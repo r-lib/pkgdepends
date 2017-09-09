@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/depends?svg=true)](https://ci.appveyor.com/project/r-lib/depends)
 [![](http://www.r-pkg.org/badges/version/depends)](http://www.r-pkg.org/pkg/depends)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/depends)](http://www.r-pkg.org/pkg/depends)
+[![Coverage Status](https://img.shields.io/codecov/c/github/r-lib/depends/master.svg)](https://codecov.io/github/r-lib/depends?branch=master)
 
 Find recursive dependenies of R packages from various sources.
 

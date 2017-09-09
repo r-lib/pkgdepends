@@ -9,5 +9,7 @@ LazyData: true
 URL: https://github.com/r-lib/depends
 BugReports: https://github.com/r-lib/depends/issues
 RoxygenNote: 6.0.1
-Suggests: 
+Suggests:
+    covr,
     testthat
+Encoding: UTF-8

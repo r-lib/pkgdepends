@@ -9,6 +9,19 @@ LazyData: true
 URL: https://github.com/r-lib/depends
 BugReports: https://github.com/r-lib/depends/issues
 RoxygenNote: 6.0.1
+Imports:
+    assertthat,
+    async,
+    callr,
+    cranlike,
+    curl,
+    desc,
+    jsonlite,
+    rematch,
+    R6,
+    stats,
+    utils,
+    withr
 Suggests:
     covr,
     testthat

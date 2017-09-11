@@ -5,4 +5,5 @@
 #'
 #' @docType package
 #' @name depends
+#' @import async
 NULL

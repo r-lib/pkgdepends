@@ -1,7 +1,7 @@
 
-context("depends")
+context("repoman")
 
-test_that("depends works", {
+test_that("repoman works", {
 
   expect_true(TRUE)
 

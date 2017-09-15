@@ -18,6 +18,11 @@ test_that("parse_remotes, cran", {
          list(package = "pkg", atleast = "", version = "0.1-2"))
   )
 
+  expect_equal(
+    get_remote_types(vcapply(cases, "[[", 1)),
+    rep("cran", length(cases))
+  )
+
   for (case in cases) {
     expect_equal_named_lists(
       p <- parse_remotes(case[[1]])[[1]],

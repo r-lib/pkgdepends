@@ -8,23 +8,13 @@ remotes_resolve <- function(self, private) {
   private$dirty <- TRUE
   private$resolution <- private$start_new_resolution()
 
-  types <- c("cran", vapply(private$remotes, "[[", character(1), "type"))
-
-  ## Get caches needed for resolutions
-  lapply(unique(types), function(type) {
-    private$resolution$cache[[type]] <- private$update_cache(type)
-  })
-
   ## Resolve the remotes
   ## These will register themselves in private$resolution$packages
   lapply(private$remotes, private$resolve_ref)
 
   ## This is a synchronization barrier. After this, no async code is
   ## running, and we turn all deferred values into actual values.
-  ## Order is important, because some async code might rely on the cache
-  ## containing deferred values.
   private$resolution$packages <- await_env(private$resolution$packages)
-  private$resolution$cache    <- await_env(private$resolution$cache)
 
   private$dirty <- FALSE
   self$get_resolution()
@@ -42,12 +32,7 @@ remotes__resolve_ref <- function(self, private, rem) {
     return(private$resolution$packages[[rem$ref]])
   }
 
-  private$resolution$packages[[rem$ref]] <-
-    if (rem$type == "cran") {
-      private$resolve_ref_cran(rem)
-    } else if (rem$type == "github") {
-      private$resolve_ref_github(rem)
-    }
+  private$resolution$packages[[rem$ref]] <- resolve_remote(rem)
 }
 
 remotes__start_new_resolution <- function(self, private) {

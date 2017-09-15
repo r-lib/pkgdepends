@@ -11,6 +11,7 @@ package_cache
 \description{
 Fields:
 \itemize{
+\item \code{fullpath} Full package path.
 \item \code{path} Package path, within the repository.
 \item \code{package} Package name.
 \item \code{url} URL it was downloaded from.

@@ -11,7 +11,7 @@ parse_deps(deps)
 }
 \value{
 Character vector of dependent packages. Base packages are
-  omitted.
+omitted.
 }
 \description{
 Parse dependency specifications, vectorized

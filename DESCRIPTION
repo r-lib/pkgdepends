@@ -1,5 +1,5 @@
 Package: depends
-Title: Package Dependency Resolution
+Title: Package Dependency Resolution and Downloads
 Version: 0.0.0.9000
 Author: Gábor Csárdi
 Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
@@ -9,14 +9,16 @@ LazyData: true
 URL: https://github.com/r-lib/depends
 BugReports: https://github.com/r-lib/depends/issues
 RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)
 Imports:
     assertthat,
     async,
     callr,
-    cranlike,
     curl,
     desc,
+    filelock,
     jsonlite,
+    rappdirs,
     rematch,
     R6,
     stats,

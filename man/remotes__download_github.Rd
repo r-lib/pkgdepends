@@ -16,13 +16,15 @@ remotes__download_github(self, private, resolution)
 \description{
 It supports caching, both for the downloaded zip file, and the
 built source package. The algorithm is this:
-* Check if we have a built package in the cache. If yes, do nothing.
-* Check if we have a downloaded zip file in the cache. If yes, build it
-  into the cached source package.
-* Otherwise download the zip file and build it.
+\itemize{
+\item Check if we have a built package in the cache. If yes, do nothing.
+\item Check if we have a downloaded zip file in the cache. If yes, build it
+into the cached source package.
+\item Otherwise download the zip file and build it.
+}
 }
 \details{
 The name of the zip file is the same as the name of the source package,
-except the extension is `.zip`.
+except the extension is \code{.zip}.
 }
 \keyword{internal}

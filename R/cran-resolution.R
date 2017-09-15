@@ -3,23 +3,23 @@
 
 remotes__update_cache_cran <- function(self, private) {
   remotes_i_update_cache_cran(
-    repo      = private$repo,
+    rootdir   = private$get_download_cache_dir(),
     platforms = private$cfg$get("config:platforms"),
     rversions = private$cfg$get("config:r-versions"),
     mirror    = private$cfg$get("config:cran-mirror")
   )
 }
 
-remotes_i_update_cache_cran <- function(repo, platforms, rversions,
+remotes_i_update_cache_cran <- function(rootdir, platforms, rversions,
                                         mirror) {
 
   dirs <- get_all_package_dirs(platforms, rversions)
 
   defs <- lapply_with_names(dirs$contriburl, function(dir) {
-    target_rds  <- file.path(repo, dir, "_cache", "PACKAGES.rds")
-    target_file <- file.path(repo, dir, "_cache", "PACKAGES.gz")
+    target_rds  <- file.path(rootdir, dir, "_cache", "PACKAGES.rds")
+    target_file <- file.path(rootdir, dir, "_cache", "PACKAGES.gz")
     source_url  <- paste0(mirror, "/", dir, "/PACKAGES.gz")
-    etag_file   <- file.path(repo, dir, "_cache", "etags.yaml")
+    etag_file   <- file.path(rootdir, dir, "_cache", "etags.yaml")
     mkdirp(dirname(target_file))
     download_if_newer(source_url, target_file, etag_file)$
       then(function(value) {
@@ -30,7 +30,7 @@ remotes_i_update_cache_cran <- function(repo, platforms, rversions,
   })
 
   archive <- local({
-    target_rds <- file.path(repo, "src/contrib", "_cache", "archive.rds")
+    target_rds <- file.path(rootdir, "src/contrib", "_cache", "archive.rds")
     source_url <- paste0(mirror, "/src/contrib/Meta/archive.rds")
     mkdirp(dirname(target_rds))
     etag_file <- paste0(target_rds, ".etag")
@@ -140,7 +140,6 @@ remotes__resolve_ref_cran_general <- function(self, private, rem) {
 
 remotes__resolve_ref_cran_version_files <- function(self, private, package,
                                                     version, dependencies) {
-  repo    <- private$repo
   mirror  <- private$cfg$get("config:cran-mirror")
   cache   <- await(private$resolution$cache$cran)
   dirs    <- cache$`_dirs`
@@ -152,14 +151,12 @@ remotes__resolve_ref_cran_version_files <- function(self, private, package,
   ## To get the dependencies, we need to download the package, and
   ## parse DESCRIPTION
   source <- make_cran_archive_url(mirror, package, version)
-  target_file <- file.path(repo, dir, package_path)
-  cached_target <-
+  target_file <-
     file.path(private$get_download_cache_dir(), dir, package_path)
-  mkdirp(target_dir <- dirname(target_file))
-  mkdirp(dirname(cached_target))
+  mkdirp(dirname(target_file))
   etag_file <- file.path(target_dir, "_cache", basename(target_file))
 
-  deps <- get_package_deps_url(source, cached_target, etag_file)$
+  deps <- get_package_deps_url(source, target_file, etag_file)$
     then(function(deps) {
       clean_package_deps(deps, dependencies, last = TRUE)
     })$

@@ -34,23 +34,6 @@ remotes_get_resolution <- function(self, private) {
   private$resolution_to_df()
 }
 
-remotes_diff_resolution <- function(self, private) {
-  if (is.null(private$resolution)) stop("You need to resolve first")
-  oldremotes <- remotes$new(private$repo)
-  tryCatch(
-    oldremotes$.__enclos_env__$private$load_resolution(),
-    error = function(e) stop("Cannot load resolution")
-  )
-
-  current <- oldremotes$get_resolution()
-  proposed <- self$get_resolution()
-
-  structure(
-    list(current = current, proposed = proposed),
-    class = "remotes_resolution_diff"
-  )
-}
-
 ## Internals
 
 remotes__resolve_ref <- function(self, private, rem) {

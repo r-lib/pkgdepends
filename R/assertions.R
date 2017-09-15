@@ -17,3 +17,17 @@ all_named <- function(x) {
 on_failure(all_named) <- function(call, env) {
   paste0(deparse(call$x), " must be a list of named entries")
 }
+
+is_path <- is_string
+
+on_failure(is_path) <- function(call, env) {
+  paste0(deparse(call$x), " is not a valid path")
+}
+
+is_existing_file <- function(x) {
+  file.exists(x) && ! file.info(x)$isdir
+}
+
+on_failure(is_existing_file) <- function(call, env) {
+  paste0("File ", deparse(call$x), " does not exist")
+}

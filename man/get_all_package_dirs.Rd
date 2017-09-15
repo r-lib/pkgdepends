@@ -7,7 +7,7 @@
 get_all_package_dirs(platforms, rversions)
 }
 \arguments{
-\item{platforms}{Can be a subset of `source`, `windows`, `macos`. The
+\item{platforms}{Can be a subset of \code{source}, \code{windows}, \code{macos}. The
 platforms to download.}
 
 \item{rversions}{The R versions to download.}

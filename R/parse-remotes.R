@@ -84,6 +84,11 @@ parse_remotes <- function(specs) {
       function(i) as.list(parsed_specs[i,])
     )
     new_remotes <- lapply(new_remotes, parse_postprocess[[this]] %||% identity)
+    new_remotes <- lapply(
+      new_remotes,
+      add_class,
+      c(paste0("remote_ref_", this), "remote_ref")
+    )
     res <- c(res, new_remotes)
   }
   res

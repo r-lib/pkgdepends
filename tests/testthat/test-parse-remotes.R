@@ -20,9 +20,10 @@ test_that("parse_remotes, cran", {
 
   for (case in cases) {
     expect_equal_named_lists(
-      parse_remotes(case[[1]])[[1]],
+      p <- parse_remotes(case[[1]])[[1]],
       c(case[[2]], ref = case[[1]], type = "cran")
     )
+    expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
   }
 
 })
@@ -50,7 +51,7 @@ test_that("parse_remotes, github", {
 
   for (case in cases) {
     expect_equal_named_lists(
-      parse_remotes(case[[1]])[[1]],
+      p <- parse_remotes(case[[1]])[[1]],
       utils::modifyList(
         list(package = case$repo %||% "repo", username = "user",
              repo = "repo", subdir = "", commitish = "", pull = "",
@@ -58,5 +59,6 @@ test_that("parse_remotes, github", {
         case[-1]
       )
     )
+    expect_s3_class(p, c("remote_ref_github", "remote_ref"))
   }
 })

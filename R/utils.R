@@ -151,3 +151,8 @@ make_error <- function(message, class = character(), call = NULL, ...) {
     class = c(class, "error", "condition")
   )
 }
+
+add_class <- function(x, cl) {
+  class(x) <- c(cl, class(x))
+  x
+}

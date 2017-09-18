@@ -1,4 +1,4 @@
 library(testthat)
-library(depends)
+library(pkgdepends)
 
-test_check("depends")
+test_check("pkgdepends")

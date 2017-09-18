@@ -8,28 +8,28 @@ knitr::opts_chunk$set(
   fig.height = 8)
 ```
 
-# depends
+# pkgdepends
 
 > Package Dependency Resolution
 
-[![Linux Build Status](https://travis-ci.org/r-lib/depends.svg?branch=master)](https://travis-ci.org/r-lib/depends)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/depends?svg=true)](https://ci.appveyor.com/project/r-lib/depends)
-[![](http://www.r-pkg.org/badges/version/depends)](http://www.r-pkg.org/pkg/depends)
-[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/depends)](http://www.r-pkg.org/pkg/depends)
-[![Coverage Status](https://img.shields.io/codecov/c/github/r-lib/depends/master.svg)](https://codecov.io/github/r-lib/depends?branch=master)
+[![Linux Build Status](https://travis-ci.org/r-lib/pkgdepends.svg?branch=master)](https://travis-ci.org/r-lib/pkgdepends)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/pkgdepends?svg=true)](https://ci.appveyor.com/project/r-lib/pkgdepends)
+[![](http://www.r-pkg.org/badges/version/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)
+[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)
+[![Coverage Status](https://img.shields.io/codecov/c/github/r-lib/pkgdepends/master.svg)](https://codecov.io/github/r-lib/pkgdepends?branch=master)
 
 Find recursive dependenies of R packages from various sources.
 
 ## Installation
 
 ```{r eval = FALSE}
-devtools::install_github("r-lib/depends")
+devtools::install_github("r-lib/pkgdepends")
 ```
 
 ## Usage
 
 ```{r}
-library(depends)
+library(pkgdepends)
 ```
 
 ## License

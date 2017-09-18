@@ -1,5 +1,6 @@
 
 #' @importFrom R6 R6Class
+#' @export
 
 remotes <- R6Class(
   "remotes",

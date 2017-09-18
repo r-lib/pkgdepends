@@ -19,7 +19,6 @@ Imports:
     filelock,
     glue,
     jsonlite,
-    rappdirs,
     rematch2,
     R6,
     stats,

@@ -1,5 +1,9 @@
 
 remotes_download <- function(self, private) {
+  await(self$async_download())
+}
+
+remotes_async_download <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
 
   if (private$dirty) stop("Need to resolve, remote list has changed")
@@ -9,17 +13,25 @@ remotes_download <- function(self, private) {
     stop("Resolution has errors, cannot start downloading")
   }
 
-  dls <- async_map(private$resolution$packages, function(res) {
-    if (res$remote$type == "cran") {
-      private$download_cran(res)
-    } else if (res$remote$type == "github") {
-      private$download_github(res)
-    }
+  dls <- async_map(private$resolution$packages, private$download_res)
+
+  dls$then(function(value) {
+    private$downloads <- value
+    self$get_download_status()
   })
+}
 
-  private$downloads <- await(dls)
+remotes_download_res <- function(self, private, res) {
 
-  self$get_download_status()
+  ddl <- download_remote(
+    res,
+    config = private$config,
+    cache = private$resolution$cache
+  )
+
+  if (!is_deferred(ddl)) ddl <- async_constant(ddl)
+
+  ddl
 }
 
 ## This has the same structure as the resolutions, but we add some

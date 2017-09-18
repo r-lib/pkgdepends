@@ -7,7 +7,7 @@ parse_remote.remote_specs_cran <- NULL
 #' @export
 resolve_remote.remote_ref_cran <- NULL
 #' @export
-download_remote.remote_ref_cran <- NULL
+download_remote.remote_resolution_cran <- NULL
 
 #' @importFrom rematch2 re_match
 #' @importFrom stats na.omit
@@ -50,12 +50,37 @@ local({
     })
   }
 
-  ## ----------------------------------------------------------------------
+  download_remote.remote_resolution_cran <<- function(resolution, config,
+                                                      ..., cache) {
+    ref <- resolution$remote$ref
+    message("Downloading ", ref)
 
-  download_remote.remote_ref_cran <<- function(remote, config, ..., cache) {
-    TODO
+
+    async_map(resolution$files, function(files) {
+      urls <- files$source
+      target_file <- file.path(config$cache_dir, files$target)
+      mkdirp(target_dir <- dirname(target_file))
+      etag_file <- file.path(target_dir, "_cache", basename(target_file))
+
+      had_this <- first_existing_file(target_file, target_file)
+      download_try_list(urls, target_file, etag_file)$
+        then(function(status) {
+          if (status == 304) {
+            make_dl_status("Had", files, urls, target_file,
+                           bytes = file.size(target_file))
+          } else {
+            make_dl_status("Got", files, urls, target_file,
+                           bytes = file.size(target_file))
+          }
+        })$
+        catch(function(err) {
+          make_dl_status("Failed", files, urls, target_file,
+                         error = err$error)
+        })
+    })
   }
 
+  ## ----------------------------------------------------------------------
   ## Internal functions
 
   update_cache <- function(cache, rootdir, platforms, rversions, mirror) {
@@ -110,7 +135,10 @@ local({
       } else {
         "FAILED"
       }
-      list(files = files, remote = remote, status = status)
+      structure(
+        list(files = files, remote = remote, status = status),
+        class = c("remote_resolution_cran", "remote_resolution")
+      )
     })
   }
 
@@ -173,7 +201,10 @@ local({
         "FAILED"
       }
 
-      list(files = files, remote = remote, status = status)
+      structure(
+        list(files = files, remote = remote, status = status),
+        class = c("remote_resolution_cran", "remote_resolution")
+      )
     })
   }
 

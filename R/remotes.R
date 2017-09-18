@@ -14,6 +14,8 @@ remotes <- R6Class(
       remotes_get_resolution(self, private),
     get_download_status = function()
       remotes_get_download_status(self, private),
+    async_download = function()
+      remotes_async_download(self, private),
     download = function()
       remotes_download(self, private)
   ),
@@ -34,9 +36,8 @@ remotes <- R6Class(
       remotes__resolution_to_df(self, private),
     is_resolving = function(ref)
       remotes__is_resolving(self, private, ref),
-
-    get_download_cache_dir = function()
-      private$download_cache
+    download_res = function(res)
+      remotes_download_res(self, private, res)
   )
 )
 

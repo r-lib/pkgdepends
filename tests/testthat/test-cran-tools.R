@@ -3,6 +3,9 @@ context("cran utility functions")
 
 test_that("fix_cran_version", {
 
+  fix_cran_version <-
+    environment(parse_remote.remote_specs_cran)$fix_cran_version
+
   packages <- readRDS("fixtures/resolve-cran-version-packages.rds")
   archive <- readRDS("fixtures/resolve-cran-version-archive.rds")
 

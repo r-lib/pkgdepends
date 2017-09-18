@@ -5,17 +5,22 @@ test_that("remotes__update_cran_cache", {
 
   skip_if_offline()
 
-  dir.create(repo <- tempfile())
-  on.exit(unlink(repo, recursive = TRUE), add = TRUE)
+  dir.create(cache_dir <- tempfile())
+  on.exit(unlink(cache_dir, recursive = TRUE), add = TRUE)
+  cache_env <- new.env(parent = emptyenv())
 
-  cache <- remotes_i_update_cache_cran(
-    repo,
+  update_cache <- environment(parse_remote.remote_specs_cran)$update_cache
+
+  cache <- update_cache(
+    cache_env,
+    cache_dir,
     platforms = c("source", "macos", "windows"),
     rversion = "3.4.1",
     mirror = "https://cran.rstudio.com"
   )
 
   expect_true(async::is_deferred(cache))
+  expect_true(async::is_deferred(cache_env$crandata))
 
   cres <- await(cache)
 
@@ -33,6 +38,8 @@ test_that("remotes__update_cran_cache", {
 })
 
 test_that("make_cran_resolution", {
+  make_cran_resolution <-
+    environment(parse_remote.remote_specs_cran)$make_cran_resolution
   res <- make_cran_resolution(
     remote = parse_remotes("ggplot2")[[1]],
     platform = "source",

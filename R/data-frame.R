@@ -4,7 +4,7 @@ check_data_frame_columns <- function(df, ...) {
   assert_that(all_named(cols))
 
   if (any(bad <- ! names(cols) %in% names(df))) {
-    stop("Unknown column(s): ", paste(names(cold)[bad], collapse = ", "))
+    stop("Unknown column(s): ", paste(names(cols)[bad], collapse = ", "))
   }
 }
 
@@ -26,7 +26,7 @@ append_to_data_frame <- function(df, ...) {
   assert_that(all_named(cols))
 
   if (any(bad <- ! names(cols) %in% names(df))) {
-    stop("Unknown column(s): ", paste(names(cold)[bad], collapse = ", "))
+    stop("Unknown column(s): ", paste(names(cols)[bad], collapse = ", "))
   }
 
   cols <- ifelse(names(df) %in% names(cols), cols[names(df)], NA_integer_)

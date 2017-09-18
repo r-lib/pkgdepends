@@ -95,3 +95,7 @@ download_try_list <- function(urls, targets, etag_file = NULL,
   })
 
 }
+
+get_async_value <- function(x) {
+  if (is_deferred(x)) x$get_value() else x
+}

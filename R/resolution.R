@@ -18,7 +18,7 @@ remotes_async_resolve <- function(self, private) {
   res <- pool$when_complete()$
     then(function() {
       private$resolution$packages <-
-        await_env(private$resolution$packages)
+        eapply(private$resolution$packages, get_async_value)
     })$
     then(function() private$dirty <- FALSE)$
     then(function() self$get_resolution())

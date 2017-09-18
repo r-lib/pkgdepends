@@ -20,7 +20,7 @@ Imports:
     glue,
     jsonlite,
     rappdirs,
-    rematch,
+    rematch2,
     R6,
     stats,
     utils,

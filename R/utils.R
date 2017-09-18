@@ -34,7 +34,11 @@ current_r_platform <- function() {
 
 default_cran_mirror <- function() {
   mirror <- getOption("repos")["CRAN"]
-  if (!is.na(mirror)) mirror else "https://cran.rstudio.com"
+  if (is.null(mirror) || is.na(mirror) || mirror == "@CRAN@") {
+    "https://cran.rstudio.com"
+  } else {
+    mirror
+  }
 }
 
 current_r_version <- function() {

@@ -171,3 +171,9 @@ add_class <- function(x, cl) {
   class(x) <- c(cl, class(x))
   x
 }
+
+clean_package_deps <- function(deps, dependencies, last = FALSE) {
+  pkgs <- deps[deps$type %in% dependencies, ]$package
+  pkgs <- setdiff(pkgs, c("R", base_packages()))
+  if (last && length(pkgs)) paste0(pkgs, "@last") else pkgs
+}

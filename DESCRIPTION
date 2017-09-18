@@ -17,6 +17,7 @@ Imports:
     curl,
     desc,
     filelock,
+    glue,
     jsonlite,
     rappdirs,
     rematch,

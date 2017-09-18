@@ -246,12 +246,6 @@ local({
       })
   }
 
-  clean_package_deps <- function(deps, dependencies, last = FALSE) {
-    pkgs <- deps[deps$type %in% dependencies, ]$package
-    pkgs <- setdiff(pkgs, c("R", base_packages()))
-    if (last && length(pkgs)) paste0(pkgs, "@last") else pkgs
-  }
-
   get_all_package_dirs <- function(platforms, rversions) {
     minors <- unique(get_minor_r_version(rversions))
     res <- lapply(platforms, function(pl) {

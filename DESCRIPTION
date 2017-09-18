@@ -28,4 +28,7 @@ Imports:
 Suggests:
     covr,
     testthat
+Remotes:
+    r-lib/async,
+    r-lib/filelock
 Encoding: UTF-8

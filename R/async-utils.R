@@ -7,6 +7,8 @@ read_etag <- function(etag_file) {
   }
 }
 
+#' @importFrom curl parse_headers_list
+
 download_file <- function(url, target, etag_file = NULL) {
   force(url) ; force(target) ; force(etag_file)
   message("Getting ", sQuote(url))

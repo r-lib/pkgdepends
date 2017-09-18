@@ -4,8 +4,10 @@
 remotes <- R6Class(
   "remotes",
   public = list(
-    initialize = function(specs)
-      remotes_init(self, private, specs),
+    initialize = function(specs, config = list())
+      remotes_init(self, private, specs, config),
+    async_resolve = function()
+      remotes_async_resolve(self, private),
     resolve = function()
       remotes_resolve(self, private),
     get_resolution = function()
@@ -22,11 +24,12 @@ remotes <- R6Class(
     resolution = NULL,
     downloads = NULL,
     download_cache = NULL,
+    config = NULL,
 
     start_new_resolution = function()
       remotes__start_new_resolution(self, private),
-    resolve_ref = function(rem)
-      remotes__resolve_ref(self, private, rem),
+    resolve_ref = function(rem, pool)
+      remotes__resolve_ref(self, private, rem, pool),
     resolution_to_df = function()
       remotes__resolution_to_df(self, private),
     is_resolving = function(ref)
@@ -37,12 +40,22 @@ remotes <- R6Class(
   )
 )
 
-#' @importFrom rematch2 re_match
+#' @importFrom utils modifyList
 
-remotes_init <- function(self, private, specs) {
-  mkdirp(private$download_cache <- tempfile())
-  new_remotes <- parse_remotes(specs)
-  private$remotes <- c(private$remotes, new_remotes)
+remotes_init <- function(self, private, specs, config) {
+  private$remotes <- parse_remotes(specs)
+  private$config <- modifyList(remotes_default_config(), config)
+  mkdirp(private$download_cache <- private$config$cache_dir)
   private$dirty <- TRUE
   invisible(self)
+}
+
+remotes_default_config <- function() {
+  list(
+    "cache_dir"    = tempfile(),
+    "platforms"    = unique(c(current_r_platform(), "source")),
+    "cran-mirror"  = default_cran_mirror(),
+    "dependencies" = c("Depends", "Imports", "LinkingTo"),
+    "r-versions"   = current_r_version()
+  )
 }

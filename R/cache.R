@@ -54,7 +54,7 @@ package_cache <- R6Class(
                                 url = url, etag = etag, md5 = md5)
       if (length(idx) != 0) stop("Package already exists in cache")
 
-      target <- file.path(private$path, "files", path)
+      target <- file.path(private$path, path)
       mkdirp(dirname(target))
       file.copy(file, target)
       unlink(file)
@@ -110,16 +110,15 @@ package_cache <- R6Class(
 ## Internal functions
 
 get_db_file <- function(path) {
-  file.path(path, "db.rds")
+  file.path(path, ".db.rds")
 }
 
 get_lock_file <- function(path) {
-  file.path(path, "db.lock")
+  file.path(path, ".db.lock")
 }
 
 create_empty_db_file <- function(path) {
   mkdirp(path)
-  mkdirp(file.path(path, "files"))
 
   dbfile <- get_db_file(path)
   lockfile <- get_lock_file(path)

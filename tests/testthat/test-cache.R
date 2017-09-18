@@ -4,7 +4,6 @@ context("cache")
 test_that("init", {
   pc <- package_cache$new(tmp <- tempfile())
   expect_true(file.exists(tmp))
-  expect_true(file.exists(file.path(tmp, "files")))
 })
 
 test_that("add / list / find / delete", {
@@ -14,7 +13,7 @@ test_that("add / list / find / delete", {
   pc$add(f1, path = "f/b", package = "p", url = "u", etag = "e", md5 = "5")
 
   path <- file.path("f", "b")
-  fullpath <- file.path(tmp, "files", path)
+  fullpath <- file.path(tmp, path)
   expect_equal(
     as.list(pc$list()),
     list(fullpath = fullpath, path = path, package = "p", url = "u",

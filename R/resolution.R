@@ -2,22 +2,30 @@
 ## API
 
 remotes_resolve <- function(self, private) {
+  await(self$async_resolve())
+}
+
+remotes_async_resolve <- function(self, private) {
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
 
   private$dirty <- TRUE
   private$resolution <- private$start_new_resolution()
 
-  ## Resolve the remotes
-  ## These will register themselves in private$resolution$packages
-  lapply(private$remotes, private$resolve_ref)
+  pool <- deferred_pool$new()
+  lapply(private$remotes, private$resolve_ref, pool = pool)
 
-  ## This is a synchronization barrier. After this, no async code is
-  ## running, and we turn all deferred values into actual values.
-  private$resolution$packages <- await_env(private$resolution$packages)
+  res <- pool$when_complete()$
+    then(function() {
+      private$resolution$packages <-
+        await_env(private$resolution$packages)
+    })$
+    then(function() private$dirty <- FALSE)$
+    then(function() self$get_resolution())
 
-  private$dirty <- FALSE
-  self$get_resolution()
+  pool$finish()
+
+  res
 }
 
 remotes_get_resolution <- function(self, private) {
@@ -26,13 +34,30 @@ remotes_get_resolution <- function(self, private) {
 
 ## Internals
 
-remotes__resolve_ref <- function(self, private, rem) {
+remotes__resolve_ref <- function(self, private, rem, pool) {
   ## We might have a deferred value for it already
   if (private$is_resolving(rem$ref)) {
     return(private$resolution$packages[[rem$ref]])
   }
 
-  private$resolution$packages[[rem$ref]] <- resolve_remote(rem)
+  dres <- resolve_remote(
+    rem,
+    config = private$config,
+    cache = private$resolution$cache
+   )
+
+  if (!is_deferred(dres)) dres <- async_constant(dres)
+
+  private$resolution$packages[[rem$ref]] <- dres
+  pool$add(dres)
+
+  deps <- dres$then(function(res) {
+    deps <- unique(unlist(lapply(res$files, "[[", "deps")))
+    lapply(parse_remotes(deps), private$resolve_ref, pool = pool)
+  })
+  pool$add(deps)
+
+  dres
 }
 
 remotes__start_new_resolution <- function(self, private) {

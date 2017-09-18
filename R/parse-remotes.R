@@ -48,6 +48,8 @@ github_rx <- function() {
   )
 }
 
+#' @importFrom rematch2 re_match
+
 get_remote_types <- function(specs) {
   remote_type_rx <- paste0(
     "^",

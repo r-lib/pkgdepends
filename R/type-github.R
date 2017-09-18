@@ -1,5 +1,6 @@
 
 #' @export
+#' @importFrom rematch2 re_match
 
 parse_remote.remote_specs_github <- function(specs) {
 

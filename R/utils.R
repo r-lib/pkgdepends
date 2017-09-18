@@ -22,7 +22,22 @@ first_existing_file <- function(...) {
   }
 }
 
-r_version <- function() {
+current_r_platform <- function() {
+  if (grepl("^mac", .Platform$pkgType)) {
+    "macos"
+  } else if (grepl("^win", .Platform$pkgType)) {
+    "windows"
+  } else {
+    "source"
+  }
+}
+
+default_cran_mirror <- function() {
+  mirror <- getOption("repos")["CRAN"]
+  if (!is.na(mirror)) mirror else "https://cran.rstudio.com"
+}
+
+current_r_version <- function() {
   as.character(getRversion())
 }
 

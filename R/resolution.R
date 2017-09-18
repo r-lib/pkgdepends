@@ -101,16 +101,17 @@ remotes__resolution_to_df <- function(self, private) {
 
   res <- structure(data.frame(
     stringsAsFactors = FALSE,
-    ref      = ref,
-    direct   = ref %in% vcapply(remotes, "[[", "ref"),
-    status   = getf("status"),
-    package  = getf("package"),
-    version  = getf("version"),
-    platform = getf("platform"),
-    rversion = getf("rversion"),
-    repodir  = getf("dir"),
-    sources  = sources,
-    target   = getf("target")
+    ref        = ref,
+    direct     = ref %in% vcapply(remotes, "[[", "ref"),
+    status     = getf("status"),
+    package    = getf("package"),
+    version    = getf("version"),
+    platform   = getf("platform"),
+    rversion   = getf("rversion"),
+    repodir    = getf("dir"),
+    sources    = sources,
+    target     = getf("target"),
+    fulltarget = file.path(private$config$cache_dir, getf("target"))
   ), class = c("remotes_resolution", "data.frame"))
 
   rownames(res) <- NULL

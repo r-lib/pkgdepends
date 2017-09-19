@@ -4,7 +4,6 @@ cache: packages
 
 r:
  - release
- - devel
  - oldrel
 
 after_success:

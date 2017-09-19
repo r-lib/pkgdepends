@@ -13,7 +13,10 @@ install:
 # Adapt as necessary starting from here
 
 environment:
+  GITHUB_PAT:
+    secure: Nkvazgyo9FBXlhdY1vdqGsSNJl/DjKXhBYRFd105iEpZxKAXWI5X1aQ/awLgCfWa
   NOT_CRAN: true
+  USE_RTOOLS: true
 
 build_script:
   - travis-tool.sh install_deps

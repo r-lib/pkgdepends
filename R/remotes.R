@@ -83,10 +83,13 @@
 #' @import async
 #' @name remotes
 #' @examples
+#' ## This does download a bunch of packages, so we don't run it currently
+#' \dontrun{
 #' rems <- remotes$new(c("dplyr", "r-lib/rcmdcheck"))
 #' rems$resolve()
 #' rems$download()
 #' rems$get_download_status()
+#' }
 NULL
 
 #' @export

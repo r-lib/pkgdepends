@@ -17,7 +17,10 @@ is_valid_package <- function(file) {
 is_valid_package_zip <- function(file) {
   if (file.info(file)$size == 0) return(FALSE)
   tryCatch(
-    is_package_file_list(file, unzip(file, list = TRUE)),
+    is_package_file_list(
+      file,
+      utils::unzip(file, list = TRUE, unzip = "internal")
+    ),
     error = function(e) FALSE,
     warning = function(e) FALSE
   )

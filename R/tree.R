@@ -1,22 +1,37 @@
 
+#' @importFrom crayon italic bold cyan silver bgRed white
+
 remotes_draw_tree <- function(self, private, pkgs) {
   refs <- vcapply(private$remotes, "[[", "ref")
   pkgs <- get_remotes_from_regexps(pkgs, refs)
   if (is.null(private$resolution)) stop("Need to resolve remotes first")
 
-  recdeps <- function(pkg) {
+  recdeps <- function(pkg, highlight = FALSE) {
+    res <- private$resolution$packages[[pkg]]
     deps <- unique(unlist(
-      lapply(private$resolution$packages[[pkg]]$files, "[[", "deps")
+      lapply(res$files, "[[", "deps")
     ))
-    list(node = pkg, children = lapply(deps, recdeps))
+    if (is_na_scalar(deps)) deps <- list()
+
+    vers <- unique(vcapply(res$files, "[[", "version"))
+    if (is_na_scalar(vers)) vers <- "???"
+    vers <- paste0(vers, collapse = ", ")
+
+    node <- paste(pkg, silver(paste0("(", vers, ")")))
+    if (highlight) node <- italic(bold(cyan(node)))
+    if (res$status == "FAILED") node <- bgRed(white(node))
+
+    list(
+      node = node,
+      children = lapply(deps, recdeps)
+    )
   }
 
-  trees <- lapply(pkgs, recdeps)
+  trees <- lapply(pkgs, recdeps, highlight = TRUE)
   for (t in trees) { cat("\n"); print_tree(t) }
 
   invisible(self)
 }
-
 
 get_remotes_from_regexps <- function(rx, refs) {
   if (is.null(rx)) {

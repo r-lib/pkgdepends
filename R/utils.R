@@ -181,3 +181,7 @@ clean_package_deps <- function(deps, dependencies, last = FALSE) {
   pkgs <- setdiff(pkgs, c("R", base_packages()))
   if (last && length(pkgs)) paste0(pkgs, "@last") else pkgs
 }
+
+is_na_scalar <- function(x) {
+  length(x) == 1 && is.na(x)
+}

@@ -53,8 +53,6 @@ local({
   download_remote.remote_resolution_cran <<- function(resolution, config,
                                                       ..., cache) {
     ref <- resolution$remote$ref
-    message("Downloading ", ref)
-
 
     async_map(resolution$files, function(files) {
       urls <- files$source

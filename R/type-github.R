@@ -33,7 +33,6 @@ local({
 
   resolve_remote.remote_ref_github <<- function(remote, config, ...,
                                                 cache) {
-    message("Scheduling resolution of ", remote$ref)
     dependencies <- config$dependencies
 
     ## Get the DESCRIPTION data, and the SHA we need
@@ -71,7 +70,6 @@ local({
     cache_dir <- config$cache_dir
 
     ref <- resolution$remote$ref
-    message("Downloading ", ref)
 
     if (length(resolution$files) != 1) {
       stop("Invalid `files` vector, should be length one.")

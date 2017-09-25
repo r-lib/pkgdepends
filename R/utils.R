@@ -185,3 +185,10 @@ clean_package_deps <- function(deps, dependencies, last = FALSE) {
 is_na_scalar <- function(x) {
   length(x) == 1 && is.na(x)
 }
+
+#' @importFrom clisymbols symbol
+
+progress_msg <- function(msg, status = c("tick", "cross")) {
+  status <- match.arg(status)
+  cat(symbol[[status]], " ", msg, "\n", sep = "")
+}

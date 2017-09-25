@@ -1,19 +1,41 @@
 
 ## API
 
+#' @importFrom progress progress_bar
+
 remotes_resolve <- function(self, private) {
-  await(self$async_resolve())
+  progress_bar <- progress_bar$new(
+    total = length(private$remotes),
+    format = "  Resolving dependencies [:current/:total] [:deps/:deptot] :elapsedfull"
+  )
+  progress_bar$tick(0, tokens = list(deps = 0, deptot = 0))
+
+  await(self$async_resolve(progress_bar = progress_bar))
+
+  progress_msg("Resolving dependencies")
 }
 
-remotes_async_resolve <- function(self, private) {
+remotes_async_resolve <- function(self, private, progress_bar = NULL) {
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
 
   private$dirty <- TRUE
-  private$resolution <- private$start_new_resolution()
+  private$resolution <- private$start_new_resolution(progress_bar)
 
   pool <- deferred_pool$new()
-  lapply(private$remotes, private$resolve_ref, pool = pool)
+  proms <- lapply(private$remotes, private$resolve_ref, pool = pool)
+
+  if (!is.null(private$resolution$cache$progress_bar)) {
+    for (pr in proms) {
+      pr$then(function() {
+        private$resolution$cache$progress_bar$tick(
+          tokens = list(
+            deps = private$resolution$cache$numdeps_done,
+            deptot = private$resolution$cache$numdeps)
+        )
+      })
+    }
+  }
 
   res <- pool$when_complete()$
     then(function() {
@@ -40,11 +62,9 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
     return(private$resolution$packages[[rem$ref]])
   }
 
-  dres <- resolve_remote(
-    rem,
-    config = private$config,
-    cache = private$resolution$cache
-   )
+  cache <- private$resolution$cache
+
+  dres <- resolve_remote(rem, config = private$config, cache = cache)
 
   if (!is_deferred(dres)) dres <- async_constant(dres)
 
@@ -53,6 +73,7 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
 
   deps <- dres$then(function(res) {
     deps <- unique(unlist(lapply(res$files, "[[", "deps")))
+    cache$numdeps <- cache$numdeps + length(deps)
     lapply(parse_remotes(deps), private$resolve_ref, pool = pool)
   })
   pool$add(deps)
@@ -60,7 +81,7 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
   dres
 }
 
-remotes__start_new_resolution <- function(self, private) {
+remotes__start_new_resolution <- function(self, private, progress_bar) {
   res <- new.env(parent = emptyenv())
 
   ## These are the resolved packages. They might be deferred values,
@@ -69,6 +90,9 @@ remotes__start_new_resolution <- function(self, private) {
 
   ## This is a generic cache
   res$cache <- new.env(parent = emptyenv())
+  res$cache$progress_bar <- progress_bar
+  res$cache$numdeps <- length(private$remotes)
+  res$cache$numdeps_done <- 0
 
   res
 }

@@ -1,9 +1,17 @@
 
 remotes_download <- function(self, private) {
-  await(self$async_download())
+  progress_bar <- progress_bar$new(
+    total = private$get_total_files(),
+    format = "  Downloading files     [:current/:total] :elapsedfull"
+  )
+  progress_bar$tick(0)
+
+  await(self$async_download(progress_bar = progress_bar))
+
+  progress_msg("Downloading files")
 }
 
-remotes_async_download <- function(self, private) {
+remotes_async_download <- function(self, private, progress_bar) {
   if (is.null(private$resolution)) self$resolve()
 
   if (private$dirty) stop("Need to resolve, remote list has changed")
@@ -12,6 +20,8 @@ remotes_async_download <- function(self, private) {
   if (any(resolution$status != "OK")) {
     stop("Resolution has errors, cannot start downloading")
   }
+
+  private$resolution$cache$progress_bar <- progress_bar
 
   dls <- async_map(private$resolution$packages, private$download_res)
 
@@ -23,6 +33,8 @@ remotes_async_download <- function(self, private) {
 
 remotes_download_res <- function(self, private, res) {
 
+  force(private)
+
   ddl <- download_remote(
     res,
     config = private$config,
@@ -30,6 +42,13 @@ remotes_download_res <- function(self, private, res) {
   )
 
   if (!is_deferred(ddl)) ddl <- async_constant(ddl)
+
+  if (!is.null(private$resolution$cache$progress_bar)) {
+    ddl$then(function() {
+      cache <- private$resolution$cache
+      cache$progress_bar$tick(length(res$files))
+    })
+  }
 
   ddl
 }

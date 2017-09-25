@@ -10,7 +10,7 @@ Class for package dependency resolution and package downloads
 \preformatted{r <- remotes$new(specs, config = list())
 
 r$resolve()
-r$async_resolve()
+r$async_resolve(progress_bar)
 r$get_resolution()
 r$draw_tree(pkgs)
 
@@ -26,6 +26,9 @@ r$get_download_status()
 \item \code{specs}: Package specifications. See 'Remote Types' below.
 \item \code{config}: Custom configuration, a named list. See the list of options
 below.
+\item \code{progress_bar} A \link[progress:progress_bar]{progress::progress_bar} object from the \code{progress}
+package. This is optional, and can be used to track progress. See
+details below.
 \item \code{pkgs}: Charcater vector of regular expressions, to specify the
 packages to query.
 }
@@ -106,6 +109,11 @@ dependencies: \code{Depends}, \code{Imports}, \code{LinkingTo}.
 \item \code{r-versions}: R version to support, for the binary packages. Defaults
 to the running R version.
 }
+}
+
+\section{Progress bars}{
+
+TODO
 }
 
 \examples{

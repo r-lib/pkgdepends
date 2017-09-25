@@ -14,12 +14,14 @@ Imports:
     assertthat,
     async,
     callr,
+    clisymbols,
     crayon,
     curl,
     desc,
     filelock,
     glue,
     jsonlite,
+    progress,
     rematch2,
     R6,
     stats,
@@ -30,5 +32,6 @@ Suggests:
     testthat
 Remotes:
     r-lib/async,
-    r-lib/filelock
+    r-lib/filelock,
+    r-lib/progress
 Encoding: UTF-8

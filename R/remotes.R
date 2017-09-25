@@ -6,18 +6,21 @@
 #' r <- remotes$new(specs, config = list())
 #'
 #' r$resolve()
-#' r$async_resolve()
+#' r$async_resolve(progress_bar)
 #' r$get_resolution()
 #' r$draw_tree(pkgs)
 #'
 #' r$download()
-#' r$async_download()
+#' r$async_download(progress_bar)
 #' r$get_download_status()
 #'
 #' @section Arguments:
 #' * `specs`: Package specifications. See 'Remote Types' below.
 #' * `config`: Custom configuration, a named list. See the list of options
 #'   below.
+#' * `progress_bar` A [progress::progress_bar] object from the `progress`
+#'   package. This is optional, and can be used to track progress. See
+#'   details below.
 #' * `pkgs`: Charcater vector of regular expressions, to specify the
 #'   packages to query.
 #'
@@ -85,6 +88,9 @@
 #' * `r-versions`: R version to support, for the binary packages. Defaults
 #'   to the running R version.
 #'
+#' @section Progress bars:
+#' TODO
+#'
 #' @importFrom R6 R6Class
 #' @import async
 #' @name remotes
@@ -105,20 +111,21 @@ remotes <- R6Class(
   public = list(
     initialize = function(specs, config = list())
       remotes_init(self, private, specs, config),
-    async_resolve = function()
-      remotes_async_resolve(self, private),
+    async_resolve = function(progress_bar = NULL)
+      remotes_async_resolve(self, private, progress_bar),
     resolve = function()
       remotes_resolve(self, private),
     get_resolution = function()
       remotes_get_resolution(self, private),
     draw_tree = function(pkgs = NULL)
       remotes_draw_tree(self, private, pkgs),
-    get_download_status = function()
-      remotes_get_download_status(self, private),
-    async_download = function()
-      remotes_async_download(self, private),
+
+    async_download = function(progress_bar = NULL)
+      remotes_async_download(self, private, progress_bar),
     download = function()
-      remotes_download(self, private)
+      remotes_download(self, private),
+    get_download_status = function()
+      remotes_get_download_status(self, private)
   ),
 
   private = list(
@@ -129,8 +136,8 @@ remotes <- R6Class(
     download_cache = NULL,
     config = NULL,
 
-    start_new_resolution = function()
-      remotes__start_new_resolution(self, private),
+    start_new_resolution = function(progress_bar)
+      remotes__start_new_resolution(self, private, progress_bar),
     resolve_ref = function(rem, pool)
       remotes__resolve_ref(self, private, rem, pool),
     resolution_to_df = function()
@@ -138,7 +145,9 @@ remotes <- R6Class(
     is_resolving = function(ref)
       remotes__is_resolving(self, private, ref),
     download_res = function(res)
-      remotes_download_res(self, private, res)
+      remotes_download_res(self, private, res),
+    get_total_files = function()
+      remotes_get_total_files(self, private)
   )
 )
 
@@ -160,4 +169,8 @@ remotes_default_config <- function() {
     "dependencies" = c("Depends", "Imports", "LinkingTo"),
     "r-versions"   = current_r_version()
   )
+}
+
+remotes_get_total_files <- function(self, private) {
+  sum(viapply(private$resolution$packages, function(x) length(x$files)))
 }

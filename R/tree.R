@@ -1,4 +1,34 @@
 
+remotes_draw_tree <- function(self, private, pkgs) {
+  refs <- vcapply(private$remotes, "[[", "ref")
+  pkgs <- get_remotes_from_regexps(pkgs, refs)
+  if (is.null(private$resolution)) stop("Need to resolve remotes first")
+
+  recdeps <- function(pkg) {
+    deps <- unique(unlist(
+      lapply(private$resolution$packages[[pkg]]$files, "[[", "deps")
+    ))
+    list(node = pkg, children = lapply(deps, recdeps))
+  }
+
+  trees <- lapply(pkgs, recdeps)
+  for (t in trees) { cat("\n"); print_tree(t) }
+
+  invisible(self)
+}
+
+
+get_remotes_from_regexps <- function(rx, refs) {
+  if (is.null(rx)) {
+    refs
+  } else {
+    assert_that(is.character(rx))
+    pkgs <- unique(unlist(
+      lapply(rx, grep, remotes, value = TRUE)
+    ))
+  }
+}
+
 box_chars <- function() {
   fancy <- getOption("pkgdepends.fancy.tree") %||% l10n_info()$`UTF-8`
   if (fancy) {
@@ -18,13 +48,10 @@ box_chars <- function() {
   }
 }
 
-remotes_draw_tree <- function(self, private, pkgs) {
-  refs <- vcapply(private$remotes, "[[", "ref")
-  pkgs <- get_remotes_from_regexps(pkgs, refs)
-  if (is.null(private$resolution)) stop("Need to resolve remotes first")
+print_tree <- function(tree) {
   chars <- box_chars()
 
-  print_tree <- function(self, private, pkg, n = integer(), mx = integer()) {
+  pt <- function(tree, n = integer(), mx = integer()) {
     level <- length(n) - 1
     prefix <- vcapply(seq_along(n), function(i) {
       if (n[i] < mx[i]) {
@@ -39,27 +66,11 @@ remotes_draw_tree <- function(self, private, pkgs) {
         "  "
       }
     })
-    cat(prefix, pkg, "\n", sep = "")
-    deps <- unique(unlist(
-      lapply(private$resolution$packages[[pkg]]$files, "[[", "deps")
-    ))
-    for (d in seq_along(deps)) {
-      print_tree(self, private, deps[[d]], c(n, d), c(mx, length(deps)))
+    cat(prefix, tree$node, "\n", sep = "")
+    for (d in seq_along(tree$children)) {
+      pt(tree$children[[d]], c(n, d), c(mx, length(tree$children)))
     }
   }
 
-  for (pkg in pkgs) { cat("\n"); print_tree(self, private, pkg) }
-
-  invisible(self)
-}
-
-get_remotes_from_regexps <- function(rx, refs) {
-  if (is.null(rx)) {
-    refs
-  } else {
-    assert_that(is.character(rx))
-    pkgs <- unique(unlist(
-      lapply(rx, grep, remotes, value = TRUE)
-    ))
-  }
+  pt(tree)
 }

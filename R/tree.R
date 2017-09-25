@@ -39,7 +39,7 @@ get_remotes_from_regexps <- function(rx, refs) {
   } else {
     assert_that(is.character(rx))
     pkgs <- unique(unlist(
-      lapply(rx, grep, remotes, value = TRUE)
+      lapply(rx, grep, refs, value = TRUE)
     ))
   }
 }

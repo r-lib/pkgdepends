@@ -23,6 +23,7 @@ remotes_draw_tree <- function(self, private, pkgs) {
 
     list(
       node = node,
+      status = res$status,
       children = lapply(deps, recdeps)
     )
   }
@@ -30,7 +31,7 @@ remotes_draw_tree <- function(self, private, pkgs) {
   trees <- lapply(pkgs, recdeps, highlight = TRUE)
   for (t in trees) { cat("\n"); print_tree(t) }
 
-  invisible(self)
+  invisible(trees)
 }
 
 get_remotes_from_regexps <- function(rx, refs) {

@@ -8,6 +8,7 @@
 #' r$resolve()
 #' r$async_resolve()
 #' r$get_resolution()
+#' r$draw_tree(pkgs)
 #'
 #' r$download()
 #' r$async_download()
@@ -17,6 +18,8 @@
 #' * `specs`: Package specifications. See 'Remote Types' below.
 #' * `config`: Custom configuration, a named list. See the list of options
 #'   below.
+#' * `pkgs`: Charcater vector of regular expressions, to specify the
+#'   packages to query.
 #'
 #' @section Details:
 #'
@@ -35,10 +38,13 @@
 #' `$get_resolution()` returns the result of the resolution. See
 #' `Resolution Table` below.
 #'
+#' `$draw_tree()` draws the dependency tree of one or more packages,
+#' after resolution.
+#'
 #' @section Remote types:
 #' The following remote types are currently supported:
 #'
-#' * CRAN packages: 
+#' * CRAN packages:
 #'     \preformatted{
 #'     [cran::]<package>[@[>=]<version> | @current | @last]
 #'     }
@@ -105,6 +111,8 @@ remotes <- R6Class(
       remotes_resolve(self, private),
     get_resolution = function()
       remotes_get_resolution(self, private),
+    draw_tree = function(pkgs = NULL)
+      remotes_draw_tree(self, private, pkgs),
     get_download_status = function()
       remotes_get_download_status(self, private),
     async_download = function()

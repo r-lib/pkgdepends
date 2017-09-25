@@ -12,6 +12,7 @@ Class for package dependency resolution and package downloads
 r$resolve()
 r$async_resolve()
 r$get_resolution()
+r$draw_tree(pkgs)
 
 r$download()
 r$async_download()
@@ -25,6 +26,8 @@ r$get_download_status()
 \item \code{specs}: Package specifications. See 'Remote Types' below.
 \item \code{config}: Custom configuration, a named list. See the list of options
 below.
+\item \code{pkgs}: Charcater vector of regular expressions, to specify the
+packages to query.
 }
 }
 
@@ -45,6 +48,9 @@ returned by \code{$resolve()}.
 
 \code{$get_resolution()} returns the result of the resolution. See
 \code{Resolution Table} below.
+
+\code{$draw_tree()} draws the dependency tree of one or more packages,
+after resolution.
 }
 
 \section{Remote types}{

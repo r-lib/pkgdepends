@@ -42,3 +42,96 @@ test_that("fix_cran_version", {
   )
   expect_equal(fix("igraph0", ge = ">=", "0.5.7"), "0.5.7")
 })
+
+test_that("parse_deps", {
+
+  parse_deps <- environment(parse_remote.remote_specs_cran)$parse_deps
+
+  expect_equal(
+    parse_deps(character(), character()),
+    list()
+  )
+
+  expect_equal(
+    parse_deps("foobar", "Imports"),
+    list(tibble::tibble(
+      type = "Imports",
+      package = "foobar",
+      op = "",
+      version = ""
+    ))
+  )
+
+  expect_equal(
+    parse_deps("foobar (>= 1.0-5)", "Imports"),
+    list(tibble::tibble(
+      type = "Imports",
+      package = "foobar",
+      op = ">=",
+      version = "1.0-5"
+    ))
+  )
+
+  expect_equal(
+    parse_deps("foobar\n (>=\n 1.0-5), foobar2", "Imports"),
+    list(tibble::tibble(
+      type = rep("Imports", 2),
+      package = c("foobar", "foobar2"),
+      op = c(">=", ""),
+      version = c("1.0-5", "")
+    ))
+  )
+})
+
+test_that("get_cran_deps", {
+
+  get_cran_deps <-
+    environment(parse_remote.remote_specs_cran)$get_cran_deps
+
+  packages <- readRDS("fixtures/resolve-cran-version-packages.rds")
+
+  deps <- c("Imports", "LinkingTo", "Depends")
+
+  expect_equal(
+    get_cran_deps("dplyr", "0.7.2", packages, deps),
+    tibble::tibble(
+      ref = c("assertthat", "bindrcpp", "glue", "magrittr",
+        "pkgconfig", "rlang", "R6", "Rcpp", "tibble", "Rcpp", "BH",
+        "bindrcpp", "plogr"),
+      type = c(rep("Imports", 9), rep("LinkingTo", 4)),
+      package = ref,
+      op = c("", ">=", ">=", "", "", ">=", "", ">=", ">=", ">=", ">=",
+        "", ""),
+      version = c("", "0.2", "1.1.0", "", "", "0.1", "", "0.12.6",
+        "1.3.1", "0.12.0", "1.58.0-1", "", "")
+    )
+  )
+})
+
+test_that("get_package_deps_url", {
+
+  skip_if_offline()
+
+  get_package_deps_url <-
+    environment(parse_remote.remote_specs_cran)$get_package_deps_url
+
+  url <- "https://cran.rstudio.com/src/contrib/Archive/dplyr/dplyr_0.2.tar.gz"
+  dir.create(dir <- tempfile())
+  target <- file.path(dir, basename(url))
+  obj <- async::await(get_package_deps_url(
+    url = url,
+    target = target,
+    dependencies = c("Imports", "LinkingTo")
+  ))
+
+  exp <- tibble::tibble(
+    ref = c("assertthat", "Rcpp", "magrittr", "Lahman", "hflights",
+      "Rcpp", "BH"),
+    type = c(rep("Imports", 5), rep("LinkingTo", 2)),
+    package = ref,
+    op = c(rep("", 5), rep(">=", 2)),
+    version = c(rep("", 5), "0.11.1", "1.51.0-2")
+  )
+
+  expect_equal(obj, exp)
+})

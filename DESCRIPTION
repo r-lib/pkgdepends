@@ -25,6 +25,7 @@ Imports:
     rematch2,
     R6,
     stats,
+    tibble,
     utils,
     withr
 Suggests:

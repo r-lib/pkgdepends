@@ -12,6 +12,7 @@ download_remote.remote_resolution_cran <- NULL
 #' @importFrom rematch2 re_match
 #' @importFrom stats na.omit
 #' @importFrom desc desc_get_deps
+#' @importFrom tibble as_tibble
 
 local({
 
@@ -225,10 +226,8 @@ local({
     mkdirp(target_dir <- dirname(target_file))
     etag_file <- file.path(target_dir, "_cache", basename(target_file))
 
-    deps <- get_package_deps_url(source, target_file, etag_file)$
-      then(function(deps) {
-        clean_package_deps(deps, dependencies, last = TRUE)
-      })$
+    deps <- get_package_deps_url(source, target_file, dependencies,
+                                 last = TRUE, etag_file = etag_file)$
       then(function(deps) {
         list(list(
           source = make_cran_archive_url(mirror, package, version),
@@ -330,7 +329,7 @@ local({
     result$source <- unname(url)
     result$target <- path
 
-    result$deps <- get_cran_deps(remote$ref, result$package, result$version,
+    result$deps <- get_cran_deps(result$package, result$version,
                                  data, dependencies)
 
     result
@@ -366,7 +365,7 @@ local({
     as.character(res)
   }
 
-  get_cran_deps <- function(ref, package, version, data, dependencies) {
+  get_cran_deps <- function(package, version, data, dependencies) {
 
     ## Some dependency types might not be present here
     dependencies <- intersect(dependencies, colnames(data))
@@ -380,8 +379,10 @@ local({
     wh <- wh[1]
     version <- data[wh, "Version"]
 
-    deps <- data[wh, dependencies]
-    res <- unname(unlist(parse_deps(na.omit(deps))))
+    deps <- na.omit(data[wh, dependencies])
+    res <- do.call(rbind, parse_deps(deps, names(deps)))
+    res$ref <- res$package
+    res <- res[, c("ref", setdiff(names(res), "ref"))]
 
     ## TODO: Bioc? Additional repositories?
     res
@@ -397,20 +398,12 @@ local({
     )
   }
 
-  parse_deps <- function(deps) {
-    deps <- lapply(strsplit(deps, ","), str_trim)
-    deps <- lapply(deps, function(x) lapply(strsplit(x, "\\("), str_trim))
-    deps <- lapply(
-      deps,
-      function(x) lapply(x, sub, pattern = "\\)$", replacement = "")
-    )
-    deps <- lapply(deps, function(x) vapply(x, "[", "", 1))
-    lapply(deps, setdiff, y = c("R", base_packages()))
-  }
-
-  get_package_deps_url <- function(url, target, etag_file = NULL) {
-    force(url) ; force(target) ; force(etag_file)
+  get_package_deps_url <- function(url, target, dependencies, last = FALSE,
+                                   etag_file = NULL) {
+    force(url) ; force(target) ; force(dependencies) ; force(last)
+    force(etag_file)
     download_if_newer(url, target, etag_file)$
-    then(function() desc_get_deps(file = target))
+      then(function() desc_get_deps(file = target))$
+      then(function(deps) deps_from_desc(deps, dependencies, last))
   }
 })

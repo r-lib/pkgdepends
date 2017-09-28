@@ -176,12 +176,6 @@ add_class <- function(x, cl) {
   x
 }
 
-clean_package_deps <- function(deps, dependencies, last = FALSE) {
-  pkgs <- deps[deps$type %in% dependencies, ]$package
-  pkgs <- setdiff(pkgs, c("R", base_packages()))
-  if (last && length(pkgs)) paste0(pkgs, "@last") else pkgs
-}
-
 is_na_scalar <- function(x) {
   length(x) == 1 && is.na(x)
 }
@@ -191,4 +185,44 @@ is_na_scalar <- function(x) {
 progress_msg <- function(msg, status = c("tick", "cross")) {
   status <- match.arg(status)
   cat(symbol[[status]], " ", msg, "\n", sep = "")
+}
+
+omit_cols <- function(df, omit) {
+  if (!length(omit)) {
+    df
+  } else {
+    df[ , setdiff(names(df), omit), drop = FALSE]
+  }
+}
+
+parse_deps <- function(deps, type) {
+  assert_that(length(deps) == length(type))
+  deps <- lapply(strsplit(deps, ","), str_trim)
+  rx <- paste0(
+    "(?<type>)",
+    "^\\s*",
+    "(?<package>[^\\s]+)",
+    "\\s*",
+    "(?:[(](?<op>>|>=|==|<|<=)\\s*(?<version>[-0-9\\.]+)[)])?\\s*$"
+  )
+  base <- c("R", base_packages())
+  lapply(seq_along(deps), function(i) {
+    x <- omit_cols(re_match(deps[[i]], pattern = rx), c(".text", ".match"))
+    x$type <- type[[i]]
+    x[! x$package %in% base, ]
+  })
+}
+
+deps_from_desc <- function(deps, dependencies, last) {
+  op_ver <- strsplit(deps$version, "\\s+")
+  deps$op <- vcapply(op_ver, "[", 1)
+  deps$op[deps$op == "*"] <- ""
+  deps$version <- vcapply(op_ver, "[", 2)
+  deps$version[is.na(deps$version)] <- ""
+  deps$ref <- paste0(deps$package, if (last) "@last")
+  base <- c("R", base_packages())
+  res <- as_tibble(deps[deps$type %in% dependencies & !deps$package %in% base,
+                        c("ref", "type", "package", "op", "version")])
+  rownames(res) <- NULL
+  res
 }

@@ -15,7 +15,7 @@ r$get_resolution()
 r$draw_tree(pkgs)
 
 r$download()
-r$async_download()
+r$async_download(progress_bar)
 r$get_download_status()
 }
 }

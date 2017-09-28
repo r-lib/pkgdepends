@@ -41,7 +41,7 @@ local({
     when_all(desc = desc, sha = sha)$
       then(function(data) {
         deps <- resolve_ref_github_deps(
-          remote, data$desc$deps, data$desc$remotes, dependencies)
+          data$desc$deps, data$desc$remotes, dependencies)
         files <- list(
           source = glue(
             "https://api.github.com/repos/{remote$username}/{remote$repo}",
@@ -166,15 +166,15 @@ local({
     })
   }
 
-  resolve_ref_github_deps <- function(rem, deps, remotes, dependencies) {
+  resolve_ref_github_deps <- function(deps, remotes, dependencies) {
 
-    remotes <- na.omit(remotes)
-    remotes_deps_packages <- vcapply(parse_remotes(remotes), "[[", "package")
-    regular_deps <- setdiff(
-      clean_package_deps(deps, dependencies),
-      remotes_deps_packages
-    )
-    c(remotes, regular_deps)
+    deps <- deps_from_desc(deps, dependencies, last = FALSE)
+    remotes <- str_trim(na.omit(remotes))
+    remotes_packages <- vcapply(parse_remotes(remotes), "[[", "package")
+    keep <- which(remotes_packages %in% deps$package)
+    deps$ref[match(remotes_packages[keep], deps$package)] <-
+      remotes[keep]
+    deps
   }
 
   build_github_package <- function(source, target, subdir) {

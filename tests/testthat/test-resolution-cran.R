@@ -66,7 +66,7 @@ test_that("make_cran_resolution", {
   expect_equal(res$dir, "src/contrib")
   expect_equal(res$package, "ggplot2")
   expect_silent(package_version(res$version))
-  expect_true(is.character(res$deps) && length(res$deps) > 0)
+  expect_true(is.data.frame(res$deps) && nrow(res$deps) > 0)
   expect_equal(res$status, "OK")
 })
 

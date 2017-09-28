@@ -120,10 +120,15 @@ remotes__resolution_to_df <- function(self, private) {
     unlist(lapply(ress, function(x) vcapply(x$files, "[[", f)))
   }
 
-  sources <- I(unlist(
-    lapply(ress, function(x) lapply(x$files, "[[", "source")),
-    recursive = FALSE
-  ))
+  getfl <- function(f) {
+    I(unlist(
+      lapply(ress, function(x) lapply(x$files, "[[", f)),
+      recursive = FALSE
+    ))
+  }
+
+  sources <- getfl("source")
+  deps <- getfl("deps")
 
   res <- structure(data.frame(
     stringsAsFactors = FALSE,
@@ -137,7 +142,8 @@ remotes__resolution_to_df <- function(self, private) {
     repodir    = getf("dir"),
     sources    = sources,
     target     = getf("target"),
-    fulltarget = file.path(private$config$cache_dir, getf("target"))
+    fulltarget = file.path(private$config$cache_dir, getf("target")),
+    dependencies = deps
   ), class = c("remotes_resolution", "data.frame"))
 
   rownames(res) <- NULL

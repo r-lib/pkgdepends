@@ -53,6 +53,14 @@ test_that("parse_deps", {
   )
 
   expect_equal(
+    parse_deps("", "Imports"),
+    list(tibble::tibble(
+      type = character(), package = character(), op = character(),
+      version = character()
+    ))
+  )
+
+  expect_equal(
     parse_deps("foobar", "Imports"),
     list(tibble::tibble(
       type = "Imports",

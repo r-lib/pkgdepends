@@ -207,7 +207,7 @@ parse_deps <- function(deps, type) {
   base <- c("R", base_packages())
   lapply(seq_along(deps), function(i) {
     x <- omit_cols(re_match(deps[[i]], pattern = rx), c(".text", ".match"))
-    x$type <- type[[i]]
+    x$type <- if (length(x$type) > 0) type[[i]] else character()
     x[! x$package %in% base, ]
   })
 }

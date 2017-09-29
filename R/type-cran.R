@@ -365,29 +365,6 @@ local({
     as.character(res)
   }
 
-  get_cran_deps <- function(package, version, data, dependencies) {
-
-    ## Some dependency types might not be present here
-    dependencies <- intersect(dependencies, colnames(data))
-
-    wh <- if (version == "") {
-      wh <- which(data[ , "Package"] == package)
-    } else {
-      wh <- which(data[ , "Package"] == package &
-                    data[, "Version"] == version)
-    }
-    wh <- wh[1]
-    version <- data[wh, "Version"]
-
-    deps <- na.omit(data[wh, dependencies])
-    res <- do.call(rbind, parse_deps(deps, names(deps)))
-    res$ref <- res$package
-    res <- res[, c("ref", setdiff(names(res), "ref"))]
-
-    ## TODO: Bioc? Additional repositories?
-    res
-  }
-
   get_cran_extension <- function(platform) {
     switch(
       platform,

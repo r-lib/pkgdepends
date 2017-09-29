@@ -2,7 +2,14 @@
 resolve_installed <- function(lib = .libPaths()[1]) {
   inst <- as_tibble(installed.packages(lib.loc = lib, noCache = TRUE))
 
-  empty_deps <- parse_deps("", "")[[1]]
+  deps <- lapply(
+    inst$Package,
+    get_cran_deps,
+    version = "",
+    data = inst,
+    dependencies = dependency_fields()
+  )
+
   tibble(
     ref = inst$Package,
     direct = NA,
@@ -15,6 +22,6 @@ resolve_installed <- function(lib = .libPaths()[1]) {
     sources = I(replicate(nrow(inst), character())),
     target = NA_character_,
     fulltarget = NA_character_,
-    dependencies = I(replicate(nrow(inst), empty_deps, simplify = FALSE))
+    dependencies = deps
   )
 }

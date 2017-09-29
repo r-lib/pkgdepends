@@ -1,7 +1,4 @@
 
-dependency_fields <- c("Depends", "Imports", "Suggests", "LinkingTo",
-                       "Enhances")
-
 repoman_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
@@ -192,36 +189,4 @@ omit_cols <- function(df, omit) {
   } else {
     df[ , setdiff(names(df), omit), drop = FALSE]
   }
-}
-
-parse_deps <- function(deps, type) {
-  assert_that(length(deps) == length(type))
-  deps <- lapply(strsplit(deps, ","), str_trim)
-  rx <- paste0(
-    "(?<type>)",
-    "^\\s*",
-    "(?<package>[^\\s]+)",
-    "\\s*",
-    "(?:[(](?<op>>|>=|==|<|<=)\\s*(?<version>[-0-9\\.]+)[)])?\\s*$"
-  )
-  base <- c("R", base_packages())
-  lapply(seq_along(deps), function(i) {
-    x <- omit_cols(re_match(deps[[i]], pattern = rx), c(".text", ".match"))
-    x$type <- if (length(x$type) > 0) type[[i]] else character()
-    x[! x$package %in% base, ]
-  })
-}
-
-deps_from_desc <- function(deps, dependencies, last) {
-  op_ver <- strsplit(deps$version, "\\s+")
-  deps$op <- vcapply(op_ver, "[", 1)
-  deps$op[deps$op == "*"] <- ""
-  deps$version <- vcapply(op_ver, "[", 2)
-  deps$version[is.na(deps$version)] <- ""
-  deps$ref <- paste0(deps$package, if (last) "@last")
-  base <- c("R", base_packages())
-  res <- as_tibble(deps[deps$type %in% dependencies & !deps$package %in% base,
-                        c("ref", "type", "package", "op", "version")])
-  rownames(res) <- NULL
-  res
 }

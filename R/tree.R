@@ -9,7 +9,7 @@ remotes_draw_tree <- function(self, private, pkgs) {
   recdeps <- function(pkg, highlight = FALSE) {
     res <- private$resolution$packages[[pkg]]
     deps <- unique(unlist(
-      lapply(res$files, "[[", "deps")
+      lapply(res$files, function(x) x$deps$ref)
     ))
     if (is_na_scalar(deps)) deps <- list()
 

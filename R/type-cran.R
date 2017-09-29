@@ -12,7 +12,7 @@ download_remote.remote_resolution_cran <- NULL
 #' @importFrom rematch2 re_match
 #' @importFrom stats na.omit
 #' @importFrom desc desc_get_deps
-#' @importFrom tibble as_tibble
+#' @importFrom tibble as_tibble tibble
 
 local({
 
@@ -271,7 +271,7 @@ local({
       }
     })
 
-    res <- as.data.frame(do.call(rbind, res), stringsAsFactors = FALSE)
+    res <- as_tibble(do.call(rbind, res), stringsAsFactors = FALSE)
     colnames(res) <- c("platform", "rversion", "contriburl")
     res$prefix <- paste0(
       "/",

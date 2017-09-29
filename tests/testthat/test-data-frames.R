@@ -2,8 +2,7 @@
 context("data frames")
 
 example_df <- function() {
-  data.frame(
-    stringsAsFactors = FALSE,
+  tibble::tibble(
     a = 1:5,
     b = letters[1:5],
     c = 5:1,

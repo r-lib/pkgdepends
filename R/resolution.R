@@ -130,8 +130,7 @@ remotes__resolution_to_df <- function(self, private) {
   sources <- getfl("source")
   deps <- getfl("deps")
 
-  res <- structure(data.frame(
-    stringsAsFactors = FALSE,
+  res <- tibble::tibble(
     ref        = ref,
     direct     = ref %in% vcapply(remotes, "[[", "ref"),
     status     = getf("status"),
@@ -144,9 +143,9 @@ remotes__resolution_to_df <- function(self, private) {
     target     = getf("target"),
     fulltarget = file.path(private$config$cache_dir, getf("target")),
     dependencies = deps
-  ), class = c("remotes_resolution", "data.frame"))
+  )
+  class(res) <- c("remotes_resolution", class(res))
 
-  rownames(res) <- NULL
   res
 }
 

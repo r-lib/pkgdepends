@@ -150,8 +150,7 @@ format_archive_rds <- function(ards) {
 
   files <- sub("^[^/]+/", "", unlist(lapply(ards, rownames)))
 
-  data.frame(
-    stringsAsFactors = FALSE,
+  tibble(
     package = rep(names(ards), viapply(ards, nrow)),
     file = files,
     version = sub("^[^_]+_([-\\.0-9]+)\\.tar\\.gz$", "\\1", files),

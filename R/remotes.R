@@ -125,7 +125,10 @@ remotes <- R6Class(
     download = function()
       remotes_download(self, private),
     get_download_status = function()
-      remotes_get_download_status(self, private)
+      remotes_get_download_status(self, private),
+
+    solve = function(lib = .libPaths()[1])
+      remotes_solve(self, private, lib)
   ),
 
   private = list(

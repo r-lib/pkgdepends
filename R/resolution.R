@@ -107,12 +107,12 @@ remotes__resolution_to_df <- function(self, private) {
   errs <- Filter(function(x) x$status != "OK", ress)
 
   num_files <- viapply(ress, function(x) length(x$files))
+  remote <- rep(
+    lapply(ress, function(x) x$remote),
+    num_files
+  )
   ref <- rep(
-    vcapply(
-      ress,
-      function(x) x$remote$origref %||% x$remote$ref,
-      USE.NAMES = FALSE
-    ),
+    vcapply(ress, function(x) x$remote$ref, USE.NAMES = FALSE),
     num_files
   )
 
@@ -142,7 +142,8 @@ remotes__resolution_to_df <- function(self, private) {
     sources    = sources,
     target     = getf("target"),
     fulltarget = file.path(private$config$cache_dir, getf("target")),
-    dependencies = deps
+    dependencies = deps,
+    remote     = remote
   )
   class(res) <- c("remotes_resolution", class(res))
 

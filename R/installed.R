@@ -22,6 +22,7 @@ resolve_installed <- function(lib = .libPaths()[1]) {
     sources = I(replicate(nrow(inst), character())),
     target = NA_character_,
     fulltarget = NA_character_,
-    dependencies = deps
+    dependencies = deps,
+    remote = I(replicate(nrow(inst), "TODO", simplify = FALSE))
   )
 }

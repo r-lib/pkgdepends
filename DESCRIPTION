@@ -17,10 +17,11 @@ Imports:
     clisymbols,
     crayon,
     curl,
-    desc,
+    desc (>= 1.1.1.9000),
     filelock,
     glue,
     jsonlite,
+    lpSolve,
     progress,
     rematch2,
     R6,
@@ -33,6 +34,7 @@ Suggests:
     testthat
 Remotes:
     r-lib/async,
+    r-lib/desc,
     r-lib/filelock,
     r-lib/progress
 Encoding: UTF-8

@@ -51,6 +51,7 @@ get_cran_deps <- function(package, version, data, dependencies) {
   
   deps <- na.omit(unlist(data[wh, dependencies]))
   res <- do.call(rbind, parse_deps(deps, names(deps)))
+  if (is.null(res)) res <- parse_deps("", "")[[1]]
   res$ref <- res$package
   res <- res[, c("ref", setdiff(names(res), "ref"))]
   

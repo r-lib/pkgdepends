@@ -1,18 +1,21 @@
 
-remotes_solve <- function(self, private, lib) {
+remotes_solve <- function(self, private) {
+  if (is.null(private$library)) {
+    stop("No package library specified, see 'library' in new()")
+  }
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
-  inst <- resolve_installed(lib)
+  inst <- resolve_installed(private$library)
   ress <- self$get_resolution()
   inst <- inst[inst$package %in% ress$package, ]
 
   pkgs <- rbind(inst, ress)
-  pkgs <- pkgs[order(pkgs$package), ]
 
   prb <- create_lp_problem(pkgs)
   sol <- solve_lp_problem(prb)
-  browser()
+  private$solution <- list(package = pkgs, problem = prb, solution = sol)
+  self$get_solution()
 }
 
 #' Create the LP problem that solves the installation
@@ -106,4 +109,8 @@ solve_lp_problem <- function(problem) {
   dir <- vcapply(problem$conds, "[[", "op")
   rhs <- vapply(problem$conds, "[[", "rhs", FUN.VALUE = double(1))
   lp("min", problem$obj, condmat, dir, rhs, int.vec = seq_len(problem$num))
+}
+
+remotes_get_solution <- function(self, private) {
+  TODO
 }

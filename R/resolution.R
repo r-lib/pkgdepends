@@ -45,7 +45,9 @@ remotes_async_resolve <- function(self, private, progress_bar = NULL) {
         eapply(private$resolution$packages, get_async_value)
     })$
     then(function() private$dirty <- FALSE)$
-    then(function() self$get_resolution())
+    then(function() {
+      private$resolution$result <- private$resolution_to_df()
+    })
 
   pool$finish()
 
@@ -53,7 +55,8 @@ remotes_async_resolve <- function(self, private, progress_bar = NULL) {
 }
 
 remotes_get_resolution <- function(self, private) {
-  private$resolution_to_df()
+  if (is.null(private$resolution$result)) stop("No resolution yet")
+  private$resolution$result
 }
 
 ## Internals

@@ -109,8 +109,9 @@ NULL
 remotes <- R6Class(
   "remotes",
   public = list(
-    initialize = function(specs, config = list())
-      remotes_init(self, private, specs, config),
+    initialize = function(specs, config = list(), library = NULL)
+      remotes_init(self, private, specs, config, library),
+
     async_resolve = function(progress_bar = NULL)
       remotes_async_resolve(self, private, progress_bar),
     resolve = function()
@@ -120,21 +121,32 @@ remotes <- R6Class(
     draw_tree = function(pkgs = NULL)
       remotes_draw_tree(self, private, pkgs),
 
-    async_download = function(progress_bar = NULL)
-      remotes_async_download(self, private, progress_bar),
-    download = function()
-      remotes_download(self, private),
-    get_download_status = function()
-      remotes_get_download_status(self, private),
+    async_download_resolution = function(progress_bar = NULL)
+      remotes_async_download_resolution(self, private, progress_bar),
+    download_resolution = function()
+      remotes_download_resolution(self, private),
+    get_resolution_download = function()
+      remotes_get_resolution_download(self, private),
 
-    solve = function(lib = .libPaths()[1])
-      remotes_solve(self, private, lib)
+    solve = function()
+      remotes_solve(self, private),
+    get_solution = function()
+      remotes_get_solution(self, private),
+
+    async_download_solution = function(progress_bar = NULL)
+      remotes_async_download_solution(self, private, progress_bar),
+    download_solution = function()
+      remotes_download_solution(self, private),
+    get_solution_download = function()
+      remotes_get_solution_download(self, private)
   ),
 
   private = list(
+    library = NULL,
     dirty = FALSE,
     remotes = list(),
     resolution = NULL,
+    solution = NULL,
     downloads = NULL,
     download_cache = NULL,
     config = NULL,
@@ -156,9 +168,10 @@ remotes <- R6Class(
 
 #' @importFrom utils modifyList
 
-remotes_init <- function(self, private, specs, config) {
+remotes_init <- function(self, private, specs, config, library) {
   private$remotes <- parse_remotes(specs)
   private$config <- modifyList(remotes_default_config(), config)
+  private$library <- library
   mkdirp(private$download_cache <- private$config$cache_dir)
   private$dirty <- TRUE
   invisible(self)
@@ -175,5 +188,5 @@ remotes_default_config <- function() {
 }
 
 remotes_get_total_files <- function(self, private) {
-  sum(viapply(private$resolution$packages, function(x) length(x$files)))
+  nrow(private$resolution$result)
 }

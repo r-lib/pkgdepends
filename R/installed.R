@@ -1,5 +1,5 @@
 
-resolve_installed <- function(lib = .libPaths()[1]) {
+resolve_installed <- function(lib) {
   inst <- as_tibble(installed.packages(lib.loc = lib, noCache = TRUE))
 
   deps <- lapply(

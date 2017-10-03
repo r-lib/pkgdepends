@@ -47,7 +47,7 @@ remotes_solve <- function(self, private) {
 #' @param pkgs Resolution data frame, that contains the locally installed
 #'   packages as well.
 #' @return An S3 object for a linear (integer) optimization problem,
-#'   to be used with [lpsolve::lp()] (eventually).
+#'   to be used with [lpSolve::lp()] (eventually).
 #'
 #' @keywords internal
 

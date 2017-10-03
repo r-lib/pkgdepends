@@ -32,25 +32,27 @@ local({
 
   resolve_remote.remote_ref_installed <<- function(remote, config, ...,
                                                    cache) {
-    descr <- withr::with_libpaths(
+    dsc <- withr::with_libpaths(
       remote$library,
       desc(package = remote$package)
     )
 
     deps <- resolve_ref_deps(
-      descr$get_deps(), descr$get("Remotes"), config$dependencies)
+      dsc$get_deps(), dsc$get("Remotes")[[1]], config$dependencies)
 
     files <- list(
       source = character(),
       target = NA_character_,
-      platform = descr$get_built()$Platform %|z|% "*",
-      rversion = get_minor_r_version(descr$get_built()$R),
+      platform = dsc$get_built()$Platform %|z|% "*",
+      rversion = get_minor_r_version(dsc$get_built()$R),
       dir = NA_character_,
-      package = descr$get("Package"),
-      version = descr$get("Version"),
+      package = dsc$get("Package")[[1]],
+      version = dsc$get("Version")[[1]],
       deps = deps,
       status = "OK"
     )
+
+    remote$description <- dsc
 
     structure(
       list(files = list(files), remote = remote, status = "OK"),

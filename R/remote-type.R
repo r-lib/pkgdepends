@@ -16,3 +16,10 @@ download_remote <- function(resolution, config, ...)
 
 download_remote.default <- function(resolution, config, ...)
   stop("Unknown or incomplete remote type, no `download_remote` method")
+
+satisfies_remote <- function(resolution, installed_description, config, ...)
+  UseMethod("satisfies_remote")
+
+satisfies_remote.default <- function(resolution, candidate, config, ...) {
+  FALSE
+}

@@ -8,6 +8,8 @@ parse_remote.remote_specs_cran <- NULL
 resolve_remote.remote_ref_cran <- NULL
 #' @export
 download_remote.remote_resolution_cran <- NULL
+#' @export
+satisfies_remote.remote_resolution_cran <- NULL
 
 #' @importFrom rematch2 re_match
 #' @importFrom stats na.omit
@@ -51,6 +53,8 @@ local({
     })
   }
 
+  ## ----------------------------------------------------------------------
+
   download_remote.remote_resolution_cran <<- function(resolution, config,
                                                       ..., cache) {
     ref <- resolution$remote$ref
@@ -78,6 +82,38 @@ local({
         })
     })
   }
+
+  ## ----------------------------------------------------------------------
+
+  satisfies_remote.remote_resolution_cran <<-
+    function(resolution, candidate, config, ...) {
+      rrem <- resolution$remote
+      crem <- candidate$remote
+      if (rrem$ref == crem$ref) return(TRUE)
+      if (crem$type == "installed") {
+        dsc <- crem$description
+        if (! identical(dsc$get("Repository")[[1]], "CRAN")) return(FALSE)
+        if (dsc$get("Package") != rrem$package) return(FALSE)
+        if (rrem$version == "") return(TRUE)
+        version_satisfies(
+          dsc$get("Version"),
+          rrem$atleast,
+          rrem$version
+        )
+
+      } else if (crem$type == "cran") {
+        if (crem$package != rrem$remote$package) return(FALSE)
+        if (rrem$version == "") return(TRUE)
+        version_satisfies(
+          dsc$get("Version"),
+          rrem$remote$atleast,
+          rrem$remote$version
+        )
+
+      } else {
+        FALSE
+      }
+    }
 
   ## ----------------------------------------------------------------------
   ## Internal functions

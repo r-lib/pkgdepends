@@ -8,8 +8,8 @@ remotes_solve <- function(self, private) {
 
   pkgs <- self$get_resolution()
 
-  prb <- create_lp_problem(pkgs)
-  sol <- solve_lp_problem(prb)
+  prb <- private$create_lp_problem(pkgs)
+  sol <- private$solve_lp_problem(prb)
 
   packages <- private$subset_resolution(as.logical(sol$solution))
   private$solution <- list(
@@ -51,7 +51,7 @@ remotes_solve <- function(self, private) {
 #'
 #' @keywords internal
 
-create_lp_problem <- function(pkgs) {
+remotes__create_lp_problem <- function(self, private, pkgs) {
   num <- nrow(pkgs)
   lp <- list(num = num, conds = list())
 
@@ -90,11 +90,17 @@ create_lp_problem <- function(pkgs) {
 
   ## 3. If the ref of a package is directly specified, the package must
   ## satisfy the ref.
-  ## This is a TODO
   directs <- function(wh) {
-    pkgname <- pkgs$package[wh]
-    others <- which(pkgs$package == pkgname)
-    ## TODO
+    pkgname <- pkgs$package[[wh]]
+    remote <- pkgs$remote[[wh]]
+    res <- private$resolution$packages[[ pkgs$res_id[wh] ]]
+    others <- setdiff(which(pkgs$package == pkgname), wh)
+    for (o in others) {
+      res2 <- private$resolution$packages[[  pkgs$res_id[o] ]]
+      if (! isTRUE(satisfies_remote(res, res2))) {
+        cond(wh, o)
+      }
+    }
   }
   lapply(which(vlapply(pkgs$direct, isTRUE)), directs)
 
@@ -103,7 +109,7 @@ create_lp_problem <- function(pkgs) {
 
 #' @importFrom lpSolve lp
 
-solve_lp_problem <- function(problem) {
+remotes__solve_lp_problem <- function(self, private, problem) {
   condmat <- matrix(0, nrow = length(problem$conds), ncol = problem$num)
   for (i in seq_along(problem$conds)) {
     cond <- problem$conds[[i]]

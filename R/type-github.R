@@ -8,6 +8,8 @@ parse_remote.remote_specs_github <- NULL
 resolve_remote.remote_ref_github <- NULL
 #' @export
 download_remote.remote_resolution_github <- NULL
+#' @export
+satisfies_remote.remote_resolution_github <- NULL
 
 #' @importFrom rematch2 re_match
 #' @importFrom jsonlite fromJSON
@@ -15,6 +17,8 @@ download_remote.remote_resolution_github <- NULL
 #' @importFrom glue glue
 
 local({
+
+  ## ----------------------------------------------------------------------
 
   parse_remote.remote_specs_github <<- function(specs, config, ...) {
 
@@ -30,6 +34,8 @@ local({
       function(i) as.list(pds[i,])
     )
   }
+
+  ## ----------------------------------------------------------------------
 
   resolve_remote.remote_ref_github <<- function(remote, config, ...,
                                                 cache) {
@@ -57,12 +63,17 @@ local({
           deps = deps,
           status = "OK"
         )
+
+        remote$sha <- sha
+
         structure(
           list(files = list(files), remote = remote, status = "OK"),
           class = c("remote_resolution_github", "remote_resolution")
         )
       })
   }
+
+  ## ----------------------------------------------------------------------
 
   download_remote.remote_resolution_github <<- function(resolution, config,
                                                        ..., cache) {
@@ -109,7 +120,54 @@ local({
     }
   }
 
-### -----------------------------------------------------------------------
+  ## ----------------------------------------------------------------------
+
+  satisfies_remote.remote_resolution_github <<-
+    function(resolution, candidate, config, ...) {
+      rrem <- resolution$remote
+      crem <- candidate$remote
+      if (crem$type == "installed") {
+        dsc <- crem$description
+        ## If SHA is the same, then they are the same
+        if (identical(rrem$sha, dsc$get("RemoteSha")[[1]])) return(TRUE)
+        ## Otherwise type, username and repo must match
+        if (! identical(dsc$get("RemoteType")[[1]], "github")) return(FALSE)
+        if (! identical(dsc$get("RemoteUsername")[[1]], rrem$username)) {
+          return(FALSE)
+        }
+        if (! identical(dsc$get("RemoteRepo")[[1]], rrem$repo)) {
+          return(FALSE)
+        }
+        ## If branch matches as well, we are good. Otherwise not.
+        ## If HEAD is specified, then the SHA must match as well
+        ccomm <- dsc$get("RemoteRef")
+        rcomm <- rrem$commitish
+        if (ccomm == rcomm && ccomm != "HEAD") return(TRUE)
+        if (ccomm == "master" && rcomm == "") return(TRUE)
+        FALSE
+
+      } else if (crem$type == "github") {
+        ## If SHA is the same, then they are the same
+        if (identical(rrem$sha, crem$sha)) return(TRUE)
+        ## Otherwise username and repo must match
+        if (! identical(crem$username, rrem$username)) return(FALSE)
+        if (! identical(crem$repo, rrem$repo)) return(FALSE)
+        ## If branch matches as well, we are good. Otherwise not.
+        ## If HEAD is specified, then the SHA must match as well
+        ccomm <- crem$commitish
+        rcomm <- rrem$commitish
+        if (ccomm == rcomm && ccomm != "HEAD") return(TRUE)
+        if (ccomm == "master" && rcomm == "") return(TRUE)
+        if (ccomm == "" && rcomm == "master") return(TRUE)
+        FALSE
+
+      } else {
+        FALSE
+      }
+    }
+
+  ## ----------------------------------------------------------------------
+  ## Internal functions
 
   get_github_headers <- function() {
     headers <- c("Accept" = "application/vnd.github.v3+json")

@@ -127,3 +127,16 @@ remotes_get_solution <- function(self, private) {
   }
   private$solution$result
 }
+
+remotes_install_plan <- function(self, private) {
+  sol <- self$get_solution()
+  deps <- lapply(sol$dependencies, "[[", "package")
+  tibble::tibble(
+    package = sol$package,
+    type = sol$type,
+    version = sol$version,
+    file = sol$fulltarget,
+    binary = sol$platform != "source",
+    dependencies = I(deps)
+  )
+}

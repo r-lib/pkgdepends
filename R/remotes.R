@@ -132,6 +132,8 @@ remotes <- R6Class(
       remotes_solve(self, private),
     get_solution = function()
       remotes_get_solution(self, private),
+    get_install_plan = function()
+      remotes_install_plan(self, private),
 
     async_download_solution = function(progress_bar = NULL)
       remotes_async_download_solution(self, private, progress_bar),

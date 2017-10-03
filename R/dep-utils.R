@@ -58,3 +58,14 @@ get_cran_deps <- function(package, version, data, dependencies) {
   ## TODO: Bioc? Additional repositories?
   res
 }
+
+resolve_ref_deps <- function(deps, remotes, dependencies) {
+
+  deps <- deps_from_desc(deps, dependencies, last = FALSE)
+  remotes <- str_trim(na.omit(remotes))
+  remotes_packages <- vcapply(parse_remotes(remotes), "[[", "package")
+  keep <- which(remotes_packages %in% deps$package)
+  deps$ref[match(remotes_packages[keep], deps$package)] <-
+    remotes[keep]
+  deps
+}

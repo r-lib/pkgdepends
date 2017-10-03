@@ -25,7 +25,8 @@ The constraints we have:
 \item For each package \eqn{k}, we need exactly one candidate to be
 installed: \eqn{\sum_{i\in k} p_i=1}{sum(p[i], i in k) = 1}.
 \item All dependency versions must be satisfied.
-\item The directly specified remote refs must be installed.
+\item If the ref of a package is directly specified, the package must
+satisfy the ref.
 }
 
 And we want to minimize package downloads and package compilation:

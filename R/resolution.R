@@ -46,7 +46,8 @@ remotes_async_resolve <- function(self, private, progress_bar = NULL) {
     })$
     then(function() private$dirty <- FALSE)$
     then(function() {
-      private$resolution$result <- private$resolution_to_df()
+      private$resolution$result <-
+        private$resolution_to_df(private$resolution$packages)
     })
 
   pool$finish()
@@ -70,11 +71,19 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
   cache <- private$resolution$cache
 
   dres <- resolve_remote(rem, config = private$config, cache = cache)
-
   if (!is_deferred(dres)) dres <- async_constant(dres)
-
   private$resolution$packages[[rem$ref]] <- dres
   pool$add(dres)
+
+  if (!is.null(private$library) &&
+      file.exists(file.path(private$library, rem$package))) {
+    lib <- normalizePath(private$library, winslash = "/",
+                         mustWork = FALSE)
+    ref <- paste0("installed::", lib, "/", rem$package)
+    if (! ref %in% names(private$resolution$packages)) {
+      private$resolve_ref(parse_remotes(ref)[[1]], pool = pool)
+    }
+  }
 
   deps <- dres$then(function(res) {
     deps <- unique(unlist(lapply(res$files, function(x) x$deps$ref)))
@@ -102,30 +111,28 @@ remotes__start_new_resolution <- function(self, private, progress_bar) {
   res
 }
 
-remotes__resolution_to_df <- function(self, private) {
+remotes__resolution_to_df <- function(self, private, resolution) {
   remotes <- private$remotes
-  resolution <- private$resolution
+  errs <- Filter(function(x) x$status != "OK", resolution)
 
-  ress <- resolution$packages
-  errs <- Filter(function(x) x$status != "OK", ress)
-
-  num_files <- viapply(ress, function(x) length(x$files))
+  num_files <- viapply(resolution, function(x) length(x$files))
   remote <- rep(
-    lapply(ress, function(x) x$remote),
+    lapply(resolution, function(x) x$remote),
     num_files
   )
   ref <- rep(
-    vcapply(ress, function(x) x$remote$ref, USE.NAMES = FALSE),
+    vcapply(resolution, function(x) x$remote$ref, USE.NAMES = FALSE),
     num_files
   )
+  res_file <- unlist(lapply(resolution, function(x) seq_along(x$files)))
 
   getf <- function(f) {
-    unlist(lapply(ress, function(x) vcapply(x$files, "[[", f)))
+    unlist(lapply(resolution, function(x) vcapply(x$files, "[[", f)))
   }
 
   getfl <- function(f) {
     I(unlist(
-      lapply(ress, function(x) lapply(x$files, "[[", f)),
+      lapply(resolution, function(x) lapply(x$files, "[[", f)),
       recursive = FALSE
     ))
   }
@@ -135,6 +142,7 @@ remotes__resolution_to_df <- function(self, private) {
 
   res <- tibble::tibble(
     ref        = ref,
+    type       = vcapply(remote, "[[", "type"),
     direct     = ref %in% vcapply(remotes, "[[", "ref"),
     status     = getf("status"),
     package    = getf("package"),
@@ -146,7 +154,9 @@ remotes__resolution_to_df <- function(self, private) {
     target     = getf("target"),
     fulltarget = file.path(private$config$cache_dir, getf("target")),
     dependencies = deps,
-    remote     = remote
+    remote     = remote,
+    res_id     = rep(seq_along(resolution), num_files),
+    res_file   = res_file
   )
   class(res) <- c("remotes_resolution", class(res))
 
@@ -155,4 +165,15 @@ remotes__resolution_to_df <- function(self, private) {
 
 remotes__is_resolving <- function(self, private, ref) {
   ref %in% names(private$resolution$packages)
+}
+
+remotes__subset_resolution <- function(self, private, which) {
+  df <- self$get_resolution()
+  res_id <- df$res_id[which]
+  res_file <- df$res_file[which]
+  lapply(seq_along(res_id), function(i) {
+    r <- private$resolution$packages[[ res_id[i] ]]
+    r$files <- r$files[ res_file[i] ]
+    r
+  })
 }

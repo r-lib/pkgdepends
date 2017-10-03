@@ -19,6 +19,10 @@ first_existing_file <- function(...) {
   }
 }
 
+`%|z|%` <- function(l, r) {
+  if (identical(l, "")) r else l
+}
+
 current_r_platform <- function() {
   if (grepl("^mac", .Platform$pkgType)) {
     "macos"

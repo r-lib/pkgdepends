@@ -6,15 +6,19 @@ remotes_solve <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
-  inst <- resolve_installed(private$library)
-  ress <- self$get_resolution()
-  inst <- inst[inst$package %in% ress$package, ]
-
-  pkgs <- rbind(inst, ress)
+  pkgs <- self$get_resolution()
 
   prb <- create_lp_problem(pkgs)
   sol <- solve_lp_problem(prb)
-  private$solution <- list(package = pkgs, problem = prb, solution = sol)
+
+  packages <- private$subset_resolution(as.logical(sol$solution))
+  private$solution <- list(
+    packages = packages,
+    result = private$resolution_to_df(packages),
+    problem = prb,
+    solution = sol
+  )
+
   self$get_solution()
 }
 
@@ -59,7 +63,7 @@ create_lp_problem <- function(pkgs) {
   ## 4. & 5. coefficients of the objective function, this is very easy
   ## TODO: use rversion as well, for installed and binary packages
   my_platform <- current_r_platform()
-  lp$obj <- ifelse(pkgs$status == "INSTALLED", 0,
+  lp$obj <- ifelse(pkgs$type == "installed", 0,
                    ifelse(pkgs$platform == my_platform, 1, 2))
 
   ## 1. Each package exactly once
@@ -112,5 +116,8 @@ solve_lp_problem <- function(problem) {
 }
 
 remotes_get_solution <- function(self, private) {
-  TODO
+  if (is.null(private$solution$result)) {
+    stop("No solution found, need to call $solve()")
+  }
+  private$solution$result
 }

@@ -148,6 +148,7 @@ remotes <- R6Class(
     resolution = NULL,
     solution = NULL,
     downloads = NULL,
+    solution_downloads = NULL,
     download_cache = NULL,
     config = NULL,
 
@@ -155,14 +156,14 @@ remotes <- R6Class(
       remotes__start_new_resolution(self, private, progress_bar),
     resolve_ref = function(rem, pool)
       remotes__resolve_ref(self, private, rem, pool),
-    resolution_to_df = function()
-      remotes__resolution_to_df(self, private),
+    resolution_to_df = function(resolution)
+      remotes__resolution_to_df(self, private, resolution),
     is_resolving = function(ref)
       remotes__is_resolving(self, private, ref),
     download_res = function(res)
       remotes_download_res(self, private, res),
-    get_total_files = function()
-      remotes_get_total_files(self, private)
+    subset_resolution = function(which)
+      remotes__subset_resolution(self, private, which)
   )
 )
 

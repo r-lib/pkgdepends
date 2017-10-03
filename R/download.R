@@ -1,50 +1,24 @@
 
-remotes_download_resolution <- function(self, private) {
-  remotes_download_internal(self, private, which = TRUE)
-}
-
-remotes_async_download_resolution <- function(self, private) {
-  remotes_async_download_internal(self, private, which = TRUE)
-}
-
-remotes_download_solution <- function(self, private) {
-  TODO
-}
-
-remotes_async_download_solution <- function(self, private) {
-  TODO
-}
-
-remotes_download_internal <- function(self, private, which) {
+setup_download_progress_bar <- function(total) {
   progress_bar <- progress_bar$new(
-    total = private$get_total_files(),
+    total = total,
     format = "  Downloading files     [:current/:total] :elapsedfull"
   )
   progress_bar$tick(0)
-
-  await(remotes_async_download_internal(self, private, which,
-                                        progress_bar = progress_bar))
-
-  progress_msg("Downloading files")
+  progress_bar
 }
 
-remotes_async_download_internal <- function(self, private, which,
-                                            progress_bar) {
+remotes_download_resolution <- function(self, private) {
+  total <- nrow(private$resolution$result)
+  progress_bar <- setup_download_progress_bar(total)
+  await(self$async_download_resolution(progress_bar = progress_bar))
+}
+
+remotes_async_download_resolution <- function(self, private, progress_bar) {
   if (is.null(private$resolution)) self$resolve()
-
   if (private$dirty) stop("Need to resolve, remote list has changed")
-
-  resolution <- self$get_resolution()
-  if (any(resolution$status != "OK")) {
-    stop("Resolution has errors, cannot start downloading")
-  }
-
-  private$resolution$cache$progress_bar <- progress_bar
-
-  dls <- async_map(
-    private$resolution$packages[which],
-    private$download_res
-  )
+  dls <- remotes_async_download_internal(
+    self, private, private$resolution$packages, progress_bar)
 
   dls$then(function(value) {
     private$downloads <- value
@@ -52,7 +26,35 @@ remotes_async_download_internal <- function(self, private, which,
   })
 }
 
+remotes_download_solution <- function(self, private) {
+  total <- nrow(private$solution$result)
+  progress_bar <- setup_download_progress_bar(total)
+  await(self$async_download_solution(progress_bar = progress_bar))
+}
 
+remotes_async_download_solution <- function(self, private, progress_bar) {
+  if (is.null(private$solution)) self$solve()
+  if (private$dirty) stop("Need to resolve, remote list has changed")
+
+  dls <- remotes_async_download_internal(
+    self, private, private$solution$packages, progress_bar)
+
+  dls$then(function(value) {
+    private$solution_downloads <- value
+    self$get_solution_download()
+  })
+}
+
+remotes_async_download_internal <- function(self, private, what,
+                                            progress_bar) {
+  if (any(what$status != "OK")) {
+    stop("Resolution has errors, cannot start downloading")
+  }
+
+  private$resolution$cache$progress_bar <- progress_bar
+
+  async_map(what, private$download_res)
+}
 
 remotes_download_res <- function(self, private, res) {
 
@@ -81,8 +83,18 @@ remotes_download_res <- function(self, private, res) {
 
 remotes_get_resolution_download <- function(self, private) {
   if (is.null(private$downloads)) stop("No downloads")
-  reso <- self$get_resolution()
-  dl <- as.list(private$downloads)
+  remotes_get_download(private$resolution$result, private$downloads)
+}
+
+remotes_get_solution_download <- function(self, private) {
+  if (is.null(private$solution_downloads)) stop("No downloads")
+  remotes_get_download(private$solution$result,
+                       private$solution_downloads)
+}
+
+remotes_get_download <- function(resolution, downloads) {
+  reso <- resolution
+  dl <- downloads
 
   getf <- function(f) unlist(lapply(dl, function(x) lapply(x, "[[", f)))
 
@@ -97,4 +109,5 @@ remotes_get_resolution_download <- function(self, private) {
 
   class(reso) <- c("remotes_downloads", "data.frame")
   reso
+
 }

@@ -40,7 +40,7 @@ local({
     sha <- get_github_commit_sha(remote)
     when_all(desc = desc, sha = sha)$
       then(function(data) {
-        deps <- resolve_ref_github_deps(
+        deps <- resolve_ref_deps(
           data$desc$deps, data$desc$remotes, dependencies)
         files <- list(
           source = glue(
@@ -164,17 +164,6 @@ local({
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
       cdata$object$sha
     })
-  }
-
-  resolve_ref_github_deps <- function(deps, remotes, dependencies) {
-
-    deps <- deps_from_desc(deps, dependencies, last = FALSE)
-    remotes <- str_trim(na.omit(remotes))
-    remotes_packages <- vcapply(parse_remotes(remotes), "[[", "package")
-    keep <- which(remotes_packages %in% deps$package)
-    deps$ref[match(remotes_packages[keep], deps$package)] <-
-      remotes[keep]
-    deps
   }
 
   build_github_package <- function(source, target, subdir) {

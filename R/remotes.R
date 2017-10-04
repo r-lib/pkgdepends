@@ -186,11 +186,12 @@ remotes_init <- function(self, private, specs, config, library) {
 
 remotes_default_config <- function() {
   list(
-    "cache_dir"    = tempfile(),
-    "platforms"    = unique(c(current_r_platform(), "source")),
-    "cran-mirror"  = default_cran_mirror(),
-    "dependencies" = c("Depends", "Imports", "LinkingTo"),
-    "r-versions"   = current_r_version()
+    "cache_dir"          = detect_cache_dir(),
+    "metadata_cache_dir" = detect_metadata_cache_dir(),
+    "platforms"          = unique(c(current_r_platform(), "source")),
+    "cran-mirror"        = default_cran_mirror(),
+    "dependencies"       = c("Depends", "Imports", "LinkingTo"),
+    "r-versions"         = current_r_version()
   )
 }
 

@@ -41,7 +41,7 @@ local({
     if (is.null(cache$crandata)) {
       update_cache(
         cache,
-        rootdir   = config$cache_dir,
+        rootdir   = config$metadata_cache_dir,
         platforms = config$platforms,
         rversions = config$`r-versions`,
         mirror    = config$`cran-mirror`
@@ -64,6 +64,7 @@ local({
       target_file <- file.path(config$cache_dir, files$target)
       mkdirp(target_dir <- dirname(target_file))
       etag_file <- file.path(target_dir, "_cache", basename(target_file))
+      mkdirp(dirname(etag_file))
 
       had_this <- first_existing_file(target_file, target_file)
       download_try_list(urls, target_file, etag_file)$
@@ -151,6 +152,10 @@ local({
       `_archive` = archive,
       .list = defs
     )
+
+    cache$crandata$then(update_metadata_cache_dir(rootdir))
+
+    cache$crandata
   }
 
   resolve_from_cache <- function(remote, config, crancache) {

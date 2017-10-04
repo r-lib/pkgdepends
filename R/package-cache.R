@@ -1,4 +1,51 @@
 
+#' Get package from cache, or download it asynchronously
+#'
+#' Currently, even if we take it from the cache, we check the etag
+#' of the url. TODO: This should change in the future, and we should trust
+#' at least CRAN source packages.
+#'
+#' @param cache `package_cache` instance.
+#' @param urls Character vector, list of candidate urls.
+#' @param target_file Where to save the file.
+#' @return Download status.
+#'
+#' @keywords internal
+#' @importFrom async async_detect
+
+get_package_from <- function(cache, urls, cache_dir, target) {
+  cache ; urls ; cache_dir; target
+  target_file <- file.path(cache_dir, target)
+  mkdirp(target_dir <- dirname(target_file))
+
+  etag_file <- tempfile()
+  for (url in urls) {
+    hit <- cache$copy_to(target_file, url = url)
+    if (nrow(hit) >= 1) {
+      writeLines(hit$etag, etag_file)
+      break
+    }
+  }
+
+  download_try_list(urls, target_file, etag_file)$
+    then(function(status) {
+      if (status == 304) {
+        make_dl_status("Had", files, urls, target_file,
+                       bytes = file.size(target_file))
+      } else {
+        etag <- read_etag(etag_file)
+        cache$add(target_file, path = target, package = NA_character_,
+                  url = urls[1], etag = etag, md5 = NA_character_)
+        make_dl_status("Got", files, urls, target_file,
+                       bytes = file.size(target_file))
+      }
+    })$
+    catch(function(err) {
+      make_dl_status("Failed", files, urls, target_file,
+                     error = err)
+    })
+}
+
 #' A simple package cache
 #'
 #' Fields:
@@ -20,7 +67,7 @@ package_cache <- R6Class(
     initialize = function(path = NULL) {
       assert_that(is_path(path))
       private$path <- path
-      create_empty_db_file(path)
+      create_empty_db_file_if_needed(path)
       invisible(self)
     },
 
@@ -33,9 +80,17 @@ package_cache <- R6Class(
 
     find = function(path = NULL, package = NULL, url = NULL, etag = NULL,
       md5 = NULL) {
+      self$copy_to(NULL, path, package, url, etag, md5)
+    },
+
+    copy_to = function(target, path = NULL, package = NULL, url = NULL,
+      etag = NULL, md5 = NULL) {
       l <- private$lock(exclusive = FALSE)
       on.exit(unlock(l), add = TRUE)
       res <- private$find_locked(path, package, url, etag, md5)
+      if (!is.null(target) && nrow(res) >= 1) {
+        file.copy(res$fullpath[1], target)
+      }
       unlock(l)
       res
     },
@@ -117,10 +172,12 @@ get_lock_file <- function(path) {
   file.path(path, ".db.lock")
 }
 
-create_empty_db_file <- function(path) {
+create_empty_db_file_if_needed <- function(path) {
   mkdirp(path)
 
   dbfile <- get_db_file(path)
+  if (file.exists(dbfile)) return()
+
   lockfile <- get_lock_file(path)
 
   df <- make_empty_db_data_frame()

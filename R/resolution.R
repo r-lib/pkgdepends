@@ -108,6 +108,9 @@ remotes__start_new_resolution <- function(self, private, progress_bar) {
   res$cache$numdeps <- length(private$remotes)
   res$cache$numdeps_done <- 0
 
+  res$cache$package_cache <-
+    package_cache$new(private$config$package_cache_dir)
+
   res
 }
 

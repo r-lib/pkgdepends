@@ -1,7 +1,21 @@
 
 detect_cache_dir <- function() {
-  ## TODO
   tempfile()
+}
+
+detect_package_cache_dir <- function() {
+  tryCatch(
+    get_user_cache_dir()$root,
+    error = function(e) {
+      warning(
+        "Cannot set package cache directory, using temporary directory. (",
+        conditionMessage(e), ")"
+      )
+      tmp <- tempfile()
+      mkdirp(tmp)
+      normalizePath(tmp)
+    }
+  )
 }
 
 detect_metadata_cache_dir <- function() {

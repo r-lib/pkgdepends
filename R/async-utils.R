@@ -17,6 +17,7 @@ download_file <- function(url, target, etag_file = NULL) {
       etag <- parse_headers_list(resp$headers)[["etag"]]
       writeLines(etag, etag_file)
     }
+    resp$status_code
   })
 }
 

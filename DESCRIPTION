@@ -32,7 +32,8 @@ Imports:
     withr
 Suggests:
     covr,
-    testthat
+    testthat,
+    tools
 Remotes:
     r-lib/async,
     r-lib/desc,

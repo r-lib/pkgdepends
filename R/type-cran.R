@@ -60,26 +60,8 @@ local({
     ref <- resolution$remote$ref
 
     async_map(resolution$files, function(files) {
-      urls <- files$source
-      target_file <- file.path(config$cache_dir, files$target)
-      mkdirp(target_dir <- dirname(target_file))
-      etag_file <- file.path(target_dir, "_cache", basename(target_file))
-      mkdirp(dirname(etag_file))
-
-      download_try_list(urls, target_file, etag_file)$
-        then(function(status) {
-          if (status == 304) {
-            make_dl_status("Had", files, urls, target_file,
-                           bytes = file.size(target_file))
-          } else {
-            make_dl_status("Got", files, urls, target_file,
-                           bytes = file.size(target_file))
-          }
-        })$
-        catch(function(err) {
-          make_dl_status("Failed", files, urls, target_file,
-                         error = err$error)
-        })
+      get_package_from(cache$package_cache, files$source,
+                       config$cache_dir, files$target)
     })
   }
 

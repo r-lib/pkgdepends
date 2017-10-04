@@ -94,9 +94,8 @@ local({
     url <- files$source
 
     if (is_valid_package(target_file) || is_valid_package(target_file)) {
-      had_this <- first_existing_file(target_file, target_file)
       status <- make_dl_status("Had", files, files$source, target_file,
-                               bytes = file.size(had_this))
+                               bytes = file.size(target_file))
       async_constant(list(status))
 
     } else if (file.exists(cached_zip)) {

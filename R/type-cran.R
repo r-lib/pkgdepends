@@ -66,7 +66,6 @@ local({
       etag_file <- file.path(target_dir, "_cache", basename(target_file))
       mkdirp(dirname(etag_file))
 
-      had_this <- first_existing_file(target_file, target_file)
       download_try_list(urls, target_file, etag_file)$
         then(function(status) {
           if (status == 304) {

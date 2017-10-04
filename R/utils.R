@@ -3,12 +3,6 @@ repoman_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
-first_existing_file <- function(...) {
-  files <- unlist(list(...))
-  ex <- file.exists(files)
-  if (any(ex)) files[which(ex)[1]] else NULL
-}
-
 `%|NA|%` <- function(l, r) {
   if (identical(l, NA) || identical(l, NA_character_) ||
       identical(l, NA_integer_) || identical(l, NA_real_) ||

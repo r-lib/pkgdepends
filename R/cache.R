@@ -37,9 +37,9 @@ detect_metadata_cache_dir <- function() {
 #' @keywords internal
 
 user_metadata_cache_dir <- function() {
-  cdir <- get_user_metadata_cache_dir()
+  cdir <- get_user_cache_dir()
 
-  tmp <- tempfile()
+  tmp <- file.path(tempfile(), basename(cdir$meta))
   mkdirp(tmp)
   l <- lock(cdir$lock, exclusive = FALSE, timeout = 10000)
   if (is.null(l)) stop("Cannot acquire lock")
@@ -52,7 +52,7 @@ user_metadata_cache_dir <- function() {
 
 #' @importFrom rappdirs user_cache_dir
 
-get_user_metadata_cache_dir <- function() {
+get_user_cache_dir <- function() {
   cdir <- user_cache_dir("R-pkg")
   res <- list(
     root = cdir,
@@ -74,7 +74,7 @@ update_metadata_cache_dir <- function(from) {
 }
 
 update_user_metadata_cache_dir <- function(from) {
-  cdir <- get_user_metadata_cache_dir()
+  cdir <- get_user_cache_dir()
   l <- lock(cdir$lock, exclusive = TRUE, timeout = 10000)
   if (is.null(l)) stop("Cannot acquire lock")
   on.exit(unlock(l))

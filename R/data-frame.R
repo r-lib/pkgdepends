@@ -1,13 +1,4 @@
 
-check_data_frame_columns <- function(df, ...) {
-  cols <- list(...)
-  assert_that(all_named(cols))
-
-  if (any(bad <- ! names(cols) %in% names(df))) {
-    stop("Unknown column(s): ", paste(names(cols)[bad], collapse = ", "))
-  }
-}
-
 find_in_data_frame <- function(df, ...) {
   cols <- list(...)
   idx <- seq_len(nrow(df))
@@ -25,12 +16,12 @@ append_to_data_frame <- function(df, ...) {
   cols <- list(...)
   assert_that(all_named(cols))
 
-  if (any(bad <- ! names(cols) %in% names(df))) {
-    stop("Unknown column(s): ", paste(names(cols)[bad], collapse = ", "))
+  if (length(new <- setdiff(names(cols), names(df)))) {
+    na_col <- rep(NA_character_, nrow(df))
+    df[new] <- replicate(length(new), na_col, simplify = FALSE)
   }
 
-  cols <- ifelse(names(df) %in% names(cols), cols[names(df)], NA_integer_)
-  res <- rbind(df, cols, stringsAsFactors = FALSE)
+  res <- rbind(df, cols[names(df)], stringsAsFactors = FALSE)
   names(res) <- names(df)
   res
 }

@@ -77,16 +77,14 @@ package_cache <- R6Class(
       readRDS(dbfile)
     },
 
-    find = function(path = NULL, package = NULL, url = NULL, etag = NULL,
-      md5 = NULL) {
-      self$copy_to(NULL, path, package, url, etag, md5)
+    find = function(...) {
+      self$copy_to(NULL, ...)
     },
 
-    copy_to = function(target, path = NULL, package = NULL, url = NULL,
-      etag = NULL, md5 = NULL) {
+    copy_to = function(target, ...) {
       l <- private$lock(exclusive = FALSE)
       on.exit(unlock(l), add = TRUE)
-      res <- private$find_locked(path, package, url, etag, md5)
+      res <- private$find_locked(...)
       if (!is.null(target) && nrow(res) >= 1) {
         file.copy(res$fullpath[1], target)
       }
@@ -94,8 +92,7 @@ package_cache <- R6Class(
       res
     },
 
-    add = function(file, path, package = NULL, url = NULL, etag = NULL,
-      md5 = NULL) {
+    add = function(file, path, ...) {
 
       assert_that(is_existing_file(file))
 
@@ -104,32 +101,27 @@ package_cache <- R6Class(
       dbfile <- get_db_file(private$path)
       db <- readRDS(dbfile)
 
-      idx <- find_in_data_frame(db, path = path, package = package,
-                                url = url, etag = etag, md5 = md5)
+      idx <- find_in_data_frame(db, path = path, ...)
       if (length(idx) != 0) stop("Package already exists in cache")
 
       target <- file.path(private$path, path)
       mkdirp(dirname(target))
       file.copy(file, target)
       unlink(file)
-      db <- append_to_data_frame(
-        db, fullpath = target, path = path, package = package, url = url,
-        etag = etag, md5 = md5
-      )
+      db <- append_to_data_frame(db, fullpath = target, path = path, ...)
       saveRDS(db, dbfile)
       unlock(l)
     },
 
-    delete = function(path = NULL, package = NULL, url = NULL,
-      etag = NULL, md5 = NULL) {
+    delete = function(...) {
       l <- private$lock(exclusive = TRUE)
       on.exit(unlock(l), add = TRUE)
       dbfile <- get_db_file(private$path)
 
-      ex <- private$find_locked(path = path)
+      ex <- private$find_locked(...)
       if (nrow(ex) == 0) stop("Package does not exist in cache")
       unlink(file.path(private$path, ex$path))
-      db <- delete_from_data_frame(readRDS(dbfile), path = path)
+      db <- delete_from_data_frame(readRDS(dbfile), ...)
       saveRDS(db, dbfile)
       unlock(l)
     }
@@ -146,15 +138,11 @@ package_cache <- R6Class(
     unlock = function(l) {
       filelock::unlock(l)
     },
-    find_locked = function(path = NULL, package = NULL, url = NULL,
-      etag = NULL, md5 = NULL) {
+    find_locked = function(...) {
       dbfile <- get_db_file(private$path)
       db <- readRDS(dbfile)
 
-      idx <- find_in_data_frame(
-        db, path = path, package = package, url = url, etag = etag,
-        md5 = md5
-      )
+      idx <- find_in_data_frame(db, ...)
       db[idx, ]
     }
   )
@@ -190,10 +178,6 @@ make_empty_db_data_frame <- function() {
   data.frame(
     stringsAsFactors = FALSE,
     fullpath = character(),
-    path     = character(),
-    package  = character(),
-    url      = character(),
-    etag     = character(),
-    md5      = character()
+    path     = character()
   )
 }

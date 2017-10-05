@@ -32,14 +32,15 @@ test_that("add / list / find / delete", {
   expect_equal(unname(tools::md5sum(f2)), md5)
 
   pc$delete(package = "p")
-  expect_equal(
-    pc$list(),
-    make_empty_db_data_frame()
+
+  empty <- data.frame(
+    stringsAsFactors = FALSE,
+    fullpath = character(),  path = character(), package = character(),
+    url = character(), etag = character(), md5 = character()
   )
 
+  expect_equal(pc$list(), empty)
+
   pc$find(package = "p")
-  expect_equal(
-    pc$find(package = "p"),
-    make_empty_db_data_frame()
-  )
+  expect_equal(pc$find(package = "p"), empty)
 })

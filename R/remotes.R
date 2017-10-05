@@ -118,8 +118,6 @@ remotes <- R6Class(
       remotes_resolve(self, private),
     get_resolution = function()
       remotes_get_resolution(self, private),
-    draw_tree = function(pkgs = NULL)
-      remotes_draw_tree(self, private, pkgs),
 
     async_download_resolution = function(progress_bar = NULL)
       remotes_async_download_resolution(self, private, progress_bar),
@@ -134,6 +132,8 @@ remotes <- R6Class(
       remotes_get_solution(self, private),
     get_install_plan = function()
       remotes_install_plan(self, private),
+    draw_tree = function(pkgs = NULL)
+      remotes_draw_tree(self, private, pkgs),
 
     async_download_solution = function(progress_bar = NULL)
       remotes_async_download_solution(self, private, progress_bar),

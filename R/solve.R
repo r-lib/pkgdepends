@@ -135,8 +135,9 @@ remotes_install_plan <- function(self, private) {
     package = sol$package,
     type = sol$type,
     version = sol$version,
-    file = sol$fulltarget,
     binary = sol$platform != "source",
-    dependencies = I(deps)
+    direct = sol$direct,
+    dependencies = I(deps),
+    file = sol$fulltarget
   )
 }

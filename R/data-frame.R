@@ -21,7 +21,8 @@ append_to_data_frame <- function(df, ...) {
     df[new] <- replicate(length(new), na_col, simplify = FALSE)
   }
 
-  res <- rbind(df, cols[names(df)], stringsAsFactors = FALSE)
+  cols <- ifelse(names(df) %in% names(cols), cols[names(df)], NA_integer_)
+  res <- rbind(df, cols, stringsAsFactors = FALSE)
   names(res) <- names(df)
   res
 }

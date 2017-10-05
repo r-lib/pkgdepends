@@ -93,7 +93,7 @@ local({
     subdir <- resolution$remote$subdir
     url <- files$source
 
-    if (is_valid_package(target_file) || is_valid_package(target_file)) {
+    if (is_valid_package(target_file)) {
       status <- make_dl_status("Had", files$source, target_file,
                                bytes = file.size(target_file))
       async_constant(list(status))

@@ -110,10 +110,8 @@ local({
       etag_file   <- file.path(rootdir, dir, "_cache", "etags.yaml")
       mkdirp(dirname(target_file))
       download_if_newer(source_url, target_file, etag_file)$
-      then(function(value) {
-        pkgs <- read.dcf.gz(target_file)
-        saveRDS(pkgs, target_rds)
-        pkgs
+      then(function() {
+        cran_metadata_cache$get(target_file)
       })
     })
 
@@ -124,7 +122,7 @@ local({
       etag_file <- paste0(target_rds, ".etag")
       download_if_newer(source_url, target_rds, etag_file)$
       then(function() {
-        format_archive_rds(readRDS(target_rds))
+        cran_metadata_cache$get(target_rds)
       })
     })
 

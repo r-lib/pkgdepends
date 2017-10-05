@@ -30,7 +30,7 @@ get_package_from <- function(cache, urls, cache_dir, target) {
   download_try_list(urls, target_file, etag_file)$
     then(function(status) {
       if (status == 304) {
-        make_dl_status("Had", files, urls, target_file,
+        make_dl_status("Had", urls, target_file,
                        bytes = file.size(target_file))
       } else {
         etag <- read_etag(etag_file)

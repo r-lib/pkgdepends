@@ -36,13 +36,12 @@ get_package_from <- function(cache, urls, cache_dir, target) {
         etag <- read_etag(etag_file)
         cache$add(target_file, path = target, package = NA_character_,
                   url = urls[1], etag = etag, md5 = NA_character_)
-        make_dl_status("Got", files, urls, target_file,
+        make_dl_status("Got", urls, target_file,
                        bytes = file.size(target_file))
       }
     })$
     catch(function(err) {
-      make_dl_status("Failed", files, urls, target_file,
-                     error = err)
+      make_dl_status("Failed", urls, target_file,  error = err)
     })
 }
 

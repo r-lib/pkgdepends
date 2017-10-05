@@ -65,7 +65,7 @@ local({
   download_remote.remote_resolution_installed <<- function(resolution,
                                                            config, ...,
                                                            cache) {
-    status <- make_dl_status("Had", resolution$files[[1]], "", "",
+    status <- make_dl_status("Had", NA_character_, NA_character_,
                              bytes = NA)
     async_constant(list(status))
   }

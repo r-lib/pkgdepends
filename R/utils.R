@@ -100,8 +100,7 @@ update_named_vector <- function(old, new) {
   old
 }
 
-make_dl_status <- function(status, resolution, url, target, bytes,
-                           error = NULL) {
+make_dl_status <- function(status, url, target, bytes, error = NULL) {
   obj <- list(
     status = status,
     url = url,

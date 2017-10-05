@@ -76,6 +76,7 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
   pool$add(dres)
 
   if (!is.null(private$library) &&
+      !is.null(rem$package) &&
       file.exists(file.path(private$library, rem$package))) {
     lib <- normalizePath(private$library, winslash = "/",
                          mustWork = FALSE)

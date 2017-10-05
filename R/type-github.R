@@ -94,13 +94,13 @@ local({
     url <- files$source
 
     if (is_valid_package(target_file) || is_valid_package(target_file)) {
-      status <- make_dl_status("Had", files, files$source, target_file,
+      status <- make_dl_status("Had", files$source, target_file,
                                bytes = file.size(target_file))
       async_constant(list(status))
 
     } else if (file.exists(cached_zip)) {
       build_github_package(cached_zip, target_file, subdir)
-      status <- make_dl_status("Had", files, url, target_file,
+      status <- make_dl_status("Had", url, target_file,
                                bytes = file.size(target_file))
       async_constant(list(status))
 
@@ -108,12 +108,12 @@ local({
       download_file(url, cached_zip)$
         then(function() {
           build_github_package(cached_zip, target_file, subdir)
-          list(make_dl_status("Got", files, url, target_file,
+          list(make_dl_status("Got", url, target_file,
                               bytes = file.size(target_file)))
         })$
         catch(function(err) {
           error <- if (is.list(err)) err$error %||% err else err
-          list(make_dl_status("Failed", files, url, target_file,
+          list(make_dl_status("Failed", url, target_file,
                               error = error))
         })
     }

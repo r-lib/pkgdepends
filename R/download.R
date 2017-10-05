@@ -107,7 +107,6 @@ remotes_get_download <- function(resolution, downloads) {
   reso$bytes <- getf("bytes")
   reso$errors <- I(errors)
 
-  class(reso) <- c("remotes_downloads", "data.frame")
+  class(reso) <- c("remotes_downloads", class(reso))
   reso
-
 }

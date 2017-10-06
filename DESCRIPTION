@@ -14,7 +14,6 @@ Imports:
     assertthat,
     async,
     boxes,
-    callr,
     clisymbols,
     crayon,
     curl,
@@ -23,6 +22,7 @@ Imports:
     glue,
     jsonlite,
     lpSolve,
+    pkgbuild,
     progress,
     rappdirs,
     rematch2,
@@ -33,6 +33,7 @@ Imports:
     withr
 Suggests:
     covr,
+    mockery,
     testthat,
     tools
 Remotes:
@@ -40,5 +41,6 @@ Remotes:
     r-lib/boxes,
     r-lib/desc,
     r-lib/filelock,
+    r-lib/pkgbuild,
     r-lib/progress
 Encoding: UTF-8

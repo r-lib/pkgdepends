@@ -98,7 +98,7 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
     for (o in others) {
       res2 <- private$resolution$packages[[  pkgs$res_id[o] ]]
       if (! isTRUE(satisfies_remote(res, res2))) {
-        cond(wh, o)
+        cond(c(wh, o))
       }
     }
   }

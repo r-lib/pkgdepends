@@ -10,9 +10,11 @@ read_etag <- function(etag_file) {
 #' @importFrom curl parse_headers_list
 
 download_file <- function(url, target, etag_file = NULL) {
-  force(url) ; force(target) ; force(etag_file)
-  http_get(url)$then(function(resp) {
-    write_bin_atomic(resp$content, target)
+  url; target; etag_file
+  target <- normalizePath(target, mustWork = FALSE)
+  tmp_target <- paste0(target, ".tmp")
+  http_get(url, file = tmp_target)$then(function(resp) {
+    file.rename(tmp_target, target)
     if (!is.null(etag_file)) {
       etag <- parse_headers_list(resp$headers)[["etag"]]
       writeLines(etag, etag_file)
@@ -32,16 +34,20 @@ download_if_newer <- function(url, target, etag_file = NULL) {
     }
   }
 
-  http_get(url, headers = headers)$then(function(resp) {
+  target <- normalizePath(target, mustWork = FALSE)
+  tmp_target <- paste(target, ".tmp")
+
+  http_get(url, file = tmp_target, headers = headers)$then(function(resp) {
     if (resp$status_code == 304) {
       ## Current, nothing to do
     } else if (resp$status_code == 200) {
-      write_bin_atomic(resp$content, target)
+      file.rename(tmp_target, target)
       etag <- parse_headers_list(resp$headers)[["etag"]]
       if (!is.null(etag_file)) writeLines(etag, etag_file)
     } else {
       stop(paste("HTTP error: ", resp$status_code))
     }
+    unlink(tmp_target)
 
     resp
   })
@@ -60,21 +66,25 @@ download_try_list <- function(urls, targets, etag_file = NULL,
     }
   }
 
+  target <- normalizePath(targets[1], mustWork = FALSE)
+  tmp_target <- paste(target, ".tmp")
+
   status_code <- NULL
   error <- NULL
   async_detect(
     urls,
     function(x) {
-      http_get(x, headers = headers)$
+      http_get(x, file = tmp_target, headers = headers)$
         then(function(resp) {
           http_stop_for_status(resp)
           if (resp$status_code == "304") {
             ## Current, nothing to do
           } else {
-            write_bin_atomic(resp$content, targets[1])
+            file.rename(tmp_target, targets[1])
             etag <- parse_headers_list(resp$headers)[["etag"]]
             if (!is.null(etag_file)) writeLines(etag, etag_file)
           }
+          unlink(tmp_target)
           status_code <<- resp$status_code
           TRUE
         })$

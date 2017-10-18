@@ -93,14 +93,15 @@ local({
   download_remote.remote_resolution_local <<- function(resolution, config,
                                                        ..., cache) {
     tryCatch({
-      files <- resolution$files
+      files <- resolution$files[[1]]
       target_file <- file.path(config$cache_dir, files$target)
+      mkdirp(dirname(target_file))
       file.copy(files$source, target_file)
-      async_constant(make_dl_status("Had", files$source, target_file,
-                                    bytes = file.size(target_file)))
+      async_constant(list(make_dl_status("Had", files$source, target_file,
+                                         bytes = file.size(target_file))))
     }, error = function(err) {
-      async_constant(make_dl_status("Failed", files$source, target_file,
-                                    error = err))
+      async_constant(list(make_dl_status("Failed", files$source,
+                                         target_file, error = err)))
     })
   }
 

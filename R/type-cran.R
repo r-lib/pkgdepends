@@ -291,7 +291,7 @@ local({
       }
     })
 
-    res <- as_tibble(do.call(rbind, res), stringsAsFactors = FALSE)
+    res <- as_tibble(do.call(rbind, res), validate = FALSE)
     colnames(res) <- c("platform", "rversion", "contriburl")
     res$prefix <- paste0(
       "/",

@@ -63,7 +63,7 @@ local({
 
       structure(
         list(files = list(files), remote = remote, status = "OK"),
-        class = c("remote_resolution_installed", "remote_resolution")
+        class = c("remote_resolution_local", "remote_resolution")
       )
 
     }, error = function(err) {
@@ -83,7 +83,7 @@ local({
 
       structure(
         list(files = list(files), remote = remote, status = "FAILED"),
-        class = c("remote_resolution_installed", "remote_resolution")
+        class = c("remote_resolution_local", "remote_resolution")
       )
     })
   }

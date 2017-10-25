@@ -54,9 +54,19 @@ get_cran_deps <- function(package, version, data, dependencies) {
   if (is.null(res)) res <- parse_deps("", "")[[1]]
   res$ref <- res$package
   res <- res[, c("ref", setdiff(names(res), "ref"))]
-  
+
   ## TODO: Bioc? Additional repositories?
   res
+}
+
+get_cran_extension <- function(platform) {
+  switch(
+    platform,
+    "source" = ".tar.gz",
+    "macos" = ".tgz",
+    "windows" = ".zip",
+    stop("Unknown platform: ", sQuote(platform))
+  )
 }
 
 resolve_ref_deps <- function(deps, remotes, dependencies) {

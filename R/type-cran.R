@@ -104,15 +104,14 @@ local({
     dirs <- get_all_package_dirs(platforms, rversions)
 
     defs <- lapply_with_names(dirs$contriburl, function(dir) {
-      target_rds  <- file.path(rootdir, dir, "_cache", "PACKAGES.rds")
       target_file <- file.path(rootdir, dir, "_cache", "PACKAGES.gz")
       source_url  <- paste0(mirror, "/", dir, "/PACKAGES.gz")
       etag_file   <- file.path(rootdir, dir, "_cache", "etags.yaml")
       mkdirp(dirname(target_file))
       download_if_newer(source_url, target_file, etag_file)$
-      then(function() {
-        cran_metadata_cache$get(target_file)
-      })
+        then(function() {
+          cran_metadata_cache$get(target_file)
+        })
     })
 
     archive <- local({
@@ -132,6 +131,7 @@ local({
       .list = defs
     )
 
+    ## TODO: this might copy partial files?
     cache$crandata$then(update_metadata_cache_dir(rootdir))
 
     cache$crandata
@@ -263,45 +263,6 @@ local({
       })
   }
 
-  get_all_package_dirs <- function(platforms, rversions) {
-    minors <- unique(get_minor_r_version(rversions))
-    res <- lapply(platforms, function(pl) {
-      if (pl == "source") {
-        cbind("source", "*", "src/contrib")
-
-      } else if (pl == "windows") {
-        cbind("windows", minors, paste0("bin/windows/contrib/", minors))
-
-      } else if (pl == "macos") {
-        res1 <- lapply(minors, function(v) {
-          if (package_version(v) <= "2.15") {
-            cbind("macos", v, paste0("bin/macosx/leopard/contrib/", v))
-          } else if (package_version(v) == "3.0") {
-            cbind("macos", v, paste0("bin/macosx/contrib/", v))
-          } else if (package_version(v) <= "3.2") {
-            cbind("macos", v, paste0(c("bin/macosx/contrib/",
-                                       "bin/macosx/mavericks/contrib/"), v))
-          } else if (package_version(v) == "3.3") {
-            cbind("macos", v, paste0("bin/macosx/mavericks/contrib/", v))
-          } else {
-            cbind("macos", v, paste0("bin/macosx/el-capitan/contrib/", v))
-          }
-        })
-        do.call(rbind, res1)
-      }
-    })
-
-    res <- as_tibble(do.call(rbind, res), validate = FALSE)
-    colnames(res) <- c("platform", "rversion", "contriburl")
-    res$prefix <- paste0(
-      "/",
-      ifelse(res$rversion == "*", "*", paste0("R-", res$rversion)),
-    "/", res$platform, "/"
-    )
-
-    res
-  }
-
   make_cran_resolution <- function(remote, platform, rversion, data, dir,
                                    mirror, dependencies) {
     ref <- remote$ref
@@ -383,16 +344,6 @@ local({
     }
 
     as.character(res)
-  }
-
-  get_cran_extension <- function(platform) {
-    switch(
-      platform,
-      "source" = ".tar.gz",
-      "macos" = ".tgz",
-      "windows" = ".zip",
-      stop("Unknown platform: ", sQuote(platform))
-    )
   }
 
   get_package_deps_url <- function(url, target, dependencies, last = FALSE,

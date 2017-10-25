@@ -4,11 +4,11 @@ package_name_rx <- function() "[[:alpha:]][[:alnum:].]*[[:alnum:]]"
 ## CRAN and GitHub are special, because they have shorthands,
 ## so we need to know their regexes to find the type of the remotes 
 
-cran_rx <- function() {
+cran_rx <- function(remote_name = "cran") {
   paste0(
     "^",
     ## Optional remote type
-    "(?:cran::)?",
+    "(?:", remote_name, "::)?",
     ## Package name, only valid names
     "(?<package>", package_name_rx(), ")",
     ## Package version, only valid version numbers

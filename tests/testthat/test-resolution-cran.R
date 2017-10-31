@@ -11,18 +11,22 @@ test_that("remotes__update_cran_cache", {
 
   update_cache <- environment(parse_remote.remote_specs_cran)$update_cache
 
-  cache <- update_cache(
-    cache_env,
-    cache_dir,
-    platforms = c("source", "macos", "windows"),
-    rversion = "3.4.1",
-    mirror = "https://cran.rstudio.com"
-  )
+  afun <- async(function() {
+    cache <- update_cache(
+      cache_env,
+      cache_dir,
+      platforms = c("source", "macos", "windows"),
+      rversion = "3.4.1",
+      mirror = "https://cran.rstudio.com"
+    )
 
-  expect_true(async::is_deferred(cache))
-  expect_true(async::is_deferred(cache_env$crandata))
+    expect_true(async::is_deferred(cache))
+    expect_true(async::is_deferred(cache_env$crandata))
 
-  cres <- await(cache)
+    cache
+  })
+
+  cres <- synchronise(afun())
 
   expect_true(is.list(cres))
   expect_true("_dirs" %in% names(cres))

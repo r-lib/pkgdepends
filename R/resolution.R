@@ -10,7 +10,7 @@ remotes_resolve <- function(self, private) {
   )
   progress_bar$tick(0, tokens = list(deps = 0, deptot = 0))
 
-  res <- await(self$async_resolve(progress_bar = progress_bar))
+  res <- synchronise(self$async_resolve(progress_bar = progress_bar))
 
   progress_msg("Resolving dependencies")
 

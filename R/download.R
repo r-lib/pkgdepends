@@ -11,7 +11,7 @@ setup_download_progress_bar <- function(total) {
 remotes_download_resolution <- function(self, private) {
   total <- nrow(private$resolution$result)
   progress_bar <- setup_download_progress_bar(total)
-  await(self$async_download_resolution(progress_bar = progress_bar))
+  synchronise(self$async_download_resolution(progress_bar = progress_bar))
 }
 
 remotes_async_download_resolution <- function(self, private, progress_bar) {
@@ -29,7 +29,7 @@ remotes_async_download_resolution <- function(self, private, progress_bar) {
 remotes_download_solution <- function(self, private) {
   total <- nrow(private$solution$result)
   progress_bar <- setup_download_progress_bar(total)
-  await(self$async_download_solution(progress_bar = progress_bar))
+  synchronise(self$async_download_solution(progress_bar = progress_bar))
 }
 
 remotes_async_download_solution <- function(self, private, progress_bar) {

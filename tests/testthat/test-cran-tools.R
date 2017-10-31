@@ -126,7 +126,7 @@ test_that("get_package_deps_url", {
   url <- "https://cran.rstudio.com/src/contrib/Archive/dplyr/dplyr_0.2.tar.gz"
   dir.create(dir <- tempfile())
   target <- file.path(dir, basename(url))
-  obj <- async::await(get_package_deps_url(
+  obj <- async::synchronise(get_package_deps_url(
     url = url,
     target = target,
     dependencies = c("Imports", "LinkingTo")

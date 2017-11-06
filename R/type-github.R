@@ -189,7 +189,7 @@ local({
   get_github_commit_url <- function(rem) {
     glue(
       "https://api.github.com/repos/{rem$username}/{rem$repo}",
-      "/git/refs/heads/{commitish}",
+      "/commits/{commitish}",
       commitish = if (nzchar(rem$commitish)) rem$commitish else "master"
     )
   }
@@ -219,7 +219,7 @@ local({
     http_get(commit_url, headers = get_github_headers())$
     then(function(resp) {
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-      cdata$object$sha
+      cdata$sha
     })
   }
 

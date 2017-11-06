@@ -73,13 +73,15 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
   ## We check the dependencies of each package candidate, and rule out
   ## unallowed combinations
   depconds <- function(wh) {
+    if (pkgs$status[wh] != "OK") return()
     deps <- pkgs$dependencies[[wh]]
     deps <- deps[deps$version != "", ]
     for (i in seq_len(nrow(deps))) {
       deppkg <- deps$package[i]
       confl_pkgs <- which(pkgs$package == deppkg)
       for (co in confl_pkgs) {
-        if (! version_satisfies(pkgs$version[co], deps$op[i],
+        if (pkgs$status[co] == "OK" &&
+            ! version_satisfies(pkgs$version[co], deps$op[i],
                                 deps$version[i])) {
           cond(c(wh, co))
         }
@@ -103,6 +105,13 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
     }
   }
   lapply(which(vlapply(pkgs$direct, isTRUE)), directs)
+
+  ## 6. Can't install failed resolutions
+  failedconds <- function(wh) {
+    if (pkgs$status[wh] != "FAILED") return()
+    cond(wh, op = "==", rhs = 0)
+  }
+  lapply(seq_len(num), failedconds)
 
   lp
 }

@@ -9,10 +9,8 @@ test_that("remotes__update_cran_cache", {
   on.exit(unlink(cache_dir, recursive = TRUE), add = TRUE)
   cache_env <- new.env(parent = emptyenv())
 
-  update_cache <- environment(parse_remote.remote_specs_cran)$update_cache
-
   afun <- async(function() {
-    cache <- update_cache(
+    cache <- type_cran_update_cache(
       cache_env,
       cache_dir,
       platforms = c("source", "macos", "windows"),
@@ -41,10 +39,8 @@ test_that("remotes__update_cran_cache", {
   expect_true(any(grepl("3.4", names(cres), fixed = TRUE)))
 })
 
-test_that("make_cran_resolution", {
-  make_cran_resolution <-
-    environment(parse_remote.remote_specs_cran)$make_cran_resolution
-  res <- make_cran_resolution(
+test_that("type_cran_make_resolution", {
+  res <- type_cran_make_resolution(
     remote = parse_remotes("ggplot2")[[1]],
     platform = "source",
     rversion = "3.4",

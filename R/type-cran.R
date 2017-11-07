@@ -27,8 +27,7 @@ parse_remote.remote_specs_cran <- function(specs, config, ...) {
 resolve_remote.remote_ref_cran <- function(remote, config, ..., cache) {
   force(remote)
   if (is.null(cache$crandata)) {
-    type_cran_update_cache(
-      cache,
+    cache$crandata <- type_cran_update_cache(
       rootdir   = config$metadata_cache_dir,
       platforms = config$platforms,
       rversions = config$`r-versions`,
@@ -88,8 +87,7 @@ satisfies_remote.remote_resolution_cran <- function(resolution, candidate,
 ## ----------------------------------------------------------------------
 ## Internal functions
 
-type_cran_update_cache <- function(cache, rootdir, platforms, rversions,
-                                   mirror) {
+type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
   dirs <- get_all_package_dirs(platforms, rversions)
 
   defs <- lapply_with_names(dirs$contriburl, function(dir) {
@@ -115,16 +113,16 @@ type_cran_update_cache <- function(cache, rootdir, platforms, rversions,
       })
   })
 
-  cache$crandata <- when_all(
+  cran_cache <- when_all(
     `_dirs` = dirs,
     `_archive` = archive,
     .list = defs
   )
 
   ## TODO: this might copy partial files?
-  cache$crandata$then(update_metadata_cache_dir(rootdir))
+  cran_cache$then(update_metadata_cache_dir(rootdir))
 
-  cache$crandata
+  cran_cache
 }
 
 type_cran_resolve_from_cache <- function(remote, config, crancache) {

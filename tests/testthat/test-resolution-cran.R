@@ -7,11 +7,9 @@ test_that("remotes__update_cran_cache", {
 
   dir.create(cache_dir <- tempfile())
   on.exit(unlink(cache_dir, recursive = TRUE), add = TRUE)
-  cache_env <- new.env(parent = emptyenv())
 
   afun <- async(function() {
     cache <- type_cran_update_cache(
-      cache_env,
       cache_dir,
       platforms = c("source", "macos", "windows"),
       rversion = "3.4.1",
@@ -19,7 +17,6 @@ test_that("remotes__update_cran_cache", {
     )
 
     expect_true(async::is_deferred(cache))
-    expect_true(async::is_deferred(cache_env$crandata))
 
     cache
   })

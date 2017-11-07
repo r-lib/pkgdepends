@@ -32,33 +32,9 @@ resolve_remote.remote_ref_github <- function(remote, config, ...,
   ## Get the DESCRIPTION data, and the SHA we need
   desc <- type_github_get_github_description_data(remote)
   sha <- type_github_get_github_commit_sha(remote)
-  when_all(desc = desc, sha = sha)$
-    then(function(data) {
-      deps <- resolve_ref_deps(
-        data$desc$deps, data$desc$remotes, dependencies)
-      files <- list(
-        source = glue(
-          "https://api.github.com/repos/{remote$username}/{remote$repo}",
-          "/zipball/{data$sha}"),
-        target = glue(
-          "src/contrib/{data$desc$package}_{data$desc$version}",
-          "_{data$sha}.tar.gz"),
-        platform = "source",
-        rversion = "*",
-        dir = "src/contrib",
-        package = data$desc$package,
-        version = data$desc$version,
-        deps = deps,
-        status = "OK"
-      )
-
-    remote$sha <- sha
-
-    structure(
-      list(files = list(files), remote = remote, status = "OK"),
-      class = c("remote_resolution_github", "remote_resolution")
-    )
-  })
+  when_all(desc = desc, sha = sha, remote = remote,
+           dependencies = dependencies)$
+    then(type_github_make_resolution)
 }
 
 #' @export
@@ -194,22 +170,38 @@ type_github_get_github_description_data <- function(rem) {
       dsc <- desc(tmp)
       gx <- function(e) unname(str_trim(dsc$get(e)))
       list(
+        error   = NULL,
         package = gx("Package"),
         version = gx("Version"),
         remotes = gx("Remotes"),
         deps = dsc$get_deps()
+      )
+    })$
+    catch(function(err) {
+      list(
+        error   = err,
+        package = NA_character_,
+        version = NA_character_,
+        remotes = NA_character_,
+        deps    = NA_character_
       )
     })
 }
 
 ## Returns a deferred value
 
+#' @importFrom async http_stop_for_status
+
 type_github_get_github_commit_sha <- function(rem) {
   commit_url <- type_github_get_github_commit_url(rem)
   http_get(commit_url, headers = type_github_get_github_headers())$
+    then(http_stop_for_status)$
     then(function(resp) {
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-      cdata$sha
+      list(error = NULL, sha = cdata$object$sha)
+    })$
+    catch(function(err) {
+      list(error = err, sha = NA_character_)
     })
 }
 
@@ -224,4 +216,41 @@ type_github_build_github_package <- function(source, target, subdir) {
   pkgfile <- build_package(pkgdir)
 
   file.copy(pkgfile, target)
+}
+
+type_github_make_resolution <- function(data) {
+
+  deps <- if (is.null(data$error)) {
+    resolve_ref_deps(
+      data$desc$deps, data$desc$remotes, data$dependencies)
+  } else {
+    NA_character_
+  }
+
+  sha <- data$sha$sha
+  username <- data$remote$username
+  repo <- data$remote$repo
+  package <- data$desc$package
+  version <- data$desc$version
+
+  files <- list(
+    source = glue(
+      "https://api.github.com/repos/{username}/{repo}/zipball/{sha}"),
+    target = glue("src/contrib/{package}_{version}_{sha}.tar.gz"),
+    platform = "source",
+    rversion = "*",
+    dir = "src/contrib",
+    package = package,
+    version = version,
+    deps = deps,
+    status = if (!is.null(data$error)) "OK" else "FAILED",
+    error = data$error
+  )
+
+  data$remote$sha <- sha
+
+  structure(
+    list(files = list(files), remote = data$remote, status = files$status),
+    class = c("remote_resolution_github", "remote_resolution")
+  )
 }

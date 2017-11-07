@@ -34,7 +34,12 @@ resolve_remote.remote_ref_bioc <- function(remote, config, ..., cache) {
 
 download_remote.remote_resolution_bioc <- function(resolution, config,
                                                    ..., cache) {
-  ## TODO
+  ref <- resolution$remote$ref
+
+  async_map(resolution$files, function(files) {
+    get_package_from(cache$package_cache, files$source,
+                     config$cache_dir, files$target)
+  })
 }
 
 #' @export

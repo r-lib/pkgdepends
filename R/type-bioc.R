@@ -24,8 +24,7 @@ parse_remote.remote_specs_bioc <- function(specs, config, ...) {
 resolve_remote.remote_ref_bioc <- function(remote, config, ..., cache) {
   force(remote)
   if (is.null(cache$biocdata)) {
-    type_bioc_update_cache(
-      cache,
+    cache$biocdata <- type_bioc_update_cache(
       rootdir   = config$metadata_cache_dir,
       platforms = config$platforms,
       rversions = config$`r-versions`
@@ -85,7 +84,7 @@ type_bioc_get_bioc_repos <- function(r_version) {
   vcapply(tmpl, glue_data, .x = list(bv = bv))
 }
 
-type_bioc_update_cache <- function(cache, rootdir, platforms, rversions) {
+type_bioc_update_cache <- function(rootdir, platforms, rversions) {
   cache; rootdir
   dirs <- get_all_package_dirs(platforms, rversions)
 
@@ -111,16 +110,16 @@ type_bioc_update_cache <- function(cache, rootdir, platforms, rversions) {
     })
   })
 
-  cache$biocdata <- when_all(
+  biocdata <- when_all(
     `_dirs` = dirs,
     `_repos` = bioc_repos,
     .list = defs
   )
 
   ## TODO: this might copy partial files?
-  cache$biocdata$then(update_metadata_cache_dir(rootdir))
+  biocdata$then(update_metadata_cache_dir(rootdir))
 
-  cache$biocdata
+  biocdata
 }
 
 type_bioc_resolve_from_cache <- function(remote, config, bioccache) {

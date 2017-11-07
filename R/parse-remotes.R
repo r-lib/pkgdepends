@@ -4,7 +4,7 @@ package_name_rx <- function() "[[:alpha:]][[:alnum:].]*[[:alnum:]]"
 ## CRAN and GitHub are special, because they have shorthands,
 ## so we need to know their regexes to find the type of the remotes 
 
-cran_rx <- function(remote_name = "cran") {
+standard_rx <- function(remote_name = "standard") {
   paste0(
     "^",
     ## Optional remote type
@@ -63,7 +63,7 @@ get_remote_types <- function(specs) {
   m <- re_match(specs, remote_type_rx)
   types <- m$type
 
-  types[types == "" & grepl(cran_rx(), specs, perl = TRUE)] <- "cran"
+  types[types == "" & grepl(standard_rx(), specs, perl = TRUE)] <- "standard"
   types[types == "" & grepl(github_rx(), specs, perl = TRUE)] <- "github"
 
   if (any(bad <- types == "")) {

@@ -10,7 +10,7 @@
 
 parse_remote.remote_specs_cran <- function(specs, config, ...) {
 
-  parsed_specs <- re_match(specs, cran_rx())
+  parsed_specs <- re_match(specs, standard_rx("cran"))
 
   parsed_specs$ref <- parsed_specs$.text
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
@@ -26,14 +26,7 @@ parse_remote.remote_specs_cran <- function(specs, config, ...) {
 
 resolve_remote.remote_ref_cran <- function(remote, config, ..., cache) {
   force(remote)
-  if (is.null(cache$crandata)) {
-    cache$crandata <- type_cran_update_cache(
-      rootdir   = config$metadata_cache_dir,
-      platforms = config$platforms,
-      rversions = config$`r-versions`,
-      mirror    = config$`cran-mirror`
-    )
-  }
+  cache$crandata <- cache$crandata %||% update_crandata_cache(config)
 
   cache$crandata$then(function(cacheresult) {
     type_cran_resolve_from_cache(remote, config, cacheresult)

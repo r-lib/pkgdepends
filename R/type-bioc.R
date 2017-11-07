@@ -8,7 +8,7 @@
 parse_remote.remote_specs_bioc <- function(specs, config, ...) {
 
   ## BioC is the same as CRAN, except for cran:: -> bioc::
-  parsed_specs <- re_match(specs, cran_rx("bioc"))
+  parsed_specs <- re_match(specs, standard_rx("bioc"))
   parsed_specs$ref <- parsed_specs$.text
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
   parsed_specs <- parsed_specs[, cn]
@@ -23,13 +23,7 @@ parse_remote.remote_specs_bioc <- function(specs, config, ...) {
 
 resolve_remote.remote_ref_bioc <- function(remote, config, ..., cache) {
   force(remote)
-  if (is.null(cache$biocdata)) {
-    cache$biocdata <- type_bioc_update_cache(
-      rootdir   = config$metadata_cache_dir,
-      platforms = config$platforms,
-      rversions = config$`r-versions`
-    )
-  }
+  cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
 
   cache$biocdata$then(function(cacheresult) {
     type_bioc_resolve_from_cache(remote, config, cacheresult)
@@ -85,7 +79,8 @@ type_bioc_get_bioc_repos <- function(r_version) {
 }
 
 type_bioc_update_cache <- function(rootdir, platforms, rversions) {
-  cache; rootdir
+  rootdir; platforms; rversions
+
   dirs <- get_all_package_dirs(platforms, rversions)
 
   bioc_repos <- lapply_with_names(rversions, type_bioc_get_bioc_repos)
@@ -185,7 +180,7 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion, data,
   which_repo <- vlapply(data, function(d) package %in% d[, "Package"])
   if (sum(which_repo) == 0) {
     result$status <- "FAILED"
-    retturn(result)
+    return(result)
   } else if (sum(which_repo) > 1) {
     warning("Package '", package, "' in multiple repositories")
   }

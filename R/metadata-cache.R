@@ -46,3 +46,20 @@ CRANMetadataCache <- R6Class(
     }
   )
 )
+
+update_crandata_cache <- function(config) {
+  type_cran_update_cache(
+    rootdir   = config$metadata_cache_dir,
+    platforms = config$platforms,
+    rversions = config$`r-versions`,
+    mirror    = config$`cran-mirror`
+  )
+}
+
+update_biocdata_cache <- function(config) {
+  type_bioc_update_cache(
+    rootdir   = config$metadata_cache_dir,
+    platforms = config$platforms,
+    rversions = config$`r-versions`
+  )
+}

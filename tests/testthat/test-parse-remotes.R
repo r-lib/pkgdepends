@@ -1,7 +1,7 @@
 
 context("parse_remotes")
 
-test_that("parse_remotes, cran", {
+test_that("parse_remotes, standard", {
 
   cases <- list(
     list("pkg",
@@ -12,6 +12,30 @@ test_that("parse_remotes, cran", {
          list(package = "pkg", atleast = ">=", version = "2.9")),
     list("pkg@last",
          list(package = "pkg", atleast = "", version = "last")),
+    list("standard::pkg",
+         list(package = "pkg", atleast = "", version = "")),
+    list("standard::pkg@0.1-2",
+         list(package = "pkg", atleast = "", version = "0.1-2"))
+  )
+
+  expect_equal(
+    get_remote_types(vcapply(cases, "[[", 1)),
+    rep("standard", length(cases))
+  )
+
+  for (case in cases) {
+    expect_equal_named_lists(
+      p <- parse_remotes(case[[1]])[[1]],
+      c(case[[2]], ref = case[[1]], type = "standard")
+    )
+    expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
+  }
+
+})
+
+test_that("parse_remotes, cran", {
+
+  cases <- list(
     list("cran::pkg",
          list(package = "pkg", atleast = "", version = "")),
     list("cran::pkg@0.1-2",

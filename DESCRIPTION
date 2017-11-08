@@ -13,7 +13,7 @@ Roxygen: list(markdown = TRUE)
 Imports:
     assertthat,
     async,
-    boxes,
+    cli,
     clisymbols,
     crayon,
     curl,
@@ -38,7 +38,6 @@ Suggests:
     tools
 Remotes:
     r-lib/async,
-    r-lib/boxes,
     r-lib/desc,
     r-lib/filelock,
     r-lib/pkgbuild,

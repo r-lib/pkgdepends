@@ -1,6 +1,6 @@
 
 #' @importFrom crayon italic bold cyan silver bgRed white
-#' @importFrom boxes tree
+#' @importFrom cli tree
 
 remotes_draw_tree <- function(self, private, pkgs) {
 

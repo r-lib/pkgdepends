@@ -46,7 +46,28 @@ download_remote.remote_resolution_bioc <- function(resolution, config,
 
 satisfies_remote.remote_resolution_bioc <-
   function(resolution, candidate, config, ...) {
-    ## TODO
+    rrem <- resolution$remote
+    crem <- candidate$remote
+    if (rrem$ref == crem$ref) return(TRUE)
+    if (crem$type == "installed") {
+      dsc <- crem$description
+      if (is.na(dsc$get("biocViews"))) return(FALSE)
+      if (dsc$get("Package") != rrem$package) return(FALSE)
+      if (rrem$version == "") return(TRUE)
+      version_satisfies(dsc$get("Version"), rrem$atleast, rrem$version)
+
+    } else if (crem$type == "bioc") {
+      if (crem$package != rrem$remote$package) return(FALSE)
+      if (rrem$version == "") return(TRUE)
+      version_satisfies(
+        dsc$get("Version"),
+        rrem$remote$atleast,
+        rrem$remote$version
+      )
+
+    } else {
+      FALSE
+    }
   }
 
 ## ----------------------------------------------------------------------

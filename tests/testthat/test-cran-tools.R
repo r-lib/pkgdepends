@@ -1,16 +1,13 @@
 
 context("cran utility functions")
 
-test_that("fix_cran_version", {
-
-  fix_cran_version <-
-    environment(parse_remote.remote_specs_cran)$fix_cran_version
+test_that("type_cran_fix_cran_version", {
 
   packages <- readRDS("fixtures/resolve-cran-version-packages.rds")
   archive <- readRDS("fixtures/resolve-cran-version-archive.rds")
 
   fix <- function(package, version, ge = "") {
-    fix_cran_version(package, version, ge, packages, archive)
+    type_cran_fix_cran_version(package, version, ge, packages, archive)
   }
 
   ## Last version
@@ -44,8 +41,6 @@ test_that("fix_cran_version", {
 })
 
 test_that("parse_deps", {
-
-  parse_deps <- environment(parse_remote.remote_specs_cran)$parse_deps
 
   expect_equal(
     parse_deps(character(), character()),
@@ -93,9 +88,6 @@ test_that("parse_deps", {
 
 test_that("get_cran_deps", {
 
-  get_cran_deps <-
-    environment(parse_remote.remote_specs_cran)$get_cran_deps
-
   packages <- readRDS("fixtures/resolve-cran-version-packages.rds")
 
   deps <- c("Imports", "LinkingTo", "Depends")
@@ -116,17 +108,14 @@ test_that("get_cran_deps", {
   )
 })
 
-test_that("get_package_deps_url", {
+test_that("type_cran_get_package_deps_url", {
 
   skip_if_offline()
-
-  get_package_deps_url <-
-    environment(parse_remote.remote_specs_cran)$get_package_deps_url
 
   url <- "https://cran.rstudio.com/src/contrib/Archive/dplyr/dplyr_0.2.tar.gz"
   dir.create(dir <- tempfile())
   target <- file.path(dir, basename(url))
-  obj <- async::synchronise(get_package_deps_url(
+  obj <- async::synchronise(type_cran_get_package_deps_url(
     url = url,
     target = target,
     dependencies = c("Imports", "LinkingTo")

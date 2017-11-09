@@ -70,10 +70,11 @@ download_try_list <- function(urls, targets, etag_file = NULL,
   tmp_target <- paste(target, ".tmp")
 
   status_code <- NULL
-  error <- NULL
+  errors <- NULL
   async_detect(
     urls,
     function(x) {
+      force(x)
       http_get(x, file = tmp_target, headers = headers)$
         then(function(resp) {
           http_stop_for_status(resp)
@@ -88,12 +89,14 @@ download_try_list <- function(urls, targets, etag_file = NULL,
           status_code <<- resp$status_code
           TRUE
         })$
-        catch(~ FALSE)
+        catch(function(err) {
+          errors <<- c(errors, structure(list(err), names = x))
+        })
     },
     .limit = 1
   )$then(function(url) {
     if (is.null(url)) {
-      stop(make_error("All URLs failed", "http_error", error = error))
+      stop(make_error("All URLs failed", "http_error", error = errors))
     }
     status_code
   })

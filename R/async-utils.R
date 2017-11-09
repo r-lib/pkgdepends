@@ -1,10 +1,10 @@
 
 read_etag <- function(etag_file) {
-  if (file.exists(etag_file)) {
-    tryCatch(readLines(etag_file)[1], error = function(e) NA)
-  } else {
-    NA
-  }
+  tryCatch(
+    readLines(etag_file, n = 1, warn = FALSE)[1],
+    error = function(e) NA,
+    warning = function(w) NA
+  )
 }
 
 #' @importFrom curl parse_headers_list

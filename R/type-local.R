@@ -33,8 +33,8 @@ resolve_remote.remote_ref_local <- function(remote, config, ...,
     )
 
     platform <- tryCatch(
-      dsc$get_built()$Platform %|z|% "*",
-      error = function(e) "*"
+      dsc$get_built()$Platform %|z|% "source",
+      error = function(e) "source"
     )
 
     files <- list(

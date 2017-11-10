@@ -3,16 +3,6 @@ repoman_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
-`%|NA|%` <- function(l, r) {
-  if (identical(l, NA) || identical(l, NA_character_) ||
-      identical(l, NA_integer_) || identical(l, NA_real_) ||
-      identical(l, NA_complex_)) {
-    r
-  } else {
-    l
-  }
-}
-
 `%|z|%` <- function(l, r) {
   if (identical(l, "")) r else l
 }

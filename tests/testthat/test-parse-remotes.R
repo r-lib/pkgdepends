@@ -91,3 +91,7 @@ test_that("parse_remotes, github", {
     expect_s3_class(p, c("remote_ref_github", "remote_ref"))
   }
 })
+
+test_that("parse_remotes error on unknown type", {
+  expect_error(parse_remotes("my_package"), "parse remotes")
+})

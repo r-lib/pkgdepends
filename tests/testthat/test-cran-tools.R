@@ -86,28 +86,6 @@ test_that("parse_deps", {
   )
 })
 
-test_that("get_cran_deps", {
-
-  packages <- readRDS("fixtures/resolve-cran-version-packages.rds")
-
-  deps <- c("Imports", "LinkingTo", "Depends")
-
-  expect_equal(
-    get_cran_deps("dplyr", "0.7.2", packages, deps),
-    tibble::tibble(
-      ref = c("assertthat", "bindrcpp", "glue", "magrittr",
-        "pkgconfig", "rlang", "R6", "Rcpp", "tibble", "Rcpp", "BH",
-        "bindrcpp", "plogr"),
-      type = c(rep("Imports", 9), rep("LinkingTo", 4)),
-      package = ref,
-      op = c("", ">=", ">=", "", "", ">=", "", ">=", ">=", ">=", ">=",
-        "", ""),
-      version = c("", "0.2", "1.1.0", "", "", "0.1", "", "0.12.6",
-        "1.3.1", "0.12.0", "1.58.0-1", "", "")
-    )
-  )
-})
-
 test_that("type_cran_get_package_deps_url", {
 
   skip_if_offline()

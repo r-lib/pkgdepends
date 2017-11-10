@@ -42,7 +42,6 @@ package_cache <- R6Class(
       if (!is.null(target) && nrow(res) >= 1) {
         file.copy(res$fullpath[1], target)
       }
-      unlock(l)
       res
     },
 
@@ -63,7 +62,6 @@ package_cache <- R6Class(
       file.copy(file, target)
       db <- append_to_data_frame(db, fullpath = target, path = path, ...)
       saveRDS(db, dbfile)
-      unlock(l)
     },
 
     delete = function(...) {
@@ -76,7 +74,6 @@ package_cache <- R6Class(
       unlink(file.path(private$path, ex$path))
       db <- delete_from_data_frame(readRDS(dbfile), ...)
       saveRDS(db, dbfile)
-      unlock(l)
     }
   ),
 
@@ -87,9 +84,6 @@ package_cache <- R6Class(
     lock = function(exclusive = TRUE, ...) {
       lockfile <- get_lock_file(private$path)
       filelock::lock(lockfile, exclusive = exclusive, ...)
-    },
-    unlock = function(l) {
-      filelock::unlock(l)
     },
     find_locked = function(...) {
       dbfile <- get_db_file(private$path)

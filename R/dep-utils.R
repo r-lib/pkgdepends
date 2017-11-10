@@ -1,8 +1,4 @@
 
-dependency_fields <- function() {
-  c("Depends", "Imports", "Suggests", "LinkingTo", "Enhances")
-}
-
 parse_deps <- function(deps, type) {
   assert_that(length(deps) == length(type))
   deps <- lapply(strsplit(deps, ","), str_trim)

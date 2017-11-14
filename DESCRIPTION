@@ -33,6 +33,7 @@ Imports:
     withr
 Suggests:
     covr,
+    debugme,
     mockery,
     testthat,
     tools

@@ -4,6 +4,7 @@
 #' @importFrom progress progress_bar
 
 remotes_resolve <- function(self, private) {
+  "!DEBUG remotes_resolve (sync)"
   progress_bar <- progress_bar$new(
     total = length(private$remotes),
     format = "  Resolving dependencies [:current/:total] [:deps/:deptot] :elapsedfull"
@@ -18,6 +19,7 @@ remotes_resolve <- function(self, private) {
 }
 
 remotes_async_resolve <- function(self, private, progress_bar = NULL) {
+  "!DEBUG remotes_resolve (async)"
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
 
@@ -63,6 +65,7 @@ remotes_get_resolution <- function(self, private) {
 ## Internals
 
 remotes__resolve_ref <- function(self, private, rem, pool) {
+  "!DEBUG resolving `rem$ref` (type `rem$type`)"
   ## We might have a deferred value for it already
   if (private$is_resolving(rem$ref)) {
     return(private$resolution$packages[[rem$ref]])
@@ -97,6 +100,7 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
 }
 
 remotes__start_new_resolution <- function(self, private, progress_bar) {
+  "!DEBUG cleaning up for new resolution"
   res <- new.env(parent = emptyenv())
 
   ## These are the resolved packages. They might be deferred values,
@@ -116,6 +120,7 @@ remotes__start_new_resolution <- function(self, private, progress_bar) {
 }
 
 remotes__resolution_to_df <- function(self, private, resolution) {
+  "!DEBUG formatting resolution into data frame"
   remotes <- private$remotes
   errs <- Filter(function(x) x$status != "OK", resolution)
 
@@ -172,6 +177,7 @@ remotes__is_resolving <- function(self, private, ref) {
 }
 
 remotes__subset_resolution <- function(self, private, which) {
+  "!DEBUG taking a subset of a resolution"
   df <- self$get_resolution()
   res_id <- df$res_id[which]
   res_file <- df$res_file[which]

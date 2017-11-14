@@ -10,10 +10,12 @@ read_etag <- function(etag_file) {
 #' @importFrom curl parse_headers_list
 
 download_file <- function(url, target, etag_file = NULL) {
+  "!DEBUG downloading `url`"
   url; target; etag_file
   target <- normalizePath(target, mustWork = FALSE)
   tmp_target <- paste0(target, ".tmp")
   http_get(url, file = tmp_target)$then(function(resp) {
+    "!DEBUG downloaded `url`"
     file.rename(tmp_target, target)
     if (!is.null(etag_file)) {
       etag <- parse_headers_list(resp$headers)[["etag"]]
@@ -24,6 +26,7 @@ download_file <- function(url, target, etag_file = NULL) {
 }
 
 download_if_newer <- function(url, target, etag_file = NULL) {
+  "!DEBUG downloading (if newer) `url`"
   force(url) ; force(target)
 
   headers <- character()
@@ -39,12 +42,15 @@ download_if_newer <- function(url, target, etag_file = NULL) {
 
   http_get(url, file = tmp_target, headers = headers)$then(function(resp) {
     if (resp$status_code == 304) {
+      "!DEBUG download not needed, `url` current"
       ## Current, nothing to do
     } else if (resp$status_code == 200) {
+      "!DEBUG downloaded `url`"
       file.rename(tmp_target, target)
       etag <- parse_headers_list(resp$headers)[["etag"]]
       if (!is.null(etag_file)) writeLines(etag, etag_file)
     } else {
+      "!DEBUG download error `url`"
       stop(paste("HTTP error: ", resp$status_code))
     }
     unlink(tmp_target)
@@ -55,6 +61,7 @@ download_if_newer <- function(url, target, etag_file = NULL) {
 
 download_try_list <- function(urls, targets, etag_file = NULL,
                               headers = character()) {
+  "!DEBUG trying download list `paste(urls, collapse = ', ')`"
   assert_that(is.character(urls), length(urls) >= 1)
 
   force(urls) ; force(targets) ; force(etag_file) ; force(headers)
@@ -79,8 +86,10 @@ download_try_list <- function(urls, targets, etag_file = NULL,
         then(function(resp) {
           http_stop_for_status(resp)
           if (resp$status_code == "304") {
+            "!DEBUG download not needed, `x` current"
             ## Current, nothing to do
           } else {
+            "!DEBUG downloaded `url`"
             file.rename(tmp_target, targets[1])
             etag <- parse_headers_list(resp$headers)[["etag"]]
             if (!is.null(etag_file)) writeLines(etag, etag_file)
@@ -90,6 +99,7 @@ download_try_list <- function(urls, targets, etag_file = NULL,
           TRUE
         })$
         catch(function(err) {
+          "!DEBUG download failed `url`"
           errors <<- c(errors, structure(list(err), names = x))
         })
     },

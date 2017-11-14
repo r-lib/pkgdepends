@@ -1,5 +1,6 @@
 
 remotes_solve <- function(self, private) {
+  "!DEBUG starting to solve `length(private$resolution$packages)` packages"
   if (is.null(private$library)) {
     stop("No package library specified, see 'library' in new()")
   }
@@ -52,6 +53,7 @@ remotes_solve <- function(self, private) {
 #' @keywords internal
 
 remotes__create_lp_problem <- function(self, private, pkgs) {
+  "!DEBUG creating LP problem"
   num <- nrow(pkgs)
   lp <- list(num = num, conds = list())
 
@@ -119,6 +121,7 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
 #' @importFrom lpSolve lp
 
 remotes__solve_lp_problem <- function(self, private, problem) {
+  "!DEBUG solving LP problem"
   condmat <- matrix(0, nrow = length(problem$conds), ncol = problem$num)
   for (i in seq_along(problem$conds)) {
     cond <- problem$conds[[i]]
@@ -138,6 +141,7 @@ remotes_get_solution <- function(self, private) {
 }
 
 remotes_install_plan <- function(self, private) {
+  "!DEBUG creating install plan"
   sol <- self$get_solution()
   deps <- lapply(sol$dependencies, "[[", "package")
   tibble::tibble(

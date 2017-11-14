@@ -84,23 +84,36 @@ type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
   dirs <- get_all_package_dirs(platforms, rversions)
 
   defs <- lapply_with_names(dirs$contriburl, function(dir) {
-    target_file <- file.path(rootdir, dir, "_cache", "PACKAGES.gz")
+    cache_file  <- file.path(dir, "_cache", "PACKAGES.gz")
+    target_file <- file.path(rootdir, cache_file)
     source_url  <- paste0(mirror, "/", dir, "/PACKAGES.gz")
-    etag_file   <- file.path(rootdir, dir, "_cache", "etags.yaml")
+    cache_etag  <- file.path(dir, "_cache", "etags.yaml")
+    etag_file   <- file.path(rootdir, cache_etag)
     mkdirp(dirname(target_file))
     download_if_newer(source_url, target_file, etag_file)$
+      then(function(resp) {
+        if (resp$status_code == 200) {
+          update_metadata_cache(rootdir, c(cache_file, cache_etag))
+        }
+      })$
       then(function() {
         cran_metadata_cache$get(target_file)
       })
   })
 
   archive <- local({
-    target_rds <- file.path(rootdir, "src/contrib", "_cache",
-                            "archive.rds")
+    cache_file <- file.path("src/contrib", "_cache", "archive.rds")
+    target_rds <- file.path(rootdir, cache_file)
     source_url <- paste0(mirror, "/src/contrib/Meta/archive.rds")
     mkdirp(dirname(target_rds))
-    etag_file <- paste0(target_rds, ".etag")
+    cache_etag <- paste0(cache_file, ".etag")
+    etag_file  <- paste0(target_rds, ".etag")
     download_if_newer(source_url, target_rds, etag_file)$
+      then(function(resp) {
+        if (resp$status_code == 200) {
+          update_metadata_cache(rootdir, c(cache_file, cache_etag))
+        }
+      })$
       then(function() {
         cran_metadata_cache$get(target_rds)
       })
@@ -111,9 +124,6 @@ type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
     `_archive` = archive,
     .list = defs
   )
-
-  ## TODO: this might copy partial files?
-  cran_cache$then(update_metadata_cache_dir(rootdir))
 
   cran_cache
 }

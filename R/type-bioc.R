@@ -117,13 +117,18 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions) {
     async_map(rversions, function(rversion) {
       repos <- bioc_repos[[rversion]]
       async_map(repos, function(repo) {
-        target_file <- file.path(rootdir, dir, "_cache", "bioc", repo,
-                                 "PACKAGES.gz")
+        cache_file <- file.path(dir, "_cache", "bioc", repo, "PACKAGES.gz")
+        target_file <- file.path(rootdir, cache_file)
         source_url <- paste0(repo, "/", dir, "/", "PACKAGES.gz")
-        etag_file <- file.path(rootdir, dir, "_cache", "bioc", repo,
-                               "etags.yaml")
+        cache_etag <- file.path(dir, "_cache", "bioc", repo, "etags.yaml")
+        etag_file <- file.path(rootdir, cache_etag)
         mkdirp(dirname(target_file))
         download_if_newer(source_url, target_file, etag_file)$
+          then(function(resp) {
+            if (resp$status_code == 200) {
+              update_metadata_cache(rootdir, c(cache_file, cache_etag))
+            }
+          })$
           then(function() {
             cran_metadata_cache$get(target_file)
           })
@@ -136,9 +141,6 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions) {
     `_repos` = bioc_repos,
     .list = defs
   )
-
-  ## TODO: this might copy partial files?
-  biocdata$then(update_metadata_cache_dir(rootdir))
 
   biocdata
 }

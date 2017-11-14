@@ -58,10 +58,9 @@ user_metadata_cache_dir <- function() {
   l <- lock(cdir$lock, exclusive = FALSE, timeout = 10000)
   if (is.null(l)) stop("Cannot acquire lock")
   on.exit(unlock(l))
-  file.copy(cdir$meta, tmp, recursive = TRUE)
+  file.copy(cdir$meta, dirname(tmp), recursive = TRUE)
   unlock(l)
-
-  normalizePath(file.path(tmp, basename(cdir$meta)))
+  normalizePath(tmp)
 }
 
 #' @importFrom rappdirs user_cache_dir
@@ -77,9 +76,9 @@ get_user_cache_dir <- function() {
   res
 }
 
-update_metadata_cache_dir <- function(from) {
+update_metadata_cache <- function(root, files) {
   tryCatch(
-    update_user_metadata_cache_dir(from),
+    update_user_metadata_cache(root, files),
     error = function(e) {
       warning("Cannot update metadata cache dir (",
               conditionMessage(e), ")")
@@ -87,12 +86,16 @@ update_metadata_cache_dir <- function(from) {
   )
 }
 
-update_user_metadata_cache_dir <- function(from) {
+update_user_metadata_cache <- function(root, files) {
   cdir <- get_user_cache_dir()
   l <- lock(cdir$lock, exclusive = TRUE, timeout = 10000)
   if (is.null(l)) stop("Cannot acquire lock")
   on.exit(unlock(l))
-  file.copy(from, dirname(cdir$meta), recursive = TRUE)
+  for (f in files) {
+    target_dir <- file.path(cdir$meta, dirname(f))
+    mkdirp(target_dir)
+    file.copy(file.path(root, f), target_dir, recursive = TRUE)
+  }
   unlock(l)
   NULL
 }

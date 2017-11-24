@@ -37,6 +37,22 @@ test_that("download_file", {
   expect_equal(readLines(etag), "foobar")
 })
 
+test_that("download_file, errors", {
+
+  skip_if_offline()
+
+  tmp <- tempfile()
+  expect_error(
+    synchronise(download_file("http://0.42.42.42", tmp)),
+    class = c("async_rejected", "async_http_error")
+  )
+
+  expect_error(
+    synchronise(download_file("https://eu.httpbin.org/status/404", tmp)),
+    class = c("async_rejected", "async_http_401", "async_http_error")
+  )
+})
+
 test_that("download_if_newer, no etag file", {
 
   skip_if_offline()

@@ -14,15 +14,17 @@ download_file <- function(url, target, etag_file = NULL) {
   url; target; etag_file
   target <- normalizePath(target, mustWork = FALSE)
   tmp_target <- paste0(target, ".tmp")
-  http_get(url, file = tmp_target)$then(function(resp) {
-    "!DEBUG downloaded `url`"
-    file.rename(tmp_target, target)
-    if (!is.null(etag_file)) {
-      etag <- parse_headers_list(resp$headers)[["etag"]]
-      writeLines(etag, etag_file)
-    }
-    resp$status_code
-  })
+  http_get(url, file = tmp_target)$
+    then(http_stop_for_status)$
+    then(function(resp) {
+      "!DEBUG downloaded `url`"
+      file.rename(tmp_target, target)
+      if (!is.null(etag_file)) {
+        etag <- parse_headers_list(resp$headers)[["etag"]]
+        writeLines(etag, etag_file)
+      }
+      resp$status_code
+    })
 }
 
 download_if_newer <- function(url, target, etag_file = NULL) {

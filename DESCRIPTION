@@ -14,7 +14,6 @@ Imports:
     assertthat,
     async,
     cli,
-    clisymbols,
     crayon,
     curl,
     desc (>= 1.1.1.9000),

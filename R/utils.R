@@ -163,7 +163,7 @@ is_na_scalar <- function(x) {
   length(x) == 1 && is.na(x)
 }
 
-#' @importFrom clisymbols symbol
+#' @importFrom cli symbol
 
 progress_msg <- function(msg, status = c("tick", "cross")) {
   status <- match.arg(status)

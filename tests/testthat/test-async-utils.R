@@ -207,6 +207,7 @@ test_that("download_try_list, errors", {
 
   err <- tryCatch(synchronise(afun()), error = identity)
   expect_match(conditionMessage(err), "All URLs failed")
+  expect_true("download_try_list_error" %in% class(err))
   expect_false(file.exists(tmp))
 })
 

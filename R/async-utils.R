@@ -106,7 +106,8 @@ download_try_list <- function(urls, targets, etag_file = NULL,
     .limit = 1
   )$then(function(url) {
     if (is.null(url)) {
-      stop(make_error("All URLs failed", "http_error", error = errors))
+      stop(make_error("All URLs failed", "download_try_list_error",
+                      error = errors))
     }
     status_code
   })

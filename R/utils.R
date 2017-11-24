@@ -7,10 +7,17 @@ repoman_data <- new.env(parent = emptyenv())
   if (identical(l, "")) r else l
 }
 
+get_platform <- function() {
+  .Platform
+}
+
 current_r_platform <- function() {
-  if (grepl("^mac", .Platform$pkgType)) {
+  type <- get_platform()$pkgType
+  if (!is_string(type))
+    "source"
+  else if (grepl("^mac", type)) {
     "macos"
-  } else if (grepl("^win", .Platform$pkgType)) {
+  } else if (grepl("^win", type)) {
     "windows"
   } else {
     "source"

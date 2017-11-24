@@ -40,23 +40,21 @@ download_if_newer <- function(url, target, etag_file = NULL) {
   target <- normalizePath(target, mustWork = FALSE)
   tmp_target <- paste(target, ".tmp")
 
-  http_get(url, file = tmp_target, headers = headers)$then(function(resp) {
-    if (resp$status_code == 304) {
-      "!DEBUG download not needed, `url` current"
-      ## Current, nothing to do
-    } else if (resp$status_code == 200) {
-      "!DEBUG downloaded `url`"
-      file.rename(tmp_target, target)
-      etag <- parse_headers_list(resp$headers)[["etag"]]
-      if (!is.null(etag_file)) writeLines(etag, etag_file)
-    } else {
-      "!DEBUG download error `url`"
-      stop(paste("HTTP error: ", resp$status_code))
-    }
-    unlink(tmp_target)
+  http_get(url, file = tmp_target, headers = headers)$
+    then(http_stop_for_status)$
+    then(function(resp) {
+      if (resp$status_code == 304) {
+        "!DEBUG download not needed, `url` current"
+        ## Current, nothing to do
+      } else if (resp$status_code == 200) {
+        "!DEBUG downloaded `url`"
+        file.rename(tmp_target, target)
+        etag <- parse_headers_list(resp$headers)[["etag"]]
+        if (!is.null(etag_file)) writeLines(etag, etag_file)
+      }
 
-    resp
-  })
+      resp
+    })
 }
 
 download_try_list <- function(urls, targets, etag_file = NULL,

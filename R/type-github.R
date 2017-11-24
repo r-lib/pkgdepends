@@ -231,6 +231,8 @@ type_github_make_resolution <- function(data) {
   repo <- data$remote$repo
   package <- data$desc$package
   version <- data$desc$version
+  desc_err <- data$desc$error
+  sha_err <- data$sha$error
 
   files <- list(
     source = glue(
@@ -242,8 +244,8 @@ type_github_make_resolution <- function(data) {
     package = package,
     version = version,
     deps = deps,
-    status = if (!is.null(data$error)) "OK" else "FAILED",
-    error = data$error
+    status = if (is.null(desc_err %||% sha_err)) "OK" else "FAILED",
+    error = list(desc = desc_err, sha = sha_err)
   )
 
   data$remote$sha <- sha

@@ -83,6 +83,7 @@ vdapply <- function(X, FUN, ...) {
 }
 
 update_named_vector <- function(old, new) {
+  assert_that(all_named(old), all_named(new))
   comm <- intersect(names(old), names(new))
   add <- setdiff(names(new), names(old))
   old[comm] <- new[comm]

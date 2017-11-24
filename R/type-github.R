@@ -76,9 +76,8 @@ download_remote.remote_resolution_github <- function(resolution, config,
                             bytes = file.size(target_file)))
       })$
       catch(function(err) {
-        error <- if (is.list(err)) err$error %||% err else err
         list(make_dl_status("Failed", url, target_file,
-                            error = error))
+                            error = err))
       })
   }
 }

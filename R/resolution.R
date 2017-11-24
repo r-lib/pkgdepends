@@ -187,3 +187,36 @@ remotes__subset_resolution <- function(self, private, which) {
     r
   })
 }
+
+print.remotes_resolution <- function(x, ...) {
+  print_refs(x, x$direct, header = "Remote resolution for refs")
+  print_refs(
+    x, (! x$direct) & (x$type != "installed"),
+    header = "Dependencies",
+    by_type = TRUE)
+  print_refs(
+    x, (! x$direct) & (x$type == "installed"),
+    header = "Already installed")
+  ## TODO: time stamp
+  ## TODO: Errors
+  invisible(x)
+}
+
+print_refs <- function(res, which, header, by_type = FALSE) {
+  if (!length(res$ref[which])) return()
+
+  cat(paste0(header, ":"), sep = "\n")
+
+  if (by_type) {
+    for (t in sort(unique(res$type[which]))) {
+      cat(paste0("  ", t, ":"), sep = "\n")
+      which2 <- which & res$type == t
+      l <- comma_wrap(sort(unique(res$ref[which2])), indent = 4)
+      cat(l, sep = "\n")
+    }
+
+  } else {
+    l <- comma_wrap(sort(unique(res$ref[which])))
+    cat(l, sep = "\n")
+  }
+}

@@ -66,13 +66,14 @@ get_cran_extension <- function(platform) {
 }
 
 resolve_ref_deps <- function(deps, remotes, dependencies) {
+  deps <- deps_from_desc(deps, dependencies, last = FALSE)
+
   if (is.na(remotes)) return (deps)
 
   parse <- function(x) {
     str_trim(strsplit(x, "\\s*,\\s*", perl = TRUE)[[1]])
   }
 
-  deps <- deps_from_desc(deps, dependencies, last = FALSE)
   remotes <- str_trim(na.omit(remotes))
   remotes <- parse(remotes)
   remotes_packages <- vcapply(parse_remotes(remotes), "[[", "package")

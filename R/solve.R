@@ -53,6 +53,12 @@ remotes_solve <- function(self, private) {
 #' @keywords internal
 
 remotes__create_lp_problem <- function(self, private, pkgs) {
+  remotes_i_create_lp_problem(pkgs)
+}
+
+## This is to make it testable without a `remotes` object.
+
+remotes_i_create_lp_problem <- function(pkgs) {
   "!DEBUG creating LP problem"
   num <- nrow(pkgs)
   lp <- list(num = num, conds = list())
@@ -97,10 +103,10 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
   directs <- function(wh) {
     pkgname <- pkgs$package[[wh]]
     remote <- pkgs$remote[[wh]]
-    res <- private$resolution$packages[[ pkgs$res_id[wh] ]]
+    res <- pkgs$resolution[[wh]]
     others <- setdiff(which(pkgs$package == pkgname), wh)
     for (o in others) {
-      res2 <- private$resolution$packages[[  pkgs$res_id[o] ]]
+      res2 <- pkgs$resolution[[o]]
       if (! isTRUE(satisfies_remote(res, res2))) {
         cond(c(wh, o))
       }

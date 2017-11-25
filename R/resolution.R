@@ -133,7 +133,13 @@ remotes__resolution_to_df <- function(self, private, resolution) {
     vcapply(resolution, function(x) x$remote$ref, USE.NAMES = FALSE),
     num_files
   )
+  res_id <- rep(seq_along(resolution), num_files)
   res_file <- unlist(lapply(resolution, function(x) seq_along(x$files)))
+  resolution_subset <- lapply(seq_along(res_id), function(i) {
+    r <- resolution[[ res_id[i] ]]
+    r$files <- r$files[ res_file[i] ]
+    r
+  })
 
   getf <- function(f) {
     unlist(lapply(resolution, function(x) vcapply(x$files, "[[", f)))
@@ -164,8 +170,7 @@ remotes__resolution_to_df <- function(self, private, resolution) {
     fulltarget = file.path(private$config$cache_dir, getf("target")),
     dependencies = deps,
     remote     = remote,
-    res_id     = rep(seq_along(resolution), num_files),
-    res_file   = res_file
+    resolution = resolution_subset
   )
   class(res) <- c("remotes_resolution", class(res))
 
@@ -179,13 +184,7 @@ remotes__is_resolving <- function(self, private, ref) {
 remotes__subset_resolution <- function(self, private, which) {
   "!DEBUG taking a subset of a resolution"
   df <- self$get_resolution()
-  res_id <- df$res_id[which]
-  res_file <- df$res_file[which]
-  lapply(seq_along(res_id), function(i) {
-    r <- private$resolution$packages[[ res_id[i] ]]
-    r$files <- r$files[ res_file[i] ]
-    r
-  })
+  df$resolution[which]
 }
 
 print.remotes_resolution <- function(x, ...) {

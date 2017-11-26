@@ -127,6 +127,11 @@ remotes_i_create_lp_problem <- function(pkgs) {
 #' @importFrom lpSolve lp
 
 remotes__solve_lp_problem <- function(self, private, problem) {
+  res <- remotes_i_solve_lp_problem(problem)
+  res
+}
+
+remotes_i_solve_lp_problem <- function(problem) {
   "!DEBUG solving LP problem"
   condmat <- matrix(0, nrow = length(problem$conds), ncol = problem$num)
   for (i in seq_along(problem$conds)) {

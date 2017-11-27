@@ -121,7 +121,11 @@ remotes__start_new_resolution <- function(self, private, progress_bar) {
 
 remotes__resolution_to_df <- function(self, private, resolution) {
   "!DEBUG formatting resolution into data frame"
-  remotes <- private$remotes
+  remotes_i_resolution_to_df(resolution, private$remotes,
+                             private$config$cache_dir)
+}
+
+remotes_i_resolution_to_df <- function(resolution, remotes, cache_dir) {
   errs <- Filter(function(x) x$status != "OK", resolution)
 
   num_files <- viapply(resolution, function(x) length(x$files))
@@ -167,7 +171,7 @@ remotes__resolution_to_df <- function(self, private, resolution) {
     repodir    = getf("dir"),
     sources    = sources,
     target     = getf("target"),
-    fulltarget = file.path(private$config$cache_dir, getf("target")),
+    fulltarget = file.path(cache_dir, getf("target")),
     dependencies = deps,
     remote     = remote,
     resolution = resolution_subset

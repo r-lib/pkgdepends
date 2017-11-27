@@ -18,24 +18,27 @@ make_fake_resolution1 <- function(ref, args) {
   version <- args$version %||% "1.0.0"
   filename <- paste0(pref$package, "_", version, ".tar.gz")
 
-  list(
-    files = list(list(
-      source = c(
-        sprintf("%s/%s/%s", mirror, repodir, filename),
-        sprintf("%s/%s/Archive/%s/%s", mirror, repodir, pref$pakcvage,
-                filename)
-      ),
-      target = sprintf("src/contrib/%s_%s.tar.gz", pref$package, version),
-      platform = args$platform %||% "source",
-      rversion = args$rversion %||% "*",
-      dir = repodir,
-      package = pref$package,
-      version = version,
-      deps = args$deps %||% make_fake_deps(),
+  structure(
+    list(
+      files = list(list(
+        source = c(
+          sprintf("%s/%s/%s", mirror, repodir, filename),
+          sprintf("%s/%s/Archive/%s/%s", mirror, repodir, pref$pakcvage,
+                  filename)
+        ),
+        target = sprintf("src/contrib/%s_%s.tar.gz", pref$package, version),
+        platform = args$platform %||% "source",
+        rversion = args$rversion %||% "*",
+        dir = repodir,
+        package = pref$package,
+        version = version,
+        deps = args$deps %||% make_fake_deps(),
+        status = args$status %||% "OK"
+      )),
+      remote = pref,
       status = args$status %||% "OK"
-    )),
-    remote = pref,
-    status = args$status %||% "OK"
+    ),
+    class = c(paste0("remote_resolution_", pref$type), "remote_resolution")
   )
 }
 

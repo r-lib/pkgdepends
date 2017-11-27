@@ -86,49 +86,26 @@ download_remote.remote_resolution_github <- function(resolution, config,
 
 #' @export
 
-satisfies_remote.remote_resolution_github <-
-  function(resolution, candidate, config, ...) {
-    rrem <- resolution$remote
-    crem <- candidate$remote
-    if (crem$type == "installed") {
-      dsc <- crem$description
-      ## If SHA is the same, then they are the same
-      if (identical(rrem$sha, dsc$get("RemoteSha")[[1]])) return(TRUE)
-      ## Otherwise type, username and repo must match
-      if (! identical(dsc$get("RemoteType")[[1]], "github")) return(FALSE)
-      if (! identical(dsc$get("RemoteUsername")[[1]], rrem$username)) {
-        return(FALSE)
-      }
-      if (! identical(dsc$get("RemoteRepo")[[1]], rrem$repo)) {
-        return(FALSE)
-      }
-      ## If branch matches as well, we are good. Otherwise not.
-      ## If HEAD is specified, then the SHA must match as well
-      ccomm <- dsc$get("RemoteRef")
-      rcomm <- rrem$commitish
-      if (ccomm == rcomm && ccomm != "HEAD") return(TRUE)
-      if (ccomm == "master" && rcomm == "") return(TRUE)
-      FALSE
+satisfies_remote.remote_resolution_github <- function(resolution, candidate,
+                                                      config, ...) {
 
-    } else if (crem$type == "github") {
-      ## If SHA is the same, then they are the same
-      if (identical(rrem$sha, crem$sha)) return(TRUE)
-      ## Otherwise username and repo must match
-      if (! identical(crem$username, rrem$username)) return(FALSE)
-      if (! identical(crem$repo, rrem$repo)) return(FALSE)
-      ## If branch matches as well, we are good. Otherwise not.
-      ## If HEAD is specified, then the SHA must match as well
-      ccomm <- crem$commitish
-      rcomm <- rrem$commitish
-      if (ccomm == rcomm && ccomm != "HEAD") return(TRUE)
-      if (ccomm == "master" && rcomm == "") return(TRUE)
-      if (ccomm == "" && rcomm == "master") return(TRUE)
-      FALSE
+  ## 1. package name must match
+  if (resolution$remote$package != candidate$remote$package) return(FALSE)
 
-    } else {
-      FALSE
-    }
+
+  ## 1. installed ref is good, if it has the same same ref
+  if (inherits(candidate, "remote_resolution_installed")) {
+    dsc <- candidate$resolution$description
+    sha1 <- dsc$get("RemoteSha")[[1]]
+    sha2 <- resolution$remote$sha
+    return(is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2))
   }
+
+  ## 2. other refs are also good, as long as they have the same sha
+  sha1 <- candidate$remote$sha
+  sha2 <- resolution$remote$sha
+  return(is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2))
+}
 
 ## ----------------------------------------------------------------------
 ## Internal functions

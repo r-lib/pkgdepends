@@ -34,11 +34,35 @@ resolve_remote.remote_ref_standard <- function(remote, config, ...,
     })$
     then(function(cran_resolution) {
       cache$biocdata$then(function(cacheresult) {
-        if (cran_resolution$status == "OK") {
-          cran_resolution
+        res <- if (cran_resolution$status == "OK") {
+          res <- cran_resolution
         } else {
           type_bioc_resolve_from_cache(remote, config, cacheresult)
         }
+        class(res) <- c("remote_resolution_standard", class(res))
+        res
       })
     })
 }
+
+#' @export
+
+satisfies_remote.remote_resolution_standard <-
+  function(resolution, candidate, config, ...) {
+
+    ## A standard ref is special, in that any ref source can satisfy it,
+    ## as long as the package name is the same, and the version
+    ## requirements are satisfied.
+
+    ## 1. package name must be the same
+    if (resolution$remote$package != candidate$remote$package) return(FALSE)
+
+    ## 2. version requirements must be satisfied
+    if (resolution$remote$version == "") return(TRUE)
+
+    version_satisfies(
+      candidate$files[[1]]$version,
+      resolution$remote$atleast,
+      resolution$remote$version
+    )
+  }

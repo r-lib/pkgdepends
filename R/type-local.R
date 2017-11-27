@@ -98,6 +98,7 @@ download_remote.remote_resolution_local <- function(resolution, config,
 
 satisfies_remote.remote_resolution_local <-
   function(resolution, candidate, config, ...) {
+    ## TODO: we can probably do better than this
     FALSE
   }
 

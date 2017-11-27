@@ -62,6 +62,13 @@ download_remote.remote_resolution_installed <- function(resolution,
   async_constant(list(status))
 }
 
+#' @export
+
+satisfies_remote.remote_resolution_installed <-
+  function(resolution, candidate, config, ...) {
+    TRUE
+  }
+
 ## ----------------------------------------------------------------------
 ## Internal functions
 

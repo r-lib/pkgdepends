@@ -11,6 +11,10 @@
 parse_remote.remote_specs_github <- function(specs, config, ...) {
 
   pds <- re_match(specs, github_rx())
+  if (is.na(pds$.match)) {
+    pds <- re_match(specs, github_url_rx())
+    pds$subdir <- ""
+  }
 
   pds$ref <- pds$.text
   cn <- setdiff(colnames(pds), c(".match", ".text"))

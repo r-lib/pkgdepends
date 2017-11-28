@@ -37,13 +37,41 @@ github_rx <- function() {
     ## Optional remote type
     "(?:github::)?",
     ## Username
-    "(?<username>(?:[^/]+))/",
+    "(?<username>(?:[[:alnum:]-]+))/",
     ## Repo
     "(?<repo>[^/@#]+)",
     ## Subdirectory
     "(?:/(?<subdir>(?:[^@#]*[^@#/])/?))?",
     ## Commit / PR / Release
     github_detail,
+    "$"
+  )
+}
+
+github_url_rx <- function() {
+  commitish_rx <- "(?:(?:tree|commit|releases/tag)/(?<commitish>.+$))"
+  pull_rx <- "(?:pull/(?<pull>.+$))"
+  release_rx <- "(?:releases/)(?<release>.+$)"
+  detail_rx <- glue("(?:/(?:{commitish_rx}|{pull_rx}|{release_rx}))?")
+
+  paste0(
+    "^",
+    ## Optional package name
+    "(?:(?<package>", package_name_rx(), ")=)?",
+    ## Optional remote type
+    "(?:github::)?",
+    ## Optional protocol
+    "(?:(?:https?://)|(?:ssh://(?:[^@]+@)?)?)",
+    ## Servername
+    "(?:[^/:]+)[/:]",
+    ## Username
+    "(?<username>[^/]+)/",
+    ## Repo
+    "(?<repo>[^/#@.]+)",
+    ## Optional Extension
+    "(?:[.]git)?",
+    ## Commit / PR / Release
+    detail_rx,
     "$"
   )
 }
@@ -65,6 +93,7 @@ get_remote_types <- function(specs) {
 
   types[types == "" & grepl(standard_rx(), specs, perl = TRUE)] <- "standard"
   types[types == "" & grepl(github_rx(), specs, perl = TRUE)] <- "github"
+  types[types == "" & grepl(github_url_rx(), specs, perl = TRUE)] <- "github"
 
   if (any(bad <- types == "")) {
     stop("Can't parse remotes: ", paste(specs[bad], collapse = ", "))

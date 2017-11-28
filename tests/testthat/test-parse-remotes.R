@@ -75,7 +75,24 @@ test_that("parse_remotes, github", {
     list("pkg=user/repo/subdir", package = "pkg", subdir = "subdir"),
     list("pkg=user/repo@badcafe", package = "pkg", commitish = "badcafe"),
     list("pkg=user/repo#123", package = "pkg", pull = "123"),
-    list("pkg=user/repo@*release", package = "pkg", release = "*release")
+    list("pkg=user/repo@*release", package = "pkg", release = "*release"),
+
+    # github url cases
+    list("git@github.com:user/repo.git"),
+    list("git@github.ubc.ca:user/repo.git"),
+    list("https://github.com/user/repo"),
+    list("https://github.ubc.ca/user/repo"),
+    list("https://github.com/user/repo/tree/i-am-a-branch", commitish = "i-am-a-branch"),
+    list("https://github.com/user/repo/commit/1234567", commitish = "1234567"),
+    list("https://github.com/user/repo/pull/108", pull = "108"),
+    list("https://github.com/user/repo/releases/tag/1.0.0", commitish = "1.0.0"),
+    list("https://github.com/user/repo/releases/latest", release = "latest"),
+    list("https://github.com/user/repo/releases/latest", release = "latest"),
+    list("https://github.com/foo/bar", username = "foo", repo = "bar"),
+    list("git@github.com:foo/bar.git", username = "foo", repo = "bar"),
+
+    # Username and repo can have hyphens in them
+    list("git@github.com:foo-bar/baz-qux.git", username = "foo-bar", repo = "baz-qux")
   )
 
   for (case in cases) {

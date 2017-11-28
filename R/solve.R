@@ -18,7 +18,7 @@ remotes_solve <- function(self, private) {
     stop("Cannot solve installation, internal lpSolve error ", sol$status)
   }
 
-  packages <- if (sol$status == 0 && sol$objval < solve_dummy_obj) {
+  if (sol$status == 0 && sol$objval < solve_dummy_obj) {
     selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
     packages <- private$subset_resolution(selected)
     result <- private$resolution_to_df(packages)

@@ -1,4 +1,6 @@
 
+solve_dummy_obj <- 1000000
+
 remotes_solve <- function(self, private) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
   if (is.null(private$library)) {
@@ -12,10 +14,21 @@ remotes_solve <- function(self, private) {
   prb <- private$create_lp_problem(pkgs)
   sol <- private$solve_lp_problem(prb)
 
-  packages <- private$subset_resolution(as.logical(sol$solution))
+  if (sol$status != 2 && sol$status != 0) {
+    stop("Cannot solve installation, internal lpSolve error ", sol$status)
+  }
+
+  packages <- if (sol$status == 0 && sol$objval < solve_dummy_obj) {
+    selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
+    packages <- private$subset_resolution(selected)
+    result <- private$resolution_to_df(packages)
+  } else {
+    packages <- result <- NULL
+  }
+
   private$solution <- list(
     packages = packages,
-    result = private$resolution_to_df(packages),
+    result = result,
     problem = prb,
     solution = sol
   )
@@ -57,26 +70,47 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
   remotes_i_create_lp_problem(pkgs)
 }
 
-## This is to make it testable without a `remotes` object.
+## This is a separate function to make it testable without a `remotes`
+## object.
+##
+## Variables:
+## * 1:num are packages
+## * (num+1):(num+num_pkgs) denote the relax variables for packages
 
 remotes_i_create_lp_problem <- function(pkgs) {
   "!DEBUG creating LP problem"
   num <- nrow(pkgs)
-  lp <- list(num = num, conds = list())
+  package_names <- unique(pkgs$package)
+  num_pkgs <- length(package_names)
+  lp <- list(
+    num = num + num_pkgs,
+    num_pkgs = num_pkgs,
+    conds = list(),
+    cond_types = character()
+  )
 
   ## Add a condition, for a subset of variables, with op and rhs
-  cond <- function(vars, op = "<=", rhs = 1) {
-    lp$conds[[length(lp$conds)+1]] <<- list(vars = vars, op = op, rhs = rhs)
+  cond <- function(vars, op = "<=", rhs = 1, type = NA_character_,
+                   note = NULL) {
+    lp$conds[[length(lp$conds)+1]] <<-
+      list(vars = vars, op = op, rhs = rhs, type = type, note = note)
   }
 
   ## 4. & 5. coefficients of the objective function, this is very easy
   ## TODO: use rversion as well, for installed and binary packages
   my_platform <- current_r_platform()
-  lp$obj <- ifelse(pkgs$type == "installed", 0,
-                   ifelse(pkgs$platform == my_platform, 1, 2))
+  lp$obj <- c(
+    ifelse(pkgs$type == "installed", 0,
+           ifelse(pkgs$platform == my_platform, 1, 2)),
+    rep(solve_dummy_obj, num_pkgs)
+  )
 
   ## 1. Each package exactly once
-  tapply(seq_len(num), pkgs$package, cond, op = "==")
+  ##    (We also add a dummy variable to catch errors.)
+  for (p in seq_along(package_names)) {
+    wh <- which(pkgs$package == package_names[p])
+    cond(c(wh, num + p), op = "==", type = "exactly-once")
+  }
 
   ## 2. All dependency versions must be satisfied
   ## We check the dependencies of each package candidate, and rule out
@@ -92,7 +126,7 @@ remotes_i_create_lp_problem <- function(pkgs) {
         if (pkgs$status[co] == "OK" &&
             ! version_satisfies(pkgs$version[co], deps$op[i],
                                 deps$version[i])) {
-          cond(c(wh, co))
+          cond(c(wh, co), type = "dependency-version", note = wh)
         }
       }
     }
@@ -108,7 +142,7 @@ remotes_i_create_lp_problem <- function(pkgs) {
     for (o in others) {
       res2 <- pkgs$resolution[[o]]
       if (! isTRUE(satisfies_remote(res, res2))) {
-        cond(o, op = "==", rhs = 0)
+        cond(o, op = "==", rhs = 0, type = "satisfy-refs", note = wh)
       }
     }
   }
@@ -117,7 +151,7 @@ remotes_i_create_lp_problem <- function(pkgs) {
   ## 7. Can't install failed resolutions
   failedconds <- function(wh) {
     if (pkgs$status[wh] != "FAILED") return()
-    cond(wh, op = "==", rhs = 0)
+    cond(wh, op = "==", rhs = 0, type = "ok-resolution")
   }
   lapply(seq_len(num), failedconds)
 
@@ -145,15 +179,21 @@ remotes_i_solve_lp_problem <- function(problem) {
 }
 
 remotes_get_solution <- function(self, private) {
-  if (is.null(private$solution$result)) {
+  if (is.null(private$solution)) {
     stop("No solution found, need to call $solve()")
   }
-  private$solution$result
+  if (! is.null(private$solution$result)) {
+    private$solution$result
+  } else {
+    describe_solution_error(self$get_resolution(), private$solution)
+  }
 }
 
 remotes_install_plan <- function(self, private) {
   "!DEBUG creating install plan"
   sol <- self$get_solution()
+  if (inherits(sol, "remotes_solve_error")) return(sol)
+
   deps <- lapply(sol$dependencies, "[[", "package")
   tibble::tibble(
     package = sol$package,
@@ -164,4 +204,85 @@ remotes_install_plan <- function(self, private) {
     dependencies = I(deps),
     file = sol$fulltarget
   )
+}
+
+describe_solution_error <- function(pkgs, solution) {
+  assert_that(
+    ! is.null(pkgs),
+    ! is.null(solution),
+    is.null(solution$packages),
+    solution$solution$objval >= solve_dummy_obj - 1L
+  )
+
+  sol <- solution$solution$solution
+
+  ## 1. Which packages are problematic?
+  num <- nrow(pkgs)
+  package_names <- unique(pkgs$package)
+  num_pkgs <- length(package_names)
+  prob_pkgs <- package_names[which(sol[(num+1):(num+num_pkgs)] != 0)]
+
+  ## 2. What constraints are they included in?
+  unsat_conds <- lapply(prob_pkgs, function(p) {
+    cands <- which(pkgs$package == p)
+    which(vlapply(
+      solution$problem$conds,
+      function(cond) any(cands %in% cond$vars)
+    ))
+  })
+
+  messages <- lapply(unsat_conds, function(cidxs) {
+    unsat <- solution$problem$conds[cidxs]
+    vcapply(unsat, function(cond) {
+      pkg <- unique(na.omit(pkgs$package[cond$vars]))
+      if (is.na(cond$type)) {
+        NA_character_
+      } else if (cond$type == "exactly-once") {
+        glue("cannot install any version of package `{pkg}`")
+
+      } else if (cond$type == "dependency-version") {
+        NA_character_                   # TODO
+
+      } else if (cond$type == "satisfy-refs") {
+        ref <- pkgs$ref[cond$var]
+        ref2 <- pkgs$ref[cond$note]
+        TODO: required by .....
+        glue("ref `{ref}`, conflicts with ref `{ref2}`")
+
+      } else if (cond$type == "ok_resolution") {
+        NA_character_                   # TODO
+
+      }
+    })
+  })
+
+  types <- vcapply(
+    solution$problem$conds[unlist(unsat_conds)],
+    "[[",
+    "type")
+
+  structure(list(
+    pkgs = pkgs,
+    problem = solution$problem,
+    solution = solution$solution,
+    failures = tibble(
+      package = rep(prob_pkgs, viapply(unsat_conds, length)),
+      constraint = unlist(unsat_conds),
+      message = unlist(messages),
+      type = types
+    )
+  ), class = "remote_solution_error")
+}
+
+#' @export
+
+print.remote_solution_error <- function(x, ...) {
+  fails <- x$failures
+  for (pkg in unique(fails$package)) {
+    xpkg <- fails[fails$package == pkg, ]
+    msgs <- unique(na.omit(xpkg$message[xpkg$type != "exactly-once"]))
+    cat(glue("Cannot install package `{pkg}`."), sep = "\n")
+    if (length(msgs)) cat(paste0(" * ", msgs), sep = "\n")
+  }
+  invisible(x)
 }

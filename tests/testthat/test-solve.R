@@ -6,7 +6,7 @@ test_that("binary preferred over source", {
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution), c(TRUE, FALSE))
+  expect_identical(as.logical(sol$solution)[1:2], c(TRUE, FALSE))
 })
 
 test_that("installed preferred over download", {
@@ -14,7 +14,7 @@ test_that("installed preferred over download", {
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution), c(TRUE, FALSE, FALSE))
+  expect_identical(as.logical(sol$solution[1:3]), c(TRUE, FALSE, FALSE))
 })
 
 test_that("dependency versions are honored", {
@@ -27,14 +27,19 @@ test_that("dependency versions are honored", {
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution), c(FALSE, TRUE, TRUE))
+  expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
 })
 
 test_that("conflict: different versions required for package", {
   pkgs <- read_fixture("resolution-gh-vs-cran.rds")
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 2)
+  expect_equal(sol$status, 0)
+  expect_true(sol$objval >= solve_dummy_obj - 1L)
+
+  solution <- list(packages = NULL, result = NULL, problem = lp,
+                   solution = sol)
+  dsc <- describe_solution_error(pkgs, solution)
 
   pkgs <- make_fake_resolution(
     `cran::pkgA` = list(direct = TRUE),
@@ -42,7 +47,8 @@ test_that("conflict: different versions required for package", {
   )
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 2)
+  expect_equal(sol$status, 0)
+  expect_true(sol$objval >= solve_dummy_obj - 1L)
 })
 
 test_that("standard direct & github indirect is OK", {
@@ -56,7 +62,7 @@ test_that("standard direct & github indirect is OK", {
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution), c(FALSE, TRUE, TRUE))
+  expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
 })
 
 test_that("conflict between direct and indirect ref", {
@@ -69,5 +75,7 @@ test_that("conflict between direct and indirect ref", {
   )
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 2)
+  expect_equal(sol$status, 0)
+  expect_true(sol$objval >= solve_dummy_obj - 1L)
+  expect_equal(as.logical(sol$solution), c(FALSE, TRUE, FALSE, TRUE, FALSE))
 })

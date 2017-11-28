@@ -22,6 +22,7 @@ remotes_async_resolve <- function(self, private, progress_bar = NULL) {
   "!DEBUG remotes_resolve (async)"
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
+  private$solution <- NULL
 
   private$dirty <- TRUE
   private$resolution <- private$start_new_resolution(progress_bar)

@@ -97,11 +97,11 @@ remotes_i_create_lp_problem <- function(pkgs) {
   }
 
   ## 4. & 5. coefficients of the objective function, this is very easy
+  ## TODO: rule out incompatible platforms
   ## TODO: use rversion as well, for installed and binary packages
-  my_platform <- current_r_platform()
   lp$obj <- c(
     ifelse(pkgs$type == "installed", 0,
-           ifelse(pkgs$platform == my_platform, 1, 2)),
+           ifelse(pkgs$platform == "source", 2, 1)),
     rep(solve_dummy_obj, num_pkgs)
   )
 

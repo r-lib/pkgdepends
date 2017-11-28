@@ -234,24 +234,33 @@ describe_solution_error <- function(pkgs, solution) {
   messages <- lapply(unsat_conds, function(cidxs) {
     unsat <- solution$problem$conds[cidxs]
     vcapply(unsat, function(cond) {
-      pkg <- unique(na.omit(pkgs$package[cond$vars]))
       if (is.na(cond$type)) {
-        NA_character_
+        "internal error happened"
+
       } else if (cond$type == "exactly-once") {
+        pkg <- unique(na.omit(pkgs$package[cond$vars]))
         glue("cannot install any version of package `{pkg}`")
 
       } else if (cond$type == "dependency-version") {
-        NA_character_                   # TODO
+        other <- pkgs$package[[cond$note]]
+        pkg <- unique(na.omit(setdiff(pkgs$package[cond$vars], other)))
+        otherdeps <- pkgs$dependencies[[cond$note]]
+        wh <- match(pkg, otherdeps$package)[1]
+        ver <- paste(otherdeps$op[wh], otherdeps$version[wh])
+        glue("version `{ver}`, required by `{other}`, cannot be installed")
 
       } else if (cond$type == "satisfy-refs") {
-        ref <- pkgs$ref[cond$var]
+        ref <- pkgs$ref[cond$vars]
         ref2 <- pkgs$ref[cond$note]
-        TODO: required by .....
+        ## TODO: required by .....
         glue("ref `{ref}`, conflicts with ref `{ref2}`")
 
-      } else if (cond$type == "ok_resolution") {
-        NA_character_                   # TODO
+      } else if (cond$type == "ok-resolution") {
+        ref <- pkgs$ref[cond$vars]
+        glue("failed to resolve ref `{ref}`")
 
+      } else {
+        "internal error happened"
       }
     })
   })

@@ -40,6 +40,7 @@ test_that("conflict: different versions required for package", {
   solution <- list(packages = NULL, result = NULL, problem = lp,
                    solution = sol)
   dsc <- describe_solution_error(pkgs, solution)
+  expect_equal(dsc$failures$type, c("exactly-once", rep("satisfy-refs", 4)))
 
   pkgs <- make_fake_resolution(
     `cran::pkgA` = list(direct = TRUE),
@@ -49,6 +50,11 @@ test_that("conflict: different versions required for package", {
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
+
+  solution <- list(packages = NULL, result = NULL, problem = lp,
+                   solution = sol)
+  dsc <- describe_solution_error(pkgs, solution)
+  expect_equal(dsc$failures$type, c("exactly-once", rep("satisfy-refs", 2)))
 })
 
 test_that("standard direct & github indirect is OK", {
@@ -78,4 +84,41 @@ test_that("conflict between direct and indirect ref", {
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
   expect_equal(as.logical(sol$solution), c(FALSE, TRUE, FALSE, TRUE, FALSE))
+})
+
+test_that("version conflict", {
+  pkgs <- make_fake_resolution(
+    `pkgA` = list(version = "1.0.0"),
+    `pkgB` = list(
+      direct = TRUE,
+      deps = make_fake_deps(Imports = "pkgA (>= 2.0.0)"))
+  )
+  lp <- remotes_i_create_lp_problem(pkgs)
+  sol <- remotes_i_solve_lp_problem(lp)
+
+  solution <- list(packages = NULL, result = NULL, problem = lp,
+                   solution = sol)
+  dsc <- describe_solution_error(pkgs, solution)
+  expect_equal(dsc$failures$type, c("exactly-once", "dependency-version"))
+
+  expect_equal(sol$status, 0)
+  expect_true(sol$objval >= solve_dummy_obj - 1L)
+  expect_equal(as.logical(sol$solution), c(FALSE, TRUE, TRUE, FALSE))
+})
+
+test_that("resolution failure", {
+  pkgs <- make_fake_resolution(
+    `pkgA` = list(status = "FAILED")
+  )
+  lp <- remotes_i_create_lp_problem(pkgs)
+  sol <- remotes_i_solve_lp_problem(lp)
+
+  solution <- list(packages = NULL, result = NULL, problem = lp,
+                   solution = sol)
+  dsc <- describe_solution_error(pkgs, solution)
+  expect_equal(dsc$failures$type, c("exactly-once", "ok-resolution"))
+
+  expect_equal(sol$status, 0)
+  expect_true(sol$objval >= solve_dummy_obj - 1L)
+  expect_equal(as.logical(sol$solution), c(FALSE, TRUE))
 })

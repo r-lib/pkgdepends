@@ -310,6 +310,13 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
   result$deps <- get_cran_deps(result$package, result$version,
                                data, dependencies)
 
+  result$metadata <- c(
+    RemoteOriginalRef = ref,
+    RemoteType = "cran",
+    RemoteRepos = mirror[[1]],
+    RemotePkgType = if (platform == "source") "source" else "binary"
+  )
+
   result
 }
 

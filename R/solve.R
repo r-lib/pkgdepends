@@ -202,7 +202,8 @@ remotes_install_plan <- function(self, private) {
     binary = sol$platform != "source",
     direct = sol$direct,
     dependencies = I(deps),
-    file = sol$fulltarget
+    file = sol$fulltarget,
+    metadata = lapply(sol$resolution, function(x) x$files[[1]]$metadata)
   )
 }
 

@@ -11,6 +11,7 @@ is_offline <- (function() {
         is.na(pingr::ping_port(httpbin_url(), port = 443, count = 1L)),
         error = function(e) TRUE
       )
+      if (offline) cat("We are offline!\n", file = stderr())
     }
     offline
   }

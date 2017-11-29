@@ -122,3 +122,29 @@ test_that("resolution failure", {
   expect_true(sol$objval >= solve_dummy_obj - 1L)
   expect_equal(as.logical(sol$solution), c(FALSE, TRUE))
 })
+
+test_that("integration test", {
+  skip_on_cran()
+  skip_if_offline()
+
+  mkdirp(lib <- tempfile())
+  on.exit(unlink(lib, recursive = TRUE), add = TRUE)
+  r <- remotes$new(c("r-lib/cli"), lib = lib)
+  r$resolve()
+  sol <- r$solve()
+  expect_true("r-lib/cli" %in% sol$ref)
+
+  r <- remotes$new("cran::cli", lib = lib)
+  r$resolve()
+  sol <- r$solve()
+  expect_true("cran::cli" %in% sol$ref)
+  plan <- r$get_install_plan()
+  expect_true("cli" %in% plan$package)
+
+  r <- remotes$new(c("cran::cli", "r-lib/cli"), lib = lib)
+  r$resolve()
+  sol <- r$solve()
+  expect_s3_class(sol, "remote_solution_error")
+  expect_true("cli" %in% sol$failures$package)
+  expect_output(print(sol), "Cannot install package .*cli")
+})

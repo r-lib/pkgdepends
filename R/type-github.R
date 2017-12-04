@@ -206,6 +206,10 @@ type_github_make_resolution <- function(data) {
   sha <- data$sha$sha
   username <- data$remote$username
   repo <- data$remote$repo
+  subdir <- data$remote$subdir %|z|% NULL
+  commitish <- data$remote$commitish %|z|% NULL
+  pull <- data$remote$pull %|z|% NULL
+  release <- data$remote$release %|z|% NULL
   package <- data$desc$package
   version <- data$desc$version
   desc_err <- data$desc$error
@@ -223,6 +227,20 @@ type_github_make_resolution <- function(data) {
     deps = deps,
     status = if (is.null(desc_err %||% sha_err)) "OK" else "FAILED",
     error = list(desc = desc_err, sha = sha_err)
+  )
+
+  files$metadata <- c(
+    RemoteOriginalRef = data$remote$ref,
+    RemoteType = "github",
+    RemotePkgType = "source",
+    RemoteHost = "api.github.com",  # TODO: update if others are supported
+    RemoteRepo = repo,
+    RemoteUsername = username,
+    RemoteSubdir = subdir,
+    RemoteRef = commitish,
+    RemotePull = pull,
+    RemoteRelease = release,
+    RemoteSha = sha
   )
 
   data$remote$sha <- sha

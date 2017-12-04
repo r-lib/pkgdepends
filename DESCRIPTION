@@ -28,6 +28,7 @@ Imports:
     R6,
     stats,
     tibble,
+    tools,
     utils,
     withr
 Suggests:

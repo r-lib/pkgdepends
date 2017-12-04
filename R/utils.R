@@ -230,3 +230,7 @@ same_sha <- function(s1, s2) {
   len <- min(nchar(s1), nchar(s2))
   substr(s1, 1, len) == substr(s2, 1, len)
 }
+
+format_iso_8601 <- function (date) {
+  format(as.POSIXlt(date, tz = "UTC"), "%Y-%m-%dT%H:%M:%S+00:00")
+}

@@ -48,6 +48,16 @@ resolve_remote.remote_ref_local <- function(remote, config, ...,
       deps = deps,
       status = "OK"
     )
+
+    files$metadata <- c(
+      RemoteOriginalRef = remote$ref,
+      RemoteType = "local",
+      RemoteUrl = remote$path,
+      RemoteMD5 = tools::md5sum(remote$path),
+      RemotePkgType = if (platform == "source") "source" else "binary",
+      RemoteMtime = format_iso_8601(file.info(remote$path)$mtime)
+    )
+
     remote$description <- dsc
 
     structure(

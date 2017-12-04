@@ -104,7 +104,10 @@ type_bioc_get_bioc_repos <- function(r_version) {
     BioCexp   = "https://bioconductor.org/packages/{bv}/data/experiment",
     BioCextra = "https://bioconductor.org/packages/{bv}/extra"
   )
-  vcapply(tmpl, glue_data, .x = list(bv = bv))
+  list(
+    repos = vcapply(tmpl, glue_data, .x = list(bv = bv)),
+    version = bv
+  )
 }
 
 type_bioc_update_cache <- function(rootdir, platforms, rversions) {
@@ -118,7 +121,7 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions) {
     dir
     names(rversions) <- rversions
     async_map(rversions, function(rversion) {
-      repos <- bioc_repos[[rversion]]
+      repos <- bioc_repos[[rversion]]$repos
       async_map(repos, function(repo) {
         cache_file <- file.path(dir, "_cache", "bioc", repo, "PACKAGES.gz")
         target_file <- file.path(rootdir, cache_file)
@@ -178,8 +181,9 @@ type_bioc_resolve_from_cache_files <- function(remote, config, bioccache) {
         remote,
         dir$platform,
         dir$rversion,
+        bioc_version = repos[[rversion]]$version,
         data = bioccache[[dir$contriburl]][[rversion]],
-        repos = repos[[rversion]],
+        repos = repos[[rversion]]$repos,
         dir = dir$contriburl,
         dependencies = dependencies
       )
@@ -191,8 +195,10 @@ type_bioc_resolve_from_cache_files <- function(remote, config, bioccache) {
   async_constant(files)
 }
 
-type_bioc_make_bioc_resolution <- function(remote, platform, rversion, data,
-                                           repos, dir, dependencies) {
+type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
+                                           bioc_version, data, repos,
+                                           dir, dependencies) {
+
   ref <- remote$ref
   package <- remote$package
   version <- remote$version
@@ -250,5 +256,14 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion, data,
 
   result$deps <- get_cran_deps(result$package, result$version, data,
                                dependencies)
+
+  result$metadata <- c(
+    RemoteOriginalRef = ref,
+    RemoteType = "bioc",
+    RemoteRepos = repos,
+    RemotePkgType = if (platform == "source") "source" else "binary",
+    RemoteRelease = bioc_version
+  )
+
   result
 }

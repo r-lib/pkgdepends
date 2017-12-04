@@ -68,6 +68,8 @@ github_url_rx <- function() {
     "(?<username>[^/]+)/",
     ## Repo
     "(?<repo>[^/#@.]+)",
+    ## subdir, always empty
+    "(?<subdir>)",
     ## Optional Extension
     "(?:[.]git)?",
     ## Commit / PR / Release

@@ -97,7 +97,7 @@ satisfies_remote.remote_resolution_github <- function(resolution, candidate,
   if (resolution$remote$package != candidate$remote$package) return(FALSE)
 
 
-  ## 1. installed ref is good, if it has the same same ref
+  ## 1. installed ref is good, if it has the same sha
   if (inherits(candidate, "remote_resolution_installed")) {
     dsc <- candidate$remote$description
     sha1 <- dsc$get("RemoteSha")[[1]]

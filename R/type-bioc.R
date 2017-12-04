@@ -260,7 +260,7 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   result$metadata <- c(
     RemoteOriginalRef = ref,
     RemoteType = "bioc",
-    RemoteRepos = repos,
+    RemoteRepos = paste0(deparse(repos), collapse = ""),
     RemotePkgType = if (platform == "source") "source" else "binary",
     RemoteRelease = bioc_version
   )

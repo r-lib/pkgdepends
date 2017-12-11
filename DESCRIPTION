@@ -22,6 +22,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild,
+    prettyunits,
     progress,
     rappdirs,
     rematch2,

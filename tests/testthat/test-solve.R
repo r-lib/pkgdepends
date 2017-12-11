@@ -2,7 +2,7 @@
 context("solve")
 
 test_that("binary preferred over source", {
-  pkgs <- read_fixture("resolution-simple.rds")
+  pkgs <- read_fixture("resolution-simple.rds")$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -10,7 +10,7 @@ test_that("binary preferred over source", {
 })
 
 test_that("installed preferred over download", {
-  pkgs <- read_fixture("resolution-installed.rds")
+  pkgs <- read_fixture("resolution-installed.rds")$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -22,7 +22,7 @@ test_that("dependency versions are honored", {
     `pkgA` = list(),
     `pkgA@2.0.0` = list(version = "2.0.0"),
     pkgB = list(deps = make_fake_deps(Imports = "pkgA (>= 2.0.0)"))
-  )
+  )$data
 
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
@@ -31,7 +31,7 @@ test_that("dependency versions are honored", {
 })
 
 test_that("conflict: different versions required for package", {
-  pkgs <- read_fixture("resolution-gh-vs-cran.rds")
+  pkgs <- read_fixture("resolution-gh-vs-cran.rds")$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -45,7 +45,7 @@ test_that("conflict: different versions required for package", {
   pkgs <- make_fake_resolution(
     `cran::pkgA` = list(direct = TRUE),
     `github::user/pkgA` = list(direct = TRUE)
-  )
+  )$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -64,7 +64,7 @@ test_that("standard direct & github indirect is OK", {
       direct = TRUE,
       deps = make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA")),
     `user/pkgA` = list()
-  )
+  )$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -78,7 +78,7 @@ test_that("conflict between direct and indirect ref", {
       direct = TRUE,
       deps = make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA")),
     `user/pkgA` = list()
-  )
+  )$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -92,7 +92,7 @@ test_that("version conflict", {
     `pkgB` = list(
       direct = TRUE,
       deps = make_fake_deps(Imports = "pkgA (>= 2.0.0)"))
-  )
+  )$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
 
@@ -109,7 +109,7 @@ test_that("version conflict", {
 test_that("resolution failure", {
   pkgs <- make_fake_resolution(
     `pkgA` = list(status = "FAILED")
-  )
+  )$data
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
 
@@ -132,12 +132,12 @@ test_that("integration test", {
   r <- remotes$new(c("r-lib/cli"), lib = lib)
   r$resolve()
   sol <- r$solve()
-  expect_true("r-lib/cli" %in% sol$ref)
+  expect_true("r-lib/cli" %in% sol$data$ref)
 
   r <- remotes$new("cran::cli", lib = lib)
   r$resolve()
   sol <- r$solve()
-  expect_true("cran::cli" %in% sol$ref)
+  expect_true("cran::cli" %in% sol$data$ref)
   plan <- r$get_install_plan()
   expect_true("cli" %in% plan$package)
 

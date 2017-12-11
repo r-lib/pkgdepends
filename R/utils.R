@@ -234,3 +234,7 @@ same_sha <- function(s1, s2) {
 format_iso_8601 <- function (date) {
   format(as.POSIXlt(date, tz = "UTC"), "%Y-%m-%dT%H:%M:%S+00:00")
 }
+
+cat0 <- function(..., sep = "") {
+  cat(..., sep = sep)
+}

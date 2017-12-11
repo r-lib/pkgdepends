@@ -231,3 +231,14 @@ test_that("get_all_package_dirs", {
   expect_gte(nrow(res), 1)
   expect_true(all(sapply(res, is.character)))
 })
+
+test_that("same_sha", {
+  expect_true(same_sha("badcafe", "b"))
+  expect_true(same_sha("b", "badcafe"))
+  expect_false(same_sha("badcafe1", "badcafebadcafe"))
+})
+
+test_that("format_iso_8601", {
+  d <- structure(1266510204, class = c("POSIXct", "POSIXt"), tzone = "UTC")
+  expect_equal(format_iso_8601(d), "2010-02-18T16:23:24+00:00")
+})

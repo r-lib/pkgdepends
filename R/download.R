@@ -9,7 +9,7 @@ setup_download_progress_bar <- function(total) {
 }
 
 remotes_download_resolution <- function(self, private) {
-  total <- nrow(private$resolution$result)
+  total <- nrow(private$resolution$result$data)
   progress_bar <- setup_download_progress_bar(total)
   synchronise(self$async_download_resolution(progress_bar = progress_bar))
 }
@@ -18,7 +18,8 @@ remotes_async_download_resolution <- function(self, private, progress_bar) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
   dls <- remotes_async_download_internal(
-    self, private, private$resolution$packages, progress_bar)
+    self, private, private$resolution$result$data$resolution,
+    progress_bar)
 
   dls$then(function(value) {
     private$downloads <- value
@@ -27,7 +28,7 @@ remotes_async_download_resolution <- function(self, private, progress_bar) {
 }
 
 remotes_download_solution <- function(self, private) {
-  total <- nrow(private$solution$result)
+  total <- nrow(private$solution$result$data)
   progress_bar <- setup_download_progress_bar(total)
   synchronise(self$async_download_solution(progress_bar = progress_bar))
 }
@@ -37,7 +38,7 @@ remotes_async_download_solution <- function(self, private, progress_bar) {
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
   dls <- remotes_async_download_internal(
-    self, private, private$solution$packages, progress_bar)
+    self, private, private$solution$result$data$resolution, progress_bar)
 
   dls$then(function(value) {
     private$solution_downloads <- value
@@ -47,7 +48,7 @@ remotes_async_download_solution <- function(self, private, progress_bar) {
 
 remotes_async_download_internal <- function(self, private, what,
                                             progress_bar) {
-  if (any(what$status != "OK")) {
+  if (any(vcapply(what, get_status) != "OK")) {
     stop("Resolution has errors, cannot start downloading")
   }
 
@@ -71,7 +72,7 @@ remotes_download_res <- function(self, private, res) {
   if (!is.null(private$resolution$cache$progress_bar)) {
     ddl$then(function() {
       cache <- private$resolution$cache
-      cache$progress_bar$tick(length(res$files))
+      cache$progress_bar$tick(num_files(res))
     })
   }
 
@@ -103,9 +104,9 @@ remotes_get_download <- function(resolution, downloads) {
     recursive = FALSE
   )
 
-  reso$download_status <- getf("status")
-  reso$bytes <- getf("bytes")
-  reso$errors <- I(errors)
+  reso$data$download_status <- getf("status")
+  reso$data$bytes <- getf("bytes")
+  reso$data$errors <- I(errors)
 
   class(reso) <- c("remotes_downloads", class(reso))
   reso

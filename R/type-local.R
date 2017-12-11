@@ -92,7 +92,7 @@ resolve_remote.remote_ref_local <- function(remote, config, ...,
 download_remote.remote_resolution_local <- function(resolution, config,
                                                     ..., cache) {
   tryCatch({
-    files <- resolution$files[[1]]
+    files <- get_files(resolution)[[1]]
     target_file <- file.path(config$cache_dir, files$target)
     mkdirp(dirname(target_file))
     file.copy(files$source, target_file)

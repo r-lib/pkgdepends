@@ -49,8 +49,12 @@ remotes_async_resolve <- function(self, private, progress_bar = NULL) {
     })$
     then(function() private$dirty <- FALSE)$
     then(function() {
-      private$resolution$result <-
-        private$resolution_to_df(private$resolution$packages)
+      private$resolution$metadata$resolution_end <- Sys.time()
+      private$resolution$result <- remotes__resolution_to_df(
+        private$resolution$packages,
+        private$resolution$metadata,
+        private$remotes,
+        private$config$cache_dir)
     })
 
   pool$finish()
@@ -91,7 +95,7 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
   }
 
   deps <- dres$then(function(res) {
-    deps <- unique(unlist(lapply(res$files, function(x) x$deps$ref)))
+    deps <- unique(unlist(lapply(get_files(res), function(x) x$deps$ref)))
     cache$numdeps <- cache$numdeps + length(deps)
     lapply(parse_remotes(deps), private$resolve_ref, pool = pool)
   })
@@ -107,6 +111,8 @@ remotes__start_new_resolution <- function(self, private, progress_bar) {
   ## These are the resolved packages. They might be deferred values,
   ## if the resolution is still ongoing.
   res$packages <- new.env(parent = emptyenv())
+  res$metadata <- list()
+  res$metadata$resolution_start <- Sys.time()
 
   ## This is a generic cache
   res$cache <- new.env(parent = emptyenv())
@@ -120,39 +126,32 @@ remotes__start_new_resolution <- function(self, private, progress_bar) {
   res
 }
 
-remotes__resolution_to_df <- function(self, private, resolution) {
-  "!DEBUG formatting resolution into data frame"
-  remotes_i_resolution_to_df(resolution, private$remotes,
-                             private$config$cache_dir)
-}
+remotes__resolution_to_df <- function(packages, metadata,
+                                       remotes, cache_dir) {
 
-remotes_i_resolution_to_df <- function(resolution, remotes, cache_dir) {
-  errs <- Filter(function(x) x$status != "OK", resolution)
+  errs <- Filter(function(x) get_status(x) != "OK", packages)
 
-  num_files <- viapply(resolution, function(x) length(x$files))
-  remote <- rep(
-    lapply(resolution, function(x) x$remote),
-    num_files
-  )
+  num_files <- viapply(packages, num_files)
+  remote <- rep(lapply(packages, get_remote), num_files)
   ref <- rep(
-    vcapply(resolution, function(x) x$remote$ref, USE.NAMES = FALSE),
+    vcapply(packages, function(x) get_ref(x), USE.NAMES = FALSE),
     num_files
   )
-  res_id <- rep(seq_along(resolution), num_files)
-  res_file <- unlist(lapply(resolution, function(x) seq_along(x$files)))
-  resolution_subset <- lapply(seq_along(res_id), function(i) {
-    r <- resolution[[ res_id[i] ]]
-    r$files <- r$files[ res_file[i] ]
+  res_id <- rep(seq_along(packages), num_files)
+  res_file <- unlist(lapply(packages, function(x) seq_len(num_files(x))))
+  packages_subset <- lapply(seq_along(res_id), function(i) {
+    r <- packages[[ res_id[i] ]]
+    r <- set_files(r, get_files(r)[ res_file[i] ])
     r
   })
 
   getf <- function(f) {
-    unlist(lapply(resolution, function(x) vcapply(x$files, "[[", f)))
+    unlist(lapply(packages, function(x) vcapply(get_files(x), "[[", f)))
   }
 
   getfl <- function(f) {
     I(unlist(
-      lapply(resolution, function(x) lapply(x$files, "[[", f)),
+      lapply(packages, function(x) lapply(get_files(x), "[[", f)),
       recursive = FALSE
     ))
   }
@@ -175,11 +174,13 @@ remotes_i_resolution_to_df <- function(resolution, remotes, cache_dir) {
     fulltarget = file.path(cache_dir, getf("target")),
     dependencies = deps,
     remote     = remote,
-    resolution = resolution_subset
+    resolution = packages_subset
   )
-  class(res) <- c("remotes_resolution", class(res))
 
-  res
+  structure(
+    list(data = res, metadata = metadata),
+    class = "remotes_resolution"
+  )
 }
 
 remotes__is_resolving <- function(self, private, ref) {
@@ -188,39 +189,95 @@ remotes__is_resolving <- function(self, private, ref) {
 
 remotes__subset_resolution <- function(self, private, which) {
   "!DEBUG taking a subset of a resolution"
-  df <- self$get_resolution()
-  df$resolution[which]
+  current <- self$get_resolution()
+  remotes__resolution_to_df(current$data$resolution[which],
+                            current$metadata,
+                            private$remotes,
+                            private$config$cache_dir)
 }
 
+#' @importFrom prettyunits pretty_dt
+#' @importFrom crayon bgBlue green blue white bold col_nchar
+#' @importFrom cli cat_rule
+
 print.remotes_resolution <- function(x, ...) {
-  print_refs(x, x$direct, header = "Remote resolution for refs")
+  meta <- x$metadata
+  x <- x$data
+
+  direct <- unique(x$ref[x$direct])
+  dt <- pretty_dt(meta$resolution_end - meta$resolution_start)
+  head <- glue(
+    "{logo()} RESOLUTION, {length(direct)} refs, resolved in {dt} ")
+  width <- getOption("width") - col_nchar(head, type = "width") - 1
+  head <- paste0(head, strrep(symbol$line, max(width, 0)))
+  cat(blue(bold(head)), sep = "\n")
+
+  print_refs(x, x$direct, header = NULL)
+
   print_refs(
     x, (! x$direct) & (x$type != "installed"),
     header = "Dependencies",
     by_type = TRUE)
+
   print_refs(
     x, (! x$direct) & (x$type == "installed"),
     header = "Already installed")
-  ## TODO: time stamp
-  ## TODO: Errors
+
+  print_failed_refs(x)
+
   invisible(x)
 }
 
-print_refs <- function(res, which, header, by_type = FALSE) {
+get_failed_refs <- function(res) {
+  failed <- tapply(res$status, res$ref, function(x) all(x != "OK"))
+  names(which(failed))
+}
+
+#' @importFrom crayon red
+
+print_refs <- function(res, which, header, by_type = FALSE,
+                       mark_failed = TRUE) {
   if (!length(res$ref[which])) return()
 
-  cat(paste0(header, ":"), sep = "\n")
+  if (!is.null(header)) cat(blue(bold(paste0(header, ":"))), sep = "\n")
+
+  mark <- function(wh) {
+    ref <- sort(unique(res$ref[wh]))
+    if (mark_failed) {
+      failed_ref <- get_failed_refs(res[wh,])
+      ref <- ifelse(ref %in% failed_ref, bold(red(ref)), ref)
+    }
+    ref
+  }
 
   if (by_type) {
     for (t in sort(unique(res$type[which]))) {
-      cat(paste0("  ", t, ":"), sep = "\n")
+      cat(blue(paste0("  ", t, ":")), sep = "\n")
       which2 <- which & res$type == t
-      l <- comma_wrap(sort(unique(res$ref[which2])), indent = 4)
-      cat(l, sep = "\n")
+      cat(comma_wrap(mark(which2), indent = 4), sep = "\n")
     }
 
   } else {
-    l <- comma_wrap(sort(unique(res$ref[which])))
-    cat(l, sep = "\n")
+    cat(comma_wrap(mark(which)), sep = "\n")
   }
+}
+
+print_failed_refs <- function(res) {
+  failed <- get_failed_refs(res)
+  if (length(failed) > 0) cat(bold(red("Errors:")), sep = "\n")
+  for (f in failed) print_failed_ref(res, f)
+}
+
+print_failed_ref <- function(res, failed_ref) {
+  cat0("  ", failed_ref, ": ")
+  wh <- which(failed_ref == res$ref)
+  errs <- unique(vcapply(
+    res$resolution[wh],
+    function(x) {
+      get_error_message(x) %||%
+      get_files(x)[[1]]$error$message %||%
+      "Unknown error"
+    }
+  ))
+  cat(paste(errs, collapse = "\n    "), sep = "\n")
 }

@@ -27,22 +27,47 @@ resolve_remote.remote_ref_standard <- function(remote, config, ...,
   cache$crandata <- cache$crandata %||% update_crandata_cache(config)
   cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
 
-  ## First we try CRAN, then BioC, then fail
-  cache$crandata$
+  ## We try both cran and bioc
+  cran <- cache$crandata$
     then(function(cacheresult) {
       type_cran_resolve_from_cache(remote, config, cacheresult)
-    })$
-    then(function(cran_resolution) {
-      cache$biocdata$then(function(cacheresult) {
-        res <- if (cran_resolution$status == "OK") {
-          res <- cran_resolution
-        } else {
-          type_bioc_resolve_from_cache(remote, config, cacheresult)
-        }
-        class(res) <- c("remote_resolution_standard", class(res))
-        res
-      })
     })
+
+  bioc <- cache$biocdata$
+    then(function(cacheresult) {
+      type_bioc_resolve_from_cache(remote, config, cacheresult)
+    })
+
+  when_all(cran = cran, bioc = bioc)$
+    then(function(val) {
+      cran_status <- vcapply(get_files(val$cran), "[[", "status")
+      bioc_status <- vcapply(get_files(val$bioc), "[[", "status")
+      statusok <- any(cran_status == "OK") || any(bioc_status == "OK")
+      files <- if (statusok) {
+        c(get_files(val$cran)[cran_status == "OK"],
+          get_files(val$bioc)[bioc_status == "OK"])
+      } else {
+        c(get_files(val$cran), get_files(val$bioc))
+      }
+      structure(
+        list(
+          files = files,
+          remote = remote,
+          status = if (statusok) "OK" else "FAILED"
+        ),
+        class = c("remote_resolution_standard", "remote_resolution")
+      )
+    })
+}
+
+#' @export
+
+download_remote.remote_resolution_standard <- function(resolution, config,
+                                                       ..., cache) {
+  async_map(get_files(resolution), function(file) {
+    get_package_from(cache$package_cache, file$source,
+                     config$cache_dir, file$target)
+  })
 }
 
 #' @export
@@ -55,14 +80,16 @@ satisfies_remote.remote_resolution_standard <-
     ## requirements are satisfied.
 
     ## 1. package name must be the same
-    if (resolution$remote$package != candidate$remote$package) return(FALSE)
+    if (get_remote(resolution)$package != get_remote(candidate)$package) {
+      return(FALSE)
+    }
 
     ## 2. version requirements must be satisfied
-    if (resolution$remote$version == "") return(TRUE)
+    if (get_remote(resolution)$version == "") return(TRUE)
 
     version_satisfies(
-      candidate$files[[1]]$version,
-      resolution$remote$atleast,
-      resolution$remote$version
+      get_files(candidate)[[1]]$version,
+      get_remote(resolution)$atleast,
+      get_remote(resolution)$version
     )
   }

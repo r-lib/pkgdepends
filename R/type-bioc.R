@@ -34,9 +34,7 @@ resolve_remote.remote_ref_bioc <- function(remote, config, ..., cache) {
 
 download_remote.remote_resolution_bioc <- function(resolution, config,
                                                    ..., cache) {
-  ref <- resolution$remote$ref
-
-  async_map(resolution$files, function(files) {
+  async_map(get_files(resolution), function(files) {
     get_package_from(cache$package_cache, files$source,
                      config$cache_dir, files$target)
   })
@@ -56,20 +54,22 @@ satisfies_remote.remote_resolution_bioc <- function(resolution, candidate,
 
   ## 2. installed refs must be from bioc
   if (inherits(candidate, "remote_resolution_installed")) {
-    dsc <- candidate$remote$description
+    dsc <- get_remote(candidate)$description
     if (is.na(dsc$get("biocViews"))) return(FALSE)
   }
 
   ## 3. package names must match
-  if (resolution$remote$package != candidate$remote$package) return(FALSE)
+  if (get_remote(resolution)$package != get_remote(candidate)$package) {
+    return(FALSE)
+  }
 
   ## 4. version requirements must be satisfied. Otherwise good.
-  if (resolution$remote$version == "") return(TRUE)
+  if (get_remote(resolution)$version == "") return(TRUE)
 
   version_satisfies(
-    candidate$files[[1]]$version,
-    resolution$remote$atleast,
-    resolution$remote$version
+    get_files(candidate)[[1]]$version,
+    get_remote(resolution)$atleast,
+    get_remote(resolution)$version
   )
 }
 
@@ -217,6 +217,10 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   which_repo <- vlapply(data, function(d) package %in% d[, "Package"])
   if (sum(which_repo) == 0) {
     result$status <- "FAILED"
+    result$error <- make_error(
+      paste0("Can't find BioConductor package ", package),
+      class = "remotes_resolution_error"
+    )
     return(result)
   } else if (sum(which_repo) > 1) {
     warning("Package '", package, "' in multiple repositories")
@@ -232,6 +236,10 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   }
   if (! length(wh)) {
     result$status <- "FAILED"
+    result$error <- make_error(
+      paste0("Can't find BioConductor package ", package),
+      class = "remotes_resolution_error"
+    )
     return(result)
   }
 

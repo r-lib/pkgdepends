@@ -9,7 +9,7 @@ remotes_solve <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
-  pkgs <- self$get_resolution()
+  pkgs <- self$get_resolution()$data
 
   prb <- private$create_lp_problem(pkgs)
   sol <- private$solve_lp_problem(prb)
@@ -20,14 +20,12 @@ remotes_solve <- function(self, private) {
 
   if (sol$status == 0 && sol$objval < solve_dummy_obj) {
     selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
-    packages <- private$subset_resolution(selected)
-    result <- private$resolution_to_df(packages)
+    result <- private$subset_resolution(selected)
   } else {
-    packages <- result <- NULL
+    result <- NULL
   }
 
   private$solution <- list(
-    packages = packages,
     result = result,
     problem = prb,
     solution = sol
@@ -185,13 +183,13 @@ remotes_get_solution <- function(self, private) {
   if (! is.null(private$solution$result)) {
     private$solution$result
   } else {
-    describe_solution_error(self$get_resolution(), private$solution)
+    describe_solution_error(self$get_resolution()$data, private$solution)
   }
 }
 
 remotes_install_plan <- function(self, private) {
   "!DEBUG creating install plan"
-  sol <- self$get_solution()
+  sol <- self$get_solution()$data
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
   deps <- lapply(sol$dependencies, "[[", "package")
@@ -203,7 +201,8 @@ remotes_install_plan <- function(self, private) {
     direct = sol$direct,
     dependencies = I(deps),
     file = sol$fulltarget,
-    metadata = lapply(sol$resolution, function(x) x$files[[1]]$metadata)
+    metadata =
+      lapply(sol$resolution, function(x) get_files(x)[[1]]$metadata)
   )
 }
 
@@ -211,7 +210,6 @@ describe_solution_error <- function(pkgs, solution) {
   assert_that(
     ! is.null(pkgs),
     ! is.null(solution),
-    is.null(solution$packages),
     solution$solution$objval >= solve_dummy_obj - 1L
   )
 

@@ -158,8 +158,6 @@ remotes <- R6Class(
       remotes__start_new_resolution(self, private, progress_bar),
     resolve_ref = function(rem, pool)
       remotes__resolve_ref(self, private, rem, pool),
-    resolution_to_df = function(resolution)
-      remotes__resolution_to_df(self, private, resolution),
     is_resolving = function(ref)
       remotes__is_resolving(self, private, ref),
     download_res = function(res)

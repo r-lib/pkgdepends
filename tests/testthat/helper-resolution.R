@@ -42,6 +42,13 @@ make_fake_resolution1 <- function(ref, args) {
   )
 }
 
+make_fake_metadata <- function() {
+  list(
+    resolution_start = Sys.time(),
+    resolution_end = Sys.time()
+  )
+}
+
 make_fake_resolution <- function(...) {
   pkgs <- list(...)
   assertthat::assert_that(all_named(pkgs))
@@ -49,8 +56,9 @@ make_fake_resolution <- function(...) {
     names(pkgs), function(n) make_fake_resolution1(n, pkgs[[n]]))
 
   direct <- vlapply(lapply(pkgs, "[[", "direct"), isTRUE)
-  remotes_i_resolution_to_df(
+  remotes__resolution_to_df(
     ress,
+    make_fake_metadata(),
     parse_remotes(names(pkgs)[direct]),
     remotes_default_config()$cache_dir)
 }

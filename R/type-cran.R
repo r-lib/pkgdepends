@@ -37,9 +37,7 @@ resolve_remote.remote_ref_cran <- function(remote, config, ..., cache) {
 
 download_remote.remote_resolution_cran <- function(resolution, config,
                                                    ..., cache) {
-  ref <- resolution$remote$ref
-
-  async_map(resolution$files, function(files) {
+  async_map(get_files(resolution), function(files) {
     get_package_from(cache$package_cache, files$source,
                      config$cache_dir, files$target)
   })
@@ -59,20 +57,22 @@ satisfies_remote.remote_resolution_cran <- function(resolution, candidate,
 
   ## 2. installed refs must be from CRAN
   if (inherits(candidate, "remote_resolution_installed")) {
-    dsc <- candidate$remote$description
+    dsc <- get_remote(candidate)$description
     if (! identical(dsc$get("Repository")[[1]], "CRAN")) return(FALSE)
   }
 
   ## 3. package names must match
-  if (resolution$remote$package != candidate$remote$package) return(FALSE)
+  if (get_remote(resolution)$package != get_remote(candidate)$package) {
+    return(FALSE)
+  }
 
   ## 4. version requirements must be satisfied. Otherwise good.
-  if (resolution$remote$version == "") return(TRUE)
+  if (get_remote(resolution)$version == "") return(TRUE)
 
   version_satisfies(
-    candidate$files[[1]]$version,
-    resolution$remote$atleast,
-    resolution$remote$version
+    get_files(candidate)[[1]]$version,
+    get_remote(resolution)$atleast,
+    get_remote(resolution)$version
   )
 }
 
@@ -278,6 +278,10 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
   }
   if (! length(wh)) {
     result$status <- "FAILED"
+    result$error <- make_error(
+      paste0("Can't find CRAN package ", package),
+      class = "remotes_resolution_error"
+    )
     return(result)
   }
 

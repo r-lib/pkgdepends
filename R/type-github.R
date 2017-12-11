@@ -48,12 +48,12 @@ download_remote.remote_resolution_github <- function(resolution, config,
 
   cache_dir <- config$cache_dir
 
-  ref <- resolution$remote$ref
+  ref <- get_ref(resolution)
 
-  if (length(resolution$files) != 1) {
+  if (num_files(resolution) != 1) {
     stop("Invalid `files` vector, should be length one.")
   }
-  files <- resolution$files[[1]]
+  files <- get_files(resolution)[[1]]
 
   target_file <- file.path(cache_dir, files$target)
   cached_zip <- sub("\\.tar\\.gz$", ".zip", target_file)
@@ -94,20 +94,21 @@ satisfies_remote.remote_resolution_github <- function(resolution, candidate,
                                                       config, ...) {
 
   ## 1. package name must match
-  if (resolution$remote$package != candidate$remote$package) return(FALSE)
-
+  if (get_remote(resolution)$package != get_remote(candidate)$package) {
+    return(FALSE)
+  }
 
   ## 1. installed ref is good, if it has the same sha
   if (inherits(candidate, "remote_resolution_installed")) {
-    dsc <- candidate$remote$description
+    dsc <- get_remote(candidate)$description
     sha1 <- dsc$get("RemoteSha")[[1]]
-    sha2 <- resolution$remote$sha
+    sha2 <- get_remote(resolution)$sha
     return(is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2))
   }
 
   ## 2. other refs are also good, as long as they have the same sha
-  sha1 <- candidate$remote$sha
-  sha2 <- resolution$remote$sha
+  sha1 <- get_remote(candidate)$sha
+  sha2 <- get_remote(resolution)$sha
   return(is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2))
 }
 

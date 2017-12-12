@@ -9,6 +9,7 @@ remotes_solve <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
+  metadata <- list(solution_start = Sys.time())
   pkgs <- self$get_resolution()$data
 
   prb <- private$create_lp_problem(pkgs)
@@ -21,6 +22,9 @@ remotes_solve <- function(self, private) {
   if (sol$status == 0 && sol$objval < solve_dummy_obj) {
     selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
     result <- private$subset_resolution(selected)
+    metadata$solution_end <- Sys.time()
+    result$metadata <- modifyList(result$metadata, metadata)
+    class(result) <- unique(c("remotes_solution", class(result)))
   } else {
     result <- NULL
   }
@@ -292,5 +296,30 @@ print.remote_solution_error <- function(x, ...) {
     cat(glue("Cannot install package `{pkg}`."), sep = "\n")
     if (length(msgs)) cat(paste0(" * ", msgs), sep = "\n")
   }
+  invisible(x)
+}
+
+#' @export
+
+print.remotes_solution <- function(x, ...) {
+  meta <- x$metadata
+  x <- x$data
+
+  direct <- unique(x$ref[x$direct])
+  dt <- pretty_dt(meta$resolution_end - meta$resolution_start)
+  dt2 <- pretty_dt(meta$solution_end - meta$solution_start)
+  head <- glue(
+    "{logo()} SOLUTION, {length(direct)} refs, resolved in {dt}, ",
+    "solved in {dt2} ")
+  width <- getOption("width") - col_nchar(head, type = "width") - 1
+  head <- paste0(head, strrep(symbol$line, max(width, 0)))
+  cat(blue(bold(head)), sep = "\n")
+
+  print_refs(x, x$direct, header = NULL)
+
+  print_refs(x, (! x$direct), header = "Dependencies", by_type = TRUE)
+
+  print_failed_refs(x)
+
   invisible(x)
 }

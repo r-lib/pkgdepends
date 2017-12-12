@@ -214,14 +214,7 @@ print.remotes_resolution <- function(x, ...) {
 
   print_refs(x, x$direct, header = NULL)
 
-  print_refs(
-    x, (! x$direct) & (x$type != "installed"),
-    header = "Dependencies",
-    by_type = TRUE)
-
-  print_refs(
-    x, (! x$direct) & (x$type == "installed"),
-    header = "Already installed")
+  print_refs(x, (! x$direct), header = "Dependencies", by_type = TRUE)
 
   print_failed_refs(x)
 
@@ -241,20 +234,22 @@ print_refs <- function(res, which, header, by_type = FALSE,
 
   if (!is.null(header)) cat(blue(bold(paste0(header, ":"))), sep = "\n")
 
-  mark <- function(wh) {
-    ref <- sort(unique(res$ref[wh]))
+  mark <- function(wh, short = FALSE) {
+    ref <- ref2 <- sort(unique(res$ref[wh]))
+    if (short) ref2 <- basename(ref)
     if (mark_failed) {
       failed_ref <- get_failed_refs(res[wh,])
-      ref <- ifelse(ref %in% failed_ref, bold(red(ref)), ref)
+      ref <- ifelse(ref %in% failed_ref, bold(red(ref2)), ref2)
     }
-    ref
+    ref2
   }
 
   if (by_type) {
     for (t in sort(unique(res$type[which]))) {
       cat(blue(paste0("  ", t, ":")), sep = "\n")
       which2 <- which & res$type == t
-      cat(comma_wrap(mark(which2), indent = 4), sep = "\n")
+      cat(comma_wrap(mark(which2, short = t == "installed"), indent = 4),
+          sep = "\n")
     }
 
   } else {

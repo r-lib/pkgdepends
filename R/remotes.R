@@ -6,21 +6,18 @@
 #' r <- remotes$new(specs, config = list())
 #'
 #' r$resolve()
-#' r$async_resolve(progress_bar)
+#' r$async_resolve()
 #' r$get_resolution()
 #' r$draw_tree(pkgs)
 #'
 #' r$download()
-#' r$async_download(progress_bar)
+#' r$async_download()
 #' r$get_download_status()
 #'
 #' @section Arguments:
 #' * `specs`: Package specifications. See 'Remote Types' below.
 #' * `config`: Custom configuration, a named list. See the list of options
 #'   below.
-#' * `progress_bar` A [progress::progress_bar] object from the `progress`
-#'   package. This is optional, and can be used to track progress. See
-#'   details below.
 #' * `pkgs`: Charcater vector of regular expressions, to specify the
 #'   packages to query.
 #'
@@ -88,9 +85,6 @@
 #' * `r-versions`: R version to support, for the binary packages. Defaults
 #'   to the running R version.
 #'
-#' @section Progress bars:
-#' TODO
-#'
 #' @importFrom R6 R6Class
 #' @import async
 #' @name remotes
@@ -112,15 +106,15 @@ remotes <- R6Class(
     initialize = function(specs, config = list(), library = NULL)
       remotes_init(self, private, specs, config, library),
 
-    async_resolve = function(progress_bar = NULL)
-      remotes_async_resolve(self, private, progress_bar),
+    async_resolve = function()
+      remotes_async_resolve(self, private),
     resolve = function()
       remotes_resolve(self, private),
     get_resolution = function()
       remotes_get_resolution(self, private),
 
-    async_download_resolution = function(progress_bar = NULL)
-      remotes_async_download_resolution(self, private, progress_bar),
+    async_download_resolution = function()
+      remotes_async_download_resolution(self, private),
     download_resolution = function()
       remotes_download_resolution(self, private),
     get_resolution_download = function()
@@ -135,8 +129,8 @@ remotes <- R6Class(
     draw_tree = function(pkgs = NULL)
       remotes_draw_tree(self, private, pkgs),
 
-    async_download_solution = function(progress_bar = NULL)
-      remotes_async_download_solution(self, private, progress_bar),
+    async_download_solution = function()
+      remotes_async_download_solution(self, private),
     download_solution = function()
       remotes_download_solution(self, private),
     get_solution_download = function()
@@ -154,8 +148,8 @@ remotes <- R6Class(
     download_cache = NULL,
     config = NULL,
 
-    start_new_resolution = function(progress_bar)
-      remotes__start_new_resolution(self, private, progress_bar),
+    start_new_resolution = function()
+      remotes__start_new_resolution(self, private),
     resolve_ref = function(rem, pool)
       remotes__resolve_ref(self, private, rem, pool),
     is_resolving = function(ref)

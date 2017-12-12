@@ -171,13 +171,6 @@ is_na_scalar <- function(x) {
   length(x) == 1 && is.na(x)
 }
 
-#' @importFrom cli symbol
-
-progress_msg <- function(msg, status = c("tick", "cross")) {
-  status <- match.arg(status)
-  cat(symbol[[status]], " ", msg, "\n", sep = "")
-}
-
 omit_cols <- function(df, omit) {
   if (!length(omit)) {
     df

@@ -1,46 +1,22 @@
 
 ## API
 
-#' @importFrom progress progress_bar
-
 remotes_resolve <- function(self, private) {
   "!DEBUG remotes_resolve (sync)"
-  progress_bar <- progress_bar$new(
-    total = length(private$remotes),
-    format = "  Resolving dependencies [:current/:total] [:deps/:deptot] :elapsedfull"
-  )
-  progress_bar$tick(0, tokens = list(deps = 0, deptot = 0))
-
-  res <- synchronise(self$async_resolve(progress_bar = progress_bar))
-
-  progress_msg("Resolving dependencies")
-
-  res
+  synchronise(self$async_resolve())
 }
 
-remotes_async_resolve <- function(self, private, progress_bar = NULL) {
+remotes_async_resolve <- function(self, private) {
   "!DEBUG remotes_resolve (async)"
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
   private$solution <- NULL
 
   private$dirty <- TRUE
-  private$resolution <- private$start_new_resolution(progress_bar)
+  private$resolution <- private$start_new_resolution()
 
   pool <- deferred_pool$new()
   proms <- lapply(private$remotes, private$resolve_ref, pool = pool)
-
-  if (!is.null(private$resolution$cache$progress_bar)) {
-    for (pr in proms) {
-      pr$then(function() {
-        private$resolution$cache$progress_bar$tick(
-          tokens = list(
-            deps = private$resolution$cache$numdeps_done,
-            deptot = private$resolution$cache$numdeps)
-        )
-      })
-    }
-  }
 
   res <- pool$when_complete()$
     then(function() {
@@ -104,7 +80,7 @@ remotes__resolve_ref <- function(self, private, rem, pool) {
   dres
 }
 
-remotes__start_new_resolution <- function(self, private, progress_bar) {
+remotes__start_new_resolution <- function(self, private) {
   "!DEBUG cleaning up for new resolution"
   res <- new.env(parent = emptyenv())
 
@@ -116,7 +92,6 @@ remotes__start_new_resolution <- function(self, private, progress_bar) {
 
   ## This is a generic cache
   res$cache <- new.env(parent = emptyenv())
-  res$cache$progress_bar <- progress_bar
   res$cache$numdeps <- length(private$remotes)
   res$cache$numdeps_done <- 0
 

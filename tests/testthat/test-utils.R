@@ -191,26 +191,6 @@ test_that("is_na_scalar", {
   for (n in neg) expect_false(is_na_scalar(n))
 })
 
-test_that("progress_msg", {
-  withr::with_options(
-    list(cli.unicode = TRUE),
-    expect_output(progress_msg("yes"), "✔ yes")
-  )
-  withr::with_options(
-    list(cli.unicode = TRUE),
-    expect_output(progress_msg("yes", "cross"), "✖ yes")
-  )
-
-  withr::with_options(
-    list(cli.unicode = FALSE),
-    expect_output(progress_msg("yes"), "√ yes")
-  )
-  withr::with_options(
-    list(cli.unicode = FALSE),
-    expect_output(progress_msg("yes", "cross"), "x yes")
-  )
-})
-
 test_that("omit_cols", {
   df <- data.frame(a = 1:5, b = 5:1, c = letters[1:5])
   expect_identical(omit_cols(df, character()), df)

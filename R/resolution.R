@@ -3,7 +3,14 @@
 
 remotes_resolve <- function(self, private) {
   "!DEBUG remotes_resolve (sync)"
-  synchronise(self$async_resolve())
+  private$with_progress_bar(
+    list(type = "resolution", total = length(private$remotes)),
+    synchronise(self$async_resolve())
+  )
+  private$progress_bar$message(
+    symbol$tick, "  Resolved {count}/{total} direct refs and ",
+    "{xcount}/{xtotal} dependencies"
+  )
 }
 
 remotes_async_resolve <- function(self, private) {
@@ -16,7 +23,8 @@ remotes_async_resolve <- function(self, private) {
   private$resolution <- private$start_new_resolution()
 
   pool <- deferred_pool$new()
-  proms <- lapply(private$remotes, private$resolve_ref, pool = pool)
+  proms <- lapply(private$remotes, private$resolve_ref, pool = pool,
+                  direct = TRUE)
 
   res <- pool$when_complete()$
     then(function() {
@@ -45,19 +53,22 @@ remotes_get_resolution <- function(self, private) {
 
 ## Internals
 
-remotes__resolve_ref <- function(self, private, rem, pool) {
+remotes__resolve_ref <- function(self, private, rem, pool, direct) {
   "!DEBUG resolving `rem$ref` (type `rem$type`)"
   ## We might have a deferred value for it already
   if (private$is_resolving(rem$ref)) {
     return(private$resolution$packages[[rem$ref]])
   }
 
+  pb_name <- if (direct) c("count", "total") else c("xcount", "xtotal")
+  private$progress_bar$update(pb_name[2], 1)
+
   cache <- private$resolution$cache
 
   dres <- resolve_remote(rem, config = private$config, cache = cache)
   if (!is_deferred(dres)) dres <- async_constant(dres)
   private$resolution$packages[[rem$ref]] <- dres
-  pool$add(dres)
+  pool$add(dres$then(~ private$progress_bar$update(pb_name[1], 1)))
 
   if (!is.null(private$library) &&
       !is.null(rem$package) &&
@@ -173,7 +184,7 @@ remotes__subset_resolution <- function(self, private, which) {
 
 #' @importFrom prettyunits pretty_dt
 #' @importFrom crayon bgBlue green blue white bold col_nchar
-#' @importFrom cli cat_rule
+#' @importFrom cli cat_rule symbol
 
 print.remotes_resolution <- function(x, ...) {
   meta <- x$metadata

@@ -147,11 +147,12 @@ remotes <- R6Class(
     solution_downloads = NULL,
     download_cache = NULL,
     config = NULL,
+    progress_bar = NULL,
 
     start_new_resolution = function()
       remotes__start_new_resolution(self, private),
-    resolve_ref = function(rem, pool)
-      remotes__resolve_ref(self, private, rem, pool),
+    resolve_ref = function(rem, pool, direct = FALSE)
+      remotes__resolve_ref(self, private, rem, pool, direct),
     is_resolving = function(ref)
       remotes__is_resolving(self, private, ref),
     download_res = function(res)
@@ -161,7 +162,9 @@ remotes <- R6Class(
     create_lp_problem = function(pkgs)
       remotes__create_lp_problem(self, private, pkgs),
     solve_lp_problem = function(problem)
-      remotes__solve_lp_problem(self, private, problem)
+      remotes__solve_lp_problem(self, private, problem),
+    with_progress_bar = function(args, expr)
+      remotes__with_progress_bar(self, private, args, expr)
   )
 )
 

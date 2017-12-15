@@ -34,7 +34,7 @@ test_that("download_file", {
   expect_true(file.exists(target))
   expect_equal(jsonlite::fromJSON(target)$url, url)
   expect_true(file.exists(etag))
-  expect_equal(readLines(etag), "foobar")
+  expect_equal(read_lines(etag), "foobar")
 })
 
 test_that("download_file, errors", {
@@ -67,7 +67,7 @@ test_that("download_if_newer, no etag file", {
   expect_true(file.exists(target))
   expect_equal(jsonlite::fromJSON(target)$url, url)
   expect_true(file.exists(etag))
-  expect_equal(readLines(etag), "foobar")
+  expect_equal(read_lines(etag), "foobar")
 })
 
 test_that("download_if_newer, different etag", {
@@ -86,7 +86,7 @@ test_that("download_if_newer, different etag", {
   expect_true(file.exists(target))
   expect_equal(jsonlite::fromJSON(target)$url, url)
   expect_true(file.exists(etag))
-  expect_equal(readLines(etag), "foobar")
+  expect_equal(read_lines(etag), "foobar")
 })
 
 test_that("download_if_newer, matching etag", {
@@ -104,9 +104,9 @@ test_that("download_if_newer, matching etag", {
   ))
 
   expect_true(file.exists(target))
-  expect_equal(readLines(target), "dummy")
+  expect_equal(read_lines(target), "dummy")
   expect_true(file.exists(etag))
-  expect_equal(readLines(etag), "foobar")
+  expect_equal(read_lines(etag), "foobar")
 })
 
 test_that("download_if_newer, error", {
@@ -143,7 +143,7 @@ test_that("download_try_list", {
     tmp <- tempfile()
   ))
 
-  res <- jsonlite::fromJSON(readLines(tmp), simplifyVector = FALSE)
+  res <- jsonlite::fromJSON(read_lines(tmp), simplifyVector = FALSE)
   expect_equal(res$args$q, "1")
 })
 
@@ -165,7 +165,7 @@ test_that("download_try_list, etag", {
   expect_true(file.exists(target))
   expect_equal(jsonlite::fromJSON(target)$url, url)
   expect_true(file.exists(etag))
-  expect_equal(readLines(etag), "foobar")
+  expect_equal(read_lines(etag), "foobar")
 })
 
 test_that("download_try_list, matching etag", {
@@ -185,9 +185,9 @@ test_that("download_try_list, matching etag", {
   ))
 
   expect_true(file.exists(target))
-  expect_equal(readLines(target), "dummy")
+  expect_equal(read_lines(target), "dummy")
   expect_true(file.exists(etag))
-  expect_equal(readLines(etag), "foobar")
+  expect_equal(read_lines(etag), "foobar")
 })
 
 test_that("download_try_list, errors", {

@@ -231,3 +231,11 @@ format_iso_8601 <- function (date) {
 cat0 <- function(..., sep = "") {
   cat(..., sep = sep)
 }
+
+read_lines <- function(con, ...) {
+  if (is.character(con)) {
+    con <- file(con)
+    on.exit(close(con))
+  }
+  readLines(con, ...)
+}

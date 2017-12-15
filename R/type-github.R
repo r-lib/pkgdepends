@@ -58,7 +58,7 @@ download_remote.remote_resolution_github <- function(resolution, config,
   target_file <- file.path(cache_dir, files$target)
   cached_zip <- sub("\\.tar\\.gz$", ".zip", target_file)
   mkdirp(dirname(target_file))
-  subdir <- resolution$remote$subdir
+  subdir <- get_remote(resolution)$subdir
   url <- files$source
 
   if (is_valid_package(target_file)) {

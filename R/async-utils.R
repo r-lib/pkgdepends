@@ -22,9 +22,8 @@ download_progress_callback <- function(progress_bar,
 
 read_etag <- function(etag_file) {
   tryCatch(
-    read_lines(etag_file, n = 1, warn = FALSE)[1],
-    error = function(e) NA,
-    warning = function(w) NA
+    suppressWarnings(read_lines(etag_file, n = 1, warn = FALSE)[1]),
+    error = function(e) NA
   )
 }
 

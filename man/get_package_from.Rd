@@ -4,7 +4,7 @@
 \alias{get_package_from}
 \title{Get package from cache, or download it asynchronously}
 \usage{
-get_package_from(cache, urls, cache_dir, target)
+get_package_from(cache, urls, cache_dir, target, progress_bar = NULL)
 }
 \arguments{
 \item{cache}{\code{package_cache} instance.}

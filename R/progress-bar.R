@@ -17,13 +17,15 @@ pkg_progress_bar <- R6Class(
       private$active <- getOption("pkg.progress.bar") %||% interactive()
       if (! private$active) return()
 
+      private$data$total <- total
+
       type <- match.arg(type)
       format <- if (type == "resolution") {
         paste0("  Resolving   [:count/:total]   ",
                "deps: [:xcount/:xtotal] :elapsedfull")
       } else {
         paste0("  Downloading [:count/:total] ",
-               "[:bytes/:btotal] :elapsedfull")
+               "[:strcbytes/:strbtotal] :elapsedfull")
       }
 
       private$bar <- progress_bar$new(
@@ -35,11 +37,15 @@ pkg_progress_bar <- R6Class(
       if (!private$active) return()
       args <- list(...)
       if (is.null(names(args))) {
-        key <- args[[1]]
-        private$data[[key]] <- private$data[[key]] + args[[2]]
-      } else {
-        for (n in names(args)) {
-          private$data[[n]] <- private$data[[n]] + args[[n]]
+        args <- structure(list(args[[2]]), names = args[[1]])
+      }
+      for (n in names(args)) {
+        private$data[[n]] <- private$data[[n]] + args[[n]]
+        if (n == "cbytes") {
+          private$data$strcbytes <- pretty_bytes(private$data$cbytes)
+        }
+        if (n == "btotal") {
+          private$data$strbtotal <- pretty_bytes(private$data$btotal)
         }
       }
       private$bar$tick(0, tokens = private$data)
@@ -52,18 +58,24 @@ pkg_progress_bar <- R6Class(
 
     ## This has to come after the PB is finished
     message = function(...) {
+      if (!private$active) return()
       message(glue::glue_data(private$data, ...))
     }
   ),
 
   private = list(
     data = list(
-      count = 0,
-      total = 0,
-      xcount = 0,
-      xtotal = 0,
-      bytes = 0,
-      btotal = 0
+      count = 0,    ## number of refs/files done
+      total = 0,    ## total number of refs/files
+      xcount = 0,   ## number of deps done, for resolution
+      xtotal = 0,   ## total number of deps, for resolution
+      cbytes = 0,   ## number of bytes done (download)
+      btotal = 0,   ## total number of bytes (download)
+      cached = 0,   ## number of cached packages (download)
+      bcached = 0,  ## cached bytes (download) (unused)
+      failed = 0,   ## number of failed packages
+      strcbytes = "",
+      strbtotal = ""
     ),
     active = NULL,
     bar = NULL,

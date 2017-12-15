@@ -5,12 +5,13 @@ remotes_resolve <- function(self, private) {
   "!DEBUG remotes_resolve (sync)"
   private$with_progress_bar(
     list(type = "resolution", total = length(private$remotes)),
-    synchronise(self$async_resolve())
+    res <- synchronise(self$async_resolve())
   )
   private$progress_bar$message(
-    symbol$tick, "  Resolved {count}/{total} direct refs and ",
+    symbol$tick, " Resolved {count}/{total} direct refs and ",
     "{xcount}/{xtotal} dependencies"
   )
+  res
 }
 
 remotes_async_resolve <- function(self, private) {

@@ -1,4 +1,25 @@
 
+download_progress_callback <- function(progress_bar,
+                                       total, amount, ratio,
+                                       status_code = NULL) {
+  if (is.null(status_code)) {
+    progress_bar$update(cbytes = amount %||% 0, btotal = total %||% 0)
+
+  } else if (status_code == 304) {
+    progress_bar$update(count = 1, cached = 1, bcached = total %||% 0)
+
+  } else if (status_code == 200) {
+    progress_bar$update(
+      count = (ratio == 1) %||% 0 + 0,
+      cbytes = amount %||% 0,
+      btotal = total %||% 0
+    )
+
+  } else {
+    progress_bar$update(failed = 1)
+  }
+}
+
 read_etag <- function(etag_file) {
   tryCatch(
     readLines(etag_file, n = 1, warn = FALSE)[1],
@@ -60,7 +81,7 @@ download_if_newer <- function(url, target, etag_file = NULL) {
 }
 
 download_try_list <- function(urls, targets, etag_file = NULL,
-                              headers = character()) {
+                              headers = character(), progress_bar = NULL) {
   "!DEBUG trying download list `paste(urls, collapse = ', ')`"
   assert_that(is.character(urls), length(urls) >= 1)
 
@@ -76,13 +97,19 @@ download_try_list <- function(urls, targets, etag_file = NULL,
   target <- normalizePath(targets[1], mustWork = FALSE)
   tmp_target <- paste(target, ".tmp")
 
+  pg <- function(total = NULL, amount = NULL, status_code = NULL, ratio = NULL) {
+    download_progress_callback(progress_bar, total = total, amount = amount,
+                               ratio = ratio, status_code = status_code)
+  }
+
   status_code <- NULL
   errors <- NULL
   async_detect(
     urls,
     function(x) {
       force(x)
-      http_get(x, file = tmp_target, headers = headers)$
+      http_get(x, file = tmp_target, headers = headers,
+               on_progress = if (! is.null(progress_bar)) pg else NULL)$
         then(function(resp) {
           http_stop_for_status(resp)
           if (resp$status_code == "304") {

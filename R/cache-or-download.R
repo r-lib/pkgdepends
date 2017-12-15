@@ -13,7 +13,8 @@
 #' @keywords internal
 #' @importFrom async async_detect
 
-get_package_from <- function(cache, urls, cache_dir, target) {
+get_package_from <- function(cache, urls, cache_dir, target,
+                             progress_bar = NULL) {
   cache ; urls ; cache_dir; target
   target_file <- file.path(cache_dir, target)
   mkdirp(target_dir <- dirname(target_file))
@@ -27,7 +28,8 @@ get_package_from <- function(cache, urls, cache_dir, target) {
     }
   }
 
-  download_try_list(urls, target_file, etag_file)$
+  download_try_list(urls, target_file, etag_file,
+                    progress_bar = progress_bar)$
     then(function(status) {
       if (status == 304) {
         make_dl_status("Had", urls, target_file,

@@ -1,9 +1,26 @@
 
+#' @importFrom prettyunits pretty_bytes
+
 remotes_download_resolution <- function(self, private) {
-  synchronise(self$async_download_resolution())
+  if (is.null(private$resolution)) self$resolve()
+  if (private$dirty) stop("Need to resolve, remote list has changed")
+
+  data <- private$resolution$result$data
+  total <- sum(data$type != "installed")
+  private$with_progress_bar(
+    list(type = "download", total = total),
+    res <- synchronise(self$async_download_resolution())
+  )
+  private$progress_bar$message(
+    symbol$tick,
+    " Have {count}/{total} packages, cached {cached},",
+    " downloaded {count-cached} ({pretty_bytes(cbytes)})"
+  )
+  res
 }
 
 remotes_async_download_resolution <- function(self, private) {
+  self ; private
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
   dls <- remotes_async_download_internal(
@@ -17,7 +34,21 @@ remotes_async_download_resolution <- function(self, private) {
 }
 
 remotes_download_solution <- function(self, private) {
-  synchronise(self$async_download_solution())
+  if (is.null(private$solution)) self$solve()
+  if (private$dirty) stop("Need to resolve, remote list has changed")
+
+  data <- private$solution$result$data
+  total <- sum(data$type != "installed")
+  private$with_progress_bar(
+    list(type = "download", total = total),
+    res <- synchronise(self$async_download_solution())
+  )
+  private$progress_bar$message(
+    symbol$tick,
+    " Downloaded {count}/{total} packages, {pretty_bytes(cbytes)}, ",
+    "cached: {pretty_bytes(bcached)}"
+  )
+  res
 }
 
 remotes_async_download_solution <- function(self, private) {
@@ -47,7 +78,8 @@ remotes_download_res <- function(self, private, res) {
   ddl <- download_remote(
     res,
     config = private$config,
-    cache = private$resolution$cache
+    cache = private$resolution$cache,
+    progress_bar = private$progress_bar
   )
 
   if (!is_deferred(ddl)) ddl <- async_constant(ddl)

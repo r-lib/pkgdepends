@@ -62,7 +62,7 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
   }
 
   pb_name <- if (direct) c("count", "total") else c("xcount", "xtotal")
-  private$progress_bar$update(pb_name[2], 1)
+  if (!direct) private$progress_bar$update(pb_name[2], 1)
 
   cache <- private$resolution$cache
 

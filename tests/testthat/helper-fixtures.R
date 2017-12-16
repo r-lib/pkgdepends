@@ -21,6 +21,22 @@ fixtures <- list(
       c("cran::pkgconfig", "github::r-lib/pkgconfig"),
       lib = tmp)
     r$resolve()
+  },
+
+  "solution-crayon.rds" = function() {
+    dir.create(tmp <- tempfile())
+    on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+    r <- remotes$new("crayon", lib = tempfile())
+    r$resolve()
+    r$solve()
+  },
+
+  "solution-igraph.rds" = function() {
+    dir.create(tmp <- tempfile())
+    on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+    r <- remotes$new("igraph", lib = tempfile())
+    r$resolve()
+    r$solve()
   }
 )
 

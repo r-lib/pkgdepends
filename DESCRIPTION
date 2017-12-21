@@ -37,8 +37,7 @@ Suggests:
     debugme,
     mockery,
     rprojroot,
-    testthat,
-    tools
+    testthat
 Remotes:
     r-lib/async,
     r-lib/desc,

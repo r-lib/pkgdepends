@@ -33,10 +33,11 @@ resolve_remote.remote_ref_bioc <- function(remote, config, ..., cache) {
 #' @export
 
 download_remote.remote_resolution_bioc <- function(resolution, config,
-                                                   ..., cache) {
+                                                   ..., cache, progress_bar) {
   async_map(get_files(resolution), function(files) {
     get_package_from(cache$package_cache, files$source,
-                     config$cache_dir, files$target)
+                     config$cache_dir, files$target,
+                     progress_bar = progress_bar)
   })
 }
 

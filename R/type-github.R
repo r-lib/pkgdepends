@@ -44,7 +44,7 @@ resolve_remote.remote_ref_github <- function(remote, config, ...,
 #' @export
 
 download_remote.remote_resolution_github <- function(resolution, config,
-                                                     ..., cache) {
+                                                     ..., cache, progress_bar) {
 
   cache_dir <- config$cache_dir
 
@@ -62,18 +62,20 @@ download_remote.remote_resolution_github <- function(resolution, config,
   url <- files$source
 
   if (is_valid_package(target_file)) {
+    progress_bar$update(count = 1, cached = 1)
     status <- make_dl_status("Had", files$source, target_file,
                              bytes = file.size(target_file))
     async_constant(list(status))
 
   } else if (file.exists(cached_zip)) {
     type_github_build_github_package(cached_zip, target_file, subdir)
+    progress_bar$update(count = 1, cached = 1)
     status <- make_dl_status("Had", url, target_file,
                              bytes = file.size(target_file))
     async_constant(list(status))
 
   } else {
-    download_file(url, cached_zip)$
+    download_file(url, cached_zip, progress_bar = progress_bar)$
       then(function() {
         type_github_build_github_package(cached_zip, target_file, subdir)
         list(make_dl_status("Got", url, target_file,

@@ -29,12 +29,20 @@ read_etag <- function(etag_file) {
 
 #' @importFrom curl parse_headers_list
 
-download_file <- function(url, target, etag_file = NULL) {
+download_file <- function(url, target, etag_file = NULL,
+                          progress_bar = NULL) {
   "!DEBUG downloading `url`"
   url; target; etag_file
   target <- normalizePath(target, mustWork = FALSE)
   tmp_target <- paste0(target, ".tmp")
-  http_get(url, file = tmp_target)$
+
+  pg <- function(total = NULL, amount = NULL, status_code = NULL, ratio = NULL) {
+    download_progress_callback(progress_bar, total = total, amount = amount,
+                               ratio = ratio, status_code = status_code)
+  }
+
+  http_get(url, file = tmp_target,
+           on_progress = if (! is.null(progress_bar)) pg else NULL)$
     then(http_stop_for_status)$
     then(function(resp) {
       "!DEBUG downloaded `url`"

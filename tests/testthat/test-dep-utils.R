@@ -25,25 +25,3 @@ test_that("resolve_ref_deps", {
 
   expect_equal(obj, exp)
 })
-
-test_that("get_cran_deps", {
-
-  packages <- readRDS("fixtures/resolve-cran-version-packages.rds")
-
-  deps <- c("Imports", "LinkingTo", "Depends")
-
-  expected <- tibble::tibble(
-    ref = c("assertthat", "bindrcpp", "glue", "magrittr",
-      "pkgconfig", "rlang", "R6", "Rcpp", "tibble", "Rcpp", "BH",
-      "bindrcpp", "plogr"),
-    type = c(rep("Imports", 9), rep("LinkingTo", 4)),
-    package = ref,
-    op = c("", ">=", ">=", "", "", ">=", "", ">=", ">=", ">=", ">=",
-      "", ""),
-    version = c("", "0.2", "1.1.0", "", "", "0.1", "", "0.12.6",
-      "1.3.1", "0.12.0", "1.58.0-1", "", "")
-  )
-  
-  expect_equal(get_cran_deps("dplyr", "0.7.2", packages, deps), expected)
-  expect_equal(get_cran_deps("dplyr", "", packages, deps), expected)
-})

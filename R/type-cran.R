@@ -177,6 +177,9 @@ type_cran_resolve_from_cache_current_files <- function(remote, config,
     )
   })
 
+  ## cran_make_resolution returns a list of 'files' structures
+  files <- unlist(files, recursive = FALSE)
+
   async_constant(files)
 }
 
@@ -266,6 +269,8 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
   package <- remote$package
   version <- remote$version
 
+  dependencies <- intersect(dependencies, colnames(data))
+
   result <- list(
     source = character(), target = NA_character_, platform = platform,
     rversion = rversion, dir = dir, package = package,
@@ -284,44 +289,49 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
       paste0("Can't find CRAN package ", package),
       class = "remotes_resolution_error"
     )
-    return(result)
+    return(list(result))
   }
 
-  if (length(wh) > 1) warning("Non-unique resolve: ", sQuote(ref))
-  wh <- wh[1]
-  version <- unname(data[wh, "Version"])
-  result$version <- version
   ext <- get_cran_extension(platform)
 
-  path <- if ("File" %in% colnames(data) &&
-              !is.na(file_loc <- data[wh, "File"])) {
-    paste0(dir, "/", file_loc)
-  } else {
-    paste0(dir, "/", package, "_", version, ext)
+  result <- replicate(length(wh), result, simplify = FALSE)
+  for (i in 1:length(wh)) {
+    whi <- wh[i]
+    version <- unname(data[whi, "Version"])
+    result[[i]]$version <- version
+
+    path <- if ("File" %in% colnames(data) &&
+                !is.na(file_loc <- data[whi, "File"])) {
+      paste0(dir, "/", file_loc)
+    } else if ("Path" %in% colnames(data) &&
+               !is.na(file_path <- data[whi, "Path"])) {
+      paste0(dir, "/", file_path, "/", package, "_", version, ext)
+    } else {
+      paste0(dir, "/", package, "_", version, ext)
+    }
+
+    url <- paste0(mirror, "/", path)
+
+    ## If this is a source package, then it might be in Archive by the time
+    ## we download it
+    if (platform == "source") {
+      url <- c(
+        url,
+        type_cran_make_cran_archive_url(mirror, package, version))
+    }
+
+    result[[i]]$source <- unname(url)
+    result[[i]]$target <- path
+
+    result[[i]]$deps <- parse_all_deps(data[whi, dependencies])
+
+    result[[i]]$metadata <- c(
+      RemoteOriginalRef = ref,
+      RemoteType = "cran",
+      RemoteRepos = paste0(deparse(mirror[[1]]), collapse = ""),
+      RemotePkgType = if (platform == "source") "source" else "binary"
+    )
   }
-
-  url <- paste0(mirror, "/", path)
-
-  ## If this is a source package, then it might be in Archive by the time
-  ## we download it
-  if (platform == "source") {
-    url <- c(
-      url,
-      type_cran_make_cran_archive_url(mirror, package, version))
-  }
-
-  result$source <- unname(url)
-  result$target <- path
-
-  result$deps <- get_cran_deps(result$package, result$version,
-                               data, dependencies)
-
-  result$metadata <- c(
-    RemoteOriginalRef = ref,
-    RemoteType = "cran",
-    RemoteRepos = paste0(deparse(mirror[[1]]), collapse = ""),
-    RemotePkgType = if (platform == "source") "source" else "binary"
-  )
 
   result
 }

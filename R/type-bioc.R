@@ -177,7 +177,7 @@ type_bioc_resolve_from_cache_files <- function(remote, config, bioccache) {
   files <- lapply(seq_len(nrow(dirs)), function(i) {
     dir <- dirs[i, ]
     lapply(names(repos), function(rversion) {
-      type_bioc_make_bioc_resolution(
+      unlist(type_bioc_make_bioc_resolution(
         remote,
         dir$platform,
         dir$rversion,
@@ -186,7 +186,7 @@ type_bioc_resolve_from_cache_files <- function(remote, config, bioccache) {
         repos = repos[[rversion]]$repos,
         dir = dir$contriburl,
         dependencies = dependencies
-      )
+      ), recursive = FALSE)
     })
   })
 
@@ -240,38 +240,42 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
       paste0("Can't find BioConductor package ", package),
       class = "remotes_resolution_error"
     )
-    return(result)
+    return(list(result))
   }
 
-  if (length(wh) > 1) warning("Non-unique resolve: ", sQuote(ref))
-  wh <- wh[1]
-
-  version <- unname(data[wh, "Version"])
-  result$version <- version
   ext <- get_cran_extension(platform)
 
-  path <- if ("File" %in% colnames(data) &&
-              !is.na(file_loc <- data[wh, "File"])) {
-    paste0(dir, "/", file_loc)
-  } else {
-    paste0(dir, "/", package, "_", version, ext)
+  result <- replicate(length(wh), result, simplify = FALSE)
+  for (i in 1:length(wh)) {
+    whi <- wh[i]
+    version <- unname(data[wh, "Version"])
+    result[[i]]$version <- version
+
+    path <- if ("File" %in% colnames(data) &&
+                !is.na(file_loc <- data[wh, "File"])) {
+      paste0(dir, "/", file_loc)
+    } else if ("Path" %in% colnames(data) &&
+               !is.na(file_path <- data[whi, "Path"])) {
+      paste0(dir, "/", file_path, "/", package, "_", version, ext)
+    } else {
+      paste0(dir, "/", package, "_", version, ext)
+    }
+
+    url <- paste0(repos, "/", path)
+
+    result[[i]]$source <- unname(url)
+    result[[i]]$target <- path
+
+    result[[i]]$deps <- parse_all_deps(data[whi, dependencies])
+
+    result[[i]]$metadata <- c(
+      RemoteOriginalRef = ref,
+      RemoteType = "bioc",
+      RemoteRepos = paste0(deparse(repos), collapse = ""),
+      RemotePkgType = if (platform == "source") "source" else "binary",
+      RemoteRelease = bioc_version
+    )
   }
-
-  url <- paste0(repos, "/", path)
-
-  result$source <- unname(url)
-  result$target <- path
-
-  result$deps <- get_cran_deps(result$package, result$version, data,
-                               dependencies)
-
-  result$metadata <- c(
-    RemoteOriginalRef = ref,
-    RemoteType = "bioc",
-    RemoteRepos = paste0(deparse(repos), collapse = ""),
-    RemotePkgType = if (platform == "source") "source" else "binary",
-    RemoteRelease = bioc_version
-  )
 
   result
 }

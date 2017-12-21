@@ -9,7 +9,7 @@ parse_deps <- function(deps, type) {
     "\\s*",
     "(?:[(](?<op>>|>=|==|<|<=)\\s*(?<version>[-0-9\\.]+)[)])?\\s*$"
   )
-  base <- c("R", base_packages())
+  base <- base_packages()
   lapply(seq_along(deps), function(i) {
     x <- omit_cols(re_match(deps[[i]], pattern = rx), c(".text", ".match"))
     x$type <- if (length(x$type) > 0) type[[i]] else character()
@@ -24,35 +24,19 @@ deps_from_desc <- function(deps, dependencies, last) {
   deps$version <- vcapply(op_ver, "[", 2)
   deps$version[is.na(deps$version)] <- ""
   deps$ref <- paste0(deps$package, if (last) "@last")
-  base <- c("R", base_packages())
+  base <- base_packages()
   res <- as_tibble(deps[deps$type %in% dependencies & !deps$package %in% base,
                         c("ref", "type", "package", "op", "version")])
   rownames(res) <- NULL
   res
 }
 
-get_cran_deps <- function(package, version, data, dependencies) {
-
-  ## Some dependency types might not be present here
-  dependencies <- intersect(dependencies, colnames(data))
-  
-  wh <- if (version == "") {
-    wh <- which(data[ , "Package"] == package)
-  } else {
-    wh <- which(data[ , "Package"] == package &
-                  data[, "Version"] == version)
-  }
-  wh <- wh[1]
-  version <- data[wh, "Version"]
-  
-  deps <- na.omit(unlist(data[wh, dependencies]))
+parse_all_deps <- function(deps) {
+  deps <- na.omit(deps)
   res <- do.call(rbind, parse_deps(deps, names(deps)))
   if (is.null(res)) res <- parse_deps("", "")[[1]]
   res$ref <- res$package
-  res <- res[, c("ref", setdiff(names(res), "ref"))]
-
-  ## TODO: Bioc? Additional repositories?
-  res
+  res[, c("ref", setdiff(names(res), "ref"))]
 }
 
 get_cran_extension <- function(platform) {

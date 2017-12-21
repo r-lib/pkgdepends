@@ -84,6 +84,7 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
 
   deps <- dres$then(function(res) {
     deps <- unique(unlist(lapply(get_files(res), function(x) x$deps$ref)))
+    deps <- setdiff(deps, "R")
     cache$numdeps <- cache$numdeps + length(deps)
     lapply(parse_remotes(deps), private$resolve_ref, pool = pool)
   })

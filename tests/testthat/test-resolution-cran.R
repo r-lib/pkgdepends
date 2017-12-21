@@ -45,7 +45,7 @@ test_that("type_cran_make_resolution", {
     dir = "src/contrib",
     mirror = "https://cran.rstudio.com",
     dependencies = c("Imports", "Suggests")
-  )
+  )[[1]]
 
   expect_equal(length(res$source), 2)
   expect_match(

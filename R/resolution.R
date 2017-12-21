@@ -146,6 +146,11 @@ remotes__resolution_to_df <- function(packages, metadata,
 
   sources <- getfl("source")
   deps <- getfl("deps")
+  target <- getf("target")
+  fulltarget <- ifelse(
+    is.na(target),
+    NA_character_,
+    file.path(cache_dir, target))
 
   res <- tibble::tibble(
     ref        = ref,
@@ -158,8 +163,8 @@ remotes__resolution_to_df <- function(packages, metadata,
     rversion   = getf("rversion"),
     repodir    = getf("dir"),
     sources    = sources,
-    target     = getf("target"),
-    fulltarget = file.path(cache_dir, getf("target")),
+    target     = target,
+    fulltarget = fulltarget,
     dependencies = deps,
     remote     = remote,
     resolution = packages_subset

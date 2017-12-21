@@ -197,6 +197,11 @@ remotes_install_plan <- function(self, private) {
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
   deps <- lapply(sol$dependencies, "[[", "package")
+  installed <- ifelse(
+    sol$type == "installed",
+    file.path(private$library, sol$package),
+    NA_character_)
+
   tibble::tibble(
     package = sol$package,
     type = sol$type,
@@ -205,6 +210,7 @@ remotes_install_plan <- function(self, private) {
     direct = sol$direct,
     dependencies = I(deps),
     file = sol$fulltarget,
+    installed = installed,
     metadata =
       lapply(sol$resolution, function(x) get_files(x)[[1]]$metadata)
   )

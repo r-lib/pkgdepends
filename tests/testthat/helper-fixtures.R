@@ -41,9 +41,14 @@ fixtures <- list(
 )
 
 fixture_dir <- function() {
-  file.path(
-    rprojroot::find_package_root_file(),
-    "tests", "testthat", "fixtures"
+  ## If run from R CMD check, it might give an error,
+  ## so fall back to the current directory being tests/testthat
+  tryCatch(
+    file.path(
+      rprojroot::find_package_root_file(),
+      "tests", "testthat", "fixtures"
+    ),
+    error = function(e) "fixtures"
   )
 }
 

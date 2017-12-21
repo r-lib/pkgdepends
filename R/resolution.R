@@ -115,6 +115,10 @@ remotes__start_new_resolution <- function(self, private) {
     res$metadata$dependencies <- c(hard, "Suggests")
     res$metadata$indirect_dependencies <- hard
 
+  } else if (identical(dp, FALSE)) {
+    res$metadata$dependencies <- character()
+    res$metadata$indirect_dependencies <- character()
+
   } else if (is_na_scalar(dp)) {
     res$metadata$dependencies <- hard
     res$metadata$indirect_dependencies <- hard

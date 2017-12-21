@@ -43,4 +43,8 @@ test_that("dependencies config parameter is honored", {
   expect_true("Depends" %in% indirect)
   expect_true("LinkingTo" %in% indirect)
   expect_false("Suggests" %in% indirect)
+
+  ## FALSE means nothing
+  d <- do(FALSE)$data
+  expect_true(all(d$ref == "dplyr"))
 })

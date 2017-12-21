@@ -226,9 +226,9 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
       paste0("Can't find BioConductor package ", package),
       class = "remotes_resolution_error"
     )
-    return(result)
+    return(list(result))
   } else if (sum(which_repo) > 1) {
-    warning("Package '", package, "' in multiple repositories")
+    warning("Package '", package, "' in multiple repositories, using first")
   }
   data <- data[which_repo][[1]]
   repos <- repos[which_repo][[1]]

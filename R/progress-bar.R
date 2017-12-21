@@ -1,4 +1,8 @@
 
+is_verbose <- function() {
+  getOption("pkg.progress.bar") %||% interactive()
+}
+
 remotes__with_progress_bar <- function(self, private, args, expr) {
   private$progress_bar <- do.call(pkg_progress_bar$new, as.list(args))
   on.exit(private$progress_bar$done())
@@ -14,7 +18,7 @@ pkg_progress_bar <- R6Class(
     initialize = function(type = c("resolution", "download"),
       show_after = 0, total = 1e10, ...) {
 
-      private$active <- getOption("pkg.progress.bar") %||% interactive()
+      private$active <- is_verbose()
       if (! private$active) return()
 
       private$data$total <- total

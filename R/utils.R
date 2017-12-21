@@ -120,8 +120,12 @@ make_dl_status <- function(status, url, target, bytes, error = NULL) {
   obj
 }
 
-mkdirp <- function(dir) {
-  dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+mkdirp <- function(dir, msg = NULL) {
+  s <- dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+  if (any(s) && !is.null(msg) && is_verbose()) {
+    cat_msg(glue("{symbol$tick} {msg}: {format_items(dir[s])}"))
+  }
+  invisible(s)
 }
 
 write_bin_atomic <- function(object, file) {

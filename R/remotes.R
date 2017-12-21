@@ -178,8 +178,12 @@ remotes_init <- function(self, private, specs, config, library) {
 
   private$remotes <- parse_remotes(specs)
   private$config <- modifyList(remotes_default_config(), config)
+
   private$library <- library
-  mkdirp(private$download_cache <- private$config$cache_dir)
+  if (!is.null(library)) mkdirp(library, msg = "Creating library directory")
+  mkdirp(private$download_cache <- private$config$cache_dir,
+         msg = "Creating cache directory")
+
   private$dirty <- TRUE
   invisible(self)
 }

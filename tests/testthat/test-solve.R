@@ -129,29 +129,29 @@ test_that("integration test", {
 
   mkdirp(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
-  r <- remotes$new(c("r-lib/cli"), lib = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
-    r$resolve()
-  )
+    c(pkg.progress.bar = FALSE), {
+      r <- remotes$new(c("r-lib/cli"), lib = lib)
+      r$resolve()
+    })
   sol <- r$solve()
   expect_true("r-lib/cli" %in% sol$data$ref)
 
-  r <- remotes$new("cran::cli", lib = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
-    r$resolve()
-  )
+    c(pkg.progress.bar = FALSE), {
+      r <- remotes$new("cran::cli", lib = lib)
+      r$resolve()
+    })
   sol <- r$solve()
   expect_true("cran::cli" %in% sol$data$ref)
   plan <- r$get_install_plan()
   expect_true("cli" %in% plan$package)
 
-  r <- remotes$new(c("cran::cli", "r-lib/cli"), lib = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
-    r$resolve()
-  )
+    c(pkg.progress.bar = FALSE), {
+      r <- remotes$new(c("cran::cli", "r-lib/cli"), lib = lib)
+      r$resolve()
+    })
   sol <- r$solve()
   expect_s3_class(sol, "remote_solution_error")
   expect_true("cli" %in% sol$failures$package)

@@ -171,6 +171,11 @@ remotes <- R6Class(
 #' @importFrom utils modifyList
 
 remotes_init <- function(self, private, specs, config, library) {
+
+  assert_that(is_character(specs),
+              is_valid_config(config),
+              is_path_or_null(library))
+
   private$remotes <- parse_remotes(specs)
   private$config <- modifyList(remotes_default_config(), config)
   private$library <- library
@@ -189,6 +194,28 @@ remotes_default_config <- function() {
     "dependencies"       = c("Depends", "Imports", "LinkingTo"),
     "r-versions"         = current_r_version()
   )
+}
+
+is_valid_config <- function(x) {
+  assert_that(is.list(x), all_named(x))
+  assert_that(all(names(x) %in% names(remotes_default_config())))
+  for (n in names(x)) {
+    switch (
+      n,
+      cache_dir          = assert_that(is_path(x[[n]])),
+      package_cache_dir  = assert_that(is_path(x[[n]])),
+      metadata_cache_dir = assert_that(is_path(x[[n]])),
+      platforms          = assert_that(is_platform_list(x[[n]])),
+      "cran-mirror"      = assert_that(is_string(x[[n]])),
+      dependencies       = assert_that(is_dependencies(x[[n]])),
+      "r-versions"       = assert_that(is_r_version_list(x[[n]]))
+    )
+  }
+  TRUE
+}
+
+on_failure(is_valid_config) <- function(call, env) {
+  paste0(deparse(call$x), " is not a valid configuration list")
 }
 
 remotes_get_total_files <- function(self, private) {

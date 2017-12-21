@@ -4,6 +4,8 @@
 
 remotes_draw_tree <- function(self, private, pkgs) {
 
+  assert_that(is.null(pkgs) || is_character(pkgs))
+
   plan <- self$get_install_plan()
   pkgs <- pkgs %||% plan$package[plan$direct]
 

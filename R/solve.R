@@ -35,7 +35,7 @@ remotes_solve <- function(self, private) {
     solution = sol
   )
 
-  self$get_solution()
+  invisible(self$get_solution())
 }
 
 #' Create the LP problem that solves the installation

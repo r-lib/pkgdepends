@@ -16,7 +16,7 @@ remotes_download_resolution <- function(self, private) {
     " Have {count}/{total} packages, cached {cached},",
     " downloaded {count-cached} ({pretty_bytes(cbytes)})"
   )
-  res
+  invisible(res)
 }
 
 remotes_async_download_resolution <- function(self, private) {
@@ -48,7 +48,7 @@ remotes_download_solution <- function(self, private) {
     " Downloaded {count}/{total} packages, {pretty_bytes(cbytes)}, ",
     "cached: {pretty_bytes(bcached)}"
   )
-  res
+  invisible(res)
 }
 
 remotes_async_download_solution <- function(self, private) {

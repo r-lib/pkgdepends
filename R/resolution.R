@@ -11,7 +11,7 @@ remotes_resolve <- function(self, private) {
     symbol$tick, " Resolved {count}/{total} direct refs and ",
     "{xcount}/{xtotal} dependencies"
   )
-  res
+  invisible(res)
 }
 
 remotes_async_resolve <- function(self, private) {

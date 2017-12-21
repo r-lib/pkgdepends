@@ -113,7 +113,7 @@ to the running R version.
 \dontrun{
 rems <- remotes$new(c("dplyr", "r-lib/rcmdcheck"))
 rems$resolve()
-rems$download()
+rems$download_resolution()
 rems$get_download_status()
 }
 }

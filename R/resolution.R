@@ -66,7 +66,11 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
 
   cache <- private$resolution$cache
 
-  dres <- resolve_remote(rem, config = private$config, cache = cache)
+  meta <- private$resolution$metadata
+  dependencies <-
+    meta[c("dependencies", "indirect_dependencies")][[2 - direct]]
+  dres <- resolve_remote(rem, config = private$config, cache = cache,
+                         dependencies = dependencies)
   if (!is_deferred(dres)) dres <- async_constant(dres)
   private$resolution$packages[[rem$ref]] <- dres
   pool$add(dres$then(~ private$progress_bar$update(pb_name[1], 1)))
@@ -102,6 +106,23 @@ remotes__start_new_resolution <- function(self, private) {
   res$packages <- new.env(parent = emptyenv())
   res$metadata <- list()
   res$metadata$resolution_start <- Sys.time()
+
+  ## Interpret the 'dependencies' configuration parameter,
+  ## similarly to utils::install.packages
+  dp <- private$config$dependencies
+  hard <- c("Depends", "Imports", "LinkingTo")
+  if (isTRUE(dp)) {
+    res$metadata$dependencies <- c(hard, "Suggests")
+    res$metadata$indirect_dependencies <- hard
+
+  } else if (is_na_scalar(dp)) {
+    res$metadata$dependencies <- hard
+    res$metadata$indirect_dependencies <- hard
+
+  } else {
+    res$metadata$dependencies <- dp
+    res$metadata$indirect_dependencies <- dp
+  }
 
   ## This is a generic cache
   res$cache <- new.env(parent = emptyenv())

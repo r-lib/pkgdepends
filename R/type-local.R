@@ -18,14 +18,14 @@ parse_remote.remote_specs_local <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_local <- function(remote, config, ...,
-                                            cache) {
+resolve_remote.remote_ref_local <- function(remote, config, cache,
+                                            dependencies, ...) {
 
   tryCatch({
     dsc <- desc(file = remote$path)
 
     deps <- resolve_ref_deps(
-      dsc$get_deps(), dsc$get("Remotes")[[1]], config$dependencies)
+      dsc$get_deps(), dsc$get("Remotes")[[1]], dependencies)
 
     rversion <- tryCatch(
       get_minor_r_version(dsc$get_built()$R),

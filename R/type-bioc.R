@@ -21,12 +21,13 @@ parse_remote.remote_specs_bioc <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_bioc <- function(remote, config, ..., cache) {
+resolve_remote.remote_ref_bioc <- function(remote, config, cache,
+                                           dependencies, ...) {
   force(remote)
   cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
 
   cache$biocdata$then(function(cacheresult) {
-    type_bioc_resolve_from_cache(remote, config, cacheresult)
+    type_bioc_resolve_from_cache(remote, config, cacheresult, dependencies)
   })
 }
 
@@ -152,8 +153,11 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions) {
   biocdata
 }
 
-type_bioc_resolve_from_cache <- function(remote, config, bioccache) {
-  files <- type_bioc_resolve_from_cache_files(remote, config, bioccache)
+type_bioc_resolve_from_cache <- function(remote, config, bioccache,
+                                         dependencies) {
+
+  files <- type_bioc_resolve_from_cache_files(remote, config, bioccache,
+                                              dependencies)
 
   files$then(function(files) {
     status <- if (all(vcapply(files, "[[", "status") == "OK")) {
@@ -168,10 +172,10 @@ type_bioc_resolve_from_cache <- function(remote, config, bioccache) {
   })
 }
 
-type_bioc_resolve_from_cache_files <- function(remote, config, bioccache) {
+type_bioc_resolve_from_cache_files <- function(remote, config, bioccache,
+                                               dependencies) {
   platforms    <- config$platforms
   rversions    <- config$`r-versions`
-  dependencies <- config$dependencies
   dirs         <- bioccache$`_dirs`
   repos        <- bioccache$`_repos`
 

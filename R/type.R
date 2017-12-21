@@ -5,7 +5,7 @@ parse_remote <- function(specs, config, ...)
 parse_remote.default <- function(specs, config, ...)
   stop("Unknown or incomplete remote specs type, no `parse_remote` method")
 
-resolve_remote <- function(remote, config, ...)
+resolve_remote <- function(remote, config, cache, dependencies, ...)
   UseMethod("resolve_remote")
 
 resolve_remote.default <- function(remote, config, ...)

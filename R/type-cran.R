@@ -24,12 +24,13 @@ parse_remote.remote_specs_cran <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_cran <- function(remote, config, ..., cache) {
+resolve_remote.remote_ref_cran <- function(remote, config, cache,
+                                           dependencies, ...) {
   force(remote)
   cache$crandata <- cache$crandata %||% update_crandata_cache(config)
 
   cache$crandata$then(function(cacheresult) {
-    type_cran_resolve_from_cache(remote, config, cacheresult)
+    type_cran_resolve_from_cache(remote, config, cacheresult, dependencies)
   })
 }
 
@@ -129,18 +130,23 @@ type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
   cran_cache
 }
 
-type_cran_resolve_from_cache <- function(remote, config, crancache) {
+type_cran_resolve_from_cache <- function(remote, config, crancache,
+                                         dependencies) {
   if (remote$version == "current" || remote$version == "") {
-    type_cran_resolve_from_cache_current(remote, config, crancache)
+    type_cran_resolve_from_cache_current(remote, config, crancache,
+                                         dependencies)
   } else {
-    type_cran_resolve_from_cache_general(remote, config, crancache)
+    type_cran_resolve_from_cache_general(remote, config, crancache,
+                                         dependencies)
   }
 }
 
 type_cran_resolve_from_cache_current <- function(remote, config,
-                                                 crancache) {
+                                                 crancache, dependencies) {
+
   files <- type_cran_resolve_from_cache_current_files(remote, config,
-                                                      crancache)
+                                                      crancache,
+                                                      dependencies)
 
   files$then(function(files) {
     status <- if (all(vcapply(files, "[[", "status") == "OK")) {
@@ -156,12 +162,12 @@ type_cran_resolve_from_cache_current <- function(remote, config,
 }
 
 type_cran_resolve_from_cache_current_files <- function(remote, config,
-                                                       crancache) {
+                                                       crancache,
+                                                       dependencies) {
 
   platforms    <- config$platforms
   rversions    <- config$`r-versions`
   mirror       <- config$`cran-mirror`
-  dependencies <- config$dependencies
   dirs         <- crancache$`_dirs`
 
   files <- lapply(seq_len(nrow(dirs)), function(i) {
@@ -184,9 +190,7 @@ type_cran_resolve_from_cache_current_files <- function(remote, config,
 }
 
 type_cran_resolve_from_cache_general <- function(remote, config,
-                                                 crancache) {
-
-  dependencies <- config$dependencies
+                                                 crancache, dependencies) {
 
   vers <- type_cran_fix_cran_version(
     remote$package, remote$version, remote$atleast,
@@ -201,10 +205,11 @@ type_cran_resolve_from_cache_general <- function(remote, config,
         rem2 <- remote
         rem2$version <- ""
         rem2$atleast <- ""
-        type_cran_resolve_from_cache_current_files(rem2, config, crancache)
+        type_cran_resolve_from_cache_current_files(rem2, config, crancache,
+                                                   dependencies)
       } else {
         type_cran_resolve_from_cache_version_files(remote, v, config,
-                                                   crancache)
+                                                   crancache, dependencies)
       }
     }
   )
@@ -228,7 +233,8 @@ type_cran_resolve_from_cache_general <- function(remote, config,
 }
 
 type_cran_resolve_from_cache_version_files <- function(remote, version,
-                                                       config, crancache) {
+                                                       config, crancache,
+                                                       dependencies) {
 
   package <- remote$package
   mirror  <- config$`cran-mirror`
@@ -237,7 +243,6 @@ type_cran_resolve_from_cache_version_files <- function(remote, version,
   archive <- crancache$`_archive`
   package_path <- archive$file[archive$package == package &
                                  archive$version == version]
-  dependencies <- config$dependencies
 
   ## To get the dependencies, we need to download the package, and
   ## parse DESCRIPTION

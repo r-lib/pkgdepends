@@ -2,5 +2,5 @@
 #' @importFrom crayon inverse blue
 
 logo <- function() {
-  inverse(blue(" 🄿  "))
+  inverse(blue(" \U0001F13F  "))
 }

@@ -40,8 +40,9 @@ download_remote.remote_resolution_cran <- function(resolution, config,
                                                    ..., cache, progress_bar) {
 
   async_map(get_files(resolution), function(files) {
+    meta <- files[c("platform", "package", "version", "rversion")]
     get_package_from(cache$package_cache, files$source,
-                     config$cache_dir, files$target,
+                     config$cache_dir, files$target, metadata = meta,
                      progress_bar = progress_bar)
   })
 }

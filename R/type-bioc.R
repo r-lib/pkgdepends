@@ -36,8 +36,9 @@ resolve_remote.remote_ref_bioc <- function(remote, config, cache,
 download_remote.remote_resolution_bioc <- function(resolution, config,
                                                    ..., cache, progress_bar) {
   async_map(get_files(resolution), function(files) {
+    meta <- files[c("platform", "package", "version", "rversion")]
     get_package_from(cache$package_cache, files$source,
-                     config$cache_dir, files$target,
+                     config$cache_dir, files$target, metadata = meta,
                      progress_bar = progress_bar)
   })
 }
@@ -167,7 +168,7 @@ type_bioc_resolve_from_cache <- function(remote, config, bioccache,
     }
     structure(
       list(files = files, remote = remote, status = status),
-      class = c("remote_resolution_cran", "remote_resolution")
+      class = c("remote_resolution_bioc", "remote_resolution")
     )
   })
 }

@@ -96,6 +96,58 @@ package_cache <- R6Class(
   )
 )
 
+#' Get package from cache, or download it asynchronously
+#'
+#' Currently, even if we take it from the cache, we check the etag
+#' of the url. TODO: This should change in the future, and we should trust
+#' at least CRAN source packages.
+#'
+#' @param cache `package_cache` instance.
+#' @param urls Character vector, list of candidate urls.
+#' @param target_dir Directory to place the file in.
+#' @param target_file Path to target file, within the target directory.
+#' @return Download status.
+#'
+#' @keywords internal
+#' @importFrom async async_detect
+
+get_package_from <- function(cache, urls, target_dir, target,
+                             progress_bar = NULL, metadata = list()) {
+  cache ; urls ; metadata
+  target_file <- file.path(target_dir, target)
+  mkdirp(target_dir <- dirname(target_file))
+
+  etag_file <- tempfile()
+  for (url in urls) {
+    hit <- cache$copy_to(target_file, url = url, .list = metadata)
+    if (nrow(hit) >= 1) {
+      writeLines(hit$etag, etag_file)
+      break
+    }
+  }
+
+  download_try_list(urls, target_file, etag_file,
+                    progress_bar = progress_bar)$
+    then(function(status) {
+      if (status == 304) {
+        make_dl_status("Had", urls, target_file,
+                       bytes = file.size(target_file))
+      } else {
+        etag <- read_etag(etag_file)
+        metadata <- metadata %||% list()
+        metadata$package <- metadata$package %||% NA_character_
+        metadata$md5 <- metadata$md5 %||% NA_character_
+        cache$add(target_file, path = target, url = urls[1], # TODO: url!
+                  etag = etag, .list = metadata)
+        make_dl_status("Got", urls, target_file,
+                       bytes = file.size(target_file))
+      }
+    })$
+    catch(function(err) {
+      make_dl_status("Failed", urls, target_file,  error = err)
+    })
+}
+
 ## ------------------------------------------------------------------------
 ## Internal functions
 

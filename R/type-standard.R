@@ -65,8 +65,9 @@ resolve_remote.remote_ref_standard <- function(remote, config, cache,
 download_remote.remote_resolution_standard <- function(resolution, config,
                                                        ..., cache, progress_bar) {
   async_map(get_files(resolution), function(file) {
+    meta <- file[c("platform", "package", "version", "rversion")]
     get_package_from(cache$package_cache, file$source,
-                     config$cache_dir, file$target,
+                     config$cache_dir, file$target, metadata = meta,
                      progress_bar = progress_bar)
   })
 }

@@ -89,7 +89,7 @@ on_failure(is_dependencies) <- function(call, env) {
 }
 
 is_r_version_list <- function(x) {
-  if (is.character(x) && length(x) > 0 && ! any(is.mna(x))) {
+  if (is.character(x) && length(x) > 0 && ! any(is.na(x))) {
     tryCatch(
       package_version(x),
       error = function(e) return(FALSE)

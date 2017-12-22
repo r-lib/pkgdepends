@@ -31,21 +31,21 @@ package_cache <- R6Class(
       readRDS(dbfile)
     },
 
-    find = function(...) {
-      self$copy_to(NULL, ...)
+    find = function(..., .list = NULL) {
+      self$copy_to(NULL, ..., .list = .list)
     },
 
-    copy_to = function(target, ...) {
+    copy_to = function(target, ..., .list = NULL) {
       l <- private$lock(exclusive = FALSE)
       on.exit(unlock(l), add = TRUE)
-      res <- private$find_locked(...)
+      res <- private$find_locked(..., .list = .list)
       if (!is.null(target) && nrow(res) >= 1) {
         file.copy(res$fullpath[1], target)
       }
       res
     },
 
-    add = function(file, path, ...) {
+    add = function(file, path, ..., .list = NULL) {
 
       assert_that(is_existing_file(file))
 
@@ -54,25 +54,26 @@ package_cache <- R6Class(
       dbfile <- get_db_file(private$path)
       db <- readRDS(dbfile)
 
-      idx <- find_in_data_frame(db, path = path, ...)
+      idx <- find_in_data_frame(db, path = path, ..., .list = .list)
       if (length(idx) != 0) stop("Package already exists in cache")
 
       target <- file.path(private$path, path)
       mkdirp(dirname(target))
       file.copy(file, target)
-      db <- append_to_data_frame(db, fullpath = target, path = path, ...)
+      db <- append_to_data_frame(db, fullpath = target, path = path, ...,
+                                 .list = .list)
       saveRDS(db, dbfile)
     },
 
-    delete = function(...) {
+    delete = function(..., .list = NULL) {
       l <- private$lock(exclusive = TRUE)
       on.exit(unlock(l), add = TRUE)
       dbfile <- get_db_file(private$path)
 
-      ex <- private$find_locked(...)
+      ex <- private$find_locked(..., .list = .list)
       if (nrow(ex) == 0) stop("Package does not exist in cache")
       unlink(file.path(private$path, ex$path))
-      db <- delete_from_data_frame(readRDS(dbfile), ...)
+      db <- delete_from_data_frame(readRDS(dbfile), ..., .list = .list)
       saveRDS(db, dbfile)
     }
   ),
@@ -85,11 +86,11 @@ package_cache <- R6Class(
       lockfile <- get_lock_file(private$path)
       filelock::lock(lockfile, exclusive = exclusive, ...)
     },
-    find_locked = function(...) {
+    find_locked = function(..., .list = NULL) {
       dbfile <- get_db_file(private$path)
       db <- readRDS(dbfile)
 
-      idx <- find_in_data_frame(db, ...)
+      idx <- find_in_data_frame(db, ..., .list = NULL)
       db[idx, ]
     }
   )

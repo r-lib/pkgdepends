@@ -1,6 +1,6 @@
 
-find_in_data_frame <- function(df, ...) {
-  cols <- list(...)
+find_in_data_frame <- function(df, ..., .list = NULL) {
+  cols <- c(list(...), .list)
   idx <- seq_len(nrow(df))
   for (i in seq_along(cols)) {
     if (length(idx) == 0) break
@@ -12,8 +12,8 @@ find_in_data_frame <- function(df, ...) {
   idx
 }
 
-append_to_data_frame <- function(df, ...) {
-  cols <- list(...)
+append_to_data_frame <- function(df, ..., .list = NULL) {
+  cols <- c(list(...), .list)
   assert_that(all_named(cols))
 
   if (length(new <- setdiff(names(cols), names(df)))) {
@@ -27,7 +27,7 @@ append_to_data_frame <- function(df, ...) {
   res
 }
 
-delete_from_data_frame <- function(df, ...) {
-  idx <- find_in_data_frame(df, ...)
+delete_from_data_frame <- function(df, ..., .list = NULL) {
+  idx <- find_in_data_frame(df, ..., .list = .list)
   if (length(idx)) df[-idx, ] else df
 }

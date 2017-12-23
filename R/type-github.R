@@ -32,6 +32,7 @@ parse_remote.remote_specs_github <- function(specs, config, ...) {
 resolve_remote.remote_ref_github <- function(remote, config, cache,
                                              dependencies, ...) {
 
+  force(dependencies)
   ## Get the DESCRIPTION data, and the SHA we need
   desc <- type_github_get_github_description_data(remote)
   sha <- type_github_get_github_commit_sha(remote)

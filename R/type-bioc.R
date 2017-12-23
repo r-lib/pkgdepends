@@ -23,7 +23,7 @@ parse_remote.remote_specs_bioc <- function(specs, config, ...) {
 
 resolve_remote.remote_ref_bioc <- function(remote, config, cache,
                                            dependencies, ...) {
-  force(remote)
+  force(remote); force(dependencies)
   cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
 
   cache$biocdata$then(function(cacheresult) {

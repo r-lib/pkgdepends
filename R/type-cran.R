@@ -26,7 +26,7 @@ parse_remote.remote_specs_cran <- function(specs, config, ...) {
 
 resolve_remote.remote_ref_cran <- function(remote, config, cache,
                                            dependencies, ...) {
-  force(remote)
+  force(remote); force(dependencies)
   cache$crandata <- cache$crandata %||% update_crandata_cache(config)
 
   cache$crandata$then(function(cacheresult) {

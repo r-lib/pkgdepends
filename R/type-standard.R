@@ -22,7 +22,7 @@ parse_remote.remote_specs_standard <- function(specs, config, ...) {
 
 resolve_remote.remote_ref_standard <- function(remote, config, cache,
                                                dependencies, ...) {
-  force(remote)
+  force(remote); force(dependencies)
 
   cache$crandata <- cache$crandata %||% update_crandata_cache(config)
   cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)

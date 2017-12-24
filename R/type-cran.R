@@ -237,13 +237,27 @@ type_cran_resolve_from_cache_version_files <- function(remote, version,
                                                        config, crancache,
                                                        dependencies) {
 
-  package <- remote$package
-  mirror  <- config$`cran-mirror`
-  dirs    <- crancache$`_dirs`
-  dir     <- dirs$contriburl[match("source", dirs$platform)]
-  archive <- crancache$`_archive`
+  package  <- remote$package
+  mirror   <- config$`cran-mirror`
+  dirs     <- crancache$`_dirs`
+  dir      <- dirs$contriburl[match("source", dirs$platform)]
+  archive  <- crancache$`_archive`
   package_path <- archive$file[archive$package == package &
                                  archive$version == version]
+
+  ## If we can't find the specified version, then `package_path` is empty
+
+  if (!length(package_path)) {
+    return(async_constant(list(list(
+      source = character(), target = NA_character_, platform = "*",
+      rversion = "*", dir = dir, package = package,
+      version = version, deps = NA, status = "FAILED",
+      error = make_error(
+        paste0("Can't find CRAN package ", package, ", version ", version),
+        class = "remotes_resolution_error"
+      )
+    ))))
+  }
 
   ## To get the dependencies, we need to download the package, and
   ## parse DESCRIPTION
@@ -252,7 +266,7 @@ type_cran_resolve_from_cache_version_files <- function(remote, version,
   mkdirp(target_dir <- dirname(target_file))
   etag_file <- file.path(target_dir, "_cache", basename(target_file))
 
-  deps <- type_cran_get_package_deps_url(
+  type_cran_get_package_deps_url(
     source, target_file, dependencies, last = TRUE, etag_file = etag_file)$
       then(function(deps) {
         list(list(
@@ -362,7 +376,7 @@ type_cran_fix_cran_version <- function(package, version, ge, packages,
     } else if (version %in% oldvers) {
       version
     } else {
-      stop("Cannot find package version ", version)
+      "invalid-version"
     }
 
   } else {

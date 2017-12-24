@@ -25,10 +25,7 @@ parse_remote.remote_specs_installed <- function(specs, config, ...) {
 resolve_remote.remote_ref_installed <- function(remote, config, cache,
                                                 dependencies, ...) {
 
-  dsc <- withr::with_libpaths(
-    remote$library,
-    desc(package = remote$package)
-  )
+  dsc <- desc(file.path(remote$library, remote$package))
 
   deps <- resolve_ref_deps(
     dsc$get_deps(), dsc$get("Remotes")[[1]], dependencies)

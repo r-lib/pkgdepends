@@ -68,7 +68,8 @@ download_if_newer <- function(url, target, etag_file = NULL) {
   }
 
   target <- normalizePath(target, mustWork = FALSE)
-  tmp_target <- paste(target, ".tmp")
+  tmp_target <- paste0(target, ".tmp")
+  mkdirp(dirname(tmp_target))
 
   http_get(url, file = tmp_target, headers = headers)$
     then(http_stop_for_status)$
@@ -78,9 +79,13 @@ download_if_newer <- function(url, target, etag_file = NULL) {
         ## Current, nothing to do
       } else if (resp$status_code == 200) {
         "!DEBUG downloaded `url`"
+        mkdirp(dirname(target))
         file.rename(tmp_target, target)
         etag <- parse_headers_list(resp$headers)[["etag"]]
-        if (!is.null(etag_file)) writeLines(etag, etag_file)
+        if (!is.null(etag_file)) {
+          mkdirp(dirname(etag_file))
+          writeLines(etag, etag_file)
+        }
       }
 
       resp

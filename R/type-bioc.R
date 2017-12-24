@@ -49,7 +49,7 @@ satisfies_remote.remote_resolution_bioc <- function(resolution, candidate,
                                                     config, ...) {
 
   ## 1. candidate must be a bioc, standard or installed ref
-  if (! inherits(candidate, "remote_resolution_cran") &&
+  if (! inherits(candidate, "remote_resolution_bioc") &&
       ! inherits(candidate, "remote_resolution_standard") &&
       ! inherits(candidate, "remote_resolution_installed")) {
     return(FALSE)

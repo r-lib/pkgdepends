@@ -297,7 +297,7 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
     version = NA_character_, deps = NA, status = "OK"
   )
 
-  wh <- if (version == "") {
+  wh <- if (version == "" || version == "current") {
     wh <- which(data[ , "Package"] == package)
   } else {
     wh <- which(data[ , "Package"] == package &

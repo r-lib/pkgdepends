@@ -148,6 +148,7 @@ type_github_get_github_commit_url <- function(rem) {
 type_github_get_github_description_data <- function(rem) {
   description_url <- type_github_get_github_description_url(rem)
   http_get(description_url, headers = type_github_get_github_headers())$
+    then(http_stop_for_status)$
     then(function(resp) {
       write_bin_atomic(resp$content, tmp <- tempfile())
       dsc <- desc(tmp)
@@ -181,7 +182,7 @@ type_github_get_github_commit_sha <- function(rem) {
     then(http_stop_for_status)$
     then(function(resp) {
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-      list(error = NULL, sha = cdata$object$sha)
+      list(error = NULL, sha = cdata$sha)
     })$
     catch(function(err) {
       list(error = err, sha = NA_character_)
@@ -203,7 +204,7 @@ type_github_build_github_package <- function(source, target, subdir) {
 
 type_github_make_resolution <- function(data) {
 
-  deps <- if (is.null(data$error)) {
+  deps <- if (is.null(data$desc$error)) {
     resolve_ref_deps(
       data$desc$deps, data$desc$remotes, data$dependencies)
   } else {

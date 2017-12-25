@@ -138,7 +138,7 @@ type_github_get_github_description_url <- function(rem) {
 type_github_get_github_commit_url <- function(rem) {
   glue(
     "https://api.github.com/repos/{rem$username}/{rem$repo}",
-    "/git/refs/heads/{commitish}",
+    "/git/trees/{commitish}",
     commitish = if (nzchar(rem$commitish)) rem$commitish else "master"
   )
 }

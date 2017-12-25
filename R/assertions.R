@@ -26,6 +26,8 @@ on_failure(is_string_or_null) <- function(call, env) {
   paste0(deparse(call$x), " must be a string (length 1 character) or NULL")
 }
 
+## To be refined
+
 is_path <- function(x) {
   is_string(x)
 }
@@ -60,6 +62,7 @@ on_failure(is_path) <- function(call, env) {
 }
 
 is_existing_file <- function(x) {
+  assert_that(is_path(x))
   file.exists(x) && ! file.info(x)$isdir
 }
 
@@ -78,7 +81,7 @@ on_failure(is_platform_list) <- function(call, env) {
 is_dependencies <- function(x) {
   deptypes <- c("Depends", "Suggests", "Imports", "LinkingTo", "Enhances")
   is_na_scalar(x) || isTRUE(x) || identical(x, FALSE) ||
-    (is.character(x) && all(x %in% deptypes))
+    (is_character(x) && all(x %in% deptypes))
 }
 
 on_failure(is_dependencies) <- function(call, env) {
@@ -89,12 +92,11 @@ on_failure(is_dependencies) <- function(call, env) {
 }
 
 is_r_version_list <- function(x) {
-  if (is.character(x) && length(x) > 0 && ! any(is.na(x))) {
-    tryCatch(
-      package_version(x),
-      error = function(e) return(FALSE)
-    )
-    TRUE
+  if (is_character(x) && length(x) > 0) {
+    tryCatch({
+      package_version(x)
+      TRUE
+    }, error = function(e) FALSE)
   } else {
     FALSE
   }

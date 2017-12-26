@@ -52,8 +52,12 @@ fixture_dir <- function() {
   )
 }
 
+get_fixture <- function(file) {
+  file.path(fixture_dir(), file)
+}
+
 read_fixture <- function(file) {
-  readRDS(file.path(fixture_dir(), file))
+  readRDS(get_fixture(file))
 }
 
 update_fixtures <- function(files = NULL) {

@@ -21,6 +21,7 @@ Imports:
     glue,
     jsonlite,
     lpSolve,
+    pingr,
     pkgbuild,
     prettyunits,
     progress,

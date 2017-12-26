@@ -95,7 +95,7 @@ download_remote.remote_resolution_local <- function(resolution, config,
     files <- get_files(resolution)[[1]]
     target_file <- file.path(config$cache_dir, files$target)
     mkdirp(dirname(target_file))
-    file.copy(files$source, target_file)
+    if (! file.copy(files$source, target_file)) stop("No local file found")
     progress_bar$update(count = 1, cached = 1)
     async_constant(list(make_dl_status("Had", files$source, target_file,
                                        bytes = file.size(target_file))))

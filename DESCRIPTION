@@ -21,7 +21,6 @@ Imports:
     glue,
     jsonlite,
     lpSolve,
-    pingr,
     pkgbuild,
     prettyunits,
     progress,
@@ -37,6 +36,7 @@ Suggests:
     covr,
     debugme,
     mockery,
+    pingr,
     rprojroot,
     testthat
 Remotes:

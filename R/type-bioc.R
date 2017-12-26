@@ -209,6 +209,8 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   package <- remote$package
   version <- remote$version
 
+  dependencies <- intersect(dependencies, colnames(data))
+
   result <- list(
     source = character(), target = NA_character_, platform = platform,
     rversion = rversion, dir = dir, package = package,

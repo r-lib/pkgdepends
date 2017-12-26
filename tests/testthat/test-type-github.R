@@ -114,7 +114,7 @@ test_that("satisfies_remote", {
 
   while (nrow(plan)) {
     to_install <- which(! viapply(plan$dependencies, length))
-    if (!to_install) stop("Cannot install packages")
+    if (!length(to_install)) stop("Cannot install packages")
     for (w in to_install) {
       install.packages(plan$file[w], lib = lib, repos = NULL, quiet = TRUE,
                        type = "source")

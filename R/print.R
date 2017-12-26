@@ -13,6 +13,6 @@ cat_msg <- function(str) {
 
 format_items <- function(x) {
   paste0(
-    collapse(backtick(x), last = " and ")
+    collapse(backtick(x), sep = ", ", last = " and ")
   )
 }

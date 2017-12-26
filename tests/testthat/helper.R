@@ -1,6 +1,6 @@
 
-httpbin_url <- function() {
-  "eu.httpbin.org"
+offline_check_url <- function() {
+  "cran.rstudio.com"
 }
 
 is_offline <- (function() {
@@ -8,7 +8,7 @@ is_offline <- (function() {
   function() {
     if (is.null(offline)) {
       offline <<- tryCatch(
-        is.na(pingr::ping_port(httpbin_url(), port = 443, count = 1L)),
+        is.na(pingr::ping_port(offline_check_url(), port = 80, count = 1L)),
         error = function(e) TRUE
       )
       if (offline) cat("We are offline!\n", file = stderr())

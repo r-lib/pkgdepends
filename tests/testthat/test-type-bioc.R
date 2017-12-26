@@ -83,6 +83,7 @@ test_that("download_remote", {
     })
   dl <- r$get_resolution_download()
 
+  expect_true(file.exists(dl$data$fulltarget))
   expect_s3_class(dl, "remotes_downloads")
   expect_true(all(dl$data$ref == "bioc::Biobase"))
   expect_true(all(dl$data$type == "bioc"))

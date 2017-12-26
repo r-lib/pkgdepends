@@ -38,7 +38,7 @@ resolve_remote.remote_ref_local <- function(remote, config, cache,
     )
 
     files <- list(
-      source = remote$path,
+      source = normalizePath(remote$path),
       target = file.path("src", "contrib", basename(remote$path)),
       platform = platform,
       rversion = rversion,

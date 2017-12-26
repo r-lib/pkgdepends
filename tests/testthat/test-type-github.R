@@ -120,7 +120,7 @@ test_that("satisfies_remote", {
                        type = "source")
     }
     pkgs <- plan$package[to_install]
-    plan <- plan[ - to_install, drop = FALSE]
+    plan <- plan[ - to_install, ]
     plan$dependencies[] <- lapply(plan$dependencies, setdiff, y = pkgs)
   }
 

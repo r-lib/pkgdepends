@@ -209,8 +209,6 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   package <- remote$package
   version <- remote$version
 
-  dependencies <- intersect(dependencies, colnames(data))
-
   result <- list(
     source = character(), target = NA_character_, platform = platform,
     rversion = rversion, dir = dir, package = package,
@@ -235,6 +233,8 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   }
   data <- data[which_repo][[1]]
   repos <- repos[which_repo][[1]]
+
+  dependencies <- intersect(dependencies, colnames(data))
 
   wh <- if (version == "") {
     wh <- which(data[ , "Package"] == package)

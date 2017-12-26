@@ -120,8 +120,8 @@ satisfies_remote.remote_resolution_github <- function(resolution, candidate,
 type_github_get_github_headers <- function() {
   headers <- c("Accept" = "application/vnd.github.v3+json")
 
-  if (nzchar(token <- Sys.getenv("GITHUB_TOKEN")) ||
-      nzchar(token <- Sys.getenv("GITHUB_PAT"))) {
+  if (nzchar(token <- Sys.getenv("GITHUB_TOKEN",
+                                 Sys.getenv("GITHUB_PAT")))) {
     headers <- c(headers, c("Authorization" = paste("token", token)))
   }
   headers

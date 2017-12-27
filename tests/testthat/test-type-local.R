@@ -56,7 +56,7 @@ test_that("resolve_remote", {
   expect_true(res$data$status == "OK")
   expect_true(res$data$package == "foobar")
   expect_true(res$data$version == "1.0.0")
-  expect_true(res$data$sources[[1]] == path)
+  expect_true(res$data$sources[[1]] == normalizePath(path))
 })
 
 test_that("resolution error", {

@@ -113,6 +113,8 @@ type_bioc_get_bioc_repos <- function(r_version) {
   )
 }
 
+#' @importFrom utils URLencode
+
 type_bioc_update_cache <- function(rootdir, platforms, rversions) {
   rootdir; platforms; rversions
 
@@ -126,10 +128,11 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions) {
     async_map(rversions, function(rversion) {
       repos <- bioc_repos[[rversion]]$repos
       async_map(repos, function(repo) {
-        cache_file <- file.path(dir, "_cache", "bioc", repo, "PACKAGES.gz")
+        urepo <- URLencode(repo, reserved=TRUE)
+        cache_file <- file.path(dir, "_cache", "bioc", urepo, "PACKAGES.gz")
         target_file <- file.path(rootdir, cache_file)
         source_url <- paste0(repo, "/", dir, "/", "PACKAGES.gz")
-        cache_etag <- file.path(dir, "_cache", "bioc", repo, "etags.yaml")
+        cache_etag <- file.path(dir, "_cache", "bioc", urepo, "etags.yaml")
         etag_file <- file.path(rootdir, cache_etag)
         mkdirp(dirname(target_file))
         download_if_newer(source_url, target_file, etag_file)$

@@ -289,7 +289,7 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
   package <- remote$package
   version <- remote$version
 
-  dependencies <- intersect(dependencies, colnames(data))
+  dependencies <- intersect(dependencies, colnames(data$pkgs))
 
   result <- list(
     source = character(), target = NA_character_, platform = platform,
@@ -298,10 +298,10 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
   )
 
   wh <- if (version == "" || version == "current") {
-    wh <- which(data[ , "Package"] == package)
+    wh <- which(data$pkgs$Package == package)
   } else {
-    wh <- which(data[ , "Package"] == package &
-                  data[, "Version"] == version)
+    wh <- which(data$pkgs$Package == package &
+                  data$pkgs$Version == version)
   }
   if (! length(wh)) {
     result$status <- "FAILED"
@@ -317,14 +317,14 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
   result <- replicate(length(wh), result, simplify = FALSE)
   for (i in 1:length(wh)) {
     whi <- wh[i]
-    version <- unname(data[whi, "Version"])
+    version <- data$pkgs$Version[[whi]]
     result[[i]]$version <- version
 
-    path <- if ("File" %in% colnames(data) &&
-                !is.na(file_loc <- data[whi, "File"])) {
+    path <- if ("File" %in% colnames(data$pkgs) &&
+                !is.na(file_loc <- data$pkgs$File[[whi]])) {
       paste0(dir, "/", file_loc)
-    } else if ("Path" %in% colnames(data) &&
-               !is.na(file_path <- data[whi, "Path"])) {
+    } else if ("Path" %in% colnames(data$pkgs) &&
+               !is.na(file_path <- data$pkgs$Path[[whi]])) {
       paste0(dir, "/", file_path, "/", package, "_", version, ext)
     } else {
       paste0(dir, "/", package, "_", version, ext)
@@ -343,7 +343,7 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
     result[[i]]$source <- unname(url)
     result[[i]]$target <- path
 
-    result[[i]]$deps <- parse_all_deps(data[whi, dependencies])
+    result[[i]]$deps <- fast_select_deps(data$deps, whi, dependencies)
 
     result[[i]]$metadata <- c(
       RemoteOriginalRef = ref,
@@ -364,7 +364,8 @@ type_cran_make_cran_archive_url <- function(mirror, package, version) {
 type_cran_fix_cran_version <- function(package, version, ge, packages,
                                        archive) {
 
-  current <- packages[packages[, "Package"] == package, "Version"]
+  packages <- packages$pkgs
+  current <- packages$Version[packages$Package == package]
   oldvers <- archive$version[archive$package == package]
 
   res <- if (version == "last") {

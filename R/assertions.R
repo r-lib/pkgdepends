@@ -78,10 +78,13 @@ on_failure(is_platform_list) <- function(call, env) {
   paste0(deparse(call$x), " must be a non-empty characater vector")
 }
 
+deptypes <- function() {
+  c("Depends", "Suggests", "Imports", "LinkingTo", "Enhances")
+}
+
 is_dependencies <- function(x) {
-  deptypes <- c("Depends", "Suggests", "Imports", "LinkingTo", "Enhances")
   is_na_scalar(x) || isTRUE(x) || identical(x, FALSE) ||
-    (is_character(x) && all(x %in% deptypes))
+    (is_character(x) && all(x %in% deptypes()))
 }
 
 on_failure(is_dependencies) <- function(call, env) {

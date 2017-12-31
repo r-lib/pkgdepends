@@ -142,18 +142,6 @@ save_rds_atomic <- function(object, file, ...) {
   file.rename(tmp, file)
 }
 
-format_archive_rds <- function(ards) {
-
-  files <- sub("^[^/]+/", "", unlist(lapply(ards, rownames)))
-
-  tibble(
-    package = rep(names(ards), viapply(ards, nrow)),
-    file = files,
-    version = sub("^[^_]+_([-\\.0-9]+)\\.tar\\.gz$", "\\1", files),
-    size = unlist(unname(lapply(ards, "[[", "size")))
-  )
-}
-
 comma_wrap <- function(x, indent = 2, exdent = indent, sep = ", ") {
   w <- strwrap(paste(x, collapse = sep), indent = indent, exdent = exdent)
   paste(w, collapse = "\n")

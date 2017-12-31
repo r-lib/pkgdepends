@@ -41,7 +41,8 @@ test_that("type_cran_make_resolution", {
     remote = parse_remotes("ggplot2")[[1]],
     platform = "source",
     rversion = "3.4",
-    data = available.packages(repos = "https://cran.rstudio.com"),
+    data = format_packages_gz(
+      available.packages(repos = "https://cran.rstudio.com")),
     dir = "src/contrib",
     mirror = "https://cran.rstudio.com",
     dependencies = c("Imports", "Suggests")

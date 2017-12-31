@@ -1,4 +1,45 @@
 
+#' @importFrom tibble tibble
+#' @importFrom rematch2 re_match
+
+fast_parse_deps <- function(pkgs) {
+  no_pkgs <- nrow(pkgs)
+  cols <- intersect(colnames(pkgs), deptypes())
+  ## as.character is for empty tibbles, e.g. from empty BioC repos
+  deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
+  nna <- which(!is.na(deps))
+  if (length(nna)) {
+    not_na_deps <- deps[nna]
+    sp <- strsplit(not_na_deps, ",", fixed = TRUE)
+    ll <- sapply(sp, length, USE.NAMES = FALSE)
+    sp <- unlist(sp, use.names = FALSE)
+    parsed <- re_match(sp,
+      paste0("^\\s*(?<package>[^(\\s]+)\\s*",
+             "(?:\\((?<op>[^0-9\\s]+)\\s*(?<version>[^)\\s]+)\\))?\\s*$"))
+    parsed$idx <- rep(rep(seq_len(no_pkgs), length(cols))[nna], ll)
+    parsed$type <- rep(rep(cols, each = no_pkgs)[nna], ll)
+    parsed$ref <- parsed$package
+    parsed <- parsed[, c("idx", "ref", "type", "package", "op", "version")]
+    parsed <- parsed[order(parsed$idx), ]
+
+  } else {
+    parsed <- tibble(idx = integer(),
+                     ref = character(),
+                     type = character(),
+                     package = character(),
+                     version = character(),
+                     op = character())
+  }
+
+  parsed
+}
+
+fast_select_deps <- function(deps, which, dependencies) {
+  res <- deps[deps$idx == which & deps$type %in% dependencies,
+              c("ref", "type", "package", "op", "version")]
+  res[! res$package %in% base_packages(), ]
+}
+
 parse_deps <- function(deps, type) {
   assert_that(length(deps) == length(type))
   deps <- lapply(strsplit(deps, ","), str_trim)

@@ -34,7 +34,7 @@ CRANMetadataCache <- R6Class(
     },
 
     insert_file_gz = function(path, md5) {
-      pkgs <- read.dcf.gz(path)
+      pkgs <- format_packages_gz(read.dcf.gz(path))
       private$data[[md5]] <- pkgs
       pkgs
     },
@@ -46,6 +46,25 @@ CRANMetadataCache <- R6Class(
     }
   )
 )
+
+#' @importFrom tibble as_tibble
+
+format_packages_gz <- function(pkgs) {
+  pkgs <- as_tibble(pkgs)
+  list(pkgs = pkgs, deps = fast_parse_deps(pkgs))
+}
+
+format_archive_rds <- function(ards) {
+
+  files <- sub("^[^/]+/", "", unlist(lapply(ards, rownames)))
+
+  tibble(
+    package = rep(names(ards), viapply(ards, nrow)),
+    file = files,
+    version = sub("^[^_]+_([-\\.0-9]+)\\.tar\\.gz$", "\\1", files),
+    size = unlist(unname(lapply(ards, "[[", "size")))
+  )
+}
 
 update_crandata_cache <- function(config) {
   type_cran_update_cache(

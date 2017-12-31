@@ -218,12 +218,12 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
     version = NA_character_, deps = NA, status = "OK")
 
   ## Some binary repos are empty, e.g. experiment and annotation repos
-  keep <- vlapply(data, function(d) length(d) != 0)
+  keep <- vlapply(data, function(d) nrow(d$pkgs) != 0)
   data <- data[keep]
   repos <- repos[keep]
 
   ## Which BioC repo do we need?
-  which_repo <- vlapply(data, function(d) package %in% d[, "Package"])
+  which_repo <- vlapply(data, function(d) package %in% d$pkgs$Package)
   if (sum(which_repo) == 0) {
     result$status <- "FAILED"
     result$error <- make_error(
@@ -237,13 +237,13 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   data <- data[which_repo][[1]]
   repos <- repos[which_repo][[1]]
 
-  dependencies <- intersect(dependencies, colnames(data))
+  dependencies <- intersect(dependencies, colnames(data$pkgs))
 
   wh <- if (version == "") {
-    wh <- which(data[ , "Package"] == package)
+    wh <- which(data$pkgs$Package == package)
   } else {
-    wh <- which(data[ , "Package"] == package &
-                  data[, "Version"] == version)
+    wh <- which(data$pkgs$Package == package &
+                  data$pkgs$Version == version)
   }
   if (! length(wh)) {
     result$status <- "FAILED"
@@ -259,14 +259,14 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   result <- replicate(length(wh), result, simplify = FALSE)
   for (i in 1:length(wh)) {
     whi <- wh[i]
-    version <- unname(data[wh, "Version"])
+    version <- data$pkgs$Version[[wh]]
     result[[i]]$version <- version
 
-    path <- if ("File" %in% colnames(data) &&
-                !is.na(file_loc <- data[wh, "File"])) {
+    path <- if ("File" %in% colnames(data$pkgs) &&
+                !is.na(file_loc <- data$pkgs$File[[wh]])) {
       paste0(dir, "/", file_loc)
-    } else if ("Path" %in% colnames(data) &&
-               !is.na(file_path <- data[whi, "Path"])) {
+    } else if ("Path" %in% colnames(data$pkgs) &&
+               !is.na(file_path <- data$pkgs$path[[whi]])) {
       paste0(dir, "/", file_path, "/", package, "_", version, ext)
     } else {
       paste0(dir, "/", package, "_", version, ext)
@@ -277,7 +277,7 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
     result[[i]]$source <- unname(url)
     result[[i]]$target <- path
 
-    result[[i]]$deps <- parse_all_deps(data[whi, dependencies])
+    result[[i]]$deps <- fast_select_deps(data$deps, whi, dependencies)
 
     result[[i]]$metadata <- c(
       RemoteOriginalRef = ref,

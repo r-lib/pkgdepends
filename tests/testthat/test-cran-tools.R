@@ -3,7 +3,8 @@ context("cran utility functions")
 
 test_that("type_cran_fix_cran_version", {
 
-  packages <- readRDS("fixtures/resolve-cran-version-packages.rds")
+  packages <- format_packages_gz(
+    readRDS("fixtures/resolve-cran-version-packages.rds"))
   archive <- readRDS("fixtures/resolve-cran-version-archive.rds")
 
   fix <- function(package, version, ge = "") {

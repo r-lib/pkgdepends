@@ -236,6 +236,11 @@ cat0 <- function(..., sep = "") {
   cat(..., sep = sep)
 }
 
+cat_line <- function(txt, sep = "\n") {
+  txt2 <- vcapply(txt, glue_data, .x = parent.frame())
+  cat(txt2, sep = sep)
+}
+
 read_lines <- function(con, ...) {
   if (is.character(con)) {
     con <- file(con)

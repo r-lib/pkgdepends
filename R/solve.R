@@ -84,12 +84,12 @@ remotes_i_create_lp_problem <- function(pkgs) {
   num <- nrow(pkgs)
   package_names <- unique(pkgs$package)
   num_pkgs <- length(package_names)
-  lp <- list(
+  lp <- structure(list(
     num = num + num_pkgs,
     num_pkgs = num_pkgs,
     conds = list(),
-    cond_types = character()
-  )
+    pkgs = pkgs
+  ), class = "remotes_lp_problem")
 
   ## Add a condition, for a subset of variables, with op and rhs
   cond <- function(vars, op = "<=", rhs = 1, type = NA_character_,
@@ -120,7 +120,7 @@ remotes_i_create_lp_problem <- function(pkgs) {
   depconds <- function(wh) {
     if (pkgs$status[wh] != "OK") return()
     deps <- pkgs$dependencies[[wh]]
-    deps <- deps[deps$version != "", ]
+    deps <- deps[deps$version != "" & deps$ref != "R", ]
     for (i in seq_len(nrow(deps))) {
       deppkg <- deps$package[i]
       confl_pkgs <- which(pkgs$package == deppkg)
@@ -128,7 +128,9 @@ remotes_i_create_lp_problem <- function(pkgs) {
         if (pkgs$status[co] == "OK" &&
             ! version_satisfies(pkgs$version[co], deps$op[i],
                                 deps$version[i])) {
-          cond(c(wh, co), type = "dependency-version", note = wh)
+          note_txt <- paste(pkgs$version[co], deps$op[i], deps$version[i])
+          note <- list(wh = wh, txt = note_txt)
+          cond(c(wh, co), type = "dependency-version", note = note)
         }
       }
     }
@@ -158,6 +160,49 @@ remotes_i_create_lp_problem <- function(pkgs) {
   lapply(seq_len(num), failedconds)
 
   lp
+}
+
+#' @export
+
+print.remotes_lp_problem <- function(x, ...) {
+
+  cat_cond <- function(cond) {
+    if (cond$type == "dependency-version") {
+      up <- x$pkgs$ref[cond$note$wh]
+      down <- setdiff(x$pkgs$ref[cond$vars], up)
+      txt <- cond$note$txt
+      cat_line(" * `{up}` requirement `{down} {txt}` fails")
+
+    } else if (cond$type == "satisfy-refs") {
+      ref <- x$pkgs$ref[cond$note]
+      cand <- x$pkgs$ref[cond$vars]
+      cat_line(" * `{ref}` is not satisfied by `{cand}`")
+
+    } else if (cond$type == "ok-resolution") {
+      ref <- x$pkgs$ref[cond$vars]
+      cat_line(" * `{ref}` resolution failed")
+
+    } else if (cond$type == "exactly-once") {
+      ## Do nothing
+
+    } else {
+      cat_line(" * Unknown condition")
+    }
+  }
+
+  cat_line("LP problem for {x$num_pkgs} packages:")
+  pn <- sort(unique(prb$pkgs$package))
+  cat_line(strwrap(paste(pn, collapse = ", "), indent = 2, exdent = 2))
+  nc <- length(x$conds) - x$num_pkgs
+
+  if (nc) {
+    cat_line("Conditions:")
+    lapply(x$conds, cat_cond)
+  } else {
+    cat_line("No conditions.")
+  }
+
+  invisible(x)
 }
 
 #' @importFrom lpSolve lp
@@ -252,12 +297,12 @@ describe_solution_error <- function(pkgs, solution) {
         glue("cannot install any version of package `{pkg}`")
 
       } else if (cond$type == "dependency-version") {
-        other <- pkgs$package[[cond$note]]
+        other <- pkgs$package[[cond$note$wh]]
         pkg <- unique(na.omit(setdiff(pkgs$package[cond$vars], other)))
-        otherdeps <- pkgs$dependencies[[cond$note]]
+        otherdeps <- pkgs$dependencies[[cond$note$wh]]
         wh <- match(pkg, otherdeps$package)[1]
         ver <- paste(otherdeps$op[wh], otherdeps$version[wh])
-        glue("version `{ver}`, required by `{other}`, cannot be installed")
+        glue("`{pkg} {ver}`, required by `{other}`, cannot be installed")
 
       } else if (cond$type == "satisfy-refs") {
         ref <- pkgs$ref[cond$vars]

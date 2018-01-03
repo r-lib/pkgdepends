@@ -44,6 +44,20 @@ set_files <- function(x, f)
 
 set_files.remote_resolution <- function(x, f) {
   x[["files"]] <- f
+  st <- vcapply(get_files(x), "[[", "status")
+  x[["status"]] <- if (all(st == "OK")) "OK" else "FAILED"
+  x
+}
+
+add_files <- function(x, f)
+  UseMethod("add_files")
+
+#' @export
+
+add_files.remote_resolution <- function(x, f) {
+  x[["files"]] <- c(x[["files"]], list(f))
+  st <- vcapply(get_files(x), "[[", "status")
+  x[["status"]] <- if (all(st == "OK")) "OK" else "FAILED"
   x
 }
 

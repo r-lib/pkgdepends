@@ -19,11 +19,14 @@ fast_parse_deps <- function(pkgs) {
     parsed$idx <- rep(rep(seq_len(no_pkgs), length(cols))[nna], ll)
     parsed$type <- rep(rep(cols, each = no_pkgs)[nna], ll)
     parsed$ref <- parsed$package
-    parsed <- parsed[, c("idx", "ref", "type", "package", "op", "version")]
+    parsed$upstream <- pkgs$Package[parsed$idx]
+    parsed <- parsed[, c("upstream", "idx", "ref", "type", "package",
+                         "op", "version")]
     parsed <- parsed[order(parsed$idx), ]
 
   } else {
-    parsed <- tibble(idx = integer(),
+    parsed <- tibble(upstream = character(),
+                     idx = integer(),
                      ref = character(),
                      type = character(),
                      package = character(),
@@ -35,9 +38,15 @@ fast_parse_deps <- function(pkgs) {
 }
 
 fast_select_deps <- function(deps, which, dependencies) {
-  res <- deps[deps$idx == which & deps$type %in% dependencies,
-              c("ref", "type", "package", "op", "version")]
+  res <- deps[deps$idx == which, ]
+  res <- res[res$type %in% dependencies,
+             c("ref", "type", "package", "op", "version")]
   res[! res$package %in% base_packages(), ]
+}
+
+make_null_deps <- function() {
+  tibble(ref = character(), type = character(), package = character(),
+         op = character(), version = character())
 }
 
 parse_deps <- function(deps, type) {

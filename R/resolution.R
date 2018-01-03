@@ -23,27 +23,30 @@ remotes_async_resolve <- function(self, private) {
   private$dirty <- TRUE
   private$resolution <- private$start_new_resolution()
 
+  pool <- deferred_pool$new()
+
   ## Standard, CRAN and BioC packages are special, we resolve them in one
   ## go in the end. For now we set them aside, but only if they don't have
   ## version requirements
   fast <- vlapply(private$remotes, function(x) {
     x$type %in% c("standard", "cran", "bioc") && x$atleast == ""
   })
-##  private$add_fast_refs(remotes = private$remotes[fast])
+  private$add_fast_refs(
+    remotes = private$remotes[fast],
+    direct = TRUE,
+    pool = pool
+  )
 
-  pool <- deferred_pool$new()
-##  proms <- lapply(private$remotes[!fast], private$resolve_ref, pool = pool,
-##                  direct = TRUE)
-  proms <- lapply(private$remotes, private$resolve_ref, pool = pool,
+  proms <- lapply(private$remotes[!fast], private$resolve_ref, pool = pool,
                   direct = TRUE)
 
   res <- pool$when_complete()$
+  then(function() private$fast_resolve())$
     then(function() {
       private$resolution$packages <-
         eapply(private$resolution$packages, get_async_value)
     })$
     then(function() private$dirty <- FALSE)$
-##    then(function() private$fast_resolve())$
     then(function() {
       private$resolution$metadata$resolution_end <- Sys.time()
       private$resolution$result <- remotes__resolution_to_df(
@@ -104,10 +107,9 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
     )))
     deps <- setdiff(deps, "R")
     cache$numdeps <- cache$numdeps + length(deps)
-##    fast <- grepl("^[a-zA-Z0-9\\.]+$", deps)
-##    private$add_fast_refs(refs = deps[fast])
-##    lapply(parse_remotes(deps[!fast]), private$resolve_ref, pool = pool)
-    lapply(parse_remotes(deps), private$resolve_ref, pool = pool)
+    fast <- grepl("^[a-zA-Z0-9\\.]+$", deps)
+    private$add_fast_refs(refs = deps[fast], direct = FALSE, pool = pool)
+    lapply(parse_remotes(deps[!fast]), private$resolve_ref, pool = pool)
   })
   pool$add(deps)
 
@@ -145,7 +147,9 @@ remotes__start_new_resolution <- function(self, private) {
     res$metadata$indirect_dependencies <- dp
   }
 
-  res$fast <- list(remotes = list(), refs = character())
+  res$fast <- list(direct_remotes = list(), indirect_remotes = list(),
+                   direct_refs = character(), indirect_refs = character(),
+                   remotes = list())
 
   ## This is a generic cache
   res$cache <- new.env(parent = emptyenv())

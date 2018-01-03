@@ -150,13 +150,8 @@ type_cran_resolve_from_cache_current <- function(remote, config,
                                                       dependencies)
 
   files$then(function(files) {
-    status <- if (all(vcapply(files, "[[", "status") == "OK")) {
-      "OK"
-    } else {
-      "FAILED"
-    }
     structure(
-      list(files = files, remote = remote, status = status),
+      list(files = files, remote = remote, status = all_ok(files)),
       class = c("remote_resolution_cran", "remote_resolution")
     )
   })
@@ -220,14 +215,8 @@ type_cran_resolve_from_cache_general <- function(remote, config,
     ## This is a list of lists
     files <- unlist(files, recursive = FALSE, use.names = FALSE)
 
-    status <- if (all(vcapply(files, "[[", "status") == "OK")) {
-      "OK"
-    } else {
-      "FAILED"
-    }
-
     structure(
-      list(files = files, remote = remote, status = status),
+      list(files = files, remote = remote, status = all_ok(files)),
       class = c("remote_resolution_cran", "remote_resolution")
     )
   })

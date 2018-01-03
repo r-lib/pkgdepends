@@ -57,6 +57,98 @@ test_that("parse_remotes, cran", {
 
 })
 
+test_that("github regexes", {
+  username <- list(
+    list("foobar", "foobar"),
+    list("", NA_character_),
+    list("-bad", NA_character_),
+    list("bad-", NA_character_),
+    list("still--bad", NA_character_),
+    list("123456789012345678901234567890123456789",
+         "123456789012345678901234567890123456789"),
+    list("1234567890123456789012345678901234567890", NA_character_)
+  )
+  for (c in username) {
+    rx <- paste0("^", github_username_rx(), "$")
+    expect_equal(
+      rematch2::re_match(c[[1]], rx)$username,
+      c[[2]]
+    )
+  }
+
+  commitish <- list(
+    list("", NA_character_),
+    list("x", NA_character_),
+    list("foobar", NA_character_),
+    list("@foobar", "foobar"),
+    list("@*foobar", NA_character_)
+  )
+  for (c in commitish) {
+    expect_equal(
+      rematch2::re_match(c[[1]], github_commitish_rx())$commitish,
+      c[[2]]
+    )
+  }
+
+  pull <- list(
+    list("", NA_character_),
+    list("x", NA_character_),
+    list("@foobar", NA_character_),
+    list("#", NA_character_),
+    list("#123", "123"),
+    list("#1", "1"),
+    list("#foobar", NA_character_),
+    list("#1foo", "1")
+  )
+  for (c in pull) {
+    expect_equal(
+      rematch2::re_match(c[[1]], github_pull_rx())$pull,
+      c[[2]]
+    )
+  }
+
+  release <- list(
+    list("", NA_character_),
+    list("x", NA_character_),
+    list("@foobar", NA_character_),
+    list("@*foobar", NA_character_),
+    list("@*release", "*release")
+  )
+  for (c in release) {
+    expect_equal(
+      rematch2::re_match(c[[1]], github_release_rx())$release,
+      c[[2]]
+    )
+  }
+
+  detail <- list(
+    list("@foobar",   c("foobar", "",    "")),
+    list("#123",       c("",       "123", "")),
+    list("@*release", c("",       "",    "*release")),
+    list("foobar",     c("",       "",    ""))
+  )
+  for (c in detail) {
+    expect_equal(
+      unlist(rematch2::re_match(
+        c[[1]],
+        github_detail_rx())[, c("commitish", "pull", "release")]),
+      structure(c[[2]], names = c("commitish", "pull", "release"))
+    )
+  }
+})
+
+test_that("github url regexes", {
+  cases <- list(
+    list("https://github.com/u/repo.git", c(username = "u", repo = "repo")),
+    list("https://github.com/u/re.po", c(username = "u", repo = "re.po")),
+    list("https://github.com/u/re.po.git", c(username = "u", repo = "re.po"))
+  )
+  for (c in cases) {
+    m <- rematch2::re_match(c[[1]], github_url_rx())
+    for (n in names(c[[2]])) expect_equal(c[[2]][[n]], m[[n]])
+  }
+})
+
 test_that("parse_remotes, github", {
 
   cases <- list(

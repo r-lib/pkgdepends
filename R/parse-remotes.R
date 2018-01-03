@@ -18,10 +18,27 @@ standard_rx <- function(remote_name = "standard") {
   )
 }
 
+#' Match a GH username
+#'
+#' * may only contain alphanumeric characters or hyphens
+#' * cannot have multiple consecutive hyphens
+#' * cannot begin or end with a hyphen
+#' * maximum 39 characters
+#'
+#' Based on https://github.com/shinnn/github-username-regex
+#'
+#' @keywords internal
+
+github_username_rx <- function() {
+  "(?<username>(?:[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}))"
+}
+
+github_repo_rx <- function() "(?<repo>[^/@#]+)"
+github_subdir_rx <- function() "(?:/(?<subdir>(?:[^@#]*[^@#/])/?))"
 github_commitish_rx <- function() "(?:@(?<commitish>[^*].*))"
 github_pull_rx <- function() "(?:#(?<pull>[0-9]+))"
 github_release_rx <- function() "(?:@(?<release>[*]release))"
-github_detail <- function() {
+github_detail_rx <- function() {
   sprintf(
     "(?:(?:%s)|(?:%s)|(?:%s))?",
     github_commitish_rx(),
@@ -31,21 +48,17 @@ github_detail <- function() {
 }
 
 github_rx <- function() {
-
   paste0(
     "^",
     ## Optional package name
     "(?:(?<package>", package_name_rx(), ")=)?",
     ## Optional remote type
     "(?:github::)?",
-    ## Username
-    "(?<username>(?:[[:alnum:]-]+))/",
-    ## Repo
-    "(?<repo>[^/@#]+)",
-    ## Subdirectory
-    "(?:/(?<subdir>(?:[^@#]*[^@#/])/?))?",
+    github_username_rx(), "/",
+    github_repo_rx(),
+    github_subdir_rx(), "?",
     ## Commit / PR / Release
-    github_detail(),
+    github_detail_rx(),
     "$"
   )
 }
@@ -66,8 +79,12 @@ github_url_detail_rx <- function() {
        "))?")
 }
 
-github_url_rx <- function() {
+## We need to select the shortest match here, to avoid matching a
+## a .git suffix
 
+github_url_repo_rx <- function() "(?<repo>[^/@#]+?)"
+
+github_url_rx <- function() {
   paste0(
     "^",
     ## Optional package name
@@ -79,9 +96,9 @@ github_url_rx <- function() {
     ## Servername
     "(?:[^/:]+)[/:]",
     ## Username
-    "(?<username>[^/]+)/",
+    github_username_rx(), "/",
     ## Repo
-    "(?<repo>[^/#@.]+)",
+    github_url_repo_rx(),
     ## subdir, always empty
     "(?<subdir>)",
     ## Optional Extension

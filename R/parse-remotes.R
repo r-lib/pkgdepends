@@ -18,17 +18,19 @@ standard_rx <- function(remote_name = "standard") {
   )
 }
 
-github_rx <- function() {
-
-  github_commitish_rx <- "(?:@(?<commitish>[^*].*))"
-  github_pull_rx <- "(?:#(?<pull>[0-9]+))"
-  github_release_rx <- "(?:@(?<release>[*]release))"
-  github_detail <- sprintf(
+github_commitish_rx <- function() "(?:@(?<commitish>[^*].*))"
+github_pull_rx <- function() "(?:#(?<pull>[0-9]+))"
+github_release_rx <- function() "(?:@(?<release>[*]release))"
+github_detail <- function() {
+  sprintf(
     "(?:(?:%s)|(?:%s)|(?:%s))?",
-    github_commitish_rx,
-    github_pull_rx,
-    github_release_rx
+    github_commitish_rx(),
+    github_pull_rx(),
+    github_release_rx()
   )
+}
+
+github_rx <- function() {
 
   paste0(
     "^",
@@ -43,16 +45,28 @@ github_rx <- function() {
     ## Subdirectory
     "(?:/(?<subdir>(?:[^@#]*[^@#/])/?))?",
     ## Commit / PR / Release
-    github_detail,
+    github_detail(),
     "$"
   )
 }
 
+github_url_commitish_rx <- function() {
+  "(?:(?:tree|commit|releases/tag)/(?<commitish>.+$))"
+}
+
+github_url_pull_rx <- function() "(?:pull/(?<pull>.+$))"
+
+github_url_release_rx <- function() "(?:releases/)(?<release>.+$)"
+
+github_url_detail_rx <- function() {
+  glue("(?:/(?:",
+       "{github_url_commitish_rx()}",
+       "|{github_url_pull_rx()}",
+       "|{github_url_release_rx()}",
+       "))?")
+}
+
 github_url_rx <- function() {
-  commitish_rx <- "(?:(?:tree|commit|releases/tag)/(?<commitish>.+$))"
-  pull_rx <- "(?:pull/(?<pull>.+$))"
-  release_rx <- "(?:releases/)(?<release>.+$)"
-  detail_rx <- glue("(?:/(?:{commitish_rx}|{pull_rx}|{release_rx}))?")
 
   paste0(
     "^",
@@ -73,7 +87,7 @@ github_url_rx <- function() {
     ## Optional Extension
     "(?:[.]git)?",
     ## Commit / PR / Release
-    detail_rx,
+    github_url_detail_rx(),
     "$"
   )
 }

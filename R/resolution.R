@@ -29,7 +29,7 @@ remotes_async_resolve <- function(self, private) {
   ## go in the end. For now we set them aside, but only if they don't have
   ## version requirements
   fast <- vlapply(private$remotes, function(x) {
-    x$type %in% c("standard", "cran", "bioc") && x$atleast == ""
+    x$type %in% c("standard", "cran", "bioc") && x$version == ""
   })
   private$add_fast_refs(
     remotes = private$remotes[fast],

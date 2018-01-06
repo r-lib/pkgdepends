@@ -22,6 +22,7 @@ fast_parse_deps <- function(pkgs) {
     parsed$upstream <- pkgs$Package[parsed$idx]
     parsed <- parsed[, c("upstream", "idx", "ref", "type", "package",
                          "op", "version")]
+    parsed <- parsed[! parsed$package %in% base_packages(), ]
     parsed <- parsed[order(parsed$idx), ]
 
   } else {

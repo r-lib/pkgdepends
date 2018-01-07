@@ -158,16 +158,47 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
 
   add_fast_resolution_result <- function(ref, type, package, remote,
                                          myfiles) {
+    msg_type <- switch(type, cran = "CRAN", bioc = "BioC", "CRAN/BioC")
     if (length(myfiles)) {
       xfiles <- apply(files[myfiles,], 1, as.list)
+      for (i in seq_along(xfiles)) {
+        if (xfiles[[i]]$mode == "cran") {
+          xfiles[[i]]$metadata <- list(
+            RemoteOriginalRef = ref,
+            RemoteType = "cran",
+            RemoteRepos =
+              paste0(deparse(xfiles[[i]]$mirror[[1]]), collapse = ""),
+            RemotePkgType =
+              if (xfiles[[i]]$platform == "source") "source" else "binary"
+          )
+        } else if (xfiles[[i]]$mode == "bioc") {
+          xfiles[[i]]$metadata <- list(
+            RemoteOriginalRef = ref,
+            RemoteType = "bioc",
+            RemoteRepos =
+              paste0(deparse(xfiles[[i]]$mirror[[1]]), collapse = ""),
+            RemotePkgType =
+              if (xfiles[[i]]$platform == "source") "source" else "binary",
+            RemoteRelease = xfiles[[i]]$bioc_version
+          )
+        }
+
+        if (xfiles[[i]]$status == "FAILED") {
+          xfiles[[i]]$error <- make_error(
+            paste0("Can't find ", msg_type, " package ", package),
+            class = "remotes_resolution_error"
+          )
+        }
+      }
       res <- list(files = xfiles, remote = remote, status = all_ok(xfiles))
+
     } else {
-      msg_type <- switch(type, cran = "CRAN", bioc = "BioC", "CRAN/BioC")
       res <- list(
         files = list(list(
           source = character(), target = NA_character_, platform = "*",
-          rversion = "*", dir = dir, package = package,
+          rversion = "*", dir = NA_character_, package = package,
           version = NA_character_, deps = NA, status = "FAILED",
+          metadata = list(),
           error = make_error(
             paste0("Can't find ", msg_type, " package ", package, ", version ", version),
             class = "remotes_resolution_error"
@@ -177,7 +208,8 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
         status = "FAILED"
       )
     }
-    class(res) <- c("remote_resolution_cran", "remote_resolution")
+    class(res) <-
+      c(paste0("remote_resolution_", type), "remote_resolution")
     private$resolution$packages[[ref]] <- res
   }
 
@@ -340,6 +372,7 @@ merge_bioc_data <- function(data, repos) {
   ## Merge the pkgs data, we need to potentially expand the columns first,
   ## because although rbind considers column names, it requires the same
   ## column names for all input data frames
+  bioc_version <- repos$version
   cols <- unique(unlist(lapply(data, function(x) colnames(x$pkgs))))
   for (i in seq_along(data)) {
     miss_cols <- setdiff(cols, colnames(data[[i]]$pkgs))
@@ -347,7 +380,11 @@ merge_bioc_data <- function(data, repos) {
       na_df <- as.tibble(structure(
         replicate(length(miss_cols), NA_character_, simplify = FALSE),
         names = miss_cols))
-      data[[i]]$pkgs <- as.tibble(cbind(data[[i]]$pkgs, na_df))
+      data[[i]]$pkgs <- as.tibble(cbind(data[[i]]$pkgs, na_df,
+                                        bioc_version = bioc_version))
+    } else {
+      data[[i]]$pkgs <- as.tibble(cbind(data[[i]]$pkgs,
+                                        bioc_version = bioc_version))
     }
   }
 
@@ -423,6 +460,7 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
     idx = idx,
     package = done_data$Package,
     version = done_data$Version,
+    mirror = real_mirror,
     target = fast_get_path(done_data, dir$contriburl, ext),
     source = fast_get_source(mode, real_mirror, dir$platform, target,
                              package, version),
@@ -430,6 +468,9 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
     rversion = dir$rversion,
     dir = dir$contriburl,
     deps = unname(all_deps[as.character(idx)]),
+    mode = mode,
+    bioc_version =
+      done_data[["bioc_version"]] %||% rep(NA_character_, length(idx)),
     status = "OK"
   )
 
@@ -438,12 +479,15 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
       idx = rep(NA_integer_, num_err),
       package = err,
       version = rep(NA_character_, num_err),
+      mirror = real_mirror,
       target = rep(NA_character_, num_err),
       source = replicate(num_err, character(), simplify = FALSE),
       platform = dir$platform,
       rversion = dir$rversion,
       dir = dir$contriburl,
       deps = replicate(num_err, NULL, simplify = FALSE),
+      mode = mode,
+      bioc_version = done_data[["bioc_version"]] %||% NA_character_,
       status = "FAILED"
     )
     files <- rbind(files, efiles)

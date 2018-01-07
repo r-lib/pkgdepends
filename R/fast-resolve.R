@@ -254,10 +254,11 @@ fast_get_path <- function(data, dir, ext) {
   }
 }
 
-fast_get_source <- function(mirror, platform, path, package, version) {
+fast_get_source <- function(mode, mirror, platform, path, package,
+                            version) {
   url <- paste0(mirror, "/", path)
 
-  if (platform != "source") {
+  if (platform != "source" || mode != "cran") {
     as.list(url)
   } else {
     url2 <- paste0(mirror, "/src/contrib/Archive/", package, "/",
@@ -377,7 +378,7 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
   i_cols <- meta$indirect_dependencies
   d_pkgs <- df$package[df$direct]
   i_pkgs <- df$package[!df$direct]
-  mirror <- config$`cran-mirror`
+  mirror <- if (mode == "cran") config$`cran-mirror`
   ext <- get_cran_extension(dir$platform)
 
   ## Do one round first, because we might have direct refs.
@@ -416,12 +417,15 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
   ## temporarily keep 'idx' to refer to the instances of the packages.
   idx <- which(data$pkgs$Package %in% done)
   done_data <- data$pkgs[idx, ]
+  col_name <- bioc_repo_col_name()
+  real_mirror <- mirror %||% done_data[[col_name]]
   files <- tibble(
     idx = idx,
     package = done_data$Package,
     version = done_data$Version,
     target = fast_get_path(done_data, dir$contriburl, ext),
-    source = fast_get_source(mirror, dir$platform, target, package, version),
+    source = fast_get_source(mode, real_mirror, dir$platform, target,
+                             package, version),
     platform = dir$platform,
     rversion = dir$rversion,
     dir = dir$contriburl,

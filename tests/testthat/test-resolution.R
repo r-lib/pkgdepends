@@ -100,7 +100,6 @@ test_that("print, with errors", {
   })
 
   expect_output(print(res), "Errors:")
-  expect_output(print(res), "Can't find CRAN package")
-  expect_output(print(res), "Can't find BioConductor package")
+  expect_output(print(res), "Can't find CRAN/BioC package")
   expect_output(print(res), "r-lib/.*: Unknown error")
 })

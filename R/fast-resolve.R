@@ -223,9 +223,12 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
     myfiles <- which(files$package == package)
     add_fast_resolution_result(ref, type, package, remote, myfiles)
   }
+  if (nn <- sum(ref_df$direct)) private$progress_bar$update("count", nn)
+  if (nn <- sum(!ref_df$direct)) private$progress_bar$update("xcount", nn)
 
   ## Next the dependencies
   dep_pkgs <- na.omit(setdiff(files$package, ref_df$package))
+  if (nn <- length(dep_pkgs)) private$progress_bar$update("xtotal", nn)
   dep_rems <- fast_standard_remotes(dep_pkgs)
   for (i in seq_along(dep_pkgs)) {
     ref <- dep_pkgs[i]
@@ -235,6 +238,7 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
     myfiles <- which(files$package == package)
     add_fast_resolution_result(ref, type, package, remote, myfiles)
   }
+  if (nn) private$progress_bar$update("xcount", nn)
 }
 
 fast_standard_remotes <- function(refs) {

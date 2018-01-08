@@ -310,8 +310,9 @@ remotes__fast_resolve_bioc <- function(self, private, bioc_ref_df) {
   self; private
 
   cache <- private$resolution$cache
+  crandata <- cache$crandata$get_value()
   config <- private$config
-  dirs <- cache$crandata$get_value()$`_dirs`
+  dirs <- crandata$`_dirs`
 
   biocdata <- cache$biocdata$get_value()
   repos <- biocdata$`_repos`
@@ -319,10 +320,11 @@ remotes__fast_resolve_bioc <- function(self, private, bioc_ref_df) {
   files <- lapply(seq_len(nrow(dirs)), function(i) {
     dir <- dirs[i, ]
     lapply(names(repos), function(rversion) {
+      cdata <- crandata[[dir$contriburl]]
       data <- biocdata[[dir$contriburl]][[rversion]]
       myrepos <- repos[[rversion]]
-      make_fast_bioc_resolution(self, private, bioc_ref_df, dir, data,
-                                myrepos)
+      make_fast_bioc_resolution(self, private, bioc_ref_df, dir, cdata,
+                                data, myrepos)
     })
   })
 
@@ -332,10 +334,11 @@ remotes__fast_resolve_bioc <- function(self, private, bioc_ref_df) {
   files
 }
 
-make_fast_bioc_resolution <- function(self, private, ref_df, dir, data,
-                                      repos) {
-  data <- merge_bioc_data(data, repos)
-  make_fast_resolution(self, private, ref_df, dir, data, mode = "bioc")
+make_fast_bioc_resolution <- function(self, private, ref_df, dir, cran_data,
+                                      data, repos) {
+  mirror <- private$config$`cran-mirror`
+  mdata <- merge_bioc_data(cran_data, data, repos, mirror)
+  make_fast_resolution(self, private, ref_df, dir, mdata, mode = "bioc")
 }
 
 bioc_repo_col_name <- function() "X-RPKG-BioCRepo"
@@ -349,23 +352,29 @@ bioc_repo_col_name <- function() "X-RPKG-BioCRepo"
 #' and update the `idx` columns in the `deps` data frames, before merging
 #' them as well.
 #'
+#' @param cran_data The cran metadata data frame.
 #' @param data Named list of repo metadata. Each entry has two tibbles in
 #'   a list: `pkgs` and `deps`.
 #' @param repos List with entries: `repos`, the actual repository URLs, in
 #'   a named character vector, and `version`, the R version that belongs
 #'   to these BioC repos.
+#' @param mirror CRAN mirror URL.
 #' @return A list with two entries: `pkgs` and `deps`, the merged package
 #'   tibble and dependency tibble.
 #'
 #' @keywords internal
 #' @importFrom tibble as.tibble
 
-merge_bioc_data <- function(data, repos) {
+merge_bioc_data <- function(cran_data, data, repos, mirror) {
   ## Some repos are empty, e.g. binary repos for data packages
   ## It is easiest to drop them here
   empty_repos <- vlapply(data, function(x) nrow(x$pkgs) == 0)
   data <- data[! empty_repos]
   repos$repos <- repos$repos[!empty_repos]
+
+  ## Add cran_data to the repo data list
+  data <- c(list(CRAN = cran_data), data)
+  repos$repos <- c(CRAN = unname(mirror), repos$repos)
 
   ## Add repo information to `pkgs`
   col_name <- bioc_repo_col_name()
@@ -483,7 +492,7 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
       idx = rep(NA_integer_, num_err),
       package = err,
       version = rep(NA_character_, num_err),
-      mirror = real_mirror,
+      mirror = NA_character_,
       target = rep(NA_character_, num_err),
       source = replicate(num_err, character(), simplify = FALSE),
       platform = dir$platform,
@@ -491,7 +500,7 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
       dir = dir$contriburl,
       deps = replicate(num_err, NULL, simplify = FALSE),
       mode = mode,
-      bioc_version = done_data[["bioc_version"]] %||% NA_character_,
+      bioc_version = done_data[["bioc_version"]][1] %||% NA_character_,
       status = "FAILED"
     )
     files <- rbind(files, efiles)

@@ -5,6 +5,7 @@
 
 > Package Dependency Resolution
 
+![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
 [![Linux Build Status](https://travis-ci.org/r-lib/pkgdepends.svg?branch=master)](https://travis-ci.org/r-lib/pkgdepends)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/4sir94ye38nwgxpx/branch/master?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pkgdepends)
 [![](http://www.r-pkg.org/badges/version/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)

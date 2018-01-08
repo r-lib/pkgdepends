@@ -13,6 +13,7 @@ Roxygen: list(markdown = TRUE)
 Imports:
     assertthat,
     async,
+    backports,
     cli,
     crayon,
     curl,

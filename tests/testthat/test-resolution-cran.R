@@ -37,12 +37,15 @@ test_that("remotes__update_cran_cache", {
 })
 
 test_that("type_cran_make_resolution", {
+  av_pkg <- withr::with_options(
+    list(repos = c(CRAN = "https://cran.rstudio.com")),
+    available.packages()
+  )
   res <- type_cran_make_resolution(
     remote = parse_remotes("ggplot2")[[1]],
     platform = "source",
     rversion = "3.4",
-    data = format_packages_gz(
-      available.packages(repos = "https://cran.rstudio.com")),
+    data = format_packages_gz(av_pkg),
     dir = "src/contrib",
     mirror = "https://cran.rstudio.com",
     dependencies = c("Imports", "Suggests")

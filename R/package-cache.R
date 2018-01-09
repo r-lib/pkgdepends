@@ -109,7 +109,6 @@ package_cache <- R6Class(
 #' @return Download status.
 #'
 #' @keywords internal
-#' @importFrom async async_detect
 
 get_package_from <- function(cache, urls, target_dir, target,
                              progress_bar = NULL, metadata = list()) {

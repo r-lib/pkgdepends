@@ -1,6 +1,5 @@
 
 #' @importFrom R6 R6Class
-#' @importFrom async deferred is_deferred
 
 deferred_pool <- R6Class(
   "deferred_pool",

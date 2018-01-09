@@ -28,7 +28,7 @@ test_that("CRANMetadataCache", {
   expect_equal(pkgs, cache$get(file.path(tmp, "PACKAGES.gz")))
 
   expect_true(tools::md5sum(file.path(tmp, "PACKAGES.gz")) %in%
-              names(cache$.__enclos_env__$private$data))
+              ls(cache$.__enclos_env__$private$data))
   expect_true(tools::md5sum(file.path(tmp, "archive.rds")) %in%
-              names(cache$.__enclos_env__$private$data))
+              ls(cache$.__enclos_env__$private$data))
 })

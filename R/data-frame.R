@@ -23,6 +23,8 @@ append_to_data_frame <- function(df, ..., .list = NULL) {
 
   cols <- ifelse(names(df) %in% names(cols), cols[names(df)], NA_integer_)
   res <- rbind(df, cols, stringsAsFactors = FALSE)
+  names(cols) <- names(df)
+  res <- rbind(df, as.data.frame(as.list(cols), stringsAsFactors = FALSE))
   names(res) <- names(df)
   res
 }

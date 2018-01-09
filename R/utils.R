@@ -244,3 +244,7 @@ all_ok <- function(x) {
 isFALSE <- function(x) {
   identical(x, FALSE)
 }
+
+file.size <- function(x) {
+  file.info(x)$size
+}

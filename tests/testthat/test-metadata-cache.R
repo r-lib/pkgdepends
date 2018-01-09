@@ -20,7 +20,7 @@ test_that("CRANMetadataCache", {
       then(async::http_stop_for_status)
     when_all(d1, d2)
   })
-  synchronise(afun())
+  async::synchronise(afun())
 
   cache <- CRANMetadataCache$new()
   expect_error(pkgs <- cache$get(file.path(tmp, "PACKAGES.gz")), NA)

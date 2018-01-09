@@ -174,8 +174,6 @@ type_github_get_github_description_data <- function(rem) {
 
 ## Returns a deferred value
 
-#' @importFrom async http_stop_for_status
-
 type_github_get_github_commit_sha <- function(rem) {
   commit_url <- type_github_get_github_commit_url(rem)
   http_get(commit_url, headers = type_github_get_github_headers())$

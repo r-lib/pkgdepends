@@ -46,6 +46,9 @@ test_that("type_cran_make_resolution", {
     list(repos = c(CRAN = "https://cran.rstudio.com")),
     available.packages()
   )
+
+  if (!nrow(av_pkg)) skip("available.packages() is empty, network problem?")
+
   res <- type_cran_make_resolution(
     remote = parse_remotes("ggplot2")[[1]],
     platform = "source",

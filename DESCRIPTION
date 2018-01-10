@@ -23,7 +23,7 @@ Imports:
     lpSolve,
     pkgbuild,
     prettyunits,
-    progress,
+    progress (>= 1.1.2.9001),
     rappdirs,
     rematch2,
     R6,

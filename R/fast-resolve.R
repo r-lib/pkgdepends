@@ -1,6 +1,5 @@
 
-remotes__add_fast_refs <- function(self, private, refs, remotes, direct,
-                                   pool) {
+remotes__add_fast_refs <- function(self, private, refs, remotes, direct) {
 
   cache <- private$resolution$cache
   cache$crandata <- cache$crandata %||% update_crandata_cache(private$config)
@@ -18,20 +17,6 @@ remotes__add_fast_refs <- function(self, private, refs, remotes, direct,
   } else {
     private$resolution$fast$indirect_refs <-
       c(private$resolution$fast$indirect_refs, refs)
-  }
-
-  ## If the packages are in the library, then we need to schedule
-  ## and installed:: ref
-  if (!is.null(private$library) && file.exists(private$library)) {
-    ext_pkgs <- file.exists(file.path(private$library, pkgs))
-    ins_pkgs <- pkgs[ext_pkgs]
-    if (length(ins_pkgs)) {
-      lib <- normalizePath(private$library, winslash = "/")
-      ref <- paste0("installed::", lib, "/", ins_pkgs)
-      ins_refs <- setdiff(ref, names(private$resolution$packages))
-      ins_rems <- parse_remotes(ins_refs)
-      for (rem in ins_rems) private$resolve_ref(rem, pool = pool)
-    }
   }
 }
 
@@ -154,6 +139,21 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
 
   } else {
     cran_files
+  }
+
+  ## If the packages are in the library, then we need to schedule
+  ## and installed:: ref
+  pkgs <- unique(files$package)
+  if (!is.null(private$library) && file.exists(private$library)) {
+    ext_pkgs <- file.exists(file.path(private$library, pkgs))
+    ins_pkgs <- pkgs[ext_pkgs]
+    if (length(ins_pkgs)) {
+      lib <- normalizePath(private$library, winslash = "/")
+      ref <- paste0("installed::", lib, "/", ins_pkgs)
+      ins_refs <- setdiff(ref, names(private$resolution$packages))
+      ins_rems <- parse_remotes(ins_refs)
+      for (rem in ins_rems) private$resolve_ref(rem, pool = FALSE)
+    }
   }
 
   add_fast_resolution_result <- function(ref, type, package, remote,

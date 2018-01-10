@@ -240,3 +240,7 @@ read_lines <- function(con, ...) {
 all_ok <- function(x) {
   if (all(vcapply(x, "[[", "status") == "OK")) "OK" else "FAILED"
 }
+
+isFALSE <- function(x) {
+  identical(x, FALSE)
+}

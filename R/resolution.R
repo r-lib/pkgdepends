@@ -31,11 +31,7 @@ remotes_async_resolve <- function(self, private) {
   fast <- vlapply(private$remotes, function(x) {
     x$type %in% c("standard", "cran", "bioc") && x$version == ""
   })
-  private$add_fast_refs(
-    remotes = private$remotes[fast],
-    direct = TRUE,
-    pool = pool
-  )
+  private$add_fast_refs(remotes = private$remotes[fast], direct = TRUE)
 
   proms <- lapply(private$remotes[!fast], private$resolve_ref, pool = pool,
                   direct = TRUE)
@@ -87,7 +83,12 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
                          dependencies = dependencies)
   if (!is_deferred(dres)) dres <- async_constant(dres)
   private$resolution$packages[[rem$ref]] <- dres
-  pool$add(dres$then(~ private$progress_bar$update(pb_name[1], 1)))
+  if (isFALSE(pool)) {
+    await(dres)
+    private$progress_bar$update(pb_name[1], 1)
+  } else {
+    pool$add(dres$then(~ private$progress_bar$update(pb_name[1], 1)))
+  }
 
   if (!is.null(private$library) &&
       !is.null(rem$package) &&
@@ -108,10 +109,10 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
     deps <- setdiff(deps, "R")
     cache$numdeps <- cache$numdeps + length(deps)
     fast <- grepl("^[a-zA-Z0-9\\.]+$", deps)
-    private$add_fast_refs(refs = deps[fast], direct = FALSE, pool = pool)
+    private$add_fast_refs(refs = deps[fast], direct = FALSE)
     lapply(parse_remotes(deps[!fast]), private$resolve_ref, pool = pool)
   })
-  pool$add(deps)
+  if (!isFALSE(pool)) pool$add(deps)
 
   dres
 }

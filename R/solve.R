@@ -191,7 +191,7 @@ print.remotes_lp_problem <- function(x, ...) {
   }
 
   cat_line("LP problem for {x$num_pkgs} packages:")
-  pn <- sort(unique(prb$pkgs$package))
+  pn <- sort(unique(x$pkgs$package))
   cat_line(strwrap(paste(pn, collapse = ", "), indent = 2, exdent = 2))
   nc <- length(x$conds) - x$num_pkgs
 

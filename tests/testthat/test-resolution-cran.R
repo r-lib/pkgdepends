@@ -3,6 +3,7 @@ context("resolution-cran")
 
 test_that("remotes__update_cran_cache", {
 
+  skip_on_cran()
   skip_if_offline()
 
   dir.create(cache_dir <- tempfile())
@@ -37,6 +38,10 @@ test_that("remotes__update_cran_cache", {
 })
 
 test_that("type_cran_make_resolution", {
+
+  skip_on_cran()
+  skip_if_offline()
+
   av_pkg <- withr::with_options(
     list(repos = c(CRAN = "https://cran.rstudio.com")),
     available.packages()

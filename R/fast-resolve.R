@@ -39,13 +39,14 @@ remotes__fast_resolve1 <- function(self, private) {
 
   ## We want to vectorize this as much as possible. So we work with a
   ## data frame throughout
+  t_remote <- parse_remotes(refs)
   ref_df <- tibble(
     ref = refs,
     direct = direct,
     status = "OK",
-    remote = parse_remotes(refs),
-    type = vcapply(remote, "[[", "type"),
-    package = vcapply(remote, "[[", "package")
+    remote = t_remote,
+    type = vcapply(t_remote, "[[", "type"),
+    package = vcapply(t_remote, "[[", "package")
   )
 
   ## if bioc types, start getting bioc metadata
@@ -85,13 +86,15 @@ remotes__fast_resolve1 <- function(self, private) {
   }
 
   if (length(retry_pkgs)) {
+    t_ref <- retry_pkgs
+    t_remote <- parse_remotes(t_ref)
     retry_df <- tibble(
-      ref = retry_pkgs,
+      ref = t_ref,
       direct = retry_pkgs %in% cran_ref_df$package,
       status = "OK",
-      remote = parse_remotes(ref),
-      type = vcapply(remote, "[[", "type"),
-      package = vcapply(remote, "[[", "package")
+      remote = t_remote,
+      type = vcapply(t_remote, "[[", "type"),
+      package = vcapply(t_remote, "[[", "package")
     )
     bioc_ref_df <- rbind(bioc_ref_df, retry_df)
   }
@@ -469,14 +472,17 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
   done_data <- data$pkgs[idx, ]
   col_name <- bioc_repo_col_name()
   real_mirror <- mirror %||% done_data[[col_name]]
+
+  t_package <- done_data$Package
+  t_target <- fast_get_path(done_data, dir$contriburl, ext)
   files <- tibble(
     idx = idx,
-    package = done_data$Package,
+    package = t_package,
     version = done_data$Version,
     mirror = real_mirror,
-    target = fast_get_path(done_data, dir$contriburl, ext),
-    source = fast_get_source(mode, real_mirror, dir$platform, target,
-                             package, version),
+    target = t_target,
+    source = fast_get_source(mode, real_mirror, dir$platform, t_target,
+                             t_package, version),
     platform = dir$platform,
     rversion = dir$rversion,
     dir = dir$contriburl,

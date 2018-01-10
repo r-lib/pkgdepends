@@ -4,15 +4,19 @@
 \alias{merge_bioc_data}
 \title{Merge the BioC package metadata from the various BioC repos}
 \usage{
-merge_bioc_data(data, repos)
+merge_bioc_data(cran_data, data, repos, mirror)
 }
 \arguments{
+\item{cran_data}{The cran metadata data frame.}
+
 \item{data}{Named list of repo metadata. Each entry has two tibbles in
 a list: \code{pkgs} and \code{deps}.}
 
 \item{repos}{List with entries: \code{repos}, the actual repository URLs, in
 a named character vector, and \code{version}, the R version that belongs
 to these BioC repos.}
+
+\item{mirror}{CRAN mirror URL.}
 }
 \value{
 A list with two entries: \code{pkgs} and \code{deps}, the merged package

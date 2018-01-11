@@ -248,12 +248,18 @@ remotes_install_plan <- function(self, private) {
     file.path(private$library, sol$package),
     NA_character_)
 
+  is_direct <- private$resolution$result$data$direct
+  direct_packages <- private$resolution$result$data$package[is_direct]
+  direct <- sol$direct |
+    (sol$type == "installed" & sol$package %in% direct_packages)
+
   tibble::tibble(
+    ref = sol$ref,
     package = sol$package,
     type = sol$type,
     version = sol$version,
     binary = sol$platform != "source",
-    direct = sol$direct,
+    direct = direct,
     dependencies = I(deps),
     file = sol$fulltarget,
     installed = installed,

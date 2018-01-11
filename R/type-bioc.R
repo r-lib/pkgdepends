@@ -81,9 +81,9 @@ satisfies_remote.remote_resolution_bioc <- function(resolution, candidate,
 
 type_bioc_matching_bioc_version <- function(r_version) {
   if (r_version >= "3.5") {
-    "3.6"
+    "3.7"
   } else if (r_version >= "3.4") {
-    "3.5"
+    "3.6"
   } else if (r_version >= "3.3.0") {
     "3.4"
   } else if (r_version >= "3.2") {

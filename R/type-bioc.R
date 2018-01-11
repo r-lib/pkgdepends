@@ -105,7 +105,9 @@ type_bioc_get_bioc_repos <- function(r_version) {
     BioCsoft  = "https://bioconductor.org/packages/{bv}/bioc",
     BioCann   = "https://bioconductor.org/packages/{bv}/data/annotation",
     BioCexp   = "https://bioconductor.org/packages/{bv}/data/experiment",
-    BioCextra = "https://bioconductor.org/packages/{bv}/extra"
+    BioCextra = if (package_version(bv) <= 3.5) {
+                  "https://bioconductor.org/packages/{bv}/extra"
+                }
   )
   list(
     repos = vcapply(tmpl, glue_data, .x = list(bv = bv)),

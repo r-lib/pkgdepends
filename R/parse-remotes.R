@@ -135,6 +135,13 @@ get_remote_types <- function(specs) {
   types
 }
 
+#' Parse package location specifications
+#'
+#' @param specs character vector
+#' @return List of parsed specification.
+#'
+#' @export
+
 parse_remotes <- function(specs) {
   types <- get_remote_types(specs)
   unique_types <- unique(types)

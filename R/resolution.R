@@ -1,6 +1,8 @@
 
 ## API
 
+#' @importFrom prettyunits pretty_dt
+
 remotes_resolve <- function(self, private) {
   "!DEBUG remotes_resolve (sync)"
   private$with_progress_bar(
@@ -8,8 +10,9 @@ remotes_resolve <- function(self, private) {
     res <- synchronise(self$async_resolve())
   )
   private$progress_bar$message(
-    symbol$tick, " Resolved {count}/{total} direct refs and ",
-    "{xcount}/{xtotal} dependencies"
+    crayon::green(symbol$tick),
+    " Found {xtotal} dependencies for {total} packages in \\
+      {pretty_dt(Sys.time() - start)}"
   )
   invisible(res)
 }
@@ -80,7 +83,8 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
   dependencies <-
     meta[c("dependencies", "indirect_dependencies")][[2 - direct]]
   dres <- resolve_remote(rem, config = private$config, cache = cache,
-                         dependencies = dependencies)
+                         dependencies = dependencies,
+                         progress_bar = private$progress_bar)
   if (!is_deferred(dres)) dres <- async_constant(dres)
   private$resolution$packages[[rem$ref]] <- dres
   if (isFALSE(pool)) {

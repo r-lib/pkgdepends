@@ -66,19 +66,21 @@ format_archive_rds <- function(ards) {
   )
 }
 
-update_crandata_cache <- function(config) {
+update_crandata_cache <- function(config, progress_bar) {
   type_cran_update_cache(
     rootdir   = config$metadata_cache_dir,
     platforms = config$platforms,
     rversions = config$`r-versions`,
-    mirror    = config$`cran-mirror`
+    mirror    = config$`cran-mirror`,
+    progress_bar
   )
 }
 
-update_biocdata_cache <- function(config) {
+update_biocdata_cache <- function(config, progress_bar) {
   type_bioc_update_cache(
     rootdir   = config$metadata_cache_dir,
     platforms = config$platforms,
-    rversions = config$`r-versions`
+    rversions = config$`r-versions`,
+    progress_bar
   )
 }

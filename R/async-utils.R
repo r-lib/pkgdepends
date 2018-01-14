@@ -1,11 +1,14 @@
 
 download_progress_callback <- function(progress_bar,
                                        total, amount, ratio,
-                                       status_code = NULL) {
+                                       status_code = NULL,
+                                       target = NULL) {
   if (is.null(status_code)) {
     progress_bar$update(cbytes = amount %||% 0, btotal = total %||% 0)
 
   } else if (status_code == 304) {
+    total <- if (is.null(total) && !is.null(target) &&
+                 file.exists(target)) file.size(target)
     progress_bar$update(count = 1, cached = 1, bcached = total %||% 0)
 
   } else if (status_code == 200) {
@@ -38,7 +41,8 @@ download_file <- function(url, target, etag_file = NULL,
 
   pg <- function(total = NULL, amount = NULL, status_code = NULL, ratio = NULL) {
     download_progress_callback(progress_bar, total = total, amount = amount,
-                               ratio = ratio, status_code = status_code)
+                               ratio = ratio, status_code = status_code,
+                               target = target)
   }
 
   http_get(url, file = tmp_target,
@@ -111,7 +115,8 @@ download_try_list <- function(urls, targets, etag_file = NULL,
 
   pg <- function(total = NULL, amount = NULL, status_code = NULL, ratio = NULL) {
     download_progress_callback(progress_bar, total = total, amount = amount,
-                               ratio = ratio, status_code = status_code)
+                               ratio = ratio, status_code = status_code,
+                               target = target)
   }
 
   status_code <- NULL

@@ -12,15 +12,7 @@ remotes_download_resolution <- function(self, private) {
     res <- synchronise(self$async_download_resolution())
   )
 
-  if (total == 0) {
-    private$progress_bar$message(symbol$tick, " No downloads are needed")
-  } else {
-    private$progress_bar$message(
-      symbol$tick,
-      " Have {count}/{total} packages, cached {cached},",
-      " downloaded {count-cached} ({pretty_bytes(cbytes)})"
-    )
-  }
+  private$progress_bar$report()
 
   invisible(res)
 }
@@ -50,15 +42,8 @@ remotes_download_solution <- function(self, private) {
     res <- synchronise(self$async_download_solution())
   )
 
-  if (total == 0) {
-    private$progress_bar$message(symbol$tick, " No downloads are needed")
-  } else {
-    private$progress_bar$message(
-      symbol$tick,
-      " Downloaded {count}/{total} packages, {pretty_bytes(cbytes)}, ",
-      "cached: {pretty_bytes(bcached)}"
-    )
-  }
+  private$progress_bar$report()
+
   invisible(res)
 }
 

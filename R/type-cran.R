@@ -25,9 +25,9 @@ parse_remote.remote_specs_cran <- function(specs, config, ...) {
 #' @export
 
 resolve_remote.remote_ref_cran <- function(remote, config, cache,
-                                           dependencies, ...) {
+                                           dependencies, progress_bar, ...) {
   force(remote); force(dependencies)
-  cache$crandata <- cache$crandata %||% update_crandata_cache(config)
+  cache$crandata <- cache$crandata %||% update_crandata_cache(config, progress_bar)
 
   cache$crandata$then(function(cacheresult) {
     type_cran_resolve_from_cache(remote, config, cacheresult, dependencies)
@@ -83,9 +83,14 @@ satisfies_remote.remote_resolution_cran <- function(resolution, candidate,
 ## ----------------------------------------------------------------------
 ## Internal functions
 
-type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
+type_cran_update_cache <- function(rootdir, platforms, rversions, mirror,
+                                   progress_bar) {
+  if (!is.null(progress_bar)) {
+    progress_bar$message("  Updating CRAN metadata")
+  }
   dirs <- get_all_package_dirs(platforms, rversions)
 
+  current <- TRUE
   defs <- lapply_with_names(dirs$contriburl, function(dir) {
     cache_file  <- file.path(dir, "_cache", "PACKAGES.gz")
     target_file <- file.path(rootdir, cache_file)
@@ -96,6 +101,7 @@ type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
     download_if_newer(source_url, target_file, etag_file)$
       then(function(resp) {
         if (resp$status_code == 200) {
+          current <<- FALSE
           update_metadata_cache(rootdir, c(cache_file, cache_etag))
         }
       })$
@@ -114,6 +120,7 @@ type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
     download_if_newer(source_url, target_rds, etag_file)$
       then(function(resp) {
         if (resp$status_code == 200) {
+          current <<- FALSE
           update_metadata_cache(rootdir, c(cache_file, cache_etag))
         }
       })$
@@ -127,6 +134,15 @@ type_cran_update_cache <- function(rootdir, platforms, rversions, mirror) {
     `_archive` = archive,
     .list = defs
   )
+
+  cran_cache$then(function() {
+    if (!is.null(progress_bar)) {
+      progress_bar$message(
+        crayon::green(symbol$tick), " ",
+        if (current) "CRAN metadata current" else "Updated CRAN metadata"
+      )
+    }
+  })
 
   cran_cache
 }

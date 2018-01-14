@@ -185,8 +185,7 @@ remotes_init <- function(self, private, specs, config, library) {
 
   private$library <- library
   if (!is.null(library)) mkdirp(library, msg = "Creating library directory")
-  mkdirp(private$download_cache <- private$config$cache_dir,
-         msg = "Creating cache directory")
+  mkdirp(private$download_cache <- private$config$cache_dir)
 
   private$dirty <- TRUE
   invisible(self)

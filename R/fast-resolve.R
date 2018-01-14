@@ -2,7 +2,8 @@
 remotes__add_fast_refs <- function(self, private, refs, remotes, direct) {
 
   cache <- private$resolution$cache
-  cache$crandata <- cache$crandata %||% update_crandata_cache(private$config)
+  cache$crandata <- cache$crandata %||%
+    update_crandata_cache(private$config, private$progress_bar)
 
   if (!is.null(remotes)) {
     refs <- vcapply(remotes, "[[", "ref")
@@ -51,7 +52,8 @@ remotes__fast_resolve1 <- function(self, private) {
 
   ## if bioc types, start getting bioc metadata
   if ("bioc" %in% ref_df$type) {
-    cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
+    cache$biocdata <- cache$biocdata %||%
+      update_biocdata_cache(config, private$progress_bar)
   }
 
   cran_ref_df <- ref_df[ref_df$type != "bioc", ]
@@ -100,7 +102,8 @@ remotes__fast_resolve1 <- function(self, private) {
   }
 
   if (nrow(bioc_ref_df)) {
-    cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
+    cache$biocdata <- cache$biocdata %||%
+      update_biocdata_cache(config, private$progress_bar)
     cache$biocdata$
       then(~ remotes__fast_resolve_bioc(self, private, bioc_ref_df))$
       then(function(bioc_files) {

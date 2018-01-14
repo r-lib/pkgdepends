@@ -14,7 +14,8 @@ test_that("remotes__update_cran_cache", {
       cache_dir,
       platforms = c("source", "macos", "windows"),
       rversion = "3.4.1",
-      mirror = "https://cran.rstudio.com"
+      mirror = "https://cran.rstudio.com",
+      progress_bar = NULL
     )
 
     expect_true(async::is_deferred(cache))

@@ -22,9 +22,9 @@ parse_remote.remote_specs_bioc <- function(specs, config, ...) {
 #' @export
 
 resolve_remote.remote_ref_bioc <- function(remote, config, cache,
-                                           dependencies, ...) {
+                                           dependencies, progress_bar, ...) {
   force(remote); force(dependencies)
-  cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
+  cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config, progress_bar)
 
   cache$biocdata$then(function(cacheresult) {
     type_bioc_resolve_from_cache(remote, config, cacheresult, dependencies)
@@ -117,13 +117,19 @@ type_bioc_get_bioc_repos <- function(r_version) {
 
 #' @importFrom utils URLencode
 
-type_bioc_update_cache <- function(rootdir, platforms, rversions) {
+type_bioc_update_cache <- function(rootdir, platforms, rversions,
+                                   progress_bar) {
   rootdir; platforms; rversions
+
+  if (!is.null(progress_bar)) {
+    progress_bar$message("  Updating BioConductor metadata")
+  }
 
   dirs <- get_all_package_dirs(platforms, rversions)
 
   bioc_repos <- lapply_with_names(rversions, type_bioc_get_bioc_repos)
 
+  current <- TRUE
   defs <- lapply_with_names(dirs$contriburl, function(dir) {
     dir
     names(rversions) <- rversions
@@ -140,6 +146,7 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions) {
         download_if_newer(source_url, target_file, etag_file)$
           then(function(resp) {
             if (resp$status_code == 200) {
+              current <<- FALSE
               update_metadata_cache(rootdir, c(cache_file, cache_etag))
             }
           })$
@@ -155,6 +162,15 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions) {
     `_repos` = bioc_repos,
     .list = defs
   )
+
+  biocdata$then(function() {
+    if (!is.null(progress_bar)) {
+      progress_bar$message(
+        crayon::green(symbol$tick), " ",
+        if (current) "BioC metadata current" else "Updated BioC metadata"
+      )
+    }
+  })
 
   biocdata
 }

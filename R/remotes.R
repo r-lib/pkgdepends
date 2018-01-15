@@ -134,7 +134,10 @@ remotes <- R6Class(
     download_solution = function()
       remotes_download_solution(self, private),
     get_solution_download = function()
-      remotes_get_solution_download(self, private)
+      remotes_get_solution_download(self, private),
+
+    print = function(...)
+      remotes_print(self, private, ...)
   ),
 
   private = list(
@@ -227,4 +230,43 @@ on_failure(is_valid_config) <- function(call, env) {
 
 remotes_get_total_files <- function(self, private) {
   nrow(private$resolution$result)
+}
+
+remotes_print <- function(self, private, ...) {
+  cat("<remotes>\n")
+
+  ## refs
+  refs <- vcapply(private$remotes, "[[", "ref")
+  cat(
+    strwrap(
+      paste0("- refs: ", paste(backtick(refs), collapse = ", ")),
+      indent = 0, exdent = 4
+    ),
+    sep = "\n"
+  )
+
+  ## library
+  if (!is.null(private$library)) {
+    cat("- library:", backtick(private$library), "\n")
+  }
+
+  ## resolution
+  if (!is.null(private$resolution$result)) {
+    if (all(private$resolution$result$data$status == "OK")) {
+      cat("- has resolution\n")
+    } else {
+      cat("- has resolution, with errors\n")
+    }
+  }
+
+  ## solution
+  if (!is.null(private$solution$result)) {
+    if (private$solution$result$status == "OK") {
+      cat("- has solution\n")
+    } else {
+      cat("- has solution, with errors\n")
+    }
+  }
+
+  invisible(self)
 }

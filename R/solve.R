@@ -341,15 +341,23 @@ describe_solution_error <- function(pkgs, solution) {
 
 #' @export
 
-print.remote_solution_error <- function(x, ...) {
+format.remote_solution_error <- function(x, ...) {
   fails <- x
-  if (nrow(fails)) cat(bold(red("Errors:")), sep = "\n")
-  for (pkg in unique(fails$package)) {
+  if (!nrow(fails)) return()
+
+  unlist(lapply(unique(fails$package), function(pkg) {
     xpkg <- fails[fails$package == pkg, ]
     msgs <- unique(na.omit(xpkg$message[xpkg$type != "exactly-once"]))
-    cat(glue("  * Cannot install package `{pkg}`."), sep = "\n")
-    if (length(msgs)) cat(paste0("  - ", msgs), sep = "\n")
-  }
+    c(glue("  * Cannot install package `{pkg}`."),
+      if (length(msgs)) paste0("  - ", msgs))
+  }))
+}
+
+#' @export
+
+print.remote_solution_error <- function(x, ...) {
+  cat(bold(red("Errors:")), sep = "\n")
+  cat(format(x), sep = "\n")
   invisible(x)
 }
 

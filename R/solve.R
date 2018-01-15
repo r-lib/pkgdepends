@@ -15,27 +15,28 @@ remotes_solve <- function(self, private) {
   prb <- private$create_lp_problem(pkgs)
   sol <- private$solve_lp_problem(prb)
 
-  if (sol$status != 2 && sol$status != 0) {
+  if (sol$status != 0) {
     stop("Cannot solve installation, internal lpSolve error ", sol$status)
   }
 
-  if (sol$status == 0 && sol$objval < solve_dummy_obj) {
-    selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
-    result <- private$subset_resolution(selected)
-    metadata$solution_end <- Sys.time()
-    result$metadata <- modifyList(result$metadata, metadata)
-    class(result) <- unique(c("remotes_solution", class(result)))
-  } else {
-    result <- NULL
-  }
-
-  private$solution <- list(
-    result = result,
+  selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
+  res <- list(
+    status = if (sol$objval < solve_dummy_obj) "OK" else "FAILED",
+    data = private$subset_resolution(selected),
     problem = prb,
     solution = sol
   )
 
-  invisible(self$get_solution())
+  metadata$solution_end <- Sys.time()
+  res$data$metadata <- modifyList(res$data$metadata, metadata)
+  class(res) <- unique(c("remotes_solution", class(res)))
+
+  if (res$status == "FAILED") {
+    res$failures <- describe_solution_error(pkgs, res)
+  }
+
+  private$solution$result <- res
+  self$get_solution()
 }
 
 #' Create the LP problem that solves the installation
@@ -229,16 +230,12 @@ remotes_get_solution <- function(self, private) {
   if (is.null(private$solution)) {
     stop("No solution found, need to call $solve()")
   }
-  if (! is.null(private$solution$result)) {
-    private$solution$result
-  } else {
-    describe_solution_error(self$get_resolution()$data, private$solution)
-  }
+  private$solution$result
 }
 
 remotes_install_plan <- function(self, private) {
   "!DEBUG creating install plan"
-  sol <- self$get_solution()$data
+  sol <- self$get_solution()$data$data
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
   deps <- lapply(sol$dependencies, "[[", "package")
@@ -314,7 +311,7 @@ describe_solution_error <- function(pkgs, solution) {
         ref <- pkgs$ref[cond$vars]
         ref2 <- pkgs$ref[cond$note]
         ## TODO: required by .....
-        glue("ref `{ref}`, conflicts with ref `{ref2}`")
+        glue("`{ref}`, conflicts with `{ref2}`")
 
       } else if (cond$type == "ok-resolution") {
         ref <- pkgs$ref[cond$vars]
@@ -331,28 +328,27 @@ describe_solution_error <- function(pkgs, solution) {
     "[[",
     "type")
 
-  structure(list(
-    pkgs = pkgs,
-    problem = solution$problem,
-    solution = solution$solution,
-    failures = tibble(
-      package = rep(prob_pkgs, viapply(unsat_conds, length)),
-      constraint = unlist(unsat_conds),
-      message = unlist(messages),
-      type = types
-    )
-  ), class = "remote_solution_error")
+  fails <- tibble(
+    package = rep(prob_pkgs, viapply(unsat_conds, length)),
+    constraint = unlist(unsat_conds),
+    message = unlist(messages),
+    type = types
+  )
+  class(fails) <- unique(c("remote_solution_error", class(fails)))
+
+  fails
 }
 
 #' @export
 
 print.remote_solution_error <- function(x, ...) {
-  fails <- x$failures
+  fails <- x
+  if (nrow(fails)) cat(bold(red("Errors:")), sep = "\n")
   for (pkg in unique(fails$package)) {
     xpkg <- fails[fails$package == pkg, ]
     msgs <- unique(na.omit(xpkg$message[xpkg$type != "exactly-once"]))
-    cat(glue("Cannot install package `{pkg}`."), sep = "\n")
-    if (length(msgs)) cat(paste0(" * ", msgs), sep = "\n")
+    cat(glue("  * Cannot install package `{pkg}`."), sep = "\n")
+    if (length(msgs)) cat(paste0("  - ", msgs), sep = "\n")
   }
   invisible(x)
 }
@@ -360,24 +356,29 @@ print.remote_solution_error <- function(x, ...) {
 #' @export
 
 print.remotes_solution <- function(x, ...) {
-  meta <- x$metadata
-  x <- x$data
+  meta <- x$data$metadata
+  data <- x$data$data
 
-  direct <- unique(x$ref[x$direct])
+  direct <- unique(data$ref[data$direct])
   dt <- pretty_dt(meta$resolution_end - meta$resolution_start)
   dt2 <- pretty_dt(meta$solution_end - meta$solution_start)
+  sol <- if (x$status == "OK") "SOLUTION" else "FAILED SOLUTION"
   head <- glue(
-    "{logo()} SOLUTION, {length(direct)} refs, resolved in {dt}, ",
+    "{logo()} {sol}, {length(direct)} refs, resolved in {dt}, ",
     "solved in {dt2} ")
   width <- getOption("width") - col_nchar(head, type = "width") - 1
   head <- paste0(head, strrep(symbol$line, max(width, 0)))
-  cat(blue(bold(head)), sep = "\n")
+  if (x$status == "OK") {
+    cat(blue(bold(head)), sep = "\n")
+  } else {
+    cat(red(bold(head)), sep = "\n")
+  }
 
-  print_refs(x, x$direct, header = NULL)
+  print_refs(data, data$direct, header = NULL)
 
-  print_refs(x, (! x$direct), header = "Dependencies", by_type = TRUE)
+  print_refs(data, (! data$direct), header = "Dependencies", by_type = TRUE)
 
-  print_failed_refs(x)
+  if (!is.null(x$failures)) print(x$failures)
 
   invisible(x)
 }

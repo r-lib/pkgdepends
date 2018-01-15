@@ -37,10 +37,10 @@ test_that("conflict: different versions required for package", {
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
 
-  solution <- list(packages = NULL, result = NULL, problem = lp,
+  solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
   dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failures$type, c("exactly-once", rep("satisfy-refs", 4)))
+  expect_equal(dsc$type, c("exactly-once", rep("satisfy-refs", 4)))
 
   pkgs <- make_fake_resolution(
     `cran::pkgA` = list(direct = TRUE),
@@ -51,10 +51,10 @@ test_that("conflict: different versions required for package", {
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
 
-  solution <- list(packages = NULL, result = NULL, problem = lp,
+  solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
   dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failures$type, c("exactly-once", rep("satisfy-refs", 2)))
+  expect_equal(dsc$type, c("exactly-once", rep("satisfy-refs", 2)))
 })
 
 test_that("standard direct & github indirect is OK", {
@@ -96,10 +96,10 @@ test_that("version conflict", {
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
 
-  solution <- list(packages = NULL, result = NULL, problem = lp,
+  solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
   dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failures$type, c("exactly-once", "dependency-version"))
+  expect_equal(dsc$type, c("exactly-once", "dependency-version"))
 
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
@@ -113,10 +113,10 @@ test_that("resolution failure", {
   lp <- remotes_i_create_lp_problem(pkgs)
   sol <- remotes_i_solve_lp_problem(lp)
 
-  solution <- list(packages = NULL, result = NULL, problem = lp,
+  solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
   dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failures$type, c("exactly-once", "ok-resolution"))
+  expect_equal(dsc$type, c("exactly-once", "ok-resolution"))
 
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
@@ -135,7 +135,7 @@ test_that("integration test", {
       r$resolve()
     })
   sol <- r$solve()
-  expect_true("r-lib/cli" %in% sol$data$ref)
+  expect_true("r-lib/cli" %in% sol$data$data$ref)
 
   withr::with_options(
     c(pkg.progress.bar = FALSE), {
@@ -143,7 +143,7 @@ test_that("integration test", {
       r$resolve()
     })
   sol <- r$solve()
-  expect_true("cran::cli" %in% sol$data$ref)
+  expect_true("cran::cli" %in% sol$data$data$ref)
   plan <- r$get_install_plan()
   expect_true("cli" %in% plan$package)
 
@@ -153,7 +153,7 @@ test_that("integration test", {
       r$resolve()
     })
   sol <- r$solve()
-  expect_s3_class(sol, "remote_solution_error")
+  expect_equal(sol$status, "FAILED")
   expect_true("cli" %in% sol$failures$package)
   expect_output(print(sol), "Cannot install package .*cli")
 })

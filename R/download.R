@@ -35,7 +35,7 @@ remotes_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
-  data <- private$solution$result$data
+  data <- private$solution$result$data$data
   total <- sum(data$type != "installed")
   private$with_progress_bar(
     list(type = "download", total = total),
@@ -52,7 +52,7 @@ remotes_async_download_solution <- function(self, private) {
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
   dls <- remotes_async_download_internal(
-    self, private, private$solution$result$data$resolution)
+    self, private, private$solution$result$data$data$resolution)
 
   dls$then(function(value) {
     private$solution_downloads <- value
@@ -93,7 +93,7 @@ remotes_get_resolution_download <- function(self, private) {
 
 remotes_get_solution_download <- function(self, private) {
   if (is.null(private$solution_downloads)) stop("No downloads")
-  remotes_get_download(private$solution$result,
+  remotes_get_download(private$solution$result$data,
                        private$solution_downloads)
 }
 

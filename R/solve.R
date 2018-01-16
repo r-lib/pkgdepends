@@ -21,7 +21,7 @@ remotes_solve <- function(self, private) {
 
   selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
   res <- list(
-    status = if (sol$objval < solve_dummy_obj) "OK" else "FAILED",
+    status = if (sol$objval < solve_dummy_obj - 1) "OK" else "FAILED",
     data = private$subset_resolution(selected),
     problem = prb,
     solution = sol

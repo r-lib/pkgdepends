@@ -90,7 +90,7 @@ package_cache <- R6Class(
       dbfile <- get_db_file(private$path)
       db <- readRDS(dbfile)
 
-      idx <- find_in_data_frame(db, ..., .list = NULL)
+      idx <- find_in_data_frame(db, ..., .list = .list)
       db[idx, ]
     }
   )

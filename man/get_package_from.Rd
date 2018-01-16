@@ -5,7 +5,7 @@
 \title{Get package from cache, or download it asynchronously}
 \usage{
 get_package_from(cache, urls, target_dir, target, progress_bar = NULL,
-  metadata = list())
+  direct = NULL, metadata = list())
 }
 \arguments{
 \item{cache}{\code{package_cache} instance.}
@@ -14,7 +14,14 @@ get_package_from(cache, urls, target_dir, target, progress_bar = NULL,
 
 \item{target_dir}{Directory to place the file in.}
 
-\item{target_file}{Path to target file, within the target directory.}
+\item{target}{Path to target file, within the target directory.}
+
+\item{progress_bar}{The progress bar object to update.}
+
+\item{direct}{Whether the package/ref was directly specified
+(or a dependency).}
+
+\item{metadata}{Extra data to add to the installed package.}
 }
 \value{
 Download status.

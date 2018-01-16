@@ -105,7 +105,11 @@ package_cache <- R6Class(
 #' @param cache `package_cache` instance.
 #' @param urls Character vector, list of candidate urls.
 #' @param target_dir Directory to place the file in.
-#' @param target_file Path to target file, within the target directory.
+#' @param target Path to target file, within the target directory.
+#' @param progress_bar The progress bar object to update.
+#' @param direct Whether the package/ref was directly specified
+#'   (or a dependency).
+#' @param metadata Extra data to add to the installed package.
 #' @return Download status.
 #'
 #' @keywords internal

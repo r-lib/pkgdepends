@@ -98,10 +98,6 @@ package_cache <- R6Class(
 
 #' Get package from cache, or download it asynchronously
 #'
-#' Currently, even if we take it from the cache, we check the etag
-#' of the url. TODO: This should change in the future, and we should trust
-#' at least CRAN source packages.
-#'
 #' @param cache `package_cache` instance.
 #' @param urls Character vector, list of candidate urls.
 #' @param target_dir Directory to place the file in.
@@ -121,6 +117,29 @@ get_package_from <- function(cache, urls, target_dir, target,
   target_file <- file.path(target_dir, target)
   mkdirp(target_dir <- dirname(target_file))
 
+  ## First check if we have a file that does the trick without HTTP
+  ## There are a couple of cases in which we can do this, right now
+  ## only one is implemented:
+  ## 1. It has to be
+  ##   - a CRAN or BioC package
+  ##   - source package
+  ##   - with the right version number
+
+  if (all(c("type", "package", "version", "platform") %in% names(metadata)) &&
+      metadata$type %in% c("standard", "cran", "bioc") &&
+      metadata$platform == "source") {
+    hit <- cache$copy_to(
+      target_file, package = metadata$package, version = metadata$version,
+      platform = metadata$platform
+    )
+    if (nrow(hit) >= 1) {
+      res <- make_dl_status(
+        "Had", urls, target_file, bytes = file.size(target_file))
+      return(async_constant(res))
+    }
+  }
+
+  ## If not, then try the URLs, we'll ping them to be sure
   etag_file <- tempfile()
   for (url in urls) {
     hit <- cache$copy_to(target_file, url = url, .list = metadata)

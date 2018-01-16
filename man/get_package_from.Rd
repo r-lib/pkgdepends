@@ -27,8 +27,6 @@ get_package_from(cache, urls, target_dir, target, progress_bar = NULL,
 Download status.
 }
 \description{
-Currently, even if we take it from the cache, we check the etag
-of the url. TODO: This should change in the future, and we should trust
-at least CRAN source packages.
+Get package from cache, or download it asynchronously
 }
 \keyword{internal}

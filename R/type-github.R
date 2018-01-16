@@ -242,7 +242,7 @@ type_github_make_resolution <- function(data) {
   commitish <- data$remote$commitish %|z|% NULL
   pull <- data$remote$pull %|z|% NULL
   release <- data$remote$release %|z|% NULL
-  package <- data$desc$package
+  package <- data$remote$package
   version <- data$desc$version
   desc_err <- data$desc$error
   sha_err <- data$sha$error

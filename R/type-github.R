@@ -58,26 +58,52 @@ download_remote.remote_resolution_github <- function(resolution, config,
   target_file <- file.path(cache_dir, files$target)
   cached_zip <- sub("\\.tar\\.gz$", ".zip", target_file)
   mkdirp(dirname(target_file))
-  subdir <- get_remote(resolution)$subdir
+  remote <- get_remote(resolution)
+  subdir <- remote$subdir
   url <- files$source
+  metadata <- list(type = "github", ref = ref, sha = remote$sha,
+                   package = remote$package, version = files$version,
+                   platform = "source")
 
   if (is_valid_package(target_file)) {
     progress_bar$update(count = 1, cached = 1)
-    status <- make_dl_status("Had", files$source, target_file,
+    status <- make_dl_status("Had", url, target_file,
                              bytes = file.size(target_file))
     async_constant(list(status))
 
   } else if (file.exists(cached_zip)) {
     type_github_build_github_package(cached_zip, target_file, subdir)
     progress_bar$update(count = 1, cached = 1)
+    ## Add built package to the cache
+    try(
+      cache$package_cache$add(target_file, path = files$target, url = url,
+                              etag = NA_character_, .list = metadata),
+      silent = TRUE
+    )
     status <- make_dl_status("Had", url, target_file,
                              bytes = file.size(target_file))
     async_constant(list(status))
 
   } else {
+
+    ## Try to get the built package from the cache
+    hit <- cache$package_cache$copy_to(target_file, .list = metadata)
+    if (nrow(hit) >= 1) {
+      res <- make_dl_status(
+        "Had", url, target_file, bytes = file.size(target_file))
+      return(async_constant(list(res)))
+    }
+
     download_file(url, cached_zip, progress_bar = progress_bar)$
       then(function() {
+        ## Build source package from zip (R CMD build)
         type_github_build_github_package(cached_zip, target_file, subdir)
+        ## Add built package to the cache
+        try(
+          cache$package_cache$add(target_file, path = files$target, url = url,
+                                  etag = NA_character_, .list = metadata),
+          silent = TRUE
+        )
         list(make_dl_status("Got", url, target_file,
                             bytes = file.size(target_file)))
       })$

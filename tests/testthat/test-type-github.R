@@ -88,7 +88,7 @@ test_that("download_remote", {
   expect_true(dl$data$direct)
   expect_true(dl$data$status == "OK")
   expect_true(dl$data$package == "crayon")
-  expect_true(dl$data$download_status == "Got")
+  expect_true(dl$data$download_status %in% c("Got", "Had"))
 })
 
 test_that("satisfies_remote", {

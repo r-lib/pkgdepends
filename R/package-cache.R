@@ -135,6 +135,7 @@ get_package_from <- function(cache, urls, target_dir, target,
     if (nrow(hit) >= 1) {
       res <- make_dl_status(
         "Had", urls, target_file, bytes = file.size(target_file))
+      progress_bar$update(count = 1, cached = 1)
       return(async_constant(res))
     }
   }

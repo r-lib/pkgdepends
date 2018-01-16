@@ -111,7 +111,8 @@ package_cache <- R6Class(
 #' @keywords internal
 
 get_package_from <- function(cache, urls, target_dir, target,
-                             progress_bar = NULL, metadata = list()) {
+                             progress_bar = NULL, direct = NULL,
+                             metadata = list()) {
   cache ; urls ; metadata
   target_file <- file.path(target_dir, target)
   mkdirp(target_dir <- dirname(target_file))
@@ -125,7 +126,16 @@ get_package_from <- function(cache, urls, target_dir, target,
     }
   }
 
+  headers <- if (!is.null(direct)) {
+    c("User-Agent" = paste0(
+        getOption("HTTPUserAgent"), "; ",
+        "pkgdepends ", getNamespaceVersion("pkgdepends"), "; ",
+        "curl ", getNamespaceVersion("curl"), "; ",
+        if (isTRUE(direct)) "direct" else "indirect"))
+  }
+
   download_try_list(urls, target_file, etag_file,
+                    headers = as.character(headers),
                     progress_bar = progress_bar)$
     then(function(status) {
       if (status == 304) {

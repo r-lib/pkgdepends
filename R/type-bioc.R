@@ -36,11 +36,13 @@ resolve_remote.remote_ref_bioc <- function(remote, direct, config, cache,
 
 download_remote.remote_resolution_bioc <- function(resolution, config,
                                                    ..., cache, progress_bar) {
+  resolution
+
   async_map(get_files(resolution), function(files) {
     meta <- files[c("platform", "package", "version", "rversion")]
     get_package_from(cache$package_cache, files$source,
                      config$cache_dir, files$target, metadata = meta,
-                     progress_bar = progress_bar)
+                     get_direct(resolution), progress_bar = progress_bar)
   })
 }
 

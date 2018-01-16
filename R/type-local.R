@@ -18,7 +18,7 @@ parse_remote.remote_specs_local <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_local <- function(remote, config, cache,
+resolve_remote.remote_ref_local <- function(remote, direct, config, cache,
                                             dependencies, ...) {
 
   tryCatch({
@@ -61,7 +61,8 @@ resolve_remote.remote_ref_local <- function(remote, config, cache,
     remote$description <- dsc
 
     structure(
-      list(files = list(files), remote = remote, status = "OK"),
+      list(files = list(files), direct = direct, remote = remote,
+           status = "OK"),
       class = c("remote_resolution_local", "remote_resolution")
     )
 
@@ -81,7 +82,8 @@ resolve_remote.remote_ref_local <- function(remote, config, cache,
     remote["description"] <- list(NULL)
 
     structure(
-      list(files = list(files), remote = remote, status = "FAILED"),
+      list(files = list(files), direct = direct, remote = remote,
+           status = "FAILED"),
       class = c("remote_resolution_local", "remote_resolution")
     )
   })

@@ -196,7 +196,12 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
           )
         }
       }
-      res <- list(files = xfiles, remote = remote, status = all_ok(xfiles))
+      res <- list(
+        files = xfiles,
+        direct = package %in% ref_df$package[ref_df$direct],
+        remote = remote,
+        status = all_ok(xfiles)
+      )
 
     } else {
       res <- list(
@@ -210,6 +215,7 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
             class = "remotes_resolution_error"
           )
         )),
+        direct = package %in% ref_df$package[ref_df$direct],
         remote = remote,
         status = "FAILED"
       )

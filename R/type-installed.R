@@ -22,8 +22,8 @@ parse_remote.remote_specs_installed <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_installed <- function(remote, config, cache,
-                                                dependencies, ...) {
+resolve_remote.remote_ref_installed <- function(remote, direct, config,
+                                                cache, dependencies, ...) {
 
   dsc <- desc(file.path(remote$library, remote$package))
 
@@ -45,7 +45,8 @@ resolve_remote.remote_ref_installed <- function(remote, config, cache,
   remote$description <- dsc
 
   structure(
-    list(files = list(files), remote = remote, status = "OK"),
+    list(files = list(files), direct = direct, remote = remote,
+         status = "OK"),
     class = c("remote_resolution_installed", "remote_resolution")
   )
 }

@@ -5,7 +5,8 @@ parse_remote <- function(specs, config, ...)
 parse_remote.default <- function(specs, config, ...)
   stop("Unknown or incomplete remote specs type, no `parse_remote` method")
 
-resolve_remote <- function(remote, config, cache, dependencies, ...)
+resolve_remote <- function(remote, direct, config, cache, dependencies,
+                           ...)
   UseMethod("resolve_remote")
 
 resolve_remote.default <- function(remote, config, ...)
@@ -105,4 +106,13 @@ get_error_message <- function(x)
 
 get_error_message.remote_resolution <- function(x) {
   x[["error"]]$message
+}
+
+get_direct <- function(x)
+  UseMethod("get_direct")
+
+#' @export
+
+get_direct.remote_resolution <- function(x) {
+  x[["direct"]]
 }

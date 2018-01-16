@@ -29,14 +29,14 @@ parse_remote.remote_specs_github <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_github <- function(remote, config, cache,
+resolve_remote.remote_ref_github <- function(remote, direct, config, cache,
                                              dependencies, ...) {
 
-  force(dependencies)
+  force(direct); force(dependencies)
   ## Get the DESCRIPTION data, and the SHA we need
   desc <- type_github_get_github_description_data(remote)
   sha <- type_github_get_github_commit_sha(remote)
-  when_all(desc = desc, sha = sha, remote = remote,
+  when_all(desc = desc, sha = sha, remote = remote, direct = direct,
            dependencies = dependencies)$
     then(type_github_make_resolution)
 }
@@ -252,7 +252,9 @@ type_github_make_resolution <- function(data) {
   data$remote$sha <- sha
 
   structure(
-    list(files = list(files), remote = data$remote, status = files$status),
+    list(
+      files = list(files), direct = data$direct, remote = data$remote,
+      status = files$status),
     class = c("remote_resolution_github", "remote_resolution")
   )
 }

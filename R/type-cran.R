@@ -24,13 +24,14 @@ parse_remote.remote_specs_cran <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_cran <- function(remote, config, cache,
+resolve_remote.remote_ref_cran <- function(remote, direct, config, cache,
                                            dependencies, progress_bar, ...) {
-  force(remote); force(dependencies)
+  force(remote); force(direct); force(dependencies)
   cache$crandata <- cache$crandata %||% update_crandata_cache(config, progress_bar)
 
   cache$crandata$then(function(cacheresult) {
-    type_cran_resolve_from_cache(remote, config, cacheresult, dependencies)
+    type_cran_resolve_from_cache(remote, direct, config, cacheresult,
+                                 dependencies)
   })
 }
 
@@ -147,19 +148,20 @@ type_cran_update_cache <- function(rootdir, platforms, rversions, mirror,
   cran_cache
 }
 
-type_cran_resolve_from_cache <- function(remote, config, crancache,
+type_cran_resolve_from_cache <- function(remote, direct, config, crancache,
                                          dependencies) {
   if (remote$version == "current" || remote$version == "") {
-    type_cran_resolve_from_cache_current(remote, config, crancache,
+    type_cran_resolve_from_cache_current(remote, direct, config, crancache,
                                          dependencies)
   } else {
-    type_cran_resolve_from_cache_general(remote, config, crancache,
+    type_cran_resolve_from_cache_general(remote, direct, config, crancache,
                                          dependencies)
   }
 }
 
-type_cran_resolve_from_cache_current <- function(remote, config,
+type_cran_resolve_from_cache_current <- function(remote, direct, config,
                                                  crancache, dependencies) {
+  force(direct);
 
   files <- type_cran_resolve_from_cache_current_files(remote, config,
                                                       crancache,
@@ -167,7 +169,9 @@ type_cran_resolve_from_cache_current <- function(remote, config,
 
   files$then(function(files) {
     structure(
-      list(files = files, remote = remote, status = all_ok(files)),
+      list(
+        files = files, direct = direct, remote = remote,
+        status = all_ok(files)),
       class = c("remote_resolution_cran", "remote_resolution")
     )
   })
@@ -201,8 +205,9 @@ type_cran_resolve_from_cache_current_files <- function(remote, config,
   async_constant(files)
 }
 
-type_cran_resolve_from_cache_general <- function(remote, config,
+type_cran_resolve_from_cache_general <- function(remote, direct, config,
                                                  crancache, dependencies) {
+  force(direct);
 
   vers <- type_cran_fix_cran_version(
     remote$package, remote$version, remote$atleast,
@@ -232,7 +237,8 @@ type_cran_resolve_from_cache_general <- function(remote, config,
     files <- unlist(files, recursive = FALSE, use.names = FALSE)
 
     structure(
-      list(files = files, remote = remote, status = all_ok(files)),
+      list(files = files, direct = direct, remote = remote,
+           status = all_ok(files)),
       class = c("remote_resolution_cran", "remote_resolution")
     )
   })

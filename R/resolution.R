@@ -82,8 +82,8 @@ remotes__resolve_ref <- function(self, private, rem, pool, direct) {
   meta <- private$resolution$metadata
   dependencies <-
     meta[c("dependencies", "indirect_dependencies")][[2 - direct]]
-  dres <- resolve_remote(rem, config = private$config, cache = cache,
-                         dependencies = dependencies,
+  dres <- resolve_remote(rem, direct, config = private$config,
+                         cache = cache, dependencies = dependencies,
                          progress_bar = private$progress_bar)
   if (!is_deferred(dres)) dres <- async_constant(dres)
   private$resolution$packages[[rem$ref]] <- dres

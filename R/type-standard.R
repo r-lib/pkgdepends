@@ -20,9 +20,9 @@ parse_remote.remote_specs_standard <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_standard <- function(remote, config, cache,
-                                               dependencies, ...) {
-  force(remote); force(dependencies)
+resolve_remote.remote_ref_standard <- function(remote, direct, config,
+                                               cache, dependencies, ...) {
+  force(remote); force(direct); force(dependencies)
 
   cache$crandata <- cache$crandata %||% update_crandata_cache(config)
   cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
@@ -30,12 +30,14 @@ resolve_remote.remote_ref_standard <- function(remote, config, cache,
   ## We try both cran and bioc
   cran <- cache$crandata$
     then(function(cacheresult) {
-      type_cran_resolve_from_cache(remote, config, cacheresult, dependencies)
+      type_cran_resolve_from_cache(remote, direct, config, cacheresult,
+                                   dependencies)
     })
 
   bioc <- cache$biocdata$
     then(function(cacheresult) {
-      type_bioc_resolve_from_cache(remote, config, cacheresult, dependencies)
+      type_bioc_resolve_from_cache(remote, direct, config, cacheresult,
+                                   dependencies)
     })
 
   when_all(cran = cran, bioc = bioc)$
@@ -52,6 +54,7 @@ resolve_remote.remote_ref_standard <- function(remote, config, cache,
       structure(
         list(
           files = files,
+          direct = direct,
           remote = remote,
           status = if (statusok) "OK" else "FAILED"
         ),

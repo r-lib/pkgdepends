@@ -21,13 +21,14 @@ parse_remote.remote_specs_bioc <- function(specs, config, ...) {
 
 #' @export
 
-resolve_remote.remote_ref_bioc <- function(remote, config, cache,
+resolve_remote.remote_ref_bioc <- function(remote, direct, config, cache,
                                            dependencies, progress_bar, ...) {
-  force(remote); force(dependencies)
+  force(remote); force(direct); force(dependencies)
   cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config, progress_bar)
 
   cache$biocdata$then(function(cacheresult) {
-    type_bioc_resolve_from_cache(remote, config, cacheresult, dependencies)
+    type_bioc_resolve_from_cache(remote, direct, config, cacheresult,
+                                 dependencies)
   })
 }
 
@@ -175,7 +176,7 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions,
   biocdata
 }
 
-type_bioc_resolve_from_cache <- function(remote, config, bioccache,
+type_bioc_resolve_from_cache <- function(remote, direct, config, bioccache,
                                          dependencies) {
 
   files <- type_bioc_resolve_from_cache_files(remote, config, bioccache,
@@ -188,7 +189,7 @@ type_bioc_resolve_from_cache <- function(remote, config, bioccache,
       "FAILED"
     }
     structure(
-      list(files = files, remote = remote, status = status),
+      list(files = files, direct = direct, remote = remote, status = status),
       class = c("remote_resolution_bioc", "remote_resolution")
     )
   })

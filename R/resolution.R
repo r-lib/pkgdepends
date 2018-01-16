@@ -192,33 +192,32 @@ remotes__resolution_to_df <- function(packages, metadata,
   }
 
   getfl <- function(f) {
-    I(unlist(
+    I(as.list(unlist(
       lapply(packages, function(x) lapply(get_files(x), "[[", f)),
       recursive = FALSE
-    ))
+    )))
   }
 
   sources <- getfl("source")
   deps <- getfl("deps")
-  target <- getf("target")
-  fulltarget <- ifelse(
-    is.na(target),
-    NA_character_,
-    file.path(cache_dir, target))
+  target <- as.character(getf("target"))
+  fulltarget <- if (length(target)) {
+    ifelse(is.na(target), NA_character_, file.path(cache_dir, target))
+  }
 
   res <- tibble::tibble(
     ref        = ref,
     type       = vcapply(remote, "[[", "type"),
     direct     = ref %in% vcapply(remotes, "[[", "ref"),
-    status     = getf("status"),
-    package    = getf("package"),
-    version    = getf("version"),
-    platform   = getf("platform"),
-    rversion   = getf("rversion"),
-    repodir    = getf("dir"),
+    status     = as.character(getf("status")),
+    package    = as.character(getf("package")),
+    version    = as.character(getf("version")),
+    platform   = as.character(getf("platform")),
+    rversion   = as.character(getf("rversion")),
+    repodir    = as.character(getf("dir")),
     sources    = sources,
     target     = target,
-    fulltarget = fulltarget,
+    fulltarget = as.character(fulltarget),
     dependencies = deps,
     remote     = remote,
     resolution = packages_subset

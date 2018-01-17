@@ -61,7 +61,7 @@ remotes_async_download_solution <- function(self, private) {
 }
 
 remotes_stop_for_solution_download_error <- function(self, private) {
-  dl <- r$get_solution_download()
+  dl <- self$get_solution_download()
   if (any(bad <- tolower(dl$data$download_status) == "failed")) {
     msgs <- vcapply(
       which(bad),

@@ -122,6 +122,8 @@ remotes <- R6Class(
 
     solve = function()
       remotes_solve(self, private),
+    stop_for_solve_error = function()
+      remotes_stop_for_solve_error(self, private),
     get_solution = function()
       remotes_get_solution(self, private),
     get_install_plan = function()
@@ -135,6 +137,8 @@ remotes <- R6Class(
       remotes_download_solution(self, private),
     get_solution_download = function()
       remotes_get_solution_download(self, private),
+    stop_for_solution_download_error = function()
+      remotes_stop_for_solution_download_error(self, private),
 
     print = function(...)
       remotes_print(self, private, ...)

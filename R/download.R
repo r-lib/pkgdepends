@@ -60,6 +60,22 @@ remotes_async_download_solution <- function(self, private) {
   })
 }
 
+remotes_stop_for_solution_download_error <- function(self, private) {
+  dl <- r$get_solution_download()
+  if (any(bad <- tolower(dl$data$download_status) == "failed")) {
+    msgs <- vcapply(
+      which(bad),
+      function(i) {
+        urls <- format_items(dl$data$sources[[i]])
+        glue("Failed to download {dl$data$package[i]} \\
+              from {urls}.")
+      }
+    )
+    msg <- paste(msgs, collapse = "\n")
+    stop("Cannot download some packages:\n", msg, call. = FALSE)
+  }
+}
+
 remotes_async_download_internal <- function(self, private, what) {
   if (any(vcapply(what, get_status) != "OK")) {
     stop("Resolution has errors, cannot start downloading")

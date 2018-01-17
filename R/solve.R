@@ -39,6 +39,19 @@ remotes_solve <- function(self, private) {
   self$get_solution()
 }
 
+remotes_stop_for_solve_error <- function(self, private) {
+  if (is.null(private$solution)) {
+    stop("No solution found, need to call $solve()")
+  }
+
+  sol <- self$get_solution()
+
+  if (sol$status != "OK") {
+    msg <- paste(format(sol$failures), collapse = "\n")
+    stop("Cannot install packages:\n", msg, call. = FALSE)
+  }
+}
+
 #' Create the LP problem that solves the installation
 #'
 #' Each row in the resolution data frame is an installation candidate.

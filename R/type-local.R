@@ -91,7 +91,7 @@ resolve_remote.remote_ref_local <- function(remote, direct, config, cache,
 
 #' @export
 
-download_remote.remote_resolution_local <- function(resolution, config,
+download_remote.remote_resolution_local <- function(resolution, config, mode,
                                                     ..., cache, progress_bar) {
   tryCatch({
     files <- get_files(resolution)[[1]]

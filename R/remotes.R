@@ -166,8 +166,8 @@ remotes <- R6Class(
       remotes__add_fast_refs(self, private, refs, remotes, direct = direct),
     fast_resolve = function()
       remotes__fast_resolve(self, private),
-    download_res = function(res)
-      remotes_download_res(self, private, res),
+    download_res = function(res, mode)
+      remotes_download_res(self, private, res, mode),
     subset_resolution = function(which)
       remotes__subset_resolution(self, private, which),
     create_lp_problem = function(pkgs)

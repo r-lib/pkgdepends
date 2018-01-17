@@ -37,7 +37,7 @@ resolve_remote.remote_ref_cran <- function(remote, direct, config, cache,
 
 #' @export
 
-download_remote.remote_resolution_cran <- function(resolution, config,
+download_remote.remote_resolution_cran <- function(resolution, config, mode,
                                                    ..., cache, progress_bar) {
 
   meta0 <- list(

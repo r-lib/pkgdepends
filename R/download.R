@@ -22,7 +22,7 @@ remotes_async_download_resolution <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
   dls <- remotes_async_download_internal(
-    self, private, private$resolution$result$data$resolution
+    self, private, private$resolution$result$data$resolution, "resolution"
   )
 
   dls$then(function(value) {
@@ -52,7 +52,7 @@ remotes_async_download_solution <- function(self, private) {
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
   dls <- remotes_async_download_internal(
-    self, private, private$solution$result$data$data$resolution)
+    self, private, private$solution$result$data$data$resolution, "solution")
 
   dls$then(function(value) {
     private$solution_downloads <- value
@@ -76,20 +76,21 @@ remotes_stop_for_solution_download_error <- function(self, private) {
   }
 }
 
-remotes_async_download_internal <- function(self, private, what) {
+remotes_async_download_internal <- function(self, private, what, mode) {
   if (any(vcapply(what, get_status) != "OK")) {
     stop("Resolution has errors, cannot start downloading")
   }
-  async_map(what, private$download_res)
+  async_map(what, private$download_res, mode = mode)
 }
 
-remotes_download_res <- function(self, private, res) {
+remotes_download_res <- function(self, private, res, mode) {
 
   force(private)
 
   ddl <- download_remote(
     res,
     config = private$config,
+    mode = mode,
     cache = private$resolution$cache,
     progress_bar = private$progress_bar
   )

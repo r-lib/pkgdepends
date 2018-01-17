@@ -54,7 +54,7 @@ resolve_remote.remote_ref_installed <- function(remote, direct, config,
 #' @export
 
 download_remote.remote_resolution_installed <- function(resolution,
-                                                         config, ...,
+                                                         config, mode, ...,
                                                          cache) {
   status <- make_dl_status("Had", NA_character_, NA_character_,
                            bytes = NA)

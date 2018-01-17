@@ -34,7 +34,7 @@ resolve_remote.remote_ref_bioc <- function(remote, direct, config, cache,
 
 #' @export
 
-download_remote.remote_resolution_bioc <- function(resolution, config,
+download_remote.remote_resolution_bioc <- function(resolution, config, mode,
                                                    ..., cache, progress_bar) {
   meta0 <- list(
     type = get_remote(resolution)[["type"]],

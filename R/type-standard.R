@@ -66,7 +66,8 @@ resolve_remote.remote_ref_standard <- function(remote, direct, config,
 #' @export
 
 download_remote.remote_resolution_standard <- function(resolution, config,
-                                                       ..., cache, progress_bar) {
+                                                       mode, ..., cache,
+                                                       progress_bar) {
   meta0 <- list(
     type = get_remote(resolution)[["type"]],
     ref = get_ref(resolution))

@@ -44,7 +44,8 @@ resolve_remote.remote_ref_github <- function(remote, direct, config, cache,
 #' @export
 
 download_remote.remote_resolution_github <- function(resolution, config,
-                                                     ..., cache, progress_bar) {
+                                                     mode, ..., cache,
+                                                     progress_bar) {
 
   cache_dir <- config$cache_dir
 
@@ -61,9 +62,10 @@ download_remote.remote_resolution_github <- function(resolution, config,
   remote <- get_remote(resolution)
   subdir <- remote$subdir
   url <- files$source
+  vignettes <- (mode == "resolution")
   metadata <- list(type = "github", ref = ref, sha = remote$sha,
                    package = remote$package, version = files$version,
-                   platform = "source")
+                   platform = "source", vignettes = vignettes)
 
   if (is_valid_package(target_file)) {
     progress_bar$update(count = 1, cached = 1)
@@ -72,7 +74,8 @@ download_remote.remote_resolution_github <- function(resolution, config,
     async_constant(list(status))
 
   } else if (file.exists(cached_zip)) {
-    type_github_build_github_package(cached_zip, target_file, subdir)
+    type_github_build_github_package(cached_zip, target_file, subdir,
+                                     vignettes = vignettes)
     progress_bar$update(count = 1, cached = 1)
     ## Add built package to the cache
     try(
@@ -97,7 +100,8 @@ download_remote.remote_resolution_github <- function(resolution, config,
     download_file(url, cached_zip, progress_bar = progress_bar)$
       then(function() {
         ## Build source package from zip (R CMD build)
-        type_github_build_github_package(cached_zip, target_file, subdir)
+        type_github_build_github_package(cached_zip, target_file, subdir,
+                                         vignettes = vignettes)
         ## Add built package to the cache
         try(
           cache$package_cache$add(target_file, path = files$target, url = url,
@@ -213,7 +217,8 @@ type_github_get_github_commit_sha <- function(rem) {
     })
 }
 
-type_github_build_github_package <- function(source, target, subdir) {
+type_github_build_github_package <- function(source, target, subdir,
+                                             vignettes) {
   mkdirp(zipdir <- tempfile())
   on.exit(unlink(zipdir, recursive = TRUE), add = TRUE)
   zipfile <- file.path(zipdir, basename(source))
@@ -221,7 +226,8 @@ type_github_build_github_package <- function(source, target, subdir) {
 
   pkgdir <- file.path(zipdir, unzip(zipfile))[1]
   if (nzchar(subdir)) pkgdir <- file.path(pkgdir, subdir)
-  pkgfile <- build_package(pkgdir)
+  pkgfile <- build_package(
+    pkgdir, build_args = list(vignettes = vignettes))
 
   file.copy(pkgfile, target)
 }

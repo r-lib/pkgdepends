@@ -263,16 +263,20 @@ remotes_install_plan <- function(self, private) {
   direct <- sol$direct |
     (sol$type == "installed" & sol$package %in% direct_packages)
 
+  binary = sol$platform != "source"
+  vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard")
+
   tibble::tibble(
     ref = sol$ref,
     package = sol$package,
     type = sol$type,
     version = sol$version,
-    binary = sol$platform != "source",
+    binary = binary,
     direct = direct,
     dependencies = I(deps),
     file = sol$fulltarget,
     installed = installed,
+    vignettes = vignettes,
     metadata =
       lapply(sol$resolution, function(x) get_files(x)[[1]]$metadata)
   )

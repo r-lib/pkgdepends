@@ -12,6 +12,7 @@ make_fake_deps <- function(...) {
 
 make_fake_resolution1 <- function(ref, args) {
   pref <- parse_remotes(ref)[[1]]
+  if (!is.null(args$extra)) pref[names(args$extra)] <- args$extra
 
   mirror <- args$mirror %||% remotes_default_config()$`cran-mirror`
   repodir <- args$repodir %||% "src/contrib"
@@ -61,4 +62,14 @@ make_fake_resolution <- function(...) {
     make_fake_metadata(),
     parse_remotes(names(pkgs)[direct]),
     remotes_default_config()$cache_dir)
+}
+
+describe_fake_error <- function(pkgs) {
+  lp <- remotes_i_create_lp_problem(pkgs)
+  sol <- remotes_i_solve_lp_problem(lp)
+
+  expect_true(sol$objval >= solve_dummy_obj - 1)
+  solution <- list(status = "FAILED", data = NULL, problem = lp,
+                   solution = sol)
+  describe_solution_error(pkgs, solution)
 }

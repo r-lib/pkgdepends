@@ -58,22 +58,19 @@ remotes_stop_for_solve_error <- function(self, private) {
 #' Each row corresponds to a binary variable \eqn{p_i}{p[i]}, which is
 #' 1 if that package will be installed.
 #'
-#' The constraints we have:
-#' 1. For each package \eqn{k}, we need exactly one candidate to be
-#'    installed: \eqn{\sum_{i\in k} p_i=1}{sum(p[i], i in k) = 1}.
-#' 2. All dependency versions must be satisfied.
-#' 3. For all packages, the selected package must satisfy all refs
-#'    for that package.
+#' TODO
 #'
 #' And we want to minimize package downloads and package compilation:
-#' 4. If a package is already installed, prefer the installed version,
+#' 6. If a package is already installed, prefer the installed version,
 #'    if possible.
-#' 5. If a package is available as a binary, prefer the binary version,
+#' 7. If a package is available as a binary, prefer the binary version,
 #'    if possible.
-#' 6. Can't install failed resolutions.
-#' We do this by assigning cost 0 to installed versions, cost 1 to
-#' binary packages, and cost 2 to source packages. Then we minimize the
+#'
+#' We do this by assigning cost 1 to installed versions, cost 2 to
+#' binary packages, and cost 3 to source packages. Then we minimize the
 #' total cost, while satisfying the constraints.
+#'
+#' Other cost schemes will be added later.
 #'
 #' @param pkgs Resolution data frame, that contains the locally installed
 #'   packages as well.
@@ -90,69 +87,58 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
 ## object.
 ##
 ## Variables:
-## * 1:num are packages
-## * (num+1):(num+num_pkgs) denote the relax variables for packages
+## * 1:num are candidates
+## * (num+1):(num+num_direct_pkgs) are the relax variables for direct refs
 
 remotes_i_create_lp_problem <- function(pkgs) {
   "!DEBUG creating LP problem"
-  num <- nrow(pkgs)
-  package_names <- unique(pkgs$package)
-  num_pkgs <- length(package_names)
+  num_candidates <- nrow(pkgs)
+  packages <- unique(pkgs$package)
+  direct_packages <- unique(pkgs$package[pkgs$direct])
+  indirect_packages <- setdiff(packages, direct_packages)
+  num_direct <- length(direct_packages)
+
   lp <- structure(list(
-    num = num + num_pkgs,
-    num_pkgs = num_pkgs,
+    num_candidates = num_candidates,
+    num_direct = num_direct,
+    total = num_candidates + num_direct,
     conds = list(),
     pkgs = pkgs
   ), class = "remotes_lp_problem")
 
   ## Add a condition, for a subset of variables, with op and rhs
-  cond <- function(vars, op = "<=", rhs = 1, type = NA_character_,
-                   note = NULL) {
+  cond <- function(vars, op = "<=", rhs = 1, coef = rep(1, length(vars)),
+                   type = NA_character_, note = NULL) {
     lp$conds[[length(lp$conds)+1]] <<-
-      list(vars = vars, op = op, rhs = rhs, type = type, note = note)
+      list(vars = vars, coef = coef, op = op, rhs = rhs, type = type,
+           note = note)
   }
 
-  ## 4. & 5. coefficients of the objective function, this is very easy
+  ## Coefficients of the objective function, this is very easy
   ## TODO: rule out incompatible platforms
   ## TODO: use rversion as well, for installed and binary packages
   lp$obj <- c(
-    ifelse(pkgs$type == "installed", 0,
-           ifelse(pkgs$platform == "source", 2, 1)),
-    rep(solve_dummy_obj, num_pkgs)
+    ifelse(pkgs$type == "installed", 1,
+           ifelse(pkgs$platform == "source", 3, 2)),
+    rep(solve_dummy_obj, num_direct)
   )
 
-  ## 1. Each package exactly once
+  ## 1. Each directly specified package exactly once.
   ##    (We also add a dummy variable to catch errors.)
-  for (p in seq_along(package_names)) {
-    wh <- which(pkgs$package == package_names[p])
-    cond(c(wh, num + p), op = "==", type = "exactly-once")
+  for (p in seq_along(direct_packages)) {
+    pkg <- direct_packages[p]
+    wh <- which(pkgs$package == pkg)
+    cond(c(wh, num_candidates + p), op = "==", type = "exactly-once")
   }
 
-  ## 2. All dependency versions must be satisfied
-  ## We check the dependencies of each package candidate, and rule out
-  ## unallowed combinations
-  depconds <- function(wh) {
-    if (pkgs$status[wh] != "OK") return()
-    deps <- pkgs$dependencies[[wh]]
-    deps <- deps[deps$version != "" & deps$ref != "R", ]
-    for (i in seq_len(nrow(deps))) {
-      deppkg <- deps$package[i]
-      confl_pkgs <- which(pkgs$package == deppkg)
-      for (co in confl_pkgs) {
-        if (pkgs$status[co] == "OK" &&
-            ! version_satisfies(pkgs$version[co], deps$op[i],
-                                deps$version[i])) {
-          note_txt <- paste(pkgs$version[co], deps$op[i], deps$version[i])
-          note <- list(wh = wh, txt = note_txt)
-          cond(c(wh, co), type = "dependency-version", note = note)
-        }
-      }
-    }
+  ## 2. Each non-direct package must be installed at most once
+  for (p in seq_along(indirect_packages)) {
+    pkg <- indirect_packages[p]
+    wh <- which(pkgs$package == pkg)
+    cond(wh, op = "<=", type = "at-most-once")
   }
-  lapply(seq_len(num), depconds)
 
-  ## 3. For all packages, the selected package must satisfy all refs
-  ##    for that package.
+  ## 3. Direct refs must be satisfied
   satisfy <- function(wh) {
     pkgname <- pkgs$package[[wh]]
     res <- pkgs$resolution[[wh]]
@@ -164,14 +150,61 @@ remotes_i_create_lp_problem <- function(pkgs) {
       }
     }
   }
-  lapply(seq_len(num), satisfy)
+  lapply(seq_len(num_candidates)[pkgs$direct], satisfy)
 
-  ## 7. Can't install failed resolutions
+  ## 4. Package dependencies must be satisfied
+  depconds <- function(wh) {
+    if (pkgs$status[wh] != "OK") return()
+    deps <- pkgs$dependencies[[wh]]
+    deps <- deps[deps$ref != "R", ]
+    for (i in seq_len(nrow(deps))) {
+      depref <- deps$ref[i]
+      depver <- deps$version[i]
+      depop  <- deps$op[i]
+      deppkg <- deps$package[i]
+      ## See which candidate satisfies this ref
+      res <- pkgs$resolution[[match(depref, pkgs$ref)]]
+      cand <- which(pkgs$package == deppkg)
+      good_cand <- Filter(
+        x = cand,
+        function(c) {
+          candver <- pkgs$version[c]
+          isTRUE(satisfies_remote(res, pkgs$resolution[[c]])) &&
+            (depver == "" || version_satisfies(candver, depop, depver))
+        })
+      bad_cand <- setdiff(cand, good_cand)
+
+      report <- c(
+        if (length(good_cand)) {
+          gc <- paste(pkgs$ref[good_cand], pkgs$version[good_cand])
+          paste0("version ", paste(gc, collapse = ", "))
+        },
+        if (length(bad_cand)) {
+          bc <- paste(pkgs$ref[bad_cand], pkgs$version[bad_cand])
+          paste0("but not ", paste(bc, collapse = ", "))
+        },
+        if (! length(cand)) "but no candidates"
+      )
+      txt <- glue("{pkgs$ref[wh]} depends on {depref}: \\
+                   {collapse(report, sep = ', ')}")
+      note <- list(wh = wh, ref = depref, cand = cand,
+                   good_cand = good_cand, txt = txt)
+
+      cond(
+        c(wh, good_cand), "<=", rhs = 0,
+        coef = c(1, rep(-1, length(good_cand))),
+        type = "dependency", note = note
+      )
+    }
+  }
+  lapply(seq_len(num_candidates), depconds)
+
+  ## 5. Can't install failed resolutions
   failedconds <- function(wh) {
     if (pkgs$status[wh] != "FAILED") return()
     cond(wh, op = "==", rhs = 0, type = "ok-resolution")
   }
-  lapply(seq_len(num), failedconds)
+  lapply(seq_len(num_candidates), failedconds)
 
   lp
 }
@@ -181,11 +214,8 @@ remotes_i_create_lp_problem <- function(pkgs) {
 print.remotes_lp_problem <- function(x, ...) {
 
   cat_cond <- function(cond) {
-    if (cond$type == "dependency-version") {
-      up <- x$pkgs$ref[cond$note$wh]
-      down <- setdiff(x$pkgs$ref[cond$vars], up)
-      txt <- cond$note$txt
-      cat_line(" * `{up}` requirement `{down} {txt}` fails")
+    if (cond$type == "dependency") {
+      cat_line(" * {cond$note$txt}")
 
     } else if (cond$type == "satisfy-refs") {
       ref <- x$pkgs$ref[cond$note]
@@ -199,21 +229,24 @@ print.remotes_lp_problem <- function(x, ...) {
     } else if (cond$type == "exactly-once") {
       ## Do nothing
 
+    } else if (cond$type == "at-most-once") {
+      ## Do nothing
+
     } else {
       cat_line(" * Unknown condition")
     }
   }
 
-  cat_line("LP problem for {x$num_pkgs} packages:")
-  pn <- sort(unique(x$pkgs$package))
+  cat_line("LP problem for {x$num_candidates} refs:")
+  pn <- sort(x$pkgs$ref)
   cat_line(strwrap(paste(pn, collapse = ", "), indent = 2, exdent = 2))
-  nc <- length(x$conds) - x$num_pkgs
+  nc <- length(x$conds) - x$num_direct
 
-  if (nc) {
-    cat_line("Conditions:")
+  if (nc > 0) {
+    cat_line("Constraints:")
     lapply(x$conds, cat_cond)
   } else {
-    cat_line("No conditions.")
+    cat_line("No constraints")
   }
 
   invisible(x)
@@ -228,15 +261,15 @@ remotes__solve_lp_problem <- function(self, private, problem) {
 
 remotes_i_solve_lp_problem <- function(problem) {
   "!DEBUG solving LP problem"
-  condmat <- matrix(0, nrow = length(problem$conds), ncol = problem$num)
+  condmat <- matrix(0, nrow = length(problem$conds), ncol = problem$total)
   for (i in seq_along(problem$conds)) {
     cond <- problem$conds[[i]]
-    condmat[i, cond$vars] <- 1
+    condmat[i, cond$vars] <- cond$coef
   }
 
   dir <- vcapply(problem$conds, "[[", "op")
   rhs <- vapply(problem$conds, "[[", "rhs", FUN.VALUE = double(1))
-  lp("min", problem$obj, condmat, dir, rhs, int.vec = seq_len(problem$num))
+  lp("min", problem$obj, condmat, dir, rhs, int.vec = seq_len(problem$total))
 }
 
 remotes_get_solution <- function(self, private) {
@@ -289,68 +322,106 @@ describe_solution_error <- function(pkgs, solution) {
     solution$solution$objval >= solve_dummy_obj - 1L
   )
 
-  sol <- solution$solution$solution
-
-  ## 1. Which packages are problematic?
   num <- nrow(pkgs)
-  package_names <- unique(pkgs$package)
-  num_pkgs <- length(package_names)
-  prob_pkgs <- package_names[which(sol[(num+1):(num+num_pkgs)] != 0)]
+  if (!num) stop("No solution errors to describe")
+  sol <- solution$solution$solution
+  sol_pkg <- sol[1:num]
+  sol_dum <- sol[(num+1):solution$problem$total]
 
-  ## 2. What constraints are they included in?
-  unsat_conds <- lapply(prob_pkgs, function(p) {
-    cands <- which(pkgs$package == p)
-    which(vlapply(
-      solution$problem$conds,
-      function(cond) any(cands %in% cond$vars)
-    ))
-  })
+  ## For each candidate, we work out if it _could_ be installed, and if
+  ## not, why not. Possible cases:
+  ## 1. it is is in the install plan, so it can be installed, YES
+  ## 2. it failed resolution, so NO
+  ## 3. it does not satisfy a direct ref for the same package, so NO
+  ## 4. it conflicts with another to-be-installed candidate of the
+  ##    same package, so NO
+  ## 5. one of its (downstream) dependencies cannot be installed, so NO
+  ## 6. otherwise YES
 
-  messages <- lapply(unsat_conds, function(cidxs) {
-    unsat <- solution$problem$conds[cidxs]
-    vcapply(unsat, function(cond) {
-      if (is.na(cond$type)) {
-        "internal error happened"
+  FAILS <- c("failed-res", "satisfy-direct", "conflict", "dep-failed")
 
-      } else if (cond$type == "exactly-once") {
-        pkg <- unique(na.omit(pkgs$package[cond$vars]))
-        glue("cannot install any version of package `{pkg}`")
+  state <- rep("maybe-good", num)
+  note <- replicate(num, NULL)
+  downstream <- replicate(num, character(), simplify = FALSE)
 
-      } else if (cond$type == "dependency-version") {
-        other <- pkgs$package[[cond$note$wh]]
-        pkg <- unique(na.omit(setdiff(pkgs$package[cond$vars], other)))
-        otherdeps <- pkgs$dependencies[[cond$note$wh]]
-        wh <- match(pkg, otherdeps$package)[1]
-        ver <- paste(otherdeps$op[wh], otherdeps$version[wh])
-        glue("`{pkg} {ver}`, required by `{other}`, cannot be installed")
+  state[sol_pkg == 1] <- "installed"
 
-      } else if (cond$type == "satisfy-refs") {
-        ref <- pkgs$ref[cond$vars]
-        ref2 <- pkgs$ref[cond$note]
-        ## TODO: required by .....
-        glue("`{ref}`, conflicts with `{ref2}`")
+  ## Candidates that failed resolution
+  cnd <- solution$problem$conds
+  typ <- vcapply(cnd, "[[", "type")
+  var <- lapply(cnd, "[[", "vars")
+  fres_vars <- unlist(var[typ == "ok-resolution"])
+  state[fres_vars] <- "failed-res"
+  for (fv in fres_vars) {
+    note[[fv]] <- c(note[[fv]], unname(get_error_message(pkgs$resolution[[fv]])))
+  }
 
-      } else if (cond$type == "ok-resolution") {
-        ref <- pkgs$ref[cond$vars]
-        glue("failed to resolve ref `{ref}`")
+  ## Candidates that conflict with a direct package
+  for (w in which(typ == "satisfy-refs")) {
+    sv <- var[[w]]
+    down <- pkgs$ref[sv]
+    up <- pkgs$ref[cnd[[w]]$note]
+    state[sv] <- "satisfy-direct"
+    note[[sv]] <- c(note[[sv]], glue("Conflicts {up}"))
+  }
 
-      } else {
-        "internal error happened"
+  ## Find "conflict". These are candidates that are not installed,
+  ## and have an "at-most-once" constraint with another package that will
+  ## be installed. So we just go over these constraints.
+  for (c in cnd[typ == "at-most-once"]) {
+    is_in <- sol_pkg[c$vars] != 0
+    if (any(is_in)) {
+      state[c$vars[!is_in]] <- "conflict"
+      package <- pkgs$package[c$vars[1]]
+      inst <- pkgs$ref[c$vars[is_in]]
+      vv <- c$vars[!is_in]
+      for (v in vv) {
+        note[[v]] <- c(
+          note[[v]],
+          glue("{pkgs$ref[v]} conflict with {inst}, to be installed"))
       }
-    })
-  })
+    }
+  }
 
-  types <- vcapply(
-    solution$problem$conds[unlist(unsat_conds)],
-    "[[",
-    "type")
+  ## Find "dep-failed". This is the trickiest. First, if there are no
+  ## condidates at all
+  type_dep <- typ == "dependency"
+  dep_up <- viapply(cnd[type_dep], function(x) x$vars[1])
+  dep_cands <- lapply(cnd[type_dep], function(x) x$vars[-1])
+  no_cands <- which(! viapply(dep_cands, length) &
+                    state[dep_up] == "maybe-good")
+  for (x in no_cands) {
+    pkg <- cnd[type_dep][[x]]$note$ref
+    state[dep_up[x]] <- "dep-failed"
+    note[[ dep_up[x] ]] <-
+      c(note[[ dep_up[x] ]], glue("Cannot install dependency {pkg}"))
+    downstream[[ dep_up[x] ]] <- c(downstream[[ dep_up[x] ]], pkg)
+  }
 
-  fails <- tibble(
-    package = rep(prob_pkgs, viapply(unsat_conds, length)),
-    constraint = unlist(unsat_conds),
-    message = unlist(messages),
-    type = types
-  )
+  ## Then we start with the already known
+  ## NO answers, and see if they rule out upstream packages
+  new <- which(state %in% FAILS)
+  while (length(new)) {
+    dep_cands <- lapply(dep_cands, setdiff, new)
+    which_new <- which(!viapply(dep_cands, length) & state[dep_up] == "maybe-good")
+    for (x in which_new) {
+      pkg <- cnd[type_dep][[x]]$note$ref
+      state[ dep_up[x] ] <- "dep-failed"
+      note[[ dep_up[x] ]] <- c(
+        note[[ dep_up[x] ]], glue("Cannot install dependency {pkg}"))
+      downstream[[ dep_up[x] ]] <- c(downstream[[ dep_up[x] ]], pkg)
+    }
+    new <- dep_up[which_new]
+  }
+
+  ## The rest is good
+  state[state == "maybe-good"] <- "could-be"
+
+  wh <- state %in% FAILS
+  fails <- pkgs[wh, ]
+  fails$failure_type <- state[wh]
+  fails$failure_message <-  note[wh]
+  fails$failure_down <- downstream[wh]
   class(fails) <- unique(c("remote_solution_error", class(fails)))
 
   fails
@@ -362,12 +433,24 @@ format.remote_solution_error <- function(x, ...) {
   fails <- x
   if (!nrow(fails)) return()
 
-  unlist(lapply(unique(fails$package), function(pkg) {
-    xpkg <- fails[fails$package == pkg, ]
-    msgs <- unique(na.omit(xpkg$message[xpkg$type != "exactly-once"]))
-    c(glue("  * Cannot install package `{pkg}`."),
-      if (length(msgs)) paste0("  - ", msgs))
-  }))
+  done <- rep(FALSE, nrow(x))
+  res <- character()
+
+  do <- function(i) {
+    if (done[i]) return()
+    done[i] <<- TRUE
+    msgs <- unique(fails$failure_message[[i]])
+    res <<- c(
+      res, glue("  * Cannot install `{fails$ref[i]}`."),
+      if (length(msgs)) paste0("    - ", msgs)
+    )
+    lapply(match(fails$failure_down[[i]], fails$ref), do)
+  }
+
+  direct_refs <- which(fails$direct)
+  lapply(direct_refs, do)
+
+  res
 }
 
 #' @export

@@ -314,11 +314,7 @@ print_failed_ref <- function(res, failed_ref) {
   wh <- which(failed_ref == res$ref)
   errs <- unique(vcapply(
     res$resolution[wh],
-    function(x) {
-      get_error_message(x) %||%
-      get_files(x)[[1]]$error$message %||%
-      "Unknown error"
-    }
+    function(x) get_error_message(x) %||% "Unknown error"
   ))
   cat(paste(errs, collapse = "\n    "), sep = "\n")
 }

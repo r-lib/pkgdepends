@@ -102,10 +102,23 @@ get_ref.remote_resolution <- function(x) {
 get_error_message <- function(x)
   UseMethod("get_error_message")
 
+as_error_msg <- function(x) {
+  if (is_string(x)) {
+    x
+  } else if (inherits(x, "condition")) {
+    x$message
+  } else if (is.list(x)) {
+    unique(vcapply(x, as_error_msg))
+  } else {
+    "Unknown error"
+  }
+}
+
 #' @export
 
 get_error_message.remote_resolution <- function(x) {
-  x[["error"]]$message
+  x[["error"]]$message %||%
+    unlist(lapply(lapply(get_files(x), "[[", "error"), as_error_msg)) %||% "???"
 }
 
 get_direct <- function(x)

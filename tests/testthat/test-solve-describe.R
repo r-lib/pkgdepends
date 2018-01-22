@@ -27,16 +27,30 @@ test_that("failed resolution", {
   })
   sol <- r$solve()
   dsc <- describe_solution_error(r$get_resolution()$data, sol)
-  expect_equal(dsc$ref, rep("nonexistentpackage", 4))
-  expect_equal(dsc$type, rep("standard", 4))
-  expect_equal(dsc$direct, rep(TRUE, 4))
-  expect_equal(dsc$status, rep("FAILED", 4))
-  expect_equal(dsc$package, rep("nonexistentpackage", 4))
-  expect_equal(dsc$failure_type, rep("failed-res", 4))
-  expect_equal(
-    dsc$failure_message,
-    replicate(4, "Can't find CRAN/BioC package nonexistentpackage",
-              simplify = FALSE))
+  if (getOption("pkgType") == "source") {
+    expect_equal(dsc$ref, rep("nonexistentpackage", 2))
+    expect_equal(dsc$type, rep("standard", 2))
+    expect_equal(dsc$direct, rep(TRUE, 2))
+    expect_equal(dsc$status, rep("FAILED", 2))
+    expect_equal(dsc$package, rep("nonexistentpackage", 2))
+    expect_equal(dsc$failure_type, rep("failed-res", 2))
+    expect_equal(
+      dsc$failure_message,
+      replicate(2, "Can't find CRAN/BioC package nonexistentpackage",
+                simplify = FALSE))
+
+  } else {
+    expect_equal(dsc$ref, rep("nonexistentpackage", 4))
+    expect_equal(dsc$type, rep("standard", 4))
+    expect_equal(dsc$direct, rep(TRUE, 4))
+    expect_equal(dsc$status, rep("FAILED", 4))
+    expect_equal(dsc$package, rep("nonexistentpackage", 4))
+    expect_equal(dsc$failure_type, rep("failed-res", 4))
+    expect_equal(
+      dsc$failure_message,
+      replicate(4, "Can't find CRAN/BioC package nonexistentpackage",
+                simplify = FALSE))
+  }
 })
 
 test_that("failed resolution of a dependency", {

@@ -125,14 +125,17 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
 
   } else if (policy == "upgrade") {
     ## Sort the candidates of a package according to version number
-    lp$obj <- rep(num_candidates + 1L, num_candidates)
+    lp$obj <- rep((num_candidates + 1) * 4, num_candidates)
     whpp <- pkgs$status == "OK" & !is.na(pkgs$version)
     pn <- unique(pkgs$package[whpp])
     for (p in pn) {
       whp <-  whpp & pkgs$package == p
       v <- pkgs$version[whp]
-      lp$obj[whp] <- order(package_version(v), decreasing=TRUE)
+      r <- rank(package_version(v), ties.method = "min")
+      lp$obj[whp] <- (max(r) - r + 1) * 4
     }
+    lp$obj <- lp$obj + ifelse(pkgs$type == "installed", 0,
+                       ifelse(pkgs$platform == "source", 2, 1))
 
   } else {
     stop("Unknown version selection policy")

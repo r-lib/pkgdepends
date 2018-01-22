@@ -67,7 +67,8 @@ satisfies_remote.remote_resolution_cran <- function(resolution, candidate,
   ## 2. installed refs must be from CRAN
   if (inherits(candidate, "remote_resolution_installed")) {
     dsc <- get_remote(candidate)$description
-    if (! identical(dsc$get("Repository")[[1]], "CRAN")) return(FALSE)
+    if (!is.null(dsc) &&
+        ! identical(dsc$get("Repository")[[1]], "CRAN")) return(FALSE)
   }
 
   ## 3. package names must match

@@ -1,7 +1,7 @@
 
 solve_dummy_obj <- 1000000
 
-remotes_solve <- function(self, private) {
+remotes_solve <- function(self, private, policy) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
   if (is.null(private$library)) {
     stop("No package library specified, see 'library' in new()")
@@ -12,7 +12,7 @@ remotes_solve <- function(self, private) {
   metadata <- list(solution_start = Sys.time())
   pkgs <- self$get_resolution()$data
 
-  prb <- private$create_lp_problem(pkgs)
+  prb <- private$create_lp_problem(pkgs, policy)
   sol <- private$solve_lp_problem(prb)
 
   if (sol$status != 0) {
@@ -74,13 +74,14 @@ remotes_stop_for_solve_error <- function(self, private) {
 #'
 #' @param pkgs Resolution data frame, that contains the locally installed
 #'   packages as well.
+#' @param policy Version selection policy.
 #' @return An S3 object for a linear (integer) optimization problem,
 #'   to be used with [lpSolve::lp()] (eventually).
 #'
 #' @keywords internal
 
-remotes__create_lp_problem <- function(self, private, pkgs) {
-  remotes_i_create_lp_problem(pkgs)
+remotes__create_lp_problem <- function(self, private, pkgs, policy) {
+  remotes_i_create_lp_problem(pkgs, policy)
 }
 
 ## This is a separate function to make it testable without a `remotes`
@@ -90,7 +91,7 @@ remotes__create_lp_problem <- function(self, private, pkgs) {
 ## * 1:num are candidates
 ## * (num+1):(num+num_direct_pkgs) are the relax variables for direct refs
 
-remotes_i_create_lp_problem <- function(pkgs) {
+remotes_i_create_lp_problem <- function(pkgs, policy) {
   "!DEBUG creating LP problem"
   num_candidates <- nrow(pkgs)
   packages <- unique(pkgs$package)
@@ -117,11 +118,27 @@ remotes_i_create_lp_problem <- function(pkgs) {
   ## Coefficients of the objective function, this is very easy
   ## TODO: rule out incompatible platforms
   ## TODO: use rversion as well, for installed and binary packages
-  lp$obj <- c(
-    ifelse(pkgs$type == "installed", 1,
-           ifelse(pkgs$platform == "source", 3, 2)),
-    rep(solve_dummy_obj, num_direct)
-  )
+  if (policy == "lazy") {
+    ## Simple: installed < binary < source
+    lp$obj <- ifelse(pkgs$type == "installed", 1,
+              ifelse(pkgs$platform == "source", 3, 2))
+
+  } else if (policy == "upgrade") {
+    ## Sort the candidates of a package according to version number
+    lp$obj <- rep(num_candidates + 1L, num_candidates)
+    whpp <- pkgs$status == "OK" & !is.na(pkgs$version)
+    pn <- unique(pkgs$package[whpp])
+    for (p in pn) {
+      whp <-  whpp & pkgs$package == p
+      v <- pkgs$version[whp]
+      lp$obj[whp] <- order(package_version(v), decreasing=TRUE)
+    }
+
+  } else {
+    stop("Unknown version selection policy")
+  }
+
+  lp$obj <- c(lp$obj, rep(solve_dummy_obj, num_direct))
 
   ## 1. Each directly specified package exactly once.
   ##    (We also add a dummy variable to catch errors.)

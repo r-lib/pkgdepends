@@ -64,8 +64,8 @@ make_fake_resolution <- function(...) {
     remotes_default_config()$cache_dir)
 }
 
-describe_fake_error <- function(pkgs) {
-  lp <- remotes_i_create_lp_problem(pkgs)
+describe_fake_error <- function(pkgs, policy = "lazy") {
+  lp <- remotes_i_create_lp_problem(pkgs, policy = policy)
   sol <- remotes_i_solve_lp_problem(lp)
 
   expect_true(sol$objval >= solve_dummy_obj - 1)

@@ -74,6 +74,7 @@ download_remote.remote_resolution_github <- function(resolution, config,
     async_constant(list(status))
 
   } else if (file.exists(cached_zip)) {
+    progress_bar$message(glue("  Building {basename(target_file)}"))
     type_github_build_github_package(cached_zip, target_file, subdir,
                                      vignettes = vignettes)
     progress_bar$update(count = 1, cached = 1)
@@ -100,6 +101,7 @@ download_remote.remote_resolution_github <- function(resolution, config,
     download_file(url, cached_zip, progress_bar = progress_bar)$
       then(function() {
         ## Build source package from zip (R CMD build)
+        progress_bar$message(glue("  Building {basename(target_file)}"))
         type_github_build_github_package(cached_zip, target_file, subdir,
                                          vignettes = vignettes)
         ## Add built package to the cache

@@ -461,7 +461,8 @@ format.remote_solution_error <- function(x, ...) {
       res, glue("  * Cannot install `{fails$ref[i]}`."),
       if (length(msgs)) paste0("    - ", msgs)
     )
-    lapply(match(fails$failure_down[[i]], fails$ref), do)
+    down <- which(fails$ref %in% fails$failure_down[[i]])
+    lapply(down, do)
   }
 
   direct_refs <- which(fails$direct)

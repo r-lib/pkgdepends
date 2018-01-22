@@ -92,7 +92,7 @@ satisfies_remote.remote_resolution_cran <- function(resolution, candidate,
 type_cran_update_cache <- function(rootdir, platforms, rversions, mirror,
                                    progress_bar) {
   if (!is.null(progress_bar)) {
-    progress_bar$message("  Updating CRAN metadata")
+    progress_bar$message(symbol$arrow_right, " Updating CRAN metadata")
   }
   dirs <- get_all_package_dirs(platforms, rversions)
 

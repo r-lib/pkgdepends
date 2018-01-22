@@ -127,7 +127,8 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions,
   rootdir; platforms; rversions
 
   if (!is.null(progress_bar)) {
-    progress_bar$message("  Updating BioConductor metadata")
+    progress_bar$message(symbol$arrow_right,
+                         "Updating BioConductor metadata")
   }
 
   dirs <- get_all_package_dirs(platforms, rversions)

@@ -9,10 +9,9 @@ remotes_resolve <- function(self, private) {
     list(type = "resolution", total = length(private$remotes)),
     res <- synchronise(self$async_resolve())
   )
-  private$progress_bar$message(
-    crayon::green(symbol$tick),
-    " Found {xtotal} dependencies for {total} packages in \\
-      {pretty_dt(Sys.time() - start)}"
+  private$progress_bar$alert_success(
+    "Found {xtotal} dependencies for {total} packages in \\
+     {pretty_dt(Sys.time() - start)}"
   )
   invisible(res)
 }
@@ -253,7 +252,7 @@ print.remotes_resolution <- function(x, ...) {
   direct <- unique(x$ref[x$direct])
   dt <- pretty_dt(meta$resolution_end - meta$resolution_start)
   head <- glue(
-    "{logo()} RESOLUTION, {length(direct)} refs, resolved in {dt} ")
+    "PKG RESOLUTION, {length(direct)} refs, resolved in {dt} ")
   width <- getOption("width") - col_nchar(head, type = "width") - 1
   head <- paste0(head, strrep(symbol$line, max(width, 0)))
   cat(blue(bold(head)), sep = "\n")

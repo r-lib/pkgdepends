@@ -495,7 +495,7 @@ print.remotes_solution <- function(x, ...) {
   dt2 <- pretty_dt(meta$solution_end - meta$solution_start)
   sol <- if (x$status == "OK") "SOLUTION" else "FAILED SOLUTION"
   head <- glue(
-    "{logo()} {sol}, {length(direct)} refs, resolved in {dt}, ",
+    "PKG {sol}, {length(direct)} refs, resolved in {dt}, ",
     "solved in {dt2} ")
   width <- getOption("width") - col_nchar(head, type = "width") - 1
   head <- paste0(head, strrep(symbol$line, max(width, 0)))

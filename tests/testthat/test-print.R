@@ -1,11 +1,6 @@
 
 context("print")
 
-test_that("cat_msg", {
-  out <- utils::capture.output(cat_msg("foobar"))
-  expect_equal(crayon::strip_style(out), "foobar")
-})
-
 test_that("format_items", {
   cases <- list(
     list(c("1", "2", "3"), "`1`, `2` and `3`"),

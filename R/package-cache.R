@@ -156,10 +156,11 @@ get_package_from <- function(cache, urls, target_dir, target,
         "pkgdepends ", getNamespaceVersion("pkgdepends"), "; ",
         "curl ", getNamespaceVersion("curl"), "; ",
         if (isTRUE(direct)) "direct" else "indirect"))
+  } else {
+    character()
   }
 
-  download_try_list(urls, target_file, etag_file,
-                    headers = as.character(headers),
+  download_try_list(urls, target_file, etag_file, headers = headers,
                     progress_bar = progress_bar)$
     then(function(status) {
       if (status == 304) {

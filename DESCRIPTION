@@ -14,7 +14,7 @@ Imports:
     assertthat,
     async,
     backports,
-    cli,
+    cli (>= 1.0.0.9000),
     crayon,
     curl,
     desc (>= 1.1.1.9000),
@@ -42,6 +42,7 @@ Suggests:
     testthat
 Remotes:
     r-lib/async,
+    r-lib/cli,
     r-lib/desc,
     r-lib/filelock,
     r-lib/pkgbuild,

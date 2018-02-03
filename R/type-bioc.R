@@ -127,8 +127,8 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions,
   rootdir; platforms; rversions
 
   if (!is.null(progress_bar)) {
-    progress_bar$message(symbol$arrow_right,
-                         "Updating BioConductor metadata")
+    progress_bar$alert(class = "alert-start",
+                       "Updating BioConductor metadata")
   }
 
   dirs <- get_all_package_dirs(platforms, rversions)
@@ -171,8 +171,7 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions,
 
   biocdata$then(function() {
     if (!is.null(progress_bar)) {
-      progress_bar$message(
-        crayon::green(symbol$tick), " ",
+      progress_bar$alert_success(
         if (current) "BioC metadata current" else "Updated BioC metadata"
       )
     }

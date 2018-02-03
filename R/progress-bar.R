@@ -9,7 +9,8 @@ remotes__with_progress_bar <- function(self, private, args, expr) {
   expr
 }
 
-#' @importFrom progress progress_bar
+#' @importFrom glue glue_data
+#' @importFrom prettyunits pretty_dt
 
 pkg_progress_bar <- R6Class(
   "pkg_progress_bar",
@@ -33,7 +34,7 @@ pkg_progress_bar <- R6Class(
                "[:strcbytes] :elapsedfull")
       }
 
-      private$bar <- progress_bar$new(
+      private$bar <- cli$progress_bar(
         show_after = show_after, total = total, format = format, ...)
     },
 
@@ -63,32 +64,33 @@ pkg_progress_bar <- R6Class(
       private$bar$terminate()
     },
 
-    message = function(...) {
-      if (!private$active) return()
-      msg <- glue::glue_data(private$data, ...)
-      if (private$bar$finished) {
-        message(msg)
-      } else{
-        private$bar$message(msg)
-      }
-    },
-
     report = function() {
       if (!private$active) return()
-      tck <- crayon::green(symbol$tick)
       if (!private$data$total) {
-        self$message(tck,  " No downloads are needed")
+        cli$alert_success("No downloads are needed")
       } else {
         data <- private$data
         dl <- data$count - data$failed - data$cached
-        self$message(
-          tck, " ", data$total, " packages",
+        self$alert_success(paste0(
+          data$total, " packages",
           if (dl) paste0(", ", dl, " downloaded") else "",
           if (data$cached) paste0(", {cached} cached") else "",
           if (data$failed) paste0(", {failed} failed") else "",
           ", in ", pretty_dt(Sys.time() - data$start)
-        )
+        ))
       }
+    },
+
+    alert = function(text, ...) {
+      if (!private$active) return()
+      text <- glue_data(private$data, text, .envir = parent.frame())
+      cli$alert(text, ...)
+    },
+
+    alert_success = function(text, ...) {
+      if (!private$active) return()
+      text <- glue_data(private$data, text, .envir = parent.frame())
+      cli$alert_success(text, ...)
     }
   ),
 

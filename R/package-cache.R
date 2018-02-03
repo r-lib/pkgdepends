@@ -55,7 +55,6 @@ package_cache <- R6Class(
       db <- readRDS(dbfile)
 
       idx <- find_in_data_frame(db, path = path, ..., .list = .list)
-      if (length(idx) != 0) stop("Package already exists in cache")
 
       target <- file.path(private$path, path)
       mkdirp(dirname(target))

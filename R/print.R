@@ -29,7 +29,3 @@ pkg_theme <- function() {
     )
   )
 }
-
-cat_msg <- function(str) {
-  cat(bold(str), sep = "\n")
-}

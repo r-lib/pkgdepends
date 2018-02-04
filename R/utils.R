@@ -27,7 +27,7 @@ current_r_platform <- function() {
 default_cran_mirror <- function() {
   mirror <- getOption("repos")["CRAN"]
   if (is.null(mirror) || is.na(mirror) || mirror == "@CRAN@") {
-    "https://cran.rstudio.com"
+    "https://cloud.r-project.org"
   } else {
     mirror
   }

@@ -14,7 +14,7 @@ test_that("remotes__update_cran_cache", {
       cache_dir,
       platforms = c("source", "macos", "windows"),
       rversion = "3.4.1",
-      mirror = "https://cran.rstudio.com",
+      mirror = "https://cloud.r-project.org",
       progress_bar = NULL
     )
 
@@ -44,7 +44,7 @@ test_that("type_cran_make_resolution", {
   skip_if_offline()
 
   av_pkg <- withr::with_options(
-    list(repos = c(CRAN = "https://cran.rstudio.com")),
+    list(repos = c(CRAN = "https://cloud.r-project.org")),
     available.packages()
   )
 
@@ -56,18 +56,18 @@ test_that("type_cran_make_resolution", {
     rversion = "3.4",
     data = format_packages_gz(av_pkg),
     dir = "src/contrib",
-    mirror = "https://cran.rstudio.com",
+    mirror = "https://cloud.r-project.org",
     dependencies = c("Imports", "Suggests")
   )[[1]]
 
   expect_equal(length(res$source), 2)
   expect_match(
     res$source[1],
-    "^https://cran\\.rstudio\\.com/.*/ggplot2.*\\.tar\\.gz$"
+    "^https://cloud\\.r-project\\.org/.*/ggplot2.*\\.tar\\.gz$"
   )
   expect_match(
     res$source[2],
-    "^https://cran\\.rstudio\\.com/.*/Archive/ggplot2/ggplot2.*\\.tar\\.gz$"
+    "^https://cloud\\.r-project\\.org/.*/Archive/ggplot2/ggplot2.*\\.tar\\.gz$"
   )
 
   expect_match(res$target, "^src/contrib/ggplot.*\\.tar\\.gz$")

@@ -1,6 +1,6 @@
 
 offline_check_url <- function() {
-  "cran.rstudio.com"
+  "cloud.r-project.org"
 }
 
 is_offline <- (function() {

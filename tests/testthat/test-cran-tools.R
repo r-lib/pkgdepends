@@ -91,7 +91,7 @@ test_that("type_cran_get_package_deps_url", {
 
   skip_if_offline()
 
-  url <- "https://cran.rstudio.com/src/contrib/Archive/dplyr/dplyr_0.2.tar.gz"
+  url <- "https://cloud.r-project.org/src/contrib/Archive/dplyr/dplyr_0.2.tar.gz"
   dir.create(dir <- tempfile())
   target <- file.path(dir, basename(url))
   obj <- async::synchronise(type_cran_get_package_deps_url(

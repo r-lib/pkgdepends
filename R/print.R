@@ -7,10 +7,27 @@ format_items <- function(x) {
   )
 }
 
+#' The pkgdepends theme
+#'
+#' We need to export it, because it is 
+#' 
+#' @export
+
 pkg_theme <- function() {
-  list(".alert-start" = list(
-    before = paste0(symbol$arrow_right, " ")
-  ))
+  list(
+    "div.pkgx .alert-success" = list(color = "darkgrey"),
+    "div.pkgx .alert-info" = list(color = "darkgrey"),
+    "div.pkgx .alert-start" = list(
+      before = paste0(symbol$arrow_right, " ")
+    ),
+    "div.pkgx span.pkg" = list(
+      "font-weight" = "bold",
+      color = "blue"
+    ),
+    "div.pkgx span.version" = list(
+      color = "blue"
+    )
+  )
 }
 
 cat_msg <- function(str) {

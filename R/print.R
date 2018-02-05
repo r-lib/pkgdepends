@@ -15,17 +15,15 @@ format_items <- function(x) {
 
 pkg_theme <- function() {
   list(
-    "div.pkgx .alert-success" = list(color = "darkgrey"),
-    "div.pkgx .alert-info" = list(color = "darkgrey"),
-    "div.pkgx .alert-start" = list(
-      before = paste0(symbol$arrow_right, " ")
-    ),
+    "div.pkgx .alert-start::before" =
+      list(content = paste0(symbol$arrow_right, " ")),
     "div.pkgx span.pkg" = list(
       "font-weight" = "bold",
       color = "blue"
     ),
-    "div.pkgx span.version" = list(
-      color = "blue"
-    )
+    "div.pkgx span.version" = list(color = "blue"),
+    "div.pkgx span.time" = list(color = "cyan"),
+    "div.pkgx span.time::before" = list(content = "("),
+    "div.pkgx span.time::after" = list(content = ")")
   )
 }

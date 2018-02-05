@@ -72,11 +72,11 @@ pkg_progress_bar <- R6Class(
         data <- private$data
         dl <- data$count - data$failed - data$cached
         self$alert_success(paste0(
-          data$total, " packages",
+          "Got ", data$total, " packages",
           if (dl) paste0(", ", dl, " downloaded") else "",
           if (data$cached) paste0(", {cached} cached") else "",
           if (data$failed) paste0(", {failed} failed") else "",
-          ", in ", pretty_dt(Sys.time() - data$start)
+          " {{time {pretty_dt(Sys.time() - data$start)}}}"
         ))
       }
     },

@@ -10,8 +10,8 @@ remotes_resolve <- function(self, private) {
     res <- synchronise(self$async_resolve())
   )
   private$progress_bar$alert_success(
-    "Found {xtotal} dependencies for {total} packages in \\
-     {pretty_dt(Sys.time() - start)}"
+    "Found {xtotal} dependencies for {total} packages \\
+     {{time {pretty_dt(Sys.time() - start)}}}"
   )
   invisible(res)
 }

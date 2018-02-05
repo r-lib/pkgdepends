@@ -1,6 +1,6 @@
 
 is_verbose <- function() {
-  getOption("pkg.progress.bar") %||% interactive()
+  getOption("pkg.show_progress") %||% interactive()
 }
 
 remotes__with_progress_bar <- function(self, private, args, expr) {

@@ -24,7 +24,7 @@ test_that("resolve_remote", {
   ref <- paste0("local::", path)
   r <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     r$resolve()
   })
   res <- r$get_resolution()
@@ -43,7 +43,7 @@ test_that("resolve_remote", {
   r <- remotes$new(
     ref2, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_dir(fix_dir,
-    withr::with_options(c(pkg.progress.bar = FALSE), {
+    withr::with_options(c(pkg.show_progress = FALSE), {
       r$resolve()
     })
   )
@@ -68,7 +68,7 @@ test_that("resolution error", {
   ref <- paste0("local::", path)
   r <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     r$resolve()
   })
   res <- r$get_resolution()
@@ -95,7 +95,7 @@ test_that("download_remote", {
   ref <- paste0("local::", path)
   r <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     expect_error(r$resolve(), NA)
     expect_error(r$download_resolution(), NA)
   })
@@ -116,7 +116,7 @@ test_that("download_remote", {
   r <- remotes$new(
     ref2, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_dir(fix_dir,
-    withr::with_options(c(pkg.progress.bar = FALSE), {
+    withr::with_options(c(pkg.show_progress = FALSE), {
       expect_error(r$resolve(), NA)
       expect_error(r$download_resolution(), NA)
     })
@@ -147,7 +147,7 @@ test_that("download_remote error", {
   ref <- paste0("local::", path2 <- file.path(tmp2, basename(path)))
   r <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     expect_error(r$resolve(), NA)
     unlink(path2)
     expect_error(r$download_resolution(), NA)
@@ -176,7 +176,7 @@ test_that("satisfies_remote", {
   ref <- paste0("local::", path)
   r <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     r$resolve()
   })
   res <- r$get_resolution()

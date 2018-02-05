@@ -24,7 +24,7 @@ test_that("resolve_remote", {
   r <- remotes$new(
     "bioc::Biobase", config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -48,7 +48,7 @@ test_that("failed resolution", {
   r <- remotes$new(
     nonpkg, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -59,7 +59,7 @@ test_that("failed resolution", {
   r <- remotes$new(
     "bioc::Biobase@0.0", config = list(cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -77,7 +77,7 @@ test_that("download_remote", {
   r <- remotes$new(
     "bioc::Biobase", config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(r$resolve(), NA)
       expect_error(r$download_resolution(), NA)
     })
@@ -106,7 +106,7 @@ test_that("satisfies_remote", {
   r <- remotes$new(
     "bioc::Biobase", config = list(cache_dir = tmp), library = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(res <- r$resolve(), NA)
       expect_error(r$solve(), NA)
       expect_error(r$download_solution(), NA)
@@ -126,7 +126,7 @@ test_that("satisfies_remote", {
   }
 
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       r$resolve()
       r$solve()
       plan <- r$get_install_plan()
@@ -139,7 +139,7 @@ test_that("satisfies_remote", {
   ref <- paste0("bioc::Biobase@>=", ver)
   r <- remotes$new(ref, config = list(cache_dir = tmp), library = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(res <- r$resolve(), NA)
       expect_error(r$solve(), NA)
       expect_error(r$download_solution(), NA)

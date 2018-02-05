@@ -13,7 +13,7 @@ test_that("dependencies config parameter is honored", {
     r <- remotes$new(
       "dplyr", config = list(dependencies = deps, cache_dir = tmp))
     withr::with_options(
-      c(pkg.progress.bar = FALSE),
+      c(pkg.show_progress = FALSE),
       expect_error(r$resolve(), NA))
     r$get_resolution()
   }
@@ -58,7 +58,7 @@ test_that("resolving installed packages", {
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     r <- remotes$new("crayon", config = list(dependencies = FALSE),
                      library = tmp)
     r$solve()
@@ -92,7 +92,7 @@ test_that("print, with errors", {
   skip_if_offline()
   skip_on_cran()
 
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     npkg1 <- basename(tempfile())
     npkg2 <- basename(tempfile())
     r <- remotes$new(c(npkg1, paste0("r-lib/", npkg2)), lib = tempfile())

@@ -6,26 +6,31 @@
 \alias{cache_find}
 \alias{cache_get_file}
 \alias{cache_delete_files}
+\alias{cache_add_file}
 \title{Functions to query and manipulate the package cache}
 \usage{
-cache_summary(path = NULL)
+cache_summary(cachepath = NULL)
 
-cache_list(path = NULL)
+cache_list(cachepath = NULL)
 
-cache_find(path = NULL, ...)
+cache_find(cachepath = NULL, ...)
 
-cache_get_file(path = NULL, target, ...)
+cache_get_file(cachepath = NULL, target, ...)
 
-cache_delete_files(path = NULL, ...)
+cache_delete_files(cachepath = NULL, ...)
+
+cache_add_file(cachepath = NULL, file, relpath = dirname(file), ...)
 }
 \arguments{
-\item{path}{Path of the cache. By default the cache directory is in
+\item{cachepath}{Path of the cache. By default the cache directory is in
 \code{R-pkg}, within the user's cache directory.
 See \code{\link[rappdirs:user_cache_dir]{rappdirs::user_cache_dir()}}.}
 
 \item{...}{Extra named arguments to select the package file.}
 
 \item{target}{Path where the selected file is copied.}
+
+\item{path}{The relative path of the file within the cache.}
 }
 \description{
 \code{cache_summary()} returns a short summary of the state of the cache,
@@ -44,4 +49,6 @@ the \code{target} path.
 
 \code{cache_delete_files()} deletes the selected files from the caches.
 Without any arguments, all files are deleted.
+
+\code{cache_add_file} adds a file to the cache.
 }

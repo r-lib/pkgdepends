@@ -9,7 +9,7 @@ test_that("cache api", {
   ## This creates the cache
   sm <- cache_summary(tmp)
   expect_true(is.list(sm))
-  expect_equal(sm$path, tmp)
+  expect_equal(sm$cachepath, tmp)
   expect_equal(sm$files, 0)
   expect_equal(sm$size, 0)
   expect_equal(nrow(cache_list(tmp)), 0)
@@ -61,7 +61,7 @@ test_that("cache api", {
 
   cache_delete_files(tmp)
   sm <- cache_summary(tmp)
-  expect_equal(sm$path, tmp)
+  expect_equal(sm$cachepath, tmp)
   expect_equal(sm$files, 0)
   expect_equal(sm$size, 0)
   expect_equal(nrow(cache_list(tmp)), 0)

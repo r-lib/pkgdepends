@@ -133,7 +133,7 @@ test_that("integration test", {
   mkdirp(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       r <- remotes$new(c("r-lib/cli"), lib = lib)
       r$resolve()
     })
@@ -141,7 +141,7 @@ test_that("integration test", {
   expect_true("r-lib/cli" %in% sol$data$data$ref)
 
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       r <- remotes$new("cran::cli", lib = lib)
       r$resolve()
     })
@@ -151,7 +151,7 @@ test_that("integration test", {
   expect_true("cli" %in% plan$package)
 
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       r <- remotes$new(c("cran::cli", "r-lib/cli"), lib = lib)
       r$resolve()
     })
@@ -164,7 +164,7 @@ test_that("integration test", {
 test_that("print", {
   sol <- read_fixture("solution-crayon.rds")
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_output(
       print(sol),
       "SOLUTION.*crayon"
@@ -173,7 +173,7 @@ test_that("print", {
 
   sol <- read_fixture("solution-igraph.rds")
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_output(
       print(sol),
       "SOLUTION.*igraph.*Dependencies.*lattice.*pkgconfig"

@@ -7,7 +7,7 @@ test_that("resolve_remote", {
   skip_on_cran()
 
   ## CRAN package is found
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     res <- remotes$new("crayon", config = list(dependencies = FALSE))$
       resolve()
   })
@@ -18,7 +18,7 @@ test_that("resolve_remote", {
   )
 
   ## BioC package is found
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     res <- remotes$new("Biobase", config = list(dependencies = FALSE))$
       resolve()
   })
@@ -30,7 +30,7 @@ test_that("resolve_remote", {
 
   ## Proper error for non-existing package
   nonpkg <- basename(tempfile())
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     res <- remotes$new(nonpkg, config = list(dependencies = FALSE))$
       resolve()
   })
@@ -42,7 +42,7 @@ test_that("download_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     r <- remotes$new("crayon", config = list(dependencies = FALSE))
     r$resolve()
     dl <- r$download_resolution()

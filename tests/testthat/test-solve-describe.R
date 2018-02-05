@@ -21,7 +21,7 @@ test_that("failed resolution", {
   skip_on_cran()
   skip_if_offline()
 
-  withr::with_options(list(pkg.progress.bar = FALSE), {
+  withr::with_options(list(pkg.show_progress = FALSE), {
     r <- remotes$new("nonexistentpackage", lib = tempfile())
     r$resolve()
   })

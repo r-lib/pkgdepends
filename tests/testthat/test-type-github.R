@@ -23,7 +23,7 @@ test_that("resolve_remote", {
   r <- remotes$new(
     refs, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -46,7 +46,7 @@ test_that("failed resolution", {
   r <- remotes$new(
     nonrepo, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -57,7 +57,7 @@ test_that("failed resolution", {
   r <- remotes$new(
     "github::r-lib/crayon/R", config = list(cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -76,7 +76,7 @@ test_that("download_remote", {
   r <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(r$resolve(), NA)
       expect_error(r$download_resolution(), NA)
     })
@@ -105,7 +105,7 @@ test_that("satisfies_remote", {
   r <- remotes$new(
     ref, config = list(cache_dir = tmp), library = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(res <- r$resolve(), NA)
       expect_error(r$solve(), NA)
       expect_error(r$download_solution(), NA)
@@ -129,7 +129,7 @@ test_that("satisfies_remote", {
   dsc$write()
 
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       r$resolve()
       r$solve()
       plan <- r$get_install_plan()
@@ -139,7 +139,7 @@ test_that("satisfies_remote", {
 
   r <- remotes$new(ref, config = list(cache_dir = tmp), library = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(res <- r$resolve(), NA)
       expect_error(r$solve(), NA)
       expect_error(plan <- r$get_install_plan(), NA)

@@ -12,7 +12,7 @@ test_that("resolve_remote", {
   r <- remotes$new(
     "cran::crayon", config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -36,7 +36,7 @@ test_that("failed resolution", {
   r <- remotes$new(
     nonpkg, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -47,7 +47,7 @@ test_that("failed resolution", {
   r <- remotes$new(
     "cran::crayon@0.0", config = list(cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -65,7 +65,7 @@ test_that("resolve current version", {
     c("cran::crayon", "cran::crayon@current"),
     config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -92,7 +92,7 @@ test_that("resolve an old version", {
     "cran::crayon@1.1.0",
     config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -116,7 +116,7 @@ test_that("resolve current version, specified via version number", {
     "cran::crayon@current",
     config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -126,7 +126,7 @@ test_that("resolve current version, specified via version number", {
   r2 <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r2$resolve(), NA))
   res2 <- r2$get_resolution()
 
@@ -145,7 +145,7 @@ test_that("resolve a version range", {
     "cran::crayon@>=1.3.2",
     config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE),
+    c(pkg.show_progress = FALSE),
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
@@ -169,7 +169,7 @@ test_that("download_remote", {
   r <- remotes$new(
     "cran::crayon", config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(r$resolve(), NA)
       expect_error(r$download_resolution(), NA)
     })
@@ -198,7 +198,7 @@ test_that("satisfies_remote", {
   r <- remotes$new(
     "cran::crayon", config = list(cache_dir = tmp), library = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(res <- r$resolve(), NA)
       expect_error(r$solve(), NA)
       expect_error(r$download_solution(), NA)
@@ -218,7 +218,7 @@ test_that("satisfies_remote", {
   }
 
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       r$resolve()
       r$solve()
       plan <- r$get_install_plan()
@@ -231,7 +231,7 @@ test_that("satisfies_remote", {
   ref <- paste0("cran::crayon@>=", ver)
   r <- remotes$new(ref, config = list(cache_dir = tmp), library = lib)
   withr::with_options(
-    c(pkg.progress.bar = FALSE), {
+    c(pkg.show_progress = FALSE), {
       expect_error(res <- r$resolve(), NA)
       expect_error(r$solve(), NA)
       expect_error(r$download_solution(), NA)

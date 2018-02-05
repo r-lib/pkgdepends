@@ -9,7 +9,7 @@ test_that("draw_tree", {
   dir.create(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
 
-  withr::with_options(c(pkg.progress.bar = FALSE), {
+  withr::with_options(c(pkg.show_progress = FALSE), {
     r <- remotes$new(c("pkgconfig", "igraph"), library = lib)
     r$resolve()
     r$solve()

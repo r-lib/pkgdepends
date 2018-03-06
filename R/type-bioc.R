@@ -238,7 +238,8 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
   result <- list(
     source = character(), target = NA_character_, platform = platform,
     rversion = rversion, dir = dir, package = package,
-    version = NA_character_, deps = NA, status = "OK")
+    version = NA_character_, deps = NA, needs_compilation = NA_character_,
+    status = "OK")
 
   ## Some binary repos are empty, e.g. experiment and annotation repos
   keep <- vlapply(data, function(d) nrow(d$pkgs) != 0)
@@ -301,6 +302,13 @@ type_bioc_make_bioc_resolution <- function(remote, platform, rversion,
     result[[i]]$target <- path
 
     result[[i]]$deps <- fast_select_deps(data$deps, whi, dependencies)
+    ## It is NA for binary packages
+    comp <- if ("NeedsCompilation" %in% colnames(data)) {
+      data$NeedsCompilation[whi]
+    } else {
+      "no"
+    }
+    result[[i]]$needs_compilation <- if (is.na(comp)) "no" else comp
 
     result[[i]]$metadata <- c(
       RemoteOriginalRef = ref,

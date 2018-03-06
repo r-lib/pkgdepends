@@ -329,6 +329,7 @@ remotes_install_plan <- function(self, private) {
     binary = binary,
     direct = direct,
     dependencies = I(deps),
+    needs_compilation = sol$needs_compilation,
     file = sol$fulltarget,
     installed = installed,
     vignettes = vignettes,

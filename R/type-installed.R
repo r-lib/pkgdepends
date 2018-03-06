@@ -39,6 +39,7 @@ resolve_remote.remote_ref_installed <- function(remote, direct, config,
     package = dsc$get("Package")[[1]],
     version = dsc$get("Version")[[1]],
     deps = deps,
+    needs_compilation = "false",
     status = "OK"
   )
 

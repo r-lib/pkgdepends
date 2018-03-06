@@ -24,7 +24,7 @@ make_fake_resolution1 <- function(ref, args) {
       files = list(list(
         source = c(
           sprintf("%s/%s/%s", mirror, repodir, filename),
-          sprintf("%s/%s/Archive/%s/%s", mirror, repodir, pref$pakcvage,
+          sprintf("%s/%s/Archive/%s/%s", mirror, repodir, pref$package,
                   filename)
         ),
         target = sprintf("src/contrib/%s_%s.tar.gz", pref$package, version),
@@ -34,6 +34,7 @@ make_fake_resolution1 <- function(ref, args) {
         package = pref$package,
         version = version,
         deps = args$deps %||% make_fake_deps(),
+        needs_compilation = "yes",
         status = args$status %||% "OK"
       )),
       remote = pref,

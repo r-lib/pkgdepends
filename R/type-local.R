@@ -46,6 +46,8 @@ resolve_remote.remote_ref_local <- function(remote, direct, config, cache,
       package = dsc$get("Package")[[1]],
       version = dsc$get("Version")[[1]],
       deps = deps,
+      ## Meaning, we don't know...
+      needs_compilation = NA_character_,
       status = "OK"
     )
 

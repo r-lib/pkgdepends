@@ -204,6 +204,14 @@ remotes__resolution_to_df <- function(packages, metadata,
     ifelse(is.na(target), NA_character_, file.path(cache_dir, target))
   }
 
+  needs_comp <- function() {
+    unlist(lapply(
+      packages,
+      function(x) vcapply(
+        get_files(x), function(xx) xx$needs_compilation %||% NA_character_)
+    ))
+  }
+
   res <- tibble::tibble(
     ref        = ref,
     type       = vcapply(remote, "[[", "type"),
@@ -218,6 +226,7 @@ remotes__resolution_to_df <- function(packages, metadata,
     target     = target,
     fulltarget = as.character(fulltarget),
     dependencies = deps,
+    needs_compilation = as.character(needs_comp()),
     remote     = remote,
     resolution = packages_subset
   )

@@ -208,7 +208,8 @@ fast_finish_resolve <- function(private, ref_df, cran_files, bioc_files) {
         files = list(list(
           source = character(), target = NA_character_, platform = "*",
           rversion = "*", dir = NA_character_, package = package,
-          version = NA_character_, deps = NA, status = "FAILED",
+          version = NA_character_, deps = NA,
+          needs_compilation = NA_character_, status = "FAILED",
           metadata = list(),
           error = make_error(
             paste0("Can't find ", msg_type, " package ", package, ", version ", version),
@@ -484,10 +485,19 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
 
   t_package <- done_data$Package
   t_target <- fast_get_path(done_data, dir$contriburl, ext)
+
+  if ("NeedsCompilation" %in% colnames(done_data)) {
+    needs_comp <- done_data$NeedsCompilation
+    needs_comp <- ifelse(is.na(needs_comp), "no", needs_comp)
+  } else {
+    needs_comp <- rep("no", length(idx))
+  }
+
   files <- tibble(
     idx = idx,
     package = t_package,
     version = done_data$Version,
+    needs_compilation = needs_comp[seq_along(idx)],
     mirror = real_mirror,
     target = t_target,
     source = fast_get_source(mode, real_mirror, dir$platform, t_target,
@@ -507,6 +517,7 @@ make_fast_resolution <- function(self, private, df, dir, data, mode) {
       idx = rep(NA_integer_, num_err),
       package = err,
       version = rep(NA_character_, num_err),
+      needs_compilation = rep(NA_character_, num_err),
       mirror = NA_character_,
       target = rep(NA_character_, num_err),
       source = replicate(num_err, character(), simplify = FALSE),

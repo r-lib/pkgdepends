@@ -266,7 +266,8 @@ type_cran_resolve_from_cache_version_files <- function(remote, version,
     return(async_constant(list(list(
       source = character(), target = NA_character_, platform = "*",
       rversion = "*", dir = dir, package = package,
-      version = version, deps = NA, status = "FAILED",
+      version = version, deps = NA_character_,
+      needs_compilation = NA_character_, status = "FAILED",
       error = make_error(
         paste0("Can't find CRAN package ", package, ", version ", version),
         class = "remotes_resolution_error"
@@ -293,6 +294,7 @@ type_cran_resolve_from_cache_version_files <- function(remote, version,
           package = package,
           version = version,
           deps = deps,
+          needs_compilation = NA_character_,
           status = "OK"
         ))
       })
@@ -309,7 +311,9 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
   result <- list(
     source = character(), target = NA_character_, platform = platform,
     rversion = rversion, dir = dir, package = package,
-    version = NA_character_, deps = NA, status = "OK"
+    version = NA_character_, deps = NA_character_,
+    needs_compilation = NA_character_,
+    status = "OK"
   )
 
   wh <- if (version == "" || version == "current") {
@@ -359,6 +363,13 @@ type_cran_make_resolution <- function(remote, platform, rversion, data,
     result[[i]]$target <- path
 
     result[[i]]$deps <- fast_select_deps(data$deps, whi, dependencies)
+    ## It is NA for binary packages
+    comp <- if ("NeedsCompilation" %in% colnames(data)) {
+      data$NeedsCompilation[whi]
+    } else {
+      "no"
+    }
+    result[[i]]$needs_compilation <- if (is.na(comp)) "no" else comp
 
     result[[i]]$metadata <- c(
       RemoteOriginalRef = ref,

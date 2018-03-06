@@ -267,6 +267,7 @@ type_github_make_resolution <- function(data) {
     package = package,
     version = version,
     deps = deps,
+    needs_compilation = "yes",
     status = if (is.null(desc_err %||% sha_err)) "OK" else "FAILED",
     error = list(desc = desc_err, sha = sha_err)
   )

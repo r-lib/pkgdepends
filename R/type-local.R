@@ -37,6 +37,9 @@ resolve_remote.remote_ref_local <- function(remote, direct, config, cache,
       error = function(e) "source"
     )
 
+    nc <- dsc$get("NeedsCompilation")
+    if (is.na(nc)) nc <- "yes"
+
     files <- list(
       source = normalizePath(remote$path),
       target = file.path("src", "contrib", basename(remote$path)),
@@ -47,7 +50,7 @@ resolve_remote.remote_ref_local <- function(remote, direct, config, cache,
       version = dsc$get("Version")[[1]],
       deps = deps,
       ## Meaning, we don't know...
-      needs_compilation = NA_character_,
+      needs_compilation = nc,
       status = "OK"
     )
 

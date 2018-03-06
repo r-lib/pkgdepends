@@ -76,8 +76,8 @@ download_remote.remote_resolution_github <- function(resolution, config,
   } else if (file.exists(cached_zip)) {
     progress_bar$alert(class = "alert-start",
                        "Building {basename(target_file)}")
-    type_github_build_github_package(cached_zip, target_file, subdir,
-                                     vignettes = vignettes)
+    dsc <- type_github_build_github_package(cached_zip, target_file, subdir,
+                                            vignettes = vignettes)
     progress_bar$update(count = 1, cached = 1)
     ## Add built package to the cache
     try(
@@ -104,8 +104,8 @@ download_remote.remote_resolution_github <- function(resolution, config,
         ## Build source package from zip (R CMD build)
         progress_bar$alert(class = "alert-start",
                            "Building {basename(target_file)}")
-        type_github_build_github_package(cached_zip, target_file, subdir,
-                                         vignettes = vignettes)
+        dsc <- type_github_build_github_package(cached_zip, target_file, subdir,
+                                                vignettes = vignettes)
         ## Add built package to the cache
         try(
           cache$package_cache$add(target_file, path = files$target, url = url,
@@ -221,6 +221,8 @@ type_github_get_github_commit_sha <- function(rem) {
     })
 }
 
+#' @importFrom desc desc
+
 type_github_build_github_package <- function(source, target, subdir,
                                              vignettes) {
   mkdirp(zipdir <- tempfile())
@@ -234,6 +236,7 @@ type_github_build_github_package <- function(source, target, subdir,
     pkgdir, build_args = list(vignettes = vignettes))
 
   file.copy(pkgfile, target)
+  desc(target)
 }
 
 type_github_make_resolution <- function(data) {
@@ -267,7 +270,7 @@ type_github_make_resolution <- function(data) {
     package = package,
     version = version,
     deps = deps,
-    needs_compilation = "yes",
+    needs_compilation = NA_character_,
     status = if (is.null(desc_err %||% sha_err)) "OK" else "FAILED",
     error = list(desc = desc_err, sha = sha_err)
   )

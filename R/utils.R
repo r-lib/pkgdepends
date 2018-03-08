@@ -252,3 +252,9 @@ file.size <- function(x) {
 isFALSE <- function(x) {
   identical(x, FALSE)
 }
+
+## Unique values from x, as selected by latest v
+select_latest_versions <- function(x, v) {
+  o <- rev(order(package_version(v)))
+  rev(seq_along(x)[o] [!duplicated(x[o])])
+}

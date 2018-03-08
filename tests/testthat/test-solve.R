@@ -3,20 +3,24 @@ context("solve")
 
 test_that("binary preferred over source", {
   pkgs <- read_fixture("resolution-simple.rds")$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution)[1:2], c(TRUE, FALSE))
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_equal(sol$status, 0)
+    expect_identical(as.logical(sol$solution)[1:2], c(TRUE, FALSE))
+  }
 })
 
 test_that("installed preferred over download", {
   pkgs <- read_fixture("resolution-installed.rds")$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution[1:3]), c(TRUE, FALSE, FALSE))
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_equal(sol$status, 0)
+    expect_identical(as.logical(sol$solution[1:3]), c(TRUE, FALSE, FALSE))
+  }
 })
 
 test_that("dependency versions are honored", {
@@ -28,40 +32,47 @@ test_that("dependency versions are honored", {
       deps = make_fake_deps(Imports = "pkgA (>= 2.0.0)"))
   )$data
 
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_equal(sol$status, 0)
+    expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
+  }
 })
 
 test_that("conflict: different versions required for package", {
   pkgs <- read_fixture("resolution-gh-vs-cran.rds")$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 0)
-  expect_true(sol$objval >= solve_dummy_obj - 1L)
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_equal(sol$status, 0)
+    expect_true(sol$objval >= solve_dummy_obj - 1L)
 
-  solution <- list(status = "FAILED", data = NULL, problem = lp,
-                   solution = sol)
-  dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failure_type, rep("satisfy-direct", 3))
+    solution <- list(status = "FAILED", data = NULL, problem = lp,
+                     solution = sol)
+    dsc <- describe_solution_error(pkgs, solution)
+    expect_equal(dsc$failure_type, rep("satisfy-direct", 3))
+  }
 
   pkgs <- make_fake_resolution(
     `cran::pkgA` = list(direct = TRUE),
     `github::user/pkgA` = list(direct = TRUE)
   )$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 0)
-  expect_true(sol$objval >= solve_dummy_obj - 1L)
 
-  solution <- list(status = "FAILED", data = NULL, problem = lp,
-                   solution = sol)
-  dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failure_type, rep("satisfy-direct", 2))
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_equal(sol$status, 0)
+    expect_true(sol$objval >= solve_dummy_obj - 1L)
+
+    solution <- list(status = "FAILED", data = NULL, problem = lp,
+                     solution = sol)
+    dsc <- describe_solution_error(pkgs, solution)
+    expect_equal(dsc$failure_type, rep("satisfy-direct", 2))
+  }
 })
 
 test_that("standard direct & github indirect is OK", {
@@ -72,11 +83,14 @@ test_that("standard direct & github indirect is OK", {
       deps = make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA")),
     `user/pkgA` = list(extra = list(sha = "badcafe"))
   )$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
+
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_equal(sol$status, 0)
+    expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
+  }
 })
 
 test_that("conflict between direct and indirect ref", {
@@ -87,12 +101,14 @@ test_that("conflict between direct and indirect ref", {
       deps = make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA")),
     `user/pkgA` = list(extra = list(sha = "badcafe"))
   )$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_equal(sol$status, 0)
-  expect_true(sol$objval >= solve_dummy_obj - 1L)
-  expect_equal(as.logical(sol$solution), c(TRUE, FALSE, FALSE, FALSE, TRUE))
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_equal(sol$status, 0)
+    expect_true(sol$objval >= solve_dummy_obj - 1L)
+    expect_equal(as.logical(sol$solution), c(TRUE, FALSE, FALSE, FALSE, TRUE))
+  }
 })
 
 test_that("version conflict", {
@@ -103,36 +119,40 @@ test_that("version conflict", {
       deps = make_fake_deps(Imports = "pkgA (>= 2.0.0), pkgC")),
     `pkgC` = list()
   )$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
 
-  solution <- list(status = "FAILED", data = NULL, problem = lp,
-                   solution = sol)
-  dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failure_type, "dep-failed")
+    solution <- list(status = "FAILED", data = NULL, problem = lp,
+                     solution = sol)
+    dsc <- describe_solution_error(pkgs, solution)
+    expect_equal(dsc$failure_type, "dep-failed")
 
-  expect_equal(sol$status, 0)
-  expect_true(sol$objval >= solve_dummy_obj - 1L)
-  expect_equal(as.logical(sol$solution), c(FALSE, FALSE, FALSE, TRUE))
+    expect_equal(sol$status, 0)
+    expect_true(sol$objval >= solve_dummy_obj - 1L)
+    expect_equal(as.logical(sol$solution), c(FALSE, FALSE, FALSE, TRUE))
+  }
 })
 
 test_that("resolution failure", {
   pkgs <- make_fake_resolution(
     `pkgA` = list(status = "FAILED", direct = TRUE)
   )$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
 
-  solution <- list(status = "FAILED", data = NULL, problem = lp,
-                   solution = sol)
-  dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failure_type, "failed-res")
+    solution <- list(status = "FAILED", data = NULL, problem = lp,
+                     solution = sol)
+    dsc <- describe_solution_error(pkgs, solution)
+    expect_equal(dsc$failure_type, "failed-res")
 
-  expect_equal(sol$status, 0)
-  expect_true(sol$objval >= solve_dummy_obj - 1L)
-  expect_equal(as.logical(sol$solution), c(FALSE, TRUE))
+    expect_equal(sol$status, 0)
+    expect_true(sol$objval >= solve_dummy_obj - 1L)
+    expect_equal(as.logical(sol$solution), c(FALSE, TRUE))
+  }
 })
 
 test_that("integration test", {
@@ -197,11 +217,13 @@ test_that("failure in non-needed package is ignored", {
     `bb/bb` = list(),
     xx = list()
   )$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_true(sol$objval < 1e4)
-  expect_equal(as.logical(sol$solution), as.logical(c(1, 0, 1, 1, 0)))
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_true(sol$objval < 1e4)
+    expect_equal(as.logical(sol$solution), as.logical(c(1, 0, 1, 1, 0)))
+  }
 })
 
 test_that("failure in dependency of a non-needed package is ignored", {
@@ -211,9 +233,11 @@ test_that("failure in dependency of a non-needed package is ignored", {
     bb = list(status = "FAILED"),
     `bb/bb` = list()
   )$data
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
-                                    algorithm = "full")
-  sol <- remotes_i_solve_lp_problem(lp)
-  expect_true(sol$objval < 1e4)
-  expect_equal(as.logical(sol$solution), as.logical(c(1, 1, 0, 1, 0)))
+  for (algo in c("full", "fast")) {
+    lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy",
+                                      algorithm = algo)
+    sol <- remotes_i_solve_lp_problem(lp)
+    expect_true(sol$objval < 1e4)
+    expect_equal(as.logical(sol$solution), as.logical(c(1, 1, 0, 1, 0)))
+  }
 })

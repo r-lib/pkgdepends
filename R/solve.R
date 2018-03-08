@@ -132,6 +132,7 @@ remotes_i_create_lp_problem <- function(pkgs, policy, algorithm) {
   lp <- remotes_i_lp_satisfy_direct(lp)
   lp <- remotes_i_lp_dependencies(lp)
   lp <- remotes_i_lp_failures(lp)
+  ## TODO: rule out the ones that do not satisfy the R version
 
   lp
 }
@@ -330,6 +331,15 @@ print.remotes_lp_problem <- function(x, ...) {
   cat_line(strwrap(paste(pn, collapse = ", "), indent = 2, exdent = 2))
   nc <- length(x$conds) - x$num_direct
 
+  cat_line(paste0("Policy: ", x$policy))
+  cat_line(paste0("Algorithm: ", x$algorithm))
+
+  if (length(x$missing_deps)) {
+    cat_line("Dependencies not in the problem:")
+    xn <- sort(x$pkgs$ref[x$missing_deps])
+    cat_line(strwrap(paste(xn, collapse = ", "), indent = 2, exdent = 2))
+  }
+
   if (nc > 0) {
     cat_line("Constraints:")
     lapply(x$conds, cat_cond)
@@ -361,7 +371,62 @@ remotes_i_solve_lp_problem <- function(problem) {
 }
 
 remotes_i_solve_standard <- function(problem, solver_selected) {
-  FALSE
+  ## Do we need to do anything?
+  todo <- intersect(problem$missing_deps, which(solver_selected))
+  if (! length(todo)) return(FALSE)
+
+  sel_std <- remotes_i_solve_standard_src(problem, solver_selected)
+  remotes_i_solve_standard_bin(problem, solver_selected, sel_std)
+}
+
+remotes_i_solve_standard_src <- function(problem, solver_selected) {
+
+  pkgs <- problem$pkgs
+
+  ## Select the source packages, these should be present,
+  ## unless sg strange is going on
+  wtodo <- intersect(problem$missing_deps, which(solver_selected))
+
+  ## These packages (not refs!) already have a candidate
+  done <- pkgs$package[solver_selected]
+
+  ## We need the dependencies of these (but not themselves, they are
+  ## already selected)
+  uqdeps <- function(x) {
+    deppkg <- lapply(pkgs$dependencies[x], "[[", "package")
+    setdiff(unique(unlist(deppkg)), c("R", base_packages()))
+  }
+  need <- uqdeps(wtodo)
+  find <- character()
+
+  while (length(need)) {
+    find <- unique(c(find, need))
+    need <- setdiff(uqdeps(pkgs$package %in% need), find)
+  }
+
+  ## Now we need to select a source package for each of `find`
+  src <-  pkgs$platform == "source"
+  if (any(bad <- ! find %in% pkgs$package[src])) {
+    stop("Cannot find standard source package(s): ",
+         paste0("`", pkgs$package[bad], "`", collapse = ", "))
+  }
+
+  src_sel <- (pkgs$package %in% find) & src
+  if (any(dup <- duplicated(pkgs$package[src_sel]))) {
+    ## Multiple source packages, selecting latest / first
+    ## TODO: take R version into account
+    wsrc_sel <- select_latest_versions(pkgs$package[src_sel],
+                                       pkgs$version[src_sel])
+    src_sel[] <- FALSE
+    src_sel[wsrc_sel] <- TRUE
+  }
+
+  src_sel
+}
+
+remotes_i_solve_standard_bin <- function(problem, solver_selected, src) {
+  ## TODO
+  src
 }
 
 remotes_get_solution <- function(self, private) {

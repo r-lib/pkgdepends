@@ -84,6 +84,17 @@ remotes__create_lp_problem <- function(self, private, pkgs, policy) {
   remotes_i_create_lp_problem(pkgs, policy)
 }
 
+## Add a condition, for a subset of variables, with op and rhs
+remotes_i_lp_add_cond <- function(
+  lp, vars, op = "<=", rhs = 1, coef = rep(1, length(vars)),
+  type = NA_character_, note = NULL) {
+
+  lp$conds[[length(lp$conds)+1]] <-
+    list(vars = vars, coef = coef, op = op, rhs = rhs, type = type,
+         note = note)
+  lp
+}
+
 ## This is a separate function to make it testable without a `remotes`
 ## object.
 ##
@@ -104,20 +115,32 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
     num_direct = num_direct,
     total = num_candidates + num_direct,
     conds = list(),
-    pkgs = pkgs
+    pkgs = pkgs,
+    policy = policy,
+    packages = packages,
+    direct_packages = direct_packages,
+    indirect_packages = indirect_packages
   ), class = "remotes_lp_problem")
 
-  ## Add a condition, for a subset of variables, with op and rhs
-  cond <- function(vars, op = "<=", rhs = 1, coef = rep(1, length(vars)),
-                   type = NA_character_, note = NULL) {
-    lp$conds[[length(lp$conds)+1]] <<-
-      list(vars = vars, coef = coef, op = op, rhs = rhs, type = type,
-           note = note)
-  }
+  lp <- remotes_i_lp_objectives(lp)
+  lp <- remotes_i_lp_no_multiples(lp)
+  lp <- remotes_i_lp_satisfy_direct(lp)
+  lp <- remotes_i_lp_dependencies(lp)
+  lp <- remotes_i_lp_failures(lp)
 
-  ## Coefficients of the objective function, this is very easy
-  ## TODO: rule out incompatible platforms
-  ## TODO: use rversion as well, for installed and binary packages
+  lp
+}
+
+## Coefficients of the objective function, this is very easy
+## TODO: rule out incompatible platforms
+## TODO: use rversion as well, for installed and binary packages
+
+remotes_i_lp_objectives <- function(lp) {
+
+  pkgs <- lp$pkgs
+  policy <- lp$policy
+  num_candidates <- lp$num_candidates
+
   if (policy == "lazy") {
     ## Simple: installed < binary < source
     lp$obj <- ifelse(pkgs$type == "installed", 1,
@@ -143,36 +166,57 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
     stop("Unknown version selection policy")
   }
 
-  lp$obj <- c(lp$obj, rep(solve_dummy_obj, num_direct))
+  lp$obj <- c(lp$obj, rep(solve_dummy_obj, lp$num_direct))
+
+  lp
+}
+
+remotes_i_lp_no_multiples <- function(lp) {
 
   ## 1. Each directly specified package exactly once.
   ##    (We also add a dummy variable to catch errors.)
-  for (p in seq_along(direct_packages)) {
-    pkg <- direct_packages[p]
-    wh <- which(pkgs$package == pkg)
-    cond(c(wh, num_candidates + p), op = "==", type = "exactly-once")
+  for (p in seq_along(lp$direct_packages)) {
+    pkg <- lp$direct_packages[p]
+    wh <- which(lp$pkgs$package == pkg)
+    lp <- remotes_i_lp_add_cond(
+      lp, c(wh, lp$num_candidates + p),
+      op = "==", type = "exactly-once")
   }
 
   ## 2. Each non-direct package must be installed at most once
-  for (p in seq_along(indirect_packages)) {
-    pkg <- indirect_packages[p]
-    wh <- which(pkgs$package == pkg)
-    cond(wh, op = "<=", type = "at-most-once")
+  for (p in seq_along(lp$indirect_packages)) {
+    pkg <- lp$indirect_packages[p]
+    wh <- which(lp$pkgs$package == pkg)
+    lp <- remotes_i_lp_add_cond(lp, wh, op = "<=", type = "at-most-once")
   }
+
+  lp
+}
+
+remotes_i_lp_satisfy_direct <-  function(lp) {
 
   ## 3. Direct refs must be satisfied
   satisfy <- function(wh) {
-    pkgname <- pkgs$package[[wh]]
-    res <- pkgs$resolution[[wh]]
-    others <- setdiff(which(pkgs$package == pkgname), wh)
+    pkgname <- lp$pkgs$package[[wh]]
+    res <- lp$pkgs$resolution[[wh]]
+    others <- setdiff(which(lp$pkgs$package == pkgname), wh)
     for (o in others) {
-      res2 <- pkgs$resolution[[o]]
+      res2 <- lp$pkgs$resolution[[o]]
       if (! isTRUE(satisfies_remote(res, res2))) {
-        cond(o, op = "==", rhs = 0, type = "satisfy-refs", note = wh)
+        lp <<- remotes_i_lp_add_cond(
+          lp, o, op = "==", rhs = 0, type = "satisfy-refs", note = wh)
       }
     }
   }
-  lapply(seq_len(num_candidates)[pkgs$direct], satisfy)
+  lapply(seq_len(lp$num_candidates)[lp$pkgs$direct], satisfy)
+
+  lp
+}
+
+remotes_i_lp_dependencies <- function(lp) {
+
+  pkgs <- lp$pkgs
+  num_candidates <- lp$num_candidates
 
   ## 4. Package dependencies must be satisfied
   depconds <- function(wh) {
@@ -212,8 +256,8 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
       note <- list(wh = wh, ref = depref, cand = cand,
                    good_cand = good_cand, txt = txt)
 
-      cond(
-        c(wh, good_cand), "<=", rhs = 0,
+      lp <<- remotes_i_lp_add_cond(
+        lp, c(wh, good_cand), "<=", rhs = 0,
         coef = c(1, rep(-1, length(good_cand))),
         type = "dependency", note = note
       )
@@ -221,12 +265,18 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
   }
   lapply(seq_len(num_candidates), depconds)
 
+  lp
+}
+
+remotes_i_lp_failures <- function(lp) {
+
   ## 5. Can't install failed resolutions
   failedconds <- function(wh) {
-    if (pkgs$status[wh] != "FAILED") return()
-    cond(wh, op = "==", rhs = 0, type = "ok-resolution")
+    if (lp$pkgs$status[wh] != "FAILED") return()
+    lp <<- remotes_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
+                          type = "ok-resolution")
   }
-  lapply(seq_len(num_candidates), failedconds)
+  lapply(seq_len(lp$num_candidates), failedconds)
 
   lp
 }

@@ -12,7 +12,7 @@ test_that("draw_tree", {
   withr::with_options(c(pkg.show_progress = FALSE), {
     r <- remotes$new(c("pkgconfig", "igraph"), library = lib)
     r$resolve()
-    r$solve()
+    r$solve(algorithm = "full")
   })
 
   out <- r$draw_tree()

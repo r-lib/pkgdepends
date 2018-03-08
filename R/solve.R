@@ -1,7 +1,7 @@
 
 solve_dummy_obj <- 1000000000
 
-remotes_solve <- function(self, private, policy) {
+remotes_solve <- function(self, private, policy, algorithm) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
   if (is.null(private$library)) {
     stop("No package library specified, see 'library' in new()")
@@ -12,14 +12,16 @@ remotes_solve <- function(self, private, policy) {
   metadata <- list(solution_start = Sys.time())
   pkgs <- self$get_resolution()$data
 
-  prb <- private$create_lp_problem(pkgs, policy)
+  prb <- private$create_lp_problem(pkgs, policy, algorithm)
   sol <- private$solve_lp_problem(prb)
 
   if (sol$status != 0) {
     stop("Cannot solve installation, internal lpSolve error ", sol$status)
   }
 
-  selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
+  solver_selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
+  standard_selected <- remotes_i_solve_standard(prb, solver_selected)
+  selected <- solver_selected | standard_selected
   res <- list(
     status = if (sol$objval < solve_dummy_obj - 1) "OK" else "FAILED",
     data = private$subset_resolution(selected),
@@ -80,8 +82,9 @@ remotes_stop_for_solve_error <- function(self, private) {
 #'
 #' @keywords internal
 
-remotes__create_lp_problem <- function(self, private, pkgs, policy) {
-  remotes_i_create_lp_problem(pkgs, policy)
+remotes__create_lp_problem <- function(self, private, pkgs, policy,
+                                       algorithm) {
+  remotes_i_create_lp_problem(pkgs, policy, algorithm)
 }
 
 ## Add a condition, for a subset of variables, with op and rhs
@@ -102,7 +105,7 @@ remotes_i_lp_add_cond <- function(
 ## * 1:num are candidates
 ## * (num+1):(num+num_direct_pkgs) are the relax variables for direct refs
 
-remotes_i_create_lp_problem <- function(pkgs, policy) {
+remotes_i_create_lp_problem <- function(pkgs, policy, algorithm) {
   "!DEBUG creating LP problem"
   num_candidates <- nrow(pkgs)
   packages <- unique(pkgs$package)
@@ -119,7 +122,9 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
     policy = policy,
     packages = packages,
     direct_packages = direct_packages,
-    indirect_packages = indirect_packages
+    indirect_packages = indirect_packages,
+    missing_deps <- integer(),
+    algorithm =  algorithm
   ), class = "remotes_lp_problem")
 
   lp <- remotes_i_lp_objectives(lp)
@@ -263,7 +268,18 @@ remotes_i_lp_dependencies <- function(lp) {
       )
     }
   }
-  lapply(seq_len(num_candidates), depconds)
+
+  if (lp$algorithm == "fast") {
+    standard_deps <- pkgs$type == "standard"
+    lp$missing_deps <- which(standard_deps)
+    lapply(which(!standard_deps), depconds)
+
+  } else if (lp$algorithm == "full") {
+    lapply(seq_len(num_candidates), depconds)
+
+  } else {
+    stop("Unknown solution algorithm, internal error")
+  }
 
   lp
 }
@@ -342,6 +358,10 @@ remotes_i_solve_lp_problem <- function(problem) {
   dir <- vcapply(problem$conds, "[[", "op")
   rhs <- vapply(problem$conds, "[[", "rhs", FUN.VALUE = double(1))
   lp("min", problem$obj, condmat, dir, rhs, int.vec = seq_len(problem$total))
+}
+
+remotes_i_solve_standard <- function(problem, solver_selected) {
+  FALSE
 }
 
 remotes_get_solution <- function(self, private) {

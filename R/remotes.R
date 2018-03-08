@@ -120,8 +120,9 @@ remotes <- R6Class(
     get_resolution_download = function()
       remotes_get_resolution_download(self, private),
 
-    solve = function(policy = c("lazy", "upgrade"))
-      remotes_solve(self, private, match.arg(policy)),
+    solve = function(policy = c("lazy", "upgrade"),
+                     algorithm = c("fast", "full"))
+      remotes_solve(self, private, match.arg(policy), match.arg(algorithm)),
     stop_for_solve_error = function()
       remotes_stop_for_solve_error(self, private),
     get_solution = function()
@@ -170,8 +171,8 @@ remotes <- R6Class(
       remotes_download_res(self, private, res, mode),
     subset_resolution = function(which)
       remotes__subset_resolution(self, private, which),
-    create_lp_problem = function(pkgs, policy)
-      remotes__create_lp_problem(self, private, pkgs, policy),
+    create_lp_problem = function(pkgs, policy, algorithm)
+      remotes__create_lp_problem(self, private, pkgs, policy, algorithm),
     solve_lp_problem = function(problem)
       remotes__solve_lp_problem(self, private, problem),
     with_progress_bar = function(args, expr)

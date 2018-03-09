@@ -24,7 +24,6 @@ Imports:
     lpSolve,
     pkgbuild,
     prettyunits,
-    progress (>= 1.1.2.9001),
     rappdirs,
     rematch2,
     R6,
@@ -45,6 +44,5 @@ Remotes:
     r-lib/cli,
     r-lib/desc,
     r-lib/filelock,
-    r-lib/pkgbuild,
-    r-lib/progress
+    r-lib/pkgbuild
 Encoding: UTF-8

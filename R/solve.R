@@ -119,14 +119,17 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
     policy = policy,
     packages = packages,
     direct_packages = direct_packages,
-    indirect_packages = indirect_packages
+    indirect_packages = indirect_packages,
+    ruled_out = integer()
   ), class = "remotes_lp_problem")
 
   lp <- remotes_i_lp_objectives(lp)
   lp <- remotes_i_lp_no_multiples(lp)
   lp <- remotes_i_lp_satisfy_direct(lp)
-  lp <- remotes_i_lp_dependencies(lp)
   lp <- remotes_i_lp_failures(lp)
+  lp <- remotes_i_lp_prefer_installed(lp)
+  lp <- remotes_i_lp_prefer_binaries(lp)
+  lp <- remotes_i_lp_dependencies(lp)
 
   lp
 }
@@ -217,6 +220,7 @@ remotes_i_lp_dependencies <- function(lp) {
 
   pkgs <- lp$pkgs
   num_candidates <- lp$num_candidates
+  ruled_out <- lp$ruled_out
 
   ## 4. Package dependencies must be satisfied
   depconds <- function(wh) {
@@ -263,7 +267,7 @@ remotes_i_lp_dependencies <- function(lp) {
       )
     }
   }
-  lapply(seq_len(num_candidates), depconds)
+  lapply(setdiff(seq_len(num_candidates), ruled_out), depconds)
 
   lp
 }
@@ -274,9 +278,63 @@ remotes_i_lp_failures <- function(lp) {
   failedconds <- function(wh) {
     if (lp$pkgs$status[wh] != "FAILED") return()
     lp <<- remotes_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
-                          type = "ok-resolution")
+                                 type = "ok-resolution")
+    lp$rules_out <<- c(lp$ruled_out, wh)
   }
   lapply(seq_len(lp$num_candidates), failedconds)
+
+  lp
+}
+
+remotes_i_lp_prefer_installed <- function(lp) {
+  pkgs <- lp$pkgs
+  inst <- which(pkgs$type == "installed")
+  for (i in inst) {
+    res <- pkgs$resolution[[i]]
+    dsc <- get_remote(res)$description
+
+    ## This usually only happens in artificial test cases
+    if (is.null(dsc)) next
+
+    ## If not a CRAN or BioC package, skip it
+    if (! identical(dsc$get("Repository")[[1]], "CRAN") &&
+        is.na(dsc$get("biocViews"))) next
+
+    ## Look for others with cran/bioc/standard type and same name & ver
+    package <- pkgs$package[i]
+    version <- pkgs$version[i]
+
+    ruledout <- which(pkgs$type %in% c("cran", "bioc", "standard") &
+                      pkgs$package == package & pkgs$version == version)
+    lp$ruled_out <- c(lp$ruled_out, ruledout)
+    for (r in ruledout) {
+      lp <- remotes_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+                                  type = "prefer-installed")
+    }
+  }
+
+  lp
+}
+
+remotes_i_lp_prefer_binaries <- function(lp) {
+  pkgs <- lp$pkgs
+  str <- paste0(pkgs$type, "::", pkgs$package, "@", pkgs$version)
+  for (ustr in unique(str)) {
+    same <- which(ustr == str)
+    ## We can't do this for other packages, because version is
+    ## exclusive for those
+    if (! pkgs$type[same[1]] %in% c("cran", "bioc", "standard")) next
+    ## TODO: choose the right one for the current R version
+    selected <- same[pkgs$platform[same] != "source"][1]
+    ## No binary package
+    if  (is.na(selected)) next
+    ruledout <- setdiff(same, selected)
+    lp$ruled_out <- c(lp$ruled_out, ruledout)
+    for (r in ruledout) {
+      lp <- remotes_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+                                  type = "prefer-binary")
+    }
+  }
 
   lp
 }

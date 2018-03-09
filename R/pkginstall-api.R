@@ -1,4 +1,13 @@
 
+#' Create a package installation plan
+#'
+#' TODO
+#'
+#' @param pkgs Package names (or remote references) to install.
+#' @param library Package library directory to install to. The packages
+#'   already installed there are considered for the install plan.
+#' @param config Configuration options, see [remotes].
+#' @return The install plan, a data frame.
 #' @export
 
 make_install_plan <- function(pkgs, library = .libPaths()[[1]],

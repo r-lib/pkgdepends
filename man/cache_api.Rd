@@ -30,7 +30,9 @@ See \code{\link[rappdirs:user_cache_dir]{rappdirs::user_cache_dir()}}.}
 
 \item{target}{Path where the selected file is copied.}
 
-\item{path}{The relative path of the file within the cache.}
+\item{file}{File to add.}
+
+\item{relpath}{The relative path of the file within the cache.}
 }
 \description{
 \code{cache_summary()} returns a short summary of the state of the cache,

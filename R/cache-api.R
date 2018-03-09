@@ -69,12 +69,13 @@ cache_delete_files <- function(cachepath = NULL, ...) {
 }
 
 #' `cache_add_file` adds a file to the cache.
-#' @param path The relative path of the file within the cache.
+#' @param file File to add.
+#' @param relpath The relative path of the file within the cache.
 #' @rdname cache_api
 #' @export
 
 cache_add_file <- function(cachepath = NULL, file,
                            relpath = dirname(file), ...) {
   cachepath <- cachepath %||% get_user_cache_dir()$root
-  package_cache$new(cachepath)$add(file = file, path = path, ...)
+  package_cache$new(cachepath)$add(file = file, path = relpath, ...)
 }

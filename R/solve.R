@@ -429,21 +429,16 @@ remotes_install_plan <- function(self, private) {
   binary = sol$platform != "source"
   vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard")
 
-  tibble::tibble(
-    ref = sol$ref,
-    package = sol$package,
-    type = sol$type,
-    version = sol$version,
-    binary = binary,
-    direct = direct,
-    dependencies = I(deps),
-    needs_compilation = sol$needs_compilation,
-    file = sol$fulltarget,
-    installed = installed,
-    vignettes = vignettes,
-    metadata =
-      lapply(sol$resolution, function(x) get_files(x)[[1]]$metadata)
-  )
+  sol$binary <- binary
+  sol$direct <- direct
+  sol$dependencies <- I(deps)
+  sol$file <- sol$fulltarget
+  sol$installed <- installed
+  sol$vignettes <- vignettes
+  sol$metadata <- lapply(sol$resolution,
+                         function(x) get_files(x)[[1]]$metadata)
+
+  sol
 }
 
 describe_solution_error <- function(pkgs, solution) {

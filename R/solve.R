@@ -429,6 +429,8 @@ remotes_install_plan <- function(self, private) {
   binary = sol$platform != "source"
   vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard")
 
+  lib_status <- calculate_lib_status(sol, self$get_resolution()$data)
+
   sol$binary <- binary
   sol$direct <- direct
   sol$dependencies <- I(deps)
@@ -437,8 +439,37 @@ remotes_install_plan <- function(self, private) {
   sol$vignettes <- vignettes
   sol$metadata <- lapply(sol$resolution,
                          function(x) get_files(x)[[1]]$metadata)
+  sol$lib_status <- lib_status
 
   sol
+}
+
+calculate_lib_status <- function(sol, res) {
+  ## Possible values at the moment:
+  ## - new: newly installed
+  ## - current: up to date, not installed
+  ## - update: will be updated
+  ## - no-update: could update, but won't
+
+  sres <- res[res$package %in% sol$package, c("package", "version", "type")]
+
+  ## Check if it is not new
+  lib_ver <- vcapply(sol$package, function(p) {
+    c(sres$version[sres$package == p & sres$type == "installed"],
+      NA_character_)[1]
+  })
+  status <- ifelse(is.na(lib_ver), "new",
+    ifelse(lib_ver >= sol$version, "current", "update"))
+
+  ## Check for no-update
+  could_update <- vlapply(seq_along(sol$package), function(i) {
+    p <- sol$package[i]
+    v <- package_version(sol$version[i])
+    any(sres$package == p & v < sres$version)
+  })
+  status[status == "current" & could_update] <- "no-update"
+
+  status
 }
 
 describe_solution_error <- function(pkgs, solution) {

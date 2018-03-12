@@ -142,7 +142,7 @@ test_that("satisfies_remote", {
     c(pkg.show_progress = FALSE), {
       expect_error(res <- r$resolve(), NA)
       expect_error(r$solve(), NA)
-      expect_error(plan <- r$get_install_plan(), NA)
+      expect_error(sol <- r$get_solution(), NA)
     })
 
   expect_true(all(plan$type == "installed"))

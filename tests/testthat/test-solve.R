@@ -147,8 +147,7 @@ test_that("integration test", {
     })
   sol <- r$solve()
   expect_true("cran::cli" %in% sol$data$data$ref)
-  plan <- r$get_install_plan()
-  expect_true("cli" %in% plan$package)
+  expect_true("cli" %in% r$get_solution()$data$data$package)
 
   withr::with_options(
     c(pkg.show_progress = FALSE), {

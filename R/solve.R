@@ -411,7 +411,7 @@ remotes_get_solution <- function(self, private) {
 
 remotes_install_plan <- function(self, private) {
   "!DEBUG creating install plan"
-  sol <- self$get_solution()$data$data
+  sol <- self$get_solution_download()$data
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
   deps <- lapply(sol$dependencies, "[[", "package")

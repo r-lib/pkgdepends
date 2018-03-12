@@ -27,6 +27,9 @@ remotes_solve <- function(self, private, policy) {
     solution = sol
   )
 
+  res$data$data$lib_status <-
+    calculate_lib_status(res$data$data, self$get_resolution()$data)
+
   metadata$solution_end <- Sys.time()
   res$data$metadata <- modifyList(res$data$metadata, metadata)
   class(res) <- unique(c("remotes_solution", class(res)))
@@ -429,8 +432,6 @@ remotes_install_plan <- function(self, private) {
   binary = sol$platform != "source"
   vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard")
 
-  lib_status <- calculate_lib_status(sol, self$get_resolution()$data)
-
   sol$binary <- binary
   sol$direct <- direct
   sol$dependencies <- I(deps)
@@ -439,7 +440,7 @@ remotes_install_plan <- function(self, private) {
   sol$vignettes <- vignettes
   sol$metadata <- lapply(sol$resolution,
                          function(x) get_files(x)[[1]]$metadata)
-  sol$lib_status <- lib_status
+  sol$lib_status <- sol$lib_status
 
   sol
 }

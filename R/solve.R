@@ -458,8 +458,10 @@ calculate_lib_status <- function(sol, res) {
     c(sres$version[sres$package == p & sres$type == "installed"],
       NA_character_)[1]
   })
+
+  ## If not new, and not "installed" type, that means update
   status <- ifelse(is.na(lib_ver), "new",
-    ifelse(lib_ver >= sol$version, "current", "update"))
+    ifelse(sol$type == "installed", "current", "update"))
 
   ## Check for no-update
   could_update <- vlapply(seq_along(sol$package), function(i) {

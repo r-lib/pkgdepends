@@ -29,6 +29,7 @@ resolve_remote.remote_ref_installed <- function(remote, direct, config,
 
   deps <- resolve_ref_deps(
     dsc$get_deps(), dsc$get("Remotes")[[1]], dependencies)
+  deps <- deps[deps$type != "LinkingTo", ]
 
   files <- list(
     source = character(),

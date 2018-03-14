@@ -252,7 +252,7 @@ remotes__subset_resolution <- function(self, private, which) {
 
 #' @importFrom prettyunits pretty_dt
 #' @importFrom crayon bgBlue green blue white bold col_nchar
-#' @importFrom cli cat_rule symbol
+#' @importFrom cli symbol
 
 print.remotes_resolution <- function(x, ...) {
   meta <- x$metadata

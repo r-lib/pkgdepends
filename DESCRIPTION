@@ -43,6 +43,5 @@ Remotes:
     r-lib/async,
     r-lib/cli,
     r-lib/desc,
-    r-lib/filelock,
     r-lib/pkgbuild
 Encoding: UTF-8

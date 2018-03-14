@@ -123,7 +123,7 @@ make_dl_status <- function(status, url, target, bytes, error = NULL) {
 mkdirp <- function(dir, msg = NULL) {
   s <- dir.create(dir, recursive = TRUE, showWarnings = FALSE)
   if (any(s) && !is.null(msg) && is_verbose()) {
-    cli$alert_info("{msg}: {path format_items(dir[s])}")
+    cli$alert_info("{msg}: {path {format_items(dir[s])}}")
   }
   invisible(s)
 }

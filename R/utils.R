@@ -252,3 +252,7 @@ file.size <- function(x) {
 isFALSE <- function(x) {
   identical(x, FALSE)
 }
+
+zip_lists <- function(...) {
+  mapply(c, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
+}

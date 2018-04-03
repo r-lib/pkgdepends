@@ -96,7 +96,7 @@ test_that("get_package_from", {
   expect_equal(res3$status, "Failed")
   expect_s3_class(
     res3$error,
-    c("async_rejected", "download_try_list_error", "error")
+    c("async_rejected", "download_one_of_error", "error")
   )
 })
 

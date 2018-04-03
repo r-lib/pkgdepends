@@ -150,8 +150,8 @@ type_bioc_update_cache <- function(rootdir, platforms, rversions,
         etag_file <- file.path(rootdir, cache_etag)
         mkdirp(dirname(target_file))
         download_if_newer(source_url, target_file, etag_file)$
-          then(function(resp) {
-            if (resp$status_code == 200) {
+          then(function(status) {
+            if (status$response$status_code == 200) {
               current <<- FALSE
               update_metadata_cache(rootdir, c(cache_file, cache_etag))
             }

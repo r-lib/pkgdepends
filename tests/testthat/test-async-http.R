@@ -1,5 +1,5 @@
 
-context("async utils")
+context("async http")
 
 test_that("read_etag", {
   cat("foobar\n", file = tmp <- tempfile())
@@ -107,6 +107,7 @@ test_that("download_if_newer, matching etag", {
   expect_equal(read_lines(target), "dummy")
   expect_true(file.exists(etag))
   expect_equal(read_lines(etag), "foobar")
+  expect_equal(dx$response$status_code, 304)
 })
 
 test_that("download_if_newer, error", {
@@ -118,7 +119,7 @@ test_that("download_if_newer, error", {
   expect_error(
     synchronise(download_if_newer(
       url <- "http://0.42.42.42",
-      target = target
+      destfile = target
     )),
     class = c("async_rejected", "async_http_error")
   )
@@ -126,17 +127,17 @@ test_that("download_if_newer, error", {
   expect_error(
     synchronise(download_if_newer(
       url <- "https://httpbin.org/status/404",
-      target = target
+      destfile = target
     )),
     class = c("async_rejected", "async_http_404", "async_http_error")
   )
 })
 
-test_that("download_try_list", {
+test_that("download_one_of", {
 
   skip_if_offline()
 
-  dx <- synchronise(download_try_list(
+  dx <- synchronise(download_one_of(
     c("https://httpbin.org/status/404",
       "https://httpbin.org/status/403",
       "https://httpbin.org/get?q=1"),
@@ -147,14 +148,14 @@ test_that("download_try_list", {
   expect_equal(res$args$q, "1")
 })
 
-test_that("download_try_list, etag", {
+test_that("download_one_of, etag", {
 
   skip_if_offline()
 
   dir.create(dir <- tempfile())
 
   cat("eeeetag\n", file = etag <- file.path(dir, "etag"))
-  dx <- synchronise(download_try_list(
+  dx <- synchronise(download_one_of(
     c("https://httpbin.org/status/404",
       "https://httpbin.org/status/403",
       url <- "https://httpbin.org/etag/foobar"),
@@ -168,7 +169,7 @@ test_that("download_try_list, etag", {
   expect_equal(read_lines(etag), "foobar")
 })
 
-test_that("download_try_list, matching etag", {
+test_that("download_one_of, matching etag", {
 
   skip_if_offline()
 
@@ -176,7 +177,7 @@ test_that("download_try_list, matching etag", {
 
   cat("foobar\n", file = etag <- file.path(dir, "etag"))
   cat("dummy\n", file = target <- file.path(dir, "file1"))
-  dx <- synchronise(download_try_list(
+  dx <- synchronise(download_one_of(
     c("https://httpbin.org/status/404",
       "https://httpbin.org/status/403",
       url <- "https://httpbin.org/etag/foobar"),
@@ -190,14 +191,14 @@ test_that("download_try_list, matching etag", {
   expect_equal(read_lines(etag), "foobar")
 })
 
-test_that("download_try_list, errors", {
+test_that("download_one_of, errors", {
 
   skip_if_offline()
 
   tmp <- tempfile()
 
   afun <- async(function() {
-    download_try_list(
+    download_one_of(
       c("https://httpbin.org/status/404",
         "https://httpbin.org/status/403",
         "https://httpbin.org/status/404"),
@@ -207,19 +208,6 @@ test_that("download_try_list, errors", {
 
   err <- tryCatch(synchronise(afun()), error = identity)
   expect_match(conditionMessage(err), "All URLs failed")
-  expect_true("download_try_list_error" %in% class(err))
+  expect_true("download_one_of_error" %in% class(err))
   expect_false(file.exists(tmp))
-})
-
-test_that("get_async_value", {
-  expect_identical(get_async_value(NULL), NULL)
-  expect_identical(get_async_value(1:10), 1:10)
-
-  afun <- async(function() {
-    v <- async::async_constant(42)
-    await(v)
-    expect_identical(get_async_value(v), 42)
-  })
-
-  synchronise(afun())
 })

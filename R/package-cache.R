@@ -159,10 +159,9 @@ get_package_from <- function(cache, urls, target_dir, target,
     character()
   }
 
-  download_try_list(urls, target_file, etag_file, headers = headers,
-                    progress_bar = progress_bar)$
-    then(function(status) {
-      if (status == 304) {
+  download_one_of(urls, target_file, etag_file, headers = headers)$
+    then(function(result) {
+      if (result$response$status_code == 304) {
         make_dl_status("Had", urls, target_file,
                        bytes = file.size(target_file))
       } else {

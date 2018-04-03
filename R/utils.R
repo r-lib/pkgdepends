@@ -256,3 +256,9 @@ isFALSE <- function(x) {
 zip_lists <- function(...) {
   mapply(c, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
 }
+
+## TODO: remove this
+
+get_async_value <- function(x) {
+  if (is_deferred(x)) x$.__enclos_env__$private$value else x
+}

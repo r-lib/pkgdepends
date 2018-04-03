@@ -203,7 +203,7 @@ remotes_default_config <- function() {
     "cache_dir"          = detect_cache_dir(),
     "package_cache_dir"  = detect_package_cache_dir(),
     "metadata_cache_dir" = detect_metadata_cache_dir(),
-    "platforms"          = unique(c(current_r_platform(), "source")),
+    "platforms"          = default_platforms(),
     "cran-mirror"        = default_cran_mirror(),
     "dependencies"       = c("Depends", "Imports", "LinkingTo"),
     "r-versions"         = current_r_version()

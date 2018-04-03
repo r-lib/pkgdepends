@@ -24,6 +24,8 @@ current_r_platform <- function() {
   }
 }
 
+default_platforms <- function() unique(c(current_r_platform(), "source"))
+
 default_cran_mirror <- function() {
   mirror <- getOption("repos")["CRAN"]
   if (is.null(mirror) || is.na(mirror) || mirror == "@CRAN@") {

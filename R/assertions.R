@@ -26,6 +26,14 @@ on_failure(is_string_or_null) <- function(call, env) {
   paste0(deparse(call$x), " must be a string (length 1 character) or NULL")
 }
 
+is_flag <- function(x) {
+  is.logical(x) && length(x) == 1 && !is.na(x)
+}
+
+on_failure(is_flag) <- function(call, env) {
+  paste0(deparse(call$x), " is not a flag (length 1 logical)")
+}
+
 ## To be refined
 
 is_path <- function(x) {

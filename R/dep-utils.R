@@ -116,3 +116,23 @@ resolve_ref_deps <- function(deps, remotes, dependencies) {
   deps$ref[match(remotes_packages[keep], deps$package)] <- remotes[keep]
   deps
 }
+
+interpret_dependencies <- function(dp) {
+  hard <- c("Depends", "Imports", "LinkingTo")
+
+  res <- if (isTRUE(dp)) {
+    list(c(hard, "Suggests"), hard)
+
+  } else if (identical(dp, FALSE)) {
+    list(character(), character())
+
+  } else if (is_na_scalar(dp)) {
+    list(hard, hard)
+
+  } else {
+    list(dp, dp)
+  }
+
+  names(res) <- c("direct", "indirect")
+  res
+}

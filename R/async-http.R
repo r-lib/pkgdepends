@@ -85,7 +85,7 @@ download_file <- async(function(url, destfile, etag_file = NULL,
       list(url = url, destfile = destfile, response = resp, etag = etag,
            etag_file = etag_file)
     })$
-    catch(function(err) {
+    catch(error = function(err) {
       "!DEBUG downloading `url` failed"
       err$destfile <- destfile
       err$url <- url
@@ -206,7 +206,7 @@ download_if_newer <- async(function(url, destfile, etag_file = NULL,
       list(url = url, destfile = destfile, response = resp, etag = etag,
            etag_file = etag_file)
     })$
-    catch(function(err) {
+    catch(error = function(err) {
       "!DEBUG downloading `url` failed"
       err$destfile <- destfile
       err$url <- url
@@ -291,7 +291,7 @@ download_one_of <- async(function(urls, destfile, etag_file = NULL,
     SIMPLIFY = FALSE)
 
   when_any(.list = dls)$
-    catch(function(err) {
+    catch(error = function(err) {
       err$message <- "All URLs failed"
       class(err) <- c("download_one_of_error", class(err))
       stop(err)

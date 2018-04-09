@@ -55,10 +55,6 @@ test_that("packages_make_sources", {
 })
 
 test_that("read_packages_file", {
-  p_cols <- c("ref", "type", "direct", "status", "package", "version",
-              "platform", "rversion", "repodir", "sources", "target",
-              "needscompilation")
-  d_cols <- c("upstream", "idx", "ref", "type", "package", "op", "version")
 
   pkg_files <- vcapply(
     paste0("PACKAGES-", c("src", "win", "mac"), ".gz"),
@@ -68,15 +64,7 @@ test_that("read_packages_file", {
     pkgs <- read_packages_file(
       pf, mirror = "mirror", repodir = "src/contrib", platform = "source",
       rversion = "rversion")
-    expect_equal(length(pkgs), 2)
-    miss <- setdiff(p_cols, names(pkgs$pkgs))
-    expect_identical(miss, character(0))
-
-    miss2 <- setdiff(d_cols, names(pkgs$deps))
-    expect_identical(miss2, character(0))
-    expect_true(is.integer(pkgs$deps$idx))
-    pkgs$deps$idx <- as.character(pkgs$deps$idx)
-    expect_true(all(vlapply(pkgs$deps, is.character)))
+    check_packages_data(pkgs)
   }
 })
 
@@ -108,6 +96,9 @@ test_that("merge_packages_data", {
   )
 
   pkgs <- merge_packages_data(.list = pkgsx)
+
+  check_packages_data(pkgs)
+
   expect_equal(
     nrow(pkgs$pkgs),
     nrow(pkgsx[[1]]$pkgs) + nrow(pkgsx[[2]]$pkgs) + nrow(pkgsx[[3]]$pkgs))

@@ -133,24 +133,10 @@ remotes__start_new_resolution <- function(self, private) {
 
   ## Interpret the 'dependencies' configuration parameter,
   ## similarly to utils::install.packages
-  dp <- private$config$dependencies
-  hard <- c("Depends", "Imports", "LinkingTo")
-  if (isTRUE(dp)) {
-    res$metadata$dependencies <- c(hard, "Suggests")
-    res$metadata$indirect_dependencies <- hard
+  dp <- interpret_dependencies(private$config$dependencies)
 
-  } else if (identical(dp, FALSE)) {
-    res$metadata$dependencies <- character()
-    res$metadata$indirect_dependencies <- character()
-
-  } else if (is_na_scalar(dp)) {
-    res$metadata$dependencies <- hard
-    res$metadata$indirect_dependencies <- hard
-
-  } else {
-    res$metadata$dependencies <- dp
-    res$metadata$indirect_dependencies <- dp
-  }
+  res$metadata$dependencies <- dp$direct
+  res$metadata$indirect_dependencies <- dp$indirect
 
   res$fast <- list(direct_remotes = list(), indirect_remotes = list(),
                    direct_refs = character(), indirect_refs = character(),

@@ -52,7 +52,6 @@ packages_parse_deps <- function(pkgs) {
     parsed$upstream <- pkgs$package[parsed$idx]
     parsed <- parsed[, c("upstream", "idx", "ref", "type", "package",
                          "op", "version")]
-    parsed <- parsed[! parsed$package %in% base_packages(), ]
     parsed <- parsed[order(parsed$idx), ]
 
   } else {
@@ -122,7 +121,7 @@ packages_make_sources <- function(mirror, platform, target, repodir,
   } else {
     url2 <- paste0(mirror, "/", repodir, "/Archive/", package, "_",
                    version, ".tar.gz")
-    zip_lists(url, url2)
+    zip_vecs(url, url2)
   }
 }
 
@@ -133,7 +132,7 @@ merge_packages_data <- function(..., .list = list()) {
 
   ## Need to shift deps indices first to merge deps
   num_pkgs <- viapply(pkgslist, function(x) nrow(x$pkgs), USE.NAMES = FALSE)
-  shifts <- c(0, cumsum(num_pkgs))
+  shifts <- c(0L, cumsum(num_pkgs))
   for (i in seq_along(pkgslist)) {
     pkgslist[[i]]$deps$idx <- pkgslist[[i]]$deps$idx + shifts[i]
   }

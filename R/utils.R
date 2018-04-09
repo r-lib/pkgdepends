@@ -122,14 +122,6 @@ make_dl_status <- function(status, url, target, bytes, error = NULL) {
   obj
 }
 
-mkdirp <- function(dir, msg = NULL) {
-  s <- dir.create(dir, recursive = TRUE, showWarnings = FALSE)
-  if (any(s) && !is.null(msg) && is_verbose()) {
-    cli$alert_info("{msg}: {path {format_items(dir[s])}}")
-  }
-  invisible(s)
-}
-
 write_bin_atomic <- function(object, file) {
   tmp <- paste0(file, ".tmp")
   on.exit(try(unlink(tmp), silent = TRUE))
@@ -256,6 +248,10 @@ isFALSE <- function(x) {
 }
 
 zip_lists <- function(...) {
+  mapply(list, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
+}
+
+zip_vecs <- function(...) {
   mapply(c, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
 }
 
@@ -263,4 +259,8 @@ zip_lists <- function(...) {
 
 get_async_value <- function(x) {
   if (is_deferred(x)) x$.__enclos_env__$private$value else x
+}
+
+lapply_rows <-  function(df, fun, ...) {
+  lapply(seq_len(nrow(df)), function(i) fun(df[i,], ...))
 }

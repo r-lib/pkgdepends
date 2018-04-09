@@ -41,7 +41,7 @@ Suggests:
     rprojroot,
     testthat
 Remotes:
-    r-lib/async@pkgdepends,
+    r-lib/async,
     r-lib/cli,
     r-lib/desc,
     r-lib/pkgbuild

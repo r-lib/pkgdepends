@@ -29,6 +29,9 @@ read_packages_file <- function(path, mirror, repodir, platform, ...,
     mirror, platform, pkgs$target, repodir, pkgs$package, pkgs$version)
 
   deps <- packages_parse_deps(pkgs)
+  pkgs_deps <- split(
+    deps[,-(1:2)], factor(deps$idx, levels = seq_len(nrow(pkgs))))
+  pkgs$deps <- unname(pkgs_deps)
   list(pkgs = pkgs, deps = deps)
 }
 

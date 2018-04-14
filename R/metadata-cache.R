@@ -17,6 +17,11 @@ cranlike_metadata_cache <- R6Class(
     async_deps = function(packages, dependencies = NA, recursive = TRUE)
       cmc_async_deps(self, private, packages, dependencies, recursive),
 
+    list = function(packages = NULL)
+      synchronise(self$async_list(packages)),
+    async_list = function(packages = NULL)
+      cmc_async_list(self, private, packages),
+
     update = function()
       synchronise(self$async_update()),
     async_update = function()
@@ -88,6 +93,16 @@ cmc_async_deps <- async(function(self, private, packages, dependencies,
   "!!DEBUG Checking metadata"
   private$async_ensure_cache(private$update_after)$
     then(~ extract_deps(., packages, dependencies, recursive))
+})
+
+cmc_async_list <- async(function(self, private, packages) {
+  assert_that(is.null(packages) || is_character(packages))
+
+  "!!DEBUG Listing packages"
+  private$async_ensure_cache(private$update_after)$
+    then(function(x) {
+      if (is.null(packages)) x$pkgs else x$pkgs[x$pkgs$package %in% packages,]
+    })
 })
 
 cmc_async_update <- function(self, private) {
@@ -377,4 +392,50 @@ extract_deps <- function(pkgs, packages, dependencies, recursive) {
   attr(res, "unknown") <- setdiff(packages, c(res$package, base))
 
   res
+}
+
+#' Query CRAN(like) package data
+#'
+#' It uses CRAN and BioConductor packages.
+#'
+#' `cran_list()` lists all packages.
+#'
+#' `cran_update()` updates all metadata. Note that metadata is automatically
+#' updated if it is older than seven days.
+#'
+#' `cran_deps()` queries packages dependencies.
+#'
+#' @param packages Packages to query.
+#' @param dependencies Dependency types to query. See the `dependencies`
+#'   parameter of [utils::install.packages()].
+#' @param recursive Whether to query recursive dependencies.
+#' @return A data frame (tibble) of the dependencies. For `cran_deps()`
+#'   it includes the queried `packages` as well.
+#'
+#' @section Examples:
+#' ```
+#' cran_deps("dplyr")
+#' cran_list(c("MASS", dplyr"))
+#' cran_update()
+#' ```
+#'
+#' @export
+
+cran_deps <-  function(packages, dependencies = NA, recursive = TRUE) {
+  global_metadata_cache$deps(packages, dependencies = dependencies,
+                             recursive = recursive)
+}
+
+#' @export
+#' @rdname cran_deps
+
+cran_update <- function() {
+  invisible(global_metadata_cache$update()$pkgs)
+}
+
+#' @export
+#' @rdname cran_deps
+
+cran_list <- function(packages = NULL) {
+  global_metadata_cache$list(packages)
 }

@@ -19,7 +19,7 @@ cranlike_metadata_cache <- R6Class(
 
     revdeps = function(packages, dependencies = NA, recursive = TRUE)
       synchronise(self$async_revdeps(packages, dependencies, recursive)),
-    async_revdeps = function(packages, dependencies  = NA, recursive = TRUE)
+    async_revdeps = function(packages, dependencies = NA, recursive = TRUE)
       cmc_async_revdeps(self, private, packages, dependencies, recursive),
 
     list = function(packages = NULL)
@@ -368,6 +368,7 @@ cmc__update_primary <- function(self, private, rds, packages) {
   pri_files <- private$get_cache_files("primary")
   rep_files <- private$get_cache_files("replica")
 
+  mkdirp(dirname(pri_files$lock))
   l <- lock(pri_files$lock, exclusive = TRUE, private$lock_timeout)
   if (is.null(l)) stop("Cannot acquire lock to update primary cache")
   on.exit(unlock(l), add = TRUE)

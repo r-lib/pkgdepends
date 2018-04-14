@@ -175,7 +175,7 @@ get_package_from <- function(cache, urls, target_dir, target,
                        bytes = file.size(target_file))
       }
     })$
-    catch(function(err) {
+    catch(error = function(err) {
       make_dl_status("Failed", urls, target_file,  error = err)
     })
 }

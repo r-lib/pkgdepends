@@ -110,7 +110,7 @@ download_remote_github <- function(resolution, config,
         list(make_dl_status("Got", url, target_file,
                             bytes = file.size(target_file)))
       })$
-      catch(function(err) {
+      catch(error = function(err) {
         list(make_dl_status("Failed", url, target_file,
                             error = err))
       })
@@ -188,7 +188,7 @@ type_github_get_github_description_data <- function(rem) {
         deps = dsc$get_deps()
       )
     })$
-    catch(function(err) {
+    catch(error = function(err) {
       list(
         error   = err,
         package = NA_character_,
@@ -209,7 +209,7 @@ type_github_get_github_commit_sha <- function(rem) {
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
       list(error = NULL, sha = cdata$sha)
     })$
-    catch(function(err) {
+    catch(error = function(err) {
       list(error = err, sha = NA_character_)
     })
 }

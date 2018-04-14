@@ -2,11 +2,14 @@
 % Please edit documentation in R/metadata-cache.R
 \name{cran_deps}
 \alias{cran_deps}
+\alias{cran_revdeps}
 \alias{cran_update}
 \alias{cran_list}
 \title{Query CRAN(like) package data}
 \usage{
 cran_deps(packages, dependencies = NA, recursive = TRUE)
+
+cran_revdeps(packages, dependencues = NA, recursive = TRUE)
 
 cran_update()
 
@@ -34,6 +37,8 @@ It uses CRAN and BioConductor packages.
 updated if it is older than seven days.
 
 \code{cran_deps()} queries packages dependencies.
+
+\code{cran_revdeps()} queries reverse package dependencies.
 }
 \section{Examples}{
 \preformatted{cran_deps("dplyr")

@@ -17,6 +17,11 @@ cranlike_metadata_cache <- R6Class(
     async_deps = function(packages, dependencies = NA, recursive = TRUE)
       cmc_async_deps(self, private, packages, dependencies, recursive),
 
+    revdeps = function(packages, dependencies = NA, recursive = TRUE)
+      synchronise(self$async_revdeps(packages, dependencies, recursive)),
+    async_revdeps = function(packages, dependencies  = NA, recursive = TRUE)
+      cmc_async_revdeps(self, private, packages, dependencies, recursive),
+
     list = function(packages = NULL)
       synchronise(self$async_list(packages)),
     async_list = function(packages = NULL)
@@ -90,9 +95,21 @@ cmc_async_deps <- async(function(self, private, packages, dependencies,
     is_dependencies(dependencies),
     is_flag(recursive))
 
-  "!!DEBUG Checking metadata"
+  "!!DEBUG Getting deps"
   private$async_ensure_cache(private$update_after)$
     then(~ extract_deps(., packages, dependencies, recursive))
+})
+
+cmc_async_revdeps <- async(function(self, private, packages, dependencies,
+                                    recursive) {
+  assert_that(
+    is_character(packages),
+    is_dependencies(dependencies),
+    is_flag(recursive))
+
+  "!!DEBUG Getting revdeps"
+  private$async_ensure_cache(private$update_after)$
+    then(~ extract_revdeps(., packages, dependencies, recursive))
 })
 
 cmc_async_list <- async(function(self, private, packages) {
@@ -394,6 +411,32 @@ extract_deps <- function(pkgs, packages, dependencies, recursive) {
   res
 }
 
+extract_revdeps <- function(pkgs, packages, dependencies, recursive) {
+
+  realdep <- interpret_dependencies(dependencies)
+  dep <- tolower(realdep$direct)
+
+  new <- packages
+  repeat {
+    new <- setdiff(
+      pkgs$deps$upstream[pkgs$deps$ref %in% new & pkgs$deps$type %in% dep],
+      packages)
+    if (!length(new)) break
+    packages <- c(packages, new)
+    if (!recursive) break
+    dep <- tolower(realdep$indirect)
+  }
+
+  packages <- setdiff(packages, "R")
+  res <- pkgs$pkgs[pkgs$pkgs$package %in% packages, ]
+
+  base <- intersect(packages, base_packages())
+  attr(res, "base") <- base
+  attr(res, "unknown") <- setdiff(packages, c(res$package, base))
+
+  res
+}
+
 #' Query CRAN(like) package data
 #'
 #' It uses CRAN and BioConductor packages.
@@ -404,6 +447,8 @@ extract_deps <- function(pkgs, packages, dependencies, recursive) {
 #' updated if it is older than seven days.
 #'
 #' `cran_deps()` queries packages dependencies.
+#'
+#' `cran_revdeps()` queries reverse package dependencies.
 #'
 #' @param packages Packages to query.
 #' @param dependencies Dependency types to query. See the `dependencies`
@@ -421,9 +466,15 @@ extract_deps <- function(pkgs, packages, dependencies, recursive) {
 #'
 #' @export
 
-cran_deps <-  function(packages, dependencies = NA, recursive = TRUE) {
-  global_metadata_cache$deps(packages, dependencies = dependencies,
-                             recursive = recursive)
+cran_deps <- function(packages, dependencies = NA, recursive = TRUE) {
+  global_metadata_cache$deps(packages, dependencies, recursive)
+}
+
+#' @export
+#' @rdname cran_deps
+
+cran_revdeps <- function(packages, dependencues = NA, recursive = TRUE) {
+  global_metadata_cache$revdeps(packages, dependencies, recursive)
 }
 
 #' @export

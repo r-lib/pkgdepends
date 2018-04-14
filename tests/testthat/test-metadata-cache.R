@@ -368,3 +368,30 @@ test_that("deps, extract_deps", {
   deps2 <- extract_deps(pkgs, "nnet", c("Depends", "Suggests"), FALSE)
   expect_identical(deps, deps2)
 })
+
+test_that("concurrency in update", {
+  skip_if_offline()
+
+  dir.create(pri <- fs::path_norm(tempfile()))
+  on.exit(unlink(pri, recursive = TRUE), add = TRUE)
+  dir.create(rep <- fs::path_norm(tempfile()))
+  on.exit(unlink(rep, recursive = TRUE), add = TRUE)
+
+  cmc <- cranlike_metadata_cache$new(pri, rep, c("macos", "windows"),
+                                     bioc = FALSE)
+
+  ## TODO: somehow check that there are no parallel downloads
+  do <- function() {
+    dx1 <- cmc$async_update()
+    dx2 <- cmc$async_update()
+    dx3 <- cmc$async_update()
+    when_all(dx1, dx2, dx3)
+  }
+
+  res <- synchronise(do())
+  check_packages_data(res[[1]])
+  check_packages_data(res[[2]])
+  check_packages_data(res[[3]])
+
+  expect_null(get_private(cmc)$update_deferred)
+})

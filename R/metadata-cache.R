@@ -59,6 +59,8 @@ cranlike_metadata_cache <- R6Class(
     data = NULL,
     data_time = NULL,
 
+    update_deferred = NULL,
+
     primary_path = NULL,
     replica_path = NULL,
     platforms = NULL,
@@ -123,10 +125,14 @@ cmc_async_list <- async(function(self, private, packages) {
 })
 
 cmc_async_update <- function(self, private) {
-  private$update_replica_pkgs()$
+  if (!is.null(private$update_deferred)) return(private$update_deferred)
+
+  private$update_deferred <- private$update_replica_pkgs()$
     then(~ private$update_replica_rds())$
     then(~ private$update_primary())$
-    then(~ private$data)
+    then(~ private$data)$
+    finally(function() private$update_deferred <- NULL)$
+    share()
 }
 
 cmc__get_cache_files <- function(self, private, which) {

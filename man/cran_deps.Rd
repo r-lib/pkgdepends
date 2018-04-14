@@ -9,7 +9,7 @@
 \usage{
 cran_deps(packages, dependencies = NA, recursive = TRUE)
 
-cran_revdeps(packages, dependencues = NA, recursive = TRUE)
+cran_revdeps(packages, dependencies = NA, recursive = TRUE)
 
 cran_update()
 

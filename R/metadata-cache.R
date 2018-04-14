@@ -474,7 +474,7 @@ cran_deps <- function(packages, dependencies = NA, recursive = TRUE) {
 #' @export
 #' @rdname cran_deps
 
-cran_revdeps <- function(packages, dependencues = NA, recursive = TRUE) {
+cran_revdeps <- function(packages, dependencies = NA, recursive = TRUE) {
   global_metadata_cache$revdeps(packages, dependencies, recursive)
 }
 

@@ -1,28 +1,38 @@
 
-parse_remote <- function(specs, config, ...)
-  UseMethod("parse_remote")
+default_remote_types <- function() {
+  default <- list(
+    cran = list(
+      parse = parse_remote_cran,
+      resolve = resolve_remote_cran,
+      download = resolve_remote_cran,
+      satisfy = satisfy_remote_cran),
+    bioc = list(
+      parse = parse_remote_bioc,
+      resolve = resolve_remote_bioc,
+      download = resolve_remote_bioc,
+      satisfy = satisfy_remote_bioc),
+    standard = list(
+      parse = parse_remote_standard,
+      resolve = resolve_remote_standard,
+      download = resolve_remote_standard,
+      satisfy = satisfy_remote_standard),
+    github = list(
+      parse = parse_remote_github,
+      resolve = resolve_remote_github,
+      download = download_remote_github),
+    local = list(
+      parse = parse_remote_local,
+      resolve = resolve_remote_local,
+      download = resolve_remote_local,
+      satisfy = satisfy_remote_local),
+    installed = list(
+      parse = parse_remote_installed,
+      resolve = resolve_remote_installed,
+      download = resolve_remote_installed,
+      satisfy = satisfy_remote_installed)
+  )
 
-parse_remote.default <- function(specs, config, ...)
-  stop("Unknown or incomplete remote specs type, no `parse_remote` method")
-
-resolve_remote <- function(remote, direct, config, cache, dependencies,
-                           ...)
-  UseMethod("resolve_remote")
-
-resolve_remote.default <- function(remote, config, ...)
-  stop("Unknown or incomplete remote type, no `resolve_remote` method")
-
-download_remote <- function(resolution, config, mode, ...)
-  UseMethod("download_remote")
-
-download_remote.default <- function(resolution, config, mode, ...)
-  stop("Unknown or incomplete remote type, no `download_remote` method")
-
-satisfies_remote <- function(resolution, installed_description, config, ...)
-  UseMethod("satisfies_remote")
-
-satisfies_remote.default <- function(resolution, candidate, config, ...) {
-  FALSE
+  modifyList(default, as.list(getOption("pkg.remote_types")))
 }
 
 `$.remote_resolution` <- function(x, name) {

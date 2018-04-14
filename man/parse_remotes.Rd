@@ -4,7 +4,7 @@
 \alias{parse_remotes}
 \title{Parse package location specifications}
 \usage{
-parse_remotes(specs)
+parse_remotes(specs, remote_types = NULL, ...)
 }
 \arguments{
 \item{specs}{character vector}

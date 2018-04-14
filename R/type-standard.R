@@ -2,9 +2,7 @@
 ## ------------------------------------------------------------------------
 ## API
 
-#' @export
-
-parse_remote.remote_specs_standard <- function(specs, config, ...) {
+parse_remote_standard <- function(specs, config, ...) {
 
   ## This is the same as CRAN, but possibly with standard::
   parsed_specs <- re_match(specs, standard_rx())
@@ -18,10 +16,8 @@ parse_remote.remote_specs_standard <- function(specs, config, ...) {
   )
 }
 
-#' @export
-
-resolve_remote.remote_ref_standard <- function(remote, direct, config,
-                                               cache, dependencies, ...) {
+resolve_remote_standard <- function(remote, direct, config,
+                                    cache, dependencies, ...) {
   force(remote); force(direct); force(dependencies)
 
   cache$crandata <- cache$crandata %||% update_crandata_cache(config)
@@ -63,11 +59,9 @@ resolve_remote.remote_ref_standard <- function(remote, direct, config,
     })
 }
 
-#' @export
-
-download_remote.remote_resolution_standard <- function(resolution, config,
-                                                       mode, ..., cache,
-                                                       progress_bar) {
+download_remote_standard <- function(resolution, config,
+                                     mode, ..., cache,
+                                     progress_bar) {
   meta0 <- list(
     type = get_remote(resolution)[["type"]],
     ref = get_ref(resolution))
@@ -80,10 +74,7 @@ download_remote.remote_resolution_standard <- function(resolution, config,
   })
 }
 
-#' @export
-
-satisfies_remote.remote_resolution_standard <-
-  function(resolution, candidate, config, ...) {
+satisfy_remote_standard <- function(resolution, candidate, config, ...) {
 
     ## A standard ref is special, in that any ref source can satisfy it,
     ## as long as the package name is the same, and the version

@@ -2,9 +2,7 @@
 ### -----------------------------------------------------------------------
 ### API
 
-#' @export
-
-parse_remote.remote_specs_local <- function(specs, config, ...) {
+parse_remote_local <- function(specs, config, ...) {
   parsed_specs <- re_match(specs, type_local_rx())
   parsed_specs$ref <- parsed_specs$.text
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
@@ -16,10 +14,8 @@ parse_remote.remote_specs_local <- function(specs, config, ...) {
   )
 }
 
-#' @export
-
-resolve_remote.remote_ref_local <- function(remote, direct, config, cache,
-                                            dependencies, ...) {
+resolve_remote_local <- function(remote, direct, config, cache,
+                                 dependencies, ...) {
 
   tryCatch({
     dsc <- desc(file = remote$path)
@@ -94,10 +90,8 @@ resolve_remote.remote_ref_local <- function(remote, direct, config, cache,
   })
 }
 
-#' @export
-
-download_remote.remote_resolution_local <- function(resolution, config, mode,
-                                                    ..., cache, progress_bar) {
+download_remote_local <- function(resolution, config, mode,
+                                  ..., cache, progress_bar) {
   tryCatch({
     files <- get_files(resolution)[[1]]
     target_file <- file.path(config$cache_dir, files$target)
@@ -112,10 +106,7 @@ download_remote.remote_resolution_local <- function(resolution, config, mode,
   })
 }
 
-#' @export
-
-satisfies_remote.remote_resolution_local <-
-  function(resolution, candidate, config, ...) {
+satisfy_remote_local <- function(resolution, candidate, config, ...) {
     ## TODO: we can probably do better than this
     FALSE
   }

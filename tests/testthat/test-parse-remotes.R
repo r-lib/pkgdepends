@@ -204,3 +204,59 @@ test_that("parse_remotes, github", {
 test_that("parse_remotes error on unknown type", {
   expect_error(parse_remotes("my_package"), "parse remotes")
 })
+
+test_that("custom remote types", {
+  xspecs <- NULL
+  xargs <- NULL
+  parse_remote_foo <- function(specs, ...) {
+    xspecs <<- specs
+    xargs <<- list(...)
+    list(list())
+  }
+  res <- withr::with_options(
+    list(pkg.remote_types = list(foo = list(parse = parse_remote_foo))),
+    parse_remotes("foo::arbitrary_string/xxx", ex1 = "1", ex2 = "2")
+  )
+  expect_identical(
+    res,
+    list(structure(list(type = "foo"),
+                   class = c("remote_ref_foo", "remote_ref", "list")))
+  )
+  expect_identical(xspecs, "foo::arbitrary_string/xxx")
+  expect_identical(xargs, list(ex1 = "1", ex2 = "2"))
+
+  res2 <- parse_remotes(
+    "foo::arbitrary_string/xxx", ex1 = "1", ex2 = "2",
+    remote_types = list(foo = list(parse = parse_remote_foo)))
+  expect_identical(res, res2)
+})
+
+test_that("type_default_parse", {
+  res <- type_default_parse(c("foo::bar", "package=foo2::bar2"))
+  expect_identical(res,
+    list(
+      list(package = "", type = "foo", rest = "bar"),
+      list(package = "package", type = "foo2", rest = "bar2")
+    )
+  )
+})
+
+test_that("default parse function", {
+  res <- withr::with_options(
+    list(pkg.remote_types = list(foo = list(), foo2 = list())),
+    parse_remotes(c("foo::bar", "package=foo2::bar2"))
+  )
+  expect_identical(res,
+    list(
+      structure(list(package = "", type = "foo", rest = "bar"),
+                class = c("remote_ref_foo", "remote_ref", "list")),
+      structure(list(package = "package", type = "foo2", rest = "bar2"),
+                class = c("remote_ref_foo2", "remote_ref", "list"))
+    )
+  )
+
+  res2 <- parse_remotes(
+    c("foo::bar", "package=foo2::bar2"),
+    remote_types = list(foo = list(), foo2 = list()))
+  expect_identical(res, res2)
+})

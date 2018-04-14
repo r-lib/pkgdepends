@@ -6,9 +6,8 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom desc desc
 #' @importFrom glue glue
-#' @export
 
-parse_remote.remote_specs_github <- function(specs, config, ...) {
+parse_remote_github <- function(specs, config, ...) {
 
   pds <- re_match(specs, github_rx())
   if (any(unk <- is.na(pds$.match))) {
@@ -27,10 +26,8 @@ parse_remote.remote_specs_github <- function(specs, config, ...) {
   )
 }
 
-#' @export
-
-resolve_remote.remote_ref_github <- function(remote, direct, config, cache,
-                                             dependencies, ...) {
+resolve_remote_github <- function(remote, direct, config, cache,
+                                  dependencies, ...) {
 
   force(direct); force(dependencies)
   ## Get the DESCRIPTION data, and the SHA we need
@@ -41,11 +38,9 @@ resolve_remote.remote_ref_github <- function(remote, direct, config, cache,
     then(type_github_make_resolution)
 }
 
-#' @export
-
-download_remote.remote_resolution_github <- function(resolution, config,
-                                                     mode, ..., cache,
-                                                     progress_bar) {
+download_remote_github <- function(resolution, config,
+                                   mode, ..., cache,
+                                   progress_bar) {
 
   cache_dir <- config$cache_dir
 
@@ -124,10 +119,8 @@ download_remote.remote_resolution_github <- function(resolution, config,
 
 ## ----------------------------------------------------------------------
 
-#' @export
-
-satisfies_remote.remote_resolution_github <- function(resolution, candidate,
-                                                      config, ...) {
+satisfy_remote_github <- function(resolution, candidate,
+                                    config, ...) {
 
   ## 1. package name must match
   if (get_remote(resolution)$package != get_remote(candidate)$package) {

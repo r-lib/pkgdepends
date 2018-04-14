@@ -6,9 +6,8 @@
 #' @importFrom stats na.omit
 #' @importFrom desc desc_get_deps
 #' @importFrom tibble as_tibble tibble
-#' @export
 
-parse_remote.remote_specs_cran <- function(specs, config, ...) {
+parse_remote_cran <- function(specs, ...) {
 
   parsed_specs <- re_match(specs, standard_rx("cran"))
 
@@ -22,10 +21,8 @@ parse_remote.remote_specs_cran <- function(specs, config, ...) {
   )
 }
 
-#' @export
-
-resolve_remote.remote_ref_cran <- function(remote, direct, config, cache,
-                                           dependencies, progress_bar, ...) {
+resolve_remote_cran <- function(remote, direct, config, cache,
+                                dependencies, ...) {
   force(remote); force(direct); force(dependencies)
   cache$crandata <- cache$crandata %||% update_crandata_cache(config, progress_bar)
 
@@ -35,10 +32,8 @@ resolve_remote.remote_ref_cran <- function(remote, direct, config, cache,
   })
 }
 
-#' @export
-
-download_remote.remote_resolution_cran <- function(resolution, config, mode,
-                                                   ..., cache, progress_bar) {
+download_remote_cran <- function(resolution, config, mode, ..., cache,
+                                 progress_bar) {
 
   meta0 <- list(
     type = get_remote(resolution)[["type"]],
@@ -52,10 +47,7 @@ download_remote.remote_resolution_cran <- function(resolution, config, mode,
   })
 }
 
-#' @export
-
-satisfies_remote.remote_resolution_cran <- function(resolution, candidate,
-                                                    config, ...) {
+satisfy_remote_cran <- function(resolution, candidate, config, ...) {
 
   ## 1. candidate must be a cran, standard or installed ref
   if (! inherits(candidate, "remote_resolution_cran") &&

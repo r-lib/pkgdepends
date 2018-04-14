@@ -3,11 +3,8 @@
 ## API
 
 #' @importFrom desc desc
-#' @export
 
-#' @export
-
-parse_remote.remote_specs_installed <- function(specs, config, ...) {
+parse_remote_installed <- function(specs, config, ...) {
   parsed_specs <- re_match(specs, type_installed_rx())
 
   parsed_specs$ref <- parsed_specs$.text
@@ -20,9 +17,7 @@ parse_remote.remote_specs_installed <- function(specs, config, ...) {
   )
 }
 
-#' @export
-
-resolve_remote.remote_ref_installed <- function(remote, direct, config,
+resolve_remote_installed <- function(remote, direct, config,
                                                 cache, dependencies, ...) {
 
   dsc <- desc(file.path(remote$library, remote$package))
@@ -53,20 +48,16 @@ resolve_remote.remote_ref_installed <- function(remote, direct, config,
   )
 }
 
-#' @export
-
-download_remote.remote_resolution_installed <- function(resolution,
-                                                         config, mode, ...,
-                                                         cache) {
+download_remote_installed <- function(resolution,
+                                      config, mode, ...,
+                                      cache) {
   status <- make_dl_status("Had", NA_character_, NA_character_,
                            bytes = NA)
   async_constant(list(status))
 }
 
-#' @export
-
-satisfies_remote.remote_resolution_installed <-
-  function(resolution, candidate, config, ...) {
+satisfy_remote_installed <- function(resolution, candidate,
+                                     config, ...) {
     TRUE
   }
 

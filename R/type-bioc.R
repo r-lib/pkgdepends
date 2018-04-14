@@ -3,9 +3,8 @@
 ## API
 
 #' @importFrom glue glue_data
-#' @export
 
-parse_remote.remote_specs_bioc <- function(specs, config, ...) {
+parse_remote_bioc <- function(specs, config, ...) {
 
   ## BioC is the same as CRAN, except for cran:: -> bioc::
   parsed_specs <- re_match(specs, standard_rx("bioc"))
@@ -19,10 +18,8 @@ parse_remote.remote_specs_bioc <- function(specs, config, ...) {
   )
 }
 
-#' @export
-
-resolve_remote.remote_ref_bioc <- function(remote, direct, config, cache,
-                                           dependencies, progress_bar, ...) {
+resolve_remote_bioc <- function(remote, direct, config, cache,
+                                dependencies, progress_bar, ...) {
   force(remote); force(direct); force(dependencies)
   cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config, progress_bar)
 
@@ -32,10 +29,8 @@ resolve_remote.remote_ref_bioc <- function(remote, direct, config, cache,
   })
 }
 
-#' @export
-
-download_remote.remote_resolution_bioc <- function(resolution, config, mode,
-                                                   ..., cache, progress_bar) {
+download_remote_bioc <- function(resolution, config, mode,
+                                 ..., cache, progress_bar) {
   meta0 <- list(
     type = get_remote(resolution)[["type"]],
     ref = get_ref(resolution))
@@ -48,10 +43,8 @@ download_remote.remote_resolution_bioc <- function(resolution, config, mode,
   })
 }
 
-#' @export
-
-satisfies_remote.remote_resolution_bioc <- function(resolution, candidate,
-                                                    config, ...) {
+satisfy_remote_bioc <- function(resolution, candidate,
+                                config, ...) {
 
   ## 1. candidate must be a bioc, standard or installed ref
   if (! inherits(candidate, "remote_resolution_bioc") &&

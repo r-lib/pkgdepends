@@ -34,30 +34,22 @@ test_that("res_df_must_have", {
   expect_true(length(intersect(types, def)) == 0)
 })
 
-test_that("res_check_entry", {
+test_that("res_add_df_entries", {
   good <- list(
     ref = "package",
     type = "standard",
     package = "package",
     version = "1.0.0",
-    sources = list("url1", "url2"),
-    remote = quote(parse_remotes(ref))
+    sources = c("url1", "url2")
   )
 
-  expect_error(ent <- res_check_entry(good), NA)
+  empty <- res_make_empty_df()
 
-  bad <- c(good, list("noname"))
-  expect_error(res_check_entry(bad), "must be a list of named entries")
+  df <- res_add_df_entries(empty, good)
+  expect_identical(names(df), names(empty))
+  expect_equal(nrow(df), 1)
 
-  bad <- unlist(good[1:3])
-  expect_error(res_check_entry(bad), "not a list")
-
-  bad <- modifyList(good, list(type = 1L))
-  expect_error(res_check_entry(bad), "Wrong entry types")
-})
-
-test_that("res_add_df_entries", {
-  good <- list(
+  good2 <- tibble(
     ref = "package",
     type = "standard",
     package = "package",
@@ -67,7 +59,20 @@ test_that("res_add_df_entries", {
 
   empty <- res_make_empty_df()
 
-  df <- res_add_df_entries(empty, list(good, good))
-  expect_identical(names(df), names(empty))
-  expect_equal(nrow(df), 2)
+  df2 <- res_add_df_entries(empty, good2)
+  expect_identical(df2, df)
+
+  good3 <- tibble(
+    ref = c("package1", "package2"),
+    type = c("standard", "cran"),
+    package = c("package1", "package2"),
+    version = c("1.0.0", "2.0.0"),
+    sources = list(c("url1", "url2"), "url3")
+  )
+
+  empty <- res_make_empty_df()
+
+  df3 <- res_add_df_entries(empty, good3)
+  expect_identical(names(df3), names(empty))
+  expect_equal(nrow(df3), 2)
 })

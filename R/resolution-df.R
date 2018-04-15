@@ -1,31 +1,37 @@
 
-res_make_empty_df <- function() {
-  tibble(
-    ref      = character(),
-    type     = character(),
-    direct   = logical(),
-    status   = character(),             # "OK" or "FAILED"
-    package  = character(),
-    version  = character(),
-    license  = character(),
-    needscompilation
-             = logical(),
-    priority = character(),
-    md5sum   = character(),
-    filesize = integer(),
-    built    = character(),
-    platform = character(),             # "source" or platform string
-    rversion = character(),             # * or version number (prefix)
-    repodir  = character(),
-    target   = character(),
-    deps     = list(),
-    sources  = list(),                  # list of URLs
-    remote   = list(),                  # parsed remote ref
-    error    = list(),                  # list of errors
-    metadata = list(),                  # named character of entries
-    extra    = list()                   # any extra data (e.g. GitHub sha)
-  )
-}
+res_make_empty_df <- local({
+  data <- NULL
+  function() {
+    if (is.null(data)) {
+      data <<- tibble(
+        ref      = character(),
+        type     = character(),
+        direct   = logical(),
+        status   = character(),         # "OK" or "FAILED"
+        package  = character(),
+        version  = character(),
+        license  = character(),
+        needscompilation
+                 = logical(),
+        priority = character(),
+        md5sum   = character(),
+        filesize = integer(),
+        built    = character(),
+        platform = character(),         # "source" or platform string
+        rversion = character(),         # * or version number (prefix)
+        repodir  = character(),
+        target   = character(),
+        deps     = list(),
+        sources  = list(),              # list of URLs
+        remote   = list(),              # parsed remote ref
+        error    = list(),              # list of errors
+        metadata = list(),              # named character of entries
+        extra    = list()               # any extra data (e.g. GitHub sha)
+      )
+    }
+    data
+  }
+})
 
 res_df_defaults <- local({
   data <- NULL
@@ -45,7 +51,7 @@ res_df_defaults <- local({
         rversion = "*",
         repodir  =  "src/contrib",
         target   =
-          quote(file.path(repodir, paste0(package, "_", version, ".tar.gz"))),
+          quote(file.path("src/contrib", paste0(package, "_", version, ".tar.gz"))),
         deps     = list(make_null_deps()),
         remote   = quote(parse_remotes(ref)),
         error    = list(list()),
@@ -77,15 +83,13 @@ res_df_must_have <- local({
   }
 })
 
-res_check_entry <- function(ent) {
+res_check_entries <- function(df) {
   ## Some columns are required
-  assert_that(is.list(ent), all_named(ent))
+  assert_that(is.data.frame(ent))
 
   if (length(miss <- setdiff(res_df_must_have(), names(ent)))) {
     stop("Entries missing from remote: ", format_items(miss))
   }
-
-  ent <- lapply(ent, eval, envir = ent)
 
   ent_types <- vcapply(ent, class)
   exp_types <- res_df_entry_types()[names(ent)]
@@ -100,10 +104,40 @@ res_check_entry <- function(ent) {
 
 #' @param df Resolution data frame (tibble, really).
 #' @param entries List of entries to add.
+#' @importFrom tibble is_tibble
 
 res_add_df_entries <- function(df, entries) {
-  entries <- lapply(entries, modifyList, x = res_df_defaults())
-  entries <- lapply(entries, res_check_entry)
-  entries <- do.call(rbind, lapply(entries, as.tibble))
+  if (!is_tibble(entries)) entries <- res_one_row_tibble(entries)
+  entries <- res_add_defaults(entries)
   as.tibble(rbind(df, entries))[names(df)]
+}
+
+res_one_row_tibble <- function(l) {
+  assert_that(is.list(l) && all_named(l))
+  samp <- res_make_empty_df()[names(l)]
+  bad <- vlapply(samp, is.list) & !vlapply(l, is.list)
+  l[bad] <- lapply(l[bad], list)
+  as_tibble(l)
+}
+
+res_add_defaults <- function(df) {
+  if (length(bad <- setdiff(res_df_must_have(), names(df)))) {
+    stop("Entries missing from remote: ", format_items(miss))
+  }
+
+  all_types <- res_df_entry_types()
+  miss <- setdiff(names(all_types), names(df))
+  def <- lapply(res_df_defaults()[miss], eval, envir = df)
+  df[names(def)] <- def
+  df <- df[, names(all_types)]
+
+  ent_types <- vcapply(df, class)
+  exp_types <- all_types[names(df)]
+  if (any(bad <- ent_types != exp_types)) {
+    items <- paste0(names(df)[bad], " (", ent_types[bad], ", expected ",
+                    exp_types[bad], ")")
+    stop("Wrong entry types: ", format_items(items))
+  }
+
+  df
 }

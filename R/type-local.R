@@ -33,59 +33,39 @@ resolve_remote_local <- function(remote, direct, config, cache,
       error = function(e) "source"
     )
 
-    nc <- dsc$get("NeedsCompilation")
-    if (is.na(nc)) nc <- "yes"
-
-    files <- list(
-      source = normalizePath(remote$path),
-      target = file.path("src", "contrib", basename(remote$path)),
-      platform = platform,
-      rversion = rversion,
-      dir = file.path("src", "contrib"),
-      package = dsc$get("Package")[[1]],
-      version = dsc$get("Version")[[1]],
-      deps = deps,
-      ## Meaning, we don't know...
-      needs_compilation = nc,
-      status = "OK"
-    )
-
-    files$metadata <- c(
-      RemoteOriginalRef = remote$ref,
-      RemoteType = "local",
-      RemoteUrl = remote$path,
-      RemoteMD5 = tools::md5sum(remote$path),
-      RemotePkgType = if (platform == "source") "source" else "binary",
-      RemoteMtime = format_iso_8601(file.info(remote$path)$mtime)
-    )
+    nc <- dsc$get_field("NeedsCompilation", NA)
+    if  (!is.na(nc)) nc <- tolower(nc) %in% c("true", "yes")
 
     remote$description <- dsc
 
-    structure(
-      list(files = list(files), direct = direct, remote = remote,
-           status = "OK"),
-      class = c("remote_resolution_local", "remote_resolution")
+    list(
+      ref = remote$ref,
+      type = remote$type,
+      status = "OK",
+      package = dsc$get_field("Package"),
+      version = dsc$get_field("Version"),
+      license = dsc$get_field("License", NA_character_),
+      needscompilation = nc,
+      md5sum = dsc$get_field("MD5sum", NA_character_),
+      built = dsc$get_field("Built", NA_character_),
+      platform = platform,
+      rversion = rversion,
+      deps = list(deps),
+      sources = list(paste0("file://", normalizePath(remote$path))),
+      remote = list(remote),
+      unknown_deps = setdiff(deps$ref, "R")
     )
-
   }, error = function(err) {
-    files <- list(
-      source = remote$path,
-      target = file.path("src", "contrib", basename(remote$path)),
-      platform = NA_character_,
-      rversion = NA_character_,
-      dir = file.path("src", "contrib"),
-      package = NA_character_,
-      version = NA_character_,
-      deps = NULL,
-      status = "FAILED",
-      error = err
-    )
-    remote["description"] <- list(NULL)
 
-    structure(
-      list(files = list(files), direct = direct, remote = remote,
-           status = "FAILED"),
-      class = c("remote_resolution_local", "remote_resolution")
+    list(
+      ref = remote$ref,
+      type = remote$type,
+      status = "FAILED",
+      error = list(err),
+      package = dsc$get_field("Package", NA_character_),
+      version = dsc$get_field("Version", NA_character_),
+      license = dsc$get_field("License", NA_character_),
+      sources = list(NA_character_)
     )
   })
 }

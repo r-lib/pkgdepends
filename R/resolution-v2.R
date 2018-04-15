@@ -24,6 +24,11 @@ remotes_async_resolve <- function(self, private) {
     })
 }
 
+remotes_get_resolution <- function(self, private) {
+  if (is.null(private$resolution$result)) stop("No resolution yet")
+  private$resolution$result
+}
+
 resolution <- R6Class(
   "resolution",
   public = list(
@@ -43,6 +48,7 @@ resolution <- R6Class(
     state = NULL,
     cli = NULL,
     dependencies = NULL,
+    metadata = NULL,
 
     set_result = function(row_idx, value)
       res__set_result(self, private, row_idx, value),
@@ -58,6 +64,7 @@ res_init <- function(self, private, config, cache, remote_types, cli) {
   private$cache <- cache
   private$remote_types <- remote_types %||% default_remote_types()
   private$cli <- cli %||% cli::cli
+  private$metadata <- list(resolution_start = Sys.time())
 
   private$dependencies <- interpret_dependencies(config$dependencies)
 
@@ -124,6 +131,9 @@ res__try_finish <- function(self, private, resolve) {
   "!DEBUG resolution trying to finish with `nrow(self$result)` results"
   if (all(! is.na(private$state$status))) {
     "!DEBUG resolution finished"
+    private$metadata$resolution_end <- Sys.time()
+    attr(self$result, "metadata") <- private$metadata
+    class(self$result) <- c("remotes_resolution", class(self$result))
     resolve(self$result)
   }
 }

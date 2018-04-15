@@ -156,16 +156,6 @@ remotes <- R6Class(
     config = NULL,
     progress_bar = NULL,
 
-    start_new_resolution = function()
-      remotes__start_new_resolution(self, private),
-    resolve_ref = function(rem, pool, direct = FALSE)
-      remotes__resolve_ref(self, private, rem, pool, direct),
-    is_resolving = function(ref)
-      remotes__is_resolving(self, private, ref),
-    add_fast_refs = function(refs = NULL, remotes = NULL, direct = FALSE)
-      remotes__add_fast_refs(self, private, refs, remotes, direct = direct),
-    fast_resolve = function()
-      remotes__fast_resolve(self, private),
     download_res = function(res, mode)
       remotes_download_res(self, private, res, mode),
     subset_resolution = function(which)

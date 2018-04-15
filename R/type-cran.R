@@ -24,12 +24,11 @@ parse_remote_cran <- function(specs, ...) {
 resolve_remote_cran <- function(remote, direct, config, cache,
                                 dependencies, ...) {
   force(remote); force(direct); force(dependencies)
-  cache$crandata <- cache$crandata %||% update_crandata_cache(config, progress_bar)
-
-  cache$crandata$then(function(cacheresult) {
-    type_cran_resolve_from_cache(remote, direct, config, cacheresult,
-                                 dependencies)
-  })
+  if (remote$version %in% c("", "current")) {
+    type_cran_resolve_current(remote, direct, config, cache, dependencies)
+  } else {
+    type_cran_resolve_version(remote, direct, config, cache, dependencies)
+  }
 }
 
 download_remote_cran <- function(resolution, config, mode, ..., cache,
@@ -81,337 +80,25 @@ satisfy_remote_cran <- function(resolution, candidate, config, ...) {
 ## ----------------------------------------------------------------------
 ## Internal functions
 
-type_cran_update_cache <- function(rootdir, platforms, rversions, mirror,
-                                   progress_bar) {
-  if (!is.null(progress_bar)) {
-    progress_bar$alert(class = "alert-start", "Updating CRAN metadata")
-  }
-  dirs <- get_all_package_dirs(platforms, rversions)
+type_cran_resolve_current <- function(remote, direct, config, cache,
+                                      dependencies) {
+  remote; direct; config; cache; dependencies
 
-  current <- TRUE
-  defs <- lapply_with_names(dirs$contriburl, function(dir) {
-    cache_file  <- file.path(dir, "_cache", "PACKAGES.gz")
-    target_file <- file.path(rootdir, cache_file)
-    source_url  <- paste0(mirror, "/", dir, "/PACKAGES.gz")
-    cache_etag  <- file.path(dir, "_cache", "etags.yaml")
-    etag_file   <- file.path(rootdir, cache_etag)
-    mkdirp(dirname(target_file))
-    download_if_newer(source_url, target_file, etag_file)$
-      then(function(status) {
-        if (status$response$status_code == 200) {
-          current <<- FALSE
-          update_metadata_cache(rootdir, c(cache_file, cache_etag))
-        }
-      })$
-      then(function() {
-        cran_metadata_cache$get(target_file)
-      })
-  })
-
-  archive <- local({
-    cache_file <- file.path("src/contrib", "_cache", "archive.rds")
-    target_rds <- file.path(rootdir, cache_file)
-    source_url <- paste0(mirror, "/src/contrib/Meta/archive.rds")
-    mkdirp(dirname(target_rds))
-    cache_etag <- paste0(cache_file, ".etag")
-    etag_file  <- paste0(target_rds, ".etag")
-    download_if_newer(source_url, target_rds, etag_file)$
-      then(function(status) {
-        if (status$response$status_code == 200) {
-          current <<- FALSE
-          update_metadata_cache(rootdir, c(cache_file, cache_etag))
-        }
-      })$
-      then(function() {
-        cran_metadata_cache$get(target_rds)
-      })
-  })
-
-  cran_cache <- when_all(
-    `_dirs` = dirs,
-    `_archive` = archive,
-    .list = defs
-  )
-
-  cran_cache$then(function() {
-    if (!is.null(progress_bar)) {
-      progress_bar$alert_success(
-        if (current) "CRAN metadata current" else "Updated CRAN metadata"
-      )
-    }
-  })
-
-  cran_cache
+  cache$metadata$async_deps(remote$package, dependencies = dependencies)$
+    then(function(x) {
+      res <- x[c("ref", "type", "status", "package", "version", "license",
+                 "needscompilation", "priority", "md5sum", "built",
+                 "platform", "rversion", "repodir", "target", "deps",
+                 "sources")]
+      res$ref[res$package == remote$package] <- remote$ref
+      res$needscompilation <-
+        tolower(res$needscompilation) %in% c("yes", "true")
+      res$direct <- direct & res$ref == remote$ref
+      res
+    })
 }
 
-type_cran_resolve_from_cache <- function(remote, direct, config, crancache,
-                                         dependencies) {
-  if (remote$version == "current" || remote$version == "") {
-    type_cran_resolve_from_cache_current(remote, direct, config, crancache,
-                                         dependencies)
-  } else {
-    type_cran_resolve_from_cache_general(remote, direct, config, crancache,
-                                         dependencies)
-  }
-}
-
-type_cran_resolve_from_cache_current <- function(remote, direct, config,
-                                                 crancache, dependencies) {
-  force(direct);
-
-  files <- type_cran_resolve_from_cache_current_files(remote, config,
-                                                      crancache,
-                                                      dependencies)
-
-  files$then(function(files) {
-    structure(
-      list(
-        files = files, direct = direct, remote = remote,
-        status = all_ok(files)),
-      class = c("remote_resolution_cran", "remote_resolution")
-    )
-  })
-}
-
-type_cran_resolve_from_cache_current_files <- function(remote, config,
-                                                       crancache,
-                                                       dependencies) {
-
-  platforms    <- config$platforms
-  rversions    <- config$`r-versions`
-  mirror       <- config$`cran-mirror`
-  dirs         <- crancache$`_dirs`
-
-  files <- lapply(seq_len(nrow(dirs)), function(i) {
-    dir <- dirs[i, ]
-    type_cran_make_resolution(
-      remote,
-      dir$platform,
-      dir$rversion,
-      data = crancache[[dir$contriburl]],
-      dir = dir$contriburl,
-      mirror = mirror,
-      dependencies = dependencies
-    )
-  })
-
-  ## cran_make_resolution returns a list of 'files' structures
-  files <- unlist(files, recursive = FALSE)
-
-  async_constant(files)
-}
-
-type_cran_resolve_from_cache_general <- function(remote, direct, config,
-                                                 crancache, dependencies) {
-  force(direct);
-
-  vers <- type_cran_fix_cran_version(
-    remote$package, remote$version, remote$atleast,
-    packages = crancache$`src/contrib`,
-    archive = crancache$`_archive`
-  )
-
-  files <- async_map(
-    vers,
-    function(v) {
-      if (v == "current") {
-        rem2 <- remote
-        rem2$version <- ""
-        rem2$atleast <- ""
-        type_cran_resolve_from_cache_current_files(rem2, config, crancache,
-                                                   dependencies)
-      } else {
-        type_cran_resolve_from_cache_version_files(remote, v, config,
-                                                   crancache, dependencies)
-      }
-    }
-  )
-
-  files$then(function(files) {
-
-    ## This is a list of lists
-    files <- unlist(files, recursive = FALSE, use.names = FALSE)
-
-    structure(
-      list(files = files, direct = direct, remote = remote,
-           status = all_ok(files)),
-      class = c("remote_resolution_cran", "remote_resolution")
-    )
-  })
-}
-
-type_cran_resolve_from_cache_version_files <- function(remote, version,
-                                                       config, crancache,
-                                                       dependencies) {
-
-  package  <- remote$package
-  mirror   <- config$`cran-mirror`
-  dirs     <- crancache$`_dirs`
-  dir      <- dirs$contriburl[match("source", dirs$platform)]
-  archive  <- crancache$`_archive`
-  package_path <- archive$file[archive$package == package &
-                                 archive$version == version]
-
-  ## If we can't find the specified version, then `package_path` is empty
-
-  if (!length(package_path)) {
-    return(async_constant(list(list(
-      source = character(), target = NA_character_, platform = "*",
-      rversion = "*", dir = dir, package = package,
-      version = version, deps = NA_character_,
-      needs_compilation = NA_character_, status = "FAILED",
-      error = make_error(
-        paste0("Can't find CRAN package ", package, ", version ", version),
-        class = "remotes_resolution_error"
-      )
-    ))))
-  }
-
-  ## To get the dependencies, we need to download the package, and
-  ## parse DESCRIPTION
-  source <- type_cran_make_cran_archive_url(mirror, package, version)
-  target_file <- file.path(config$cache_dir, dir, package_path)
-  mkdirp(target_dir <- dirname(target_file))
-  etag_file <- file.path(target_dir, "_cache", basename(target_file))
-
-  type_cran_get_package_deps_url(
-    source, target_file, dependencies, last = TRUE, etag_file = etag_file)$
-      then(function(deps) {
-        list(list(
-          source = type_cran_make_cran_archive_url(mirror, package, version),
-          target = file.path(dir, package_path),
-          platform = "source",
-          rversion = "*",
-          dir = dir,
-          package = package,
-          version = version,
-          deps = deps,
-          needs_compilation = NA_character_,
-          status = "OK"
-        ))
-      })
-}
-
-type_cran_make_resolution <- function(remote, platform, rversion, data,
-                                      dir, mirror, dependencies) {
-  ref <- remote$ref
-  package <- remote$package
-  version <- remote$version
-
-  dependencies <- intersect(dependencies, colnames(data$pkgs))
-
-  result <- list(
-    source = character(), target = NA_character_, platform = platform,
-    rversion = rversion, dir = dir, package = package,
-    version = NA_character_, deps = NA_character_,
-    needs_compilation = NA_character_,
-    status = "OK"
-  )
-
-  wh <- if (version == "" || version == "current") {
-    wh <- which(data$pkgs$Package == package)
-  } else {
-    wh <- which(data$pkgs$Package == package &
-                  data$pkgs$Version == version)
-  }
-  if (! length(wh)) {
-    result$status <- "FAILED"
-    result$error <- make_error(
-      paste0("Can't find CRAN package ", package),
-      class = "remotes_resolution_error"
-    )
-    return(list(result))
-  }
-
-  ext <- get_cran_extension(platform)
-
-  result <- replicate(length(wh), result, simplify = FALSE)
-  for (i in 1:length(wh)) {
-    whi <- wh[i]
-    version <- data$pkgs$Version[[whi]]
-    result[[i]]$version <- version
-
-    path <- if ("File" %in% colnames(data$pkgs) &&
-                !is.na(file_loc <- data$pkgs$File[[whi]])) {
-      paste0(dir, "/", file_loc)
-    } else if ("Path" %in% colnames(data$pkgs) &&
-               !is.na(file_path <- data$pkgs$Path[[whi]])) {
-      paste0(dir, "/", file_path, "/", package, "_", version, ext)
-    } else {
-      paste0(dir, "/", package, "_", version, ext)
-    }
-
-    url <- paste0(mirror, "/", path)
-
-    ## If this is a source package, then it might be in Archive by the time
-    ## we download it
-    if (platform == "source") {
-      url <- c(
-        url,
-        type_cran_make_cran_archive_url(mirror, package, version))
-    }
-
-    result[[i]]$source <- unname(url)
-    result[[i]]$target <- path
-
-    result[[i]]$deps <- fast_select_deps(data$deps, whi, dependencies)
-    ## It is NA for binary packages
-    comp <- if ("NeedsCompilation" %in% colnames(data)) {
-      data$NeedsCompilation[whi]
-    } else {
-      "no"
-    }
-    result[[i]]$needs_compilation <- if (is.na(comp)) "no" else comp
-
-    result[[i]]$metadata <- c(
-      RemoteOriginalRef = ref,
-      RemoteType = "cran",
-      RemoteRepos = paste0(deparse(mirror[[1]]), collapse = ""),
-      RemotePkgType = if (platform == "source") "source" else "binary"
-    )
-  }
-
-  result
-}
-
-type_cran_make_cran_archive_url <- function(mirror, package, version) {
-  paste0(mirror, "/src/contrib/Archive/", package, "/",
-         package, "_", version, ".tar.gz")
-}
-
-type_cran_fix_cran_version <- function(package, version, ge, packages,
-                                       archive) {
-
-  packages <- packages$pkgs
-  current <- packages$Version[packages$Package == package]
-  oldvers <- archive$version[archive$package == package]
-
-  res <- if (version == "last") {
-    if (length(current)) "current" else max(package_version(oldvers))
-
-  } else if (ge == "") {
-    if (version %in% current) {
-      "current"
-    } else if (version %in% oldvers) {
-      version
-    } else {
-      "invalid-version"
-    }
-
-  } else {
-    c(oldvers[package_version(oldvers) >= version],
-      if (length(current)) "current")
-  }
-
-  as.character(res)
-}
-
-type_cran_get_package_deps_url <- function(url, target, dependencies,
-                                           last = FALSE,
-                                           etag_file = NULL) {
-  force(url) ; force(target) ; force(dependencies) ; force(last)
-  force(etag_file)
-  download_if_newer(url, target, etag_file)$
-    then(function() desc_get_deps(file = target))$
-    then(function(deps) deps_from_desc(deps, dependencies, last))
+type_cran_resolve_version <- function(remote, direct, config,
+                                      crancache, dependencies) {
+  TODO
 }

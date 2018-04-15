@@ -264,3 +264,9 @@ get_async_value <- function(x) {
 lapply_rows <-  function(df, fun, ...) {
   lapply(seq_len(nrow(df)), function(i) fun(df[i,], ...))
 }
+
+`%||%` <- function(l, r) if (is.null(l)) r else l
+
+is_verbose <- function() {
+  getOption("pkg.show_progress") %||% interactive()
+}

@@ -175,7 +175,6 @@ cmc__get_cache_files <- function(self, private, which) {
 #' @param max_age Maximum age allowed to consider the data current.
 #' @return Metadata.
 #' @keywords internal
-#' @importFrom async async_try_each
 
 cmc__async_ensure_cache <- async(function(self, private, max_age) {
   max_age

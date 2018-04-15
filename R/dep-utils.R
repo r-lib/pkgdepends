@@ -134,5 +134,5 @@ interpret_dependencies <- function(dp) {
   }
 
   names(res) <- c("direct", "indirect")
-  res
+  res[c("indirect", "direct")]
 }

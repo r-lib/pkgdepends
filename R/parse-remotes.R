@@ -125,7 +125,9 @@ remote_type_rx <- function() {
 
 type_default_parse <- function(specs, ...) {
   m <- re_match(specs, remote_type_rx())
-  lapply_rows(m, function(x) as.list(x)[c("package", "type", "rest")])
+  lapply_rows(m, function(x)
+    list(package = x$package, type = x$type, rest = x$rest, ref = x$.text)
+  )
 }
 
 get_remote_types <- function(specs) {

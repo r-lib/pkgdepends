@@ -20,42 +20,18 @@ resolve_remote_standard <- function(remote, direct, config,
                                     cache, dependencies, ...) {
   force(remote); force(direct); force(dependencies)
 
-  cache$crandata <- cache$crandata %||% update_crandata_cache(config)
-  cache$biocdata <- cache$biocdata %||% update_biocdata_cache(config)
-
-  ## We try both cran and bioc
-  cran <- cache$crandata$
-    then(function(cacheresult) {
-      type_cran_resolve_from_cache(remote, direct, config, cacheresult,
-                                   dependencies)
-    })
-
-  bioc <- cache$biocdata$
-    then(function(cacheresult) {
-      type_bioc_resolve_from_cache(remote, direct, config, cacheresult,
-                                   dependencies)
-    })
-
-  when_all(cran = cran, bioc = bioc)$
-    then(function(val) {
-      cran_status <- vcapply(get_files(val$cran), "[[", "status")
-      bioc_status <- vcapply(get_files(val$bioc), "[[", "status")
-      statusok <- any(cran_status == "OK") || any(bioc_status == "OK")
-      files <- if (statusok) {
-        c(get_files(val$cran)[cran_status == "OK"],
-          get_files(val$bioc)[bioc_status == "OK"])
-      } else {
-        c(get_files(val$cran), get_files(val$bioc))
-      }
-      structure(
-        list(
-          files = files,
-          direct = direct,
-          remote = remote,
-          status = if (statusok) "OK" else "FAILED"
-        ),
-        class = c("remote_resolution_standard", "remote_resolution")
-      )
+  cache$metadata$async_deps(remote$package, dependencies = dependencies)$
+    then(function(x) {
+      res <- x[c("ref", "type", "status", "package", "version", "license",
+                 "needscompilation", "priority", "md5sum", "built",
+                 "platform", "rversion", "repodir", "target", "deps",
+                 "sources")]
+      res$ref[res$package == remote$package] <- remote$ref
+      res$needscompilation <-
+        tolower(res$needscompilation) %in% c("yes", "true")
+      res$direct <- direct & res$ref == remote$ref
+      res$type <- "standard"
+      res
     })
 }
 

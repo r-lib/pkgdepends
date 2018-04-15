@@ -103,8 +103,9 @@ NULL
 remotes <- R6Class(
   "remotes",
   public = list(
-    initialize = function(specs, config = list(), library = NULL)
-      remotes_init(self, private, specs, config, library),
+    initialize = function(specs, config = list(), library = NULL,
+                          remote_types = NULL, cli = NULL)
+      remotes_init(self, private, specs, config, library, remote_types, cli),
 
     async_resolve = function()
       remotes_async_resolve(self, private),
@@ -148,6 +149,7 @@ remotes <- R6Class(
     library = NULL,
     dirty = FALSE,
     remotes = list(),
+    cache = NULL,
     resolution = NULL,
     solution = NULL,
     downloads = NULL,
@@ -155,6 +157,8 @@ remotes <- R6Class(
     download_cache = NULL,
     config = NULL,
     progress_bar = NULL,
+    remote_types = NULL,
+    cli = NULL,
 
     download_res = function(res, mode)
       remotes_download_res(self, private, res, mode),
@@ -171,7 +175,8 @@ remotes <- R6Class(
 
 #' @importFrom utils modifyList
 
-remotes_init <- function(self, private, specs, config, library) {
+remotes_init <- function(self, private, specs, config, library,
+                         remote_types, cli) {
 
   assert_that(is_character(specs),
               is_valid_config(config),
@@ -179,10 +184,18 @@ remotes_init <- function(self, private, specs, config, library) {
 
   private$remotes <- parse_remotes(specs)
   private$config <- modifyList(remotes_default_config(), config)
+  private$remote_types <- remote_types %||% default_remote_types()
+  private$cli <- cli %||% cli::cli
 
   private$library <- library
   if (!is.null(library)) mkdirp(library, msg = "Creating library directory")
   mkdirp(private$download_cache <- private$config$cache_dir)
+
+  private$cache <- list(
+    metadata = cranlike_metadata_cache$new(
+      replica_path = private$config$metadata_cache_dir),
+    package = package_cache$new(private$config$package_cache_dir)
+  )
 
   private$dirty <- TRUE
   invisible(self)
@@ -190,9 +203,9 @@ remotes_init <- function(self, private, specs, config, library) {
 
 remotes_default_config <- function() {
   list(
-    "cache_dir"          = detect_cache_dir(),
+    "cache_dir"          = detect_download_cache_dir(),
     "package_cache_dir"  = detect_package_cache_dir(),
-    "metadata_cache_dir" = detect_metadata_cache_dir(),
+    "metadata_cache_dir" = tempfile(),
     "platforms"          = default_platforms(),
     "cran-mirror"        = default_cran_mirror(),
     "dependencies"       = c("Depends", "Imports", "LinkingTo"),

@@ -13,7 +13,9 @@ remotes_async_resolve <- function(self, private) {
   private$solution <- NULL
 
   private$dirty <- TRUE
-  private$resolution <- resolution$new()
+  private$resolution <- resolution$new(
+    config = private$config, cache = private$cache,
+    remote_types = private$remote_types, cli = private$cli)
 
   private$resolution$push(direct = TRUE, .list = private$remotes)
 

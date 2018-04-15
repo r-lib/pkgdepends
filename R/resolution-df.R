@@ -109,7 +109,7 @@ res_check_entries <- function(df) {
 res_add_df_entries <- function(df, entries) {
   if (!is_tibble(entries)) entries <- res_one_row_tibble(entries)
   entries <- res_add_defaults(entries)
-  as.tibble(rbind(df, entries))[names(df)]
+  as_tibble(rbind(df, entries))[names(df)]
 }
 
 res_one_row_tibble <- function(l) {

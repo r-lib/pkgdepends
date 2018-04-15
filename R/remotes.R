@@ -193,7 +193,10 @@ remotes_init <- function(self, private, specs, config, library,
 
   private$cache <- list(
     metadata = cranlike_metadata_cache$new(
-      replica_path = private$config$metadata_cache_dir),
+      replica_path = private$config$metadata_cache_dir,
+      platforms = private$config$platforms,
+      r_version = private$config$`r-version`,
+      cran_mirror = private$config$`cran-mirror`),
     package = package_cache$new(private$config$package_cache_dir)
   )
 

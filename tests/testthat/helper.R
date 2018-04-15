@@ -42,10 +42,9 @@ oneday <- function() as.difftime(1, units = "days")
 oneminute <- function() as.difftime(1, units = "mins")
 
 check_packages_data <- function(pkgs) {
-  p_cols <- c("ref", "type", "direct", "status", "package", "version",
-              "platform", "rversion", "repodir", "sources", "target",
-              "needscompilation")
-  d_cols <- c("upstream", "idx", "ref", "type", "package", "op", "version")
+  cols <- packages_gz_cols()
+  p_cols <- cols$pkgs
+  d_cols <- cols$deps
 
   expect_equal(length(pkgs), 2)
   miss <- setdiff(p_cols, names(pkgs$pkgs))

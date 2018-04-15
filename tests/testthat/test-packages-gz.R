@@ -41,14 +41,14 @@ test_that("packages_make_sources", {
   expect_equal(
     packages_make_sources(
       "URL", "macos", c("s/c/p1_1.0.tgz", "s/c/p2_2.0.tgz"), "s/c",
-      c("p1", "p2"), c("1.0", "2.0")),
+      c("p1", "p2"), c("1.0", "2.0"), type = "cran"),
     list("URL/s/c/p1_1.0.tgz", "URL/s/c/p2_2.0.tgz")
   )
 
   expect_equal(
     packages_make_sources(
       "URL", "source", c("s/c/xx.tar.gz", "s/c/yy.tar.gz"), "s/c",
-      c("p1", "p2"), c("1.0", "2.0")),
+      c("p1", "p2"), c("1.0", "2.0"), type = "cran"),
     list(c("URL/s/c/xx.tar.gz", "URL/s/c/Archive/p1_1.0.tar.gz"),
          c("URL/s/c/yy.tar.gz", "URL/s/c/Archive/p2_2.0.tar.gz"))
   )

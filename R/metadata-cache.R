@@ -8,9 +8,10 @@ cranlike_metadata_cache <- R6Class(
                           platforms = default_platforms(),
                           r_version = current_r_version(), bioc = TRUE,
                           cran_mirror = default_cran_mirror(),
+                          repos = getOption("repos"),
                           update_after = as.difftime(7, units = "days"))
       cmc_init(self, private,  primary_path, replica_path, platforms,
-               r_version, bioc, cran_mirror, update_after),
+               r_version, bioc, cran_mirror, repos, update_after),
 
     deps = function(packages, dependencies = NA, recursive = TRUE)
       synchronise(self$async_deps(packages, dependencies, recursive)),
@@ -66,7 +67,7 @@ cranlike_metadata_cache <- R6Class(
     platforms = NULL,
     r_version = NULL,
     bioc = NULL,
-    cran_mirror = NULL,
+    repos = NULL,
     update_after = NULL,
     dirs = NULL,
     lock_timeout = 10000
@@ -76,7 +77,7 @@ cranlike_metadata_cache <- R6Class(
 #' @importFrom filelock lock unlock
 
 cmc_init <- function(self, private, primary_path, replica_path, platforms,
-                     r_version, bioc, cran_mirror, update_after) {
+                     r_version, bioc, cran_mirror, repos, update_after) {
 
   "!!DEBUG Init metadata cache in '`replica_path`'"
   private$primary_path <- primary_path
@@ -84,7 +85,7 @@ cmc_init <- function(self, private, primary_path, replica_path, platforms,
   private$platforms <- platforms
   private$r_version <- get_minor_r_version(r_version)
   private$bioc <- bioc
-  private$cran_mirror <- cran_mirror
+  private$repos <- cmc__get_repos(repos, bioc, cran_mirror, r_version)
   private$update_after <- update_after
   private$dirs <- get_all_package_dirs(platforms, r_version)
   invisible(self)
@@ -135,14 +136,29 @@ cmc_async_update <- function(self, private) {
     share()
 }
 
+#' @importFrom digest digest
+
+repo_encode <- function(repos) {
+  paste0(
+    vcapply(repos$name, URLencode, reserved = TRUE), "-",
+    substr(vcapply(repos$url, digest), 1, 10)
+  )
+}
+
 cmc__get_cache_files <- function(self, private, which) {
   root <- private[[paste0(which, "_path")]]
 
+  repo_hash <- digest(list(repos = private$repos, dirs = private$dirs))
+
   str_platforms <- paste(private$platforms, collapse = "+")
-  rds_file <- glue("pkgs-{str_platforms}-{private$r_version}.rds")
-  pkgs_dirs <- private$dirs$contriburl
+  rds_file <- paste0("pkgs-", substr(repo_hash, 1, 10), ".rds")
+
+  repo_enc <- rep(repo_encode(private$repos), each = nrow(private$dirs))
+  pkgs_dirs <- rep(private$dirs$contriburl, nrow(private$repos))
   pkgs_files <- file.path(pkgs_dirs, "PACKAGES.gz")
-  etag_files <- file.path(private$dirs$contriburl, "_cache", "etags.yaml")
+  mirror <- rep(private$repos$url, each = nrow(private$dirs))
+  type <- rep(private$repos$type, each = nrow(private$dirs))
+  bioc_version <- rep(private$repos$bioc_version, each = nrow(private$dirs))
 
   list(
     root = root,
@@ -150,13 +166,15 @@ cmc__get_cache_files <- function(self, private, which) {
     lock = file.path(root, "_metadata.lock"),
     rds  = file.path(root, "_metadata", rds_file),
     pkgs = tibble::tibble(
-      path = file.path(root, "_metadata", pkgs_files),
-      etag = file.path(root, "_metadata", etag_files),
+      path = file.path(root, "_metadata", repo_enc, pkgs_files),
+      etag = file.path(root, "_metadata", repo_enc, paste0(pkgs_files, ".etag")),
       basedir = pkgs_dirs,
       base = pkgs_files,
-      etag_base = etag_files,
-      url = paste0(private$cran_mirror, "/", pkgs_files),
-      platform = private$dirs$platform
+      mirror = mirror,
+      url = paste0(mirror, "/", pkgs_files),
+      platform = rep(private$dirs$platform, nrow(private$repos)),
+      type = type,
+      bioc_version = bioc_version
     )
   )
 }
@@ -343,10 +361,16 @@ cmc__update_replica_rds <- function(self, private) {
   data_list <- lapply_rows(
     rep_files$pkgs,
     function(r) {
-      read_packages_file(r$path, mirror = private$cran_mirror,
-                         repodir = r$basedir, platform = r$platform,
-                         rversion = private$r_version)
+      tryCatch(
+        read_packages_file(r$path, mirror = r$mirror,
+                           repodir = r$basedir, platform = r$platform,
+                           rversion = private$r_version, type = r$type),
+        ## TODO: warn?
+        error = function(x) NULL
+      )
     })
+
+  data_list <- data_list[!vlapply(data_list, is.null)]
 
   private$data <- merge_packages_data(.list = data_list)
   saveRDS(private$data, file = rep_files$rds)
@@ -439,6 +463,34 @@ extract_revdeps <- function(pkgs, packages, dependencies, recursive) {
   base <- intersect(packages, base_packages())
   attr(res, "base") <- base
   attr(res, "unknown") <- setdiff(packages, c(res$package, base))
+
+  res
+}
+
+cmc__get_repos <- function(repos, bioc, cran_mirror, r_version) {
+  repos[["CRAN"]] <- cran_mirror
+  res <- tibble(
+    name = names(repos),
+    url = unname(repos),
+    type = ifelse(names(repos) == "CRAN", "cran", "cranlike"),
+    bioc_version = NA_character_)
+
+  if (bioc) {
+    bioc_repos <- type_bioc_get_bioc_repos(r_version)
+    bioc_version <- bioc_repos$version
+    bioc_repos <- bioc_repos$repos
+
+    miss <- setdiff(names(bioc_repos), res$name)
+    bioc_res <- tibble(
+      name = miss,
+      url = unname(bioc_repos[miss]),
+      type = "bioc",
+      bioc_version = bioc_version
+    )
+    res <- rbind(res, bioc_res)
+    res$type[res$name %in% names(bioc_repos)] <- "bioc"
+    res$bioc_version[res$name %in% names(bioc_repos)] <- bioc_version
+  }
 
   res
 }

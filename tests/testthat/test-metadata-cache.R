@@ -21,8 +21,8 @@ test_that("get_cache_files", {
     expect_true(tibble::is_tibble(files$pkgs))
     expect_equal(
       sort(names(files$pkgs)),
-      sort(c("path", "etag", "basedir", "base", "etag_base", "url",
-             "platform")))
+      sort(c("path", "etag", "basedir", "base", "mirror", "url",
+             "platform", "type", "bioc_version")))
     expect_equal(
       fs::path_common(c(files$pkgs$path, files$pkgs$etag, root)),
       root)
@@ -394,4 +394,31 @@ test_that("concurrency in update", {
   check_packages_data(res[[3]])
 
   expect_null(get_private(cmc)$update_deferred)
+})
+
+test_that("cmc__get_repos", {
+  repos <- c(CRAN = "bad")
+
+  ## No bioc, CRAN is replaced
+  expect_equal(
+    cmc__get_repos(repos, FALSE, cran_mirror = "good", r_version = "3.5"),
+    tibble(name = "CRAN", url = "good", type = "cran",
+           bioc_version = NA_character_)
+  )
+
+  ## BioC, all new
+  res <- cmc__get_repos(repos, TRUE, "good", r_version = "3.5")
+  expect_equal(res$name, c("CRAN", "BioCsoft", "BioCann", "BioCexp"))
+  expect_equal(res$url[1], "good")
+  expect_equal(res$type, c("cran", "bioc", "bioc", "bioc"))
+  expect_equal(res$bioc_version, c(NA_character_, "3.7", "3.7", "3.7"))
+
+  ## BioC, some are custom
+  repos <- c(CRAN = "bad", BioCsoft = "ok")
+  res <- cmc__get_repos(repos, TRUE, "good", r_version = "3.5")
+  expect_equal(res$name, c("CRAN", "BioCsoft", "BioCann", "BioCexp"))
+  expect_equal(res$url[1], "good")
+  expect_equal(res$url[2], "ok")
+  expect_equal(res$type, c("cran", "bioc", "bioc", "bioc"))
+  expect_equal(res$bioc_version, c(NA_character_, "3.7", "3.7", "3.7"))
 })

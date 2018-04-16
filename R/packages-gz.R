@@ -169,7 +169,7 @@ rbind_expand <- function(..., .list = list()) {
       na_df <- as_tibble(structure(
         replicate(
           length(miss_cols),
-          if (nrow(data[[i]])) NA else character(),
+          if (nrow(data[[i]])) NA else logical(),
           simplify = FALSE),
         names = miss_cols))
       data[[i]] <- as_tibble(cbind(data[[i]], na_df))

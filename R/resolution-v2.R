@@ -32,6 +32,13 @@ remotes_get_resolution <- function(self, private) {
   private$resolution$result
 }
 
+remotes__subset_resolution <- function(self, private, which) {
+  if (is.null(private$resolution$result)) stop("No resolution yet")
+  res <- private$resolution$result[which, ]
+  attr(res, "metadata")  <- attr(private$resolution$result, "metadata")
+  res
+}
+
 resolution <- R6Class(
   "resolution",
   public = list(

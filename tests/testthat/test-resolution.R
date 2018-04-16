@@ -1,52 +1,6 @@
 
 context("resolution")
 
-test_that("dependencies config parameter is honored", {
-
-  skip_if_offline()
-  skip_on_cran()
-
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-
-  do <- function(deps) {
-    r <- remotes$new(
-      "dplyr", config = list(dependencies = deps, cache_dir = tmp))
-    withr::with_options(
-      c(pkg.show_progress = FALSE),
-      expect_error(r$resolve(), NA))
-    r$get_resolution()
-  }
-
-  ## Exactly the specified ones
-  d <- do("Imports")
-  imported <- unique(unlist(
-    lapply(d$deps, function(x) x$package[x$type == "imports"])))
-  expect_true(all(d$package[!d$direct] %in% imported))
-
-  hard <- c("imports", "depends", "linkingto")
-
-  ## NA (this is also the default), hard dependencies only
-  d <- do(NA)
-  harddep <- unique(unlist(
-    lapply(d$deps, function(x) x$package[x$type %in% hard])))
-  expect_true(all(d$package[!d$direct] %in% harddep))
-
-  ## TRUE means hard + Suggests on direct ones, hard only on rest
-  d <- do(TRUE)
-  harddep <- unique(unlist(
-    lapply(d$deps, function(x) x$package[x$type %in% hard])))
-  softdirectdep <- unique(unlist(
-    lapply(d$deps[d$direct], function(x) x$package[x$type == "suggests"])))
-
-  indirect <- d$package[!d$direct]
-  expect_true(all(indirect %in% harddep | indirect %in% softdirectdep))
-
-  ## FALSE means nothing
-  d <- do(FALSE)
-  expect_true(all(d$ref == "dplyr"))
-})
-
 test_that("resolving installed packages", {
 
   skip_if_offline()

@@ -204,11 +204,36 @@ resolve_from_metadata <- function(remote, direct, config, cache,
         "rversion", "repodir", "target", "deps", "sources")
       res <- data[cols]
       res$ref[res$package == remote$package] <- remote$ref
-      res$type <- "standard"
+      res$type <- if (nrow(res)) "standard" else character()
       res$type[res$package == remote$package] <- remote$type
       res$needscompilation <-
         tolower(res$needscompilation) %in% c("yes", "true")
       res$direct <- direct & res$ref == remote$ref
+
+      if (length(bad <- attr(data, "unknown"))) {
+        bad[bad == remote$package] <- remote$ref
+        failed <- make_failed_resolution(
+          bad, remote$type, direct & bad == remote$ref )
+        res <- rbind_expand(res, res_add_defaults(failed))
+      }
+
       res
     })
+}
+
+make_failed_resolution <- function(refs, type, direct) {
+  err <- structure(
+    list(message = "Cannot find standard package"),
+    class = c("error", "condition"))
+  tibble(
+    ref = refs,
+    type = type,
+    package = NA_character_,
+    version = NA_character_,
+    sources = replicate(length(refs), NA_character_, simplify = FALSE),
+    direct = direct,
+    status = "FAILED",
+    remote = parse_remotes(refs),
+    error = replicate(length(refs), err, simplify = FALSE)
+  )
 }

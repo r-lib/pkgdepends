@@ -143,11 +143,9 @@ res_push <- function(self, private, ..., direct, .list = .list) {
     ## Maybe this is already resolving
     if (n$ref %in% private$state$ref) next
 
-    resolve <- private$remote_types[[n$type]]$resolve
-    if (is.null(resolve)) stop("Cannot resolve type", format_items(n$type))
-    dx <- async(resolve)(
-      n, direct = direct, config = private$config, cache = private$cache,
-      dependencies = private$dependencies)
+    dx <- resolve_remote(n, direct, private$config, private$cache,
+                         private$dependencies,
+                         remote_types = private$remote_types)
 
     private$state <- rbind(
       private$state,
@@ -175,6 +173,19 @@ res__try_finish <- function(self, private, resolve) {
     class(self$result) <- c("remotes_resolution", class(self$result))
     resolve(self$result)
   }
+}
+
+resolve_remote <- function(remote, direct, config, cache, dependencies,
+                           remote_types = NULL) {
+  remote_types <- c(default_remote_types(), remote_types)
+
+  resolve <- remote_types[[remote$type]]$resolve
+  if (is.null(resolve)) stop("Cannot resolve type", format_items(n$type))
+
+  async(resolve)(
+    remote, direct = direct, config = config, cache = cache,
+    dependencies = dependencies)
+
 }
 
 resolve_from_description <- function(path, sources, remote, direct,

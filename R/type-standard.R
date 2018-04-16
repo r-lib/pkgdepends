@@ -38,21 +38,19 @@ download_remote_standard <- function(resolution, config,
 
 satisfy_remote_standard <- function(resolution, candidate, config, ...) {
 
-    ## A standard ref is special, in that any ref source can satisfy it,
-    ## as long as the package name is the same, and the version
-    ## requirements are satisfied.
+  ## A standard ref is special, in that any ref source can satisfy it,
+  ## as long as the package name is the same, and the version
+  ## requirements are satisfied.
 
-    ## 1. package name must be the same
-    if (get_remote(resolution)$package != get_remote(candidate)$package) {
-      return(FALSE)
-    }
+  ## 1. package name must be the same
+  if (resolution$package != candidate$package) return(FALSE)
 
-    ## 2. version requirements must be satisfied
-    if (get_remote(resolution)$version == "") return(TRUE)
+  ## 2. version requirements must be satisfied
+  if (resolution$remote[[1]]$version == "") return(TRUE)
 
-    version_satisfies(
-      get_files(candidate)[[1]]$version,
-      get_remote(resolution)$atleast,
-      get_remote(resolution)$version
-    )
-  }
+  version_satisfies(
+    candidate$version,
+    resolution$remote[[1]]$atleast,
+    resolution$remote[[1]]$version
+  )
+}

@@ -49,31 +49,25 @@ download_remote_cran <- function(resolution, config, mode, ..., cache,
 satisfy_remote_cran <- function(resolution, candidate, config, ...) {
 
   ## 1. candidate must be a cran, standard or installed ref
-  if (! inherits(candidate, "remote_resolution_cran") &&
-      ! inherits(candidate, "remote_resolution_standard") &&
-      ! inherits(candidate, "remote_resolution_installed")) {
-    return(FALSE)
-  }
+  if (!candidate$type %in% c("cran", "standard", "installed")) return(FALSE)
 
   ## 2. installed refs must be from CRAN
-  if (inherits(candidate, "remote_resolution_installed")) {
-    dsc <- get_remote(candidate)$description
+  if (candidate$type == "installed") {
+    dsc <- candidate$remote[[1]]$description
     if (!is.null(dsc) &&
         ! identical(dsc$get("Repository")[[1]], "CRAN")) return(FALSE)
   }
 
   ## 3. package names must match
-  if (get_remote(resolution)$package != get_remote(candidate)$package) {
-    return(FALSE)
-  }
+  if (resolution$package != candidate$package) return(FALSE)
 
   ## 4. version requirements must be satisfied. Otherwise good.
-  if (get_remote(resolution)$version == "") return(TRUE)
+  if (resolution$remote[[1]]$version == "") return(TRUE)
 
   version_satisfies(
-    get_files(candidate)[[1]]$version,
-    get_remote(resolution)$atleast,
-    get_remote(resolution)$version
+    candidate$version,
+    resolution$remote[[1]]$atleast,
+    resolution$remote[[1]]$version
   )
 }
 

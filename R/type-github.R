@@ -123,21 +123,19 @@ satisfy_remote_github <- function(resolution, candidate,
                                     config, ...) {
 
   ## 1. package name must match
-  if (get_remote(resolution)$package != get_remote(candidate)$package) {
-    return(FALSE)
-  }
+  if (resolution$package != candidate$package) return(FALSE)
 
   ## 1. installed ref is good, if it has the same sha
-  if (inherits(candidate, "remote_resolution_installed")) {
-    dsc <- get_remote(candidate)$description
+  if (candidate$type == "installed") {
+    dsc <- candidate$remote[[1]]$description
     sha1 <- dsc$get("RemoteSha")[[1]]
-    sha2 <- get_remote(resolution)$sha
+    sha2 <- resolution$remote[[1]]$sha
     return(is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2))
   }
 
   ## 2. other refs are also good, as long as they have the same sha
-  sha1 <- get_remote(candidate)$sha
-  sha2 <- get_remote(resolution)$sha
+  sha1 <- candidate$remote[[1]]$sha
+  sha2 <- resolution$remote[[1]]$sha
   return(is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2))
 }
 

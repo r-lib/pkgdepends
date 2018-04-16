@@ -177,25 +177,7 @@ type_github_get_github_description_data <- function(rem) {
   http_get(description_url, headers = type_github_get_github_headers())$
     then(http_stop_for_status)$
     then(function(resp) {
-      write_bin_atomic(resp$content, tmp <- tempfile())
-      dsc <- desc(tmp)
-      gx <- function(e) unname(str_trim(dsc$get(e)))
-      list(
-        error   = NULL,
-        package = gx("Package"),
-        version = gx("Version"),
-        remotes = gx("Remotes"),
-        deps = dsc$get_deps()
-      )
-    })$
-    catch(error = function(err) {
-      list(
-        error   = err,
-        package = NA_character_,
-        version = NA_character_,
-        remotes = NA_character_,
-        deps    = NA_character_
-      )
+      desc(text = rawToChar(resp$content))
     })
 }
 
@@ -207,10 +189,7 @@ type_github_get_github_commit_sha <- function(rem) {
     then(http_stop_for_status)$
     then(function(resp) {
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-      list(error = NULL, sha = cdata$sha)
-    })$
-    catch(error = function(err) {
-      list(error = err, sha = NA_character_)
+      cdata$sha
     })
 }
 
@@ -234,60 +213,31 @@ type_github_build_github_package <- function(source, target, subdir,
 
 type_github_make_resolution <- function(data) {
 
-  deps <- if (is.null(data$desc$error)) {
-    resolve_ref_deps(
-      data$desc$deps, data$desc$remotes, data$dependencies)
-  } else {
-    NA_character_
-  }
+  deps <- resolve_ref_deps(
+    data$desc$get_deps(), data$desc$get("Remotes"), data$dependencies)
 
-  sha <- data$sha$sha
+  sha <- data$sha
   username <- data$remote$username
   repo <- data$remote$repo
   subdir <- data$remote$subdir %|z|% NULL
   commitish <- data$remote$commitish %|z|% NULL
   pull <- data$remote$pull %|z|% NULL
   release <- data$remote$release %|z|% NULL
-  package <- data$remote$package
-  version <- data$desc$version
-  desc_err <- data$desc$error
-  sha_err <- data$sha$error
+  package <- data$desc$get_field("Package")
+  version <- data$desc$get_field("Version")
 
-  files <- list(
-    source = glue(
-      "https://api.github.com/repos/{username}/{repo}/zipball/{sha}"),
-    target = glue("src/contrib/{package}_{version}_{sha}.tar.gz"),
-    platform = "source",
-    rversion = "*",
-    dir = "src/contrib",
+  list(
+    ref = data$remote$ref,
+    type = data$remote$type,
+    status = "OK",
     package = package,
     version = version,
-    deps = deps,
-    needs_compilation = NA_character_,
-    status = if (is.null(desc_err %||% sha_err)) "OK" else "FAILED",
-    error = list(desc = desc_err, sha = sha_err)
-  )
-
-  files$metadata <- c(
-    RemoteOriginalRef = data$remote$ref,
-    RemoteType = "github",
-    RemotePkgType = "source",
-    RemoteHost = "api.github.com",  # TODO: update if others are supported
-    RemoteRepo = repo,
-    RemoteUsername = username,
-    RemoteSubdir = subdir,
-    RemoteRef = commitish,
-    RemotePull = pull,
-    RemoteRelease = release,
-    RemoteSha = sha
-  )
-
-  data$remote$sha <- sha
-
-  structure(
-    list(
-      files = list(files), direct = data$direct, remote = data$remote,
-      status = files$status),
-    class = c("remote_resolution_github", "remote_resolution")
+    license = data$desc$get_field("License", NA_character_),
+    sources = glue(
+      "https://api.github.com/repos/{username}/{repo}/zipball/{sha}"),
+    target = glue("src/contrib/{package}_{version}_{sha}.tar.gz"),
+    remote = list(data$remote),
+    deps = list(deps),
+    unknown_deps = deps$ref
   )
 }

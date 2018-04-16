@@ -89,7 +89,9 @@ res_init <- function(self, private, config, cache, remote_types, cli) {
     },
     parent_reject = function(value, resolve, id) {
       "!DEBUG resolution failed"
+      wh <- match(id, private$state$async_id)
       private$state$status[wh] <- "FAILED"
+      ## TODO: create proper FAILED value
       private$set_result(wh, value)
       private$try_finish(resolve)
     })

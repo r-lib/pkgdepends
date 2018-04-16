@@ -131,7 +131,7 @@ res_add_defaults <- function(df) {
   df[names(def)] <- def
   df <- df[, names(all_types)]
 
-  ent_types <- vcapply(df, class)
+  ent_types <- vcapply(df, typeof)
   exp_types <- all_types[names(df)]
   if (any(bad <- ent_types != exp_types)) {
     items <- paste0(names(df)[bad], " (", ent_types[bad], ", expected ",

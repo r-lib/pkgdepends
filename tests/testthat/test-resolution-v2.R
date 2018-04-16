@@ -148,3 +148,44 @@ test_that("error", {
   expect_equal(res$status, c("FAILED", "FAILED"))
   expect_equal(res$type, c("foo", "foo"))
 })
+
+test_that("installed refs are also resolved", {
+  conf <- remotes_default_config()
+  cache <- list(package = NULL, metadata = NULL)
+  mkdirp(lib <- tempfile())
+  on.exit(unlink(lib, recursive = TRUE), add = TRUE)
+  mkdirp(file.path(lib, "bar"))
+  mkdirp(file.path(lib, "bar2"))
+
+  do <- function() {
+    res <- resolution$new(config = conf, cache = cache, library = lib)
+    res$push(.list = parse_remotes("foo::bar"))
+    res$push(.list = parse_remotes("foo::bar2"))
+    res$when_complete()
+  }
+
+  foo_resolve <- function(remote, direct, config, cache, dependencies) {
+    list(ref = remote$ref, type = remote$type, package = remote$rest,
+         version = "1.0.0", sources = c("src1", "src2"))
+  }
+
+  inst_resolve <- function(remote, direct, config, cache, dependencies) {
+    list(ref = remote$ref, type = remote$type, package = remote$package,
+         version = "1.0.9", sources = c("i1", "i"))
+  }
+
+  types <- list(
+    foo = list(resolve = foo_resolve),
+    installed = list(resolve = inst_resolve))
+
+  res <- withr::with_options(
+    list(pkg.remote_types = types),
+    synchronise(do()))
+
+  expect_equal(nrow(res), 4)
+  expect_equal(res$ref[1:2], c("foo::bar", "foo::bar2"))
+  lib <- normalizePath(lib, winslash = "/", mustWork = TRUE)
+  expect_equal(res$ref[3:4], paste0("installed::", lib, "/", c("bar", "bar2")))
+  expect_equal(res$status, rep("OK", 4))
+  expect_equal(res$package, c("bar", "bar2", "bar", "bar2"))
+})

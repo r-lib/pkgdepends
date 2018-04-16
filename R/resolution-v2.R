@@ -15,7 +15,8 @@ remotes_async_resolve <- function(self, private) {
   private$dirty <- TRUE
   private$resolution <- resolution$new(
     config = private$config, cache = private$cache,
-    remote_types = private$remote_types, cli = private$cli)
+    library = private$library, remote_types = private$remote_types,
+    cli = private$cli)
 
   private$resolution$push(direct = TRUE, .list = private$remotes)
 
@@ -35,8 +36,9 @@ resolution <- R6Class(
   "resolution",
   public = list(
     result = NULL,
-    initialize = function(config, cache, remote_types = NULL, cli = NULL)
-      res_init(self, private, config, cache, remote_types, cli),
+    initialize = function(config, cache, library = NULL,
+                          remote_types = NULL, cli = NULL)
+      res_init(self, private, config, cache, library, remote_types, cli),
     push = function(..., direct = FALSE, .list = list())
       res_push(self, private, ..., direct = direct, .list = .list),
     when_complete = function() private$deferred
@@ -46,6 +48,7 @@ resolution <- R6Class(
     remote_types = NULL,
     config = NULL,
     cache = NULL,
+    library = NULL,
     deferred = NULL,
     state = NULL,
     cli = NULL,
@@ -59,11 +62,13 @@ resolution <- R6Class(
   )
 )
 
-res_init <- function(self, private, config, cache, remote_types, cli) {
+res_init <- function(self, private, config, cache, library,
+                     remote_types, cli) {
 
   "!DEBUG resolution init"
   private$config <- config
   private$cache <- cache
+  private$library <- library
   private$remote_types <- remote_types %||% default_remote_types()
   private$cli <- cli %||% cli::cli
   private$metadata <- list(resolution_start = Sys.time())
@@ -84,6 +89,20 @@ res_init <- function(self, private, config, cache, remote_types, cli) {
       "!DEBUG resolution done"
       wh <- match(id, private$state$async_id)
       private$state$status[wh] <- "OK"
+
+      npkgs <- value$package[value$type != "installed"]
+      ## Installed already? Resolve that as well
+      if (!is.null(private$library) && length(npkgs)) {
+        npkgs <- npkgs[file.exists(file.path(private$library, npkgs))]
+        if (length(npkgs))  {
+          lib <- normalizePath(private$library, winslash = "/",
+                               mustWork = FALSE)
+          refs <- paste0("installed::", lib, "/", npkgs)
+          refs <- setdiff(refs, private$state$ref)
+          self$push(.list = parse_remotes(refs))
+        }
+      }
+
       private$set_result(wh, value)
       private$try_finish(resolve)
     },

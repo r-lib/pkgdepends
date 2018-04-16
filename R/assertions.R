@@ -92,7 +92,9 @@ deptypes <- function() {
 
 is_dependencies <- function(x) {
   is_na_scalar(x) || isTRUE(x) || identical(x, FALSE) ||
-    (is_character(x) && all(x %in% deptypes()))
+    (is_character(x) && all(x %in% deptypes())) ||
+    (is.list(x) && all(names(x) == c("direct", "indirect")) &&
+     all(unlist(x) %in% deptypes()))
 }
 
 on_failure(is_dependencies) <- function(call, env) {

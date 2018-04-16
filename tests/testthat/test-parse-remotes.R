@@ -235,8 +235,9 @@ test_that("type_default_parse", {
   res <- type_default_parse(c("foo::bar", "package=foo2::bar2"))
   expect_identical(res,
     list(
-      list(package = "", type = "foo", rest = "bar"),
-      list(package = "package", type = "foo2", rest = "bar2")
+      list(package = "", type = "foo", rest = "bar", ref = "foo::bar"),
+      list(package = "package", type = "foo2", rest = "bar2",
+           ref = "package=foo2::bar2")
     )
   )
 })
@@ -248,9 +249,10 @@ test_that("default parse function", {
   )
   expect_identical(res,
     list(
-      structure(list(package = "", type = "foo", rest = "bar"),
+      structure(list(package = "", type = "foo", rest = "bar", ref = "foo::bar"),
                 class = c("remote_ref_foo", "remote_ref", "list")),
-      structure(list(package = "package", type = "foo2", rest = "bar2"),
+      structure(list(package = "package", type = "foo2", rest = "bar2",
+                     ref = "package=foo2::bar2"),
                 class = c("remote_ref_foo2", "remote_ref", "list"))
     )
   )

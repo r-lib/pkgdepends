@@ -34,7 +34,7 @@ resolve_remote_github <- function(remote, direct, config, cache,
   desc <- type_github_get_github_description_data(remote)
   sha <- type_github_get_github_commit_sha(remote)
   when_all(desc = desc, sha = sha, remote = remote, direct = direct,
-           dependencies = dependencies)$
+           dependencies = dependencies[[2 - direct]])$
     then(type_github_make_resolution)
 }
 
@@ -213,8 +213,7 @@ type_github_build_github_package <- function(source, target, subdir,
 
 type_github_make_resolution <- function(data) {
 
-  deps <- resolve_ref_deps(
-    data$desc$get_deps(), data$desc$get("Remotes"), data$dependencies)
+  deps <- resolve_ref_deps(data$desc$get_deps(), data$desc$get("Remotes"))
 
   sha <- data$sha
   username <- data$remote$username

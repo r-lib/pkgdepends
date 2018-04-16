@@ -6,8 +6,7 @@ make_fake_deps <- function(...) {
   if (length(list(...))) d$set(...)
   resolve_ref_deps(
     d$get_deps(),
-    d$get("Remotes")[[1]],
-    remotes_default_config()$dependencies)
+    d$get("Remotes")[[1]])
 }
 
 make_fake_resolution1 <- function(ref, args) {

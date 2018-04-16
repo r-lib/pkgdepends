@@ -68,7 +68,7 @@ parse_deps <- function(deps, type) {
   })
 }
 
-deps_from_desc <- function(deps, dependencies, last) {
+deps_from_desc <- function(deps, last) {
   op_ver <- strsplit(deps$version, "\\s+")
   deps$op <- vcapply(op_ver, "[", 1)
   deps$op[deps$op == "*"] <- ""
@@ -76,7 +76,7 @@ deps_from_desc <- function(deps, dependencies, last) {
   deps$version[is.na(deps$version)] <- ""
   deps$ref <- paste0(deps$package, if (last) "@last")
   base <- base_packages()
-  res <- as_tibble(deps[deps$type %in% dependencies & !deps$package %in% base,
+  res <- as_tibble(deps[!deps$package %in% base,
                         c("ref", "type", "package", "op", "version")])
   rownames(res) <- NULL
   res
@@ -100,8 +100,8 @@ get_cran_extension <- function(platform) {
   )
 }
 
-resolve_ref_deps <- function(deps, remotes, dependencies) {
-  deps <- deps_from_desc(deps, dependencies, last = FALSE)
+resolve_ref_deps <- function(deps, remotes) {
+  deps <- deps_from_desc(deps, last = FALSE)
 
   if (is.na(remotes)) return (deps)
 
@@ -129,10 +129,13 @@ interpret_dependencies <- function(dp) {
   } else if (is_na_scalar(dp)) {
     list(hard, hard)
 
+  } else if (is.list(dp) && all(names(dp) == c("direct", "indirect"))) {
+    dp
+
   } else {
     list(dp, dp)
   }
 
   names(res) <- c("direct", "indirect")
-  res[c("indirect", "direct")]
+  res
 }

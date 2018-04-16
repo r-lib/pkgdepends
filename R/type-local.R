@@ -19,7 +19,7 @@ resolve_remote_local <- function(remote, direct, config, cache,
 
   sources <- paste0("file://", normalizePath(remote$path))
   resolve_from_description(remote$path, sources, remote, direct, config,
-                           cache, dependencies)
+                           cache, dependencies[[2 - direct]])
 }
 
 download_remote_local <- function(resolution, config, mode,

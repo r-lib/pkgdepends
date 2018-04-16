@@ -67,7 +67,6 @@ res_init <- function(self, private, config, cache, remote_types, cli) {
   private$remote_types <- remote_types %||% default_remote_types()
   private$cli <- cli %||% cli::cli
   private$metadata <- list(resolution_start = Sys.time())
-
   private$dependencies <- interpret_dependencies(config$dependencies)
 
   self$result <- res_make_empty_df()
@@ -76,6 +75,7 @@ res_init <- function(self, private, config, cache, remote_types, cli) {
     ref = character(),
     remote = list(),
     status = character(),
+    direct = logical(),
     async_id = integer())
 
   private$deferred <- deferred$new(
@@ -109,7 +109,7 @@ res_push <- function(self, private, ..., direct, .list = .list) {
     if (is.null(resolve)) stop("Cannot resolve type", format_items(n$type))
     dx <- resolve(
       n, direct = direct, config = private$config, cache = private$cache,
-      dependencies = private$dependencies[[direct + 1L]])
+      dependencies = private$dependencies)
 
     ## We always return a deferred
     if (!is_deferred(dx)) dx <- async_constant(dx)
@@ -117,7 +117,7 @@ res_push <- function(self, private, ..., direct, .list = .list) {
     private$state <- rbind(
       private$state,
       tibble(ref = n$ref, remote = list(n), status = NA_character_,
-             async_id = dx$get_id()))
+             direct = direct, async_id = dx$get_id()))
 
     dx$then(private$deferred)
   }
@@ -148,8 +148,7 @@ resolve_from_description <- function(path, sources, remote, direct,
   tryCatch({
     dsc <- desc(file = path)
 
-    deps <- resolve_ref_deps(
-      dsc$get_deps(), dsc$get("Remotes")[[1]], dependencies)
+    deps <- resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes")[[1]])
 
     rversion <- tryCatch(
       get_minor_r_version(dsc$get_built()$R),

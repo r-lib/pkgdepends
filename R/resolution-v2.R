@@ -87,12 +87,24 @@ res_init <- function(self, private, config, cache, remote_types, cli) {
       private$set_result(wh, value)
       private$try_finish(resolve)
     },
+
     parent_reject = function(value, resolve, id) {
       "!DEBUG resolution failed"
       wh <- match(id, private$state$async_id)
       private$state$status[wh] <- "FAILED"
-      ## TODO: create proper FAILED value
-      private$set_result(wh, value)
+      rec <- private$state[wh,]
+      fail_val <- list(
+        ref = rec$ref,
+        type = rec$remote[[1]]$type,
+        package = rec$remote[[1]]$package %|z|% NA_character_,
+        version = NA_character_,
+        sources = NA_character_,
+        direct = rec$direct,
+        status = "FAILED",
+        remote = rec$remote,
+        error = list(value)
+      )
+      private$set_result(wh, fail_val)
       private$try_finish(resolve)
     })
 }
@@ -107,12 +119,9 @@ res_push <- function(self, private, ..., direct, .list = .list) {
 
     resolve <- private$remote_types[[n$type]]$resolve
     if (is.null(resolve)) stop("Cannot resolve type", format_items(n$type))
-    dx <- resolve(
+    dx <- async(resolve)(
       n, direct = direct, config = private$config, cache = private$cache,
       dependencies = private$dependencies)
-
-    ## We always return a deferred
-    if (!is_deferred(dx)) dx <- async_constant(dx)
 
     private$state <- rbind(
       private$state,
@@ -145,56 +154,41 @@ res__try_finish <- function(self, private, resolve) {
 resolve_from_description <- function(path, sources, remote, direct,
                                      config, cache, dependencies) {
 
-  tryCatch({
-    dsc <- desc(file = path)
+  dsc <- desc(file = path)
+  deps <- resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes")[[1]])
 
-    deps <- resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes")[[1]])
+  rversion <- tryCatch(
+    get_minor_r_version(dsc$get_built()$R),
+    error = function(e) "*"
+  )
 
-    rversion <- tryCatch(
-      get_minor_r_version(dsc$get_built()$R),
-      error = function(e) "*"
-    )
+  platform <- tryCatch(
+    dsc$get_built()$Platform %|z|% "source",
+    error = function(e) "source"
+  )
 
-    platform <- tryCatch(
-      dsc$get_built()$Platform %|z|% "source",
-      error = function(e) "source"
-    )
+  nc <- dsc$get_field("NeedsCompilation", NA)
+  if  (!is.na(nc)) nc <- tolower(nc) %in% c("true", "yes")
 
-    nc <- dsc$get_field("NeedsCompilation", NA)
-    if  (!is.na(nc)) nc <- tolower(nc) %in% c("true", "yes")
+  remote$description <- dsc
 
-    remote$description <- dsc
-
-    list(
-      ref = remote$ref,
-      type = remote$type,
-      status = "OK",
-      package = dsc$get_field("Package"),
-      version = dsc$get_field("Version"),
-      license = dsc$get_field("License", NA_character_),
-      needscompilation = nc,
-      md5sum = dsc$get_field("MD5sum", NA_character_),
-      built = dsc$get_field("Built", NA_character_),
-      platform = platform,
+  list(
+    ref = remote$ref,
+    type = remote$type,
+    status = "OK",
+    package = dsc$get_field("Package"),
+    version = dsc$get_field("Version"),
+    license = dsc$get_field("License", NA_character_),
+    needscompilation = nc,
+    md5sum = dsc$get_field("MD5sum", NA_character_),
+    built = dsc$get_field("Built", NA_character_),
+    platform = platform,
       rversion = rversion,
-      deps = list(deps),
-      sources = sources,
-      remote = list(remote),
-      unknown_deps = setdiff(deps$ref, "R")
-    )
-  }, error = function(err) {
-
-    list(
-      ref = remote$ref,
-      type = remote$type,
-      status = "FAILED",
-      error = list(err),
-      package = dsc$get_field("Package", NA_character_),
-      version = dsc$get_field("Version", NA_character_),
-      license = dsc$get_field("License", NA_character_),
-      sources = list(NA_character_)
-    )
-  })
+    deps = list(deps),
+    sources = sources,
+    remote = list(remote),
+    unknown_deps = setdiff(deps$ref, "R")
+  )
 }
 
 resolve_from_metadata <- function(remote, direct, config, cache,

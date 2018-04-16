@@ -4,7 +4,7 @@ context("resolution")
 test_that("resolving with a list", {
   conf <- remotes_default_config()
   cache <- list(package = NULL, metadata = NULL)
-  do <-  function() {
+  do <- function() {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
     res$push(.list = parse_remotes("foo::bar2"))
@@ -32,7 +32,7 @@ test_that("resolving with a list", {
 test_that("resolving with a tibble", {
   conf <- remotes_default_config()
   cache <- list(package = NULL, metadata = NULL)
-  do <-  function() {
+  do <- function() {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
     res$push(.list = parse_remotes("foo::bar2"))
@@ -64,7 +64,7 @@ test_that("resolving with a tibble", {
 test_that("unknown deps are pushed in the queue", {
   conf <- remotes_default_config()
   cache <- list(package = NULL, metadata = NULL)
-  do <-  function() {
+  do <- function() {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
     res$when_complete()
@@ -92,7 +92,7 @@ test_that("unknown deps are pushed in the queue", {
 test_that("unknown deps, tibble", {
   conf <- remotes_default_config()
   cache <- list(package = NULL, metadata = NULL)
-  do <-  function() {
+  do <- function() {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
     res$when_complete()
@@ -119,4 +119,32 @@ test_that("unknown deps, tibble", {
     res$sources,
     list(c("s11", "s12"), c("s21", "s22"), c("s11", "s12"), c("s21", "s22"))
   )
+})
+
+test_that("error", {
+  conf <- remotes_default_config()
+  cache <- list(package = NULL, metadata = NULL)
+  do <- function() {
+    res <- resolution$new(config = conf, cache = cache)
+    res$push(.list = parse_remotes("foo::bar"))
+    res$push(.list = parse_remotes("foo::bar2"))
+    res$when_complete()
+  }
+
+  foo_resolve <- function(remote, direct, config, cache, dependencies) {
+    stop("foobar", call. = FALSE)
+  }
+
+  res <- withr::with_options(
+    list(pkg.remote_types = list(foo = list(resolve = foo_resolve))),
+    synchronise(do()))
+
+  expect_equal(nrow(res), 2)
+  expect_equal(res$ref, c("foo::bar", "foo::bar2"))
+  expect_s3_class(res$error[[1]], "error")
+  expect_s3_class(res$error[[2]], "error")
+  expect_equal(conditionMessage(res$error[[1]]), "foobar")
+  expect_equal(conditionMessage(res$error[[2]]), "foobar")
+  expect_equal(res$status, c("FAILED", "FAILED"))
+  expect_equal(res$type, c("foo", "foo"))
 })

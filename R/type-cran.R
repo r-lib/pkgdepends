@@ -82,20 +82,7 @@ satisfy_remote_cran <- function(resolution, candidate, config, ...) {
 
 type_cran_resolve_current <- function(remote, direct, config, cache,
                                       dependencies) {
-  remote; direct; config; cache; dependencies
-
-  cache$metadata$async_deps(remote$package, dependencies = dependencies)$
-    then(function(x) {
-      res <- x[c("ref", "type", "status", "package", "version", "license",
-                 "needscompilation", "priority", "md5sum", "built",
-                 "platform", "rversion", "repodir", "target", "deps",
-                 "sources")]
-      res$ref[res$package == remote$package] <- remote$ref
-      res$needscompilation <-
-        tolower(res$needscompilation) %in% c("yes", "true")
-      res$direct <- direct & res$ref == remote$ref
-      res
-    })
+  resolve_from_metadata(remote, direct, config, cache, dependencies)
 }
 
 type_cran_resolve_version <- function(remote, direct, config,

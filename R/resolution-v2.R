@@ -197,3 +197,25 @@ resolve_from_description <- function(path, sources, remote, direct,
     )
   })
 }
+
+resolve_from_metadata <- function(remote, direct, config, cache,
+                                  dependencies) {
+
+  remote; direct; config; cache; dependencies
+
+  cache$metadata$async_deps(remote$package, dependencies = dependencies)$
+    then(function(data) {
+      cols <-  c(
+        "ref", "type", "status", "package", "version", "license",
+        "needscompilation", "priority", "md5sum", "built", "platform",
+        "rversion", "repodir", "target", "deps", "sources")
+      res <- data[cols]
+      res$ref[res$package == remote$package] <- remote$ref
+      res$type <- "standard"
+      res$type[res$package == remote$package] <- remote$type
+      res$needscompilation <-
+        tolower(res$needscompilation) %in% c("yes", "true")
+      res$direct <- direct & res$ref == remote$ref
+      res
+    })
+}

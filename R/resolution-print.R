@@ -1,9 +1,20 @@
 
+#' @export
+
+print.remotes_resolution <- function(x, ...) {
+  cat(format(x, ...))
+}
+
 #' @importFrom prettyunits pretty_dt
 #' @importFrom crayon bgBlue green blue white bold col_nchar
 #' @importFrom cli symbol
+#' @export
 
-print.remotes_resolution <- function(x, ...) {
+format.remotes_resolution <- function(x, ...) {
+
+  result <- character()
+  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
+
   meta <- attr(x, "metadata")
 
   direct <- unique(x$ref[x$direct])
@@ -12,15 +23,13 @@ print.remotes_resolution <- function(x, ...) {
     "PKG RESOLUTION, {length(direct)} refs, resolved in {dt} ")
   width <- getOption("width") - col_nchar(head, type = "width") - 1
   head <- paste0(head, strrep(symbol$line, max(width, 0)))
-  cat(blue(bold(head)), sep = "\n")
+  push(blue(bold(head)), sep = "\n")
 
-  print_refs(x, x$direct, header = NULL)
+  push(format_refs(x, x$direct, header = NULL))
+  push(format_refs(x, (! x$direct), header = "Dependencies", by_type = TRUE))
+  push(format_failed_refs(x))
 
-  print_refs(x, (! x$direct), header = "Dependencies", by_type = TRUE)
-
-  print_failed_refs(x)
-
-  invisible(x)
+  paste0(result, collapse = "")
 }
 
 get_failed_refs <- function(res) {
@@ -30,11 +39,14 @@ get_failed_refs <- function(res) {
 
 #' @importFrom crayon red
 
-print_refs <- function(res, which, header, by_type = FALSE,
-                       mark_failed = TRUE) {
+format_refs <- function(res, which, header, by_type = FALSE,
+                        mark_failed = TRUE) {
   if (!length(res$ref[which])) return()
 
-  if (!is.null(header)) cat(blue(bold(paste0(header, ":"))), sep = "\n")
+  result <- character()
+  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
+
+  if (!is.null(header)) push(blue(bold(paste0(header, ":"))), sep = "\n")
 
   mark <- function(wh, short = FALSE) {
     ref <- ref2 <- sort(unique(res$ref[wh]))
@@ -48,29 +60,38 @@ print_refs <- function(res, which, header, by_type = FALSE,
 
   if (by_type) {
     for (t in sort(unique(res$type[which]))) {
-      cat(blue(paste0("  ", t, ":")), sep = "\n")
+      push(blue(paste0("  ", t, ":")), sep = "\n")
       which2 <- which & res$type == t
-      cat(comma_wrap(mark(which2, short = t == "installed"), indent = 4),
-          sep = "\n")
+      push(comma_wrap(mark(which2, short = t == "installed"), indent = 4),
+           sep = "\n")
     }
 
   } else {
-    cat(comma_wrap(mark(which)), sep = "\n")
+    push(comma_wrap(mark(which)), sep = "\n")
   }
+
+  paste0(result, collapse = "")
 }
 
-print_failed_refs <- function(res) {
+format_failed_refs <- function(res) {
+  result <- character()
+  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
+
   failed <- get_failed_refs(res)
-  if (length(failed) > 0) cat(bold(red("Errors:")), sep = "\n")
-  for (f in failed) print_failed_ref(res, f)
+  if (length(failed) > 0) push(bold(red("Errors:")), sep = "\n")
+  for (f in failed) push(format_failed_ref(res, f))
+
+  paste0(result, collapse = "")
 }
 
-print_failed_ref <- function(res, failed_ref) {
-  cat0("  ", failed_ref, ": ")
+format_failed_ref <- function(res, failed_ref) {
+  result <- character()
+  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
+
+  push("  ", failed_ref, ": ")
   wh <- which(failed_ref == res$ref)
-  errs <- unique(vcapply(
-    res$resolution[wh],
-    function(x) get_error_message(x) %||% "Unknown error"
-  ))
-  cat(paste(errs, collapse = "\n    "), sep = "\n")
+  errs <- unique(vcapply(res$error[wh], conditionMessage))
+  push(paste(errs, collapse = "\n    "), sep = "\n")
+
+  paste0(result, collapse = "")
 }

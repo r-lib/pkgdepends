@@ -1,4 +1,6 @@
 
+cmc__data <- new.env(parent = emptyenv())
+
 cranlike_metadata_cache <- R6Class(
   "cranlike_metadata_cache",
 
@@ -43,6 +45,8 @@ cranlike_metadata_cache <- R6Class(
 
     get_current_data = function(max_age)
       cmc__get_current_data(self, private, max_age),
+    get_memory_cache = function(max_age)
+      cmc__get_memory_cache(self, private, max_age),
     load_replica_rds = function(max_age)
       cmc__load_replica_rds(self, private, max_age),
     load_primary_rds = function(max_age)
@@ -56,6 +60,8 @@ cranlike_metadata_cache <- R6Class(
       cmc__update_replica_rds(self, private),
     update_primary = function(rds = TRUE, packages = TRUE)
       cmc__update_primary(self, private, rds, packages),
+    update_memory_cache = function()
+      cmc__update_memory_cache(self, private),
 
     data = NULL,
     data_time = NULL,
@@ -199,6 +205,7 @@ cmc__async_ensure_cache <- async(function(self, private, max_age) {
 
   async_try_each(
     async(private$get_current_data)(max_age),
+    async(private$get_memory_cache)(max_age),
     async(private$load_replica_rds)(max_age),
     async(private$load_primary_rds)(max_age),
     async(private$load_primary_pkgs)(max_age),
@@ -218,6 +225,20 @@ cmc__get_current_data <- function(self, private, max_age) {
     stop("Loaded data outdated")
   }
   "!!DEBUG Got current data!"
+
+  private$data
+}
+
+cmc__get_memory_cache  <- function(self, private, max_age) {
+  "!!DEBUG Get from memory cache?"
+  rds <- private$get_cache_files("primary")$rds
+  hit <- cmc__data[[rds]]
+  if (is.null(hit)) stop("Not in the memory cache")
+  if (is.null(hit$data_time) || Sys.time() - hit$data_time > max_age) {
+    stop("Memory cache outdated")
+  }
+  private$data <- hit$data
+  private$data_time <- hit$data_time
 
   private$data
 }
@@ -245,6 +266,8 @@ cmc__load_replica_rds <- function(self, private, max_age) {
   private$data <- readRDS(rds)
   private$data_time <- time
   "!!DEBUG Loaded replica RDS!"
+  private$update_memory_cache()
+
   private$data
 }
 
@@ -275,6 +298,9 @@ cmc__load_primary_rds <- function(self, private, max_age) {
 
   private$data <- readRDS(rep_files$rds)
   private$data_time <- time
+
+  private$update_memory_cache()
+
   private$data
 }
 
@@ -376,6 +402,8 @@ cmc__update_replica_rds <- function(self, private) {
   saveRDS(private$data, file = rep_files$rds)
   private$data_time <- file_get_time(rep_files$rds)
 
+  private$update_memory_cache()
+
   private$data
 }
 
@@ -412,6 +440,11 @@ cmc__update_primary <- function(self, private, rds, packages) {
   unlock(l)
 
   invisible()
+}
+
+cmc__update_memory_cache <- function(self, private) {
+  rds <- private$get_cache_files("primary")$rds
+  cmc__data[[rds]] <- list(data = private$data, data_time = private$data_time)
 }
 
 extract_deps <- function(pkgs, packages, dependencies, recursive) {

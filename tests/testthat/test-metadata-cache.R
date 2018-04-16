@@ -332,11 +332,12 @@ test_that("deps, extract_deps", {
   pri_files <- get_private(cmc)$get_cache_files("primary")
   mkdirp(dirname(pri_files$pkgs$path))
   fs::file_copy(get_fixture("PACKAGES-src.gz"), pri_files$pkgs$path)
+  file_set_time(pri_files$pkgs$path, Sys.time() - 1/2 * oneday())
 
   pkgs <- read_packages_file(
     get_fixture("PACKAGES-src.gz"),
     mirror = "mirror", repodir = "src/contrib", platform = "source",
-    rversion = get_minor_r_version(current_r_version()))
+    rversion = get_minor_r_version(current_r_version()), type = "cran")
 
   deps <- cmc$deps("abc", FALSE, FALSE)
   expect_identical(deps$package, "abc")

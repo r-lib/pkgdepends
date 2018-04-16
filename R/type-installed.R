@@ -18,34 +18,12 @@ parse_remote_installed <- function(specs, config, ...) {
 }
 
 resolve_remote_installed <- function(remote, direct, config,
-                                                cache, dependencies, ...) {
+                                     cache, dependencies, ...) {
 
-  dsc <- desc(file.path(remote$library, remote$package))
-
-  deps <- resolve_ref_deps(
-    dsc$get_deps(), dsc$get("Remotes")[[1]], dependencies)
-  deps <- deps[deps$type != "LinkingTo", ]
-
-  files <- list(
-    source = character(),
-    target = NA_character_,
-    platform = dsc$get_built()$Platform %|z|% "*",
-    rversion = get_minor_r_version(dsc$get_built()$R),
-    dir = NA_character_,
-    package = dsc$get("Package")[[1]],
-    version = dsc$get("Version")[[1]],
-    deps = deps,
-    needs_compilation = "false",
-    status = "OK"
-  )
-
-  remote$description <- dsc
-
-  structure(
-    list(files = list(files), direct = direct, remote = remote,
-         status = "OK"),
-    class = c("remote_resolution_installed", "remote_resolution")
-  )
+  path <- file.path(remote$library, remote$package)
+  sources <- character()
+  resolve_from_description(path, sources, remote, direct, config,
+                           cache, dependencies)
 }
 
 download_remote_installed <- function(resolution,

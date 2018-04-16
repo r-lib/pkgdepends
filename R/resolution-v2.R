@@ -139,3 +139,59 @@ res__try_finish <- function(self, private, resolve) {
     resolve(self$result)
   }
 }
+
+resolve_from_description <- function(path, sources, remote, direct,
+                                     config, cache, dependencies) {
+
+  tryCatch({
+    dsc <- desc(file = path)
+
+    deps <- resolve_ref_deps(
+      dsc$get_deps(), dsc$get("Remotes")[[1]], dependencies)
+
+    rversion <- tryCatch(
+      get_minor_r_version(dsc$get_built()$R),
+      error = function(e) "*"
+    )
+
+    platform <- tryCatch(
+      dsc$get_built()$Platform %|z|% "source",
+      error = function(e) "source"
+    )
+
+    nc <- dsc$get_field("NeedsCompilation", NA)
+    if  (!is.na(nc)) nc <- tolower(nc) %in% c("true", "yes")
+
+    remote$description <- dsc
+
+    list(
+      ref = remote$ref,
+      type = remote$type,
+      status = "OK",
+      package = dsc$get_field("Package"),
+      version = dsc$get_field("Version"),
+      license = dsc$get_field("License", NA_character_),
+      needscompilation = nc,
+      md5sum = dsc$get_field("MD5sum", NA_character_),
+      built = dsc$get_field("Built", NA_character_),
+      platform = platform,
+      rversion = rversion,
+      deps = list(deps),
+      sources = sources,
+      remote = list(remote),
+      unknown_deps = setdiff(deps$ref, "R")
+    )
+  }, error = function(err) {
+
+    list(
+      ref = remote$ref,
+      type = remote$type,
+      status = "FAILED",
+      error = list(err),
+      package = dsc$get_field("Package", NA_character_),
+      version = dsc$get_field("Version", NA_character_),
+      license = dsc$get_field("License", NA_character_),
+      sources = list(NA_character_)
+    )
+  })
+}

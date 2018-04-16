@@ -142,23 +142,3 @@ test_that("cache dirs, on errors #1", {
   expect_true(file.exists(dir))
   unlink(dir, recursive = TRUE)
 })
-
-test_that("cache dirs, on errors #2", {
-  mockery::stub(
-    detect_metadata_cache_dir,
-    "user_metadata_cache_dir",
-    function(...) stop("not available"))
-  expect_warning(dir <- detect_metadata_cache_dir())
-  expect_true(file.exists(dir))
-  unlink(dir, recursive = TRUE)
-})
-
-test_that("update_metadata_cache warning on error", {
-  mockery::stub(
-    update_metadata_cache,
-    "update_user_metadata_cache",
-    function(...) stop("failed"))
-  expect_warning(
-    update_metadata_cache("foo", "bar"),
-    "Cannot update metadata cache dir")
-})

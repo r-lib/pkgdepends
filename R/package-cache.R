@@ -58,7 +58,7 @@ package_cache <- R6Class(
 
       target <- file.path(private$path, path)
       mkdirp(dirname(target))
-      file.copy(file, target)
+      file.copy(file, target, overwrite = TRUE)
       db <- append_to_data_frame(db, fullpath = target, path = path, ...,
                                  .list = .list)
       saveRDS(db, dbfile)

@@ -11,6 +11,7 @@
 #'
 #' @importFrom R6 R6Class
 #' @importFrom filelock lock unlock
+#' @importFrom tools md5sum
 #'
 #' @keywords internal
 
@@ -63,6 +64,95 @@ package_cache <- R6Class(
                                  .list = .list)
       saveRDS(db, dbfile)
       db[nrow(db), ]
+    },
+
+    ## Just download a file from an url and add it
+    ## Returns a deferred value
+    async_add_url = function(url, path, ..., .list = NULL) {
+      self; private; url; path; list(...); .list
+      target <- tempfile()
+      download_file(url, target)$
+        then(function(res) {
+          self$add(target, path, url = url, etag = res$etag, ...,
+                   md5 = md5sum(target)[[1]], .list = .list)
+        })$
+        finally(function(x) unlink(target, recursive = TRUE))
+    },
+
+    add_url = function(url, path, ..., .list = NULL) {
+      synchronise(self$async_add_url(url, path, ..., .list = .list))
+    },
+
+    ## If the file is not in the cache, then download it and add it.
+    async_copy_or_add = function(target, url, path, md5 = NULL, ...,
+                                 .list = NULL) {
+      self; private; target; url; path; md5; list(...); .list
+      etag <- tempfile()
+      if (!is.null(md5)) .list$md5 <- md5
+      async_constant()$
+        then(~ self$copy_to(target, url = url, ..., .list = .list))$
+        then(function(res) {
+          if (! nrow(res)) {
+            download_file(url, target)$
+              then(function(d) {
+                .list$md5 <- md5sum(target)[[1]]
+                self$add(target, path, url = url, etag = d$etag, ...,
+                         .list = .list)
+              })
+          } else {
+            res
+          }
+        })$
+        finally(function(x) unlink(etag, recursive = TRUE))
+    },
+
+    copy_or_add = function(target, url, path, md5 = NULL, ..., .list = NULL) {
+      synchronise(self$async_copy_or_add(target, url, path, md5, ...,
+                                         .list = .list))
+    },
+
+    ## Like copy_to_add, but we always try to update the file, from
+    ## the URL, and if the update was successful, we update the file
+    ## in the cache as well
+    async_update_or_add = function(target, url, path, md5 = NULL, ...,
+                                   .list = NULL) {
+      self; private; target; url; path; md5; list(...); .list
+      etag <- tempfile()
+      if (!is.null(md5)) .list$md5 <- md5
+      async_constant()$
+        then(~ self$copy_to(target, url = url, path = path, ...,
+                            .list = .list))$
+        then(function(res) {
+          if (! nrow(res)) {
+            ## Not in the cache, download and add it
+            download_file(url, target)$
+              then(function(d) {
+                .list$md5 <- md5sum(target)[[1]]
+                self$add(target, path, url = url, etag = d$etag, ...,
+                         .list = .list)
+              })
+          } else {
+            ## In the cache, check if it is current
+            cat(res$etag, file = etag)
+            download_if_newer(url, target, etag_file = etag)$
+              then(function(d) {
+                if (d$response$status_code != 304) {
+                  ## No current, update it
+                  .list$md5 <- md5sum(target)[[1]]
+                  self$add(target, path, url = url, etag = d$etag, ...,
+                           .list = .list)
+                } else {
+                  ## Current, nothing to do
+                  res
+                }
+              })
+          }
+        })
+    },
+
+    update_or_add = function(target, url, path, ..., .list = NULL) {
+      synchronise(self$async_update_or_add(target, url, path, ...,
+                                           .list = .list))
     },
 
     delete = function(..., .list = NULL) {

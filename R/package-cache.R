@@ -84,19 +84,19 @@ package_cache <- R6Class(
     },
 
     ## If the file is not in the cache, then download it and add it.
-    async_copy_or_add = function(target, url, path, md5 = NULL, ...,
+    async_copy_or_add = function(target, urls, path, md5 = NULL, ...,
                                  .list = NULL) {
-      self; private; target; url; path; md5; list(...); .list
+      self; private; target; urls; path; md5; list(...); .list
       etag <- tempfile()
       if (!is.null(md5)) .list$md5 <- md5
       async_constant()$
-        then(~ self$copy_to(target, url = url, ..., .list = .list))$
+        then(~ self$copy_to(target, url = urls[1], ..., .list = .list))$
         then(function(res) {
           if (! nrow(res)) {
-            download_file(url, target)$
+            download_one_of(urls, target)$
               then(function(d) {
                 .list$md5 <- md5sum(target)[[1]]
-                self$add(target, path, url = url, etag = d$etag, ...,
+                self$add(target, path, url = d$url, etag = d$etag, ...,
                          .list = .list)
               })
           } else {
@@ -106,52 +106,52 @@ package_cache <- R6Class(
         finally(function(x) unlink(etag, recursive = TRUE))
     },
 
-    copy_or_add = function(target, url, path, md5 = NULL, ..., .list = NULL) {
-      synchronise(self$async_copy_or_add(target, url, path, md5, ...,
+    copy_or_add = function(target, urls, path, md5 = NULL, ..., .list = NULL) {
+      synchronise(self$async_copy_or_add(target, urls, path, md5, ...,
                                          .list = .list))
     },
 
     ## Like copy_to_add, but we always try to update the file, from
     ## the URL, and if the update was successful, we update the file
     ## in the cache as well
-    async_update_or_add = function(target, url, path, md5 = NULL, ...,
+    async_update_or_add = function(target, urls, path, md5 = NULL, ...,
                                    .list = NULL) {
-      self; private; target; url; path; md5; list(...); .list
-      etag <- tempfile()
+      self; private; target; urls; path; md5; list(...); .list
       if (!is.null(md5)) .list$md5 <- md5
       async_constant()$
-        then(~ self$copy_to(target, url = url, path = path, ...,
+        then(~ self$copy_to(target, url = urls[1], path = path, ...,
                             .list = .list))$
         then(function(res) {
           if (! nrow(res)) {
             ## Not in the cache, download and add it
-            download_file(url, target)$
+            download_one_of(urls, target)$
               then(function(d) {
                 .list$md5 <- md5sum(target)[[1]]
-                self$add(target, path, url = url, etag = d$etag, ...,
+                self$add(target, path, url = d$url, etag = d$etag, ...,
                          .list = .list)
               })
           } else {
             ## In the cache, check if it is current
-            cat(res$etag, file = etag)
-            download_if_newer(url, target, etag_file = etag)$
+            cat(res$etag, file = etag <- tempfile())
+            download_one_of(urls, target, etag_file = etag)$
               then(function(d) {
                 if (d$response$status_code != 304) {
                   ## No current, update it
                   .list$md5 <- md5sum(target)[[1]]
-                  self$add(target, path, url = url, etag = d$etag, ...,
+                  self$add(target, path, url = d$url, etag = d$etag, ...,
                            .list = .list)
                 } else {
                   ## Current, nothing to do
                   res
                 }
-              })
+              })$
+              finally(function(x) unlink(etag, recursive = TRUE))
           }
         })
     },
 
-    update_or_add = function(target, url, path, ..., .list = NULL) {
-      synchronise(self$async_update_or_add(target, url, path, ...,
+    update_or_add = function(target, urls, path, ..., .list = NULL) {
+      synchronise(self$async_update_or_add(target, urls, path, ...,
                                            .list = .list))
     },
 

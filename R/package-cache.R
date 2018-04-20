@@ -98,9 +98,10 @@ package_cache <- R6Class(
                 .list$md5 <- md5sum(target)[[1]]
                 self$add(target, path, url = d$url, etag = d$etag, ...,
                          .list = .list)
-              })
+              })$
+              then(function(x) add_attr(x, "action", "Got"))
           } else {
-            res
+            add_attr(res, "action", "Had")
           }
         })$
         finally(function(x) unlink(etag, recursive = TRUE))
@@ -129,7 +130,8 @@ package_cache <- R6Class(
                 .list$md5 <- md5sum(target)[[1]]
                 self$add(target, path, url = d$url, etag = d$etag, ...,
                          .list = .list)
-              })
+              })$
+              then(function(x) add_attr(x, "action", "Got"))
           } else {
             ## In the cache, check if it is current
             cat(res$etag, file = etag <- tempfile())
@@ -138,11 +140,12 @@ package_cache <- R6Class(
                 if (d$response$status_code != 304) {
                   ## No current, update it
                   .list$md5 <- md5sum(target)[[1]]
-                  self$add(target, path, url = d$url, etag = d$etag, ...,
-                           .list = .list)
+                  x <- self$add(target, path, url = d$url,
+                                etag = d$etag, ..., .list = .list)
+                  add_attr(x, "action", "Got")
                 } else {
                   ## Current, nothing to do
-                  res
+                  add_attr(res, "action", "Current")
                 }
               })$
               finally(function(x) unlink(etag, recursive = TRUE))

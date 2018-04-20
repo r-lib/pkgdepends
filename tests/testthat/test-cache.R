@@ -71,6 +71,7 @@ test_that("copy_or_add, positive", {
   md5 <- unname(tools::md5sum(f1))
   new <- pc$add(f1, path = "f/b", package = "p", url = "u",
                 etag = "e", md5 = md5)
+  attr(new, "action") <- "Had"
 
   hit <- pc$copy_or_add(f1 <- tempfile(), url = "u", path = "f/b",
                         package = "p")
@@ -100,12 +101,14 @@ test_that("copy_or_add, negative", {
   fullpath <- file.path(tmp, path)
   exp <- list(fullpath = fullpath, path = path, package = "p2", url = url,
               etag = "foobar", md5 = md5sum(fullpath)[[1]])
+  attr(exp, "action") <- "Got"
   expect_equal(as.list(hit), exp)
   expect_true(file.exists(f1))
   expect_true(any(grepl("url\"*:.*http://httpbin.org/etag/foobar",
                         readLines(f1))))
 
   hit2 <- pc$find(url = url)
+  attr(hit2, "action") <- "Got"
   expect_equal(hit2, hit)
 })
 
@@ -124,6 +127,7 @@ test_that("update_or_add, not in cache", {
   fullpath <- file.path(tmp, path)
   exp <- list(fullpath = fullpath, path = path, url = url, etag = "foobar",
               package = "p", md5 = md5sum(fullpath)[[1]])
+  attr(exp, "action") <- "Got"
   expect_equal(as.list(hit), exp)
 
   expect_true(file.exists(f1))
@@ -131,6 +135,7 @@ test_that("update_or_add, not in cache", {
                         readLines(f1))))
 
   hit2 <- pc$find(url = url)
+  attr(hit2, "action") <- "Got"
   expect_equal(hit2, hit)
 })
 
@@ -153,6 +158,7 @@ test_that("update_or_add, cache is too old", {
   fullpath <- file.path(tmp, path)
   exp <- list(fullpath = fullpath, path = path, package = "p", url = url,
               etag = "foobar", md5 = md5sum(fullpath)[[1]])
+  attr(exp, "action") <- "Got"
   expect_equal(as.list(hit), exp)
 
   expect_true(file.exists(f1))
@@ -160,6 +166,7 @@ test_that("update_or_add, cache is too old", {
                         readLines(f1))))
 
   hit2 <- pc$find(url = url, etag = "foobar")
+  attr(hit2, "action") <- "Got"
   expect_equal(hit2, hit)
 })
 
@@ -183,12 +190,14 @@ test_that("update_or_add, cache is current", {
   fullpath <- file.path(tmp, path)
   exp <- list(fullpath = fullpath, path = path, package = "p", url = url,
               etag = "foobar", md5 = md5)
+  attr(exp, "action") <- "Current"
   expect_equal(as.list(hit), exp)
 
   expect_true(file.exists(f1))
   expect_equal(readLines(f1), "f1")
 
   hit2 <- pc$find(url = url)
+  attr(hit2, "action") <- "Current"
   expect_equal(hit2, hit)
 })
 

@@ -62,6 +62,7 @@ package_cache <- R6Class(
       db <- append_to_data_frame(db, fullpath = target, path = path, ...,
                                  .list = .list)
       saveRDS(db, dbfile)
+      db[nrow(db), ]
     },
 
     delete = function(..., .list = NULL) {

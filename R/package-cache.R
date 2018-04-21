@@ -41,6 +41,7 @@ package_cache <- R6Class(
       on.exit(unlock(l), add = TRUE)
       res <- private$find_locked(..., .list = .list)
       if (!is.null(target) && nrow(res) >= 1) {
+        mkdirp(dirname(target))
         file.copy(res$fullpath[1], target)
       }
       res

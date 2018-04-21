@@ -28,10 +28,10 @@ test_that("resolve_remote", {
   res <- r$get_resolution()
 
   expect_s3_class(res, "remotes_resolution")
-  expect_equal(sort(res$data$ref), sort(refs))
-  expect_true(all(res$data$type == "github"))
-  expect_true(all(res$data$direct))
-  expect_true(all(res$data$status == "OK"))
+  expect_equal(sort(res$ref), sort(refs))
+  expect_true(all(res$type == "github"))
+  expect_true(all(res$direct))
+  expect_true(all(res$status == "OK"))
 })
 
 test_that("failed resolution", {
@@ -50,7 +50,7 @@ test_that("failed resolution", {
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
-  expect_true(all(res$data$status == "FAILED"))
+  expect_true(all(res$status == "FAILED"))
 
   ## Existing repo, no R package there
 
@@ -61,7 +61,7 @@ test_that("failed resolution", {
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
-  expect_true(all(res$data$status == "FAILED"))
+  expect_true(all(res$status == "FAILED"))
 })
 
 test_that("download_remote", {
@@ -83,12 +83,12 @@ test_that("download_remote", {
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "remotes_downloads")
-  expect_true(dl$data$ref == ref)
-  expect_true(dl$data$type == "github")
-  expect_true(dl$data$direct)
-  expect_true(dl$data$status == "OK")
-  expect_true(dl$data$package == "crayon")
-  expect_true(dl$data$download_status %in% c("Got", "Had"))
+  expect_true(dl$ref == ref)
+  expect_true(dl$type == "github")
+  expect_true(dl$direct)
+  expect_true(dl$status == "OK")
+  expect_true(dl$package == "crayon")
+  expect_true(dl$download_status %in% c("Got", "Had"))
 })
 
 test_that("satisfies_remote", {

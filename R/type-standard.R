@@ -21,19 +21,11 @@ resolve_remote_standard <- function(remote, direct, config,
   resolve_from_metadata(remote, direct, config, cache, dependencies)
 }
 
-download_remote_standard <- function(resolution, config,
-                                     mode, ..., cache,
+download_remote_standard <- function(resolution, target, config, cache,
                                      progress_bar) {
-  meta0 <- list(
-    type = get_remote(resolution)[["type"]],
-    ref = get_ref(resolution))
 
-  async_map(get_files(resolution), function(file) {
-    meta <- c(meta0, file[c("platform", "package", "version", "rversion")])
-    get_package_from(cache$package_cache, file$source,
-                     config$cache_dir, file$target, metadata = meta,
-                     get_direct(resolution), progress_bar = progress_bar)
-  })
+  download_ping_if_not_source(resolution, target, config, cache,
+                              progress_bar)
 }
 
 satisfy_remote_standard <- function(resolution, candidate, config, ...) {

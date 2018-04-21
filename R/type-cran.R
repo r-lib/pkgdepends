@@ -31,19 +31,11 @@ resolve_remote_cran <- function(remote, direct, config, cache,
   }
 }
 
-download_remote_cran <- function(resolution, config, mode, ..., cache,
+download_remote_cran <- function(resolution, target, config, cache,
                                  progress_bar) {
 
-  meta0 <- list(
-    type = get_remote(resolution)[["type"]],
-    ref = get_ref(resolution))
-
-  async_map(get_files(resolution), function(files) {
-    meta <- c(meta0, files[c("platform", "package", "version", "rversion")])
-    get_package_from(cache$package_cache, files$source,
-                     config$cache_dir, files$target, metadata = meta,
-                     get_direct(resolution), progress_bar = progress_bar)
-  })
+  download_ping_if_not_source(resolution, target, config, cache,
+                              progress_bar)
 }
 
 satisfy_remote_cran <- function(resolution, candidate, config, ...) {

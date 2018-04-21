@@ -207,11 +207,12 @@ resolve_from_description <- function(path, sources, remote, direct,
   nc <- dsc$get_field("NeedsCompilation", NA)
   if  (!is.na(nc)) nc <- tolower(nc) %in% c("true", "yes")
 
-  remote$description <- dsc
+  unknown <- deps$ref[deps$type %in% dependencies]
 
   list(
     ref = remote$ref,
     type = remote$type,
+    direct = direct,
     status = "OK",
     package = dsc$get_field("Package"),
     version = dsc$get_field("Version"),
@@ -224,7 +225,8 @@ resolve_from_description <- function(path, sources, remote, direct,
     deps = list(deps),
     sources = sources,
     remote = list(remote),
-    unknown_deps = setdiff(deps$ref, "R")
+    unknown_deps = setdiff(unknown, "R"),
+    extra = list(description = dsc)
   )
 }
 

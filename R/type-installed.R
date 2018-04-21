@@ -26,12 +26,9 @@ resolve_remote_installed <- function(remote, direct, config,
                            cache, dependencies[[2 - direct]])
 }
 
-download_remote_installed <- function(resolution,
-                                      config, mode, ...,
-                                      cache) {
-  status <- make_dl_status("Had", NA_character_, NA_character_,
-                           bytes = NA)
-  async_constant(list(status))
+download_remote_installed <- function(resolution, target, config, cache,
+                                      progress_bar) {
+  "Had"
 }
 
 satisfy_remote_installed <- function(resolution, candidate,

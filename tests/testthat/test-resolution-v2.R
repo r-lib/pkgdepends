@@ -4,6 +4,7 @@ context("resolution")
 test_that("resolving with a list", {
   conf <- remotes_default_config()
   cache <- list(package = NULL, metadata = NULL)
+
   do <- function() {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))

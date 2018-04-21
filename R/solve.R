@@ -10,7 +10,7 @@ remotes_solve <- function(self, private, policy) {
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
   metadata <- list(solution_start = Sys.time())
-  pkgs <- self$get_resolution()$data
+  pkgs <- self$get_resolution()
 
   prb <- private$create_lp_problem(pkgs, policy)
   sol <- private$solve_lp_problem(prb)
@@ -27,11 +27,11 @@ remotes_solve <- function(self, private, policy) {
     solution = sol
   )
 
-  res$data$data$lib_status <-
-    calculate_lib_status(res$data$data, self$get_resolution()$data)
+  res$data$lib_status <-
+    calculate_lib_status(res$data, self$get_resolution())
 
   metadata$solution_end <- Sys.time()
-  res$data$metadata <- modifyList(res$data$metadata, metadata)
+  attr(res, "metadata") <- modifyList(attr(res, "metadata"), metadata)
   class(res) <- unique(c("remotes_solution", class(res)))
 
   if (res$status == "FAILED") {
@@ -204,10 +204,10 @@ remotes_i_lp_satisfy_direct <-  function(lp) {
   ## 3. Direct refs must be satisfied
   satisfy <- function(wh) {
     pkgname <- lp$pkgs$package[[wh]]
-    res <- lp$pkgs$resolution[[wh]]
+    res <- lp$pkgs[wh, ]
     others <- setdiff(which(lp$pkgs$package == pkgname), wh)
     for (o in others) {
-      res2 <- lp$pkgs$resolution[[o]]
+      res2 <- lp$pkgs[o, ]
       if (! isTRUE(satisfies_remote(res, res2))) {
         lp <<- remotes_i_lp_add_cond(
           lp, o, op = "==", rhs = 0, type = "satisfy-refs", note = wh)
@@ -236,13 +236,13 @@ remotes_i_lp_dependencies <- function(lp) {
       depop  <- deps$op[i]
       deppkg <- deps$package[i]
       ## See which candidate satisfies this ref
-      res <- pkgs$resolution[[match(depref, pkgs$ref)]]
+      res <- pkgs[match(depref, pkgs$ref), ]
       cand <- which(pkgs$package == deppkg)
       good_cand <- Filter(
         x = cand,
         function(c) {
           candver <- pkgs$version[c]
-          isTRUE(satisfies_remote(res, pkgs$resolution[[c]])) &&
+          isTRUE(satisfies_remote(res, pkgs[c, ])) &&
             (depver == "" || version_satisfies(candver, depop, depver))
         })
       bad_cand <- setdiff(cand, good_cand)
@@ -293,8 +293,7 @@ remotes_i_lp_prefer_installed <- function(lp) {
   pkgs <- lp$pkgs
   inst <- which(pkgs$type == "installed")
   for (i in inst) {
-    res <- pkgs$resolution[[i]]
-    dsc <- get_remote(res)$description
+    dsc <- pkgs$remote[[i]]$description
 
     ## This usually only happens in artificial test cases
     if (is.null(dsc)) next

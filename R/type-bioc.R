@@ -23,18 +23,11 @@ resolve_remote_bioc <- function(remote, direct, config, cache,
   resolve_from_metadata(remote, direct, config, cache, dependencies)
 }
 
-download_remote_bioc <- function(resolution, config, mode,
-                                 ..., cache, progress_bar) {
-  meta0 <- list(
-    type = get_remote(resolution)[["type"]],
-    ref = get_ref(resolution))
+download_remote_bioc <- function(resolution, target, config, cache,
+                                 progress_bar) {
 
-  async_map(get_files(resolution), function(files) {
-    meta <- c(meta0, files[c("platform", "package", "version", "rversion")])
-    get_package_from(cache$package_cache, files$source,
-                     config$cache_dir, files$target, metadata = meta,
-                     get_direct(resolution), progress_bar = progress_bar)
-  })
+  download_ping_if_not_source(resolution, target, config, cache,
+                              progress_bar)
 }
 
 satisfy_remote_bioc <- function(resolution, candidate,

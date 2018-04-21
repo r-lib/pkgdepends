@@ -17,25 +17,19 @@ parse_remote_local <- function(specs, config, ...) {
 resolve_remote_local <- function(remote, direct, config, cache,
                                  dependencies, ...) {
 
-  sources <- paste0("file://", normalizePath(remote$path))
-  resolve_from_description(remote$path, sources, remote, direct, config,
-                           cache, dependencies[[2 - direct]])
+  sources <- paste0("file://", normalizePath(remote$path, mustWork = FALSE))
+  resolve_from_description(remote$path, sources, remote, direct,
+                           config, cache, dependencies[[2 - direct]])
 }
 
-download_remote_local <- function(resolution, config, mode,
-                                  ..., cache, progress_bar) {
-  tryCatch({
-    files <- get_files(resolution)[[1]]
-    target_file <- file.path(config$cache_dir, files$target)
-    mkdirp(dirname(target_file))
-    if (! file.copy(files$source, target_file)) stop("No local file found")
-    progress_bar$update(count = 1, cached = 1)
-    async_constant(list(make_dl_status("Had", files$source, target_file,
-                                       bytes = file.size(target_file))))
-  }, error = function(err) {
-    async_constant(list(make_dl_status("Failed", files$source,
-                                       target_file, error = err)))
-  })
+download_remote_local <- function(resolution, target, config, cache,
+                                  progress_bar) {
+
+  source_file <- sub("^file://",  "",  resolution$sources[[1]])
+  if (! file.copy(source_file, target, overwrite =  TRUE)) {
+    stop("No local file found")
+  }
+  "Had"
 }
 
 satisfy_remote_local <- function(resolution, candidate, config, ...) {

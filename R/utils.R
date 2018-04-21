@@ -270,3 +270,8 @@ lapply_rows <-  function(df, fun, ...) {
 is_verbose <- function() {
   getOption("pkg.show_progress") %||% interactive()
 }
+
+add_attr <- function(x, attr, value) {
+  attr(x, attr) <- value
+  x
+}

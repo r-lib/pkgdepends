@@ -160,8 +160,8 @@ remotes <- R6Class(
     remote_types = NULL,
     cli = NULL,
 
-    download_res = function(res, mode)
-      remotes_download_res(self, private, res, mode),
+    download_res = function(res)
+      remotes_download_res(self, private, res),
     subset_resolution = function(which)
       remotes__subset_resolution(self, private, which),
     create_lp_problem = function(pkgs, policy)
@@ -262,7 +262,7 @@ remotes_print <- function(self, private, ...) {
 
   ## resolution
   if (!is.null(private$resolution$result)) {
-    if (all(private$resolution$result$data$status == "OK")) {
+    if (all(private$resolution$result$status == "OK")) {
       cat("- has resolution\n")
     } else {
       cat("- has resolution, with errors\n")

@@ -53,7 +53,7 @@ format_refs <- function(res, which, header, by_type = FALSE,
     if (short) ref2 <- basename(ref)
     if (mark_failed) {
       failed_ref <- get_failed_refs(res[wh,])
-      ref <- ifelse(ref %in% failed_ref, bold(red(ref2)), ref2)
+      ref2 <- ifelse(ref %in% failed_ref, bold(red(ref2)), ref2)
     }
     ref2
   }

@@ -38,83 +38,88 @@ resolve_remote_github <- function(remote, direct, config, cache,
     then(type_github_make_resolution)
 }
 
-download_remote_github <- function(resolution, config,
-                                   mode, ..., cache,
+download_remote_github <- function(resolution, target, config, cache,
                                    progress_bar) {
 
-  cache_dir <- config$cache_dir
+  ## A GitHub package needs to be built, from the downloaded repo
+  ## If we are downloading a solution, then we skip building the vignettes,
+  ## because these will be built later by pkginstall.
+  ##
+  ## We cache both the downloaded repo snapshot and the built package in
+  ## the package cache. So this is how we go:
+  ##
+  ## 1. If there is a built package in the cache (including vignettes
+  ##    if they are needed), then we just use that.
+  ## 2. If there is a repo snapshot in the cache, we build an R package
+  ##    from it. (Add also add it to the cache.)
+  ## 3. Otherwise we download the repo, add it to the cache, build the
+  ##    R package, and add that to the cache as well.
 
-  ref <- get_ref(resolution)
+  package <- resolution$package
+  sha <- resolution$extra$sha
+  need_vignettes <- ! inherits(resolution, "remotes_solution")
 
-  if (num_files(resolution) != 1) {
-    stop("Invalid `files` vector, should be length one.")
+  ## 1. Check if we have a built package in the cache. We don not check the
+  ## ref or the type, so the package could have been built from a local
+  ## ref or from another repo. As long as the sha is the same, we are
+  ## fine. If we don't require vignetted, then a package with or without
+  ## vignettes is fine.
+
+  hit <- cache$package$copy_to(
+    target, package = package, sha = sha, built = TRUE,
+    .list = c(if (need_vignettes) vignettes = TRUE))
+  if (nrow(hit)) return("Had")
+
+  ## 2. Check if we have a repo snapshot in the cache.
+
+  target_zip <- sub("\\.tar\\.gz$", ".zip", target)
+  rel_target <- resolution$target
+  subdir <- resolution$remote[[1]]$subdir
+  hit <- cache$package$copy_to(
+    target_zip, package = package, sha = sha, built = FALSE)
+  if (nrow(hit)) {
+    return(type_github_build_package(target_zip, target, rel_target, subdir,
+                                     package, sha, need_vignettes, cache))
   }
-  files <- get_files(resolution)[[1]]
 
-  target_file <- file.path(cache_dir, files$target)
-  cached_zip <- sub("\\.tar\\.gz$", ".zip", target_file)
-  mkdirp(dirname(target_file))
-  remote <- get_remote(resolution)
-  subdir <- remote$subdir
-  url <- files$source
-  vignettes <- (mode == "resolution")
-  metadata <- list(type = "github", ref = ref, sha = remote$sha,
-                   package = remote$package, version = files$version,
-                   platform = "source", vignettes = vignettes)
+  ## 3. Need to download the repo
 
-  if (is_valid_package(target_file)) {
-    progress_bar$update(count = 1, cached = 1)
-    status <- make_dl_status("Had", url, target_file,
-                             bytes = file.size(target_file))
-    async_constant(list(status))
+  urls <- resolution$sources[[1]]
+  rel_zip <- sub("\\.tar\\.gz$", ".zip", rel_target)
+  type_github_download_repo(urls, target_zip, rel_zip, sha, package, cache)$
+    then(function() {
+      type_github_build_package(target_zip, target, rel_target, subdir,
+                                package, sha, need_vignettes, cache)
+    })
+}
 
-  } else if (file.exists(cached_zip)) {
-    progress_bar$alert(class = "alert-start",
-                       "Building {basename(target_file)}")
-    dsc <- type_github_build_github_package(cached_zip, target_file, subdir,
-                                            vignettes = vignettes)
-    progress_bar$update(count = 1, cached = 1)
-    ## Add built package to the cache
-    try(
-      cache$package_cache$add(target_file, path = files$target, url = url,
-                              etag = NA_character_, .list = metadata),
-      silent = TRUE
-    )
-    status <- make_dl_status("Had", url, target_file,
-                             bytes = file.size(target_file))
-    async_constant(list(status))
+type_github_build_package <- function(repo_zip, target, rel_target, subdir,
+                                      package, sha, vignettes, cache) {
+  mkdirp(tmpdir <- tempfile())
+  on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
+  zipfile <- file.path(tmpdir, basename(repo_zip))
+  file.copy(repo_zip, zipfile)
 
-  } else {
+  pkgdir <- file.path(tmpdir, unzip(zipfile))[1]
+  if (!nzchar(subdir)) pkgdir <- file.path(pkgdir, subdir)
+  pkgfile <- build_package(
+    pkgdir, build_args = list(vignettes = vignettes))
 
-    ## Try to get the built package from the cache
-    hit <- cache$package_cache$copy_to(target_file, .list = metadata)
-    if (nrow(hit) >= 1) {
-      res <- make_dl_status(
-        "Had", url, target_file, bytes = file.size(target_file))
-      return(async_constant(list(res)))
-    }
+  file.copy(pkgfile, target)
+  cache$package$add(
+    target, rel_target, package = package, sha = sha, built = TRUE,
+    vignettes = vignettes)
+  "Built"
+}
 
-    download_file(url, cached_zip, progress_bar = progress_bar)$
-      then(function() {
-        ## Build source package from zip (R CMD build)
-        progress_bar$alert(class = "alert-start",
-                           "Building {basename(target_file)}")
-        dsc <- type_github_build_github_package(cached_zip, target_file, subdir,
-                                                vignettes = vignettes)
-        ## Add built package to the cache
-        try(
-          cache$package_cache$add(target_file, path = files$target, url = url,
-                                  etag = NA_character_, .list = metadata),
-          silent = TRUE
-        )
-        list(make_dl_status("Got", url, target_file,
-                            bytes = file.size(target_file)))
-      })$
-      catch(error = function(err) {
-        list(make_dl_status("Failed", url, target_file,
-                            error = err))
-      })
-  }
+type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,
+                                      package, cache) {
+  download_file(urls, repo_zip)$
+    then(function() {
+      cache$package$add(
+        repo_zip, rel_zip, package = package, sha = sha, built = FALSE)
+      "Got"
+    })
 }
 
 ## ----------------------------------------------------------------------
@@ -191,24 +196,6 @@ type_github_get_github_commit_sha <- function(rem) {
     })
 }
 
-#' @importFrom desc desc
-
-type_github_build_github_package <- function(source, target, subdir,
-                                             vignettes) {
-  mkdirp(zipdir <- tempfile())
-  on.exit(unlink(zipdir, recursive = TRUE), add = TRUE)
-  zipfile <- file.path(zipdir, basename(source))
-  file.copy(source, zipfile)
-
-  pkgdir <- file.path(zipdir, unzip(zipfile))[1]
-  if (nzchar(subdir)) pkgdir <- file.path(pkgdir, subdir)
-  pkgfile <- build_package(
-    pkgdir, build_args = list(vignettes = vignettes))
-
-  file.copy(pkgfile, target)
-  desc(target)
-}
-
 type_github_make_resolution <- function(data) {
 
   deps <- resolve_ref_deps(data$desc$get_deps(), data$desc$get("Remotes"))
@@ -228,6 +215,7 @@ type_github_make_resolution <- function(data) {
   list(
     ref = data$remote$ref,
     type = data$remote$type,
+    direct = data$direct,
     status = "OK",
     package = package,
     version = version,
@@ -237,6 +225,7 @@ type_github_make_resolution <- function(data) {
     target = glue("src/contrib/{package}_{version}_{sha}.tar.gz"),
     remote = list(data$remote),
     deps = list(deps),
-    unknown_deps = unknown
+    unknown_deps = unknown,
+    extra = list(sha = sha)
   )
 }

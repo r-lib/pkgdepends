@@ -222,6 +222,8 @@ type_github_make_resolution <- function(data) {
   release <- data$remote$release %|z|% NULL
   package <- data$desc$get_field("Package")
   version <- data$desc$get_field("Version")
+  dependencies <- data$dependencies
+  unknown <- deps$ref[deps$type %in% dependencies]
 
   list(
     ref = data$remote$ref,
@@ -235,6 +237,6 @@ type_github_make_resolution <- function(data) {
     target = glue("src/contrib/{package}_{version}_{sha}.tar.gz"),
     remote = list(data$remote),
     deps = list(deps),
-    unknown_deps = deps$ref
+    unknown_deps = unknown
   )
 }

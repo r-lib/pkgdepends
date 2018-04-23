@@ -238,3 +238,9 @@ format_failed_dl <- function(dls, failed_dl) {
 
   paste0(result, collapse = "")
 }
+
+type_default_download <- function(resolution, target, config, cache,
+                                  progress_bar) {
+  ## TODO
+  stop("Not implemented yet")
+}

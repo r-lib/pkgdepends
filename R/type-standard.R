@@ -35,14 +35,19 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
   ## requirements are satisfied.
 
   ## 1. package name must be the same
-  if (resolution$package != candidate$package) return(FALSE)
+  if (resolution$package != candidate$package) {
+    return(structure(FALSE, reason = "Package names differ"))
+  }
 
   ## 2. version requirements must be satisfied
   if (resolution$remote[[1]]$version == "") return(TRUE)
 
-  version_satisfies(
-    candidate$version,
-    resolution$remote[[1]]$atleast,
-    resolution$remote[[1]]$version
-  )
+  if (!version_satisfies(
+         candidate$version,
+         resolution$remote[[1]]$atleast,
+         resolution$remote[[1]]$version)) {
+    return(structure(FALSE, reason = "Insufficient version"))
+  }
+
+  TRUE
 }

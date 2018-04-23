@@ -76,3 +76,28 @@ test_that("download_remote", {
   expect_equal(dl2, "Current")
   expect_true(file.exists(target))
 })
+
+test_that("satisfy_remote", {
+
+  res <- make_fake_resolution(`crayon@>=1.0.0` = list(type = "standard"))
+
+  ## Package names differ
+  bad1 <- make_fake_resolution(`crayon2` = list())
+  expect_false(ans <- satisfy_remote_standard(res, bad1))
+  expect_match(attr(ans, "reason"),  "Package names differ")
+
+  ## Insufficient version
+  bad2 <- make_fake_resolution(`crayon` = list(version = "0.0.1"))
+  expect_false(ans <- satisfy_remote_standard(res, bad2))
+  expect_match(attr(ans, "reason"),  "Insufficient version")
+
+  ## Version is OK
+  ok1 <- make_fake_resolution(`local::foobar` = list(package = "crayon"))
+  expect_true(satisfy_remote_standard(res, ok1))
+
+  ## No version req
+  res <- make_fake_resolution(`crayon` = list(type = "standard"))
+  ok2 <- make_fake_resolution(`local::foobar` = list(
+    package = "crayon", version = "0.0.1"))
+  expect_true(satisfy_remote_standard(res, ok2))
+})

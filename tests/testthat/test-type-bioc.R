@@ -101,56 +101,66 @@ test_that("download_remote", {
 
 test_that("satisfies_remote", {
 
-  skip_if_offline()
-  skip_on_cran()
+  res <- make_fake_resolution(`bioc::eisa@>=1.0.0` = list())
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  dir.create(lib <- tempfile())
-  on.exit(unlink(lib, recursive = TRUE), add = TRUE)
+  ## GitHub type is never good
+  bad1 <- make_fake_resolution(`github::r-lib/eisa` = list())
+  expect_false(ans <- satisfy_remote_bioc(res, bad1))
+  expect_match(attr(ans, "reason"), "Type must be")
 
-  r <- remotes$new(
-    "bioc::Biobase", config = list(cache_dir = tmp), library = lib)
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      expect_error(res <- r$resolve(), NA)
-      expect_error(r$solve(), NA)
-      expect_error(r$download_solution(), NA)
-      expect_error(plan <- r$get_install_plan(), NA)
-    })
+  ## Missing DESCRIPTION for installed type
+  bad2 <- make_fake_resolution(`installed::foobar` = list())
+  expect_false(ans <- satisfy_remote_bioc(res, bad2))
+  expect_match(attr(ans, "reason"), "not from BioC")
 
-  while (nrow(plan)) {
-    to_install <- which(! viapply(plan$dependencies, length))
-    if (!length(to_install)) stop("Cannot install packages")
-    for (w in to_install) {
-      install.packages(plan$file[w], lib = lib, repos = NULL, quiet = TRUE,
-                       type = "source")
-    }
-    pkgs <- plan$package[to_install]
-    plan <- plan[ - to_install, ]
-    plan$dependencies[] <- lapply(plan$dependencies, setdiff, y = pkgs)
-  }
+  ## installed, but not from BioC
+  fake_desc <- desc::desc("!new")
+  bad3 <- make_fake_resolution(`installed::foobar` = list(
+    extra = list(list(description = fake_desc))))
+  expect_false(ans <- satisfy_remote_bioc(res, bad3))
+  expect_match(attr(ans, "reason"), "not from BioC")
 
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      r$resolve()
-      r$solve()
-      plan <- r$get_install_plan()
-    })
+  ## BioC type, but package name does not match
+  bad4 <- make_fake_resolution(`bioc::eisa2` = list())
+  expect_false(ans <- satisfy_remote_bioc(res, bad4))
+  expect_match(attr(ans, "reason"), "names differ")
 
-  expect_true(all(plan$type == "installed"))
+  ## installed type, but package name does not match
+  fake_desc <- desc::desc("!new")
+  fake_desc$set(biocViews = "foobar")
+  bad5 <- make_fake_resolution(`installed::foobar` = list(
+    package = "eisa2",
+    extra = list(list(description = fake_desc))))
+  expect_false(ans <- satisfy_remote_bioc(res, bad5))
+  expect_match(attr(ans, "reason"), "names differ")
 
-  ver <- plan$version[match("Biobase", plan$package)]
+  ## BioC type, but version is not good enough
+  bad6 <- make_fake_resolution(`bioc::eisa` = list(version = "0.0.1"))
+  expect_false(ans <- satisfy_remote_bioc(res, bad6))
+  expect_match(attr(ans, "reason"), "Insufficient version")
 
-  ref <- paste0("bioc::Biobase@>=", ver)
-  r <- remotes$new(ref, config = list(cache_dir = tmp), library = lib)
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      expect_error(res <- r$resolve(), NA)
-      expect_error(r$solve(), NA)
-      expect_error(r$download_solution(), NA)
-      expect_error(plan <- r$get_install_plan(), NA)
-    })
+  ## Same version, BioC
+  ok1 <- make_fake_resolution(`bioc::eisa` = list())
+  expect_true(satisfy_remote_bioc(res, ok1))
 
-  expect_true(all(plan$type == "installed"))
+  ## Newer version, BioC
+  ok2 <- make_fake_resolution(`bioc::eisa` = list(version = "2.0.0"))
+  expect_true(satisfy_remote_bioc(res, ok2))
+
+  ## Same version, installed
+  fake_desc <- desc::desc("!new")
+  fake_desc$set(biocViews ="BioC")
+  ok3 <- make_fake_resolution(`installed::foobar` = list(
+    package = "eisa",
+    extra = list(list(description = fake_desc))))
+  expect_true(satisfy_remote_bioc(res, ok3))
+
+  ## Newer version, installed
+  fake_desc <- desc::desc("!new")
+  fake_desc$set(biocViews = "foobar")
+  ok4 <- make_fake_resolution(`installed::foobar` = list(
+    package = "eisa",
+    version = "2.0.0",
+    extra = list(list(description = fake_desc))))
+  expect_true(satisfy_remote_bioc(res, ok4))
 })

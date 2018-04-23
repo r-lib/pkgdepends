@@ -34,25 +34,37 @@ satisfy_remote_bioc <- function(resolution, candidate,
                                 config, ...) {
 
   ## 1. candidate must be a bioc, standard or installed ref
-  if (!candidate$type %in% c("bioc", "standard", "installed")) return(FALSE)
+  if (!candidate$type %in% c("bioc", "standard", "installed")) {
+    return(structure(
+      FALSE, reason = "Type must be 'bioc', 'standard' or 'installed'"))
+  }
 
   ## 2. installed refs must be from bioc
   if (candidate$type == "installed") {
-    dsc <- candidate$remote[[1]]$description
-    if (is.na(dsc$get("biocViews"))) return(FALSE)
+    dsc <- candidate$extra[[1]]$description
+    if (is.null(dsc) || is.na(dsc$get("biocViews"))) {
+      return(structure(FALSE, reason = "Installed package not from BioC"))
+    }
   }
 
   ## 3. package names must match
-  if (resolution$package != candidate$package) return(FALSE)
+  if (resolution$package != candidate$package) {
+    return(structure(FALSE, reason = "Package names differ"))
+  }
 
   ## 4. version requirements must be satisfied. Otherwise good.
-  if (resolution$remote[[1]]$version == "") return(TRUE)
+  if (resolution$remote[[1]]$version == "") {
+    return(TRUE)
+  }
 
-  version_satisfies(
-    candidate$version,
-    resolution$remote[[1]]$atleast,
-    resolution$remote[[1]]$version
-  )
+  if (!version_satisfies(
+         candidate$version,
+         resolution$remote[[1]]$atleast,
+         resolution$remote[[1]]$version)) {
+    return(structure(FALSE, reason = "Insufficient version"))
+  }
+
+  TRUE
 }
 
 ## ----------------------------------------------------------------------

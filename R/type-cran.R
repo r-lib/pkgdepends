@@ -41,26 +41,36 @@ download_remote_cran <- function(resolution, target, config, cache,
 satisfy_remote_cran <- function(resolution, candidate, config, ...) {
 
   ## 1. candidate must be a cran, standard or installed ref
-  if (!candidate$type %in% c("cran", "standard", "installed")) return(FALSE)
+  if (!candidate$type %in% c("cran", "standard", "installed")) {
+    return(structure(
+      FALSE, reason = "Type must be 'cran', 'standard' or 'installed'"))
+  }
 
   ## 2. installed refs must be from CRAN
   if (candidate$type == "installed") {
-    dsc <- candidate$remote[[1]]$description
-    if (!is.null(dsc) &&
-        ! identical(dsc$get("Repository")[[1]], "CRAN")) return(FALSE)
+    dsc <- candidate$extra[[1]]$description
+    if (is.null(dsc) ||
+        ! identical(dsc$get("Repository")[[1]], "CRAN")) {
+      return(structure(FALSE, reason = "Installed package not from CRAN"))
+    }
   }
 
   ## 3. package names must match
-  if (resolution$package != candidate$package) return(FALSE)
+  if (resolution$package != candidate$package) {
+    return(structure(FALSE, reason = "Package names differ"))
+  }
 
   ## 4. version requirements must be satisfied. Otherwise good.
   if (resolution$remote[[1]]$version == "") return(TRUE)
 
-  version_satisfies(
-    candidate$version,
-    resolution$remote[[1]]$atleast,
-    resolution$remote[[1]]$version
-  )
+  if (!version_satisfies(
+         candidate$version,
+         resolution$remote[[1]]$atleast,
+         resolution$remote[[1]]$version)) {
+    return(structure(FALSE, reason = "Insufficient version"))
+  }
+
+  TRUE
 }
 
 ## ----------------------------------------------------------------------

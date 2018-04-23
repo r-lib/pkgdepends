@@ -153,23 +153,7 @@ test_that("download_remote error", {
   expect_true(all(dl$download_status == "Failed"))
 })
 
-test_that("satisfies_remote", {
-  skip_if_offline()
-  skip_on_cran()
-
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-
-  ## Absolute path
-  path <- get_fixture("foobar_1.0.0.tar.gz")
-  ref <- paste0("local::", path)
-  r <- remotes$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    r$resolve()
-  })
-  res <- r$get_resolution()
-
-  ## The rest of the arguments are not even used...
-  expect_false(satisfies_remote(res$data$resolution[[1]]))
+test_that("satisfy", {
+  ## Always FALSE, independently of arguments
+  expect_false(satisfy_remote_local())
 })

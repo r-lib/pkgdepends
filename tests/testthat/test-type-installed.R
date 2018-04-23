@@ -43,3 +43,8 @@ test_that("download", {
   dl <- r$get_resolution_download()
   expect_equal(dl$download_status, "Had")
 })
+
+test_that("satisfy", {
+  ## Always TRUE, independently of arguments
+  expect_true(satisfy_remote_installed())
+})

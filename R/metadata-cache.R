@@ -143,6 +143,7 @@ cmc_async_update <- function(self, private) {
 }
 
 #' @importFrom digest digest
+#' @importFrom utils URLencode
 
 repo_encode <- function(repos) {
   paste0(

@@ -45,5 +45,6 @@ Remotes:
     r-lib/async,
     r-lib/cli,
     r-lib/desc,
+    tidyverse/glue,
     r-lib/pkgbuild
 Encoding: UTF-8

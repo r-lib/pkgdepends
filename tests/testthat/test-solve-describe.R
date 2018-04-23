@@ -3,9 +3,10 @@ context("solve + describe")
 
 test_that("failed resolution", {
   pkgs <- make_fake_resolution(
-    aa = list(status = "FAILED", direct = TRUE),
+    aa = list(status = "FAILED", direct = TRUE, error = list(
+      structure(list(message = "EEE"), class = c("error", "condition")))),
     bb = list()
-  )$data
+  )
   dsc <- describe_fake_error(pkgs)
   expect_equal(dsc$ref, "aa")
   expect_equal(dsc$type, "standard")
@@ -13,7 +14,7 @@ test_that("failed resolution", {
   expect_equal(dsc$status, "FAILED")
   expect_equal(dsc$package, "aa")
   expect_equal(dsc$failure_type, "failed-res")
-  expect_equal(dsc$failure_message, list("Unknown error"))
+  expect_equal(dsc$failure_message, list("EEE"))
 })
 
 test_that("failed resolution", {
@@ -26,42 +27,25 @@ test_that("failed resolution", {
     r$resolve()
   })
   sol <- r$solve()
-  dsc <- describe_solution_error(r$get_resolution()$data, sol)
-  if (getOption("pkgType") == "source") {
-    expect_equal(dsc$ref, rep("nonexistentpackage", 2))
-    expect_equal(dsc$type, rep("standard", 2))
-    expect_equal(dsc$direct, rep(TRUE, 2))
-    expect_equal(dsc$status, rep("FAILED", 2))
-    expect_equal(dsc$package, rep("nonexistentpackage", 2))
-    expect_equal(dsc$failure_type, rep("failed-res", 2))
-    expect_equal(
-      dsc$failure_message,
-      replicate(2, "Can't find CRAN/BioC package nonexistentpackage",
-                simplify = FALSE))
-
-  } else {
-    expect_equal(dsc$ref, rep("nonexistentpackage", 4))
-    expect_equal(dsc$type, rep("standard", 4))
-    expect_equal(dsc$direct, rep(TRUE, 4))
-    expect_equal(dsc$status, rep("FAILED", 4))
-    expect_equal(dsc$package, rep("nonexistentpackage", 4))
-    expect_equal(dsc$failure_type, rep("failed-res", 4))
-    expect_equal(
-      dsc$failure_message,
-      replicate(4, "Can't find CRAN/BioC package nonexistentpackage",
-                simplify = FALSE))
-  }
+  dsc <- describe_solution_error(r$get_resolution(), sol)
+  expect_equal(dsc$ref, "nonexistentpackage")
+  expect_equal(dsc$type, "standard")
+  expect_equal(dsc$direct, TRUE)
+  expect_equal(dsc$status, "FAILED")
+  expect_equal(dsc$failure_type, "failed-res")
+  expect_equal(dsc$failure_message, list("Cannot find standard package"))
 })
 
 test_that("failed resolution of a dependency", {
   pkgs <- make_fake_resolution(
-    aa = list(direct = TRUE, deps = make_fake_deps(Imports = "bb, xx")),
-    bb = list(deps = make_fake_deps(Imports = "cc")),
-    cc = list(status = "FAILED"),
-    dd = list(direct = TRUE, deps = make_fake_deps(Imports = "ee")),
+    aa = list(direct = TRUE, deps = list(make_fake_deps(Imports = "bb, xx"))),
+    bb = list(deps = list(make_fake_deps(Imports = "cc"))),
+    cc = list(status = "FAILED", error = list(structure(list(message = "EEE"),
+      class = c("error", "condition")))),
+    dd = list(direct = TRUE, deps = list(make_fake_deps(Imports = "ee"))),
     ee = list(),
     xx = list()
-  )$data
+  )
   dsc <- describe_fake_error(pkgs)
   expect_equal(dsc$ref, c("aa", "bb", "cc"))
   expect_equal(dsc$type, rep("standard", 3))
@@ -73,14 +57,14 @@ test_that("failed resolution of a dependency", {
     dsc$failure_message,
     list("Cannot install dependency bb",
          "Cannot install dependency cc",
-         "Unknown error"))
+         "EEE"))
 })
 
 test_that("conflicting direct refs", {
   pkgs <- make_fake_resolution(
     `cran::aa` = list(direct = TRUE),
     `aa/aa` = list(direct = TRUE)
-  )$data
+  )
   dsc <- describe_fake_error(pkgs)
   expect_equal(dsc$ref, c("cran::aa", "aa/aa"))
   expect_equal(dsc$type, c("cran", "github"))
@@ -96,10 +80,10 @@ test_that("conflicting direct refs", {
 test_that("dependency conflicts direct ref", {
   pkgs <- make_fake_resolution(
     `cran::aa` = list(direct = TRUE),
-    `aa/aa` = list(extra = list(sha = "badcafe")),
-    bb = list(direct = TRUE, deps = make_fake_deps(Imports = "cc")),
-    cc = list(deps = make_fake_deps(Imports = "aa", Remotes = "aa/aa"))
-  )$data
+    `aa/aa` =  list(list(extra = list(sha = "badcafe"))),
+    bb = list(direct = TRUE, deps = list(make_fake_deps(Imports = "cc"))),
+    cc = list(deps = list(make_fake_deps(Imports = "aa", Remotes = "aa/aa")))
+  )
   dsc <- describe_fake_error(pkgs)
   expect_equal(dsc$ref, c("aa/aa", "bb", "cc"))
   expect_equal(dsc$type, c("github", "standard", "standard"))
@@ -118,12 +102,12 @@ test_that("dependency conflicts direct ref", {
 test_that("conflicting dependencies", {
   pkgs <- make_fake_resolution(
     `aa` = list(direct = TRUE,
-                deps = make_fake_deps(Imports = "cc", Remotes = "cran::cc")),
+                deps = list(make_fake_deps(Imports = "cc", Remotes = "cran::cc"))),
     `bb` = list(direct = TRUE,
-                deps = make_fake_deps(Imports = "cc", Remotes = "cc/cc")),
+                deps = list(make_fake_deps(Imports = "cc", Remotes = "cc/cc"))),
     `cran::cc` = list(),
-    `cc/cc` = list(extra = list(sha = "badcafe"))
-  )$data
+    `cc/cc` = list(extra = list(list(sha = "badcafe")))
+  )
   dsc <- describe_fake_error(pkgs)
   expect_equal(dsc$ref, c("aa", "cran::cc"))
   expect_equal(dsc$type, c("standard", "cran"))
@@ -139,14 +123,14 @@ test_that("conflicting dependencies", {
 
 test_that("conflicting dependencies downstream", {
   pkgs <- make_fake_resolution(
-    `a0` = list(direct = TRUE, deps = make_fake_deps(Imports = "aa, bb")),
+    `a0` = list(direct = TRUE, deps = list(make_fake_deps(Imports = "aa, bb"))),
     `aa` = list(direct = TRUE,
-                deps = make_fake_deps(Imports = "cc", Remotes = "cran::cc")),
+                deps = list(make_fake_deps(Imports = "cc", Remotes = "cran::cc"))),
     `bb` = list(direct = TRUE,
-                deps = make_fake_deps(Imports = "cc", Remotes = "cc/cc")),
+                deps = list(make_fake_deps(Imports = "cc", Remotes = "cc/cc"))),
     `cran::cc` = list(),
-    `cc/cc` = list(extra = list(sha = "badcafe"))
-  )$data
+    `cc/cc` = list(extra = list(list(sha = "badcafe")))
+  )
   dsc <- describe_fake_error(pkgs)
   expect_equal(dsc$ref, c("a0", "bb", "cc/cc"))
   expect_equal(dsc$type, c("standard", "standard", "github"))

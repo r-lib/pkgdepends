@@ -56,7 +56,7 @@ describe_fake_error <- function(pkgs, policy = "lazy") {
   sol <- remotes_i_solve_lp_problem(lp)
 
   expect_true(sol$objval >= solve_dummy_obj - 1)
-  solution <- list(status = "FAILED", data = NULL, problem = lp,
+  solution <- list(status = "FAILED", data = pkgs, problem = lp,
                    solution = sol)
   describe_solution_error(pkgs, solution)
 }

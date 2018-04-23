@@ -27,7 +27,8 @@ remotes_solve <- function(self, private, policy) {
     solution = sol
   )
 
-  res$lib_status <- calculate_lib_status(res, self$get_resolution())
+  res$data$lib_status <-
+    calculate_lib_status(res$data, self$get_resolution())
 
   metadata$solution_end <- Sys.time()
   attr(res, "metadata") <- modifyList(attr(pkgs, "metadata"), metadata)
@@ -449,15 +450,15 @@ remotes_install_plan <- function(self, private) {
   sol <- self$get_solution_download()
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
-  deps <- lapply(sol$dependencies, "[[", "package")
-  deps <- lapply(deps, setdiff, y = "R")
+  deps <- lapply(sol$deps, function(x) x$ref[x$type %in% dep_types_hard()])
+  deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   installed <- ifelse(
     sol$type == "installed",
     file.path(private$library, sol$package),
     NA_character_)
 
-  is_direct <- private$resolution$result$direct
-  direct_packages <- private$resolution$result$package[is_direct]
+  res <- self$get_resolution()
+  direct_packages <- res$package[res$direct]
   direct <- sol$direct |
     (sol$type == "installed" & sol$package %in% direct_packages)
 
@@ -470,9 +471,6 @@ remotes_install_plan <- function(self, private) {
   sol$file <- sol$fulltarget
   sol$installed <- installed
   sol$vignettes <- vignettes
-  sol$metadata <- lapply(sol$resolution,
-                         function(x) get_files(x)[[1]]$metadata)
-  sol$lib_status <- sol$lib_status
 
   sol
 }

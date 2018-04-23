@@ -56,7 +56,7 @@ download_remote_github <- function(resolution, target, config, cache,
   ##    R package, and add that to the cache as well.
 
   package <- resolution$package
-  sha <- resolution$extra$sha
+  sha <- resolution$extra[[1]]$sha
   need_vignettes <- ! inherits(resolution, "remotes_solution")
 
   ## 1. Check if we have a built package in the cache. We don not check the
@@ -223,6 +223,7 @@ type_github_make_resolution <- function(data) {
   version <- data$desc$get_field("Version")
   dependencies <- data$dependencies
   unknown <- deps$ref[deps$type %in% dependencies]
+  unknown <- setdiff(unknown, c(base_packages(), "R"))
 
   list(
     ref = data$remote$ref,
@@ -238,6 +239,6 @@ type_github_make_resolution <- function(data) {
     remote = list(data$remote),
     deps = list(deps),
     unknown_deps = unknown,
-    extra = list(sha = sha)
+    extra = list(list(sha = sha))
   )
 }

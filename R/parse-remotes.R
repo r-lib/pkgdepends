@@ -148,6 +148,9 @@ get_remote_types <- function(specs) {
 #' Parse package location specifications
 #'
 #' @param specs character vector
+#' @param remote_types custom remote types can be added here
+#' @param ... additional arguments are passed to the individual parser
+#'   functions
 #' @return List of parsed specification.
 #'
 #' @export

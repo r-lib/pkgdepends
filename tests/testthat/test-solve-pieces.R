@@ -62,7 +62,7 @@ test_that("remotes_i_lp_satisfy_direct", {
   )
   expect_equal(
     sort(viapply(lp$conds, "[[", "vars")),
-    c(1, 1, 2, 3)
+    c(1, 2, 3, 3)
   )
   expect_equal(vcapply(lp$conds, "[[", "op"), rep("==", 4))
   expect_equal(vdapply(lp$conds, "[[", "rhs"), rep(0, 4))

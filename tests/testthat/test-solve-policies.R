@@ -5,7 +5,7 @@ test_that("newer version preferred", {
   pkgs <- make_fake_resolution(
     `aa` = list(version = "1-0-1", platform = "source", direct = TRUE),
     `installed::/tmp/aa` = list(version = "1.2.0")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -14,7 +14,7 @@ test_that("newer version preferred", {
   pkgs <- make_fake_resolution(
     `aa` = list(version = "1-0-1", platform = "source", direct = TRUE),
     `installed::/tmp/aa` = list(version = "1.0.0")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -26,7 +26,7 @@ test_that("if newer fails, older is used", {
     `aa` = list(version = "0.9.9", direct = TRUE),
     `cran::aa` = list(version = "1-0-1", status = "FAILED"),
     `installed::/tmp/aa` = list(version = "1.0.0")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -36,10 +36,10 @@ test_that("if newer fails, older is used", {
 
 test_that("newer version if preferred in the dependencies", {
   pkgs <- make_fake_resolution(
-    `a0` = list(direct = TRUE, deps = make_fake_deps(Imports = "aa")),
+    `a0` = list(direct = TRUE, deps = list(make_fake_deps(Imports = "aa"))),
     `aa` = list(version = "1-0-1", platform = "source"),
     `installed::/tmp/aa` = list(version = "1.0.0")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -51,7 +51,7 @@ test_that("binaries are still preferred over source", {
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos"),
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `installed::/tmp/aa` = list(version = "0.9.9")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -61,7 +61,7 @@ test_that("binaries are still preferred over source", {
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos"),
     `installed::/tmp/aa` = list(version = "0.9.9")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -73,7 +73,7 @@ test_that("installed is still preferred over binaries", {
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos"),
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `installed::/tmp/aa` = list(version = "1.0.0")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -83,7 +83,7 @@ test_that("installed is still preferred over binaries", {
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos"),
     `installed::/tmp/aa` = list(version = "1.0.0")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -93,7 +93,7 @@ test_that("installed is still preferred over binaries", {
     `installed::/tmp/aa` = list(version = "1.0.0"),
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
@@ -103,7 +103,7 @@ test_that("installed is still preferred over binaries", {
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `installed::/tmp/aa` = list(version = "1.0.0"),
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos")
-  )$data
+  )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "upgrade")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)

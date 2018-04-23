@@ -2,7 +2,7 @@
 context("solve")
 
 test_that("binary preferred over source", {
-  pkgs <- read_fixture("resolution-simple.rds")$data
+  pkgs <- read_fixture("resolution-simple.rds")
   lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
   sol <- remotes_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)

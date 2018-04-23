@@ -218,9 +218,9 @@ cat0 <- function(..., sep = "") {
   cat(..., sep = sep)
 }
 
-cat_line <- function(txt, sep = "\n") {
+format_line <- function(txt, sep = "\n") {
   txt2 <- vcapply(txt, glue_data, .x = parent.frame())
-  cat(txt2, sep = sep)
+  paste(paste0(txt2, sep), collapse = "")
 }
 
 read_lines <- function(con, ...) {

@@ -308,13 +308,11 @@ test_that("deps will auto-update as needed", {
   expect_true(file.exists(pri_files$rds))
   expect_true(Sys.time() - file_get_time(pri_files$rds) < oneminute())
 
-  ## There are replicate PACKAGES, with Etag files
+  ## There are replicate PACKAGES, no Etag files, since no downloads...
   expect_true(all(file.exists(rep_files$pkgs$path)))
-  expect_true(all(file.exists(rep_files$pkgs$etag)))
 
-  ## There are primary PACKAGES, with Etag files
+  ## There are primary PACKAGES, no Etag files, since no downloads...
   expect_true(all(file.exists(pri_files$pkgs$path)))
-  expect_true(all(file.exists(pri_files$pkgs$etag)))
 })
 
 test_that("deps, extract_deps", {

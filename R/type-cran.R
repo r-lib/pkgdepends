@@ -83,5 +83,6 @@ type_cran_resolve_current <- function(remote, direct, config, cache,
 
 type_cran_resolve_version <- function(remote, direct, config,
                                       crancache, dependencies) {
-  TODO
+  ## TODO
+  stop("Not implemented yet")
 }

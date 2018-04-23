@@ -180,7 +180,9 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
   remote_types <- c(default_remote_types(), remote_types)
 
   resolve <- remote_types[[remote$type]]$resolve
-  if (is.null(resolve)) stop("Cannot resolve type", format_items(n$type))
+  if (is.null(resolve)) {
+    stop("Cannot resolve type", format_items(remote$type))
+  }
 
   async(resolve)(
     remote, direct = direct, config = config, cache = cache,

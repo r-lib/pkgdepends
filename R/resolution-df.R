@@ -83,7 +83,7 @@ res_df_must_have <- local({
   }
 })
 
-res_check_entries <- function(df) {
+res_check_entries <- function(ent) {
   ## Some columns are required
   assert_that(is.data.frame(ent))
 

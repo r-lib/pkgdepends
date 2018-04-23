@@ -6,13 +6,13 @@ remotes_draw_tree <- function(self, private, pkgs) {
 
   assert_that(is.null(pkgs) || is_character(pkgs))
 
-  sol <- self$get_solution()$data$data
+  sol <- self$get_solution()$data
   pkgs <- pkgs %||% sol$package[sol$direct]
 
-  data <- sol[, c("package", "dependencies")]
-  deps <- lapply(sol$dependencies, "[[", "package")
-  deps <- lapply(deps, setdiff, y = "R")
-  data$dependencies <- deps
+  data <- sol[, c("package", "deps")]
+  deps <- lapply(sol$deps, "[[", "package")
+  deps <- lapply(deps, intersect, data$package)
+  data$deps <- deps
   data$label <- paste(
     data$package,
     silver(paste0("(", sol$version, ")"))

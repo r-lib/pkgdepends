@@ -58,8 +58,8 @@
 #' cat(rawToChar(err$response$content))
 #' ```
 
-download_file <- async(function(url, destfile, etag_file = NULL,
-                                tmp_destfile = paste0(destfile, ".tmp"), ...) {
+download_file <- function(url, destfile, etag_file = NULL,
+                          tmp_destfile = paste0(destfile, ".tmp"), ...) {
   "!DEBUG downloading `url`"
   assert_that(
     is_string(url),
@@ -91,7 +91,7 @@ download_file <- async(function(url, destfile, etag_file = NULL,
       err$url <- url
       stop(err)
     })
-})
+}
 
 read_etag <- function(etag_file) {
   tryCatch(
@@ -163,10 +163,10 @@ get_etag_header_from_file <- function(destfile, etag_file) {
 #' cat(rawToChar(err$response$content))
 #' ```
 
-download_if_newer <- async(function(url, destfile, etag_file = NULL,
-                                    headers = character(),
-                                    tmp_destfile = paste0(destfile, ".tmp"),
-                                    ...) {
+download_if_newer <- function(url, destfile, etag_file = NULL,
+                              headers = character(),
+                              tmp_destfile = paste0(destfile, ".tmp"),
+                              ...) {
   "!DEBUG download if newer `url`"
   assert_that(
     is_string(url),
@@ -213,7 +213,7 @@ download_if_newer <- async(function(url, destfile, etag_file = NULL,
       stop(err)
     })
 
-})
+}
 
 #' Download a files from multiple candidate URLs
 #'
@@ -273,8 +273,8 @@ download_if_newer <- async(function(url, destfile, etag_file = NULL,
 #' cat(rawToChar(res$errors[[1]]$response$content))
 #' ```
 
-download_one_of <- async(function(urls, destfile, etag_file = NULL,
-                                  headers = character(), ...) {
+download_one_of <- function(urls, destfile, etag_file = NULL,
+                            headers = character(), ...) {
   "!DEBUG trying multiple URLs"
   assert_that(
     is_character(urls),  length(urls) >= 1,
@@ -296,4 +296,4 @@ download_one_of <- async(function(urls, destfile, etag_file = NULL,
       class(err) <- c("download_one_of_error", class(err))
       stop(err)
     })
-})
+}

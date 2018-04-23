@@ -97,8 +97,8 @@ cmc_init <- function(self, private, primary_path, replica_path, platforms,
   invisible(self)
 }
 
-cmc_async_deps <- async(function(self, private, packages, dependencies,
-                                 recursive) {
+cmc_async_deps <- function(self, private, packages, dependencies,
+                           recursive) {
   assert_that(
     is_character(packages),
     is_dependencies(dependencies),
@@ -107,10 +107,10 @@ cmc_async_deps <- async(function(self, private, packages, dependencies,
   "!!DEBUG Getting deps"
   private$async_ensure_cache(private$update_after)$
     then(~ extract_deps(., packages, dependencies, recursive))
-})
+}
 
-cmc_async_revdeps <- async(function(self, private, packages, dependencies,
-                                    recursive) {
+cmc_async_revdeps <- function(self, private, packages, dependencies,
+                              recursive) {
   assert_that(
     is_character(packages),
     is_dependencies(dependencies),
@@ -119,9 +119,9 @@ cmc_async_revdeps <- async(function(self, private, packages, dependencies,
   "!!DEBUG Getting revdeps"
   private$async_ensure_cache(private$update_after)$
     then(~ extract_revdeps(., packages, dependencies, recursive))
-})
+}
 
-cmc_async_list <- async(function(self, private, packages) {
+cmc_async_list <- function(self, private, packages) {
   assert_that(is.null(packages) || is_character(packages))
 
   "!!DEBUG Listing packages"
@@ -129,7 +129,7 @@ cmc_async_list <- async(function(self, private, packages) {
     then(function(x) {
       if (is.null(packages)) x$pkgs else x$pkgs[x$pkgs$package %in% packages,]
     })
-})
+}
 
 cmc_async_update <- function(self, private) {
   if (!is.null(private$update_deferred)) return(private$update_deferred)
@@ -201,7 +201,7 @@ cmc__get_cache_files <- function(self, private, which) {
 #' @return Metadata.
 #' @keywords internal
 
-cmc__async_ensure_cache <- async(function(self, private, max_age) {
+cmc__async_ensure_cache <- function(self, private, max_age) {
   max_age
 
   async_try_each(
@@ -216,7 +216,7 @@ cmc__async_ensure_cache <- async(function(self, private, max_age) {
     err$message <- "Could not load or update metadata cache"
     stop(err)
   })
-})
+}
 
 cmc__get_current_data <- function(self, private, max_age) {
   "!!DEBUG Get current data?"
@@ -362,7 +362,7 @@ cmc__load_primary_pkgs <- function(self, private, max_age) {
 #' @param private private self
 #' @keywords internal
 
-cmc__update_replica_pkgs <- async(function(self, private) {
+cmc__update_replica_pkgs <- function(self, private) {
   "!!DEBUG Update replica PACKAGES"
   pkgs <- private$get_cache_files("replica")$pkgs
 
@@ -371,7 +371,7 @@ cmc__update_replica_pkgs <- async(function(self, private) {
   })
 
   when_all(.list = dls)
-})
+}
 
 #' Update the replica RDS from the PACKAGES files
 #'

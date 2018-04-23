@@ -1,10 +1,14 @@
 
+dep_types_hard <- function() c("Depends", "Imports", "LinkingTo")
+dep_types_soft <- function() c("Suggests", "Enhances")
+dep_types <- function() c(dep_types_hard(), dep_types_soft())
+
 #' @importFrom tibble tibble
 #' @importFrom rematch2 re_match
 
 fast_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
-  cols <- intersect(colnames(pkgs), deptypes())
+  cols <- intersect(colnames(pkgs), dep_types())
   ## as.character is for empty tibbles, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))
@@ -118,7 +122,7 @@ resolve_ref_deps <- function(deps, remotes) {
 }
 
 interpret_dependencies <- function(dp) {
-  hard <- c("Depends", "Imports", "LinkingTo")
+  hard <- dep_types_hard()
 
   res <- if (isTRUE(dp)) {
     list(c(hard, "Suggests"), hard)

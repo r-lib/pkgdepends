@@ -51,7 +51,7 @@ read_packages_file <- function(path, mirror, repodir, platform, ...,
 
 packages_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
-  cols <- intersect(colnames(pkgs), tolower(deptypes()))
+  cols <- intersect(colnames(pkgs), tolower(dep_types()))
   ## as.character is for empty tibbles, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))

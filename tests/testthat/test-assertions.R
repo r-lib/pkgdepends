@@ -68,7 +68,7 @@ test_that("is_platform_list", {
 
 test_that("is_dependencies", {
   pos <- list(TRUE, FALSE, NA, NA_character_, character(),
-              "Depends", c("Depends", "Imports"), deptypes())
+              "Depends", c("Depends", "Imports"), dep_types())
   neg <- list(1, 1:5, "foo", c("Depends", NA), "linkingto")
   for (p in pos) expect_true(is_dependencies(p))
   for (n in neg) expect_false(is_dependencies(n))

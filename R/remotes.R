@@ -211,7 +211,7 @@ remotes_default_config <- function() {
     "metadata_cache_dir" = tempfile(),
     "platforms"          = default_platforms(),
     "cran-mirror"        = default_cran_mirror(),
-    "dependencies"       = c("Depends", "Imports", "LinkingTo"),
+    "dependencies"       = dep_types_hard(),
     "r-versions"         = current_r_version()
   )
 }

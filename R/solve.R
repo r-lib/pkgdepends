@@ -250,7 +250,7 @@ remotes_i_lp_dependencies <- function(lp) {
     deps <- pkgs$deps[[wh]]
     deps <- deps[deps$ref != "R", ]
     deps <- deps[! deps$ref %in% base, ]
-    deps <- deps[deps$type %in% tolower(dep_types_hard()), ]
+    deps <- deps[tolower(deps$type) %in% tolower(dep_types_hard()), ]
     for (i in seq_len(nrow(deps))) {
       depref <- deps$ref[i]
       depver <- deps$version[i]
@@ -543,7 +543,9 @@ describe_solution_error <- function(pkgs, solution) {
   fres_vars <- unlist(var[typ == "ok-resolution"])
   state[fres_vars] <- "failed-res"
   for (fv in fres_vars) {
-    note[[fv]] <- c(note[[fv]], unname(get_error_message(pkgs$resolution[[fv]])))
+    if (length(e <- pkgs$error[[fv]])) {
+      note[[fv]] <- c(note[[fv]], conditionMessage(e))
+    }
   }
 
   ## Candidates that conflict with a direct package

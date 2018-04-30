@@ -67,8 +67,11 @@ download_remote_github <- function(resolution, target, config, cache,
 
   hit <- cache$package$copy_to(
     target, package = package, sha = sha, built = TRUE,
-    .list = c(if (need_vignettes) vignettes = TRUE))
-  if (nrow(hit)) return("Had")
+    .list = c(if (need_vignettes) c(vignettes = TRUE)))
+  if (nrow(hit)) {
+    "!DEBUG found GH `resolution$ref`@`sha` in the cache"
+    return("Had")
+  }
 
   ## 2. Check if we have a repo snapshot in the cache.
 
@@ -78,12 +81,14 @@ download_remote_github <- function(resolution, target, config, cache,
   hit <- cache$package$copy_to(
     target_zip, package = package, sha = sha, built = FALSE)
   if (nrow(hit)) {
+    "!DEBUG found GH zip for `resolution$ref`@`sha` in the cache"
     return(type_github_build_package(target_zip, target, rel_target, subdir,
                                      package, sha, need_vignettes, cache))
   }
 
   ## 3. Need to download the repo
 
+  "!DEBUG Need to download GH package `resolution$ref`@`sha`"
   urls <- resolution$sources[[1]]
   rel_zip <- sub("\\.tar\\.gz$", ".zip", rel_target)
   type_github_download_repo(urls, target_zip, rel_zip, sha, package, cache,

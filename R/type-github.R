@@ -39,7 +39,7 @@ resolve_remote_github <- function(remote, direct, config, cache,
 }
 
 download_remote_github <- function(resolution, target, config, cache,
-                                   progress_bar) {
+                                   on_progress) {
 
   ## A GitHub package needs to be built, from the downloaded repo
   ## If we are downloading a solution, then we skip building the vignettes,
@@ -86,7 +86,8 @@ download_remote_github <- function(resolution, target, config, cache,
 
   urls <- resolution$sources[[1]]
   rel_zip <- sub("\\.tar\\.gz$", ".zip", rel_target)
-  type_github_download_repo(urls, target_zip, rel_zip, sha, package, cache)$
+  type_github_download_repo(urls, target_zip, rel_zip, sha, package, cache,
+                            on_progress)$
     then(function() {
       type_github_build_package(target_zip, target, rel_target, subdir,
                                 package, sha, need_vignettes, cache)
@@ -113,8 +114,8 @@ type_github_build_package <- function(repo_zip, target, rel_target, subdir,
 }
 
 type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,
-                                      package, cache) {
-  download_file(urls, repo_zip)$
+                                      package, cache, on_progress) {
+  download_file(urls, repo_zip, on_progress = on_progress)$
     then(function() {
       cache$package$add(
         repo_zip, rel_zip, package = package, sha = sha, built = FALSE)

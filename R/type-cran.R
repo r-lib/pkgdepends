@@ -32,10 +32,10 @@ resolve_remote_cran <- function(remote, direct, config, cache,
 }
 
 download_remote_cran <- function(resolution, target, config, cache,
-                                 progress_bar) {
+                                 on_progress) {
 
   download_ping_if_not_source(resolution, target, config, cache,
-                              progress_bar)
+                              on_progress)
 }
 
 satisfy_remote_cran <- function(resolution, candidate, config, ...) {

@@ -27,7 +27,7 @@ resolve_remote_installed <- function(remote, direct, config,
 }
 
 download_remote_installed <- function(resolution, target, config, cache,
-                                      progress_bar) {
+                                      on_progress) {
   "Had"
 }
 

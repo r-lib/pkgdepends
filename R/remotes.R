@@ -160,16 +160,21 @@ remotes <- R6Class(
     remote_types = NULL,
     cli = NULL,
 
-    download_res = function(res)
-      remotes_download_res(self, private, res),
+    download_res = function(res, on_progress = NULL)
+      remotes_download_res(self, private, res, on_progress),
     subset_resolution = function(which)
       remotes__subset_resolution(self, private, which),
     create_lp_problem = function(pkgs, policy)
       remotes__create_lp_problem(self, private, pkgs, policy),
     solve_lp_problem = function(problem)
       remotes__solve_lp_problem(self, private, problem),
-    with_progress_bar = function(args, expr)
-      remotes__with_progress_bar(self, private, args, expr)
+
+    create_progress_bar = function(what)
+      remotes__create_progress_bar(self, private, what),
+    update_progress_bar = function(idx, data)
+      remotes__update_progress_bar(self, private, idx, data),
+    done_progress_bar = function()
+      remotes__done_progress_bar(self, private)
   )
 )
 

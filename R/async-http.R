@@ -183,7 +183,7 @@ download_if_newer <- function(url, destfile, etag_file = NULL,
   tmp_destfile <- normalizePath(tmp_destfile, mustWork = FALSE)
   mkdirp(dirname(tmp_destfile))
 
-  http_get(url, file = tmp_destfile, headers = headers)$
+  http_get(url, file = tmp_destfile, headers = headers, ...)$
     then(http_stop_for_status)$
     then(function(resp) {
       if (resp$status_code == 304) {
@@ -287,7 +287,7 @@ download_one_of <- function(urls, destfile, etag_file = NULL,
   dls <- mapply(
     download_if_newer, url = urls, tmp_destfile = tmps,
     MoreArgs = list(destfile = destfile, etag_file = etag_file,
-                    headers = headers),
+                    headers = headers, ...),
     SIMPLIFY = FALSE)
 
   when_any(.list = dls)$

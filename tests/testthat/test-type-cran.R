@@ -181,7 +181,7 @@ test_that("download_remote", {
 
   target <- file.path(conf$cache_dir, res$target[1])
   download <- function(res) {
-    download_remote_cran(res, target, conf, cache, progress_bar = NULL)
+    download_remote_cran(res, target, conf, cache, on_progress = NULL)
   }
   dl1 <- synchronise(download(res[1,]))
   expect_equal(dl1, "Got")

@@ -23,7 +23,7 @@ resolve_remote_local <- function(remote, direct, config, cache,
 }
 
 download_remote_local <- function(resolution, target, config, cache,
-                                  progress_bar) {
+                                  on_progress) {
 
   source_file <- sub("^file://",  "",  resolution$sources[[1]])
   if (! file.copy(source_file, target, overwrite =  TRUE)) {

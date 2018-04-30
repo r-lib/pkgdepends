@@ -87,14 +87,14 @@ test_that("download_remote", {
 
   target <- file.path(conf$cache_dir, res$target[1])
   dl <- synchronise(
-    download_remote_bioc(res[1,], target, conf, cache, progress_bar = NULL))
+    download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
 
   expect_equal(dl, "Got")
   expect_true(file.exists(target))
 
   unlink(target)
   dl2 <- synchronise(
-    download_remote_bioc(res[1,], target, conf, cache, progress_bar = NULL))
+    download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
   expect_equal(dl2, "Current")
   expect_true(file.exists(target))
 })

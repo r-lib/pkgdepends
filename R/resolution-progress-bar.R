@@ -41,7 +41,7 @@ res__update_progress_bar <- function(self, private) {
   direct_done <- sum(!is.na(private$state$status) & private$state$direct)
 
   bar <- if (direct >= 5) {
-    make_bar(private$bar, direct_done / direct, width = 15)
+    make_bar(private$bar$chars, direct_done / direct, width = 15)
   }
 
   tokens <- list(
@@ -54,12 +54,11 @@ res__update_progress_bar <- function(self, private) {
   private$bar$bar$tick(0, tokens = tokens)
 }
 
-make_bar <- function(bar, p, width =  15) {
+make_bar <- function(chars, p, width =  15) {
   width <- width - 2L
 
   w <- if (isTRUE(all.equal(p, 1))) width else trunc(width * p)
 
-  chars <- bar$chars
   pchars <- rep(chars$fill, w)
   xchars <- rep(" ", max(width - w, 0))
   bar <- paste(

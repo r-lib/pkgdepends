@@ -59,7 +59,18 @@ remotes_async_download_internal <- function(self, private, what) {
     stop("Resolution has errors, cannot start downloading")
   }
   start <- Sys.time()
-  dl <- lapply_rows(what, private$download_res)
+  private$progress_bar <- private$create_progress_bar(what)
+
+  dl <- lapply(seq_len(nrow(what)), function(idx) {
+    force(idx)
+    private$download_res(
+      what[idx, ],
+      on_progress = function(data) {
+        private$update_progress_bar(idx, data)
+      })$
+      finally(function() private$update_progress_bar(idx, "done"))
+  })
+
   when_all(.list = dl)$
     then(function(dls) {
       what$fulltarget <- vcapply(dls, "[[", "fulltarget")
@@ -70,16 +81,27 @@ remotes_async_download_internal <- function(self, private, what) {
       attr(what, "metadata")$download_start <- start
       attr(what, "metadata")$download_end <- Sys.time()
       what
-    })
+    })$
+    finally(function() private$done_progress_bar())
 }
 
-download_remote <- function(res, config, cache, progress_bar,
+remotes_download_res <- function(self, private, res, on_progress) {
+  force(private)
+  download_remote(
+    res,
+    config = private$config,
+    cache = private$cache,
+    on_progress = on_progress
+  )
+}
+
+download_remote <- function(res, config, cache, on_progress = NULL,
                             remote_types = NULL) {
   remote_types <- c(default_remote_types(), remote_types)
   dl <- remote_types[[res$type]]$download %||% type_default_download
   target <- file.path(config$cache_dir, res$target)
   mkdirp(dirname(target))
-  async(dl)(res, target, config, cache = cache, progress_bar = progress_bar)$
+  async(dl)(res, target, config, cache = cache, on_progress = on_progress)$
     then(function(s) {
       if (length(res$sources[[1]]) && !file.exists(target)) {
         stop("Failed to download ", res$type, " package ", res$package)
@@ -103,19 +125,9 @@ download_remote <- function(res, config, cache, progress_bar,
     })
 }
 
-remotes_download_res <- function(self, private, res) {
-  force(private)
-  download_remote(
-    res,
-    config = private$config,
-    cache = private$cache,
-    progress_bar = private$progress_bar
-  )
-}
-
 download_ping_if_not_source <- function(resolution, target, config, cache,
-                                        progress_bar) {
-  resolution; target; config; cache; progress_bar
+                                        on_progress) {
+  resolution; target; config; cache; on_progress
   mkdirp(dirname(target))
 
   if (resolution$platform == "source") {
@@ -240,7 +252,7 @@ format_failed_dl <- function(dls, failed_dl) {
 }
 
 type_default_download <- function(resolution, target, config, cache,
-                                  progress_bar) {
+                                  on_progress) {
   ## TODO
   stop("Not implemented yet")
 }

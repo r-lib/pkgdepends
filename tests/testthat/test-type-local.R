@@ -100,7 +100,7 @@ test_that("download_remote", {
   target <- file.path(conf$cache_dir, res$target[1])
   mkdirp(dirname(target))
   download <- function(res) {
-    download_remote_local(res, target, conf, cache, progress_bar = NULL)
+    download_remote_local(res, target, conf, cache, on_progress = NULL)
   }
   dl1 <- synchronise(download(res[1,]))
   expect_equal(dl1, "Had")
@@ -118,7 +118,7 @@ test_that("download_remote", {
 
   target <- file.path(conf$cache_dir, res$target[1])
   mkdirp(dirname(target))
-  dl1 <- download_remote_local(res, target, conf, cache, progress_bar = NULL)
+  dl1 <- download_remote_local(res, target, conf, cache, on_progress = NULL)
 
   expect_equal(dl1, "Had")
   expect_true(file.exists(target))

@@ -61,6 +61,14 @@ resolution <- R6Class(
     cli = NULL,
     dependencies = NULL,
     metadata = NULL,
+    bar = NULL,
+
+    create_progress_bar = function()
+      res__create_progress_bar(self, private),
+    update_progress_bar = function()
+      res__update_progress_bar(self, private),
+    done_progress_bar = function()
+      res__done_progress_bar(self, private),
 
     set_result = function(row_idx, value)
       res__set_result(self, private, row_idx, value),
@@ -80,6 +88,7 @@ res_init <- function(self, private, config, cache, library,
   private$cli <- cli %||% cli::cli
   private$metadata <- list(resolution_start = Sys.time())
   private$dependencies <- interpret_dependencies(config$dependencies)
+  private$bar <- private$create_progress_bar()
 
   self$result <- res_make_empty_df()
 
@@ -88,7 +97,8 @@ res_init <- function(self, private, config, cache, library,
     remote = list(),
     status = character(),
     direct = logical(),
-    async_id = integer())
+    async_id = integer(),
+    started_at = Sys.time()[FALSE])
 
   private$deferred <- deferred$new(
     type = "resolution_queue",
@@ -112,6 +122,7 @@ res_init <- function(self, private, config, cache, library,
 
       private$set_result(wh, value)
       private$try_finish(resolve)
+      private$update_progress_bar()
     },
 
     parent_reject = function(value, resolve, id) {
@@ -132,6 +143,7 @@ res_init <- function(self, private, config, cache, library,
       )
       private$set_result(wh, fail_val)
       private$try_finish(resolve)
+      private$update_progress_bar()
     })
 }
 
@@ -150,8 +162,11 @@ res_push <- function(self, private, ..., direct, .list = .list) {
     private$state <- rbind(
       private$state,
       tibble(ref = n$ref, remote = list(n), status = NA_character_,
-             direct = direct, async_id = dx$get_id()))
+             direct = direct, async_id = dx$get_id(),
+             started_at = Sys.time())
+    )
 
+    private$update_progress_bar()
     dx$then(private$deferred)
   }
 }
@@ -171,6 +186,7 @@ res__try_finish <- function(self, private, resolve) {
     private$metadata$resolution_end <- Sys.time()
     attr(self$result, "metadata") <- private$metadata
     class(self$result) <- c("remotes_resolution", class(self$result))
+    private$done_progress_bar()
     resolve(self$result)
   }
 }

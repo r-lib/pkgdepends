@@ -172,8 +172,7 @@ test_that("update_replica_pkgs", {
   dir.create(rep <- fs::path_norm(tempfile()))
   on.exit(unlink(rep, recursive = TRUE), add = TRUE)
 
-  cmc <- cranlike_metadata_cache$new(pri, rep, c("macos", "windows"),
-                                     bioc = FALSE)
+  cmc <- cranlike_metadata_cache$new(pri, rep, "source", bioc = FALSE)
 
   synchronise(get_private(cmc)$update_replica_pkgs())
   rep_files <- get_private(cmc)$get_cache_files("replica")
@@ -248,8 +247,7 @@ test_that("update", {
   dir.create(rep <- fs::path_norm(tempfile()))
   on.exit(unlink(rep, recursive = TRUE), add = TRUE)
 
-  cmc <- cranlike_metadata_cache$new(pri, rep, c("macos", "windows"),
-                                     bioc = FALSE)
+  cmc <- cranlike_metadata_cache$new(pri, rep, "source", bioc = FALSE)
   data <- cmc$update()
   check_packages_data(data)
 
@@ -376,8 +374,7 @@ test_that("concurrency in update", {
   dir.create(rep <- fs::path_norm(tempfile()))
   on.exit(unlink(rep, recursive = TRUE), add = TRUE)
 
-  cmc <- cranlike_metadata_cache$new(pri, rep, c("macos", "windows"),
-                                     bioc = FALSE)
+  cmc <- cranlike_metadata_cache$new(pri, rep, "source", bioc = FALSE)
 
   ## TODO: somehow check that there are no parallel downloads
   do <- function() {

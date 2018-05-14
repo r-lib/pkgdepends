@@ -63,6 +63,10 @@ resolution <- R6Class(
     metadata = NULL,
     bar = NULL,
 
+    delayed = list(),
+    resolve_delayed = function(resolve)
+      res__resolve_delayed(self, private, resolve),
+
     create_progress_bar = function()
       res__create_progress_bar(self, private),
     update_progress_bar = function()
@@ -104,7 +108,7 @@ res_init <- function(self, private, config, cache, library,
     type = "resolution_queue",
     parent_resolve = function(value, resolve, id) {
       "!DEBUG resolution done"
-      wh <- match(id, private$state$async_id)
+      wh <- which(id == private$state$async_id)
       private$state$status[wh] <- "OK"
 
       npkgs <- value$package[value$type != "installed"]
@@ -127,7 +131,7 @@ res_init <- function(self, private, config, cache, library,
 
     parent_reject = function(value, resolve, id) {
       "!DEBUG resolution failed"
-      wh <- match(id, private$state$async_id)
+      wh <- which(id == private$state$async_id)
       private$state$status[wh] <- "FAILED"
       rec <- private$state[wh,]
       fail_val <- list(
@@ -151,6 +155,15 @@ res_push <- function(self, private, ..., direct, .list = .list) {
   new <- c(list(...), .list)
   "!DEBUG resolution push `length(new)`"
 
+
+  ## We do CRAN/BioC/standard in batches
+  ## TODO: direct ones in one go as well
+  delay <- vcapply(new, "[[", "type") %in% c("cran", "standard", "bioc")
+  if (!direct && any(delay)) {
+    private$delayed <- c(private$delayed, new[delay])
+    new <- new[!delay]
+  }
+
   for (n in new) {
     ## Maybe this is already resolving
     if (n$ref %in% private$state$ref) next
@@ -171,6 +184,40 @@ res_push <- function(self, private, ..., direct, .list = .list) {
   }
 }
 
+res__resolve_delayed <- function(self, private, resolve) {
+  n <- private$delayed
+  private$delayed <- list()
+
+  refs <- vcapply(n, "[[", "ref")
+  done <- refs %in% private$state$ref
+  n <- n[!done]
+  refs <- vcapply(n, "[[", "ref")
+  "!DEBUG resolving `length(private$delayed)` delayed remotes"
+
+  if (length(n))  {
+    types <- vcapply(n, "[[", "type")
+    utypes <- unique(types)
+    for (t in types) {
+      n2 <- n[types == t]
+
+      dx <- resolve_remote(n2, direct = FALSE, private$config,
+                           private$cache, private$dependencies,
+                           remote_types = private$remote_types)
+
+      private$state <- rbind(
+        private$state,
+        tibble(ref = vcapply(n2, "[[", "ref"), remote = n,
+               status = NA_character_, direct = FALSE,
+               async_id = dx$get_id(), started_at = Sys.time())
+      )
+      dx$then(private$deferred)
+    }
+    private$update_progress_bar()
+  }
+
+  private$try_finish(resolve)
+}
+
 res__set_result <- function(self, private, row_idx, value) {
   unknown <- if ("unknown_deps" %in% names(value)) value$unknown_deps
   value <- value[setdiff(names(value), "unknown_deps")]
@@ -181,6 +228,7 @@ res__set_result <- function(self, private, row_idx, value) {
 
 res__try_finish <- function(self, private, resolve) {
   "!DEBUG resolution trying to finish with `nrow(self$result)` results"
+  if (length(private$delayed)) return(private$resolve_delayed(resolve))
   if (all(! is.na(private$state$status))) {
     "!DEBUG resolution finished"
     private$metadata$resolution_end <- Sys.time()
@@ -195,15 +243,17 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
                            remote_types = NULL) {
   remote_types <- c(default_remote_types(), remote_types)
 
-  resolve <- remote_types[[remote$type]]$resolve
+  type <- remote$type %||% unique(vcapply(remote, "[[", "type"))
+  if (length(type) != 1) stop("Invalid remote or remote list, multiple types?")
+
+  resolve <- remote_types[[type]]$resolve
   if (is.null(resolve)) {
-    stop("Cannot resolve type", format_items(remote$type))
+    stop("Cannot resolve type", format_items(type))
   }
 
   async(resolve)(
     remote, direct = direct, config = config, cache = cache,
     dependencies = dependencies)
-
 }
 
 resolve_from_description <- function(path, sources, remote, direct,

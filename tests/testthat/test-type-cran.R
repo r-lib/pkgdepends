@@ -21,6 +21,26 @@ test_that("resolve_remote", {
   expect_true(all(res$package == "crayon"))
 })
 
+test_that("resolve_remote, multiple", {
+
+  skip_if_offline()
+  skip_on_cran()
+
+  conf <- remotes_default_config()
+  cache <- list(package = NULL, metadata = global_metadata_cache)
+
+  rem <- parse_remotes(c("cran::crayon", "cran::glue"))
+  res <- synchronise(
+    resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
+
+  expect_true(is_tibble(res))
+  expect_true(all(res$ref %in% c("cran::crayon",  "cran::glue")))
+  expect_true(all(res$type == "cran"))
+  expect_true(all(res$direct))
+  expect_true(all(res$status == "OK"))
+  expect_true(all(res$package %in% c("crayon", "glue")))
+})
+
 test_that("failed resolution", {
 
   skip_if_offline()
@@ -50,6 +70,25 @@ test_that("failed resolution", {
   res <- r$get_resolution()
 
   expect_true(all(res$status == "FAILED"))
+})
+
+test_that("failed resolution, multiple", {
+
+  skip_if_offline()
+  skip_on_cran()
+
+  conf <- remotes_default_config()
+  cache <- list(package = NULL, metadata = global_metadata_cache)
+
+  nonpkg <- paste0("cran::", basename(tempfile()))
+  rem <- parse_remotes(c(nonpkg, "cran::crayon"))
+  res <- synchronise(
+    resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
+
+  expect_true("FAILED" %in% res$status)
+  err <- res$error[res$ref != "cran::crayon"][[1]]
+  expect_equal(conditionMessage(err), "Cannot find standard package")
+
 })
 
 test_that("resolve current version", {

@@ -248,29 +248,43 @@ resolve_from_description <- function(path, sources, remote, direct,
   )
 }
 
-resolve_from_metadata <- function(remote, direct, config, cache,
+resolve_from_metadata <- function(remotes, direct, config, cache,
                                   dependencies) {
 
-  remote; direct; config; cache; dependencies
+  remotes; direct; config; cache; dependencies
 
-  cache$metadata$async_deps(remote$package, dependencies = dependencies)$
+  ## Single remote, or a list of remotes
+  if ("ref" %in% names(remotes)) {
+    packages <- remotes$package
+    refs <- remotes$ref
+    types <- remotes$type
+  } else  {
+    packages <- vcapply(remotes, "[[", "package")
+    refs <- vcapply(remotes,  "[[", "ref")
+    types <-  vcapply(remotes, "[[", "type")
+  }
+
+  cache$metadata$async_deps(packages, dependencies = dependencies)$
     then(function(data) {
       cols <-  c(
         "ref", "type", "status", "package", "version", "license",
         "needscompilation", "priority", "md5sum", "built", "platform",
         "rversion", "repodir", "target", "deps", "sources")
       res <- data[cols]
-      res$ref[res$package == remote$package] <- remote$ref
-      res$type <- if (nrow(res)) "standard" else character()
-      res$type[res$package == remote$package] <- remote$type
+      idx <- match(res$package, packages)
+      res$ref[!is.na(idx)] <- na.omit(refs[idx])
+      res$type[] <- "standard"
+      res$type[!is.na(idx)] <- na.omit(types[idx])
       res$needscompilation <-
         tolower(res$needscompilation) %in% c("yes", "true")
-      res$direct <- direct & res$ref == remote$ref
+      res$direct <- direct & res$ref %in% refs
 
       if (length(bad <- attr(data, "unknown"))) {
-        bad[bad == remote$package] <- remote$ref
+        idx <- match(bad, packages)
+        bad[!is.na(idx)] <- na.omit(refs[idx])
         failed <- make_failed_resolution(
-          bad, remote$type, direct & bad == remote$ref )
+          bad, ifelse(!is.na(idx), types[idx], "standard"),
+          direct & bad %in% refs)
         res <- rbind_expand(res, res_add_defaults(failed))
       }
 

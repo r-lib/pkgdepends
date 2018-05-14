@@ -24,7 +24,13 @@ parse_remote_cran <- function(specs, ...) {
 resolve_remote_cran <- function(remote, direct, config, cache,
                                 dependencies, ...) {
   force(remote); force(direct); force(dependencies)
-  if (remote$version %in% c("", "current")) {
+  versions <- if ("type" %in% names(remote)) {
+    remote$version
+  } else  {
+    vcapply(remote, "[[", "version")
+  }
+
+  if (all(versions %in% c("", "current"))) {
     type_cran_resolve_current(remote, direct, config, cache, dependencies)
   } else {
     type_cran_resolve_version(remote, direct, config, cache, dependencies)

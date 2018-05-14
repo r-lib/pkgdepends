@@ -280,7 +280,7 @@ remotes_i_lp_dependencies <- function(lp) {
         if (! length(cand)) "but no candidates"
       )
       txt <- glue("{pkgs$ref[wh]} depends on {depref}: \\
-                   {glue_collapse(report, sep = ', ')}")
+                   {collapse(report, sep = ', ')}")
       note <- list(wh = wh, ref = depref, cand = cand,
                    good_cand = good_cand, txt = txt)
 

@@ -318,9 +318,10 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
     then(function(data) {
       cols <-  c(
         "ref", "type", "status", "package", "version", "license",
-        "needscompilation", "priority", "md5sum", "built", "platform",
+        "needscompilation", "priority", "md5sum", "platform",
         "rversion", "repodir", "target", "deps", "sources")
       res <- data[cols]
+      res$built <- data[["built"]] %||% rep(NA_character_, nrow(res))
       idx <- match(res$package, packages)
       res$ref[!is.na(idx)] <- na.omit(refs[idx])
       res$type[] <- "standard"

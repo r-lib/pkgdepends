@@ -228,7 +228,7 @@ test_that("download_remote", {
 
   unlink(target)
   dl2 <- synchronise(download(res[1,]))
-  expect_equal(dl2, "Current")
+  expect_true(dl2 %in% c("Had", "Current"))
   expect_true(file.exists(target))
 })
 

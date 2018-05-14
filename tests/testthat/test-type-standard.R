@@ -73,7 +73,7 @@ test_that("download_remote", {
   unlink(target)
   dl2 <- synchronise(
     download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
-  expect_equal(dl2, "Current")
+  expect_true(dl2 %in% c("Had", "Current"))
   expect_true(file.exists(target))
 })
 

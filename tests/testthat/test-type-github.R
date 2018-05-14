@@ -28,10 +28,10 @@ test_that("resolve_remote", {
   res <- r$get_resolution()
 
   expect_s3_class(res, "remotes_resolution")
-  expect_equal(sort(res$data$ref), sort(refs))
-  expect_true(all(res$data$type == "github"))
-  expect_true(all(res$data$direct))
-  expect_true(all(res$data$status == "OK"))
+  expect_equal(sort(res$ref), sort(refs))
+  expect_true(all(res$type == "github"))
+  expect_true(all(res$direct))
+  expect_true(all(res$status == "OK"))
 })
 
 test_that("failed resolution", {
@@ -50,7 +50,7 @@ test_that("failed resolution", {
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
-  expect_true(all(res$data$status == "FAILED"))
+  expect_true(all(res$status == "FAILED"))
 
   ## Existing repo, no R package there
 
@@ -61,7 +61,7 @@ test_that("failed resolution", {
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
-  expect_true(all(res$data$status == "FAILED"))
+  expect_true(all(res$status == "FAILED"))
 })
 
 test_that("download_remote", {
@@ -83,67 +83,63 @@ test_that("download_remote", {
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "remotes_downloads")
-  expect_true(dl$data$ref == ref)
-  expect_true(dl$data$type == "github")
-  expect_true(dl$data$direct)
-  expect_true(dl$data$status == "OK")
-  expect_true(dl$data$package == "crayon")
-  expect_true(dl$data$download_status %in% c("Got", "Had"))
+  expect_true(dl$ref == ref)
+  expect_true(dl$type == "github")
+  expect_true(dl$direct)
+  expect_true(dl$status == "OK")
+  expect_true(dl$package == "crayon")
+  expect_true(dl$download_status %in% c("Got", "Had"))
 })
 
 test_that("satisfies_remote", {
 
-  skip_if_offline()
-  skip_on_cran()
+  res <- make_fake_resolution(`github::r-lib/crayon` = list(
+    extra = list(list(sha = "badcafe")),
+    package = "crayon",
+    version = "1.0.0"))
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  dir.create(lib <- tempfile())
-  on.exit(unlink(lib, recursive = TRUE), add = TRUE)
+  ## Different package name
+  bad1 <- make_fake_resolution(`github::r-lib/crayon` = list(
+    package = "crayon2"))
+  expect_false(ans <- satisfy_remote_github(res, bad1))
+  expect_match(attr(ans, "reason"), "names differ")
 
-  ref <- "github::r-lib/crayon@b5221ab0246050dc687dc8b9964d5c44c947b265"
-  r <- remotes$new(
-    ref, config = list(cache_dir = tmp), library = lib)
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      expect_error(res <- r$resolve(), NA)
-      expect_error(r$solve(), NA)
-      expect_error(r$download_solution(), NA)
-      expect_error(plan <- r$get_install_plan(), NA)
-    })
+  ## Installed ref without sha
+  fake_desc <- desc::desc("!new")
+  bad2 <- make_fake_resolution(`installed::foobar` = list(
+    extra = list(list(description = fake_desc)),
+    package = "crayon"))
+  expect_false(ans <- satisfy_remote_github(res, bad2))
+  expect_match(attr(ans, "reason"), "Installed package sha mismatch")
 
-  while (nrow(plan)) {
-    to_install <- which(! viapply(plan$dependencies, length))
-    if (!length(to_install)) stop("Cannot install packages")
-    for (w in to_install) {
-      install.packages(plan$file[w], lib = lib, repos = NULL, quiet = TRUE,
-                       type = "source")
-    }
-    pkgs <- plan$package[to_install]
-    plan <- plan[ - to_install, ]
-    plan$dependencies[] <- lapply(plan$dependencies, setdiff, y = pkgs)
-  }
+  ## Installed ref with different sha
+  fake_desc <- desc::desc("!new")
+  fake_desc$set("RemoteSha" = "notsobad")
+  bad3 <- make_fake_resolution(`installed::foobar` = list(
+    extra = list(list(description = fake_desc)),
+    package = "crayon"))
+  expect_false(ans <- satisfy_remote_github(res, bad3))
+  expect_match(attr(ans, "reason"), "Installed package sha mismatch")
 
-  dsc <- desc::desc(file.path(lib, "crayon"))
-  dsc$set("RemoteSha", parse_remotes(ref)[[1]]$commitish)
-  dsc$write()
+  ## Other package, different sha
+  bad4 <- make_fake_resolution(`local::bar` = list(
+    package = "crayon",
+    extra = list(list(sha = "notsobad"))))
+  expect_false(ans <- satisfy_remote_github(res, bad4))
+  expect_match(attr(ans, "reason"), "Candidate package sha mismatch")
 
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      r$resolve()
-      r$solve()
-      plan <- r$get_install_plan()
-    })
+  ## Corrent sha, GitHub
+  fake_desc <- desc::desc("!new")
+  fake_desc$set("RemoteSha" = "badcafe")
+  ok1 <- make_fake_resolution(`installed::foo` = list(
+    extra =  list(list(description = fake_desc)),
+    package = "crayon",
+    version = "1.0.0"))
+  expect_true(satisfy_remote_github(res, ok1))
 
-  expect_true(all(plan$type == "installed"))
-
-  r <- remotes$new(ref, config = list(cache_dir = tmp), library = lib)
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      expect_error(res <- r$resolve(), NA)
-      expect_error(r$solve(), NA)
-      expect_error(sol <- r$get_solution(), NA)
-    })
-
-  expect_true(all(plan$type == "installed"))
+  ## Corrent sha, another type
+  ok2 <- make_fake_resolution(`local::bar` = list(
+    package = "crayon",
+    extra = list(list(sha = "badcafe"))))
+  expect_true(ans <- satisfy_remote_github(res, ok2))
 })

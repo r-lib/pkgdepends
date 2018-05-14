@@ -11,16 +11,17 @@ test_that("resolve_ref_deps", {
     version = c("*", "*", "*", "*", ">= 2.8.9000", "*", "*", "*", "*")
   )
   remotes <- c(Remotes = "\n    jeroen/curl,\n  foo/bar")
-  dependencies <- "Imports"
 
-  obj <- resolve_ref_deps(deps, remotes, dependencies)
+  obj <- resolve_ref_deps(deps, remotes)
 
   exp <- tibble::tibble(
-    ref = c("jeroen/curl", "R6", "rlang", "uuid", "foo/bar"),
-    type = "Imports",
-    package = c("curl", "R6", "rlang", "uuid", "bar"),
-    op = c(">=", "", "", "", ""),
-    version = c("2.8.9000", "", "", "", "")
+    ref = c("covr", "jsonlite", "testthat", "assertthat",
+            "jeroen/curl", "R6", "rlang", "uuid", "foo/bar"),
+    type = c(rep("Suggests", 4), rep("Imports", 5)),
+    package = c("covr", "jsonlite", "testthat", "assertthat",
+                "curl", "R6", "rlang", "uuid", "bar"),
+    op = c("", "", "", "", ">=", "", "", "", ""),
+    version = c("", "", "", "", "2.8.9000", "", "", "", "")
   )
 
   expect_equal(obj, exp)

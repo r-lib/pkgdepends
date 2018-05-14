@@ -1,40 +1,57 @@
 
+packages_gz_cols <- function()  {
+  list(
+    pkgs = c("ref", "type", "direct", "status", "package", "version",
+             "platform", "rversion", "repodir", "sources", "target",
+             "needscompilation"),
+    deps = c("upstream", "idx", "ref", "type", "package", "op", "version")
+
+  )
+}
+
 #' @importFrom tools file_ext
 
 read_packages_file <- function(path, mirror, repodir, platform, ...,
-                               .list = list()) {
-  pkgs <- as.tibble(read.dcf.gz(path))
+                               type = "standard", .list = list()) {
+  pkgs <- as_tibble(read.dcf.gz(path))
   extra <- c(
     list(repodir = repodir, platform = platform),
     list(...), .list)
   assert_that(all_named(extra))
-  pkgs[names(extra)] <- extra
+  if (nrow(pkgs)) pkgs[names(extra)] <- extra
   names(pkgs) <- tolower(names(pkgs))
 
   if (! "needscompilation" %in% names(pkgs)) {
     pkgs$needscompilation <- if (! "built" %in% names(pkgs)) {
-      NA_character_
+      if (nrow(pkgs)) NA_character_ else character()
     } else {
       ifelse(is.na(pkgs$built), NA_character_, "no")
     }
   }
 
+  if (!nrow(pkgs)) {
+    pkgs$package <- character()
+    pkgs$version <- character()
+  }
   pkgs$ref <- pkgs$package
-  pkgs$type <- "standard"
-  pkgs$direct <- FALSE
-  pkgs$status <- "OK"
+  pkgs$type <- if (nrow(pkgs)) type else character()
+  pkgs$direct <- if (nrow(pkgs)) FALSE else logical()
+  pkgs$status <- if (nrow(pkgs)) "OK" else character()
   pkgs$target <- packages_make_target(
     platform, repodir, pkgs$package, pkgs$version, pkgs[["file"]], pkgs[["path"]])
   pkgs$sources <- packages_make_sources(
-    mirror, platform, pkgs$target, repodir, pkgs$package, pkgs$version)
+    mirror, platform, pkgs$target, repodir, pkgs$package, pkgs$version, type)
 
   deps <- packages_parse_deps(pkgs)
+  pkgs_deps <- split(
+    deps[,-(1:2)], factor(deps$idx, levels = seq_len(nrow(pkgs))))
+  pkgs$deps <- unname(pkgs_deps)
   list(pkgs = pkgs, deps = deps)
 }
 
 packages_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
-  cols <- intersect(colnames(pkgs), tolower(deptypes()))
+  cols <- intersect(colnames(pkgs), tolower(dep_types()))
   ## as.character is for empty tibbles, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))
@@ -52,7 +69,6 @@ packages_parse_deps <- function(pkgs) {
     parsed$upstream <- pkgs$package[parsed$idx]
     parsed <- parsed[, c("upstream", "idx", "ref", "type", "package",
                          "op", "version")]
-    parsed <- parsed[! parsed$package %in% base_packages(), ]
     parsed <- parsed[order(parsed$idx), ]
 
   } else {
@@ -104,7 +120,7 @@ packages_make_target <- function(platform, repodir, package, version,
 }
 
 packages_make_sources <- function(mirror, platform, target, repodir,
-                                  package, version) {
+                                  package, version, type) {
 
   assert_that(
     is_string(mirror),
@@ -114,15 +130,17 @@ packages_make_sources <- function(mirror, platform, target, repodir,
     is_character(package),
     is_character(version), length(version) == length(package))
 
+  if (!length(package)) return(list())
+
   url <- paste0(mirror, "/", target)
 
-  if (platform != "source") {
+  if (type != "cran" || platform != "source") {
     as.list(url)
 
   } else {
     url2 <- paste0(mirror, "/", repodir, "/Archive/", package, "_",
                    version, ".tar.gz")
-    zip_lists(url, url2)
+    zip_vecs(url, url2)
   }
 }
 
@@ -133,7 +151,7 @@ merge_packages_data <- function(..., .list = list()) {
 
   ## Need to shift deps indices first to merge deps
   num_pkgs <- viapply(pkgslist, function(x) nrow(x$pkgs), USE.NAMES = FALSE)
-  shifts <- c(0, cumsum(num_pkgs))
+  shifts <- c(0L, cumsum(num_pkgs))
   for (i in seq_along(pkgslist)) {
     pkgslist[[i]]$deps$idx <- pkgslist[[i]]$deps$idx + shifts[i]
   }
@@ -148,10 +166,13 @@ rbind_expand <- function(..., .list = list()) {
   for (i in seq_along(data)) {
     miss_cols <- setdiff(cols, colnames(data[[i]]))
     if (length(miss_cols)) {
-      na_df <- as.tibble(structure(
-        replicate(length(miss_cols), NA, simplify = FALSE),
+      na_df <- as_tibble(structure(
+        replicate(
+          length(miss_cols),
+          if (nrow(data[[i]])) NA else logical(),
+          simplify = FALSE),
         names = miss_cols))
-      data[[i]] <- as.tibble(cbind(data[[i]], na_df))
+      data[[i]] <- as_tibble(cbind(data[[i]], na_df))
     }
   }
 

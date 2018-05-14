@@ -6,35 +6,40 @@ test_that("resolve_remote", {
   skip_if_offline()
   skip_on_cran()
 
+  conf <- remotes_default_config()
+  cache <- list(package = NULL, metadata = global_metadata_cache)
+
   ## CRAN package is found
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    res <- remotes$new("crayon", config = list(dependencies = FALSE))$
-      resolve()
-  })
-  expect_true(any(res$data[]$status == "OK"))
-  expect_equal(
-    get_files(res$data$resolution[[1]])[[1]]$metadata[["RemoteType"]],
-    "cran"
-  )
+  res <- synchronise(
+    resolve_remote_cran(parse_remotes("crayon")[[1]], TRUE, conf, cache,
+                        dependencies = FALSE))
+
+  expect_true(is_tibble(res))
+  expect_true(all(res$ref == "crayon"))
+  expect_true(all(res$type == "standard"))
+  expect_true(all(res$direct))
+  expect_true(all(res$status == "OK"))
+  expect_true(all(res$package == "crayon"))
 
   ## BioC package is found
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    res <- remotes$new("Biobase", config = list(dependencies = FALSE))$
-      resolve()
-  })
-  expect_true(any(res$data[]$status == "OK"))
-  expect_equal(
-    get_files(res$data$resolution[[1]])[[1]]$metadata[["RemoteType"]],
-    "bioc"
-  )
+  res <- synchronise(
+    resolve_remote_cran(parse_remotes("Biobase")[[1]], TRUE, conf, cache,
+                        dependencies = FALSE))
+
+  expect_true(is_tibble(res))
+  expect_true(all(res$ref == "Biobase"))
+  expect_true(all(res$type == "standard"))
+  expect_true(all(res$direct))
+  expect_true(all(res$status == "OK"))
+  expect_true(all(res$package == "Biobase"))
 
   ## Proper error for non-existing package
   nonpkg <- basename(tempfile())
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    res <- remotes$new(nonpkg, config = list(dependencies = FALSE))$
-      resolve()
-  })
-  expect_true(all(res$data[]$status == "FAILED"))
+  res <- synchronise(
+    resolve_remote_cran(parse_remotes(nonpkg)[[1]], TRUE, conf, cache,
+                        dependencies = FALSE))
+
+  expect_true(all(res$status == "FAILED"))
 })
 
 test_that("download_remote", {
@@ -42,10 +47,57 @@ test_that("download_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    r <- remotes$new("crayon", config = list(dependencies = FALSE))
-    r$resolve()
-    dl <- r$download_resolution()
-  })
-  expect_true(all(file.exists(dl$data[]$fulltarget)))
+  dir.create(tmp <- tempfile())
+  dir.create(tmp2 <- tempfile())
+  on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
+
+  conf <- remotes_default_config()
+  conf$platforms <- "macos"
+  conf$cache_dir <- tmp
+  conf$package_cache_dir <- tmp2
+  cache <- list(
+    package = package_cache$new(conf$package_cache_dir),
+    metadata = global_metadata_cache)
+
+  res <- synchronise(
+    resolve_remote_bioc(parse_remotes("crayon")[[1]], TRUE, conf, cache,
+                        dependencies = FALSE))
+
+  target <- file.path(conf$cache_dir, res$target[1])
+  dl <- synchronise(
+    download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
+
+  expect_equal(dl, "Got")
+  expect_true(file.exists(target))
+
+  unlink(target)
+  dl2 <- synchronise(
+    download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
+  expect_true(dl2 %in% c("Had", "Current"))
+  expect_true(file.exists(target))
+})
+
+test_that("satisfy_remote", {
+
+  res <- make_fake_resolution(`crayon@>=1.0.0` = list(type = "standard"))
+
+  ## Package names differ
+  bad1 <- make_fake_resolution(`crayon2` = list())
+  expect_false(ans <- satisfy_remote_standard(res, bad1))
+  expect_match(attr(ans, "reason"),  "Package names differ")
+
+  ## Insufficient version
+  bad2 <- make_fake_resolution(`crayon` = list(version = "0.0.1"))
+  expect_false(ans <- satisfy_remote_standard(res, bad2))
+  expect_match(attr(ans, "reason"),  "Insufficient version")
+
+  ## Version is OK
+  ok1 <- make_fake_resolution(`local::foobar` = list(package = "crayon"))
+  expect_true(satisfy_remote_standard(res, ok1))
+
+  ## No version req
+  res <- make_fake_resolution(`crayon` = list(type = "standard"))
+  ok2 <- make_fake_resolution(`local::foobar` = list(
+    package = "crayon", version = "0.0.1"))
+  expect_true(satisfy_remote_standard(res, ok2))
 })

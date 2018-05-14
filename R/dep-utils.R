@@ -1,10 +1,14 @@
 
+dep_types_hard <- function() c("Depends", "Imports", "LinkingTo")
+dep_types_soft <- function() c("Suggests", "Enhances")
+dep_types <- function() c(dep_types_hard(), dep_types_soft())
+
 #' @importFrom tibble tibble
 #' @importFrom rematch2 re_match
 
 fast_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
-  cols <- intersect(colnames(pkgs), deptypes())
+  cols <- intersect(colnames(pkgs), dep_types())
   ## as.character is for empty tibbles, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))
@@ -68,7 +72,7 @@ parse_deps <- function(deps, type) {
   })
 }
 
-deps_from_desc <- function(deps, dependencies, last) {
+deps_from_desc <- function(deps, last) {
   op_ver <- strsplit(deps$version, "\\s+")
   deps$op <- vcapply(op_ver, "[", 1)
   deps$op[deps$op == "*"] <- ""
@@ -76,7 +80,7 @@ deps_from_desc <- function(deps, dependencies, last) {
   deps$version[is.na(deps$version)] <- ""
   deps$ref <- paste0(deps$package, if (last) "@last")
   base <- base_packages()
-  res <- as_tibble(deps[deps$type %in% dependencies & !deps$package %in% base,
+  res <- as_tibble(deps[!deps$package %in% base,
                         c("ref", "type", "package", "op", "version")])
   rownames(res) <- NULL
   res
@@ -100,8 +104,8 @@ get_cran_extension <- function(platform) {
   )
 }
 
-resolve_ref_deps <- function(deps, remotes, dependencies) {
-  deps <- deps_from_desc(deps, dependencies, last = FALSE)
+resolve_ref_deps <- function(deps, remotes) {
+  deps <- deps_from_desc(deps, last = FALSE)
 
   if (is.na(remotes)) return (deps)
 
@@ -115,4 +119,27 @@ resolve_ref_deps <- function(deps, remotes, dependencies) {
   keep <- which(remotes_packages %in% deps$package)
   deps$ref[match(remotes_packages[keep], deps$package)] <- remotes[keep]
   deps
+}
+
+interpret_dependencies <- function(dp) {
+  hard <- dep_types_hard()
+
+  res <- if (isTRUE(dp)) {
+    list(c(hard, "Suggests"), hard)
+
+  } else if (identical(dp, FALSE)) {
+    list(character(), character())
+
+  } else if (is_na_scalar(dp)) {
+    list(hard, hard)
+
+  } else if (is.list(dp) && all(names(dp) == c("direct", "indirect"))) {
+    dp
+
+  } else {
+    list(dp, dp)
+  }
+
+  names(res) <- c("direct", "indirect")
+  res
 }

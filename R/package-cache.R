@@ -11,6 +11,7 @@
 #'
 #' @importFrom R6 R6Class
 #' @importFrom filelock lock unlock
+#' @importFrom tools md5sum
 #'
 #' @keywords internal
 
@@ -40,6 +41,7 @@ package_cache <- R6Class(
       on.exit(unlock(l), add = TRUE)
       res <- private$find_locked(..., .list = .list)
       if (!is.null(target) && nrow(res) >= 1) {
+        mkdirp(dirname(target))
         file.copy(res$fullpath[1], target)
       }
       res
@@ -58,10 +60,110 @@ package_cache <- R6Class(
 
       target <- file.path(private$path, path)
       mkdirp(dirname(target))
-      file.copy(file, target)
+      file.copy(file, target, overwrite = TRUE)
       db <- append_to_data_frame(db, fullpath = target, path = path, ...,
                                  .list = .list)
       saveRDS(db, dbfile)
+      db[nrow(db), ]
+    },
+
+    ## Just download a file from an url and add it
+    ## Returns a deferred value
+    async_add_url = function(url, path, ..., .list = NULL,
+                             on_progress = NULL) {
+      self; private; url; path; list(...); .list; on_progress
+      target <- tempfile()
+      download_file(url, target, on_progress = on_progress)$
+        then(function(res) {
+          self$add(target, path, url = url, etag = res$etag, ...,
+                   md5 = md5sum(target)[[1]], .list = .list)
+        })$
+        finally(function(x) unlink(target, recursive = TRUE))
+    },
+
+    add_url = function(url, path, ..., .list = NULL, on_progress = NULL) {
+      synchronise(self$async_add_url(url, path, ..., .list = .list,
+                                     on_progress = on_progress))
+    },
+
+    ## If the file is not in the cache, then download it and add it.
+    async_copy_or_add = function(target, urls, path, md5 = NULL, ...,
+                                 .list = NULL, on_progress = NULL) {
+      self; private; target; urls; path; md5; list(...); .list; on_progress
+      etag <- tempfile()
+      if (!is.null(md5)) .list$md5 <- md5
+      async_constant()$
+        then(~ self$copy_to(target, url = urls[1], ..., .list = .list))$
+        then(function(res) {
+          if (! nrow(res)) {
+            download_one_of(urls, target, on_progress = on_progress)$
+              then(function(d) {
+                .list$md5 <- md5sum(target)[[1]]
+                self$add(target, path, url = d$url, etag = d$etag, ...,
+                         .list = .list)
+              })$
+              then(function(x) add_attr(x, "action", "Got"))
+          } else {
+            add_attr(res, "action", "Had")
+          }
+        })$
+        finally(function(x) unlink(etag, recursive = TRUE))
+    },
+
+    copy_or_add = function(target, urls, path, md5 = NULL, ...,
+                           .list = NULL, on_progress = NULL) {
+      synchronise(self$async_copy_or_add(
+                         target, urls, path, md5, ...,
+                         .list = .list, on_progress = on_progress))
+    },
+
+    ## Like copy_to_add, but we always try to update the file, from
+    ## the URL, and if the update was successful, we update the file
+    ## in the cache as well
+    async_update_or_add = function(target, urls, path, md5 = NULL, ...,
+                                   .list = NULL, on_progress = NULL) {
+      self; private; target; urls; path; md5; list(...); .list; on_progress
+      if (!is.null(md5)) .list$md5 <- md5
+      async_constant()$
+        then(~ self$copy_to(target, url = urls[1], path = path, ...,
+                            .list = .list))$
+        then(function(res) {
+          if (! nrow(res)) {
+            ## Not in the cache, download and add it
+            download_one_of(urls, target, on_progress = on_progress)$
+              then(function(d) {
+                .list$md5 <- md5sum(target)[[1]]
+                self$add(target, path, url = d$url, etag = d$etag, ...,
+                         .list = .list)
+              })$
+              then(function(x) add_attr(x, "action", "Got"))
+          } else {
+            ## In the cache, check if it is current
+            cat(res$etag, file = etag <- tempfile())
+            download_one_of(urls, target, etag_file = etag,
+                            on_progress = on_progress)$
+              then(function(d) {
+                if (d$response$status_code != 304) {
+                  ## No current, update it
+                  .list$md5 <- md5sum(target)[[1]]
+                  x <- self$add(target, path, url = d$url,
+                                etag = d$etag, ..., .list = .list)
+                  add_attr(x, "action", "Got")
+                } else {
+                  ## Current, nothing to do
+                  add_attr(res, "action", "Current")
+                }
+              })$
+              finally(function(x) unlink(etag, recursive = TRUE))
+          }
+        })
+    },
+
+    update_or_add = function(target, urls, path, ..., .list = NULL,
+                             on_progress = NULL) {
+      synchronise(self$async_update_or_add(
+                         target, urls, path, ...,
+                         .list = .list, on_progress = on_progress))
     },
 
     delete = function(..., .list = NULL) {
@@ -94,91 +196,6 @@ package_cache <- R6Class(
     }
   )
 )
-
-#' Get package from cache, or download it asynchronously
-#'
-#' @param cache `package_cache` instance.
-#' @param urls Character vector, list of candidate urls.
-#' @param target_dir Directory to place the file in.
-#' @param target Path to target file, within the target directory.
-#' @param progress_bar The progress bar object to update.
-#' @param direct Whether the package/ref was directly specified
-#'   (or a dependency).
-#' @param metadata Extra data to add to the installed package.
-#' @return Download status.
-#'
-#' @keywords internal
-
-get_package_from <- function(cache, urls, target_dir, target,
-                             progress_bar = NULL, direct = NULL,
-                             metadata = list()) {
-  cache ; urls ; metadata
-  target_file <- file.path(target_dir, target)
-  mkdirp(target_dir <- dirname(target_file))
-
-  ## First check if we have a file that does the trick without HTTP
-  ## There are a couple of cases in which we can do this, right now
-  ## only one is implemented:
-  ## 1. It has to be
-  ##   - a CRAN or BioC package
-  ##   - source package
-  ##   - with the right version number
-
-  if (all(c("type", "package", "version", "platform") %in% names(metadata)) &&
-      metadata$type %in% c("standard", "cran", "bioc") &&
-      metadata$platform == "source") {
-    hit <- cache$copy_to(
-      target_file, package = metadata$package, version = metadata$version,
-      platform = metadata$platform
-    )
-    if (nrow(hit) >= 1) {
-      res <- make_dl_status(
-        "Had", urls, target_file, bytes = file.size(target_file))
-      progress_bar$update(count = 1, cached = 1)
-      return(async_constant(res))
-    }
-  }
-
-  ## If not, then try the URLs, we'll ping them to be sure
-  etag_file <- tempfile()
-  for (url in urls) {
-    hit <- cache$copy_to(target_file, url = url, .list = metadata)
-    if (nrow(hit) >= 1) {
-      writeLines(hit$etag, etag_file)
-      break
-    }
-  }
-
-  headers <- if (!is.null(direct)) {
-    c("User-Agent" = paste0(
-        getOption("HTTPUserAgent"), "; ",
-        "pkgdepends ", getNamespaceVersion("pkgdepends"), "; ",
-        "curl ", getNamespaceVersion("curl"), "; ",
-        if (isTRUE(direct)) "direct" else "indirect"))
-  } else {
-    character()
-  }
-
-  download_one_of(urls, target_file, etag_file, headers = headers)$
-    then(function(result) {
-      if (result$response$status_code == 304) {
-        make_dl_status("Had", urls, target_file,
-                       bytes = file.size(target_file))
-      } else {
-        etag <- read_etag(etag_file)
-        metadata <- metadata %||% list()
-        metadata$package <- metadata$package %||% NA_character_
-        metadata$md5 <- metadata$md5 %||% NA_character_
-        cache$add(target_file, path = target, url = urls[1], # TODO: url!
-                  etag = etag, .list = metadata)
-        make_dl_status("Got", urls, target_file,
-                       bytes = file.size(target_file))
-      }
-    })$
-    catch(function(err) {
-      make_dl_status("Failed", urls, target_file,  error = err)
-    })
-}
 
 ## ------------------------------------------------------------------------
 ## Internal functions

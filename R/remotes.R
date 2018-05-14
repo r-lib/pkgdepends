@@ -103,8 +103,9 @@ NULL
 remotes <- R6Class(
   "remotes",
   public = list(
-    initialize = function(specs, config = list(), library = NULL)
-      remotes_init(self, private, specs, config, library),
+    initialize = function(specs, config = list(), library = NULL,
+                          remote_types = NULL, cli = NULL)
+      remotes_init(self, private, specs, config, library, remote_types, cli),
 
     async_resolve = function()
       remotes_async_resolve(self, private),
@@ -148,6 +149,7 @@ remotes <- R6Class(
     library = NULL,
     dirty = FALSE,
     remotes = list(),
+    cache = NULL,
     resolution = NULL,
     solution = NULL,
     downloads = NULL,
@@ -155,33 +157,31 @@ remotes <- R6Class(
     download_cache = NULL,
     config = NULL,
     progress_bar = NULL,
+    remote_types = NULL,
+    cli = NULL,
 
-    start_new_resolution = function()
-      remotes__start_new_resolution(self, private),
-    resolve_ref = function(rem, pool, direct = FALSE)
-      remotes__resolve_ref(self, private, rem, pool, direct),
-    is_resolving = function(ref)
-      remotes__is_resolving(self, private, ref),
-    add_fast_refs = function(refs = NULL, remotes = NULL, direct = FALSE)
-      remotes__add_fast_refs(self, private, refs, remotes, direct = direct),
-    fast_resolve = function()
-      remotes__fast_resolve(self, private),
-    download_res = function(res, mode)
-      remotes_download_res(self, private, res, mode),
+    download_res = function(res, on_progress = NULL)
+      remotes_download_res(self, private, res, on_progress),
     subset_resolution = function(which)
       remotes__subset_resolution(self, private, which),
     create_lp_problem = function(pkgs, policy)
       remotes__create_lp_problem(self, private, pkgs, policy),
     solve_lp_problem = function(problem)
       remotes__solve_lp_problem(self, private, problem),
-    with_progress_bar = function(args, expr)
-      remotes__with_progress_bar(self, private, args, expr)
+
+    create_progress_bar = function(what)
+      remotes__create_progress_bar(self, private, what),
+    update_progress_bar = function(idx, data)
+      remotes__update_progress_bar(self, private, idx, data),
+    done_progress_bar = function()
+      remotes__done_progress_bar(self, private)
   )
 )
 
 #' @importFrom utils modifyList
 
-remotes_init <- function(self, private, specs, config, library) {
+remotes_init <- function(self, private, specs, config, library,
+                         remote_types, cli) {
 
   assert_that(is_character(specs),
               is_valid_config(config),
@@ -189,10 +189,21 @@ remotes_init <- function(self, private, specs, config, library) {
 
   private$remotes <- parse_remotes(specs)
   private$config <- modifyList(remotes_default_config(), config)
+  private$remote_types <- remote_types %||% default_remote_types()
+  private$cli <- cli %||% cli::cli
 
   private$library <- library
   if (!is.null(library)) mkdirp(library, msg = "Creating library directory")
   mkdirp(private$download_cache <- private$config$cache_dir)
+
+  private$cache <- list(
+    metadata = cranlike_metadata_cache$new(
+      replica_path = private$config$metadata_cache_dir,
+      platforms = private$config$platforms,
+      r_version = private$config$`r-version`,
+      cran_mirror = private$config$`cran-mirror`),
+    package = package_cache$new(private$config$package_cache_dir)
+  )
 
   private$dirty <- TRUE
   invisible(self)
@@ -200,12 +211,12 @@ remotes_init <- function(self, private, specs, config, library) {
 
 remotes_default_config <- function() {
   list(
-    "cache_dir"          = detect_cache_dir(),
+    "cache_dir"          = detect_download_cache_dir(),
     "package_cache_dir"  = detect_package_cache_dir(),
-    "metadata_cache_dir" = detect_metadata_cache_dir(),
-    "platforms"          = unique(c(current_r_platform(), "source")),
+    "metadata_cache_dir" = tempfile(),
+    "platforms"          = default_platforms(),
     "cran-mirror"        = default_cran_mirror(),
-    "dependencies"       = c("Depends", "Imports", "LinkingTo"),
+    "dependencies"       = dep_types_hard(),
     "r-versions"         = current_r_version()
   )
 }
@@ -256,7 +267,7 @@ remotes_print <- function(self, private, ...) {
 
   ## resolution
   if (!is.null(private$resolution$result)) {
-    if (all(private$resolution$result$data$status == "OK")) {
+    if (all(private$resolution$result$status == "OK")) {
       cat("- has resolution\n")
     } else {
       cat("- has resolution, with errors\n")

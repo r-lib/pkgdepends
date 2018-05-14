@@ -6,6 +6,11 @@ fixtures <- list(
     r$resolve()
   },
 
+  "resolution-progress.rds" = function() {
+    r <- remotes$new("progress", lib = tempfile())
+    r$resolve()
+  },
+
   "resolution-installed.rds" = function() {
     dir.create(tmp <- tempfile())
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)

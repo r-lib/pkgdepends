@@ -24,6 +24,8 @@ current_r_platform <- function() {
   }
 }
 
+default_platforms <- function() unique(c(current_r_platform(), "source"))
+
 default_cran_mirror <- function() {
   mirror <- getOption("repos")["CRAN"]
   if (is.null(mirror) || is.na(mirror) || mirror == "@CRAN@") {
@@ -118,14 +120,6 @@ make_dl_status <- function(status, url, target, bytes, error = NULL) {
   }
 
   obj
-}
-
-mkdirp <- function(dir, msg = NULL) {
-  s <- dir.create(dir, recursive = TRUE, showWarnings = FALSE)
-  if (any(s) && !is.null(msg) && is_verbose()) {
-    cli$alert_info("{msg}: {path {format_items(dir[s])}}")
-  }
-  invisible(s)
 }
 
 write_bin_atomic <- function(object, file) {
@@ -224,9 +218,9 @@ cat0 <- function(..., sep = "") {
   cat(..., sep = sep)
 }
 
-cat_line <- function(txt, sep = "\n") {
+format_line <- function(txt, sep = "\n") {
   txt2 <- vcapply(txt, glue_data, .x = parent.frame())
-  cat(txt2, sep = sep)
+  paste(paste0(txt2, sep), collapse = "")
 }
 
 read_lines <- function(con, ...) {
@@ -254,6 +248,10 @@ isFALSE <- function(x) {
 }
 
 zip_lists <- function(...) {
+  mapply(list, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
+}
+
+zip_vecs <- function(...) {
   mapply(c, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
 }
 
@@ -261,4 +259,19 @@ zip_lists <- function(...) {
 
 get_async_value <- function(x) {
   if (is_deferred(x)) x$.__enclos_env__$private$value else x
+}
+
+lapply_rows <-  function(df, fun, ...) {
+  lapply(seq_len(nrow(df)), function(i) fun(df[i,], ...))
+}
+
+`%||%` <- function(l, r) if (is.null(l)) r else l
+
+is_verbose <- function() {
+  getOption("pkg.show_progress") %||% interactive()
+}
+
+add_attr <- function(x, attr, value) {
+  attr(x, attr) <- value
+  x
 }

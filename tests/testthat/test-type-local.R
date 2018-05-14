@@ -16,71 +16,61 @@ test_that("resolve_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  conf <- remotes_default_config()
+  cache <- list(package = NULL, metadata = global_metadata_cache)
 
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
-  r <- remotes$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    r$resolve()
-  })
-  res <- r$get_resolution()
+  res <- synchronise(
+    resolve_remote_local(parse_remotes(ref)[[1]], TRUE, conf,
+                         cache, dependencies = FALSE)
+  )
 
-  expect_s3_class(res, "remotes_resolution")
-  expect_true(res$data$ref == ref)
-  expect_true(res$data$type == "local")
-  expect_true(res$data$direct)
-  expect_true(res$data$status == "OK")
-  expect_true(res$data$package == "foobar")
-  expect_true(res$data$version == "1.0.0")
+  expect_true(is.list(res))
+  expect_true(res$ref == ref)
+  expect_true(res$type == "local")
+  expect_true(res$direct)
+  expect_true(res$status == "OK")
+  expect_true(res$package == "foobar")
+  expect_true(res$version == "1.0.0")
+  expect_equal(res$unknown_deps, character(0))
+  expect_equal(res$sources[[1]], paste0("file://", normalizePath(path)))
 
   ## Relative path?
   fix_dir <- fixture_dir()
   ref2 <- paste0("local::", "foobar_1.0.0.tar.gz")
-  r <- remotes$new(
-    ref2, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_dir(fix_dir,
-    withr::with_options(c(pkg.show_progress = FALSE), {
-      r$resolve()
-    })
+  withr::with_dir(
+    fix_dir,
+    res <- synchronise(
+      resolve_remote_local(parse_remotes(ref2)[[1]], TRUE, conf,
+                         cache, dependencies = FALSE)
+    )
   )
-  res <- r$get_resolution()
 
-  expect_s3_class(res, "remotes_resolution")
-  expect_true(res$data$ref == ref2)
-  expect_true(res$data$type == "local")
-  expect_true(res$data$direct)
-  expect_true(res$data$status == "OK")
-  expect_true(res$data$package == "foobar")
-  expect_true(res$data$version == "1.0.0")
-  expect_true(res$data$sources[[1]] == normalizePath(path))
+  expect_true(is.list(res))
+  expect_true(res$ref == ref2)
+  expect_true(res$type == "local")
+  expect_true(res$direct)
+  expect_true(res$status == "OK")
+  expect_true(res$package == "foobar")
+  expect_true(res$version == "1.0.0")
+  expect_equal(res$sources[[1]], paste0("file://", normalizePath(path)))
 })
 
 test_that("resolution error", {
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  conf <- remotes_default_config()
+  cache <- list(package = NULL, metadata = global_metadata_cache)
 
   path <- get_fixture("foobar_10.0.0.tar.gz")
   ref <- paste0("local::", path)
-  r <- remotes$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    r$resolve()
-  })
-  res <- r$get_resolution()
+  err <- tryCatch(synchronise(
+    resolve_remote_local(parse_remotes(ref)[[1]], TRUE, conf,
+                         cache, dependencies = FALSE)
+  ), error = function(x) x)
 
-  expect_s3_class(res, "remotes_resolution")
-  expect_true(res$data$ref == ref)
-  expect_true(res$data$type == "local")
-  expect_true(res$data$direct)
-  expect_true(res$data$status == "FAILED")
-  expect_true(is.na(res$data$package))
-  expect_true(is.na(res$data$version))
-  expect_true(res$data$sources[[1]] == path)
+  expect_s3_class(err, "error")
 })
 
 test_that("download_remote", {
@@ -88,49 +78,50 @@ test_that("download_remote", {
   skip_on_cran()
 
   dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  dir.create(tmp2 <- tempfile())
+  on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
+
+  conf <- remotes_default_config()
+  conf$platforms <- "macos"
+  conf$cache_dir <- tmp
+  conf$package_cache_dir <- tmp2
+  cache <- list(
+    package = package_cache$new(conf$package_cache_dir),
+    metadata = global_metadata_cache)
 
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
-  r <- remotes$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    expect_error(r$resolve(), NA)
-    expect_error(r$download_resolution(), NA)
-  })
-  dl <- r$get_resolution_download()
 
-  expect_true(file.exists(dl$data$fulltarget))
-  expect_s3_class(dl, "remotes_downloads")
-  expect_true(all(dl$data$ref == ref))
-  expect_true(all(dl$data$type == "local"))
-  expect_true(all(dl$data$direct))
-  expect_true(all(dl$data$status == "OK"))
-  expect_true(all(dl$data$package == "foobar"))
-  expect_true(all(dl$download_status == "Had"))
+  rem <- remotes$new(ref)
+  rem$resolve()
+  res <- rem$get_resolution()
+
+  target <- file.path(conf$cache_dir, res$target[1])
+  mkdirp(dirname(target))
+  download <- function(res) {
+    download_remote_local(res, target, conf, cache, on_progress = NULL)
+  }
+  dl1 <- synchronise(download(res[1,]))
+  expect_equal(dl1, "Had")
+  expect_true(file.exists(target))
 
   ## Relative path?
   fix_dir <- fixture_dir()
   ref2 <- paste0("local::", "foobar_1.0.0.tar.gz")
-  r <- remotes$new(
-    ref2, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_dir(fix_dir,
-    withr::with_options(c(pkg.show_progress = FALSE), {
-      expect_error(r$resolve(), NA)
-      expect_error(r$download_resolution(), NA)
-    })
-  )
-  dl <- r$get_resolution_download()
 
-  expect_true(file.exists(dl$data$fulltarget))
-  expect_s3_class(dl, "remotes_downloads")
-  expect_true(all(dl$data$ref == ref2))
-  expect_true(all(dl$data$type == "local"))
-  expect_true(all(dl$data$direct))
-  expect_true(all(dl$data$status == "OK"))
-  expect_true(all(dl$data$package == "foobar"))
-  expect_true(all(dl$download_status == "Had"))
+  withr::with_dir(fix_dir, {
+    rem <- remotes$new(ref2)
+    rem$resolve()
+    res <- rem$get_resolution()
+  })
+
+  target <- file.path(conf$cache_dir, res$target[1])
+  mkdirp(dirname(target))
+  dl1 <- download_remote_local(res, target, conf, cache, on_progress = NULL)
+
+  expect_equal(dl1, "Had")
+  expect_true(file.exists(target))
 })
 
 test_that("download_remote error", {
@@ -147,40 +138,22 @@ test_that("download_remote error", {
   ref <- paste0("local::", path2 <- file.path(tmp2, basename(path)))
   r <- remotes$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    expect_error(r$resolve(), NA)
-    unlink(path2)
-    expect_error(r$download_resolution(), NA)
-  })
+  expect_error(r$resolve(), NA)
+  unlink(path2)
+  expect_error(r$download_resolution(), NA)
   dl <- r$get_resolution_download()
 
-  expect_false(file.exists(dl$data$fulltarget))
+  expect_false(file.exists(dl$fulltarget))
   expect_s3_class(dl, "remotes_downloads")
-  expect_true(all(dl$data$ref == ref))
-  expect_true(all(dl$data$type == "local"))
-  expect_true(all(dl$data$direct))
-  expect_true(all(dl$data$status == "OK"))
-  expect_true(all(dl$data$package == "foobar"))
+  expect_true(all(dl$ref == ref))
+  expect_true(all(dl$type == "local"))
+  expect_true(all(dl$direct))
+  expect_true(all(dl$status == "OK"))
+  expect_true(all(dl$package == "foobar"))
   expect_true(all(dl$download_status == "Failed"))
 })
 
-test_that("satisfies_remote", {
-  skip_if_offline()
-  skip_on_cran()
-
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-
-  ## Absolute path
-  path <- get_fixture("foobar_1.0.0.tar.gz")
-  ref <- paste0("local::", path)
-  r <- remotes$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(c(pkg.show_progress = FALSE), {
-    r$resolve()
-  })
-  res <- r$get_resolution()
-
-  ## The rest of the arguments are not even used...
-  expect_false(satisfies_remote(res$data$resolution[[1]]))
+test_that("satisfy", {
+  ## Always FALSE, independently of arguments
+  expect_false(satisfy_remote_local())
 })

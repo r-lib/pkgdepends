@@ -109,19 +109,29 @@ github_url_rx <- function() {
   )
 }
 
-#' @importFrom rematch2 re_match
-
-get_remote_types <- function(specs) {
-  remote_type_rx <- paste0(
+remote_type_rx <- function() {
+  paste0(
     "^",
     ## Optional package name
     "(?:(?<package>", package_name_rx(), ")=)?",
     ## Remote type
-    "(?:(?<type>[-_[:alpha:]]+)::)?"
+    "(?:(?<type>[-_[:alnum:]]+)::)?",
     ## Rest of ref
+    "(?<rest>.*)$"
   )
+}
 
-  m <- re_match(specs, remote_type_rx)
+#' @importFrom rematch2 re_match
+
+type_default_parse <- function(specs, ...) {
+  m <- re_match(specs, remote_type_rx())
+  lapply_rows(m, function(x)
+    list(package = x$package, type = x$type, rest = x$rest, ref = x$.text)
+  )
+}
+
+get_remote_types <- function(specs) {
+  m <- re_match(specs, remote_type_rx())
   types <- m$type
 
   types[types == "" & grepl(standard_rx(), specs, perl = TRUE)] <- "standard"
@@ -138,19 +148,27 @@ get_remote_types <- function(specs) {
 #' Parse package location specifications
 #'
 #' @param specs character vector
+#' @param remote_types custom remote types can be added here
+#' @param ... additional arguments are passed to the individual parser
+#'   functions
 #' @return List of parsed specification.
 #'
 #' @export
 
-parse_remotes <- function(specs) {
+parse_remotes <- function(specs, remote_types = NULL, ...) {
+  remote_types <- c(default_remote_types(), remote_types)
   types <- get_remote_types(specs)
   unique_types <- unique(types)
   res <- vector("list", length(specs))
 
+  if (any(bad <- setdiff(unique_types, names(remote_types)))) {
+    stop("Unknown remote type(s): ", format_items(bad))
+  }
+
   for (this in unique_types) {
+    parser <- remote_types[[this]]$parse %||% type_default_parse
     this_specs <- specs[types == this]
-    class(this_specs) <- c(paste0("remote_specs_", this), "remote_specs")
-    new_remotes <- parse_remote(this_specs)
+    new_remotes <- parser(this_specs, ...)
     new_remotes <- lapply(new_remotes, function(x) { x$type <- this; x })
     new_remotes <- lapply(
       new_remotes,

@@ -18,6 +18,7 @@ Imports:
     crayon,
     curl,
     desc (>= 1.1.1.9000),
+    digest,
     filelock,
     glue,
     jsonlite,
@@ -35,13 +36,15 @@ Imports:
 Suggests:
     covr,
     debugme,
+    fs,
     mockery,
     pingr,
     rprojroot,
     testthat
 Remotes:
-    r-lib/async@87122308f77a9d922ee2888423f172956b6c9ee7,
+    r-lib/async,
     r-lib/cli,
     r-lib/desc,
+    tidyverse/glue,
     r-lib/pkgbuild
 Encoding: UTF-8

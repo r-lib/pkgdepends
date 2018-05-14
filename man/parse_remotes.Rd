@@ -4,10 +4,15 @@
 \alias{parse_remotes}
 \title{Parse package location specifications}
 \usage{
-parse_remotes(specs)
+parse_remotes(specs, remote_types = NULL, ...)
 }
 \arguments{
 \item{specs}{character vector}
+
+\item{remote_types}{custom remote types can be added here}
+
+\item{...}{additional arguments are passed to the individual parser
+functions}
 }
 \value{
 List of parsed specification.

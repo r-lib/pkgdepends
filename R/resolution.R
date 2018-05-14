@@ -1,19 +1,9 @@
 
-## API
-
 #' @importFrom prettyunits pretty_dt
 
 remotes_resolve <- function(self, private) {
   "!DEBUG remotes_resolve (sync)"
-  private$with_progress_bar(
-    list(type = "resolution", total = length(private$remotes)),
-    res <- synchronise(self$async_resolve())
-  )
-  private$progress_bar$alert_success(
-    "Found {xtotal} dependencies for {total} packages in \\
-     {pretty_dt(Sys.time() - start)}"
-  )
-  invisible(res)
+  synchronise(self$async_resolve())
 }
 
 remotes_async_resolve <- function(self, private) {
@@ -23,40 +13,18 @@ remotes_async_resolve <- function(self, private) {
   private$solution <- NULL
 
   private$dirty <- TRUE
-  private$resolution <- private$start_new_resolution()
+  private$resolution <- resolution$new(
+    config = private$config, cache = private$cache,
+    library = private$library, remote_types = private$remote_types,
+    cli = private$cli)
 
-  pool <- deferred_pool$new()
+  private$resolution$push(direct = TRUE, .list = private$remotes)
 
-  ## Standard, CRAN and BioC packages are special, we resolve them in one
-  ## go in the end. For now we set them aside, but only if they don't have
-  ## version requirements
-  fast <- vlapply(private$remotes, function(x) {
-    x$type %in% c("standard", "cran", "bioc") && x$version == ""
-  })
-  private$add_fast_refs(remotes = private$remotes[fast], direct = TRUE)
-
-  proms <- lapply(private$remotes[!fast], private$resolve_ref, pool = pool,
-                  direct = TRUE)
-
-  res <- pool$when_complete()$
-  then(function() private$fast_resolve())$
-    then(function() {
-      private$resolution$packages <-
-        eapply(private$resolution$packages, get_async_value)
-    })$
-    then(function() private$dirty <- FALSE)$
-    then(function() {
-      private$resolution$metadata$resolution_end <- Sys.time()
-      private$resolution$result <- remotes__resolution_to_df(
-        private$resolution$packages,
-        private$resolution$metadata,
-        private$remotes,
-        private$config$cache_dir)
+  private$resolution$when_complete()$
+    then(function(x) {
+      private$dirty <- FALSE
+      x
     })
-
-  pool$finish()
-
-  res
 }
 
 remotes_get_resolution <- function(self, private) {
@@ -64,265 +32,330 @@ remotes_get_resolution <- function(self, private) {
   private$resolution$result
 }
 
-## Internals
-
-remotes__resolve_ref <- function(self, private, rem, pool, direct) {
-  "!DEBUG resolving `rem$ref` (type `rem$type`)"
-  ## We might have a deferred value for it already
-  if (private$is_resolving(rem$ref)) {
-    return(private$resolution$packages[[rem$ref]])
-  }
-
-  pb_name <- if (direct) c("count", "total") else c("xcount", "xtotal")
-  if (!direct) private$progress_bar$update(pb_name[2], 1)
-
-  cache <- private$resolution$cache
-
-  meta <- private$resolution$metadata
-  dependencies <-
-    meta[c("dependencies", "indirect_dependencies")][[2 - direct]]
-  dres <- resolve_remote(rem, direct, config = private$config,
-                         cache = cache, dependencies = dependencies,
-                         progress_bar = private$progress_bar)
-  if (!is_deferred(dres)) dres <- async_constant(dres)
-  private$resolution$packages[[rem$ref]] <- dres
-  if (isFALSE(pool)) {
-    await(dres)
-    private$progress_bar$update(pb_name[1], 1)
-  } else {
-    pool$add(dres$then(~ private$progress_bar$update(pb_name[1], 1)))
-  }
-
-  if (!is.null(private$library) &&
-      !is.null(rem$package) &&
-      rem$type != "installed" &&
-      file.exists(file.path(private$library, rem$package))) {
-    lib <- normalizePath(private$library, winslash = "/",
-                         mustWork = FALSE)
-    ref <- paste0("installed::", lib, "/", rem$package)
-    if (! ref %in% names(private$resolution$packages)) {
-      private$resolve_ref(parse_remotes(ref)[[1]], pool = pool)
-    }
-  }
-
-  deps <- dres$then(function(res) {
-    deps <- unique(unlist(lapply(
-      get_files(res),
-      function(x) if (is_na_scalar(x$deps)) character() else x$deps$ref
-    )))
-    deps <- setdiff(deps, "R")
-    cache$numdeps <- cache$numdeps + length(deps)
-    fast <- grepl("^[a-zA-Z0-9\\.]+$", deps)
-    private$add_fast_refs(refs = deps[fast], direct = FALSE)
-    lapply(parse_remotes(deps[!fast]), private$resolve_ref, pool = pool)
-  })
-  if (!isFALSE(pool)) pool$add(deps)
-
-  dres
-}
-
-remotes__start_new_resolution <- function(self, private) {
-  "!DEBUG cleaning up for new resolution"
-  res <- new.env(parent = emptyenv())
-
-  ## These are the resolved packages. They might be deferred values,
-  ## if the resolution is still ongoing.
-  res$packages <- new.env(parent = emptyenv())
-  res$metadata <- list()
-  res$metadata$resolution_start <- Sys.time()
-
-  ## Interpret the 'dependencies' configuration parameter,
-  ## similarly to utils::install.packages
-  dp <- private$config$dependencies
-  hard <- c("Depends", "Imports", "LinkingTo")
-  if (isTRUE(dp)) {
-    res$metadata$dependencies <- c(hard, "Suggests")
-    res$metadata$indirect_dependencies <- hard
-
-  } else if (identical(dp, FALSE)) {
-    res$metadata$dependencies <- character()
-    res$metadata$indirect_dependencies <- character()
-
-  } else if (is_na_scalar(dp)) {
-    res$metadata$dependencies <- hard
-    res$metadata$indirect_dependencies <- hard
-
-  } else {
-    res$metadata$dependencies <- dp
-    res$metadata$indirect_dependencies <- dp
-  }
-
-  res$fast <- list(direct_remotes = list(), indirect_remotes = list(),
-                   direct_refs = character(), indirect_refs = character(),
-                   remotes = list())
-
-  ## This is a generic cache
-  res$cache <- new.env(parent = emptyenv())
-  res$cache$numdeps <- length(private$remotes)
-  res$cache$numdeps_done <- 0
-
-  res$cache$package_cache <-
-    package_cache$new(private$config$package_cache_dir)
-
+remotes__subset_resolution <- function(self, private, which) {
+  if (is.null(private$resolution$result)) stop("No resolution yet")
+  res <- private$resolution$result[which, ]
+  attr(res, "metadata")  <- attr(private$resolution$result, "metadata")
   res
 }
 
-remotes__resolution_to_df <- function(packages, metadata,
-                                       remotes, cache_dir) {
+resolution <- R6Class(
+  "resolution",
+  public = list(
+    result = NULL,
+    initialize = function(config, cache, library = NULL,
+                          remote_types = NULL, cli = NULL)
+      res_init(self, private, config, cache, library, remote_types, cli),
+    push = function(..., direct = FALSE, .list = list())
+      res_push(self, private, ..., direct = direct, .list = .list),
+    when_complete = function() private$deferred
+  ),
 
-  errs <- Filter(function(x) get_status(x) != "OK", packages)
+  private = list(
+    remote_types = NULL,
+    config = NULL,
+    cache = NULL,
+    library = NULL,
+    deferred = NULL,
+    state = NULL,
+    cli = NULL,
+    dependencies = NULL,
+    metadata = NULL,
+    bar = NULL,
 
-  num_files <- viapply(packages, num_files)
-  remote <- rep(lapply(packages, get_remote), num_files)
-  ref <- rep(
-    vcapply(packages, function(x) get_ref(x), USE.NAMES = FALSE),
-    num_files
+    delayed = list(),
+    resolve_delayed = function(resolve)
+      res__resolve_delayed(self, private, resolve),
+
+    create_progress_bar = function()
+      res__create_progress_bar(self, private),
+    update_progress_bar = function()
+      res__update_progress_bar(self, private),
+    done_progress_bar = function()
+      res__done_progress_bar(self, private),
+
+    set_result = function(row_idx, value)
+      res__set_result(self, private, row_idx, value),
+    try_finish = function(resolve)
+      res__try_finish(self, private, resolve)
   )
-  res_id <- rep(seq_along(packages), num_files)
-  res_file <- unlist(lapply(packages, function(x) seq_len(num_files(x))))
-  packages_subset <- lapply(seq_along(res_id), function(i) {
-    r <- packages[[ res_id[i] ]]
-    r <- set_files(r, get_files(r)[ res_file[i] ])
-    r
-  })
+)
 
-  getf <- function(f) {
-    unlist(lapply(packages, function(x) vcapply(get_files(x), "[[", f)))
+res_init <- function(self, private, config, cache, library,
+                     remote_types, cli) {
+
+  "!DEBUG resolution init"
+  private$config <- config
+  private$cache <- cache
+  private$library <- library
+  private$remote_types <- remote_types %||% default_remote_types()
+  private$cli <- cli %||% cli::cli
+  private$metadata <- list(resolution_start = Sys.time())
+  private$dependencies <- interpret_dependencies(config$dependencies)
+  private$bar <- private$create_progress_bar()
+
+  self$result <- res_make_empty_df()
+
+  private$state <- tibble(
+    ref = character(),
+    remote = list(),
+    status = character(),
+    direct = logical(),
+    async_id = integer(),
+    started_at = Sys.time()[FALSE])
+
+  private$deferred <- deferred$new(
+    type = "resolution_queue",
+    parent_resolve = function(value, resolve, id) {
+      "!DEBUG resolution done"
+      wh <- which(id == private$state$async_id)
+      private$state$status[wh] <- "OK"
+
+      npkgs <- value$package[value$type != "installed"]
+      ## Installed already? Resolve that as well
+      if (!is.null(private$library) && length(npkgs)) {
+        npkgs <- npkgs[file.exists(file.path(private$library, npkgs))]
+        if (length(npkgs))  {
+          lib <- normalizePath(private$library, winslash = "/",
+                               mustWork = FALSE)
+          refs <- paste0("installed::", lib, "/", npkgs)
+          refs <- setdiff(refs, private$state$ref)
+          self$push(.list = parse_remotes(refs))
+        }
+      }
+
+      private$set_result(wh, value)
+      private$try_finish(resolve)
+      private$update_progress_bar()
+    },
+
+    parent_reject = function(value, resolve, id) {
+      "!DEBUG resolution failed"
+      wh <- which(id == private$state$async_id)
+      private$state$status[wh] <- "FAILED"
+      rec <- private$state[wh,]
+      fail_val <- list(
+        ref = rec$ref,
+        type = rec$remote[[1]]$type,
+        package = rec$remote[[1]]$package %|z|% NA_character_,
+        version = NA_character_,
+        sources = NA_character_,
+        direct = rec$direct,
+        status = "FAILED",
+        remote = rec$remote,
+        error = list(value)
+      )
+      private$set_result(wh, fail_val)
+      private$try_finish(resolve)
+      private$update_progress_bar()
+    })
+}
+
+res_push <- function(self, private, ..., direct, .list = .list) {
+  new <- c(list(...), .list)
+  "!DEBUG resolution push `length(new)`"
+
+
+  ## We do CRAN/BioC/standard in batches
+  ## TODO: direct ones in one go as well
+  delay <- vcapply(new, "[[", "type") %in% c("cran", "standard", "bioc")
+  if (!direct && any(delay)) {
+    private$delayed <- c(private$delayed, new[delay])
+    new <- new[!delay]
   }
 
-  getfl <- function(f) {
-    I(as.list(unlist(
-      lapply(packages, function(x) lapply(get_files(x), "[[", f)),
-      recursive = FALSE
-    )))
+  for (n in new) {
+    ## Maybe this is already resolving
+    if (n$ref %in% private$state$ref) next
+
+    dx <- resolve_remote(n, direct, private$config, private$cache,
+                         private$dependencies,
+                         remote_types = private$remote_types)
+
+    private$state <- rbind(
+      private$state,
+      tibble(ref = n$ref, remote = list(n), status = NA_character_,
+             direct = direct, async_id = dx$get_id(),
+             started_at = Sys.time())
+    )
+
+    private$update_progress_bar()
+    dx$then(private$deferred)
   }
-
-  sources <- getfl("source")
-  deps <- getfl("deps")
-  target <- as.character(getf("target"))
-  fulltarget <- if (length(target)) {
-    ifelse(is.na(target), NA_character_, file.path(cache_dir, target))
-  }
-
-  needs_comp <- function() {
-    unlist(lapply(
-      packages,
-      function(x) vcapply(
-        get_files(x), function(xx) xx$needs_compilation %||% NA_character_)
-    ))
-  }
-
-  res <- tibble::tibble(
-    ref        = ref,
-    type       = vcapply(remote, "[[", "type"),
-    direct     = ref %in% vcapply(remotes, "[[", "ref"),
-    status     = as.character(getf("status")),
-    package    = as.character(getf("package")),
-    version    = as.character(getf("version")),
-    platform   = as.character(getf("platform")),
-    rversion   = as.character(getf("rversion")),
-    repodir    = as.character(getf("dir")),
-    sources    = sources,
-    target     = target,
-    fulltarget = as.character(fulltarget),
-    dependencies = deps,
-    needs_compilation = as.character(needs_comp()),
-    remote     = remote,
-    resolution = packages_subset
-  )
-
-  structure(
-    list(data = res, metadata = metadata),
-    class = "remotes_resolution"
-  )
 }
 
-remotes__is_resolving <- function(self, private, ref) {
-  ref %in% names(private$resolution$packages)
-}
+res__resolve_delayed <- function(self, private, resolve) {
+  n <- private$delayed
+  private$delayed <- list()
 
-remotes__subset_resolution <- function(self, private, which) {
-  "!DEBUG taking a subset of a resolution"
-  current <- self$get_resolution()
-  remotes__resolution_to_df(current$data$resolution[which],
-                            current$metadata,
-                            private$remotes,
-                            private$config$cache_dir)
-}
+  refs <- vcapply(n, "[[", "ref")
+  done <- refs %in% private$state$ref
+  n <- n[!done]
+  refs <- vcapply(n, "[[", "ref")
+  "!DEBUG resolving `length(private$delayed)` delayed remotes"
 
-#' @importFrom prettyunits pretty_dt
-#' @importFrom crayon bgBlue green blue white bold col_nchar
-#' @importFrom cli symbol
+  if (length(n))  {
+    types <- vcapply(n, "[[", "type")
+    utypes <- unique(types)
+    for (t in types) {
+      n2 <- n[types == t]
 
-print.remotes_resolution <- function(x, ...) {
-  meta <- x$metadata
-  x <- x$data
+      dx <- resolve_remote(n2, direct = FALSE, private$config,
+                           private$cache, private$dependencies,
+                           remote_types = private$remote_types)
 
-  direct <- unique(x$ref[x$direct])
-  dt <- pretty_dt(meta$resolution_end - meta$resolution_start)
-  head <- glue(
-    "PKG RESOLUTION, {length(direct)} refs, resolved in {dt} ")
-  width <- getOption("width") - col_nchar(head, type = "width") - 1
-  head <- paste0(head, strrep(symbol$line, max(width, 0)))
-  cat(blue(bold(head)), sep = "\n")
-
-  print_refs(x, x$direct, header = NULL)
-
-  print_refs(x, (! x$direct), header = "Dependencies", by_type = TRUE)
-
-  print_failed_refs(x)
-
-  invisible(x)
-}
-
-get_failed_refs <- function(res) {
-  failed <- tapply(res$status, res$ref, function(x) all(x != "OK"))
-  names(which(failed))
-}
-
-#' @importFrom crayon red
-
-print_refs <- function(res, which, header, by_type = FALSE,
-                       mark_failed = TRUE) {
-  if (!length(res$ref[which])) return()
-
-  if (!is.null(header)) cat(blue(bold(paste0(header, ":"))), sep = "\n")
-
-  mark <- function(wh, short = FALSE) {
-    ref <- ref2 <- sort(unique(res$ref[wh]))
-    if (short) ref2 <- basename(ref)
-    if (mark_failed) {
-      failed_ref <- get_failed_refs(res[wh,])
-      ref <- ifelse(ref %in% failed_ref, bold(red(ref2)), ref2)
+      private$state <- rbind(
+        private$state,
+        tibble(ref = vcapply(n2, "[[", "ref"), remote = n,
+               status = NA_character_, direct = FALSE,
+               async_id = dx$get_id(), started_at = Sys.time())
+      )
+      dx$then(private$deferred)
     }
-    ref2
+    private$update_progress_bar()
   }
 
-  if (by_type) {
-    for (t in sort(unique(res$type[which]))) {
-      cat(blue(paste0("  ", t, ":")), sep = "\n")
-      which2 <- which & res$type == t
-      cat(comma_wrap(mark(which2, short = t == "installed"), indent = 4),
-          sep = "\n")
-    }
+  private$try_finish(resolve)
+}
 
-  } else {
-    cat(comma_wrap(mark(which)), sep = "\n")
+res__set_result <- function(self, private, row_idx, value) {
+  unknown <- if ("unknown_deps" %in% names(value)) value$unknown_deps
+  value <- value[setdiff(names(value), "unknown_deps")]
+  self$result <- res_add_df_entries(self$result, value)
+  "!DEBUG resolution setting result, total: `nrow(self$result)`"
+  if (length(unknown)) self$push(.list = parse_remotes(unknown))
+}
+
+res__try_finish <- function(self, private, resolve) {
+  "!DEBUG resolution trying to finish with `nrow(self$result)` results"
+  if (length(private$delayed)) return(private$resolve_delayed(resolve))
+  if (all(! is.na(private$state$status))) {
+    "!DEBUG resolution finished"
+    private$metadata$resolution_end <- Sys.time()
+    attr(self$result, "metadata") <- private$metadata
+    class(self$result) <- c("remotes_resolution", class(self$result))
+    private$done_progress_bar()
+    resolve(self$result)
   }
 }
 
-print_failed_refs <- function(res) {
-  failed <- get_failed_refs(res)
-  if (length(failed) > 0) cat(bold(red("Errors:")), sep = "\n")
-  for (f in failed) print_failed_ref(res, f)
+resolve_remote <- function(remote, direct, config, cache, dependencies,
+                           remote_types = NULL) {
+  remote_types <- c(default_remote_types(), remote_types)
+
+  type <- remote$type %||% unique(vcapply(remote, "[[", "type"))
+  if (length(type) != 1) stop("Invalid remote or remote list, multiple types?")
+
+  resolve <- remote_types[[type]]$resolve
+  if (is.null(resolve)) {
+    stop("Cannot resolve type", format_items(type))
+  }
+
+  async(resolve)(
+    remote, direct = direct, config = config, cache = cache,
+    dependencies = dependencies)
 }
 
-print_failed_ref <- function(res, failed_ref) {
-  cat0("  ", failed_ref, ": ")
-  wh <- which(failed_ref == res$ref)
-  errs <- unique(vcapply(
-    res$resolution[wh],
-    function(x) get_error_message(x) %||% "Unknown error"
-  ))
-  cat(paste(errs, collapse = "\n    "), sep = "\n")
+resolve_from_description <- function(path, sources, remote, direct,
+                                     config, cache, dependencies) {
+
+  dsc <- desc(file = path)
+  deps <- resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes")[[1]])
+
+  rversion <- tryCatch(
+    get_minor_r_version(dsc$get_built()$R),
+    error = function(e) "*"
+  )
+
+  platform <- tryCatch(
+    dsc$get_built()$Platform %|z|% "source",
+    error = function(e) "source"
+  )
+
+  nc <- dsc$get_field("NeedsCompilation", NA)
+  if  (!is.na(nc)) nc <- tolower(nc) %in% c("true", "yes")
+
+  unknown <- deps$ref[deps$type %in% dependencies]
+
+  list(
+    ref = remote$ref,
+    type = remote$type,
+    direct = direct,
+    status = "OK",
+    package = dsc$get_field("Package"),
+    version = dsc$get_field("Version"),
+    license = dsc$get_field("License", NA_character_),
+    needscompilation = nc,
+    md5sum = dsc$get_field("MD5sum", NA_character_),
+    built = dsc$get_field("Built", NA_character_),
+    platform = platform,
+      rversion = rversion,
+    deps = list(deps),
+    sources = sources,
+    remote = list(remote),
+    unknown_deps = setdiff(unknown, "R"),
+    extra = list(description = dsc)
+  )
+}
+
+resolve_from_metadata <- function(remotes, direct, config, cache,
+                                  dependencies) {
+
+  remotes; direct; config; cache; dependencies
+
+  ## Single remote, or a list of remotes
+  if ("ref" %in% names(remotes)) {
+    packages <- remotes$package
+    refs <- remotes$ref
+    types <- remotes$type
+  } else  {
+    packages <- vcapply(remotes, "[[", "package")
+    refs <- vcapply(remotes,  "[[", "ref")
+    types <-  vcapply(remotes, "[[", "type")
+  }
+
+  cache$metadata$async_deps(packages, dependencies = dependencies)$
+    then(function(data) {
+      cols <-  c(
+        "ref", "type", "status", "package", "version", "license",
+        "needscompilation", "priority", "md5sum", "platform",
+        "rversion", "repodir", "target", "deps", "sources")
+      res <- data[cols]
+      res$built <- data[["built"]] %||% rep(NA_character_, nrow(res))
+      idx <- match(res$package, packages)
+      res$ref[!is.na(idx)] <- na.omit(refs[idx])
+      res$type[] <- "standard"
+      res$type[!is.na(idx)] <- na.omit(types[idx])
+      res$needscompilation <-
+        tolower(res$needscompilation) %in% c("yes", "true")
+      res$direct <- direct & res$ref %in% refs
+
+      if (length(bad <- attr(data, "unknown"))) {
+        idx <- match(bad, packages)
+        bad[!is.na(idx)] <- na.omit(refs[idx])
+        failed <- make_failed_resolution(
+          bad, ifelse(!is.na(idx), types[idx], "standard"),
+          direct & bad %in% refs)
+        res <- rbind_expand(res, res_add_defaults(failed))
+      }
+
+      res
+    })
+}
+
+make_failed_resolution <- function(refs, type, direct) {
+  err <- structure(
+    list(message = "Cannot find standard package"),
+    class = c("error", "condition"))
+  tibble(
+    ref = refs,
+    type = type,
+    package = NA_character_,
+    version = NA_character_,
+    sources = replicate(length(refs), NA_character_, simplify = FALSE),
+    direct = direct,
+    status = "FAILED",
+    remote = parse_remotes(refs),
+    error = replicate(length(refs), err, simplify = FALSE)
+  )
 }

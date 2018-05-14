@@ -26,6 +26,14 @@ on_failure(is_string_or_null) <- function(call, env) {
   paste0(deparse(call$x), " must be a string (length 1 character) or NULL")
 }
 
+is_flag <- function(x) {
+  is.logical(x) && length(x) == 1 && !is.na(x)
+}
+
+on_failure(is_flag) <- function(call, env) {
+  paste0(deparse(call$x), " is not a flag (length 1 logical)")
+}
+
 ## To be refined
 
 is_path <- function(x) {
@@ -78,13 +86,11 @@ on_failure(is_platform_list) <- function(call, env) {
   paste0(deparse(call$x), " must be a non-empty characater vector")
 }
 
-deptypes <- function() {
-  c("Depends", "Suggests", "Imports", "LinkingTo", "Enhances")
-}
-
 is_dependencies <- function(x) {
   is_na_scalar(x) || isTRUE(x) || identical(x, FALSE) ||
-    (is_character(x) && all(x %in% deptypes()))
+    (is_character(x) && all(x %in% dep_types())) ||
+    (is.list(x) && all(names(x) == c("direct", "indirect")) &&
+     all(unlist(x) %in% dep_types()))
 }
 
 on_failure(is_dependencies) <- function(call, env) {

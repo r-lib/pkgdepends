@@ -58,8 +58,8 @@
 #' cat(rawToChar(err$response$content))
 #' ```
 
-download_file <- async(function(url, destfile, etag_file = NULL,
-                                tmp_destfile = paste0(destfile, ".tmp"), ...) {
+download_file <- function(url, destfile, etag_file = NULL,
+                          tmp_destfile = paste0(destfile, ".tmp"), ...) {
   "!DEBUG downloading `url`"
   assert_that(
     is_string(url),
@@ -85,13 +85,13 @@ download_file <- async(function(url, destfile, etag_file = NULL,
       list(url = url, destfile = destfile, response = resp, etag = etag,
            etag_file = etag_file)
     })$
-    catch(function(err) {
+    catch(error = function(err) {
       "!DEBUG downloading `url` failed"
       err$destfile <- destfile
       err$url <- url
       stop(err)
     })
-})
+}
 
 read_etag <- function(etag_file) {
   tryCatch(
@@ -163,10 +163,10 @@ get_etag_header_from_file <- function(destfile, etag_file) {
 #' cat(rawToChar(err$response$content))
 #' ```
 
-download_if_newer <- async(function(url, destfile, etag_file = NULL,
-                                    headers = character(),
-                                    tmp_destfile = paste0(destfile, ".tmp"),
-                                    ...) {
+download_if_newer <- function(url, destfile, etag_file = NULL,
+                              headers = character(),
+                              tmp_destfile = paste0(destfile, ".tmp"),
+                              ...) {
   "!DEBUG download if newer `url`"
   assert_that(
     is_string(url),
@@ -183,7 +183,7 @@ download_if_newer <- async(function(url, destfile, etag_file = NULL,
   tmp_destfile <- normalizePath(tmp_destfile, mustWork = FALSE)
   mkdirp(dirname(tmp_destfile))
 
-  http_get(url, file = tmp_destfile, headers = headers)$
+  http_get(url, file = tmp_destfile, headers = headers, ...)$
     then(http_stop_for_status)$
     then(function(resp) {
       if (resp$status_code == 304) {
@@ -206,14 +206,14 @@ download_if_newer <- async(function(url, destfile, etag_file = NULL,
       list(url = url, destfile = destfile, response = resp, etag = etag,
            etag_file = etag_file)
     })$
-    catch(function(err) {
+    catch(error = function(err) {
       "!DEBUG downloading `url` failed"
       err$destfile <- destfile
       err$url <- url
       stop(err)
     })
 
-})
+}
 
 #' Download a files from multiple candidate URLs
 #'
@@ -273,8 +273,8 @@ download_if_newer <- async(function(url, destfile, etag_file = NULL,
 #' cat(rawToChar(res$errors[[1]]$response$content))
 #' ```
 
-download_one_of <- async(function(urls, destfile, etag_file = NULL,
-                                  headers = character(), ...) {
+download_one_of <- function(urls, destfile, etag_file = NULL,
+                            headers = character(), ...) {
   "!DEBUG trying multiple URLs"
   assert_that(
     is_character(urls),  length(urls) >= 1,
@@ -287,13 +287,13 @@ download_one_of <- async(function(urls, destfile, etag_file = NULL,
   dls <- mapply(
     download_if_newer, url = urls, tmp_destfile = tmps,
     MoreArgs = list(destfile = destfile, etag_file = etag_file,
-                    headers = headers),
+                    headers = headers, ...),
     SIMPLIFY = FALSE)
 
   when_any(.list = dls)$
-    catch(function(err) {
+    catch(error = function(err) {
       err$message <- "All URLs failed"
       class(err) <- c("download_one_of_error", class(err))
       stop(err)
     })
-})
+}

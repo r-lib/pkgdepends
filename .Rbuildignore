@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^Makefile$
 ^README.Rmd$
+^NEWS.md$
 ^.travis.yml$
 ^appveyor.yml$
 ^\.env$

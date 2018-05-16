@@ -32,6 +32,10 @@ test_that("resolve_remote", {
   expect_true(all(res$direct))
   expect_true(all(res$status == "OK"))
   expect_true(all(res$package == "Biobase"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "bioc"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteRef") == "bioc::Biobase"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
 })
 
 test_that("failed resolution", {

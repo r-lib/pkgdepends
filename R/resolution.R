@@ -277,6 +277,16 @@ resolve_from_description <- function(path, sources, remote, direct,
 
   unknown <- deps$ref[deps$type %in% dependencies]
 
+  meta <- c(
+    RemoteRef = remote$ref,
+    RemoteType = remote$type,
+    RemoteSha = NULL,                   # TODO
+    RemoteUrl = NULL,                   # TODO
+    RemoteUsername = NULL,              # TODO
+    RemoteRepo = NULL,                  # TODO
+    RemoteBranch = NULL                 # TODO
+  )
+
   list(
     ref = remote$ref,
     type = remote$type,
@@ -294,7 +304,8 @@ resolve_from_description <- function(path, sources, remote, direct,
     sources = sources,
     remote = list(remote),
     unknown_deps = setdiff(unknown, "R"),
-    extra = list(description = dsc)
+    extra = list(description = dsc),
+    metadata = meta
   )
 }
 
@@ -319,7 +330,8 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
       cols <-  c(
         "ref", "type", "status", "package", "version", "license",
         "needscompilation", "priority", "md5sum", "platform",
-        "rversion", "repodir", "target", "deps", "sources")
+        "rversion", "repodir", "target", "deps", "sources", "mirror")
+
       res <- data[cols]
       res$built <- data[["built"]] %||% rep(NA_character_, nrow(res))
       idx <- match(res$package, packages)
@@ -329,6 +341,8 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
       res$needscompilation <-
         tolower(res$needscompilation) %in% c("yes", "true")
       res$direct <- direct & res$ref %in% refs
+
+      res$metadata <- get_standard_metadata(res)
 
       if (length(bad <- attr(data, "unknown"))) {
         idx <- match(bad, packages)
@@ -341,6 +355,19 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
 
       res
     })
+}
+
+get_standard_metadata <- function(tab) {
+  meta <- replicate(nrow(tab), character(), simplify = FALSE)
+  for (i in seq_len(nrow(tab))) {
+    meta[[i]] <-
+      c(RemoteType = tab$type[i],
+        RemoteRef = tab$ref[i],
+        RemoteRepos = tab$mirror[i],
+        RemotePkgType = tab$platform[i],
+        RemoteSha = tab$version[i])
+  }
+  meta
 }
 
 make_failed_resolution <- function(refs, type, direct) {

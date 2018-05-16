@@ -231,6 +231,20 @@ type_github_make_resolution <- function(data) {
   unknown <- deps$ref[deps$type %in% dependencies]
   unknown <- setdiff(unknown, c(base_packages(), "R"))
 
+  meta <- c(
+    RemoteType = "github",
+    RemoteRef = data$remote$ref,
+    RemoteSha = sha,
+    RemoteUsername = username,
+    RemoteRepo = repo,
+    RemoteSubdir = subdir,
+    RemoteHost = "github.com",
+    GithubRepo = repo,
+    GithubUsername = username,
+    GithubRef = data$remote$ref,
+    GithubSHA1 = sha,
+    GithubSubdir = subdir)
+
   list(
     ref = data$remote$ref,
     type = data$remote$type,
@@ -245,6 +259,7 @@ type_github_make_resolution <- function(data) {
     remote = list(data$remote),
     deps = list(deps),
     unknown_deps = unknown,
-    extra = list(list(sha = sha))
+    extra = list(list(sha = sha)),
+    metadata = meta
   )
 }

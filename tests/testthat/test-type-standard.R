@@ -20,6 +20,10 @@ test_that("resolve_remote", {
   expect_true(all(res$direct))
   expect_true(all(res$status == "OK"))
   expect_true(all(res$package == "crayon"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "standard"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteRef") == "crayon"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
 
   ## BioC package is found
   res <- synchronise(
@@ -32,6 +36,10 @@ test_that("resolve_remote", {
   expect_true(all(res$direct))
   expect_true(all(res$status == "OK"))
   expect_true(all(res$package == "Biobase"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "standard"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteRef") == "Biobase"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
 
   ## Proper error for non-existing package
   nonpkg <- basename(tempfile())

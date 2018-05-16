@@ -39,6 +39,7 @@ read_packages_file <- function(path, mirror, repodir, platform, ...,
   pkgs$status <- if (nrow(pkgs)) "OK" else character()
   pkgs$target <- packages_make_target(
     platform, repodir, pkgs$package, pkgs$version, pkgs[["file"]], pkgs[["path"]])
+  pkgs$mirror <- mirror
   pkgs$sources <- packages_make_sources(
     mirror, platform, pkgs$target, repodir, pkgs$package, pkgs$version, type)
 

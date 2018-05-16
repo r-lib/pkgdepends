@@ -32,6 +32,36 @@ test_that("resolve_remote", {
   expect_true(all(res$type == "github"))
   expect_true(all(res$direct))
   expect_true(all(res$status == "OK"))
+
+  ord <- match(refs, vcapply(res$metadata, "[[", "RemoteRef"))
+
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteType") == "github"))
+  expect_equal(vcapply(res$metadata, "[[", "RemoteRef")[ord], refs)
+  expect_equal(
+    vcapply(res$metadata, "[[", "RemoteSha")[ord][6],
+    "b5221ab0246050dc687dc8b9964d5c44c947b265")
+  expect_equal(
+    vcapply(res$metadata, "[[", "RemoteUsername")[ord],
+    c("r-lib", "r-lib", "r-lib", "r-lib", "wesm", "r-lib", "r-lib", "r-lib"))
+  expect_equal(
+    vcapply(res$metadata, "[[", "RemoteRepo")[ord],
+    c("crayon", "crayon", "crayon", "crayon", "feather", "crayon",
+      "crayon", "testthat"))
+  expect_equal(
+    vcapply(res$metadata, "[", "RemoteSubdir")[ord],
+    c(NA, NA, NA, NA, "R", NA, NA, NA))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteHost") == "github.com"))
+
+  expect_equal(vcapply(res$metadata, "[[", "GithubRepo"),
+               vcapply(res$metadata, "[[", "RemoteRepo"))
+  expect_equal(vcapply(res$metadata, "[[", "GithubUsername"),
+               vcapply(res$metadata, "[[", "RemoteUsername"))
+  expect_equal(vcapply(res$metadata, "[[", "GithubRef"),
+               vcapply(res$metadata, "[[", "RemoteRef"))
+  expect_equal(vcapply(res$metadata, "[[", "GithubSHA1"),
+               vcapply(res$metadata, "[[", "RemoteSha"))
+  expect_equal(vcapply(res$metadata, "[", "GithubSubdir"),
+               vcapply(res$metadata, "[", "RemoteSubdir"))
 })
 
 test_that("failed resolution", {

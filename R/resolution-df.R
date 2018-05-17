@@ -124,12 +124,13 @@ res_one_row_tibble <- function(l) {
 
 res_add_defaults <- function(df) {
   if (length(bad <- setdiff(res_df_must_have(), names(df)))) {
-    stop("Entries missing from remote: ", format_items(miss))
+    stop("Entries missing from remote: ", format_items(bad))
   }
 
   all_types <- res_df_entry_types()
   miss <- setdiff(names(all_types), names(df))
-  def <- lapply(res_df_defaults()[miss], eval, envir = df)
+  def <- lapply(res_df_defaults()[miss], eval, envir = df,
+                enclos = environment())
   df[names(def)] <- def
   df <- df[, names(all_types)]
 

@@ -22,6 +22,7 @@ res_make_empty_df <- local({
         repodir  = character(),
         target   = character(),
         deps     = list(),
+        mirror   = character(),         # for CRAN/BioC
         sources  = list(),              # list of URLs
         remote   = list(),              # parsed remote ref
         error    = list(),              # list of errors
@@ -56,6 +57,7 @@ res_df_defaults <- local({
         remote   = quote(parse_remotes(ref)),
         error    = list(list()),
         metadata = list(list()),
+        mirror   = NA_character_,
         extra    = list(list())
       )
     }

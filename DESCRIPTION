@@ -17,7 +17,7 @@ Imports:
     cli (>= 1.0.0.9000),
     crayon,
     curl,
-    desc (>= 1.1.1.9000),
+    desc (>= 1.2.0),
     digest,
     filelock,
     glue,
@@ -44,7 +44,5 @@ Suggests:
 Remotes:
     r-lib/async,
     r-lib/cli,
-    r-lib/desc,
-    tidyverse/glue,
     r-lib/pkgbuild
 Encoding: UTF-8

@@ -40,11 +40,11 @@ remotes_async_download_solution <- function(self, private) {
 
 remotes_stop_for_solution_download_error <- function(self, private) {
   dl <- self$get_solution_download()
-  if (any(bad <- tolower(dl$data$download_status) == "failed")) {
+  if (any(bad <- tolower(dl$download_status) == "failed")) {
     msgs <- vcapply(
       which(bad),
       function(i) {
-        urls <- format_items(dl$data$sources[[i]])
+        urls <- format_items(dl$sources[[i]])
         glue("Failed to download {dl$data$package[i]} \\
               from {urls}.")
       }

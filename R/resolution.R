@@ -64,6 +64,7 @@ resolution <- R6Class(
     bar = NULL,
 
     delayed = list(),
+    delayed_refs = character(),
     resolve_delayed = function(resolve)
       res__resolve_delayed(self, private, resolve),
 
@@ -160,7 +161,10 @@ res_push <- function(self, private, ..., direct, .list = .list) {
   ## TODO: direct ones in one go as well
   delay <- vcapply(new, "[[", "type") %in% c("cran", "standard", "bioc")
   if (!direct && any(delay)) {
-    private$delayed <- c(private$delayed, new[delay])
+    refs <- vcapply(new[delay], "[[", "ref")
+    new_refs <- ! refs %in% c(private$delayed_refs, private$state$ref)
+    private$delayed <- c(private$delayed, new[delay][new_refs])
+    private$delayed_refs <- c(private$delayed_refs, refs[new_refs])
     new <- new[!delay]
   }
 
@@ -221,7 +225,9 @@ res__resolve_delayed <- function(self, private, resolve) {
 res__set_result <- function(self, private, row_idx, value) {
   unknown <- if ("unknown_deps" %in% names(value)) value$unknown_deps
   value <- value[setdiff(names(value), "unknown_deps")]
-  self$result <- res_add_df_entries(self$result, value)
+  done <- value$ref %in% self$result$ref
+  value <- if (is.data.frame(value)) value[!done, ] else value[!done]
+  if (any(!done)) self$result <- res_add_df_entries(self$result, value)
   "!DEBUG resolution setting result, total: `nrow(self$result)`"
   if (length(unknown)) self$push(.list = parse_remotes(unknown))
 }

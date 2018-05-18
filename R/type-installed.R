@@ -22,8 +22,9 @@ resolve_remote_installed <- function(remote, direct, config,
 
   path <- file.path(remote$library, remote$package)
   sources <- character()
+  deps <- setdiff(dependencies[[2 - direct]], "LinkingTo")
   resolve_from_description(path, sources, remote, direct, config,
-                           cache, dependencies[[2 - direct]])
+                           cache, deps)
 }
 
 download_remote_installed <- function(resolution, target, config, cache,

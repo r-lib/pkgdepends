@@ -251,6 +251,9 @@ remotes_i_lp_dependencies <- function(lp) {
     deps <- deps[deps$ref != "R", ]
     deps <- deps[! deps$ref %in% base, ]
     deps <- deps[tolower(deps$type) %in% tolower(dep_types_hard()), ]
+    if (pkgs$platform[wh] != "source") {
+      deps <- deps[tolower(deps$type) != "linkingto", ]
+    }
     for (i in seq_len(nrow(deps))) {
       depref <- deps$ref[i]
       depver <- deps$version[i]

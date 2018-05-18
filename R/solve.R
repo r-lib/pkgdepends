@@ -317,7 +317,7 @@ remotes_i_lp_prefer_installed <- function(lp) {
   pkgs <- lp$pkgs
   inst <- which(pkgs$type == "installed")
   for (i in inst) {
-    dsc <- pkgs$remote[[i]]$description
+    dsc <- pkgs$extra[[i]]$description
 
     ## This usually only happens in artificial test cases
     if (is.null(dsc)) next
@@ -390,6 +390,10 @@ format.remotes_lp_problem <- function(x, ...) {
     } else if (cond$type == "ok-resolution") {
       ref <- x$pkgs$ref[cond$vars]
       push(format_line(" * `{ref}` resolution failed"))
+
+    } else if (cond$type == "prefer-installed") {
+      ref <- x$pkgs$ref[cond$vars]
+      push(format_line(" * installed is preferred for `{ref}`"))
 
     } else if (cond$type == "prefer-binary")  {
       ref <- x$pkgs$ref[cond$vars]

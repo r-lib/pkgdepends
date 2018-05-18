@@ -310,7 +310,7 @@ resolve_from_description <- function(path, sources, remote, direct,
     sources = sources,
     remote = list(remote),
     unknown_deps = setdiff(unknown, "R"),
-    extra = list(description = dsc),
+    extra = list(list(description = dsc)),
     metadata = meta
   )
 }

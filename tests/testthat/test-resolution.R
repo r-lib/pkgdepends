@@ -36,22 +36,24 @@ test_that("resolving with a tibble", {
   do <- function() {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
-    res$push(.list = parse_remotes("foo::bar2"))
+    res$push(.list = parse_remotes("foo2::bar2"))
     res$when_complete()
   }
 
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
-    tibble(ref = c("ref1", "ref2"), type = c("type1", "type2"),
+    tibble::tibble(ref = remote$ref, type = c("type1", "type2"),
            package = c("pkg1", "pkg2"), version = c("ver1", "ver2"),
            sources = list(c("s11", "s12"), c("s21", "s22")))
   }
 
+  types <- list(foo = list(resolve = foo_resolve),
+                foo2 = list(resolve = foo_resolve))
   res <- withr::with_options(
-    list(pkg.remote_types = list(foo = list(resolve = foo_resolve))),
+    list(pkg.remote_types = types),
     synchronise(do()))
 
   expect_equal(nrow(res), 4)
-  expect_identical(res$ref, c("ref1", "ref2", "ref1", "ref2"))
+  expect_identical(res$ref, c("foo::bar", "foo::bar", "foo2::bar2", "foo2::bar2"))
   expect_identical(res$package, c("pkg1", "pkg2", "pkg1", "pkg2"))
   expect_identical(res$status, c("OK", "OK", "OK", "OK"))
   expect_true(is.list(res$remote[[1]]))
@@ -100,18 +102,20 @@ test_that("unknown deps, tibble", {
   }
 
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
-    tibble(ref = c("ref1", "ref2"), type = c("type1", "type2"),
+    tibble::tibble(ref = remote$ref, type = c("type1", "type2"),
            package = c("pkg1", "pkg2"), version = c("ver1", "ver2"),
            sources = list(c("s11", "s12"), c("s21", "s22")),
            unknown_deps = "foo::bar2")
   }
 
+  types <- list(foo = list(resolve = foo_resolve),
+                foo2 = list(resolve = foo_resolve))
   res <- withr::with_options(
-    list(pkg.remote_types = list(foo = list(resolve = foo_resolve))),
+    list(pkg.remote_types = types),
     synchronise(do()))
 
   expect_equal(nrow(res), 4)
-  expect_identical(res$ref, c("ref1", "ref2", "ref1", "ref2"))
+  expect_identical(res$ref, c("foo::bar", "foo::bar", "foo::bar2", "foo::bar2"))
   expect_identical(res$package, c("pkg1", "pkg2", "pkg1", "pkg2"))
   expect_identical(res$status, c("OK", "OK", "OK", "OK"))
   expect_true(is.list(res$remote[[1]]))

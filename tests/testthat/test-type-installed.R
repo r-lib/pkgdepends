@@ -22,7 +22,7 @@ test_that("resolve", {
 
   expect_true("crayon" %in% res$unknown_deps)
 
-  expect_equal(res$extra$description$get_field("Package"), "testthat")
+  expect_equal(res$extra[[1]]$description$get_field("Package"), "testthat")
 })
 
 test_that("download", {

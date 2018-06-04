@@ -457,7 +457,7 @@ remotes_install_plan <- function(self, private) {
   sol <- self$get_solution_download()
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
-  deps <- lapply(sol$deps, function(x) x$ref[x$type %in% dep_types_hard()])
+  deps <- lapply(sol$deps, function(x) x$package[x$type %in% dep_types_hard()])
   deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   installed <- ifelse(
     sol$type == "installed",

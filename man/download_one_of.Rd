@@ -4,8 +4,8 @@
 \alias{download_one_of}
 \title{Download a files from multiple candidate URLs}
 \usage{
-download_one_of(urls, destfile, etag_file = NULL, headers = character(),
-  ...)
+download_one_of(urls, destfile, etag_file = NULL,
+  headers = character(), ...)
 }
 \arguments{
 \item{urls}{A non-empty character vector of alternative URLs to try.}
@@ -81,12 +81,11 @@ res
 res$errors
 cat(rawToChar(res$errors[[1]]$response$content))
 }
-
-[[1]: R:[1
 }
 
 \seealso{
 Other async HTTP tools: \code{\link{download_file}},
   \code{\link{download_if_newer}}
 }
+\concept{async HTTP tools}
 \keyword{internal}

@@ -37,20 +37,4 @@ See \code{\link[rappdirs:user_cache_dir]{rappdirs::user_cache_dir()}}.}
 \description{
 \code{cache_summary()} returns a short summary of the state of the cache,
 e.g. the number of files and their total size. It returns a named list.
-
-\code{cache_list()} lists all files in the cache. It returns a \code{tibble}.
-
-\code{cache_find()} finds all files in the cache that match the specified
-attributes. It returns a \code{tibble}.
-
-\code{cache_get_file()} copied a file out of the cache into the specified
-path. If no file is found, then it returns \code{NULL}. Otherwise it returns
-(invisibly) the tibble of all selected files. If multiple
-files match the specified attributes, then the first one is copied to
-the \code{target} path.
-
-\code{cache_delete_files()} deletes the selected files from the caches.
-Without any arguments, all files are deleted.
-
-\code{cache_add_file} adds a file to the cache.
 }

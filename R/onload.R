@@ -3,7 +3,7 @@
 
 global_metadata_cache <- NULL
 
-#' @importFrom cli cli
+#' @importFrom cliapp cliapp
 
 .onLoad <- function(libname, pkgname) {
   if (requireNamespace("debugme", quietly = TRUE)) debugme::debugme()

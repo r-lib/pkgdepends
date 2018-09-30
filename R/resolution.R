@@ -90,7 +90,7 @@ res_init <- function(self, private, config, cache, library,
   private$cache <- cache
   private$library <- library
   private$remote_types <- remote_types %||% default_remote_types()
-  private$cli <- cli %||% cli::cli
+  private$cli <- cli %||% cliapp::cliapp$new()
   private$metadata <- list(resolution_start = Sys.time())
   private$dependencies <- interpret_dependencies(config$dependencies)
   private$bar <- private$create_progress_bar()

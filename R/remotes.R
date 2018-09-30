@@ -190,7 +190,7 @@ remotes_init <- function(self, private, specs, config, library,
   private$remotes <- parse_remotes(specs)
   private$config <- modifyList(remotes_default_config(), config)
   private$remote_types <- remote_types %||% default_remote_types()
-  private$cli <- cli %||% cli::cli
+  private$cli <- cli %||% cliapp::cliapp$new()
 
   private$library <- library
   if (!is.null(library)) mkdirp(library, msg = "Creating library directory")

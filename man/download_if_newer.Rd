@@ -4,8 +4,8 @@
 \alias{download_if_newer}
 \title{Download a file, if it is newer than a local file}
 \usage{
-download_if_newer(url, destfile, etag_file = NULL, headers = character(),
-  tmp_destfile = paste0(destfile, ".tmp"), ...)
+download_if_newer(url, destfile, etag_file = NULL,
+  headers = character(), tmp_destfile = paste0(destfile, ".tmp"), ...)
 }
 \arguments{
 \item{url}{URL to download.}
@@ -79,4 +79,5 @@ cat(rawToChar(err$response$content))
 Other async HTTP tools: \code{\link{download_file}},
   \code{\link{download_one_of}}
 }
+\concept{async HTTP tools}
 \keyword{internal}

@@ -72,14 +72,11 @@ err
 names(err)
 cat(rawToChar(err$response$content))
 }
-
-[[1]: R:[1
-[[1]: R:[1
-[[1]: R:[1
 }
 
 \seealso{
 Other async HTTP tools: \code{\link{download_if_newer}},
   \code{\link{download_one_of}}
 }
+\concept{async HTTP tools}
 \keyword{internal}

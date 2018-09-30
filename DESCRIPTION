@@ -34,6 +34,7 @@ Imports:
 Suggests:
     covr,
     debugme,
+    digest,
     fs,
     mockery,
     pingr,

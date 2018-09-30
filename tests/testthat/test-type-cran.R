@@ -7,7 +7,7 @@ test_that("resolve_remote", {
   skip_on_cran()
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   res <- synchronise(
     resolve_remote_cran(parse_remotes("cran::crayon")[[1]], TRUE, conf, cache,
@@ -31,7 +31,7 @@ test_that("resolve_remote, multiple", {
   skip_on_cran()
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   rem <- parse_remotes(c("cran::crayon", "cran::glue"))
   res <- synchronise(
@@ -51,7 +51,7 @@ test_that("failed resolution", {
   skip_on_cran()
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   nonpkg <- paste0("cran::", basename(tempfile()))
   res <- synchronise(
@@ -82,7 +82,7 @@ test_that("failed resolution, multiple", {
   skip_on_cran()
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   nonpkg <- paste0("cran::", basename(tempfile()))
   rem <- parse_remotes(c(nonpkg, "cran::crayon"))
@@ -100,7 +100,7 @@ test_that("resolve current version", {
   skip_on_cran()
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   do <- function(ref) {
     resolve_remote_cran(parse_remotes(ref)[[1]], TRUE,
@@ -214,7 +214,7 @@ test_that("download_remote", {
   conf$package_cache_dir <- tmp2
   cache <- list(
     package = package_cache$new(conf$package_cache_dir),
-    metadata = global_metadata_cache)
+    metadata = pkgcache::get_cranlike_metadata_cache())
 
   resolve <- function() {
     resolve_remote_cran(parse_remotes("cran::crayon")[[1]], TRUE, conf, cache,

@@ -19,19 +19,16 @@ Imports:
     crayon,
     curl,
     desc (>= 1.2.0),
-    digest,
-    filelock,
     glue,
     jsonlite,
     lpSolve,
     pkgbuild,
+    pkgcache,
     prettyunits,
-    rappdirs,
     rematch2,
     R6,
     stats,
     tibble,
-    tools,
     utils,
     withr
 Suggests:
@@ -45,5 +42,6 @@ Suggests:
 Remotes:
     r-lib/async,
     r-lib/cliapp,
-    r-lib/pkgbuild
+    r-lib/pkgbuild,
+    r-lib/pkgcache
 Encoding: UTF-8

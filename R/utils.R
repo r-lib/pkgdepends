@@ -275,3 +275,26 @@ add_attr <- function(x, attr, value) {
   attr(x, attr) <- value
   x
 }
+
+detect_download_cache_dir <- function() {
+  tempfile()
+}
+
+rbind_expand <- function(..., .list = list()) {
+  data <- c(list(...), .list)
+  cols <- unique(unlist(lapply(data, function(x) colnames(x))))
+  for (i in seq_along(data)) {
+    miss_cols <- setdiff(cols, colnames(data[[i]]))
+    if (length(miss_cols)) {
+      na_df <- as_tibble(structure(
+        replicate(
+          length(miss_cols),
+          if (nrow(data[[i]])) NA else logical(),
+          simplify = FALSE),
+        names = miss_cols))
+      data[[i]] <- as_tibble(cbind(data[[i]], na_df))
+    }
+  }
+
+  do.call(rbind, data)
+}

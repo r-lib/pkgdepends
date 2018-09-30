@@ -17,7 +17,7 @@ test_that("resolve_remote", {
   skip_on_cran()
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
@@ -65,7 +65,7 @@ test_that("resolve_remote", {
 test_that("resolution error", {
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   path <- get_fixture("foobar_10.0.0.tar.gz")
   ref <- paste0("local::", path)
@@ -91,7 +91,7 @@ test_that("download_remote", {
   conf$package_cache_dir <- tmp2
   cache <- list(
     package = package_cache$new(conf$package_cache_dir),
-    metadata = global_metadata_cache)
+    metadata = pkgcache::get_cranlike_metadata_cache())
 
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")

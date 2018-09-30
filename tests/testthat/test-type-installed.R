@@ -4,7 +4,7 @@ context("installed ref type")
 test_that("resolve", {
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))
   ref <- paste0("installed::", tt)

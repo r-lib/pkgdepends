@@ -197,7 +197,8 @@ test_that("installed refs are also resolved", {
 
 test_that("explicit cran", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL,
+                metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes(refs), direct = TRUE)
@@ -232,7 +233,9 @@ test_that("explicit cran", {
 
 test_that("standard", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes(refs), direct = TRUE)
@@ -267,7 +270,9 @@ test_that("standard", {
 
 test_that("dependencies are honoured", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs, deps) {
     conf$dependencies <- deps
     res <- resolution$new(config = conf, cache = cache)
@@ -305,7 +310,9 @@ test_that("dependencies are honoured", {
 
 test_that("error if cannot find package", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution$new(config = conf, cache = cache)
     res$push(.list = parse_remotes(refs), direct = TRUE)

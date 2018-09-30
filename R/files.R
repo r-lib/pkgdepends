@@ -2,7 +2,7 @@
 mkdirp <- function(dir, msg = NULL) {
   s <- vlapply(dir, dir.create, recursive = TRUE, showWarnings = FALSE)
   if (any(s) && !is.null(msg) && is_verbose()) {
-    cli$alert_info("{msg}: {path {format_items(dir[s])}}")
+    cliapp::cliapp$new()$alert_info("{msg}: {path {format_items(dir[s])}}")
   }
   invisible(s)
 }

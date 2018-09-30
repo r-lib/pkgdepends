@@ -179,6 +179,7 @@ remotes <- R6Class(
 )
 
 #' @importFrom utils modifyList
+#' @importFrom pkgcache cranlike_metadata_cache package_cache
 
 remotes_init <- function(self, private, specs, config, library,
                          remote_types, cli) {
@@ -212,7 +213,7 @@ remotes_init <- function(self, private, specs, config, library,
 remotes_default_config <- function() {
   list(
     "cache_dir"          = detect_download_cache_dir(),
-    "package_cache_dir"  = detect_package_cache_dir(),
+    "package_cache_dir"  = NULL,
     "metadata_cache_dir" = tempfile(),
     "platforms"          = default_platforms(),
     "cran-mirror"        = default_cran_mirror(),

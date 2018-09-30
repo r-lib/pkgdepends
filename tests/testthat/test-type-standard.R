@@ -7,7 +7,7 @@ test_that("resolve_remote", {
   skip_on_cran()
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = global_metadata_cache)
+  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ## CRAN package is found
   res <- synchronise(
@@ -65,7 +65,7 @@ test_that("download_remote", {
   conf$package_cache_dir <- tmp2
   cache <- list(
     package = package_cache$new(conf$package_cache_dir),
-    metadata = global_metadata_cache)
+    metadata = pkgcache::get_cranlike_metadata_cache())
 
   res <- synchronise(
     resolve_remote_bioc(parse_remotes("crayon")[[1]], TRUE, conf, cache,

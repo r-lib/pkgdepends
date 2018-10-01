@@ -34,7 +34,8 @@ pkg_progress_bar <- R6Class(
                "[:strcbytes] :elapsedfull")
       }
 
-      private$bar <- cliapp::cliapp$new()$progress_bar(
+      app <- default_app() %||% start_app()
+      private$bar <- app$progress_bar(
         show_after = show_after, total = total, format = format, ...)
     },
 
@@ -67,7 +68,8 @@ pkg_progress_bar <- R6Class(
     report = function() {
       if (!private$active) return()
       if (!private$data$total) {
-        cliapp::cliapp$new()$alert_success("No downloads are needed")
+        app <- default_app() %||% start_app()
+        app$alert_success("No downloads are needed")
       } else {
         data <- private$data
         dl <- data$count - data$failed - data$cached
@@ -84,13 +86,15 @@ pkg_progress_bar <- R6Class(
     alert = function(text, ...) {
       if (!private$active) return()
       text <- glue_data(private$data, text, .envir = parent.frame())
-      cliapp::cliapp$new()$alert(text, ...)
+      app <- default_app() %||% start_app()
+      app$alert(text, ...)
     },
 
     alert_success = function(text, ...) {
       if (!private$active) return()
       text <- glue_data(private$data, text, .envir = parent.frame())
-      cliapp::cliapp$new()$alert_success(text, ...)
+      app <- default_app() %||% start_app()
+      app$alert_success(text, ...)
     }
   ),
 

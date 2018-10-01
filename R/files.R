@@ -1,8 +1,11 @@
 
+#' @importFrom cliapp default_app start_app
+
 mkdirp <- function(dir, msg = NULL) {
   s <- vlapply(dir, dir.create, recursive = TRUE, showWarnings = FALSE)
   if (any(s) && !is.null(msg) && is_verbose()) {
-    cliapp::cliapp$new()$alert_info("{msg}: {path {format_items(dir[s])}}")
+    app <- default_app() %||% start_app()
+    app$alert_info("{msg}: {path {format_items(dir[s])}}")
   }
   invisible(s)
 }

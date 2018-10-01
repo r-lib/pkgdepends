@@ -25,7 +25,8 @@ res__create_progress_bar <- function(self, private) {
   bar$spinner_state <- 1L
   bar$chars <- progress_chars()
 
-  bar$bar <- private$cli$progress_bar(
+  app <- default_app() %||% start_app()
+  bar$bar <- app$progress_bar(
     format = ":xbar:xstate :xspinner :xmsg",
     total = 10e7
     )

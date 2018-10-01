@@ -12,7 +12,9 @@ remotes__create_progress_bar <- function(self, private, what) {
   bar$spinner <- get_spinner()
   bar$spinner_state <- 1L
   bar$chars <- progress_chars()
-  bar$bar <- private$cli$progress_bar(
+
+  app <- default_app() %||% start_app()
+  bar$bar <- app$progress_bar(
     show_after = 0,
     format = ":xbar :xpkgs | :xbytes | :xspin :xmsg",
     total = nrow(what))

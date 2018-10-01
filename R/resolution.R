@@ -15,8 +15,7 @@ remotes_async_resolve <- function(self, private) {
   private$dirty <- TRUE
   private$resolution <- resolution$new(
     config = private$config, cache = private$cache,
-    library = private$library, remote_types = private$remote_types,
-    cli = private$cli)
+    library = private$library, remote_types = private$remote_types)
 
   private$resolution$push(direct = TRUE, .list = private$remotes)
 
@@ -44,8 +43,8 @@ resolution <- R6Class(
   public = list(
     result = NULL,
     initialize = function(config, cache, library = NULL,
-                          remote_types = NULL, cli = NULL)
-      res_init(self, private, config, cache, library, remote_types, cli),
+                          remote_types = NULL)
+      res_init(self, private, config, cache, library, remote_types),
     push = function(..., direct = FALSE, .list = list())
       res_push(self, private, ..., direct = direct, .list = .list),
     when_complete = function() private$deferred
@@ -58,7 +57,6 @@ resolution <- R6Class(
     library = NULL,
     deferred = NULL,
     state = NULL,
-    cli = NULL,
     dependencies = NULL,
     metadata = NULL,
     bar = NULL,
@@ -83,14 +81,13 @@ resolution <- R6Class(
 )
 
 res_init <- function(self, private, config, cache, library,
-                     remote_types, cli) {
+                     remote_types) {
 
   "!DEBUG resolution init"
   private$config <- config
   private$cache <- cache
   private$library <- library
   private$remote_types <- remote_types %||% default_remote_types()
-  private$cli <- cli %||% cliapp::cliapp$new()
   private$metadata <- list(resolution_start = Sys.time())
   private$dependencies <- interpret_dependencies(config$dependencies)
   private$bar <- private$create_progress_bar()

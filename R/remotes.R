@@ -104,8 +104,8 @@ remotes <- R6Class(
   "remotes",
   public = list(
     initialize = function(specs, config = list(), library = NULL,
-                          remote_types = NULL, cli = NULL)
-      remotes_init(self, private, specs, config, library, remote_types, cli),
+                          remote_types = NULL)
+      remotes_init(self, private, specs, config, library, remote_types),
 
     async_resolve = function()
       remotes_async_resolve(self, private),
@@ -158,7 +158,6 @@ remotes <- R6Class(
     config = NULL,
     progress_bar = NULL,
     remote_types = NULL,
-    cli = NULL,
 
     download_res = function(res, on_progress = NULL)
       remotes_download_res(self, private, res, on_progress),
@@ -182,7 +181,7 @@ remotes <- R6Class(
 #' @importFrom pkgcache cranlike_metadata_cache package_cache
 
 remotes_init <- function(self, private, specs, config, library,
-                         remote_types, cli) {
+                         remote_types) {
 
   assert_that(is_character(specs),
               is_valid_config(config),
@@ -191,7 +190,6 @@ remotes_init <- function(self, private, specs, config, library,
   private$remotes <- parse_remotes(specs)
   private$config <- modifyList(remotes_default_config(), config)
   private$remote_types <- remote_types %||% default_remote_types()
-  private$cli <- cli %||% cliapp::cliapp$new()
 
   private$library <- library
   if (!is.null(library)) mkdirp(library, msg = "Creating library directory")

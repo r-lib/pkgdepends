@@ -15,7 +15,7 @@ Imports:
     async,
     backports,
     cli (>= 1.0.0.9000),
-    cliapp,
+    cliapp (>= 0.0.0.9002),
     crayon,
     curl,
     desc (>= 1.2.0),

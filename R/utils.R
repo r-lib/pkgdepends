@@ -270,7 +270,7 @@ lapply_rows <-  function(df, fun, ...) {
 is_verbose <- function() {
   env <- Sys.getenv("R_PKG_SHOW_PROGRESS", "")
   if (env != "") {
-    isTRUE(env)
+    tolower(env) == "true"
   } else {
     opt <- getOption("pkg.show_progress")
     if (!is.null(opt)) {

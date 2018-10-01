@@ -268,7 +268,17 @@ lapply_rows <-  function(df, fun, ...) {
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
 is_verbose <- function() {
-  getOption("pkg.show_progress") %||% interactive()
+  env <- Sys.getenv("R_PKG_SHOW_PROGRESS", "")
+  if (env != "") {
+    isTRUE(env)
+  } else {
+    opt <- getOption("pkg.show_progress")
+    if (!is.null(opt)) {
+      return(isTRUE(opt))
+    } else {
+      interactive()
+    }
+  }
 }
 
 add_attr <- function(x, attr, value) {

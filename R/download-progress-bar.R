@@ -17,7 +17,8 @@ remotes__create_progress_bar <- function(self, private, what) {
   bar$bar <- app$progress_bar(
     show_after = 0,
     format = ":xbar :xpkgs | :xbytes | :xspin :xmsg",
-    total = nrow(what))
+    total = nrow(what),
+    force = TRUE)
   bar
 }
 

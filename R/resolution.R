@@ -156,7 +156,9 @@ res_push <- function(self, private, ..., direct, .list = .list) {
 
   ## We do CRAN/BioC/standard in batches
   ## TODO: direct ones in one go as well
-  delay <- vcapply(new, "[[", "type") %in% c("cran", "standard", "bioc")
+  batch_types <- setdiff(c("cran", "standard", "bioc", "installed"),
+                         private$remote_types)
+  delay <- vcapply(new, "[[", "type") %in% batch_types
   if (!direct && any(delay)) {
     refs <- vcapply(new[delay], "[[", "ref")
     new_refs <- ! refs %in% c(private$delayed_refs, private$state$ref)
@@ -188,6 +190,7 @@ res_push <- function(self, private, ..., direct, .list = .list) {
 res__resolve_delayed <- function(self, private, resolve) {
   n <- private$delayed
   private$delayed <- list()
+  private$delayed_refs <- character()
 
   refs <- vcapply(n, "[[", "ref")
   done <- refs %in% private$state$ref
@@ -207,7 +210,7 @@ res__resolve_delayed <- function(self, private, resolve) {
 
       private$state <- rbind(
         private$state,
-        tibble(ref = vcapply(n2, "[[", "ref"), remote = n,
+        tibble(ref = vcapply(n2, "[[", "ref"), remote = n2,
                status = NA_character_, direct = FALSE,
                async_id = dx$get_id(), started_at = Sys.time())
       )
@@ -221,6 +224,10 @@ res__resolve_delayed <- function(self, private, resolve) {
 
 res__set_result <- function(self, private, row_idx, value) {
   unknown <- if ("unknown_deps" %in% names(value)) value$unknown_deps
+  if (is.null(unknown) && !is.null(attr(value, "unknown_deps"))) {
+    unknown <- attr(value, "unknown_deps")
+    attr(value, "unknown_deps") <- NULL
+  }
   value <- value[setdiff(names(value), "unknown_deps")]
   done <- value$ref %in% self$result$ref
   value <- if (is.data.frame(value)) value[!done, ] else value[!done]

@@ -317,14 +317,9 @@ remotes_i_lp_prefer_installed <- function(lp) {
   pkgs <- lp$pkgs
   inst <- which(pkgs$type == "installed")
   for (i in inst) {
-    dsc <- pkgs$extra[[i]]$description
-
-    ## This usually only happens in artificial test cases
-    if (is.null(dsc)) next
-
     ## If not a CRAN or BioC package, skip it
-    if (! identical(dsc$get("Repository")[[1]], "CRAN") &&
-        is.na(dsc$get("biocViews"))) next
+    repotype <- pkgs$extra[[i]]$repotype
+    if (is.null(repotype) || ! repotype %in% c("cran", "bioc")) next
 
     ## Look for others with cran/bioc/standard type and same name & ver
     package <- pkgs$package[i]

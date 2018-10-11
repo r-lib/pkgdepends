@@ -4,9 +4,13 @@ context("installed ref type")
 test_that("resolve", {
 
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache(),
+    installed = make_installed_cache(dirname(tt)))
+
   ref <- paste0("installed::", tt)
   res <- synchronise(
     resolve_remote_installed(parse_remotes(ref)[[1]], TRUE, conf, cache,
@@ -14,15 +18,15 @@ test_that("resolve", {
   )
 
   expect_equal(
-    res[c("ref", "type", "direct", "status", "package", "version")],
+    as.list(res[c("ref", "type", "direct", "status", "package", "version")]),
     list(ref = ref, type = "installed", direct = TRUE, status = "OK",
          package = "testthat",
          version = as.character(packageVersion("testthat")))
   )
 
-  expect_true("crayon" %in% res$unknown_deps)
+  expect_true("crayon" %in% attr(res, "unknown_deps"))
 
-  expect_equal(res$extra[[1]]$description$get_field("Package"), "testthat")
+  expect_false(is.null(res$extra[[1]]$repotype))
 })
 
 test_that("download", {
@@ -37,7 +41,8 @@ test_that("download", {
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))
   ref <- paste0("installed::", tt)
   r <- remotes$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
+    ref, library = dirname(tt),
+    config = list(dependencies = FALSE, cache_dir = tmp))
   expect_error(r$resolve(), NA)
   expect_error(r$download_resolution(), NA)
   dl <- r$get_resolution_download()

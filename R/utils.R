@@ -308,3 +308,7 @@ rbind_expand <- function(..., .list = list()) {
 
   do.call(rbind, data)
 }
+
+drop_nulls <- function(x) {
+  x[! vlapply(x, is.null)]
+}

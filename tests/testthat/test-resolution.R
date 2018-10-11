@@ -156,11 +156,24 @@ test_that("error", {
 
 test_that("installed refs are also resolved", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = NULL)
   mkdirp(lib <- tempfile())
+  lib <- normalizePath(lib)
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
   mkdirp(file.path(lib, "bar"))
   mkdirp(file.path(lib, "bar2"))
+  cache <- list(package = NULL, metadata = NULL)
+  cache$installed  <- list(
+    pkgs = tibble(
+      ref = paste0("installed::", lib, c("/bar", "/bar2")),
+      type = "installed",
+      status = "OK",
+      package = c("bar", "bar2"),
+      version = "1.0.9", license = NA_character_, needscompilation = TRUE,
+      priority = NA_character_, md5sum = NA_character_,
+      platform = "source", rversion = "*", sources = list(NULL, NULL),
+      built = NA_character_, deps = list(NULL, NULL),
+      repotype = NA_character_)
+  )
 
   do <- function() {
     res <- resolution$new(config = conf, cache = cache, library = lib)
@@ -174,14 +187,7 @@ test_that("installed refs are also resolved", {
          version = "1.0.0", sources = c("src1", "src2"))
   }
 
-  inst_resolve <- function(remote, direct, config, cache, dependencies) {
-    list(ref = remote$ref, type = remote$type, package = remote$package,
-         version = "1.0.9", sources = c("i1", "i"))
-  }
-
-  types <- list(
-    foo = list(resolve = foo_resolve),
-    installed = list(resolve = inst_resolve))
+  types <- list(foo = list(resolve = foo_resolve))
 
   res <- withr::with_options(
     list(pkg.remote_types = types),

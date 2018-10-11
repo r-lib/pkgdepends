@@ -191,8 +191,11 @@ remotes_init <- function(self, private, specs, config, library,
   private$config <- modifyList(remotes_default_config(), config)
   private$remote_types <- remote_types %||% default_remote_types()
 
+  if (!is.null(library)) {
+    mkdirp(library, msg = "Creating library directory")
+    library <- normalizePath(library)
+  }
   private$library <- library
-  if (!is.null(library)) mkdirp(library, msg = "Creating library directory")
   mkdirp(private$download_cache <- private$config$cache_dir)
 
   private$cache <- list(
@@ -201,7 +204,8 @@ remotes_init <- function(self, private, specs, config, library,
       platforms = private$config$platforms,
       r_version = private$config$`r-version`,
       cran_mirror = private$config$`cran-mirror`),
-    package = package_cache$new(private$config$package_cache_dir)
+    package = package_cache$new(private$config$package_cache_dir),
+    installed = if (!is.null(library)) make_installed_cache(library)
   )
 
   private$dirty <- TRUE

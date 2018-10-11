@@ -195,7 +195,6 @@ test_that("installed refs are also resolved", {
 
   expect_equal(nrow(res), 4)
   expect_equal(res$ref[1:2], c("foo::bar", "foo::bar2"))
-  lib <- normalizePath(lib, winslash = "/", mustWork = TRUE)
   expect_equal(res$ref[3:4], paste0("installed::", lib, "/", c("bar", "bar2")))
   expect_equal(res$status, rep("OK", 4))
   expect_equal(res$package, c("bar", "bar2", "bar", "bar2"))

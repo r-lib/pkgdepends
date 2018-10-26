@@ -151,8 +151,19 @@ res_init <- function(self, private, config, cache, library,
 
 res_push <- function(self, private, ..., direct, .list = .list) {
   new <- c(list(...), .list)
-  "!DEBUG resolution push `length(new)`"
 
+  ## Drop the ones already resolving up front
+  new_refs <- vcapply(new, "[[", "ref")
+  keep <- ! new_refs %in% c(private$state$ref, private$delayed_refs)
+  new <- new[keep]
+  new_refs <- new_refs[keep]
+
+  ## Drop duplicates as well
+  uni_refs <- !duplicated(new_refs)
+  if (! all(uni_refs)) {
+    new <- new[uni_refs]
+    new_refs <- new_refs[uni_refs]
+  }
 
   ## We do CRAN/BioC/standard in batches
   ## TODO: direct ones in one go as well
@@ -161,16 +172,14 @@ res_push <- function(self, private, ..., direct, .list = .list) {
   delay <- vcapply(new, "[[", "type") %in% batch_types
   if (!direct && any(delay)) {
     refs <- vcapply(new[delay], "[[", "ref")
-    new_refs <- ! refs %in% c(private$delayed_refs, private$state$ref)
-    private$delayed <- c(private$delayed, new[delay][new_refs])
-    private$delayed_refs <- c(private$delayed_refs, refs[new_refs])
+    private$delayed <- c(private$delayed, new[delay])
+    private$delayed_refs <- c(private$delayed_refs, refs)
     new <- new[!delay]
+    "!DEBUG pushing `sum(delay)` batch resolutions"
   }
 
   for (n in new) {
-    ## Maybe this is already resolving
-    if (n$ref %in% private$state$ref) next
-
+    "!DEBUG resolution push `n$ref`"
     dx <- resolve_remote(n, direct, private$config, private$cache,
                          private$dependencies,
                          remote_types = private$remote_types)
@@ -201,7 +210,7 @@ res__resolve_delayed <- function(self, private, resolve) {
   if (length(n))  {
     types <- vcapply(n, "[[", "type")
     utypes <- unique(types)
-    for (t in types) {
+    for (t in utypes) {
       n2 <- n[types == t]
 
       dx <- resolve_remote(n2, direct = FALSE, private$config,
@@ -335,6 +344,7 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
     types <-  vcapply(remotes, "[[", "type")
   }
 
+  "!DEBUG resolving `length(refs)` batch resolution"
   cache$metadata$async_deps(packages, dependencies = dependencies)$
     then(function(data) {
       cols <-  c(

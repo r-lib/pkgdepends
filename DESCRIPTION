@@ -23,7 +23,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild,
-    pkgcache,
+    pkgcache (>= 1.0.0.9000),
     prettyunits,
     rematch2,
     R6,

@@ -22,5 +22,5 @@ test_that("errors", {
 
   expect_output(print(res), "Errors:")
   expect_output(print(res), "Cannot find standard package")
-  expect_output(print(res), "r-lib/.*: Not Found")
+  expect_output(print(res), "r-lib/.*:.*Not Found")
 })

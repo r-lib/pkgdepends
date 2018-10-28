@@ -178,11 +178,11 @@ type_github_get_github_headers <- function() {
 }
 
 type_github_get_github_description_url <- function(rem) {
+  commitish <- if (nzchar(rem$commitish)) rem$commitish else "master"
+  subdir <- if (!is.null(rem$subdir)) utils::URLencode(rem$subdir)
   glue(
-    "https://raw.githubusercontent.com/{rem$username}",
-    "/{rem$repo}/{commitish}/{rem$subdir}/DESCRIPTION",
-    commitish = if (nzchar(rem$commitish)) rem$commitish else "master"
-  )
+    "https://api.github.com/repos/{rem$username}/{rem$repo}/",
+    "contents/{subdir}/DESCRIPTION?ref={commitish}")
 }
 
 type_github_get_github_commit_url <- function(rem) {
@@ -197,10 +197,11 @@ type_github_get_github_commit_url <- function(rem) {
 
 type_github_get_github_description_data <- function(rem) {
   description_url <- type_github_get_github_description_url(rem)
-  http_get(description_url, headers = type_github_get_github_headers())$
-    then(http_stop_for_status)$
+  github_get(description_url)$
     then(function(resp) {
-      desc(text = rawToChar(resp$content))
+      obj <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
+      txt <- rawToChar(base64decode(obj$content))
+      desc(text = txt)
     })
 }
 
@@ -208,8 +209,7 @@ type_github_get_github_description_data <- function(rem) {
 
 type_github_get_github_commit_sha <- function(rem) {
   commit_url <- type_github_get_github_commit_url(rem)
-  http_get(commit_url, headers = type_github_get_github_headers())$
-    then(http_stop_for_status)$
+  github_get(commit_url)$
     then(function(resp) {
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
       cdata$sha
@@ -264,4 +264,53 @@ type_github_make_resolution <- function(data) {
     extra = list(list(sha = sha)),
     metadata = meta
   )
+}
+
+github_get <- function(url, headers = character(), ...) {
+
+  headers <- c(headers, type_github_get_github_headers())
+  http_get(url, headers = headers, ...)$
+    then(function(res) {
+      if (res$status_code >= 300) {
+        stop(github_error(res))
+      }
+      res
+    })
+}
+
+github_error <- function(res) {
+  res_headers <- curl::parse_headers_list(res$headers)
+  ratelimit_limit <- res_headers$`x-ratelimit-limit`
+  ratelimit_remaining <- res_headers$`x-ratelimit-remaining`
+  ratelimit_reset <- .POSIXct(res_headers$`x-ratelimit-reset`, tz = "UTC")
+  error_details <- fromJSON(rawToChar(res$content))$message
+
+  pat_guidance <- ""
+  if (identical(as.integer(ratelimit_remaining), 0L)) {
+    pat_guidance <-
+      sprintf(
+"\n\nTo increase your GitHub API rate limit
+  - Use `usethis::browse_github_pat()` to create a Personal Access Token.
+  - Use `usethis::edit_r_environ()` and add the token as `GITHUB_PAT`."
+)
+  }
+
+  msg <- sprintf(
+"HTTP error %s.
+  %s
+
+Rate limit remaining: %s/%s
+Rate limit reset at: %s%s",
+
+    res$status_code,
+    paste(strwrap(error_details), collapse = "\n"),
+    ratelimit_remaining,
+    ratelimit_limit,
+    format(ratelimit_reset, usetz = TRUE),
+    pat_guidance
+  )
+
+  structure(
+    list(message = msg, call = NULL),
+    class = c("async_http_error", "simpleError", "error", "condition"))
 }

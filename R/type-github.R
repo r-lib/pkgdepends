@@ -194,6 +194,7 @@ type_github_get_github_commit_url <- function(rem) {
 }
 
 ## Returns a deferred value
+#' @importFrom base64enc base64decode
 
 type_github_get_github_description_data <- function(rem) {
   description_url <- type_github_get_github_description_url(rem)

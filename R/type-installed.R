@@ -51,7 +51,9 @@ make_installed_cache <- function(library) {
   pkgs <- list.files(library, pattern = "^[a-zA-Z]")
   ds <- drop_nulls(lapply_with_names(pkgs, function(pkg) {
     tryCatch(
-      readRDS(file.path(library, pkg, "Meta", "package.rds"))$DESCRIPTION,
+      suppressWarnings(
+        readRDS(file.path(library, pkg, "Meta", "package.rds"))$DESCRIPTION
+      ),
       error = function(e) NULL)
   }))
 

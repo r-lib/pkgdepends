@@ -123,7 +123,8 @@ type_github_build_package <- function(repo_zip, target, rel_target, subdir,
 
 type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,
                                       package, cache, on_progress) {
-  download_file(urls, repo_zip, on_progress = on_progress)$
+  ## TODO: progress
+  download_file(urls, repo_zip)$
     then(function() {
       cache$package$add(
         repo_zip, rel_zip, package = package, sha = sha, built = FALSE)

@@ -13,7 +13,8 @@ remotes_async_download_resolution <- function(self, private) {
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
   remotes_async_download_internal(self, private,
-                                  private$resolution$result)$
+                                  private$resolution$result,
+                                  "resolution")$
     then(function(value) {
       private$downloads <- value
       self$get_resolution_download()
@@ -31,7 +32,8 @@ remotes_async_download_solution <- function(self, private) {
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
   remotes_async_download_internal(self, private,
-                                  private$solution$result$data)$
+                                  private$solution$result$data,
+                                  "solution")$
     then(function(value) {
       private$solution_downloads <- value
       self$get_solution_download()
@@ -54,7 +56,7 @@ remotes_stop_for_solution_download_error <- function(self, private) {
   }
 }
 
-remotes_async_download_internal <- function(self, private, what) {
+remotes_async_download_internal <- function(self, private, what, which) {
   if (any(what$status != "OK")) {
     stop("Resolution has errors, cannot start downloading")
   }
@@ -67,7 +69,8 @@ remotes_async_download_internal <- function(self, private, what) {
       what[idx, ],
       on_progress = function(data) {
         private$update_progress_bar(idx, data)
-      })$
+      },
+      which = which)$
       finally(function() private$update_progress_bar(idx, "done"))
   })
 
@@ -85,23 +88,25 @@ remotes_async_download_internal <- function(self, private, what) {
     finally(function() private$done_progress_bar())
 }
 
-remotes_download_res <- function(self, private, res, on_progress) {
+remotes_download_res <- function(self, private, res, which, on_progress) {
   force(private)
   download_remote(
     res,
     config = private$config,
     cache = private$cache,
+    which = which,
     on_progress = on_progress
   )
 }
 
-download_remote <- function(res, config, cache, on_progress = NULL,
-                            remote_types = NULL) {
+download_remote <- function(res, config, cache, which,
+                            on_progress = NULL, remote_types = NULL) {
   remote_types <- c(default_remote_types(), remote_types)
   dl <- remote_types[[res$type]]$download %||% type_default_download
   target <- file.path(config$cache_dir, res$target)
   mkdirp(dirname(target))
-  async(dl)(res, target, config, cache = cache, on_progress = on_progress)$
+  async(dl)(res, target, config, cache = cache, which = which,
+    on_progress = on_progress)$
     then(function(s) {
       if (length(res$sources[[1]]) && !file.exists(target)) {
         stop("Failed to download ", res$type, " package ", res$package)

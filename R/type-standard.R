@@ -22,7 +22,7 @@ resolve_remote_standard <- function(remote, direct, config,
 }
 
 download_remote_standard <- function(resolution, target, config, cache,
-                                     on_progress) {
+                                     which, on_progress) {
 
   download_ping_if_not_source(resolution, target, config, cache,
                               on_progress)

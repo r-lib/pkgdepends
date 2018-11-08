@@ -39,7 +39,7 @@ resolve_remote_github <- function(remote, direct, config, cache,
 }
 
 download_remote_github <- function(resolution, target, config, cache,
-                                   on_progress) {
+                                   which, on_progress) {
 
   ## A GitHub package needs to be built, from the downloaded repo
   ## If we are downloading a solution, then we skip building the vignettes,
@@ -57,7 +57,7 @@ download_remote_github <- function(resolution, target, config, cache,
 
   package <- resolution$package
   sha <- resolution$extra[[1]]$sha
-  need_vignettes <- ! inherits(resolution, "remotes_solution")
+  need_vignettes <- which == "resolution"
 
   ## 1. Check if we have a built package in the cache. We don not check the
   ## ref or the type, so the package could have been built from a local
@@ -94,6 +94,7 @@ download_remote_github <- function(resolution, target, config, cache,
   type_github_download_repo(urls, target_zip, rel_zip, sha, package, cache,
                             on_progress)$
     then(function() {
+      "!DEBUG Building package `resolution$package`"
       type_github_build_package(target_zip, target, rel_target, subdir,
                                 package, sha, need_vignettes, cache)
     })

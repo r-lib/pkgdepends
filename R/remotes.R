@@ -159,8 +159,8 @@ remotes <- R6Class(
     progress_bar = NULL,
     remote_types = NULL,
 
-    download_res = function(res, on_progress = NULL)
-      remotes_download_res(self, private, res, on_progress),
+    download_res = function(res, which, on_progress = NULL)
+      remotes_download_res(self, private, res, which, on_progress),
     subset_resolution = function(which)
       remotes__subset_resolution(self, private, which),
     create_lp_problem = function(pkgs, policy)

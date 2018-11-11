@@ -156,6 +156,32 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
   }
 }
 
+download_ping_if_no_sha <- function(resolution, target, config, cache,
+                                    on_progress) {
+  resolution; target; config; cache; on_progress
+  mkdirp(dirname(target))
+
+  if (! "sha256" %in% names(resolution) || is.na(resolution$sha256)) {
+    ## If we don't know the hash of the CRAN package, then just download
+    ## it. This happens if there is some discrepancy between the package
+    ## data and the metadata.
+    cache$package$async_copy_or_add(
+      target, resolution$sources[[1]], path = resolution$target,
+      package = resolution$package, version = resolution$version,
+      platform = resolution$platform)$
+    then(~ attr(., "action"))
+
+  } else {
+    ## There is a sha hash in the metadata, so we can search for that
+    ## in the package cache.
+    cache$package$async_copy_or_add(
+      target, resolution$sources[[1]], path = resolution$target,
+      package = resolution$package, version = resolution$version,
+      platform = resolution$platform, sha256 = resolution$sha256)$
+    then(~ attr(., "action"))
+  }
+}
+
 remotes_get_resolution_download <- function(self, private) {
   if (is.null(private$downloads)) stop("No downloads")
   private$downloads

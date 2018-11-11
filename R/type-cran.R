@@ -40,8 +40,8 @@ resolve_remote_cran <- function(remote, direct, config, cache,
 download_remote_cran <- function(resolution, target, config, cache,
                                  which, on_progress) {
 
-  download_ping_if_not_source(resolution, target, config, cache,
-                              on_progress)
+  download_ping_if_no_sha(resolution, target, config, cache,
+                          on_progress)
 }
 
 satisfy_remote_cran <- function(resolution, candidate, config, ...) {

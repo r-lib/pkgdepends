@@ -350,7 +350,8 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
       cols <-  c(
         "ref", "type", "status", "package", "version", "license",
         "needscompilation", "priority", "md5sum", "platform",
-        "rversion", "repodir", "target", "deps", "sources", "mirror")
+        "rversion", "repodir", "target", "deps", "sources", "mirror",
+        "filesize", "sha256")
 
       res <- data[cols]
       res$built <- data[["built"]] %||% rep(NA_character_, nrow(res))

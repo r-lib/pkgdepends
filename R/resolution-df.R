@@ -15,6 +15,7 @@ res_make_empty_df <- local({
                  = logical(),
         priority = character(),
         md5sum   = character(),
+        sha256   = character(),
         filesize = integer(),
         built    = character(),
         platform = character(),         # "source" or platform string
@@ -46,6 +47,7 @@ res_df_defaults <- local({
                  = TRUE,
         priority = NA_character_,
         md5sum   = NA_character_,
+        sha256   = NA_character_,
         filesize = NA_integer_,
         built    = NA_character_,
         platform = "source",

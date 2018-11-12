@@ -27,8 +27,9 @@ remotes_solve <- function(self, private, policy) {
     solution = sol
   )
 
-  res$data$lib_status <-
-    calculate_lib_status(res$data, self$get_resolution())
+  res$data$lib_status <- calculate_lib_status(res$data, pkgs)
+  res$data$cache_status <-
+    calculate_cache_status(res$data, private$cache)
 
   metadata$solution_end <- Sys.time()
   attr(res, "metadata") <- modifyList(attr(pkgs, "metadata"), metadata)
@@ -507,6 +508,13 @@ calculate_lib_status <- function(sol, res) {
   status[status == "current" & could_update] <- "no-update"
 
   status
+}
+
+calculate_cache_status <- function(soldata, cache) {
+  toinst <- soldata$sha256[soldata$type != "installed"]
+  cached <- cache$package$find(sha256 = toinst)
+  ifelse(soldata$type == "installed", NA_character_,
+         ifelse(soldata$sha256 %in% cached$sha256, "hit", "miss"))
 }
 
 describe_solution_error <- function(pkgs, solution) {

@@ -4,11 +4,10 @@ remotes__create_progress_bar <- function(self, private, what) {
   bar <- list()
 
   what$status <- NA_character_
-  what$size <- NA_integer_
   what$current <- NA_integer_
   what$finished_at <- NA_real_
 
-  bar$what <- what[, c("ref", "status", "size", "current", "finished_at")]
+  bar$what <- what[, c("ref", "status", "filesize", "current", "finished_at")]
   bar$spinner <- get_spinner()
   bar$spinner_state <- 1L
   bar$chars <- progress_chars()
@@ -29,8 +28,12 @@ remotes__update_progress_bar <- function(self, private, idx, data) {
     private$progress_bar$what$status[idx] <- "DONE"
     private$progress_bar$what$finished_at[idx] <- Sys.time()
   } else {
-    if (data$total) private$progress_bar$what$size[idx] <- data$total
-    private$progress_bar$what$size[idx] <- data$current
+    ## TODO: redirects!
+    total <- private$progress_bar$what$filesize[idx]
+    if (is.na(total) || (data$total > 0 && data$total != total)) {
+      private$progress_bar$what$filesize[idx] <- data$total
+    }
+    private$progress_bar$what$current[idx] <- data$current
     if (data$total && data$total == data$current) {
       private$progress_bar$what$status[idx] <- "DONE"
       private$progress_bar$what$finished_at[idx] <- Sys.time()
@@ -43,8 +46,8 @@ remotes__update_progress_bar <- function(self, private, idx, data) {
   pkg_total <- nrow(what)
   percent <- pkg_done / pkg_total
   bytes_done <- sum(what$current, na.rm = TRUE)
-  bytes_total <- sum(what$size, na.rm = TRUE)
-  unknown <- sum(is.na(what$size) & is.na(what$status))
+  bytes_total <- sum(what$filesize, na.rm = TRUE)
+  unknown <- sum(is.na(what$filesize) & is.na(what$status))
 
   tokens <- list(
     xbar = make_bar(bar$chars, percent, width = 15),
@@ -70,7 +73,9 @@ make_progress_packages <- function(done, total) {
 }
 
 make_progress_bytes <- function(done, total, unknown) {
-  if (total == 0) return(paste0(unknown, " pkgs with unknown size"))
+  if (is.na(total) || total == 0) {
+    return(paste0(unknown, " pkgs with unknown size"))
+  }
   paste0(
     pretty_bytes(done), " / ", pretty_bytes(total),
     if (unknown) paste0(" + ", unknown, " unknown")

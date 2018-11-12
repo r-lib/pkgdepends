@@ -510,6 +510,8 @@ calculate_lib_status <- function(sol, res) {
   status
 }
 
+## TODO: non-CRAN packages? E.g. GH based on sha.
+
 calculate_cache_status <- function(soldata, cache) {
   toinst <- soldata$sha256[soldata$type != "installed"]
   cached <- cache$package$find(sha256 = toinst)

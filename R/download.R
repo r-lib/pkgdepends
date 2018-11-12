@@ -69,6 +69,7 @@ remotes_async_download_internal <- function(self, private, what, which) {
       what[idx, ],
       on_progress = function(data) {
         private$update_progress_bar(idx, data)
+        TRUE
       },
       which = which)$
       finally(function() private$update_progress_bar(idx, "done"))
@@ -142,7 +143,7 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
     cache$package$async_copy_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
-      platform = resolution$platform)$
+      platform = resolution$platform, on_progress = on_progress)$
     then(~ attr(., "action"))
 
   } else {
@@ -151,7 +152,7 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
     cache$package$async_update_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
-      platform = resolution$platform)$
+      platform = resolution$platform, on_progress = on_progress)$
     then(~ attr(., "action"))
   }
 }
@@ -168,7 +169,7 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
     cache$package$async_copy_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
-      platform = resolution$platform)$
+      platform = resolution$platform, on_progress = on_progress)$
     then(~ attr(., "action"))
 
   } else {
@@ -177,7 +178,8 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
     cache$package$async_copy_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
-      platform = resolution$platform, sha256 = resolution$sha256)$
+      platform = resolution$platform, sha256 = resolution$sha256,
+      on_progress = on_progress)$
     then(~ attr(., "action"))
   }
 }

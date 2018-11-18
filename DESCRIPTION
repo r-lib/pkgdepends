@@ -8,11 +8,10 @@ License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/r-lib/pkgdepends#readme
 BugReports: https://github.com/r-lib/pkgdepends/issues
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Imports:
     assertthat,
-    async,
     backports,
     base64enc,
     cli (>= 1.0.0.9000),
@@ -42,7 +41,6 @@ Suggests:
     rprojroot,
     testthat
 Remotes:
-    r-lib/async,
     r-lib/cliapp,
     r-lib/pkgbuild,
     r-lib/pkgcache

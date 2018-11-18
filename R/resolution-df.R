@@ -106,6 +106,7 @@ res_check_entries <- function(ent) {
   invisible(ent)
 }
 
+#' @noRd
 #' @param df Resolution data frame (tibble, really).
 #' @param entries List of entries to add.
 #' @importFrom tibble is_tibble

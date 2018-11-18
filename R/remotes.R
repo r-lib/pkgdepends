@@ -86,7 +86,7 @@
 #'   to the running R version.
 #'
 #' @importFrom R6 R6Class
-#' @import async
+#' @import pkgcache
 #' @name remotes
 #' @examples
 #' ## This does download a bunch of packages, so we don't run it currently

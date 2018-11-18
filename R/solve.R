@@ -647,8 +647,10 @@ format.remote_solution_error <- function(x, ...) {
     done[i] <<- TRUE
     msgs <- unique(fails$failure_message[[i]])
     res <<- c(
-      res, glue("  * Cannot install `{fails$ref[i]}`."),
-      if (length(msgs)) paste0("    - ", msgs)
+      res, paste0(
+             glue("  * Cannot install `{fails$ref[i]}`."),
+             if (length(msgs)) paste0("\n    - ", msgs)
+           )
     )
     down <- which(fails$ref %in% fails$failure_down[[i]])
     lapply(down, do)
@@ -657,7 +659,7 @@ format.remote_solution_error <- function(x, ...) {
   direct_refs <- which(fails$direct)
   lapply(direct_refs, do)
 
-  res
+  paste(unique(res), collapse = "\n")
 }
 
 #' @export

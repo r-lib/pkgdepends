@@ -17,6 +17,7 @@ progress_chars <- function() {
 }
 
 #' @importFrom cli get_spinner
+#' @importFrom cliapp cli_progress_bar
 
 res__create_progress_bar <- function(self, private) {
   if (!is_verbose()) return(NULL)
@@ -25,8 +26,7 @@ res__create_progress_bar <- function(self, private) {
   bar$spinner_state <- 1L
   bar$chars <- progress_chars()
 
-  app <- default_app() %||% start_app()
-  bar$bar <- app$progress_bar(
+  bar$bar <- cli_progress_bar(
     format = ":xbar:xstate :xspinner :xmsg",
     total = 10e7,
     force = TRUE

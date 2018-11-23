@@ -7,6 +7,7 @@ remotes__with_progress_bar <- function(self, private, args, expr) {
 
 #' @importFrom glue glue_data
 #' @importFrom prettyunits pretty_dt
+#' @importFrom cliapp cli_progress_bar
 
 pkg_progress_bar <- R6Class(
   "pkg_progress_bar",
@@ -30,8 +31,7 @@ pkg_progress_bar <- R6Class(
                "[:strcbytes] :elapsedfull")
       }
 
-      app <- default_app() %||% start_app()
-      private$bar <- app$progress_bar(
+      private$bar <- cli_progress_bar(
         show_after = show_after, total = total, format = format, ...)
     },
 
@@ -64,8 +64,7 @@ pkg_progress_bar <- R6Class(
     report = function() {
       if (!private$active) return()
       if (!private$data$total) {
-        app <- default_app() %||% start_app()
-        app$alert_success("No downloads are needed")
+        cli_alert_success("No downloads are needed")
       } else {
         data <- private$data
         dl <- data$count - data$failed - data$cached
@@ -82,15 +81,13 @@ pkg_progress_bar <- R6Class(
     alert = function(text, ...) {
       if (!private$active) return()
       text <- glue_data(private$data, text, .envir = parent.frame())
-      app <- default_app() %||% start_app()
-      app$alert(text, ...)
+      cli_alert(text, ...)
     },
 
     alert_success = function(text, ...) {
       if (!private$active) return()
       text <- glue_data(private$data, text, .envir = parent.frame())
-      app <- default_app() %||% start_app()
-      app$alert_success(text, ...)
+      cli_alert_success(text, ...)
     }
   ),
 

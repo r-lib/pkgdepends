@@ -1,5 +1,6 @@
 
 #' @importFrom cliapp cli_progress_bar
+#' @importFrom pkgcache async_timer
 
 remotes__create_progress_bar <- function(self, private, what) {
   if (!is_verbose()) return(NULL)
@@ -19,6 +20,11 @@ remotes__create_progress_bar <- function(self, private, what) {
     format = ":xbar :xpkgs | :xbytes | :xspin :xmsg",
     total = nrow(what),
     force = TRUE)
+
+  private$progress_bar_timer <- async_timer$new(1/10,
+    function() private$show_progress_bar())
+  private$progress_bar_timer$listen_on("error", function(...) { })
+
   bar
 }
 
@@ -40,7 +46,10 @@ remotes__update_progress_bar <- function(self, private, idx, data) {
       private$progress_bar$what$finished_at[idx] <- Sys.time()
     }
   }
+}
 
+remotes__show_progress_bar <- function(self, private) {
+  if (!is_verbose()) return()
   bar <- private$progress_bar
   what <- bar$what
   pkg_done <- sum(!is.na(what$status))
@@ -63,6 +72,7 @@ remotes__update_progress_bar <- function(self, private, idx, data) {
 
 remotes__done_progress_bar <- function(self, private) {
   if (!is_verbose()) return()
+  private$progress_bar_timer$cancel()
   private$progress_bar$bar$terminate()
 }
 

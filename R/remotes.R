@@ -157,6 +157,7 @@ remotes <- R6Class(
     download_cache = NULL,
     config = NULL,
     progress_bar = NULL,
+    progress_bar_timer = NULL,
     remote_types = NULL,
 
     download_res = function(res, which, on_progress = NULL)
@@ -172,6 +173,8 @@ remotes <- R6Class(
       remotes__create_progress_bar(self, private, what),
     update_progress_bar = function(idx, data)
       remotes__update_progress_bar(self, private, idx, data),
+    show_progress_bar = function()
+      remotes__show_progress_bar(self, private),
     done_progress_bar = function()
       remotes__done_progress_bar(self, private)
   )

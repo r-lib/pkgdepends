@@ -119,8 +119,6 @@ type_github_build_package <- function(repo_zip, target, rel_target, subdir,
   "Built"
 }
 
-#' @importFrom pkgcache download_file
-
 type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,
                                       package, cache, on_progress) {
   ## TODO: progress

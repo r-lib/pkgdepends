@@ -1,6 +1,5 @@
 
 #' @importFrom cliapp cli_progress_bar
-#' @importFrom pkgcache async_timer
 
 remotes__create_progress_bar <- function(self, private, what) {
   if (!is_verbose()) return(NULL)

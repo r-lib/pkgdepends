@@ -181,7 +181,6 @@ remotes <- R6Class(
 )
 
 #' @importFrom utils modifyList
-#' @importFrom pkgcache cranlike_metadata_cache package_cache
 
 remotes_init <- function(self, private, specs, config, library,
                          remote_types) {

@@ -104,6 +104,24 @@ get_cran_extension <- function(platform) {
   )
 }
 
+#' Dependency refs of a package file or tree
+#'
+#' @param path Path to the package file or tree.
+#' @return Tibble with columns:
+#' * `ref` Remote reference.
+#' * `type` Dependency type.
+#' * `package` Package name.
+#' * `op` Version requirement operator. Empty string if there is no
+#'   version requirement.
+#' * `version` Version requirement version.
+#' 
+#' @export
+
+local_deps <-  function(path = ".") {
+  dsc <- desc::desc(path)
+  resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes"))
+}
+
 resolve_ref_deps <- function(deps, remotes) {
   deps <- deps_from_desc(deps, last = FALSE)
 

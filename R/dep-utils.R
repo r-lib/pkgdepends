@@ -119,7 +119,8 @@ get_cran_extension <- function(platform) {
 
 local_deps <-  function(path = ".") {
   dsc <- desc::desc(path)
-  resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes"))
+  deps <- resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes"))
+  deps[! deps$package %in% c("R", base_packages()), ]
 }
 
 resolve_ref_deps <- function(deps, remotes) {

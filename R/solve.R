@@ -483,6 +483,7 @@ remotes_install_plan <- function(self, private) {
 
 calculate_lib_status <- function(sol, res) {
   ## Possible values at the moment:
+  ## - virtual: not really a package
   ## - new: newly installed
   ## - current: up to date, not installed
   ## - update: will be updated
@@ -497,8 +498,10 @@ calculate_lib_status <- function(sol, res) {
   })
 
   ## If not new, and not "installed" type, that means update
-  status <- ifelse(is.na(lib_ver), "new",
-    ifelse(sol$type == "installed", "current", "update"))
+  status <- ifelse(
+    sol$type == "deps", "virtual",
+      ifelse(is.na(lib_ver), "new",
+        ifelse(sol$type == "installed", "current", "update")))
 
   ## Check for no-update
   could_update <- vlapply(seq_along(sol$package), function(i) {

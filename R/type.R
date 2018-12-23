@@ -26,6 +26,11 @@ default_remote_types <- function() {
       resolve = resolve_remote_local,
       download = download_remote_local,
       satisfy = satisfy_remote_local),
+    deps = list(
+      parse = parse_remote_deps,
+      resolve = resolve_remote_deps,
+      download = download_remote_deps,
+      satisfy  = satisfy_remote_deps),
     installed = list(
       parse = parse_remote_installed,
       resolve = resolve_remote_installed,

@@ -52,7 +52,10 @@ remotes_stop_for_solution_download_error <- function(self, private) {
       }
     )
     msg <- paste(msgs, collapse = "\n")
-    stop("Cannot download some packages:\n", msg, call. = FALSE)
+    err <- structure(
+      list(message = msg, call = NULL, errors = dl$download_errors[bad]),
+      class = c("error", "condition"))
+    stop(err)
   }
 }
 
@@ -250,8 +253,9 @@ format_dls <- function(dls, which, header, by_type = FALSE,
     for (t in sort(unique(dls$type[which]))) {
       push(blue(paste0("  ", t, ":")), sep = "\n")
       which2 <- which & dls$type == t
-      push(comma_wrap(mark(which2, short = t == "installed"), indent = 4),
-           sep = "\n")
+      push(comma_wrap(
+        mark(which2, short = t %in% c("deps", "installed")), indent = 4),
+        sep = "\n")
     }
 
   } else {

@@ -31,8 +31,8 @@ download_remote_installed <- function(resolution, target, config, cache,
 
 satisfy_remote_installed <- function(resolution, candidate,
                                      config, ...) {
-    TRUE
-  }
+  TRUE
+}
 
 ## ----------------------------------------------------------------------
 ## Internal functions

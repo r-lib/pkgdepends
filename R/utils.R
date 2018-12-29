@@ -312,3 +312,29 @@ rbind_expand <- function(..., .list = list()) {
 drop_nulls <- function(x) {
   x[! vlapply(x, is.null)]
 }
+
+split_built <- function(built) {
+  nms <- c("build_r_version", "build_platform", "build_date", "build_os")
+
+  if (length(built) < 1) {
+    return(data.frame(
+      stringsAsFactors = FALSE,
+      build_r_version = character(),
+      build_platform = character(),
+      build_date = as.POSIXct(character()),
+      build_os = character()
+    ))
+  }
+
+  spl <- strsplit(built, "; ")
+  tab <- set_names(
+    as.data.frame(stringsAsFactors = FALSE, do.call(rbind, spl)), nms)
+  tab$build_date <- as.POSIXct(tab$build_date, tz = "UTC")
+  tab$build_platform[ tab$build_platform == "" ] <- NA_character_
+  tab
+}
+
+set_names <- function(object, nm) {
+  names(object) <- nm
+  object
+}

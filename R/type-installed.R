@@ -75,10 +75,12 @@ make_installed_cache <- function(library) {
   } else {
     pkgs$ref <- paste0("installed::", library, "/", pkgs$package)
   }
+  built <- split_built(pkgs$built)
   pkgs$type <- rep("installed", nrow(pkgs))
   pkgs$status <- rep("OK", nrow(pkgs))
-  pkgs$rversion <- rep("*", nrow(pkgs))       # TODO
-  pkgs$platform  <- rep("source", nrow(pkgs)) # TODO
+  pkgs$rversion <- built$build_r_version
+  pkgs$platform <-
+    ifelse(is.na(built$build_platform), "source", built$build_platform)
   pkgs$sources <- replicate(nrow(pkgs), character(), simplify = FALSE)
   pkgs$needscompilation <- ifelse(
     is.na(pkgs$needscompilation), NA,

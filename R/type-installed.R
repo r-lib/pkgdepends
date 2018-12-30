@@ -47,26 +47,27 @@ type_installed_rx <- function() {
   )
 }
 
-make_installed_cache <- function(library) {
-  pkgs <- list.files(library, pattern = "^[a-zA-Z]")
-  ds <- drop_nulls(lapply_with_names(pkgs, function(pkg) {
+make_installed_cache <- function(library, packages = NULL) {
+  pkgs <- packages %||% list.files(library, pattern = "^[a-zA-Z]")
+  meta <- drop_nulls(lapply_with_names(pkgs, function(pkg) {
     tryCatch(
       suppressWarnings(
-        readRDS(file.path(library, pkg, "Meta", "package.rds"))$DESCRIPTION
+        readRDS(file.path(library, pkg, "Meta", "package.rds"))
       ),
       error = function(e) NULL)
   }))
 
-  all_fields <- unique(unlist(lapply(ds, names)))
+  all_fields <- unique(unlist(lapply(
+    meta, function(x) names(x$DESCRIPTION))))
   fields <- unique(c(
     "Package", "Title", "Version", "Depends", "Suggests", "Imports",
     "LinkingTo", "Enhances", "Built", "MD5sum", "NeedsCompilation",
     "Platform", "License", "Priority", "Repository", "biocViews",
     grep("^Remote", all_fields, value = TRUE)))
 
-  ret <- matrix(NA_character_, nrow = length(ds), ncol = length(fields))
+  ret <- matrix(NA_character_, nrow = length(meta), ncol = length(fields))
   colnames(ret) <- tolower(fields)
-  for (i in seq_along(ds)) ret[i,] <- ds[[i]][fields]
+  for (i in seq_along(meta)) ret[i,] <- meta[[i]]$DESCRIPTION[fields]
 
   pkgs <- as_tibble(ret)
 
@@ -75,12 +76,11 @@ make_installed_cache <- function(library) {
   } else {
     pkgs$ref <- paste0("installed::", library, "/", pkgs$package)
   }
-  built <- split_built(pkgs$built)
   pkgs$type <- rep("installed", nrow(pkgs))
   pkgs$status <- rep("OK", nrow(pkgs))
-  pkgs$rversion <- built$build_r_version
-  pkgs$platform <-
-    ifelse(is.na(built$build_platform), "source", built$build_platform)
+  pkgs$rversion <- vcapply(meta, function(x) as.character(x$Built$R))
+  pkgs$platform <- vcapply(meta, function(x) x$Built$Platform)
+  pkgs$platform[pkgs$platform == ""] <- "*"
   pkgs$sources <- replicate(nrow(pkgs), character(), simplify = FALSE)
   pkgs$needscompilation <- ifelse(
     is.na(pkgs$needscompilation), NA,
@@ -95,6 +95,12 @@ make_installed_cache <- function(library) {
     deps[,-(1:2)], factor(deps$idx, levels = seq_len(nrow(pkgs))))
   pkgs$deps <- unname(pkgs_deps)
   list(pkgs = pkgs, deps = deps)
+}
+
+#' @export
+
+lib_status <- function(library = .libPaths()[1], packages = NULL) {
+  make_installed_cache(library, packages)$pkgs
 }
 
 #' @importFrom tibble tibble

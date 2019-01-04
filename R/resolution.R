@@ -260,6 +260,9 @@ res__try_finish <- function(self, private, resolve) {
 
 resolve_remote <- function(remote, direct, config, cache, dependencies,
                            remote_types = NULL) {
+
+  remote; direct; config; cache; dependencies; remote_types
+
   remote_types <- c(default_remote_types(), remote_types)
 
   type <- remote$type %||% unique(vcapply(remote, "[[", "type"))

@@ -352,6 +352,7 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
     types <-  vcapply(remotes, "[[", "type")
   }
 
+  if (!direct) dependencies <- dependencies$indirect
   "!DEBUG resolving `length(refs)` batch resolution"
   cache$metadata$async_deps(packages, dependencies = dependencies)$
     then(function(data) {

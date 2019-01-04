@@ -272,7 +272,12 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
 
   async(resolve)(
     remote, direct = direct, config = config, cache = cache,
-    dependencies = dependencies)
+    dependencies = dependencies
+  )$
+    then(function(value) {
+      value[["dep_types"]] <- list(dependencies[[2-direct]])
+      value
+  })
 }
 
 resolve_from_description <- function(path, sources, remote, direct,

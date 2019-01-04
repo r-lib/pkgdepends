@@ -28,7 +28,8 @@ res_make_empty_df <- local({
         remote   = list(),              # parsed remote ref
         error    = list(),              # list of errors
         metadata = list(),              # named character of entries
-        extra    = list()               # any extra data (e.g. GitHub sha)
+        extra    = list(),              # any extra data (e.g. GitHub sha)
+        dep_types= list()
       )
     }
     data
@@ -60,7 +61,8 @@ res_df_defaults <- local({
         error    = list(list()),
         metadata = list(list()),
         mirror   = NA_character_,
-        extra    = list(list())
+        extra    = list(list()),
+        dep_types= list(list())
       )
     }
     data

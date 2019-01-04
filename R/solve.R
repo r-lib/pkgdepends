@@ -249,9 +249,10 @@ remotes_i_lp_dependencies <- function(lp) {
   depconds <- function(wh) {
     if (pkgs$status[wh] != "OK") return()
     deps <- pkgs$deps[[wh]]
+    deptypes <- pkgs$dep_types[[wh]]
     deps <- deps[deps$ref != "R", ]
     deps <- deps[! deps$ref %in% base, ]
-    deps <- deps[tolower(deps$type) %in% tolower(dep_types_hard()), ]
+    deps <- deps[tolower(deps$type) %in% tolower(deptypes), ]
     if (pkgs$platform[wh] != "source") {
       deps <- deps[tolower(deps$type) != "linkingto", ]
     }
@@ -455,8 +456,11 @@ remotes_install_plan <- function(self, private) {
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
   deps <- lapply(
-    sol$deps,
-    function(x) x$package[tolower(x$type) %in% tolower(dep_types_hard())])
+    seq_len(nrow(sol)),
+    function(i) {
+      x <- sol$deps[[i]]
+      x$package[tolower(x$type) %in% tolower(sol$dep_types[[i]])]
+    })
   deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   installed <- ifelse(
     sol$type == "installed",

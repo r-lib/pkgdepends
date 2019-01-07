@@ -408,7 +408,7 @@ make_failed_resolution <- function(refs, type, direct) {
   tibble(
     ref = refs,
     type = type,
-    package = NA_character_,
+    package = refs,
     version = NA_character_,
     sources = replicate(length(refs), NA_character_, simplify = FALSE),
     direct = direct,

@@ -510,8 +510,9 @@ calculate_lib_status <- function(sol, res) {
   ## Check for no-update
   could_update <- vlapply(seq_along(sol$package), function(i) {
     p <- sol$package[i]
-    v <- package_version(sol$version[i])
-    any(sres$package == p & v < sres$version)
+    v <- if (is.na(sol$version[i])) NA_character_ else package_version(sol$version[i])
+    g <- sres$package == p & !is.na(sres$version)
+    any(v < sres$version[g])
   })
   status[status == "current" & could_update] <- "no-update"
 

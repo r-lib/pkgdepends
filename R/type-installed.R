@@ -97,6 +97,12 @@ make_installed_cache <- function(library, packages = NULL) {
   list(pkgs = pkgs, deps = deps)
 }
 
+#' Status of packages in a ibrary
+#'
+#' @param lib Path to library.
+#' @return Data frame (tibble) the contains data about the packages
+#'   installed in the library.
+#'
 #' @export
 
 lib_status <- function(library = .libPaths()[1], packages = NULL) {

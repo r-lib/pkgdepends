@@ -50,7 +50,7 @@ test_that("resolve_remote", {
   expect_equal(
     vcapply(res$metadata, "[", "RemoteSubdir")[ord],
     c(NA, NA, NA, NA, "R", NA, NA, NA))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteHost") == "github.com"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemoteHost") == "api.github.com"))
 
   expect_equal(vcapply(res$metadata, "[[", "GithubRepo"),
                vcapply(res$metadata, "[[", "RemoteRepo"))
@@ -159,10 +159,8 @@ test_that("satisfies_remote", {
   expect_match(attr(ans, "reason"), "Candidate package sha mismatch")
 
   ## Corrent sha, GitHub
-  fake_desc <- desc::desc("!new")
-  fake_desc$set("RemoteSha" = "badcafe")
   ok1 <- make_fake_resolution(`installed::foo` = list(
-    extra =  list(list(description = fake_desc)),
+    extra =  list(list(remotesha = "badcafe")),
     package = "crayon",
     version = "1.0.0"))
   expect_true(satisfy_remote_github(res, ok1))

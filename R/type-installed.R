@@ -162,8 +162,11 @@ resolve_installed  <- function(cache, remotes, direct, dependencies) {
 
   res$direct <- direct
   res$metadata <- get_installed_metadata(res)
-  res$extra <- lapply(repotype, function(x) list(repotype = x))
   res$deps <- lapply(res$deps, function(x) x[x$type %in% dependencies,])
+
+  extracols <- c("repotype", grep("^remote", names(pkgs), value = TRUE))
+  extra <- pkgs[pkgs$package %in% packages, extracols]
+  res$extra <- lapply(seq_len(nrow(res)), function(i) extra[i,])
 
   attr(res, "unknown_deps") <-
     setdiff(unique(unlist(lapply(res$deps, "[[", "package"))), "R")

@@ -142,8 +142,7 @@ satisfy_remote_github <- function(resolution, candidate,
 
   ## 1. installed ref is good, if it has the same sha
   if (candidate$type == "installed") {
-    dsc <- candidate$extra[[1]]$description
-    sha1 <- if (!is.null(dsc)) dsc$get("RemoteSha")[[1]]
+    sha1 <- candidate$extra[[1]]$remotesha
     sha2 <- resolution$extra[[1]]$sha
     ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)
     if (!ok) {
@@ -236,12 +235,12 @@ type_github_make_resolution <- function(data) {
 
   meta <- c(
     RemoteType = "github",
+    RemoteHost = "api.github.com",
+    RemoteRepo = repo,
+    RemoteUsername = username,
     RemoteRef = data$remote$ref,
     RemoteSha = sha,
-    RemoteUsername = username,
-    RemoteRepo = repo,
     RemoteSubdir = subdir,
-    RemoteHost = "github.com",
     GithubRepo = repo,
     GithubUsername = username,
     GithubRef = data$remote$ref,

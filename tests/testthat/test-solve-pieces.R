@@ -39,15 +39,17 @@ test_that("remotes_i_lp_no_multiples", {
     c(rep("exactly-once", length(lp$direct_packages)),
       rep("at-most-once", length(lp$indirect_packages)))
   )
+  prvar <- which(pkgs$package == "progress")
   expect_equal(
     lp$conds[[1]],
     structure(
-      list(vars = c(4L, 9L, 11L), coef = c(1, 1, 1), op = "==",
+      list(vars = c(prvar, nrow(pkgs) + 1L), coef = c(1, 1, 1), op = "==",
            rhs = 1, type = "exactly-once", note = NULL))
   )
+  prvar2 <- which(pkgs$package == "assertthat")
   expect_equal(
     lp$conds[[2]],
-    structure(list(vars = c(1L, 6L), coef = c(1, 1), op = "<=", rhs = 1,
+    structure(list(vars = prvar2, coef = c(1, 1), op = "<=", rhs = 1,
                    type = "at-most-once", note = NULL))
   )
 })
@@ -84,9 +86,9 @@ test_that("remotes_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
   lp <- remotes_i_lp_init(pkgs, "lazy")
   lp <- remotes_i_lp_dependencies(lp)
-  expect_equal(length(lp$conds), 8)
+  expect_equal(length(lp$conds), 16)
   expect_equal(
     digest::digest(lp$conds[[3]]),
-    "94b2a752b80a22ca9cdb36af5ca335bc"
+    "8f4367ad78bc677389eaeece32e2f932"
   )
 })

@@ -27,7 +27,8 @@ make_fake_resolution1 <- function(ref, args = list()) {
       sprintf("%s/%s/%s", mirror, repodir, filename),
       sprintf("%s/%s/Archive/%s/%s", mirror, repodir, pref$package,
               filename)
-    )
+    ),
+    dep_types = tolower(dep_types_hard())
   )
 
   modifyList(def, args)

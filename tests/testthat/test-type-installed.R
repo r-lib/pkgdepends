@@ -17,8 +17,13 @@ test_that("resolve", {
                              dependencies = "Imports")
   )
 
+  unun <- function(x) {
+    attr(x, "unknown_deps") <- NULL
+    x
+  }
+
   expect_equal(
-    as.list(res[c("ref", "type", "direct", "status", "package", "version")]),
+    unun(as.list(res[c("ref", "type", "direct", "status", "package", "version")])),
     list(ref = ref, type = "installed", direct = TRUE, status = "OK",
          package = "testthat",
          version = as.character(packageVersion("testthat")))

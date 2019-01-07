@@ -7,7 +7,9 @@
 lib_status(library = .libPaths()[1], packages = NULL)
 }
 \arguments{
-\item{lib}{Path to library.}
+\item{library}{Path to library.}
+
+\item{packages}{If not \code{NULL}, then only these packages are shown.}
 }
 \value{
 Data frame (tibble) the contains data about the packages

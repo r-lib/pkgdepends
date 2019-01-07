@@ -278,7 +278,8 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     dependencies = dependencies
   )$
     then(function(value) {
-      value[["dep_types"]] <- list(dependencies[[2-direct]])
+      value[["dep_types"]] <-
+        if (NROW(value)) list(dependencies[[2-direct]]) else list()
       value
   })
 }

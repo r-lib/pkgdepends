@@ -268,7 +268,7 @@ remotes_i_lp_dependencies <- function(lp) {
         x = cand,
         function(c) {
           candver <- pkgs$version[c]
-          res$status != "FAILED" &&
+          pkgs$status[[c]] != "FAILED" &&
             isTRUE(satisfies_remote(res, pkgs[c, ])) &&
             (depver == "" || version_satisfies(candver, depop, depver))
         })

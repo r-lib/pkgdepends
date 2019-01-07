@@ -15,14 +15,14 @@ Imports:
     backports,
     base64enc,
     cli (>= 1.0.0.9000),
-    cliapp (>= 0.0.0.9002),
+    cliapp (>= 0.1.0),
     crayon,
     curl,
     desc (>= 1.2.0),
     glue,
     jsonlite,
     lpSolve,
-    pkgbuild,
+    pkgbuild (>= 1.0.2),
     pkgcache (>= 1.0.0.9001),
     prettyunits,
     rematch2,
@@ -41,7 +41,5 @@ Suggests:
     rprojroot,
     testthat
 Remotes:
-    r-lib/cliapp,
-    r-lib/pkgbuild,
     r-lib/pkgcache
 Encoding: UTF-8

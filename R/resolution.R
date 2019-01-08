@@ -3,7 +3,7 @@
 
 remotes_resolve <- function(self, private) {
   "!DEBUG remotes_resolve (sync)"
-  synchronise(self$async_resolve())
+  asNamespace("pkgcache")$synchronise(self$async_resolve())
 }
 
 remotes_async_resolve <- function(self, private) {
@@ -102,7 +102,7 @@ res_init <- function(self, private, config, cache, library,
     async_id = integer(),
     started_at = Sys.time()[FALSE])
 
-  private$deferred <- deferred$new(
+  private$deferred <- asNamespace("pkgcache")$deferred$new(
     type = "resolution_queue",
     parent_resolve = function(value, resolve, id) {
       "!DEBUG resolution done"
@@ -273,7 +273,7 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     stop("Cannot resolve type", format_items(type))
   }
 
-  async(resolve)(
+  asNamespace("pkgcache")$async(resolve)(
     remote, direct = direct, config = config, cache = cache,
     dependencies = dependencies
   )$

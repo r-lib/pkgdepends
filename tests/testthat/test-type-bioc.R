@@ -22,7 +22,7 @@ test_that("resolve_remote", {
   cache <- list(package = NULL,
                 metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- synchronise(
+  res <- asNamespace("pkgcache")$synchronise(
     resolve_remote_bioc(parse_remotes("bioc::Biobase")[[1]], TRUE, conf,
                         cache, dependencies = FALSE)
   )
@@ -48,7 +48,7 @@ test_that("failed resolution", {
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ref <- paste0("bioc::", basename(tempfile()))
-  res <- synchronise(
+  res <- asNamespace("pkgcache")$synchronise(
     resolve_remote_bioc(parse_remotes(ref)[[1]], TRUE, conf,
                         cache, dependencies = FALSE)
   )
@@ -83,22 +83,22 @@ test_that("download_remote", {
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2
   cache <- list(
-    package = package_cache$new(conf$package_cache_dir),
+    package = pkgcache::package_cache$new(conf$package_cache_dir),
     metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- synchronise(
+  res <- asNamespace("pkgcache")$synchronise(
     resolve_remote_bioc(parse_remotes("bioc::Biobase")[[1]], TRUE, conf, cache,
                         dependencies = FALSE))
 
   target <- file.path(conf$cache_dir, res$target[1])
-  dl <- synchronise(
+  dl <- asNamespace("pkgcache")$synchronise(
     download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
 
   expect_equal(dl, "Got")
   expect_true(file.exists(target))
 
   unlink(target)
-  dl2 <- synchronise(
+  dl2 <- asNamespace("pkgcache")$synchronise(
     download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
   expect_true(dl2 %in% c("Had", "Current"))
   expect_true(file.exists(target))

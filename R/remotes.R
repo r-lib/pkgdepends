@@ -86,7 +86,6 @@
 #'   to the running R version.
 #'
 #' @importFrom R6 R6Class
-#' @import pkgcache
 #' @name remotes
 #' @examples
 #' ## This does download a bunch of packages, so we don't run it currently
@@ -201,12 +200,12 @@ remotes_init <- function(self, private, specs, config, library,
   mkdirp(private$download_cache <- private$config$cache_dir)
 
   private$cache <- list(
-    metadata = cranlike_metadata_cache$new(
+    metadata = pkgcache::cranlike_metadata_cache$new(
       replica_path = private$config$metadata_cache_dir,
       platforms = private$config$platforms,
       r_version = private$config$`r-version`,
       cran_mirror = private$config$`cran-mirror`),
-    package = package_cache$new(private$config$package_cache_dir),
+    package = pkgcache::package_cache$new(private$config$package_cache_dir),
     installed = if (!is.null(library)) make_installed_cache(library)
   )
 

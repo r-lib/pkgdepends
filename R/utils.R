@@ -256,12 +256,6 @@ zip_vecs <- function(...) {
   mapply(c, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
 }
 
-## TODO: remove this
-
-get_async_value <- function(x) {
-  if (is_deferred(x)) x$.__enclos_env__$private$value else x
-}
-
 lapply_rows <-  function(df, fun, ...) {
   lapply(seq_len(nrow(df)), function(i) fun(df[i,], ...))
 }

@@ -22,7 +22,7 @@ test_that("resolve_remote", {
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
-  res <- synchronise(
+  res <- asNamespace("pkgcache")$synchronise(
     resolve_remote_local(parse_remotes(ref)[[1]], TRUE, conf,
                          cache, dependencies = FALSE)
   )
@@ -44,7 +44,7 @@ test_that("resolve_remote", {
   ref2 <- paste0("local::", "foobar_1.0.0.tar.gz")
   withr::with_dir(
     fix_dir,
-    res <- synchronise(
+    res <- asNamespace("pkgcache")$synchronise(
       resolve_remote_local(parse_remotes(ref2)[[1]], TRUE, conf,
                          cache, dependencies = FALSE)
     )
@@ -69,7 +69,7 @@ test_that("resolution error", {
 
   path <- get_fixture("foobar_10.0.0.tar.gz")
   ref <- paste0("local::", path)
-  err <- tryCatch(synchronise(
+  err <- tryCatch(asNamespace("pkgcache")$synchronise(
     resolve_remote_local(parse_remotes(ref)[[1]], TRUE, conf,
                          cache, dependencies = FALSE)
   ), error = function(x) x)
@@ -90,7 +90,7 @@ test_that("download_remote", {
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2
   cache <- list(
-    package = package_cache$new(conf$package_cache_dir),
+    package = pkgcache::package_cache$new(conf$package_cache_dir),
     metadata = pkgcache::get_cranlike_metadata_cache())
 
   ## Absolute path
@@ -106,7 +106,7 @@ test_that("download_remote", {
   download <- function(res) {
     download_remote_local(res, target, conf, cache, on_progress = NULL)
   }
-  dl1 <- synchronise(download(res[1,]))
+  dl1 <- asNamespace("pkgcache")$synchronise(download(res[1,]))
   expect_equal(dl1, "Had")
   expect_true(file.exists(target))
 

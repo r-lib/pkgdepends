@@ -33,8 +33,9 @@ resolve_remote_github <- function(remote, direct, config, cache,
   ## Get the DESCRIPTION data, and the SHA we need
   desc <- type_github_get_github_description_data(remote)
   sha <- type_github_get_github_commit_sha(remote)
-  when_all(desc = desc, sha = sha, remote = remote, direct = direct,
-           dependencies = dependencies[[2 - direct]])$
+  asNamespace("pkgcache")$when_all(
+    desc = desc, sha = sha, remote = remote, direct = direct,
+    dependencies = dependencies[[2 - direct]])$
     then(type_github_make_resolution)
 }
 
@@ -122,7 +123,8 @@ type_github_build_package <- function(repo_zip, target, rel_target, subdir,
 type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,
                                       package, cache, on_progress) {
   ## TODO: progress
-  download_file(urls, repo_zip, on_progress = on_progress)$
+  asNamespace("pkgcache")$download_file(urls, repo_zip,
+                                        on_progress = on_progress)$
     then(function() {
       cache$package$add(
         repo_zip, rel_zip, package = package, sha = sha, built = FALSE)
@@ -269,7 +271,7 @@ type_github_make_resolution <- function(data) {
 github_get <- function(url, headers = character(), ...) {
 
   headers <- c(headers, type_github_get_github_headers())
-  http_get(url, headers = headers, ...)$
+  asNamespace("pkgcache")$http_get(url, headers = headers, ...)$
     then(function(res) {
       if (res$status_code >= 300) {
         stop(github_error(res))

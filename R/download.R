@@ -4,7 +4,7 @@
 remotes_download_resolution <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
-  synchronise(self$async_download_resolution())
+  asNamespace("pkgcache")$synchronise(self$async_download_resolution())
 }
 
 remotes_async_download_resolution <- function(self, private) {
@@ -24,7 +24,7 @@ remotes_async_download_resolution <- function(self, private) {
 remotes_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
-  synchronise(self$async_download_solution())
+  asNamespace("pkgcache")$synchronise(self$async_download_solution())
 }
 
 remotes_async_download_solution <- function(self, private) {
@@ -78,7 +78,7 @@ remotes_async_download_internal <- function(self, private, what, which) {
       finally(function() private$update_progress_bar(idx, "done"))
   })
 
-  when_all(.list = dl)$
+  asNamespace("pkgcache")$when_all(.list = dl)$
     then(function(dls) {
       what$fulltarget <- vcapply(dls, "[[", "fulltarget")
       what$download_status <- vcapply(dls, "[[", "download_status")
@@ -109,8 +109,8 @@ download_remote <- function(res, config, cache, which,
   dl <- remote_types[[res$type]]$download %||% type_default_download
   target <- file.path(config$cache_dir, res$target)
   mkdirp(dirname(target))
-  async(dl)(res, target, config, cache = cache, which = which,
-    on_progress = on_progress)$
+  asNamespace("pkgcache")$async(dl)(res, target, config, cache = cache,
+    which = which, on_progress = on_progress)$
     then(function(s) {
       if (length(res$sources[[1]]) && !file.exists(target)) {
         stop("Failed to download ", res$type, " package ", res$package)

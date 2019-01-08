@@ -20,8 +20,9 @@ remotes__create_progress_bar <- function(self, private, what) {
     total = nrow(what),
     force = TRUE)
 
-  private$progress_bar_timer <- async_timer$new(1/10,
-    function() private$show_progress_bar())
+  private$progress_bar_timer <-
+    asNamespace("pkgcache")$async_timer$new(
+      1/10, function() private$show_progress_bar())
   private$progress_bar_timer$listen_on("error", function(...) { })
 
   bar

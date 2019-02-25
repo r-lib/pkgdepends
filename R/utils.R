@@ -307,3 +307,6 @@ rbind_expand <- function(..., .list = list()) {
 drop_nulls <- function(x) {
   x[! vlapply(x, is.null)]
 }
+
+## R CMD check fixes
+self <- private <- "foobar"

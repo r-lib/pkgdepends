@@ -54,20 +54,20 @@ remotes__update_progress_bar <- function(self, private, idx, data) {
 remotes__show_progress_bar <- function(self, private) {
   if (!is_verbose()) return()
   bar <- private$progress_bar
-  what <- bar$what
+  what <- bar$what[! bar$what$type %in% c("installed", "deps"), ]
+  what <- what[what$cache_status == "miss", ]
   pkg_done <- sum(!is.na(what$status))
   pkg_total <- nrow(what)
   percent <- pkg_done / pkg_total
   bytes_done <- sum(what$current, na.rm = TRUE)
-  bytes_total <- sum(what$filesize, na.rm = TRUE)
-  unknown <- sum(is.na(what$filesize) & is.na(what$status))
+  bytes_total <- sum(what$filesize)
 
   tokens <- list(
     xbar = make_bar(bar$chars, percent, width = 15),
     xpkgs = make_progress_packages(pkg_done, pkg_total),
-    xbytes = make_progress_bytes(bytes_done, bytes_total, unknown),
+    xbytes = make_progress_bytes(bytes_done, bytes_total),
     xspin = make_spinner(private),
-    xmsg = make_trailing_download_msg(what)
+    xmsg = make_trailing_download_msg(bar)
   )
 
   bar$bar$tick(0, tokens = tokens)

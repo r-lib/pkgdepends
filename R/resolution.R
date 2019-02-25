@@ -254,6 +254,8 @@ res__try_finish <- function(self, private, resolve) {
   if (all(! is.na(private$state$status))) {
     "!DEBUG resolution finished"
     private$metadata$resolution_end <- Sys.time()
+    self$result$cache_status <-
+      calculate_cache_status(self$result, private$cache)
     attr(self$result, "metadata") <- private$metadata
     class(self$result) <- c("remotes_resolution", class(self$result))
     private$done_progress_bar()

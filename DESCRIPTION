@@ -23,7 +23,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild (>= 1.0.2),
-    pkgcache (>= 1.0.0.9001),
+    pkgcache (>= 1.0.3),
     prettyunits,
     rematch2,
     R6,
@@ -40,6 +40,4 @@ Suggests:
     pingr,
     rprojroot,
     testthat
-Remotes:
-    r-lib/pkgcache
 Encoding: UTF-8

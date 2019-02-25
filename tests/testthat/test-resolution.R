@@ -3,7 +3,7 @@ context("resolution")
 
 test_that("resolving with a list", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = NULL)
+  cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
 
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
@@ -32,7 +32,7 @@ test_that("resolving with a list", {
 
 test_that("resolving with a tibble", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = NULL)
+  cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
@@ -66,7 +66,7 @@ test_that("resolving with a tibble", {
 
 test_that("unknown deps are pushed in the queue", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = NULL)
+  cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
@@ -94,7 +94,7 @@ test_that("unknown deps are pushed in the queue", {
 
 test_that("unknown deps, tibble", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = NULL)
+  cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
@@ -128,7 +128,7 @@ test_that("unknown deps, tibble", {
 
 test_that("error", {
   conf <- remotes_default_config()
-  cache <- list(package = NULL, metadata = NULL)
+  cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
     res$push(.list = parse_remotes("foo::bar"))
@@ -161,7 +161,7 @@ test_that("installed refs are also resolved", {
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
   mkdirp(file.path(lib, "bar"))
   mkdirp(file.path(lib, "bar2"))
-  cache <- list(package = NULL, metadata = NULL)
+  cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   cache$installed  <- list(
     pkgs = tibble(
       ref = paste0("installed::", lib, c("/bar", "/bar2")),
@@ -203,7 +203,7 @@ test_that("installed refs are also resolved", {
 test_that("explicit cran", {
   skip_on_cran()
   conf <- remotes_default_config()
-  cache <- list(package = NULL,
+  cache <- list(package = pkgcache::package_cache$new(),
                 metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution()$new(config = conf, cache = cache)
@@ -241,7 +241,7 @@ test_that("standard", {
   skip_on_cran()
   conf <- remotes_default_config()
   cache <- list(
-    package = NULL,
+    package = pkgcache::package_cache$new(),
     metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution()$new(config = conf, cache = cache)
@@ -278,7 +278,7 @@ test_that("standard", {
 test_that("dependencies are honoured", {
   conf <- remotes_default_config()
   cache <- list(
-    package = NULL,
+    package = pkgcache::package_cache$new(),
     metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs, deps) {
     conf$dependencies <- deps
@@ -318,7 +318,7 @@ test_that("dependencies are honoured", {
 test_that("error if cannot find package", {
   conf <- remotes_default_config()
   cache <- list(
-    package = NULL,
+    package = pkgcache::package_cache$new(),
     metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution()$new(config = conf, cache = cache)

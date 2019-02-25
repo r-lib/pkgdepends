@@ -8,15 +8,18 @@ remotes__create_progress_bar <- function(self, private, what) {
   what$status <- NA_character_
   what$current <- NA_integer_
   what$finished_at <- NA_real_
+  what$reported <- FALSE
 
-  bar$what <- what[, c("ref", "status", "filesize", "current", "finished_at")]
-  bar$spinner <- get_spinner()
+  bar$what <- what[, c("ref", "type", "status", "filesize", "current",
+                       "finished_at", "direct", "package", "reported",
+                       "cache_status")]
+  bar$spinner <- cli::get_spinner()
   bar$spinner_state <- 1L
   bar$chars <- progress_chars()
 
-  bar$bar <- cli_progress_bar(
+  bar$bar <- cliapp::cli_progress_bar(
     show_after = 0,
-    format = ":xbar :xpkgs | :xbytes | :xspin :xmsg",
+    format = ":xbar :xpkgs :xbytes :xspin :xmsg",
     total = nrow(what),
     force = TRUE)
 
@@ -37,7 +40,7 @@ remotes__update_progress_bar <- function(self, private, idx, data) {
   } else {
     ## TODO: redirects!
     total <- private$progress_bar$what$filesize[idx]
-    if (is.na(total) || (data$total > 0 && data$total != total)) {
+    if (data$total > 0) {
       private$progress_bar$what$filesize[idx] <- data$total
     }
     private$progress_bar$what$current[idx] <- data$current
@@ -95,14 +98,16 @@ make_progress_packages <- function(done, total) {
   paste0(bgblue(black(paste0(" ", done, "/", total, " "))), " pkgs")
 }
 
-make_progress_bytes <- function(done, total, unknown) {
+make_progress_bytes <- function(done, total) {
   if (is.na(total) || total == 0) {
-    return(paste0(unknown, " pkgs with unknown size"))
+    paste0(" | Got ", prettyunits::pretty_bytes(done))
+
+  } else {
+    paste0(
+      " | ", prettyunits::pretty_bytes(done), " / ",
+      prettyunits::pretty_bytes(total)
+    )
   }
-  paste0(
-    pretty_bytes(done), " / ", pretty_bytes(total),
-    if (unknown) paste0(" + ", unknown, " unknown")
-  )
 }
 
 make_spinner <- function(private)  {
@@ -114,8 +119,17 @@ make_spinner <- function(private)  {
   paste0("[", spin, "]")
 }
 
-make_trailing_download_msg <- function(tab) {
-  if (all(is.na(tab$finished_at))) return("Working...")
-  last <- which.max(tab$finished_at)
-  paste0("Got ", tab$ref[last])
+make_trailing_download_msg <- function(bar) {
+  tab <- bar$what
+  dd <- !is.na(tab$finished_at) & !tab$reported &
+    !tab$type %in% c("installed", "deps") & tab$cache_status == "miss"
+  if (any(dd)) {
+    w <- which(dd & tab$finished_at == min(tab$finished_at[dd]))[1]
+    bar$what$reported[w] <- TRUE
+    paste0("Got ", tab$package[w])
+  } else {
+    if (all(tab$current == 0, na.rm = TRUE)) return("Starting...")
+    w <- sample(which(is.na(tab$finished_at)), 1)
+    if (w == 0) "" else paste0("Getting ", tab$package[w])
+  }
 }

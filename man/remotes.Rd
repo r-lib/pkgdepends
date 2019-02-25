@@ -7,7 +7,7 @@
 Class for package dependency resolution and package downloads
 }
 \section{Usage}{
-\preformatted{r <- remotes$new(specs, config = list())
+\preformatted{r <- remotes()$new(specs, config = list())
 
 r$resolve()
 r$async_resolve()
@@ -111,7 +111,7 @@ to the running R version.
 \examples{
 ## This does download a bunch of packages, so we don't run it currently
 \dontrun{
-rems <- remotes$new(c("dplyr", "r-lib/rcmdcheck"))
+rems <- remotes()$new(c("dplyr", "r-lib/rcmdcheck"))
 rems$resolve()
 rems$download_resolution()
 rems$get_download_status()

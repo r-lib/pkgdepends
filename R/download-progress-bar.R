@@ -81,6 +81,18 @@ make_progress_packages <- function(done, total) {
     crayon::bgBlue(crayon::black(paste0(" ", done, "/", total, " "))),
     " pkgs"
   )
+  ## This is a workaround for an RStudio bug:
+  ## https://github.com/r-lib/pkginstall/issues/42
+  if (Sys.getenv("RSTUDIO", "") == "" ||
+      Sys.getenv("RSTUDIO_TERM", "") != "") {
+    bgblue <- crayon::bgBlue
+    black <- crayon::black
+  } else {
+    bgblue <- crayon::reset
+    black <- function(x) x
+  }
+
+  paste0(bgblue(black(paste0(" ", done, "/", total, " "))), " pkgs")
 }
 
 make_progress_bytes <- function(done, total, unknown) {

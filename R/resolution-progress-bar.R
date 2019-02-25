@@ -73,7 +73,7 @@ make_bar <- function(chars, p, width =  15) {
       Sys.getenv("RSTUDIO_TERM", "") != "") {
     crayon::green(bar)
   } else {
-    bar
+    crayon::reset(bar)
   }
 }
 

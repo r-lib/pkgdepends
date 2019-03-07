@@ -15,3 +15,4 @@ after_success:
 env:
   global:
   - NOT_CRAN="true"
+  - _R_CHECK_SYSTEM_CLOCK_="FALSE"

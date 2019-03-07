@@ -69,8 +69,7 @@ make_bar <- function(chars, p, width =  15) {
 
   ## This is a workaround for an RStudio bug:
   ## https://github.com/r-lib/pkginstall/issues/42
-  if (Sys.getenv("RSTUDIO", "") == "" ||
-      Sys.getenv("RSTUDIO_TERM", "") != "") {
+  if (! have_rstudio_bug_2387()) {
     crayon::green(bar)
   } else {
     crayon::reset(bar)

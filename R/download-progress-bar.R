@@ -86,8 +86,7 @@ make_progress_packages <- function(done, total) {
   )
   ## This is a workaround for an RStudio bug:
   ## https://github.com/r-lib/pkginstall/issues/42
-  if (Sys.getenv("RSTUDIO", "") == "" ||
-      Sys.getenv("RSTUDIO_TERM", "") != "") {
+  if (! have_rstudio_bug_2387()) {
     bgblue <- crayon::bgBlue
     black <- crayon::black
   } else {

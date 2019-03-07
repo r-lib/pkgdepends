@@ -310,3 +310,19 @@ drop_nulls <- function(x) {
 
 ## R CMD check fixes
 self <- private <- "foobar"
+
+is_rstudio_version <- function(ver) {
+  tryCatch(
+    rstudioapi::getVersion() >=ver,
+    error = function(e) FALSE
+  )
+}
+
+have_rstudio_bug_2387 <- function() {
+  if (!is.null(r <- repoman_data$rstudio_bug_2387)) return(r)
+  r <- repoman_data$rstudio_bug_2387 <-
+    Sys.getenv("RSTUDIO", "") != "" &&
+    Sys.getenv("RSTUDIO_TERM", "") == "" &&
+    !is_rstudio_version("1.2.128")
+  r
+}

@@ -39,5 +39,6 @@ Suggests:
     mockery,
     pingr,
     rprojroot,
+    rstudioapi,
     testthat
 Encoding: UTF-8

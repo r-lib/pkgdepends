@@ -81,20 +81,20 @@ remotes__done_progress_bar <- function(self, private) {
 
 make_progress_packages <- function(done, total) {
   paste0(
-    crayon::bgBlue(crayon::black(paste0(" ", done, "/", total, " "))),
+    crayon::bgCyan(crayon::black(paste0(" ", done, "/", total, " "))),
     " pkgs"
   )
   ## This is a workaround for an RStudio bug:
   ## https://github.com/r-lib/pkginstall/issues/42
   if (! have_rstudio_bug_2387()) {
-    bgblue <- crayon::bgBlue
+    bggrey <- crayon::make_style("grey", bg = TRUE)
     black <- crayon::black
   } else {
-    bgblue <- crayon::reset
+    bgcyan <- crayon::reset
     black <- function(x) x
   }
 
-  paste0(bgblue(black(paste0(" ", done, "/", total, " "))), " pkgs")
+  paste0(bggrey(black(paste0(" ", done, "/", total, " "))), " pkgs")
 }
 
 make_progress_bytes <- function(done, total) {

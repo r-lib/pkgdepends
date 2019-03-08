@@ -77,11 +77,12 @@ make_bar <- function(chars, p, width =  15) {
 }
 
 make_progress_main <- function(deps, done, total) {
+  bggrey <- crayon::make_style("grey", bg = TRUE)
   paste0(
     "Found ",
-    crayon::bgBlue(crayon::black(paste0(" ", deps, " "))),
+    bggrey(crayon::black(paste0(" ", deps, " "))),
     " deps for ",
-    crayon::bgBlue(crayon::black(paste0(" ", done, "/", total, " "))),
+    bggrey(crayon::black(paste0(" ", done, "/", total, " "))),
     " pkgs"
   )
 }

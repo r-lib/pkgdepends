@@ -16,9 +16,10 @@ Find recursive dependenies of R packages from various sources.
 
 ## Installation
 
+Once on CRAN, install the package with
 
 ```r
-devtools::install_github("r-lib/pkgdepends")
+install.packages("pkgdepends")
 ```
 
 ## Usage

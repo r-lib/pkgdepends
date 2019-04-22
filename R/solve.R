@@ -450,9 +450,13 @@ remotes_get_solution <- function(self, private) {
   private$solution$result
 }
 
-remotes_install_plan <- function(self, private) {
+remotes_install_plan <- function(self, private, downloads) {
   "!DEBUG creating install plan"
-  sol <- self$get_solution_download()
+  sol <- if (downloads) {
+    self$get_solution_download()
+  } else {
+    self$get_solution()$data
+  }
   if (inherits(sol, "remotes_solve_error")) return(sol)
 
   deps <- lapply(
@@ -478,7 +482,7 @@ remotes_install_plan <- function(self, private) {
   sol$binary <- binary
   sol$direct <- direct
   sol$dependencies <- I(deps)
-  sol$file <- sol$fulltarget
+  if (downloads) sol$file <- sol$fulltarget
   sol$installed <- installed
   sol$vignettes <- vignettes
 

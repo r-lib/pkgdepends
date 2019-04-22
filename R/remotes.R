@@ -126,8 +126,8 @@ remotes <- function() {
         remotes_stop_for_solve_error(self, private),
       get_solution = function()
         remotes_get_solution(self, private),
-      get_install_plan = function()
-        remotes_install_plan(self, private),
+      get_install_plan = function(downloads = TRUE)
+        remotes_install_plan(self, private, downloads),
       draw_tree = function(pkgs = NULL)
         remotes_draw_tree(self, private, pkgs),
 

@@ -128,6 +128,8 @@ remotes <- function() {
         remotes_get_solution(self, private),
       get_install_plan = function(downloads = TRUE)
         remotes_install_plan(self, private, downloads),
+      export_install_plan = function(plan_file = stdout())
+        remotes_export_install_plan(self, private, plan_file),
       draw_tree = function(pkgs = NULL)
         remotes_draw_tree(self, private, pkgs),
 

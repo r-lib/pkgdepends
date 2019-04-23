@@ -26,6 +26,7 @@ Imports:
     pkgcache (>= 1.0.3),
     prettyunits,
     rematch2,
+    rprojroot,
     R6,
     stats,
     tibble,
@@ -38,7 +39,6 @@ Suggests:
     fs,
     mockery,
     pingr,
-    rprojroot,
     rstudioapi,
     testthat
 Encoding: UTF-8

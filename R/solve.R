@@ -489,6 +489,25 @@ remotes_install_plan <- function(self, private, downloads) {
   sol
 }
 
+#' @importFrom rprojroot find_package_root_file
+
+remotes_export_install_plan <- function(self, private, plan_file) {
+  plan_file <- plan_file %||% find_package_root_file("resolution.json")
+  plan <- self$get_install_plan(downloads = FALSE)
+  cols <- c("ref", "package", "type", "direct", "binary", "dependencies",
+            "vignettes", "needscompilation", "metadata", "sources")
+  txt <- as_json_lite_plan(plan[, cols])
+  writeLines(txt, plan_file)
+}
+
+#' @importFrom jsonlite unbox toJSON
+
+as_json_lite_plan <- function(liteplan, pretty = TRUE, ...) {
+  tolist1 <- function(x) lapply(x, function(v) lapply(as.list(v), unbox))
+  liteplan$metadata <- tolist1(liteplan$metadata)
+  toJSON(liteplan, pretty = pretty, ...)
+}
+
 calculate_lib_status <- function(sol, res) {
   ## Possible values at the moment:
   ## - virtual: not really a package

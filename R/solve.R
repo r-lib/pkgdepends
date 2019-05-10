@@ -494,9 +494,9 @@ remotes_install_plan <- function(self, private, downloads) {
 remotes_export_install_plan <- function(self, private, plan_file) {
   plan_file <- plan_file %||% find_package_root_file("resolution.json")
   plan <- self$get_install_plan(downloads = FALSE)
-  cols <- c("ref", "package", "type", "direct", "binary", "dependencies",
-            "vignettes", "needscompilation", "metadata", "sources",
-            "target")
+  cols <- c("ref", "package", "version", "type", "direct", "binary",
+            "dependencies", "vignettes", "needscompilation", "metadata",
+            "sources", "target")
   txt <- as_json_lite_plan(plan[, cols])
   writeLines(txt, plan_file)
 }

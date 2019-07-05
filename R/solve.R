@@ -27,7 +27,8 @@ remotes_solve <- function(self, private, policy) {
     solution = sol
   )
 
-  res$data$lib_status <- calculate_lib_status(res$data, pkgs)
+  lib_status <- calculate_lib_status(res$data, pkgs)
+  res$data <- tibble::as_tibble(cbind(res$data, lib_status))
   res$data$cache_status <-
     calculate_cache_status(res$data, private$cache)
 
@@ -540,7 +541,7 @@ calculate_lib_status <- function(sol, res) {
   })
   status[status == "current" & could_update] <- "no-update"
 
-  status
+  tibble::tibble(lib_status = status, old_version = lib_ver)
 }
 
 ## TODO: non-CRAN packages? E.g. GH based on sha.

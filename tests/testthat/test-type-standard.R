@@ -21,7 +21,7 @@ test_that("resolve_remote", {
   expect_true(all(res$status == "OK"))
   expect_true(all(res$package == "crayon"))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "standard"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteRef") == "crayon"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemotePkgRef") == "crayon"))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
 
@@ -37,7 +37,7 @@ test_that("resolve_remote", {
   expect_true(all(res$status == "OK"))
   expect_true(all(res$package == "Biobase"))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "standard"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteRef") == "Biobase"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemotePkgRef") == "Biobase"))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
 

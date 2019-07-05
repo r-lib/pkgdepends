@@ -37,7 +37,7 @@ test_that("resolve_remote", {
   expect_equal(res$unknown_deps, character(0))
   expect_equal(res$sources[[1]], paste0("file://", normalizePath(path)))
   expect_equal(res$metadata[["RemoteType"]], "local")
-  expect_equal(res$metadata[["RemoteRef"]], ref)
+  expect_equal(res$metadata[["RemotePkgRef"]], ref)
 
   ## Relative path?
   fix_dir <- fixture_dir()
@@ -59,7 +59,7 @@ test_that("resolve_remote", {
   expect_true(res$version == "1.0.0")
   expect_equal(res$sources[[1]], paste0("file://", normalizePath(path)))
   expect_equal(res$metadata[["RemoteType"]], "local")
-  expect_equal(res$metadata[["RemoteRef"]], ref2)
+  expect_equal(res$metadata[["RemotePkgRef"]], ref2)
 })
 
 test_that("resolution error", {

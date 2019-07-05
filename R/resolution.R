@@ -311,7 +311,7 @@ resolve_from_description <- function(path, sources, remote, direct,
   unknown <- deps$ref[deps$type %in% dependencies]
 
   meta <- c(
-    RemoteRef = remote$ref,
+    RemotePkgRef = remote$ref,
     RemoteType = remote$type,
     RemoteSha = NULL,                   # TODO
     RemoteUrl = NULL,                   # TODO
@@ -398,6 +398,7 @@ get_standard_metadata <- function(tab) {
   for (i in seq_len(nrow(tab))) {
     meta[[i]] <-
       c(RemoteType = tab$type[i],
+        RemotePkgRef = tab$ref[i],
         RemoteRef = tab$ref[i],
         RemoteRepos = tab$mirror[i],
         RemotePkgType = tab$platform[i],

@@ -20,7 +20,7 @@ test_that("resolve_remote", {
   expect_true(all(res$status == "OK"))
   expect_true(all(res$package == "crayon"))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "cran"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteRef") == "cran::crayon"))
+  expect_true(all(vcapply(res$metadata, "[[", "RemotePkgRef") == "cran::crayon"))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
 })

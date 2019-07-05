@@ -33,10 +33,10 @@ test_that("resolve_remote", {
   expect_true(all(res$direct))
   expect_true(all(res$status == "OK"))
 
-  ord <- match(refs, vcapply(res$metadata, "[[", "RemoteRef"))
+  ord <- match(refs, vcapply(res$metadata, "[[", "RemotePkgRef"))
 
   expect_true(all(vcapply(res$metadata, "[[", "RemoteType") == "github"))
-  expect_equal(vcapply(res$metadata, "[[", "RemoteRef")[ord], refs)
+  expect_equal(vcapply(res$metadata, "[[", "RemotePkgRef")[ord], refs)
   expect_equal(
     vcapply(res$metadata, "[[", "RemoteSha")[ord][6],
     "b5221ab0246050dc687dc8b9964d5c44c947b265")

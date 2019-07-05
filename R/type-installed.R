@@ -186,7 +186,7 @@ get_installed_metadata <- function(tab) {
   for (i in seq_len(nrow(tab))) {
     meta[[i]] <-
       c(RemoteType = tab$type[i],
-        RemoteRef = tab$ref[i],
+        RemotePkgRef = tab$ref[i],
         RemotePkgType = tab$platform[i],
         RemoteSha = tab$version[i])
   }

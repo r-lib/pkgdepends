@@ -240,12 +240,13 @@ type_github_make_resolution <- function(data) {
     RemoteHost = "api.github.com",
     RemoteRepo = repo,
     RemoteUsername = username,
-    RemoteRef = data$remote$ref,
+    RemotePkgRef = data$remote$ref,
+    RemoteRef = commitish %||% "master",
     RemoteSha = sha,
     RemoteSubdir = subdir,
     GithubRepo = repo,
     GithubUsername = username,
-    GithubRef = data$remote$ref,
+    GithubRef = commitish %||% "master",
     GithubSHA1 = sha,
     GithubSubdir = subdir)
 

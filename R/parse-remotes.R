@@ -30,7 +30,7 @@ standard_rx <- function(remote_name = "standard") {
 #' @keywords internal
 
 github_username_rx <- function() {
-  "(?<username>(?:[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}))"
+  "(?<username>(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))"
 }
 
 github_repo_rx <- function() "(?<repo>[^/@#]+)"

@@ -62,8 +62,6 @@ test_that("github regexes", {
     list("foobar", "foobar"),
     list("", NA_character_),
     list("-bad", NA_character_),
-    list("bad-", NA_character_),
-    list("still--bad", NA_character_),
     list("123456789012345678901234567890123456789",
          "123456789012345678901234567890123456789"),
     list("1234567890123456789012345678901234567890", NA_character_)

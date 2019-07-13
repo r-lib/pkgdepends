@@ -310,7 +310,7 @@ remotes_i_lp_failures <- function(lp) {
     if (lp$pkgs$status[wh] != "FAILED") return()
     lp <<- remotes_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
                                  type = "ok-resolution")
-    lp$rules_out <<- c(lp$ruled_out, wh)
+    lp$ruled_out <<- c(lp$ruled_out, wh)
   }
   lapply(seq_len(lp$num_candidates), failedconds)
 

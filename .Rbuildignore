@@ -6,3 +6,5 @@
 ^.travis.yml$
 ^appveyor.yml$
 ^\.env$
+^\.Rprofile$
+^r-packages$

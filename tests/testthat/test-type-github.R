@@ -107,10 +107,12 @@ test_that("download_remote", {
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
-  ref <- "github::r-lib/crayon@b5221ab0246050dc687dc8b9964d5c44c947b265"
+  sha <- "b5221ab0246050dc687dc8b9964d5c44c947b265"
+  ref <- paste0("github::r-lib/crayon@", sha)
   r <- remotes()$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
+  ## -----------------------------------------------------
   ## We get the tree zip first
   withr::with_options(
     c(pkg.show_progress = FALSE), {
@@ -125,7 +127,69 @@ test_that("download_remote", {
   expect_true(dl$direct)
   expect_true(dl$status == "OK")
   expect_true(dl$package == "crayon")
-  expect_true(dl$download_status %in% c("Got", "Had"))
+  expect_true(dl$download_status == "Got")
+
+  ## We indeed downloaded a tree
+  expect_false(file.exists(dl$fulltarget))
+  expect_true(file.exists(dl$fulltarget_tree))
+
+  ## It was added to the cache
+  expect_equal(pkgcache::pkg_cache_list()$sha256, sha)
+
+  ## -----------------------------------------------------
+  ## Now the tree is in the cache, so it should come from there
+  r <- remotes()$new(
+    ref, config = list(dependencies = FALSE, cache_dir = tmp))
+
+  withr::with_options(
+    c(pkg.show_progress = FALSE), {
+      expect_error(r$resolve(), NA)
+      expect_error(r$download_resolution(), NA)
+    })
+  dl <- r$get_resolution_download()
+
+  expect_s3_class(dl, "remotes_downloads")
+  expect_true(dl$ref == ref)
+  expect_true(dl$type == "github")
+  expect_true(dl$direct)
+  expect_true(dl$status == "OK")
+  expect_true(dl$package == "crayon")
+  expect_true(dl$download_status == "Had")
+
+  expect_false(file.exists(dl$fulltarget))
+  expect_true(file.exists(dl$fulltarget_tree))
+
+  ## Still in the cache
+  expect_equal(pkgcache::pkg_cache_list()$sha256, sha)
+
+  ## -----------------------------------------------------
+  ## Put a (fake) built version in the cache, to similate a cache hit
+  file.copy(dl$fulltarget_tree, dl$fulltarget)
+  pkgcache::pkg_cache_add_file(
+    NULL, dl$fulltarget, dl$target, package = "crayon", sha = sha,
+    built = TRUE, vignettes = TRUE)
+  unlink(c(dl$fulltarget, dl$fulltarget_tree))
+
+  r <- remotes()$new(
+    ref, config = list(dependencies = FALSE, cache_dir = tmp))
+
+  withr::with_options(
+    c(pkg.show_progress = FALSE), {
+      expect_error(r$resolve(), NA)
+      expect_error(r$download_resolution(), NA)
+    })
+  dl <- r$get_resolution_download()
+
+  expect_s3_class(dl, "remotes_downloads")
+  expect_true(dl$ref == ref)
+  expect_true(dl$type == "github")
+  expect_true(dl$direct)
+  expect_true(dl$status == "OK")
+  expect_true(dl$package == "crayon")
+  expect_true(dl$download_status == "Had")
+
+  expect_true(file.exists(dl$fulltarget))
+  expect_false(file.exists(dl$fulltarget_tree))
 })
 
 test_that("satisfies_remote", {

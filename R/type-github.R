@@ -67,7 +67,7 @@ download_remote_github <- function(resolution, target, target_tree,
   ## vignettes is fine.
 
   hit <- cache$package$copy_to(
-    target, package = package, sha = sha, built = TRUE,
+    target, package = package, sha256 = sha, built = TRUE,
     .list = c(if (need_vignettes) c(vignettes = TRUE)))
   if (nrow(hit)) {
     "!DEBUG found GH `resolution$ref`@`sha` in the cache"
@@ -79,7 +79,7 @@ download_remote_github <- function(resolution, target, target_tree,
   rel_target <- resolution$target
   subdir <- resolution$remote[[1]]$subdir
   hit <- cache$package$copy_to(
-    target_tree, package = package, sha = sha, built = FALSE)
+    target_tree, package = package, sha256 = sha, built = FALSE)
   if (nrow(hit)) {
     "!DEBUG found GH zip for `resolution$ref`@`sha` in the cache"
     return("Had")
@@ -89,7 +89,7 @@ download_remote_github <- function(resolution, target, target_tree,
 
   "!DEBUG Need to download GH package `resolution$ref`@`sha`"
   urls <- resolution$sources[[1]]
-  rel_zip <- sub("\\.tar\\.gz$", ".tree-zip", rel_target)
+  rel_zip <- paste0(rel_target, "-tree")
   type_github_download_repo(urls, target_tree, rel_zip, sha, package, cache,
                             on_progress)$
     then(function() {

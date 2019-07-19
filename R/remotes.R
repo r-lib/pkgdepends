@@ -71,7 +71,7 @@
 #' * `sources` URLs to download the package from. CRAN URLs are not stable,
 #'   so each row typically contains multiple URLs here.
 #' * `target` Relative path for the package file in the repository.
-#' * `fulltarget` Fulle path for the package file in the cache.
+#' * `fulltarget` Full path for the package file in the cache.
 #'
 #' @section Configuration options:
 #' * `cache_dir` Path to the cache. By default a temporary directory is

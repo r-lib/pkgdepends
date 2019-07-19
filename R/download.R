@@ -81,6 +81,7 @@ remotes_async_download_internal <- function(self, private, what, which) {
   asNamespace("pkgcache")$when_all(.list = dl)$
     then(function(dls) {
       what$fulltarget <- vcapply(dls, "[[", "fulltarget")
+      what$fulltarget_tree <- vcapply(dls, "[[", "fulltarget_tree")
       what$download_status <- vcapply(dls, "[[", "download_status")
       what$download_error <- lapply(dls, function(x) x$download_error[[1]])
       what$file_size <- vdapply(dls, "[[", "file_size")
@@ -108,18 +109,20 @@ download_remote <- function(res, config, cache, which,
   remote_types <- c(default_remote_types(), remote_types)
   dl <- remote_types[[res$type]]$download %||% type_default_download
   target <- file.path(config$cache_dir, res$target)
-  target_tree <- file.path(config$cache_dir, paste0(res$target), "-tree")
+  target_tree <- file.path(config$cache_dir, paste0(res$target, "-tree"))
   mkdirp(dirname(target))
   asNamespace("pkgcache")$async(dl)(res, target, target_tree, config,
     cache = cache, which = which, on_progress = on_progress)$
     then(function(s) {
-      if (length(res$sources[[1]]) && !file.exists(target)) {
+      if (length(res$sources[[1]]) && !file.exists(target)
+          && !file.exists(target_tree)) {
         stop("Failed to download ", res$type, " package ", res$package)
       }
       if (!identical(s, "Had") && !identical(s, "Got") &&
           !identical(s, "Current")) s <- "Got"
       dlres <- res
       dlres$fulltarget <- target
+      dlres$fulltarget_tree <- target_tree
       dlres$download_status <- s
       dlres$download_error <- list(NULL)
       dlres$file_size <- file.size(target)

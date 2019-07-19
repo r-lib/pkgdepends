@@ -483,9 +483,14 @@ remotes_install_plan <- function(self, private, downloads) {
   sol$binary <- binary
   sol$direct <- direct
   sol$dependencies <- I(deps)
-  if (downloads) sol$file <- sol$fulltarget
   sol$installed <- installed
   sol$vignettes <- vignettes
+
+  if (downloads) {
+    ex <- file.exists(sol$fulltarget)
+    sol$packaged <- ex
+    sol$file <- ifelse(ex, sol$fulltarget, sol$fulltarget_tree)
+  }
 
   sol
 }

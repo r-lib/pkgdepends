@@ -108,9 +108,10 @@ download_remote <- function(res, config, cache, which,
   remote_types <- c(default_remote_types(), remote_types)
   dl <- remote_types[[res$type]]$download %||% type_default_download
   target <- file.path(config$cache_dir, res$target)
+  target_tree <- file.path(config$cache_dir, paste0(res$target), "-tree")
   mkdirp(dirname(target))
-  asNamespace("pkgcache")$async(dl)(res, target, config, cache = cache,
-    which = which, on_progress = on_progress)$
+  asNamespace("pkgcache")$async(dl)(res, target, target_tree, config,
+    cache = cache, which = which, on_progress = on_progress)$
     then(function(s) {
       if (length(res$sources[[1]]) && !file.exists(target)) {
         stop("Failed to download ", res$type, " package ", res$package)
@@ -127,6 +128,7 @@ download_remote <- function(res, config, cache, which,
     catch(error = function(err) {
       dlres <- res
       dlres$fulltarget <- target
+      dlres$fulltarget_tree <- target_tree
       dlres$download_status <- "Failed"
       dlres$download_error <- list(err)
       dlres$file_size <- NA_integer_

@@ -22,8 +22,8 @@ resolve_remote_local <- function(remote, direct, config, cache,
                            config, cache, dependencies[[2 - direct]])
 }
 
-download_remote_local <- function(resolution, target, config, cache,
-                                  which, on_progress) {
+download_remote_local <- function(resolution, target, target_tree, config,
+                                  cache, which, on_progress) {
 
   source_file <- sub("^file://",  "",  resolution$sources[[1]])
   if (! file.copy(source_file, target, overwrite =  TRUE)) {

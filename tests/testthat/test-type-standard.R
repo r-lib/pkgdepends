@@ -72,15 +72,18 @@ test_that("download_remote", {
                         dependencies = FALSE))
 
   target <- file.path(conf$cache_dir, res$target[1])
+  tree <- paste0(target, "-tree")
   dl <- asNamespace("pkgcache")$synchronise(
-    download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
+    download_remote_bioc(res[1,], target, tree, conf, cache,
+                         on_progress = NULL))
 
   expect_equal(dl, "Got")
   expect_true(file.exists(target))
 
   unlink(target)
   dl2 <- asNamespace("pkgcache")$synchronise(
-    download_remote_bioc(res[1,], target, conf, cache, on_progress = NULL))
+    download_remote_bioc(res[1,], target, tree, conf, cache,
+                         on_progress = NULL))
   expect_true(dl2 %in% c("Had", "Current"))
   expect_true(file.exists(target))
 })

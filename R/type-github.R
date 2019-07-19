@@ -39,8 +39,8 @@ resolve_remote_github <- function(remote, direct, config, cache,
     then(type_github_make_resolution)
 }
 
-download_remote_github <- function(resolution, target, config, cache,
-                                   which, on_progress) {
+download_remote_github <- function(resolution, target, target_tree,
+                                   config, cache, which, on_progress) {
 
   ## A GitHub package needs to be built, from the downloaded repo
   ## If we are downloading a solution, then we skip building the vignettes,
@@ -60,7 +60,7 @@ download_remote_github <- function(resolution, target, config, cache,
   sha <- resolution$extra[[1]]$sha
   need_vignettes <- which == "resolution"
 
-  ## 1. Check if we have a built package in the cache. We don not check the
+  ## 1. Check if we have a built package in the cache. We do not check the
   ## ref or the type, so the package could have been built from a local
   ## ref or from another repo. As long as the sha is the same, we are
   ## fine. If we don't require vignetted, then a package with or without
@@ -76,48 +76,26 @@ download_remote_github <- function(resolution, target, config, cache,
 
   ## 2. Check if we have a repo snapshot in the cache.
 
-  target_zip <- sub("\\.tar\\.gz$", ".zip", target)
   rel_target <- resolution$target
   subdir <- resolution$remote[[1]]$subdir
   hit <- cache$package$copy_to(
-    target_zip, package = package, sha = sha, built = FALSE)
+    target_tree, package = package, sha = sha, built = FALSE)
   if (nrow(hit)) {
     "!DEBUG found GH zip for `resolution$ref`@`sha` in the cache"
-    return(type_github_build_package(target_zip, target, rel_target, subdir,
-                                     package, sha, need_vignettes, cache))
+    return("Had")
   }
 
   ## 3. Need to download the repo
 
   "!DEBUG Need to download GH package `resolution$ref`@`sha`"
   urls <- resolution$sources[[1]]
-  rel_zip <- sub("\\.tar\\.gz$", ".zip", rel_target)
-  type_github_download_repo(urls, target_zip, rel_zip, sha, package, cache,
+  rel_zip <- sub("\\.tar\\.gz$", ".tree-zip", rel_target)
+  type_github_download_repo(urls, target_tree, rel_zip, sha, package, cache,
                             on_progress)$
     then(function() {
       "!DEBUG Building package `resolution$package`"
-      type_github_build_package(target_zip, target, rel_target, subdir,
-                                package, sha, need_vignettes, cache)
+      return("Got")
     })
-}
-
-type_github_build_package <- function(repo_zip, target, rel_target, subdir,
-                                      package, sha, vignettes, cache) {
-  mkdirp(tmpdir <- tempfile())
-  on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
-  zipfile <- file.path(tmpdir, basename(repo_zip))
-  file.copy(repo_zip, zipfile)
-
-  pkgdir <- file.path(tmpdir, unzip(zipfile))[1]
-  if (!nzchar(subdir)) pkgdir <- file.path(pkgdir, subdir)
-  pkgfile <- build_package(
-    pkgdir, build_args = list(vignettes = vignettes))
-
-  file.copy(pkgfile, target)
-  cache$package$add(
-    target, rel_target, package = package, sha = sha, built = TRUE,
-    vignettes = vignettes)
-  "Built"
 }
 
 type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,

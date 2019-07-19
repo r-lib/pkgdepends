@@ -21,8 +21,8 @@ resolve_remote_standard <- function(remote, direct, config,
   resolve_from_metadata(remote, direct, config, cache, dependencies)
 }
 
-download_remote_standard <- function(resolution, target, config, cache,
-                                     which, on_progress) {
+download_remote_standard <- function(resolution, target, target_tree,
+                                     config, cache, which, on_progress) {
 
   download_ping_if_no_sha(resolution, target, config, cache,
                           on_progress)

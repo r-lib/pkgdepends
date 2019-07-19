@@ -99,12 +99,19 @@ test_that("download_remote", {
   skip_if_offline()
   skip_on_cran()
 
+  old_cache <- Sys.getenv("R_PKG_CACHE_DIR")
+  on.exit(Sys.setenv(R_PKG_CACHE_DIR = old_cache))
+  Sys.setenv(R_PKG_CACHE_DIR = cache <- tempfile())
+  on.exit(unlink(cache, recursive = TRUE), add = TRUE)
+
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
   ref <- "github::r-lib/crayon@b5221ab0246050dc687dc8b9964d5c44c947b265"
   r <- remotes()$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
+
+  ## We get the tree zip first
   withr::with_options(
     c(pkg.show_progress = FALSE), {
       expect_error(r$resolve(), NA)

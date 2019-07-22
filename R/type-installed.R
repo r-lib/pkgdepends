@@ -24,7 +24,7 @@ resolve_remote_installed <- function(remote, direct, config,
   resolve_installed(cache, remote, direct, deps)
 }
 
-download_remote_installed <- function(resolution, target, target_cache,
+download_remote_installed <- function(resolution, target, target_tree,
                                       config, cache, which, on_progress) {
   "Had"
 }

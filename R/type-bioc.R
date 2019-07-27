@@ -23,8 +23,8 @@ resolve_remote_bioc <- function(remote, direct, config, cache,
   resolve_from_metadata(remote, direct, config, cache, dependencies)
 }
 
-download_remote_bioc <- function(resolution, target, config, cache,
-                                 which, on_progress) {
+download_remote_bioc <- function(resolution, target, target_tree, config,
+                                 cache, which, on_progress) {
 
   download_ping_if_not_source(resolution, target, config, cache,
                               on_progress)

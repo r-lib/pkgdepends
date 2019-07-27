@@ -20,8 +20,8 @@ resolve_remote_deps <- function(remote, direct, config, cache,
   ret
 }
 
-download_remote_deps <- function(resolution, target, config, cache,
-                                  which, on_progress) {
+download_remote_deps <- function(resolution, target, target_tree, config,
+                                 cache, which, on_progress) {
   ## Nothing to do here
   "Had"
 }

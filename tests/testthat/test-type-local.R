@@ -107,7 +107,7 @@ test_that("download_remote", {
     download_remote_local(res, target, conf, cache, on_progress = NULL)
   }
   dl1 <- asNamespace("pkgcache")$synchronise(download(res[1,]))
-  expect_equal(dl1, "Had")
+  expect_equal(dl1, "Got")
   expect_true(file.exists(target))
 
   ## Relative path?
@@ -124,7 +124,7 @@ test_that("download_remote", {
   mkdirp(dirname(target))
   dl1 <- download_remote_local(res, target, conf, cache, on_progress = NULL)
 
-  expect_equal(dl1, "Had")
+  expect_equal(dl1, "Got")
   expect_true(file.exists(target))
 })
 

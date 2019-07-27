@@ -223,8 +223,9 @@ test_that("download_remote", {
   res <- asNamespace("pkgcache")$synchronise(resolve())
 
   target <- file.path(conf$cache_dir, res$target[1])
+  tree <- paste0(target, "-tree")
   download <- function(res) {
-    download_remote_cran(res, target, conf, cache, on_progress = NULL)
+    download_remote_cran(res, target, tree, conf, cache, on_progress = NULL)
   }
   dl1 <- asNamespace("pkgcache")$synchronise(download(res[1,]))
   expect_equal(dl1, "Got")

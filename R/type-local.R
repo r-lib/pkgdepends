@@ -22,14 +22,26 @@ resolve_remote_local <- function(remote, direct, config, cache,
                            config, cache, dependencies[[2 - direct]])
 }
 
-download_remote_local <- function(resolution, target, config, cache,
-                                  which, on_progress) {
+download_remote_local <- function(resolution, target, target_tree, config,
+                                  cache, which, on_progress) {
 
   source_file <- sub("^file://",  "",  resolution$sources[[1]])
-  if (! file.copy(source_file, target, overwrite =  TRUE)) {
-    stop("No local file found")
+  isdir <- file.info(source_file)$isdir
+  if (is.na(isdir)) stop("Local file not found")
+
+  if (isdir) {
+    unlink(target_tree, recursive = TRUE)
+    mkdirp(target_tree)
+    if (! file.copy(source_file, target_tree, recursive = TRUE)) {
+      stop("No local file found")
+    }
+  } else {
+    if (! file.copy(source_file, target, overwrite = TRUE)) {
+      stop("No local file found")
+    }
   }
-  "Had"
+
+  "Got"
 }
 
 satisfy_remote_local <- function(resolution, candidate, config, ...) {

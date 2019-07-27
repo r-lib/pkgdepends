@@ -88,7 +88,7 @@ For source packages \code{"*"} is used.
 \item \code{sources} URLs to download the package from. CRAN URLs are not stable,
 so each row typically contains multiple URLs here.
 \item \code{target} Relative path for the package file in the repository.
-\item \code{fulltarget} Fulle path for the package file in the cache.
+\item \code{fulltarget} Full path for the package file in the cache.
 }
 }
 

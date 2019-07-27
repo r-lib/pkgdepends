@@ -14,11 +14,13 @@ Imports:
     assertthat,
     backports,
     base64enc,
+    callr (>= 3.3.1),
     cli (>= 1.0.0.9000),
     cliapp (>= 0.1.0),
     crayon,
     curl,
     desc (>= 1.2.0),
+    filelock (>= 1.0.2),
     glue,
     jsonlite,
     lpSolve,
@@ -31,7 +33,8 @@ Imports:
     stats,
     tibble,
     utils,
-    withr
+    withr (>= 2.1.1),
+    zip (>= 2.0.3)
 Suggests:
     covr,
     debugme,

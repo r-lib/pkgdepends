@@ -19,6 +19,7 @@ Imports:
     crayon,
     curl,
     desc (>= 1.2.0),
+    filelock (>= 1.0.2),
     glue,
     jsonlite,
     lpSolve,
@@ -26,12 +27,13 @@ Imports:
     pkgcache (>= 1.0.3),
     prettyunits,
     rematch2,
+    rlang,
     rprojroot,
     R6,
     stats,
     tibble,
     utils,
-    withr
+    withr (>= 2.1.1)
 Suggests:
     covr,
     debugme,

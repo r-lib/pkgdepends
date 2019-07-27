@@ -3,33 +3,24 @@ context("install_binary")
 
 test_that("install_binary", {
 
-  pkg <- binary_test_package("foo_0.0.0.9000")
-
-  libpath <- create_temp_dir()
-  on.exit({
-    detach("package:foo", character.only = TRUE, unload = TRUE)
-    remove.packages("foo", lib = libpath)
-    unlink(libpath, recursive = TRUE)
-  })
+  pkg <- binary_test_package("foo")
+  libpath <- test_temp_dir()
 
   expect_error_free(
     install_binary(pkg, lib = libpath, quiet = TRUE))
   expect_error_free(
-    library("foo", lib.loc = libpath))
-  expect_equal(foo::foo(), NULL)
+    x <- callr::r(function(l) {
+      library("foo", lib.loc = l)
+      foo::foo()
+    }, list(libpath)))
+  expect_null(x)
 })
 
 test_that("install_binary works for simultaneous installs", {
   skip_on_cran()
 
-  pkg <- binary_test_package("foo_0.0.0.9000")
-  on.exit({
-    detach("package:foo", character.only = TRUE, unload = TRUE)
-    remove.packages("foo", lib = libpath)
-    unlink(libpath, recursive = TRUE)
-  })
-
-  libpath <- create_temp_dir()
+  pkg <- binary_test_package("foo")
+  libpath <- test_temp_dir()
 
   processes <- list()
   num <- 5
@@ -38,19 +29,20 @@ test_that("install_binary works for simultaneous installs", {
   expect_error_free(
     install_binary(pkg, lib = libpath, quiet = TRUE))
   expect_error_free(
-    library("foo", lib.loc = libpath))
+    x <- callr::r(function(l) {
+      library("foo", lib.loc = l)
+      foo::foo()
+    }, list(libpath)))
+  expect_null(x)
 
-  expect_equal(foo::foo(), NULL)
   processes <- replicate(num, simplify = FALSE,
     callr::r_bg(args = list(pkg, libpath),
       function(pkg, libpath) pkgdepends::install_binary(pkg, lib = libpath))
   )
 
-  repeat {
-    Sys.sleep(.1)
-    done <- all(!vlapply(processes, function(x) x$is_alive()))
-    if (done) { break }
-  }
+  w <- lapply(processes, function(x) x$wait(5000))
+  al <- vlapply(processes, function(x) x$is_alive())
+  if (any(al)) stop("Some install processes did not finish")
 
   for (i in seq_len(num)) {
     expect_identical(processes[[i]]$get_result(), file.path(libpath, "foo"))

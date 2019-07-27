@@ -3,10 +3,9 @@ context("metadata")
 
 test_that("install_binary metadata", {
 
-  pkg <- binary_test_package("foo_0.0.0.9000")
+  pkg <- binary_test_package("foo")
 
-  libpath <- create_temp_dir()
-  on.exit(unlink(libpath, recursive = TRUE), add = TRUE)
+  libpath <- test_temp_dir()
 
   metadata <- c("Foo" = "Bar", "Foobar" = "baz")
   expect_error_free(
@@ -24,13 +23,8 @@ test_that("install_binary metadata", {
 
 test_that("install_package_plan metadata", {
 
-  skip_without_package("pkgdepends")
-
-  pkg <- "foo_0.0.0.9000.tar.gz"
-  expect_error_free(pkgbuild::build("foo", quiet = TRUE))
-
-  libpath <- create_temp_dir()
-  on.exit(unlink(c(libpath, pkg), recursive = TRUE), add = TRUE)
+  pkg <- source_test_package("foo")
+  libpath <- test_temp_dir()
 
   withr::with_options(list(pkg.show_progress = FALSE), {
     plan <- make_install_plan(

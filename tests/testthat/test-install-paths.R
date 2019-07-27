@@ -10,7 +10,7 @@ test_that("folders with potentially problematic characters", {
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
   on.exit(environment(need_internal_tar)$internal <- NULL, add = TRUE)
 
-  pkg <- binary_test_package("foo_0.0.0.9000")
+  pkg <- binary_test_package("foo")
 
   folders <- c(
     "s p a c e s",

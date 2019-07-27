@@ -32,25 +32,19 @@ local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
 }
 
 binary_test_package <- function(name) {
+  mkdirp(tmp <- tempfile())
+  file.copy(test_path(name), tmp, recursive = TRUE)
+  pkgbuild::build(file.path(tmp, name), binary = TRUE, quiet = TRUE)
+}
 
-  binary <- switch(sysname(),
-    windows = glue("{name}.zip"),
-    linux = glue("{name}_R_x86_64-pc-linux-gnu.tar.gz"),
-    mac = glue("{name}.tgz"),
-    skip(glue("Cannot test on {sysname()}"))
-    )
-  if (!file.exists(binary)) {
-    pkgbuild::build(sub("_.*$", "", name), binary = TRUE, quiet = TRUE)
-  }
-  binary
+source_test_package <- function(name) {
+  mkdirp(tmp <- tempfile())
+  file.copy(test_path(name), tmp, recursive = TRUE)
+  pkgbuild::build(file.path(tmp, name), binary = FALSE, quiet = TRUE)
 }
 
 expect_error_free <- function(...) {
   testthat::expect_error(..., regexp = NA)
-}
-
-if (is_loaded("foo")) {
-  unloadNamespace("foo")
 }
 
 #' @importFrom callr r_process r_process_options
@@ -89,12 +83,8 @@ make_dummy_worker_process <- function(n_iter = 10, sleep = 1, status = 0) {
   }
 }
 
-skip_without_package <- function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) skip(paste("No", pkg))
-}
-
 make_install_plan <- function(ref, lib = .libPaths()[1]) {
-  r <- asNamespace("pkgdepends")$remotes()$new(ref, lib = lib)
+  r <- remotes()$new(ref, lib = lib)
   r$resolve()
   r$solve()
   r$download_solution()

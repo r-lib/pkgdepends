@@ -3,7 +3,7 @@ local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
 
   # All arguments must be named
   args <- list(...)
-  stopifnot(length(args) == 0 || rlang::is_named(args))
+  stopifnot(length(args) == 0 || all_named(args))
 
   d <- create_temp_dir()
   pkgdir <- file.path(d, pkgname)

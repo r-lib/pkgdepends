@@ -65,9 +65,7 @@ need_internal_tar <- local({
   }
 })
 
-#' @importFrom R6 R6Class
-
-external_untar_process <- R6Class(
+external_untar_process <- R6::R6Class(
   "external_untar_process",
   inherit = callr::process,
 
@@ -85,7 +83,7 @@ external_untar_process <- R6Class(
   )
 )
 
-r_untar_process <- R6Class(
+r_untar_process <- R6::R6Class(
   "r_untar_process",
   inherit = callr::r_process,
 

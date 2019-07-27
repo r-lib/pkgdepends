@@ -27,7 +27,6 @@ Imports:
     pkgcache (>= 1.0.3),
     prettyunits,
     rematch2,
-    rlang,
     rprojroot,
     R6,
     stats,

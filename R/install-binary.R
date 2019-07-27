@@ -7,7 +7,6 @@
 #'   to the \code{DESCRIPTION} after installation.
 #' @param quiet Whether to suppress console output.
 #' @importFrom filelock lock unlock
-#' @importFrom rlang cnd cnd_signal
 #' @importFrom cliapp cli_progress_bar cli_alert_success
 #' @export
 
@@ -94,10 +93,6 @@ install_extracted_binary <- function(filename, lib_cache, pkg_cache, lib,
       "Unable to move package from {pkg$path} to {installed_path}",
       package = pkg_name))
   }
-
-  cnd_signal(
-    cnd("pkginstall_installed",
-      package = pkg_name, path = installed_path, time = Sys.time() - now, type = "binary"))
 
   installed_path
 }

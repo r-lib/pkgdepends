@@ -48,7 +48,7 @@ test_that("install_binary works for simultaneous installs", {
 
   repeat {
     Sys.sleep(.1)
-    done <- all(!map_lgl(processes, function(x) x$is_alive()))
+    done <- all(!vlapply(processes, function(x) x$is_alive()))
     if (done) { break }
   }
 

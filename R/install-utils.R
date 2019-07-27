@@ -93,12 +93,6 @@ sysname <- function() {
   res
 }
 
-map_lgl <- get("map_lgl", asNamespace("rlang"))
-
-map_chr <- get("map_chr", asNamespace("rlang"))
-
-map_int <- get("map_int", asNamespace("rlang"))
-
 rep_list <- function(n, expr) {
   lapply(integer(n), eval.parent(substitute(function(...) expr)))
 }

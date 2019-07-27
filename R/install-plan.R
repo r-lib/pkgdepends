@@ -97,7 +97,7 @@ poll_workers <- function(state) {
     timeout <- get_timeout(state)
     procs <- lapply(state$workers, "[[", "process")
     res <- poll(procs, ms = timeout)
-    map_lgl(res, function(x) "ready" %in% x)
+    vlapply(res, function(x) "ready" %in% x)
 
   } else {
     logical()
@@ -159,7 +159,7 @@ select_next_task <- function(state) {
   ## Can we select a package tree to build into a source package? Do that.
   can_package <- which(
     ! state$plan$package_done &
-    map_int(state$plan$deps_left, length) == 0 &
+    viapply(state$plan$deps_left, length) == 0 &
     is.na(state$plan$worker_id))
 
   if (any(can_package)) {
@@ -170,7 +170,7 @@ select_next_task <- function(state) {
   ## Can we select a source package build? Do that.
   can_build <- which(
     ! state$plan$build_done &
-    map_int(state$plan$deps_left, length) == 0 &
+    viapply(state$plan$deps_left, length) == 0 &
     is.na(state$plan$worker_id))
 
   if (any(can_build)) {

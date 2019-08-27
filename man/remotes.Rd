@@ -12,7 +12,7 @@ Class for package dependency resolution and package downloads
 r$resolve()
 r$async_resolve()
 r$get_resolution()
-r$draw_tree(pkgs)
+r$draw_tree(pkgs, types = NULL)
 
 r$download()
 r$async_download()
@@ -28,6 +28,8 @@ r$get_download_status()
 below.
 \item \code{pkgs}: Charcater vector of regular expressions, to specify the
 packages to query.
+\item \code{types}: Dependency types to use. Defaults to hard dependencies:
+\code{Depends}, \code{Imports}, \code{LinkingTo}.
 }
 }
 

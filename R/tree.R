@@ -2,15 +2,21 @@
 #' @importFrom crayon italic bold cyan silver bgRed white
 #' @importFrom cli tree
 
-remotes_draw_tree <- function(self, private, pkgs) {
+remotes_draw_tree <- function(self, private, pkgs, types) {
 
   assert_that(is.null(pkgs) || is_character(pkgs))
+  types <- tolower(types %||% dep_types_hard())
+
+  if (length(bad <- setdiff(types, tolower(dep_types())))) {
+    stop("Unknown dependency type(s): ", paste(bad, collapse = ", "))
+  }
 
   sol <- self$get_solution()$data
   pkgs <- pkgs %||% sol$package[sol$direct]
 
   data <- sol[, c("package", "deps")]
-  deps <- lapply(sol$deps, "[[", "package")
+  deps <- lapply(sol$deps, function(x) x[tolower(x$type) %in% types, ])
+  deps <- lapply(deps, "[[", "package")
   deps <- lapply(deps, intersect, data$package)
   data$deps <- deps
   data$label <- paste(

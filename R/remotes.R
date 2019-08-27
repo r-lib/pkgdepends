@@ -8,7 +8,7 @@
 #' r$resolve()
 #' r$async_resolve()
 #' r$get_resolution()
-#' r$draw_tree(pkgs)
+#' r$draw_tree(pkgs, types = NULL)
 #'
 #' r$download()
 #' r$async_download()
@@ -20,6 +20,8 @@
 #'   below.
 #' * `pkgs`: Charcater vector of regular expressions, to specify the
 #'   packages to query.
+#' * `types`: Dependency types to use. Defaults to hard dependencies:
+#'   `Depends`, `Imports`, `LinkingTo`.
 #'
 #' @section Details:
 #'
@@ -130,8 +132,8 @@ remotes <- function() {
         remotes_install_plan(self, private, downloads),
       export_install_plan = function(plan_file = stdout())
         remotes_export_install_plan(self, private, plan_file),
-      draw_tree = function(pkgs = NULL)
-        remotes_draw_tree(self, private, pkgs),
+      draw_tree = function(pkgs = NULL, types = NULL)
+        remotes_draw_tree(self, private, pkgs, types),
 
       async_download_solution = function()
         remotes_async_download_solution(self, private),

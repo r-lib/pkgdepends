@@ -106,7 +106,7 @@ test_that("conflicting dependencies", {
     `bb` = list(direct = TRUE,
                 deps = list(make_fake_deps(Imports = "cc", Remotes = "cc/cc"))),
     `cran::cc` = list(),
-    `cc/cc` = list(extra = list(list(sha = "badcafe")))
+    `cc/cc` = list(extra = list(list(remotesha = "badcafe")))
   )
   dsc <- describe_fake_error(pkgs)
   expect_equal(dsc$ref, c("aa", "cran::cc"))

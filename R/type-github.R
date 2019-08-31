@@ -57,7 +57,7 @@ download_remote_github <- function(resolution, target, target_tree,
   ##    R package, and add that to the cache as well.
 
   package <- resolution$package
-  sha <- resolution$extra[[1]]$sha
+  sha <- resolution$extra[[1]]$remotesha
   need_vignettes <- which == "resolution"
 
   ## 1. Check if we have a built package in the cache. We do not check the
@@ -122,8 +122,8 @@ satisfy_remote_github <- function(resolution, candidate,
 
   ## 1. installed ref is good, if it has the same sha
   if (candidate$type == "installed") {
-    sha1 <- candidate$extra[[1]]$remotesha
-    sha2 <- resolution$extra[[1]]$sha
+    sha1 <- tryCatch(candidate$extra[[1]]$remotesha, error = function(e) "")
+    sha2 <- resolution$extra[[1]]$remotesha
     ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)
     if (!ok) {
       return(structure(FALSE, reason = "Installed package sha mismatch"))
@@ -133,8 +133,8 @@ satisfy_remote_github <- function(resolution, candidate,
   }
 
   ## 2. other refs are also good, as long as they have the same sha
-  sha1 <- candidate$extra[[1]]$sha
-  sha2 <- resolution$extra[[1]]$sha
+  sha1 <- tryCatch(candidate$extra[[1]]$remotesha, error = function(e) "")
+  sha2 <- resolution$extra[[1]]$remotesha
   ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)
   if (!ok) {
     return(structure(FALSE, reason = "Candidate package sha mismatch"))
@@ -242,7 +242,7 @@ type_github_make_resolution <- function(data) {
     remote = list(data$remote),
     deps = list(deps),
     unknown_deps = unknown,
-    extra = list(list(sha = sha)),
+    extra = list(list(remotesha = sha)),
     metadata = meta
   )
 }

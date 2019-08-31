@@ -195,7 +195,7 @@ test_that("download_remote", {
 test_that("satisfies_remote", {
 
   res <- make_fake_resolution(`github::r-lib/crayon` = list(
-    extra = list(list(sha = "badcafe")),
+    extra = list(list(remotesha = "badcafe")),
     package = "crayon",
     version = "1.0.0"))
 
@@ -225,7 +225,7 @@ test_that("satisfies_remote", {
   ## Other package, different sha
   bad4 <- make_fake_resolution(`local::bar` = list(
     package = "crayon",
-    extra = list(list(sha = "notsobad"))))
+    extra = list(list(remotesha = "notsobad"))))
   expect_false(ans <- satisfy_remote_github(res, bad4))
   expect_match(attr(ans, "reason"), "Candidate package sha mismatch")
 
@@ -239,6 +239,6 @@ test_that("satisfies_remote", {
   ## Corrent sha, another type
   ok2 <- make_fake_resolution(`local::bar` = list(
     package = "crayon",
-    extra = list(list(sha = "badcafe"))))
+    extra = list(list(remotesha = "badcafe"))))
   expect_true(ans <- satisfy_remote_github(res, ok2))
 })

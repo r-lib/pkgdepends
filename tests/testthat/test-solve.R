@@ -65,7 +65,7 @@ test_that("standard direct & github indirect is OK", {
     `pkgB` = list(
       direct = TRUE,
       deps = list(make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA"))),
-    `user/pkgA` = list(extra = list(list(sha = "badcafe")))
+    `user/pkgA` = list(extra = list(list(remotesha = "badcafe")))
   )
   lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
   sol <- remotes_i_solve_lp_problem(lp)

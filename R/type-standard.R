@@ -40,12 +40,13 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
   }
 
   ## 2. version requirements must be satisfied
-  if (resolution$remote[[1]]$version == "") return(TRUE)
+  version <- tryCatch(resolution$remote[[1]]$version, error = function(e) "")
+  if (version == "") return(TRUE)
 
   if (!version_satisfies(
          candidate$version,
          resolution$remote[[1]]$atleast,
-         resolution$remote[[1]]$version)) {
+         version)) {
     return(structure(FALSE, reason = "Insufficient version"))
   }
 

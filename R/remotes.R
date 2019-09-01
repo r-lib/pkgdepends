@@ -1,14 +1,23 @@
 
+#' @export
+
+new_pkg_plan <- function(specs, config = list(), library = NULL,
+                         remote_types = NULL) {
+  pkg_plan$new(specs, config, library, remote_types)
+}
+
+#' TODO: rewrite
+#'
 #' Class for package dependency resolution and package downloads
 #'
 #' @section Usage:
 #' ```
-#' r <- remotes()$new(specs, config = list())
+#' r <- pkg_plan$new(specs, config = list())
 #'
 #' r$resolve()
 #' r$async_resolve()
 #' r$get_resolution()
-#' r$draw_tree(pkgs, types = NULL)
+#' r$draw_solution_tree(pkgs, types = NULL)
 #'
 #' r$download()
 #' r$async_download()
@@ -40,7 +49,7 @@
 #' `$get_resolution()` returns the result of the resolution. See
 #' `Resolution Table` below.
 #'
-#' `$draw_tree()` draws the dependency tree of one or more packages,
+#' `$draw_solution_tree()` draws the dependency tree of one or more packages,
 #' after resolution.
 #'
 #' @section Remote types:
@@ -91,7 +100,7 @@
 #' @examples
 #' ## This does download a bunch of packages, so we don't run it currently
 #' \dontrun{
-#' rems <- remotes()$new(c("dplyr", "r-lib/rcmdcheck"))
+#' rems <- pkg_plan$new(c("dplyr", "r-lib/rcmdcheck"))
 #' rems$resolve()
 #' rems$download_resolution()
 #' rems$get_download_status()
@@ -100,89 +109,87 @@ NULL
 
 #' @export
 
-remotes <- function() {
-  R6::R6Class(
-    "remotes",
-    public = list(
-      initialize = function(specs, config = list(), library = NULL,
-                            remote_types = NULL)
-        remotes_init(self, private, specs, config, library, remote_types),
+pkg_plan <- R6::R6Class(
+  "pkg_plan",
+  public = list(
+    initialize = function(specs, config = list(), library = NULL,
+                          remote_types = NULL)
+      remotes_init(self, private, specs, config, library, remote_types),
 
-      async_resolve = function()
-        remotes_async_resolve(self, private),
-      resolve = function()
-        remotes_resolve(self, private),
-      get_resolution = function()
-        remotes_get_resolution(self, private),
+    async_resolve = function()
+      remotes_async_resolve(self, private),
+    resolve = function()
+      remotes_resolve(self, private),
+    get_resolution = function()
+      remotes_get_resolution(self, private),
 
-      async_download_resolution = function()
-        remotes_async_download_resolution(self, private),
-      download_resolution = function()
-        remotes_download_resolution(self, private),
-      get_resolution_download = function()
-        remotes_get_resolution_download(self, private),
+    async_download_resolution = function()
+      remotes_async_download_resolution(self, private),
+    download_resolution = function()
+      remotes_download_resolution(self, private),
+    get_resolution_download = function()
+      remotes_get_resolution_download(self, private),
 
-      solve = function(policy = c("lazy", "upgrade"))
-        remotes_solve(self, private, match.arg(policy)),
-      stop_for_solve_error = function()
-        remotes_stop_for_solve_error(self, private),
-      get_solution = function()
-        remotes_get_solution(self, private),
-      get_install_plan = function(downloads = TRUE)
-        remotes_install_plan(self, private, downloads),
-      export_install_plan = function(plan_file = stdout())
-        remotes_export_install_plan(self, private, plan_file),
-      draw_tree = function(pkgs = NULL, types = NULL)
-        remotes_draw_tree(self, private, pkgs, types),
+    solve = function(policy = c("lazy", "upgrade"))
+      remotes_solve(self, private, match.arg(policy)),
+    stop_for_solve_error = function()
+      remotes_stop_for_solve_error(self, private),
+    get_solution = function()
+      remotes_get_solution(self, private),
+    get_install_plan = function(downloads = TRUE)
+      remotes_install_plan(self, private, downloads),
+    export_install_plan = function(plan_file = stdout())
+      remotes_export_install_plan(self, private, plan_file),
+    draw_solution_tree = function(pkgs = NULL, types = NULL)
+      remotes_draw_solution_tree(self, private, pkgs, types),
 
-      async_download_solution = function()
-        remotes_async_download_solution(self, private),
-      download_solution = function()
-        remotes_download_solution(self, private),
-      get_solution_download = function()
-        remotes_get_solution_download(self, private),
-      stop_for_solution_download_error = function()
-        remotes_stop_for_solution_download_error(self, private),
+    async_download_solution = function()
+      remotes_async_download_solution(self, private),
+    download_solution = function()
+      remotes_download_solution(self, private),
+    get_solution_download = function()
+      remotes_get_solution_download(self, private),
+    stop_for_solution_download_error = function()
+      remotes_stop_for_solution_download_error(self, private),
 
-      print = function(...)
-        remotes_print(self, private, ...)
-    ),
+    print = function(...)
+      remotes_print(self, private, ...)
+  ),
 
-    private = list(
-      library = NULL,
-      dirty = FALSE,
-      remotes = list(),
-      cache = NULL,
-      resolution = NULL,
-      solution = NULL,
-      downloads = NULL,
-      solution_downloads = NULL,
-      download_cache = NULL,
-      config = NULL,
-      progress_bar = NULL,
-      progress_bar_timer = NULL,
-      remote_types = NULL,
+  private = list(
+    library = NULL,
+    dirty = FALSE,
+    remotes = list(),
+    cache = NULL,
+    resolution = NULL,
+    solution = NULL,
+    downloads = NULL,
+    solution_downloads = NULL,
+    download_cache = NULL,
+    config = NULL,
+    progress_bar = NULL,
+    progress_bar_timer = NULL,
+    remote_types = NULL,
 
-      download_res = function(res, which, on_progress = NULL)
-        remotes_download_res(self, private, res, which, on_progress),
-      subset_resolution = function(which)
-        remotes__subset_resolution(self, private, which),
-      create_lp_problem = function(pkgs, policy)
-        remotes__create_lp_problem(self, private, pkgs, policy),
-      solve_lp_problem = function(problem)
-        remotes__solve_lp_problem(self, private, problem),
+    download_res = function(res, which, on_progress = NULL)
+      remotes_download_res(self, private, res, which, on_progress),
+    subset_resolution = function(which)
+      remotes__subset_resolution(self, private, which),
+    create_lp_problem = function(pkgs, policy)
+      remotes__create_lp_problem(self, private, pkgs, policy),
+    solve_lp_problem = function(problem)
+      remotes__solve_lp_problem(self, private, problem),
 
-      create_progress_bar = function(what)
-        remotes__create_progress_bar(self, private, what),
-      update_progress_bar = function(idx, data)
-        remotes__update_progress_bar(self, private, idx, data),
-      show_progress_bar = function()
-        remotes__show_progress_bar(self, private),
-      done_progress_bar = function()
-        remotes__done_progress_bar(self, private)
-    )
+    create_progress_bar = function(what)
+      remotes__create_progress_bar(self, private, what),
+    update_progress_bar = function(idx, data)
+      remotes__update_progress_bar(self, private, idx, data),
+    show_progress_bar = function()
+      remotes__show_progress_bar(self, private),
+    done_progress_bar = function()
+      remotes__done_progress_bar(self, private)
   )
-}
+)
 
 #' @importFrom utils modifyList
 

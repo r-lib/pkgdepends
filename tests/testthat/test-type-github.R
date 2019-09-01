@@ -20,7 +20,7 @@ test_that("resolve_remote", {
     "r-lib/testthat@*release"
   )
 
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     refs, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
     c(pkg.show_progress = FALSE),
@@ -73,7 +73,7 @@ test_that("failed resolution", {
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
   nonrepo <- paste0(basename(tempfile()), "/", basename(tempfile()))
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     nonrepo, config = list(dependencies = FALSE, cache_dir = tmp))
   withr::with_options(
     c(pkg.show_progress = FALSE),
@@ -84,7 +84,7 @@ test_that("failed resolution", {
 
   ## Existing repo, no R package there
 
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     "github::r-lib/crayon/R", config = list(cache_dir = tmp))
   withr::with_options(
     c(pkg.show_progress = FALSE),
@@ -109,7 +109,7 @@ test_that("download_remote", {
 
   sha <- "b5221ab0246050dc687dc8b9964d5c44c947b265"
   ref <- paste0("github::r-lib/crayon@", sha)
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
   ## -----------------------------------------------------
@@ -138,7 +138,7 @@ test_that("download_remote", {
 
   ## -----------------------------------------------------
   ## Now the tree is in the cache, so it should come from there
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
   withr::with_options(
@@ -170,7 +170,7 @@ test_that("download_remote", {
     built = TRUE, vignettes = TRUE)
   unlink(c(dl$fulltarget, dl$fulltarget_tree))
 
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
   withr::with_options(

@@ -11,7 +11,7 @@ test_that("hard example, because easch package has many candidates", {
     c("dplyr", "rcmdcheck", "qgraph", "usethis", "ggplot2", "knitr"),
     lib = lib)
 
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     c("tidyverse/dplyr", "r-lib/rcmdcheck", "cran/qgraph", "r-lib/usethis",
       "tidyverse/ggplot2", "yihui/knitr", "r-lib/rray"),
     lib = lib)

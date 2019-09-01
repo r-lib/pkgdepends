@@ -2,17 +2,17 @@
 % Please edit documentation in R/remotes.R
 \name{remotes}
 \alias{remotes}
-\title{Class for package dependency resolution and package downloads}
+\title{TODO: rewrite}
 \description{
 Class for package dependency resolution and package downloads
 }
 \section{Usage}{
-\preformatted{r <- remotes()$new(specs, config = list())
+\preformatted{r <- pkg_plan$new(specs, config = list())
 
 r$resolve()
 r$async_resolve()
 r$get_resolution()
-r$draw_tree(pkgs, types = NULL)
+r$draw_solution_tree(pkgs, types = NULL)
 
 r$download()
 r$async_download()
@@ -51,7 +51,7 @@ returned by \code{$resolve()}.
 \code{$get_resolution()} returns the result of the resolution. See
 \code{Resolution Table} below.
 
-\code{$draw_tree()} draws the dependency tree of one or more packages,
+\code{$draw_solution_tree()} draws the dependency tree of one or more packages,
 after resolution.
 }
 
@@ -113,7 +113,7 @@ to the running R version.
 \examples{
 ## This does download a bunch of packages, so we don't run it currently
 \dontrun{
-rems <- remotes()$new(c("dplyr", "r-lib/rcmdcheck"))
+rems <- pkg_plan$new(c("dplyr", "r-lib/rcmdcheck"))
 rems$resolve()
 rems$download_resolution()
 rems$get_download_status()

@@ -2,7 +2,7 @@
 #' @importFrom crayon italic bold cyan silver bgRed white
 #' @importFrom cli tree
 
-remotes_draw_tree <- function(self, private, pkgs, types) {
+remotes_draw_solution_tree <- function(self, private, pkgs, types) {
 
   assert_that(is.null(pkgs) || is_character(pkgs))
   types <- tolower(types %||% dep_types_hard())

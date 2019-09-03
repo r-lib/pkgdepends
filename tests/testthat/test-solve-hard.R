@@ -19,7 +19,7 @@ test_that("hard example, because easch package has many candidates", {
 
   pkgs <- r$get_resolution()
   prob <- r$.__enclos_env__$private$create_lp_problem(pkgs, "upgrade")
-  sol <- remotes_i_solve_lp_problem(prob)
+  sol <- pkgplan_i_solve_lp_problem(prob)
 
   expect_true(sol$objval < 1e6)
 })

@@ -326,3 +326,19 @@ have_rstudio_bug_2387 <- function() {
     !is_rstudio_version("1.2.128")
   r
 }
+
+get_num_workers <- function() {
+  n <- tryCatch(
+    suppressWarnings(as.integer(getOption("Ncpus", NA_integer_))),
+    error = function(e) NA_integer_)
+
+  if (length(n) != 1 || is.na(n)) {
+    n <- tryCatch(
+      ps::ps_cpu_count(logical = TRUE),
+      error = function(e) NA_integer_)
+  }
+
+  if (is.na(n)) n <- 1L
+
+  n
+}

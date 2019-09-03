@@ -3,7 +3,7 @@ context("installed ref type")
 
 test_that("resolve", {
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
 
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))
   cache <- list(
@@ -13,7 +13,7 @@ test_that("resolve", {
 
   ref <- paste0("installed::", tt)
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_installed(parse_remotes(ref)[[1]], TRUE, conf, cache,
+    resolve_remote_installed(parse_pkg_refs(ref)[[1]], TRUE, conf, cache,
                              dependencies = "Imports")
   )
 

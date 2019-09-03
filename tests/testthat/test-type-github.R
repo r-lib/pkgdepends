@@ -27,7 +27,7 @@ test_that("resolve_remote", {
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
-  expect_s3_class(res, "remotes_resolution")
+  expect_s3_class(res, "pkg_resolution_result")
   expect_equal(sort(res$ref), sort(refs))
   expect_true(all(res$type == "github"))
   expect_true(all(res$direct))
@@ -121,7 +121,7 @@ test_that("download_remote", {
     })
   dl <- r$get_resolution_download()
 
-  expect_s3_class(dl, "remotes_downloads")
+  expect_s3_class(dl, "pkgplan_downloads")
   expect_true(dl$ref == ref)
   expect_true(dl$type == "github")
   expect_true(dl$direct)
@@ -148,7 +148,7 @@ test_that("download_remote", {
     })
   dl <- r$get_resolution_download()
 
-  expect_s3_class(dl, "remotes_downloads")
+  expect_s3_class(dl, "pkgplan_downloads")
   expect_true(dl$ref == ref)
   expect_true(dl$type == "github")
   expect_true(dl$direct)
@@ -180,7 +180,7 @@ test_that("download_remote", {
     })
   dl <- r$get_resolution_download()
 
-  expect_s3_class(dl, "remotes_downloads")
+  expect_s3_class(dl, "pkgplan_downloads")
   expect_true(dl$ref == ref)
   expect_true(dl$type == "github")
   expect_true(dl$direct)

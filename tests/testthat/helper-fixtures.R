@@ -15,7 +15,7 @@ fixtures <- list(
     dir.create(tmp <- tempfile())
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
     install.packages("pkgconfig", lib = tmp)
-    r <- pkg_plan$new("pkgconfig", lib = tmp)
+    r <- pkg_plan$new("pkgconfig", library = tmp)
     r$resolve()
   },
 
@@ -71,6 +71,6 @@ update_fixtures <- function(files = NULL) {
   for (f in files) {
     output <- file.path(fdir, f)
     cat(output, sep = "\n")
-    saveRDS(fixtures[[f]](), file = output)
+    saveRDS(fixtures[[f]](), file = output, version = 2)
   }
 }

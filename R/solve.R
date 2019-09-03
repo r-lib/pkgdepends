@@ -1,9 +1,9 @@
 
 solve_dummy_obj <- 1000000000
 
-remotes_solve <- function(self, private, policy) {
+pkgplan_solve <- function(self, private, policy) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
-  if (is.null(private$library)) {
+  if (is.null(private$config$library)) {
     stop("No package library specified, see 'library' in new()")
   }
   if (is.null(private$resolution)) self$resolve()
@@ -34,7 +34,7 @@ remotes_solve <- function(self, private, policy) {
 
   metadata$solution_end <- Sys.time()
   attr(res, "metadata") <- modifyList(attr(pkgs, "metadata"), metadata)
-  class(res) <- unique(c("remotes_solution", class(res)))
+  class(res) <- unique(c("pkgplan_solution", class(res)))
 
   if (res$status == "FAILED") {
     res$failures <- describe_solution_error(pkgs, res)
@@ -44,7 +44,7 @@ remotes_solve <- function(self, private, policy) {
   self$get_solution()
 }
 
-remotes_stop_for_solve_error <- function(self, private) {
+pkgplan_stop_for_solve_error <- function(self, private) {
   if (is.null(private$solution)) {
     stop("No solution found, need to call $solve()")
   }
@@ -85,12 +85,12 @@ remotes_stop_for_solve_error <- function(self, private) {
 #'
 #' @keywords internal
 
-remotes__create_lp_problem <- function(self, private, pkgs, policy) {
-  remotes_i_create_lp_problem(pkgs, policy)
+pkgplan__create_lp_problem <- function(self, private, pkgs, policy) {
+  pkgplan_i_create_lp_problem(pkgs, policy)
 }
 
 ## Add a condition, for a subset of variables, with op and rhs
-remotes_i_lp_add_cond <- function(
+pkgplan_i_lp_add_cond <- function(
   lp, vars, op = "<=", rhs = 1, coef = rep(1, length(vars)),
   type = NA_character_, note = NULL) {
 
@@ -107,7 +107,7 @@ remotes_i_lp_add_cond <- function(
 ## * 1:num are candidates
 ## * (num+1):(num+num_direct_pkgs) are the relax variables for direct refs
 
-remotes_i_create_lp_problem <- function(pkgs, policy) {
+pkgplan_i_create_lp_problem <- function(pkgs, policy) {
   "!DEBUG creating LP problem"
 
   ## TODO: we could already rule out (standard) source packages if binary
@@ -116,19 +116,19 @@ remotes_i_create_lp_problem <- function(pkgs, policy) {
   ## TODO: we could already rule out (standard) source and binary packages
   ## if an installed ref with the same version is present
 
-  lp <- remotes_i_lp_init(pkgs, policy)
-  lp <- remotes_i_lp_objectives(lp)
-  lp <- remotes_i_lp_no_multiples(lp)
-  lp <- remotes_i_lp_satisfy_direct(lp)
-  lp <- remotes_i_lp_failures(lp)
-  lp <- remotes_i_lp_prefer_installed(lp)
-  lp <- remotes_i_lp_prefer_binaries(lp)
-  lp <- remotes_i_lp_dependencies(lp)
+  lp <- pkgplan_i_lp_init(pkgs, policy)
+  lp <- pkgplan_i_lp_objectives(lp)
+  lp <- pkgplan_i_lp_no_multiples(lp)
+  lp <- pkgplan_i_lp_satisfy_direct(lp)
+  lp <- pkgplan_i_lp_failures(lp)
+  lp <- pkgplan_i_lp_prefer_installed(lp)
+  lp <- pkgplan_i_lp_prefer_binaries(lp)
+  lp <- pkgplan_i_lp_dependencies(lp)
 
   lp
 }
 
-remotes_i_lp_init <- function(pkgs, policy) {
+pkgplan_i_lp_init <- function(pkgs, policy) {
   num_candidates <- nrow(pkgs)
   packages <- unique(pkgs$package)
   direct_packages <- unique(pkgs$package[pkgs$direct])
@@ -154,14 +154,14 @@ remotes_i_lp_init <- function(pkgs, policy) {
     indirect_packages = indirect_packages,
     ## Candidates (indices) that have been ruled out. E.g. resolution failed
     ruled_out = integer()
-  ), class = "remotes_lp_problem")
+  ), class = "pkgplan_lp_problem")
 }
 
 ## Coefficients of the objective function, this is very easy
 ## TODO: rule out incompatible platforms
 ## TODO: use rversion as well, for installed and binary packages
 
-remotes_i_lp_objectives <- function(lp) {
+pkgplan_i_lp_objectives <- function(lp) {
 
   pkgs <- lp$pkgs
   policy <- lp$policy
@@ -197,14 +197,14 @@ remotes_i_lp_objectives <- function(lp) {
   lp
 }
 
-remotes_i_lp_no_multiples <- function(lp) {
+pkgplan_i_lp_no_multiples <- function(lp) {
 
   ## 1. Each directly specified package exactly once.
   ##    (We also add a dummy variable to catch errors.)
   for (p in seq_along(lp$direct_packages)) {
     pkg <- lp$direct_packages[p]
     wh <- which(lp$pkgs$package == pkg)
-    lp <- remotes_i_lp_add_cond(
+    lp <- pkgplan_i_lp_add_cond(
       lp, c(wh, lp$num_candidates + p),
       op = "==", type = "exactly-once")
   }
@@ -213,13 +213,13 @@ remotes_i_lp_no_multiples <- function(lp) {
   for (p in seq_along(lp$indirect_packages)) {
     pkg <- lp$indirect_packages[p]
     wh <- which(lp$pkgs$package == pkg)
-    lp <- remotes_i_lp_add_cond(lp, wh, op = "<=", type = "at-most-once")
+    lp <- pkgplan_i_lp_add_cond(lp, wh, op = "<=", type = "at-most-once")
   }
 
   lp
 }
 
-remotes_i_lp_satisfy_direct <-  function(lp) {
+pkgplan_i_lp_satisfy_direct <-  function(lp) {
 
   ## 3. Direct refs must be satisfied
   satisfy <- function(wh) {
@@ -229,7 +229,7 @@ remotes_i_lp_satisfy_direct <-  function(lp) {
     for (o in others) {
       res2 <- lp$pkgs[o, ]
       if (! isTRUE(satisfies_remote(res, res2))) {
-        lp <<- remotes_i_lp_add_cond(
+        lp <<- pkgplan_i_lp_add_cond(
           lp, o, op = "==", rhs = 0, type = "satisfy-refs", note = wh)
       }
     }
@@ -239,7 +239,7 @@ remotes_i_lp_satisfy_direct <-  function(lp) {
   lp
 }
 
-remotes_i_lp_dependencies <- function(lp) {
+pkgplan_i_lp_dependencies <- function(lp) {
 
   pkgs <- lp$pkgs
   num_candidates <- lp$num_candidates
@@ -291,7 +291,7 @@ remotes_i_lp_dependencies <- function(lp) {
       note <- list(wh = wh, ref = depref, cand = cand,
                    good_cand = good_cand, txt = txt)
 
-      lp <<- remotes_i_lp_add_cond(
+      lp <<- pkgplan_i_lp_add_cond(
         lp, c(wh, good_cand), "<=", rhs = 0,
         coef = c(1, rep(-1, length(good_cand))),
         type = "dependency", note = note
@@ -303,12 +303,12 @@ remotes_i_lp_dependencies <- function(lp) {
   lp
 }
 
-remotes_i_lp_failures <- function(lp) {
+pkgplan_i_lp_failures <- function(lp) {
 
   ## 5. Can't install failed resolutions
   failedconds <- function(wh) {
     if (lp$pkgs$status[wh] != "FAILED") return()
-    lp <<- remotes_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
+    lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
                                  type = "ok-resolution")
     lp$ruled_out <<- c(lp$ruled_out, wh)
   }
@@ -317,7 +317,7 @@ remotes_i_lp_failures <- function(lp) {
   lp
 }
 
-remotes_i_lp_prefer_installed <- function(lp) {
+pkgplan_i_lp_prefer_installed <- function(lp) {
   pkgs <- lp$pkgs
   inst <- which(pkgs$type == "installed")
   for (i in inst) {
@@ -333,7 +333,7 @@ remotes_i_lp_prefer_installed <- function(lp) {
                       pkgs$package == package & pkgs$version == version)
     lp$ruled_out <- c(lp$ruled_out, ruledout)
     for (r in ruledout) {
-      lp <- remotes_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+      lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
                                   type = "prefer-installed")
     }
   }
@@ -341,7 +341,7 @@ remotes_i_lp_prefer_installed <- function(lp) {
   lp
 }
 
-remotes_i_lp_prefer_binaries <- function(lp) {
+pkgplan_i_lp_prefer_binaries <- function(lp) {
   pkgs <- lp$pkgs
   str <- paste0(pkgs$type, "::", pkgs$package, "@", pkgs$version)
   for (ustr in unique(str)) {
@@ -356,7 +356,7 @@ remotes_i_lp_prefer_binaries <- function(lp) {
     ruledout <- setdiff(same, selected)
     lp$ruled_out <- c(lp$ruled_out, ruledout)
     for (r in ruledout) {
-      lp <- remotes_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+      lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
                                   type = "prefer-binary")
     }
   }
@@ -366,13 +366,13 @@ remotes_i_lp_prefer_binaries <- function(lp) {
 
 #' @export
 
-print.remotes_lp_problem <- function(x, ...) {
+print.pkgplan_lp_problem <- function(x, ...) {
   cat(format(x, ...))
 }
 
 #' @export
 
-format.remotes_lp_problem <- function(x, ...) {
+format.pkgplan_lp_problem <- function(x, ...) {
 
   result <- character()
   push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
@@ -426,12 +426,12 @@ format.remotes_lp_problem <- function(x, ...) {
 
 #' @importFrom lpSolve lp
 
-remotes__solve_lp_problem <- function(self, private, problem) {
-  res <- remotes_i_solve_lp_problem(problem)
+pkgplan__solve_lp_problem <- function(self, private, problem) {
+  res <- pkgplan_i_solve_lp_problem(problem)
   res
 }
 
-remotes_i_solve_lp_problem <- function(problem) {
+pkgplan_i_solve_lp_problem <- function(problem) {
   "!DEBUG solving LP problem"
   condmat <- matrix(0, nrow = length(problem$conds), ncol = problem$total)
   for (i in seq_along(problem$conds)) {
@@ -444,21 +444,21 @@ remotes_i_solve_lp_problem <- function(problem) {
   lp("min", problem$obj, condmat, dir, rhs, int.vec = seq_len(problem$total))
 }
 
-remotes_get_solution <- function(self, private) {
+pkgplan_get_solution <- function(self, private) {
   if (is.null(private$solution)) {
     stop("No solution found, need to call $solve()")
   }
   private$solution$result
 }
 
-remotes_install_plan <- function(self, private, downloads) {
+pkgplan_install_plan <- function(self, private, downloads) {
   "!DEBUG creating install plan"
   sol <- if (downloads) {
     self$get_solution_download()
   } else {
     self$get_solution()$data
   }
-  if (inherits(sol, "remotes_solve_error")) return(sol)
+  if (inherits(sol, "pkgplan_solve_error")) return(sol)
 
   deps <- lapply(
     seq_len(nrow(sol)),
@@ -469,7 +469,7 @@ remotes_install_plan <- function(self, private, downloads) {
   deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   installed <- ifelse(
     sol$type == "installed",
-    file.path(private$library, sol$package),
+    file.path(private$config$library, sol$package),
     NA_character_)
 
   res <- self$get_resolution()
@@ -480,6 +480,7 @@ remotes_install_plan <- function(self, private, downloads) {
   binary = sol$platform != "source"
   vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard")
 
+  sol$library <- private$config$library
   sol$binary <- binary
   sol$direct <- direct
   sol$dependencies <- I(deps)
@@ -497,12 +498,12 @@ remotes_install_plan <- function(self, private, downloads) {
 
 #' @importFrom rprojroot find_package_root_file
 
-remotes_export_install_plan <- function(self, private, plan_file) {
+pkgplan_export_install_plan <- function(self, private, plan_file) {
   plan_file <- plan_file %||% find_package_root_file("resolution.json")
-  plan <- self$get_install_plan(downloads = FALSE)
+  plan <- pkgplan_install_plan(self, private, downloads = FALSE)
   cols <- c("ref", "package", "version", "type", "direct", "binary",
             "dependencies", "vignettes", "needscompilation", "metadata",
-            "sources", "target")
+            "library", "sources", "target")
   txt <- as_json_lite_plan(plan[, cols])
   writeLines(txt, plan_file)
 }
@@ -708,6 +709,7 @@ print.remote_solution_error <- function(x, ...) {
 }
 
 #' @export
+#' @importFrom crayon red
 
 format.remote_resolution_error  <- function(x, ...) {
   result <- character()
@@ -719,39 +721,7 @@ format.remote_resolution_error  <- function(x, ...) {
 
 #' @export
 
-print.remotes_solution <- function(x, ...) {
-  cat(format(x, ...))
-}
-
-#' @export
-
-format.remotes_solution <- function(x, ...) {
-  result <- character()
-  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
-
-  meta <- attr(x, "metadata")
-  data <- x$data
-
-  direct <- unique(data$ref[data$direct])
-  dt <- pretty_dt(meta$resolution_end - meta$resolution_start)
-  dt2 <- pretty_dt(meta$solution_end - meta$solution_start)
-  sol <- if (x$status == "OK") "SOLUTION" else "FAILED SOLUTION"
-  head <- glue(
-    "PKG {sol}, {length(direct)} refs, resolved in {dt}, ",
-    "solved in {dt2} ")
-  width <- getOption("width") - col_nchar(head, type = "width") - 1
-  head <- paste0(head, strrep(symbol$line, max(width, 0)))
-  if (x$status == "OK") {
-    push(blue(bold(head)), sep = "\n")
-  } else {
-    push(red(bold(head)), sep = "\n")
-  }
-
-  push(format_refs(data, data$direct, header = NULL))
-
-  push(format_refs(data, (! data$direct), header = "Dependencies", by_type = TRUE))
-
-  if (!is.null(x$failures)) push(format(x$failures))
-
-  paste0(result, collapse = "")
+`[.pkgplan_solution` <- function (x, i, j, drop = FALSE) {
+  class(x) <- setdiff(class(x), "pkgplan_solution")
+  NextMethod("[")
 }

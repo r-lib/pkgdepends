@@ -1,13 +1,13 @@
 
 #' @importFrom prettyunits pretty_dt
 
-remotes_resolve <- function(self, private) {
-  "!DEBUG remotes_resolve (sync)"
+pkgplan_resolve <- function(self, private) {
+  "!DEBUG pkgplan_resolve (sync)"
   asNamespace("pkgcache")$synchronise(self$async_resolve())
 }
 
-remotes_async_resolve <- function(self, private) {
-  "!DEBUG remotes_resolve (async)"
+pkgplan_async_resolve <- function(self, private) {
+  "!DEBUG pkgplan_resolve (async)"
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
   private$solution <- NULL
@@ -16,7 +16,7 @@ remotes_async_resolve <- function(self, private) {
   private$cache$metadata$check_update()
   private$resolution <- resolution()$new(
     config = private$config, cache = private$cache,
-    library = private$library, remote_types = private$remote_types)
+    library = private$config$library, remote_types = private$remote_types)
 
   private$resolution$push(direct = TRUE, .list = private$remotes)
 
@@ -27,12 +27,12 @@ remotes_async_resolve <- function(self, private) {
     })
 }
 
-remotes_get_resolution <- function(self, private) {
+pkgplan_get_resolution <- function(self, private) {
   if (is.null(private$resolution$result)) stop("No resolution yet")
   private$resolution$result
 }
 
-remotes__subset_resolution <- function(self, private, which) {
+pkgplan__subset_resolution <- function(self, private, which) {
   if (is.null(private$resolution$result)) stop("No resolution yet")
   res <- private$resolution$result[which, ]
   attr(res, "metadata")  <- attr(private$resolution$result, "metadata")
@@ -92,7 +92,7 @@ res_init <- function(self, private, config, cache, library,
   private$library <- library
   private$remote_types <- remote_types %||% default_remote_types()
   private$metadata <- list(resolution_start = Sys.time())
-  private$dependencies <- interpret_dependencies(config$dependencies)
+  private$dependencies <- as_pkg_dependencies(config$dependencies)
   private$bar <- private$create_progress_bar()
 
   self$result <- res_make_empty_df()
@@ -121,7 +121,7 @@ res_init <- function(self, private, config, cache, library,
                                mustWork = FALSE)
           refs <- paste0("installed::", lib, "/", npkgs)
           refs <- setdiff(refs, private$state$ref)
-          self$push(.list = parse_remotes(refs))
+          self$push(.list = parse_pkg_refs(refs))
         }
       }
 
@@ -245,7 +245,7 @@ res__set_result <- function(self, private, row_idx, value) {
   value <- if (is.data.frame(value)) value[!done, ] else value[!done]
   if (any(!done)) self$result <- res_add_df_entries(self$result, value)
   "!DEBUG resolution setting result, total: `nrow(self$result)`"
-  if (length(unknown)) self$push(.list = parse_remotes(unknown))
+  if (length(unknown)) self$push(.list = parse_pkg_refs(unknown))
 }
 
 res__try_finish <- function(self, private, resolve) {
@@ -257,7 +257,7 @@ res__try_finish <- function(self, private, resolve) {
     self$result$cache_status <-
       calculate_cache_status(self$result, private$cache)
     attr(self$result, "metadata") <- private$metadata
-    class(self$result) <- c("remotes_resolution", class(self$result))
+    class(self$result) <- c("pkg_resolution_result", class(self$result))
     private$done_progress_bar()
     resolve(self$result)
   }
@@ -419,7 +419,14 @@ make_failed_resolution <- function(refs, type, direct) {
     sources = replicate(length(refs), NA_character_, simplify = FALSE),
     direct = direct,
     status = "FAILED",
-    remote = parse_remotes(refs),
+    remote = parse_pkg_refs(refs),
     error = replicate(length(refs), err, simplify = FALSE)
   )
+}
+
+#' @export
+
+`[.pkg_resolution_result` <- function (x, i, j, drop = FALSE) {
+  class(x) <- setdiff(class(x), "pkg_resolution_result")
+  NextMethod("[")
 }

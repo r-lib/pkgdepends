@@ -6,12 +6,12 @@ test_that("resolve_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ## CRAN package is found
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_cran(parse_remotes("crayon")[[1]], TRUE, conf, cache,
+    resolve_remote_cran(parse_pkg_ref("crayon"), TRUE, conf, cache,
                         dependencies = FALSE))
 
   expect_true(is_tibble(res))
@@ -27,7 +27,7 @@ test_that("resolve_remote", {
 
   ## BioC package is found
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_cran(parse_remotes("Biobase")[[1]], TRUE, conf, cache,
+    resolve_remote_cran(parse_pkg_ref("Biobase"), TRUE, conf, cache,
                         dependencies = FALSE))
 
   expect_true(is_tibble(res))
@@ -44,7 +44,7 @@ test_that("resolve_remote", {
   ## Proper error for non-existing package
   nonpkg <- basename(tempfile())
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_cran(parse_remotes(nonpkg)[[1]], TRUE, conf, cache,
+    resolve_remote_cran(parse_pkg_ref(nonpkg), TRUE, conf, cache,
                         dependencies = FALSE))
 
   expect_true(all(res$status == "FAILED"))
@@ -59,7 +59,7 @@ test_that("download_remote", {
   dir.create(tmp2 <- tempfile())
   on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   conf$platforms <- "macos"
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2
@@ -68,7 +68,7 @@ test_that("download_remote", {
     metadata = pkgcache::get_cranlike_metadata_cache())
 
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_bioc(parse_remotes("crayon")[[1]], TRUE, conf, cache,
+    resolve_remote_bioc(parse_pkg_ref("crayon"), TRUE, conf, cache,
                         dependencies = FALSE))
 
   target <- file.path(conf$cache_dir, res$target[1])

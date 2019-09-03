@@ -2,13 +2,13 @@
 context("resolution")
 
 test_that("resolving with a list", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
 
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes("foo::bar"))
-    res$push(.list = parse_remotes("foo::bar2"))
+    res$push(.list = parse_pkg_refs("foo::bar"))
+    res$push(.list = parse_pkg_refs("foo::bar2"))
     res$when_complete()
   }
 
@@ -31,12 +31,12 @@ test_that("resolving with a list", {
 })
 
 test_that("resolving with a tibble", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes("foo::bar"))
-    res$push(.list = parse_remotes("foo2::bar2"))
+    res$push(.list = parse_pkg_refs("foo::bar"))
+    res$push(.list = parse_pkg_refs("foo2::bar2"))
     res$when_complete()
   }
 
@@ -65,11 +65,11 @@ test_that("resolving with a tibble", {
 })
 
 test_that("unknown deps are pushed in the queue", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes("foo::bar"))
+    res$push(.list = parse_pkg_refs("foo::bar"))
     res$when_complete()
   }
 
@@ -93,11 +93,11 @@ test_that("unknown deps are pushed in the queue", {
 })
 
 test_that("unknown deps, tibble", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes("foo::bar"))
+    res$push(.list = parse_pkg_refs("foo::bar"))
     res$when_complete()
   }
 
@@ -127,12 +127,12 @@ test_that("unknown deps, tibble", {
 })
 
 test_that("error", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes("foo::bar"))
-    res$push(.list = parse_remotes("foo::bar2"))
+    res$push(.list = parse_pkg_refs("foo::bar"))
+    res$push(.list = parse_pkg_refs("foo::bar2"))
     res$when_complete()
   }
 
@@ -155,7 +155,7 @@ test_that("error", {
 })
 
 test_that("installed refs are also resolved", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   mkdirp(lib <- tempfile())
   lib <- normalizePath(lib)
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
@@ -177,8 +177,8 @@ test_that("installed refs are also resolved", {
 
   do <- function() {
     res <- resolution()$new(config = conf, cache = cache, library = lib)
-    res$push(.list = parse_remotes("foo::bar"))
-    res$push(.list = parse_remotes("foo::bar2"))
+    res$push(.list = parse_pkg_refs("foo::bar"))
+    res$push(.list = parse_pkg_refs("foo::bar2"))
     res$when_complete()
   }
 
@@ -202,12 +202,12 @@ test_that("installed refs are also resolved", {
 
 test_that("explicit cran", {
   skip_on_cran()
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = pkgcache::package_cache$new(),
                 metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes(refs), direct = TRUE)
+    res$push(.list = parse_pkg_refs(refs), direct = TRUE)
     res$when_complete()
   }
 
@@ -239,13 +239,13 @@ test_that("explicit cran", {
 
 test_that("standard", {
   skip_on_cran()
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(
     package = pkgcache::package_cache$new(),
     metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes(refs), direct = TRUE)
+    res$push(.list = parse_pkg_refs(refs), direct = TRUE)
     res$when_complete()
   }
 
@@ -276,14 +276,14 @@ test_that("standard", {
 })
 
 test_that("dependencies are honoured", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(
     package = pkgcache::package_cache$new(),
     metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs, deps) {
     conf$dependencies <- deps
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes(refs), direct = TRUE)
+    res$push(.list = parse_pkg_refs(refs), direct = TRUE)
     res$when_complete()
   }
 
@@ -316,13 +316,13 @@ test_that("dependencies are honoured", {
 })
 
 test_that("error if cannot find package", {
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(
     package = pkgcache::package_cache$new(),
     metadata = pkgcache::get_cranlike_metadata_cache())
   do <- function(refs) {
     res <- resolution()$new(config = conf, cache = cache)
-    res$push(.list = parse_remotes(refs), direct = TRUE)
+    res$push(.list = parse_pkg_refs(refs), direct = TRUE)
     res$when_complete()
   }
 

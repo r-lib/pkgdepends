@@ -6,11 +6,11 @@ test_that("resolve_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_cran(parse_remotes("cran::crayon")[[1]], TRUE, conf, cache,
+    resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
                         dependencies = FALSE))
 
   expect_true(is_tibble(res))
@@ -30,10 +30,10 @@ test_that("resolve_remote, multiple", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
-  rem <- parse_remotes(c("cran::crayon", "cran::glue"))
+  rem <- parse_pkg_refs(c("cran::crayon", "cran::glue"))
   res <- asNamespace("pkgcache")$synchronise(
     resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
 
@@ -50,12 +50,12 @@ test_that("failed resolution", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   nonpkg <- paste0("cran::", basename(tempfile()))
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_cran(parse_remotes(nonpkg)[[1]], TRUE, conf, cache,
+    resolve_remote_cran(parse_pkg_refs(nonpkg)[[1]], TRUE, conf, cache,
                         dependencies = FALSE))
 
   expect_true(all(res$status == "FAILED"))
@@ -81,11 +81,11 @@ test_that("failed resolution, multiple", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   nonpkg <- paste0("cran::", basename(tempfile()))
-  rem <- parse_remotes(c(nonpkg, "cran::crayon"))
+  rem <- parse_pkg_refs(c(nonpkg, "cran::crayon"))
   res <- asNamespace("pkgcache")$synchronise(
     resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
 
@@ -99,11 +99,11 @@ test_that("resolve current version", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   do <- function(ref) {
-    resolve_remote_cran(parse_remotes(ref)[[1]], TRUE,
+    resolve_remote_cran(parse_pkg_refs(ref)[[1]], TRUE,
                         conf, cache, dependencies = FALSE)
   }
 
@@ -135,7 +135,7 @@ test_that("resolve an old version", {
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
-  expect_s3_class(res, "remotes_resolution")
+  expect_s3_class(res, "pkg_resolution_result")
   expect_true(all(res$data$ref == "cran::crayon@1.1.0"))
   expect_true(all(res$data$type == "cran"))
   expect_true(all(res$data$direct))
@@ -190,7 +190,7 @@ test_that("resolve a version range", {
     expect_error(r$resolve(), NA))
   res <- r$get_resolution()
 
-  expect_s3_class(res, "remotes_resolution")
+  expect_s3_class(res, "pkg_resolution_result")
   expect_true(all(res$ref == "cran::crayon@>=1.3.2"))
   expect_true(all(res$type == "cran"))
   expect_true(all(res$direct))
@@ -208,7 +208,7 @@ test_that("download_remote", {
   dir.create(tmp2 <- tempfile())
   on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   conf$platforms <- "macos"
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2
@@ -217,7 +217,7 @@ test_that("download_remote", {
     metadata = pkgcache::get_cranlike_metadata_cache())
 
   resolve <- function() {
-    resolve_remote_cran(parse_remotes("cran::crayon")[[1]], TRUE, conf, cache,
+    resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
                         dependencies = FALSE)
   }
   res <- asNamespace("pkgcache")$synchronise(resolve())

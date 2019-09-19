@@ -34,6 +34,6 @@ both for direct installations and dependent packages.
 }
 }
 \seealso{
-Other package dependency utilities: \code{\link{pkg_dep_types_hard}}
+Other package dependency utilities: \code{\link{pkg_dep_types_hard}()}
 }
 \concept{package dependency utilities}

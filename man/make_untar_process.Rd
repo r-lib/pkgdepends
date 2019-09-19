@@ -4,8 +4,13 @@
 \alias{make_untar_process}
 \title{Create a tar background process}
 \usage{
-make_untar_process(tarfile, files = NULL, exdir = ".",
-  restore_times = TRUE, post_process = NULL)
+make_untar_process(
+  tarfile,
+  files = NULL,
+  exdir = ".",
+  restore_times = TRUE,
+  post_process = NULL
+)
 }
 \arguments{
 \item{tarfile}{Tar file.}

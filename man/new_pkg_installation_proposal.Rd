@@ -4,8 +4,12 @@
 \alias{new_pkg_installation_proposal}
 \title{Create a package installation proposal}
 \usage{
-new_pkg_installation_proposal(refs, library, upgrade = FALSE,
-  dependencies = NA)
+new_pkg_installation_proposal(
+  refs,
+  library,
+  upgrade = FALSE,
+  dependencies = NA
+)
 }
 \arguments{
 \item{refs}{Package names or references. See \link{pkg_refs} for the

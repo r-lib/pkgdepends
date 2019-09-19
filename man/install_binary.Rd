@@ -4,8 +4,12 @@
 \alias{install_binary}
 \title{Install a R binary package}
 \usage{
-install_binary(filename, lib = .libPaths()[[1L]], metadata = NULL,
-  quiet = NULL)
+install_binary(
+  filename,
+  lib = .libPaths()[[1L]],
+  metadata = NULL,
+  quiet = NULL
+)
 }
 \arguments{
 \item{filename}{filename of built binary package to install}

@@ -67,59 +67,59 @@ and experimental currently.
 both create a new package installation proposal object. The latter has
 more options and it is for expert use.
 
-\code{$get_refs()} returns the refs of an installation proposal,
+\verb{$get_refs()} returns the refs of an installation proposal,
 see \link{pkg_refs}.
 
-\code{$get_config()} returns the configuration, see \link{pkg_config}.
+\verb{$get_config()} returns the configuration, see \link{pkg_config}.
 
-\code{$resolve()} resolves all dependencies of the remote references of the
+\verb{$resolve()} resolves all dependencies of the remote references of the
 installation proposal. This usually involves downloading metadata from
 CRAN and Bioconductor (unless already cached), and also from Github, if
 GitHub refs are specified, either directly or indirectly. See
 \link{pkg_resolution}.
 
-\code{$async_resolve()} is the asynchronous version of \code{$resolve()}, it
+\verb{$async_resolve()} is the asynchronous version of \verb{$resolve()}, it
 uses deferred values, and it is currently for advanced use.
 
-\code{$get_resolution()} returns the result of the resolution, in a
+\verb{$get_resolution()} returns the result of the resolution, in a
 \code{pkg_resolution_result} object, which is also a tibble. See
 \link{pkg_resolution_result} for the format.
 
-\code{$get_solve_policy()} returns the policy of the dependency solver.
+\verb{$get_solve_policy()} returns the policy of the dependency solver.
 See \link{pkg_solve}.
 
-\code{$set_solve_policy()} sets the policy of the dependency solver. If this
+\verb{$set_solve_policy()} sets the policy of the dependency solver. If this
 policy changes, then you need to run \code{solve()} again. See \link{pkg_solve}.
 
-\code{$solve()} solves the package dependencies to work out the which
+\verb{$solve()} solves the package dependencies to work out the which
 of the available versions of each needs to be installed to have a
 properly working set of packages. See \link{pkg_solve}.
 
-\code{$get_solution()} returns the solution of the installation problem.
+\verb{$get_solution()} returns the solution of the installation problem.
 
-\code{$stop_for_solution_error()} throws an error, with a meaningful error
-message, if the previous \code{$solve()} call failed.
+\verb{$stop_for_solution_error()} throws an error, with a meaningful error
+message, if the previous \verb{$solve()} call failed.
 
-\code{$draw()} draws the package dependency tree of a solution. It only
+\verb{$draw()} draws the package dependency tree of a solution. It only
 works once \code{solve()} was called.
 
-\code{$download()} downloads all packages of the solution. It uses
+\verb{$download()} downloads all packages of the solution. It uses
 the package cache in the pkgcache package by default, to avoid downloads
 if possible.
 
-\code{$async_download()} downloads all packages of the solution,
+\verb{$async_download()} downloads all packages of the solution,
 asynchronously. It returns a deferred value, and it is currently for
 advanced use.
 
-\code{$get_downloads()} returns data about the downloaded packages.
+\verb{$get_downloads()} returns data about the downloaded packages.
 See the format at \link{pkg_download_result}.
 
-\code{$stop_for_download_error()} throws an error for a package download
+\verb{$stop_for_download_error()} throws an error for a package download
 error.
 
-\code{$get_install_plan()} returns the package installation plan of the
+\verb{$get_install_plan()} returns the package installation plan of the
 proposal.
 
-\code{$install()} performs the package installation plan.
+\verb{$install()} performs the package installation plan.
 }
 

@@ -17,13 +17,13 @@ If you use these in R, make sure you specify \code{perl = TRUE}, see
 Currently included:
 \itemize{
 \item \code{pkg_name}: A valid package name.
-\item \code{type_cran}: A \code{cran::} package reference.
-\item \code{type_bioc}: A \code{bioc::} package reference.
-\item \code{type_standard}: A \code{standard::} package reference.
-\item \code{type_github}: A \code{github::} package reference.
-\item \code{type_local}: A \code{local::} package reference.
-\item \code{type_deps}: A \code{deps::} package reference.
-\item \code{type_installed}: An \code{installed::} package reference.
+\item \code{type_cran}: A \verb{cran::} package reference.
+\item \code{type_bioc}: A \verb{bioc::} package reference.
+\item \code{type_standard}: A \verb{standard::} package reference.
+\item \code{type_github}: A \verb{github::} package reference.
+\item \code{type_local}: A \verb{local::} package reference.
+\item \code{type_deps}: A \verb{deps::} package reference.
+\item \code{type_installed}: An \verb{installed::} package reference.
 \item \code{github_username}: A GitHub username.
 \item \code{github_repo}: A GitHub repository name.
 \item \code{github_url}: A GitHub URL.

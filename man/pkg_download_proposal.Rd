@@ -40,34 +40,34 @@ and experimental currently.
 \section{Details}{
 
 
-\code{\link[=new_pkg_download_proposal]{new_pkg_download_proposal()}} and \code{$new()} create a new package download
+\code{\link[=new_pkg_download_proposal]{new_pkg_download_proposal()}} and \verb{$new()} create a new package download
 proposal. The latter has more options, and it is for expert use.
 
-\code{$get_refs()} returns the refs of a download proposal, see \link{pkg_refs}.
+\verb{$get_refs()} returns the refs of a download proposal, see \link{pkg_refs}.
 
-\code{$get_config()} returns the configuration, see \link{pkg_config}.
+\verb{$get_config()} returns the configuration, see \link{pkg_config}.
 
-\code{$resolve()} resolves all dependencies of the remote references of the
+\verb{$resolve()} resolves all dependencies of the remote references of the
 download proposal. This usually involves downloading metadata from CRAN
 and Bioconductor (unless already cached), and also from Github, if GitHub
 refs are specified, either directly or indirectly. See \link{pkg_resolution}.
 
-\code{$async_resolve()} is the asynchronous version of \code{$resolve()}, it
+\verb{$async_resolve()} is the asynchronous version of \verb{$resolve()}, it
 uses deferred values, and it is currently for advanced use.
 
-\code{$get_resolution()} returns the result of the resolution, in a
+\verb{$get_resolution()} returns the result of the resolution, in a
 \code{pkg_resolution_result} object, which is also a tibble. See
 \link{pkg_resolution_result} for the format.
 
-\code{$download()} downloads all resolved packages. It uses
+\verb{$download()} downloads all resolved packages. It uses
 the package cache in the pkgcache package by default, to avoid downloads
 if possible.
 
-\code{$async_download()} downloads all resolved packages,
+\verb{$async_download()} downloads all resolved packages,
 asynchronously. It returns a deferred value, and it is currently for
 advanced use.
 
-\code{$get_downloads()} returns data about the downloaded packages.
+\verb{$get_downloads()} returns data about the downloaded packages.
 See the format at \link{pkg_download_result}.
 }
 

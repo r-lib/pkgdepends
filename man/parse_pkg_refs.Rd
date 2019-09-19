@@ -31,7 +31,7 @@ a list, with at least elements:
 \item \code{package}: The package name.
 It typically contains additional data, specific to the various
 reference types. See \link{pkg_refs} for details.
-The parsed reference always has class \code{remote_ref_<type>} and
+The parsed reference always has class \verb{remote_ref_<type>} and
 \code{remote_ref}.
 }
 }

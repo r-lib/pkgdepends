@@ -1,12 +1,8 @@
+---
+output: github_document
+---
 
-```{r, setup, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(
-  comment = "#>",
-  tidy = FALSE,
-  error = FALSE,
-  fig.width = 8,
-  fig.height = 8)
-```
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # pkgdepends
 
@@ -19,22 +15,5 @@ knitr::opts_chunk$set(
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)
 [![Coverage Status](https://img.shields.io/codecov/c/github/r-lib/pkgdepends/master.svg)](https://codecov.io/github/r-lib/pkgdepends?branch=master)
 
-Find recursive dependenies of R packages from various sources.
-
-## Installation
-
-Once on CRAN, install the package with
-
-```{r eval = FALSE}
-install.packages("pkgdepends")
+```{r child = "tools/doc/README-body.Rmd"}
 ```
-
-## Usage
-
-```{r}
-library(pkgdepends)
-```
-
-## License
-
-MIT © RStudio

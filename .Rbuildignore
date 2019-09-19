@@ -8,3 +8,5 @@
 ^\.env$
 ^\.Rprofile$
 ^r-packages$
+^README_cache$
+^tools$

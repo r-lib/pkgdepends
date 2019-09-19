@@ -23,9 +23,9 @@ The currently supported reference types are:
 If a ref does not explicitly specify a type, then the following rules
 are applied:
 \itemize{
-\item if the ref is a valid \code{standard} ref type (without the \code{standard::}
+\item if the ref is a valid \code{standard} ref type (without the \verb{standard::}
 prefix), then \code{standard} is used;
-\item if the ref is a valid \code{github} ref type (without the \code{github::} prefix),
+\item if the ref is a valid \code{github} ref type (without the \verb{github::} prefix),
 then \code{github} is used;
 \item if the ref is a GitHub URL, then \code{github} is used;
 \item otherwise an error is thrown.
@@ -37,15 +37,15 @@ then \code{github} is used;
 A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]
 }
 \itemize{
-\item \code{<package>} is a valid package name.
-\item \code{<version>} is either a package version, or
+\item \verb{<package>} is a valid package name.
+\item \verb{<version>} is either a package version, or
 }
 
-Examples: \code{forecast}, \code{forecast@8.8}, \code{forecast@>=8.8},
+Examples: \code{forecast}, \verb{forecast@8.8}, \verb{forecast@>=8.8},
 \code{cran::forecast}, \code{forecast@last}, \code{forecast@current}.
 
 Note: pkgdepends currently parses the version specification part
-(everything after \code{@}), but does not use it.
+(everything after \verb{@}), but does not use it.
 }
 
 \section{Bioconductor packages}{
@@ -70,34 +70,34 @@ is the same as for CRAN packages, except for the prefix:\preformatted{[standard:
 Packages from a GitHub repository. Full syntax:\preformatted{[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
 }
 \itemize{
-\item \code{<package>} is the name of the package. If this is missing, then
+\item \verb{<package>} is the name of the package. If this is missing, then
 the name of the repository is used.
-\item \code{<username>} is a GitHub username or organization name.
-\item \code{<repository>} is the name of the repository.
-\item \code{<subdir>} optional subdirectory, if the package is within a
+\item \verb{<username>} is a GitHub username or organization name.
+\item \verb{<repository>} is the name of the repository.
+\item \verb{<subdir>} optional subdirectory, if the package is within a
 subdirectory in the repository.
-\item \code{<detail>} specifies a certain version of the package, see below.
+\item \verb{<detail>} specifies a certain version of the package, see below.
 }
 
-\code{<detail>} may specify:
+\verb{<detail>} may specify:
 \itemize{
-\item a git branch, tag or (prefix of) a commit sha: \code{@<commitish>};
-\item a pull request: \code{#<pull-request>}; or
-\item the latest release: \code{@*release}.
+\item a git branch, tag or (prefix of) a commit sha: \verb{@<commitish>};
+\item a pull request: \verb{#<pull-request>}; or
+\item the latest release: \verb{@*release}.
 }
 
-Examples: \code{r-lib/crayon}, \code{github::r-lib/crayon}, \code{r-lib/crayon@84be6207},
+Examples: \code{r-lib/crayon}, \code{github::r-lib/crayon}, \verb{r-lib/crayon@84be6207},
 \code{r-lib/crayon@branch}, \code{r-lib/crayon#41}, \code{r-lib/crayon@release}.
 
 For convenience GitHub HTTP URLs can also be used to specify a
 package from GitHub. Examples:
 \itemize{
-\item \code{https://github.com/r-lib/withr}
-\item A branch: \code{https://github.com/r-lib/withr/tree/ghactions}
-\item A tag: \code{https://github.com/r-lib/withr/tree/v2.1.1}
-\item A commit: \code{https://github.com/r-lib/withr/commit/8fbcb548e316}
-\item A pull request: \code{https://github.com/r-lib/withr/pull/76}
-\item A release: \code{https://github.com/r-lib/withr/releases/tag/v2.1.0}
+\item \verb{https://github.com/r-lib/withr}
+\item A branch: \verb{https://github.com/r-lib/withr/tree/ghactions}
+\item A tag: \verb{https://github.com/r-lib/withr/tree/v2.1.1}
+\item A commit: \verb{https://github.com/r-lib/withr/commit/8fbcb548e316}
+\item A pull request: \verb{https://github.com/r-lib/withr/pull/76}
+\item A release: \verb{https://github.com/r-lib/withr/releases/tag/v2.1.0}
 }
 
 A GitHub remote string can also be used instead of an URL, for example:
@@ -107,11 +107,11 @@ A GitHub remote string can also be used instead of an URL, for example:
 \section{Local packages}{
 
 
-A path that refers to a package file built with \code{R CMD build}, or a
+A path that refers to a package file built with \verb{R CMD build}, or a
 directory that contains a package. Full syntax:\preformatted{local::<path>
 }
 
-Examples: \code{local::/foo/bar/package_1.0.0.tar.gz}, \code{local::/foo/bar/pkg},
+Examples: \verb{local::/foo/bar/package_1.0.0.tar.gz}, \verb{local::/foo/bar/pkg},
 \code{local::.}.
 }
 
@@ -122,11 +122,11 @@ This is usually used internally, but can also be used directly.
 Full syntax:\preformatted{installed::<path>/<package>
 }
 \itemize{
-\item \code{<path>} is the library the package is installed to.
-\item \code{<package>} is the package name.
+\item \verb{<path>} is the library the package is installed to.
+\item \verb{<package>} is the package name.
 }
 
-Examples: \code{installed::~/R/3.6/crayon}.
+Examples: \verb{installed::~/R/3.6/crayon}.
 }
 
 \section{Package dependencies}{
@@ -138,7 +138,7 @@ package, without downloading or installing the package itself.
 Full syntax:\preformatted{deps::<path>
 }
 
-Examples: \code{deps::/foo/bar/package_1.0.0.tar.gz}, \code{deps::/foo/bar/pkg},
+Examples: \verb{deps::/foo/bar/package_1.0.0.tar.gz}, \verb{deps::/foo/bar/pkg},
 \code{deps::.}.
 }
 

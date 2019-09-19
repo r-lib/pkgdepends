@@ -96,7 +96,7 @@ pkgdeps_format <- function(self, private, ...) {
     if (has_res) "(use `$get_resolution()` to see resolution results)",
     if (!has_sol) "(use `$solve()` to solve dependencies)",
     if (has_sol) "(use `$get_solution()` to see solution results)",
-    if (has_sol) "(use `$draw()` to draw the dependency tree)"
+    if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)"
   )
 }
 

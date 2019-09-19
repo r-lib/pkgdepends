@@ -315,7 +315,7 @@ pkginst_format <- function(self, private, ...) {
     if (has_sol && !sol_err && !has_dls)
       "(use `$download()` to download packages)",
     if (has_sol) "(use `$get_solution()` to see solution results)",
-    if (has_sol) "(use `$draw()` to draw the dependency tree)",
+    if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)",
     if (has_dls) "(use `$get_downloads()` to get download data)",
     if (has_dls) "(use `$get_install_plan()` to get the installation plan)",
     if (has_dls) "(use `$install()` to install the packages)"

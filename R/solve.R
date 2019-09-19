@@ -34,7 +34,7 @@ pkgplan_solve <- function(self, private, policy) {
 
   metadata$solution_end <- Sys.time()
   attr(res, "metadata") <- modifyList(attr(pkgs, "metadata"), metadata)
-  class(res) <- unique(c("pkgplan_solution", class(res)))
+  class(res) <- unique(c("pkg_solution_result", class(res)))
 
   if (res$status == "FAILED") {
     res$failures <- describe_solution_error(pkgs, res)
@@ -367,7 +367,41 @@ pkgplan_i_lp_prefer_binaries <- function(lp) {
 #' @export
 
 print.pkgplan_lp_problem <- function(x, ...) {
-  cat(format(x, ...))
+  cat(format(x, ...), sep = "\n")
+}
+
+format_cond <- function(x, cond) {
+  if (cond$type == "dependency") {
+    glue("{cond$note$txt}")
+
+  } else if (cond$type == "satisfy-refs") {
+    ref <- x$pkgs$ref[cond$note]
+    cand <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` is not satisfied by `{cand}`")
+
+  } else if (cond$type == "ok-resolution") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` resolution failed")
+
+  } else if (cond$type == "prefer-installed") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("installed is preferred for `{ref}`")
+
+  } else if (cond$type == "prefer-binary")  {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("binary is preferred for `{ref}`")
+
+  } else if (cond$type == "exactly-once") {
+    ref <- na.omit(x$pkgs$package[cond$vars])[1]
+    glue("select {ref} exactly once")
+
+  } else if (cond$type == "at-most-once") {
+    ref <- na.omit(x$pkgs$package[cond$vars])[1]
+    glue("select {ref} at most once")
+
+  } else {
+    glue("Unknown constraint")
+  }
 }
 
 #' @export
@@ -375,53 +409,22 @@ print.pkgplan_lp_problem <- function(x, ...) {
 format.pkgplan_lp_problem <- function(x, ...) {
 
   result <- character()
-  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
+  push <- function(...) result <<- c(result, ...)
 
-  format_cond <- function(cond) {
-    if (cond$type == "dependency") {
-      push(format_line(" * {cond$note$txt}"))
-
-    } else if (cond$type == "satisfy-refs") {
-      ref <- x$pkgs$ref[cond$note]
-      cand <- x$pkgs$ref[cond$vars]
-      push(format_line(" * `{ref}` is not satisfied by `{cand}`"))
-
-    } else if (cond$type == "ok-resolution") {
-      ref <- x$pkgs$ref[cond$vars]
-      push(format_line(" * `{ref}` resolution failed"))
-
-    } else if (cond$type == "prefer-installed") {
-      ref <- x$pkgs$ref[cond$vars]
-      push(format_line(" * installed is preferred for `{ref}`"))
-
-    } else if (cond$type == "prefer-binary")  {
-      ref <- x$pkgs$ref[cond$vars]
-      push(format_line(" * binary is preferred for `{ref}`"))
-
-    } else if (cond$type == "exactly-once") {
-      ## Do nothing
-
-    } else if (cond$type == "at-most-once") {
-      ## Do nothing
-
-    } else {
-      push(format_line(" * Unknown condition"))
-    }
-  }
-
-  push(format_line("LP problem for {x$num_candidates} refs:"))
+  push("<pkgplan_lp_problem>")
+  push(glue("+ refs ({x$num_candidates}):"))
   pn <- sort(x$pkgs$ref)
-  push(format_line(strwrap(paste(pn, collapse = ", "), indent = 2, exdent = 2)))
-  nc <- length(x$conds) - x$num_direct
+  push(paste0("  - ", x$pkgs$ref))
 
-  if (nc > 0) {
-    push(format_line("Constraints:"))
-    lapply(x$conds, format_cond)
+  if (length(x$conds)) {
+    push(glue("+ constraints ({length(x$conds)}):"))
+    conds <- drop_nulls(lapply(x$conds, format_cond, x = x))
+    push(paste0("  - ", conds))
   } else {
-    push(format_line("No constraints"))
+    push(glue("+ no constraints"))
   }
 
-  paste0(result, collapse = "")
+  result
 }
 
 #' @importFrom lpSolve lp
@@ -668,14 +671,14 @@ describe_solution_error <- function(pkgs, solution) {
   fails$failure_type <- state[wh]
   fails$failure_message <-  note[wh]
   fails$failure_down <- downstream[wh]
-  class(fails) <- unique(c("remote_solution_error", class(fails)))
+  class(fails) <- unique(c("pkg_solution_failures", class(fails)))
 
   fails
 }
 
 #' @export
 
-format.remote_solution_error <- function(x, ...) {
+format.pkg_solution_failures <- function(x, ...) {
   fails <- x
   if (!nrow(fails)) return()
 
@@ -688,7 +691,7 @@ format.remote_solution_error <- function(x, ...) {
     msgs <- unique(fails$failure_message[[i]])
     res <<- c(
       res, paste0(
-             glue("  * Cannot install `{fails$ref[i]}`."),
+             glue("  x Cannot install `{fails$ref[i]}`."),
              if (length(msgs)) paste0("\n    - ", msgs)
            )
     )
@@ -699,29 +702,38 @@ format.remote_solution_error <- function(x, ...) {
   direct_refs <- which(fails$direct)
   lapply(direct_refs, do)
 
-  paste(unique(res), collapse = "\n")
+  unique(res)
 }
 
 #' @export
 
-print.remote_solution_error <- function(x, ...) {
-  cat(format(x, ...))
-}
-
-#' @export
-#' @importFrom crayon red
-
-format.remote_resolution_error  <- function(x, ...) {
-  result <- character()
-  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
-  push(bold(red("Errors:")), sep = "\n")
-  push(format(x), sep = "\n")
-  paste0(result, collapse = "")
-}
-
-#' @export
-
-`[.pkgplan_solution` <- function (x, i, j, drop = FALSE) {
-  class(x) <- setdiff(class(x), "pkgplan_solution")
+`[.pkg_solution_result` <- function (x, i, j, drop = FALSE) {
+  class(x) <- setdiff(class(x), "pkg_solution_result")
   NextMethod("[")
+}
+
+#' @export
+
+format.pkg_solution_result <- function(x, ...) {
+  ok <- is.null(x$failures) || nrow(x$failures) == 0
+  refs <- sort(unique(x$problem$pkgs$ref[x$problem$pkgs$direct]))
+  nc <- length(x$problem$conds)
+  cnst <- unlist(lapply(x$problem$conds, format_cond, x = x$problem))
+  solrefs <- sort(x$data$ref)
+  c("<pkg_solution>",
+    paste0("+ result: ", if (ok) "OK" else "FAILED"),
+    "+ refs:", paste0("  - ", refs),
+    if (nc == 0) "+ no constraints",
+    if (nc > 0) paste0("+ constraints (", length(cnst), "):"),
+    if (nc > 0) paste0("  - ", head(cnst, 10)),
+    if (nc > 10) "  ...",
+    if (ok) c("+ solution:", paste0("  - ", solrefs)),
+    if (!ok) c("x failures:", format(x$failures))
+  )
+}
+
+#' @export
+
+print.pkg_solution_result <- function(x, ...) {
+  cat(format(x, ...), sep = "\n")
 }

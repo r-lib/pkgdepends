@@ -2,34 +2,43 @@
 % Please edit documentation in R/pkg-dependencies.R
 \name{pkg_deps}
 \alias{pkg_deps}
-\title{R6 class for package dependency lookup}
+\title{\if{html}{\out{
+<link rel="stylesheet" type="text/css" href="../doc/extra.css">
+}}
+R6 class for package dependency lookup}
 \description{
 Create a \code{pkg_deps} object to look up dependencies of R packages.
 }
 \details{
 The usual steps to query package dependencies are:
 \enumerate{
-\item Create a \verb{\pkg_deps} object via \code{pkg_deps$new()}.
-\item Resolve all possible dependencies via \code{pkg_deps$resolve()}.
+\item Create a \code{pkg_deps} object via \href{#method-new}{\code{pkg_deps$new()}}.
+\item Resolve all possible dependencies via
+\href{#method-resolve}{\code{pkg_deps$resolve()}}.
 \item Solve the dependencies, to obtain a subset of all possible
-dependencies that can be installed together, via \code{pkg_deps$solve()}.
-\item Call \code{pkg_deps$get_solution()} to list the result of the dependency
-solver.
+dependencies that can be installed together, via
+\href{#method-solve}{\code{pkg_deps$solve()}}.
+\item Call \href{#method-get-solution}{\code{pkg_deps$get_solution()}} to list the
+result of the dependency solver.
 }
 }
-\section{Methods}{\preformatted{pkg_deps$new()
-pkg_deps$get_refs()
-pkg_deps$get_config()
-pkg_deps$resolve()
-pkg_deps$async_resolve()
-pkg_deps$get_resolution()
-pkg_deps$solve()
-pkg_deps$get_solution()
-pkg_deps$draw()
-pkg_deps$format()
-pkg_deps$print()
+\section{Methods}{
+\itemize{
+\item \href{#method-new}{\code{pkg_deps$new()}}
+\item \href{#method-get-refs}{\code{pkg_deps$get_refs()}}
+\item \href{#method-get-config}{\code{pkg_deps$get_config()}}
+\item \href{#method-resolve}{\code{pkg_deps$resolve()}}
+\item \href{#method-async-resolve}{\code{pkg_deps$async_resolve()}}
+\item \href{#method-get-resolution}{\code{pkg_deps$get_resolution()}}
+\item \href{#method-solve}{\code{pkg_deps$solve()}}
+\item \href{#method-get-solution}{\code{pkg_deps$get_solution()}}
+\item \href{#method-draw}{\code{pkg_deps$draw()}}
+\item \href{#method-format}{\code{pkg_deps$format()}}
+\item \href{#method-print}{\code{pkg_deps$print()}}
 }
-\subsection{new()}{\preformatted{pkg_deps$initialize(
+
+\if{html}{\out{<a id="method-new">}}\if{html}{\out{</a>}}
+\subsection{Method \code{pkg_deps$new()}}{\preformatted{pkg_deps$initialize(
   refs,
   config = list(),
   remote_types = NULL)
@@ -37,13 +46,13 @@ pkg_deps$print()
 
 Create a new \code{pkg_deps} object. The object can be used to look up
 (recursive) dependencies of R packages from various sources. To perform
-the actual lookup, you’ll need to call the `
+the actual lookup, you’ll need to call the
+\href{#method-resolve}{\code{resolve()}} method.
 \subsection{Parameters}{
 \itemize{
-\item \code{refs}: Package names or references. See \link{pkg_refs} for
-the syntax.
+\item \code{refs}: Package names or references. See \link[=pkg_refs]{‘Package references’} for the syntax.
 \item \code{config}: Configuration options, a named list. See
-\link{pkg_config}.
+\link[=pkg_config]{‘Configuration’}.
 \item \code{remote_types}: Custom remote ref types, this is for advanced use,
 and experimental currently.
 }
@@ -62,11 +71,13 @@ pd
 ## (use `$resolve()` to resolve dependencies)
 ## (use `$solve()` to solve dependencies)
 }
+
+\if{html}{\out{<a id="method-get-refs">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{get_refs()}{\preformatted{pkg_deps$get_refs()
+\subsection{Method \code{pkg_deps$get_refs()}}{\preformatted{pkg_deps$get_refs()
 }
 
 The package refs that were used to create the \code{pkg_deps} object.
@@ -80,54 +91,68 @@ A character vector of package refs that were used to create the
 pd$get_refs()
 }\preformatted{## [1] "pak"      "jsonlite"
 }
+
+\if{html}{\out{<a id="method-get-config">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{get_config()}{\preformatted{pkg_deps$get_config()
+\subsection{Method \code{pkg_deps$get_config()}}{\preformatted{pkg_deps$get_config()
 }
 
 Configuration options for the \code{pkg_deps} object. See
-\link{pkg_config} for details.
+\link[=pkg_config]{‘Configuration’} for details.
 \subsection{Returns}{
 
-Named list. See \link{pkg_config} for the configuration
+Named list. See \link[=pkg_config]{‘Configuration’} for the configuration
 options.
 }
 
 \subsection{Examples}{\preformatted{pd <- pkg_deps$new("pak")
 pd$get_config()
 }\preformatted{## + config:
-##   - library: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpOjchk0/file13d2e1e996f40
-##   - cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpOjchk0/file13d2e24ad495f
+##   - library: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpKLyPl5/file4b685f966c14
+##   - cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpKLyPl5/file4b6821a50826
 ##   - package_cache_dir: <default>
-##   - metadata_cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpOjchk0/file13d2e6cac0ec8
+##   - metadata_cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpKLyPl5/file4b6859ba080b
 ##   - platforms: macos, source
 ##   - cran-mirror: https://cloud.r-project.org
 ##   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
 ##   - r-versions: 3.6.1
 }
+
+\if{html}{\out{<a id="method-resolve">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{resolve()}{\preformatted{pkg_deps$resolve()
+\subsection{Method \code{pkg_deps$resolve()}}{\preformatted{pkg_deps$resolve()
 }
 
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
 already cached, and also from GitHub if GitHub refs were included,
-either directly or indirectly. See \link{pkg_resolution}
-for details about dependency resolution.
+either directly or indirectly. See \link[=pkg_resolution]{‘Dependency resolution’} for details.
 \subsection{Returns}{
 
-The same as the \code{get_resolution()} method (see below), the result of the
-resolution, invisibly.
+The same as the \href{#method-get-resolution}{\code{get_resolution()}} method (see
+below), the result of the resolution, invisibly.
 }
 
 \subsection{Examples}{\preformatted{pd <- pkg_deps$new("pak")
 pd$resolve()
-pd
+}\preformatted{## Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
+## Please use `!!` instead.
+## 
+##   # Bad:
+##   dplyr::select(data, !!!enquo(x))
+## 
+##   # Good:
+##   dplyr::select(data, !!enquo(x))    # Unquote single quosure
+##   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
+## 
+## This warning is displayed once per session.
+}\preformatted{pd
 }\preformatted{## <pkg_dependencies>
 ## + refs:
 ##   - pak
@@ -135,27 +160,31 @@ pd
 ## (use `$get_resolution()` to see resolution results)
 ## (use `$solve()` to solve dependencies)
 }
+
+\if{html}{\out{<a id="method-async-resolve">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{async_resolve()}{\preformatted{pkg_deps$async_resolve()
+\subsection{Method \code{pkg_deps$async_resolve()}}{\preformatted{pkg_deps$async_resolve()
 }
 
-The same as \code{resolve()}, but asynchronous. This method is for advanced
-use.
+The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous. This
+method is for advanced use.
 \subsection{Returns}{
 
 A deferred value.
+
+\if{html}{\out{<a id="method-get-resolution">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{get_resolution()}{\preformatted{pkg_deps$get_resolution()
+\subsection{Method \code{pkg_deps$get_resolution()}}{\preformatted{pkg_deps$get_resolution()
 }
 
 Query the result of the dependency resolution. This method can be called
-after \code{resolve()} has completed.
+after \href{#method-resolve}{\code{resolve()}} has completed.
 \subsection{Returns}{
 
 A \link{pkg_resolution_result} object, which is
@@ -186,23 +215,27 @@ pd$get_resolution()
 ## #   error <list>, metadata <list>, extra <list>, dep_types <list>,
 ## #   cache_status <chr>
 }
+
+\if{html}{\out{<a id="method-solve">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{solve()}{\preformatted{pkg_deps$solve()
+\subsection{Method \code{pkg_deps$solve()}}{\preformatted{pkg_deps$solve()
 }
 
 Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that includes all directly specified
 packages, and all required (or suggested, depending on the
 configuration) packages as well. It includes every package at most once.
-See \link{pkg_solution} for details.
+See \link[=pkg_solution]{‘The dependency solver’} for details.
 
-\code{solve()} calls \code{resolve()} automatically, if it hasn’t been called yet.
+\code{solve()} calls \href{#method-resolve}{\code{resolve()}} automatically, if it
+hasn’t been called yet.
 \subsection{Returns}{
 
-The same as the \code{get_solution()} method, the result, invisibly.
+The same as the \href{#method-get-solution}{\code{get_solution()}} method, the
+result, invisibly.
 }
 
 \subsection{Examples}{\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
@@ -218,11 +251,13 @@ pd
 ## (use `$get_solution()` to see solution results)
 ## (use `$draw()` to draw the dependency tree)
 }
+
+\if{html}{\out{<a id="method-get-solution">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{get_solution()}{\preformatted{pkg_deps$get_solution()
+\subsection{Method \code{pkg_deps$get_solution()}}{\preformatted{pkg_deps$get_solution()
 }
 
 Returns the solution of the package dependencies.
@@ -271,11 +306,13 @@ pd$get_solution()
 ##   - rstudioapi
 ##   - withr
 }
+
+\if{html}{\out{<a id="method-draw">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{draw()}{\preformatted{pkg_deps$draw()
+\subsection{Method \code{pkg_deps$draw()}}{\preformatted{pkg_deps$draw()
 }
 
 Draw a tree of package dependencies. It returns a \code{tree} object, see
@@ -326,11 +363,13 @@ pd$draw()
 ## +-rstudioapi (0.10)
 ## \-withr (2.1.2)
 }
+
+\if{html}{\out{<a id="method-format">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{format()}{\preformatted{pkg_deps$format(...)
+\subsection{Method \code{pkg_deps$format()}}{\preformatted{pkg_deps$format(...)
 }
 
 Format a \code{pkg_deps} object, typically for printing.
@@ -343,11 +382,13 @@ Format a \code{pkg_deps} object, typically for printing.
 \subsection{Returns}{
 
 A character vector, each element should be a line in the printout.
+
+\if{html}{\out{<a id="method-print">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{print()}{\preformatted{pkg_deps$print(...)
+\subsection{Method \code{pkg_deps$print()}}{\preformatted{pkg_deps$print(...)
 }
 
 Prints a \code{pkg_deps} object to the screen. The printout includes:

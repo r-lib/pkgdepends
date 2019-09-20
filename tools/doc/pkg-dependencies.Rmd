@@ -3,36 +3,40 @@
 options(
   pkg.show_progress = FALSE,
   cli.unicode = FALSE)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(
+  cache = TRUE,
+  highlight = TRUE)
 ```
 
 The usual steps to query package dependencies are:
 
-1. Create a `\pkg_deps` object via `pkg_deps$new()`.
-1. Resolve all possible dependencies via `pkg_deps$resolve()`.
+1. Create a `pkg_deps` object via [`pkg_deps$new()`](#method-new).
+1. Resolve all possible dependencies via
+   [`pkg_deps$resolve()`](#method-resolve).
 1. Solve the dependencies, to obtain a subset of all possible
-   dependencies that can be installed together, via `pkg_deps$solve()`.
-1. Call `pkg_deps$get_solution()` to list the result of the
-   dependency solver.
+   dependencies that can be installed together, via
+   [`pkg_deps$solve()`](#method-solve).
+1. Call [`pkg_deps$get_solution()`](#method-get-solution) to list the
+   result of the dependency solver.
 
 Methods
 ==========================================================================
 
-```r
-pkg_deps$new()
-pkg_deps$get_refs()
-pkg_deps$get_config()
-pkg_deps$resolve()
-pkg_deps$async_resolve()
-pkg_deps$get_resolution()
-pkg_deps$solve()
-pkg_deps$get_solution()
-pkg_deps$draw()
-pkg_deps$format()
-pkg_deps$print()
-```
+* [`pkg_deps$new()`](#method-new)
+* [`pkg_deps$get_refs()`](#method-get-refs)
+* [`pkg_deps$get_config()`](#method-get-config)
+* [`pkg_deps$resolve()`](#method-resolve)
+* [`pkg_deps$async_resolve()`](#method-async-resolve)
+* [`pkg_deps$get_resolution()`](#method-get-resolution)
+* [`pkg_deps$solve()`](#method-solve)
+* [`pkg_deps$get_solution()`](#method-get-solution)
+* [`pkg_deps$draw()`](#method-draw)
+* [`pkg_deps$format()`](#method-format)
+* [`pkg_deps$print()`](#method-print)
 
-`new()`
+<a id="method-new"></a>
+
+Method `pkg_deps$new()`
 -------------------------------------
 
 ```r
@@ -44,12 +48,15 @@ pkg_deps$initialize(
 
 Create a new `pkg_deps` object. The object can be used to look up
 (recursive) dependencies of R packages from various sources.
-To perform the actual lookup, you'll need to call the `
+To perform the actual lookup, you'll need to call the
+[`resolve()`](#method-resolve) method.
 
 ### Parameters
 
-* `refs`: Package names or references. See [pkg_refs] for the syntax.
-* `config`: Configuration options, a named list. See [pkg_config].
+* `refs`: Package names or references. See ['Package references'][pkg_refs]
+  for the syntax.
+* `config`: Configuration options, a named list. See
+  ['Configuration'][pkg_config].
 * `remote_types`: Custom remote ref types, this is for advanced use,
   and experimental currently.
 
@@ -64,7 +71,9 @@ pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
 ```
 
-`get_refs()`
+<a id="method-get-refs"></a>
+
+Method `pkg_deps$get_refs()`
 -------------------------------------
 
 ```r
@@ -85,19 +94,21 @@ pd <- pkg_deps$new(c("pak", "jsonlite"))
 pd$get_refs()
 ```
 
-`get_config()`
+<a id="method-get-config"></a>
+
+Method `pkg_deps$get_config()`
 -------------------------------------
 
 ```r
 pkg_deps$get_config()
 ```
 
-Configuration options for the `pkg_deps` object. See [pkg_config] for
-details.
+Configuration options for the `pkg_deps` object. See
+['Configuration'][pkg_config] for details.
 
 ### Returns
 
-Named list. See [pkg_config] for the configuration options.
+Named list. See ['Configuration'][pkg_config] for the configuration options.
 
 ### Examples
 
@@ -106,7 +117,9 @@ pd <- pkg_deps$new("pak")
 pd$get_config()
 ```
 
-`resolve()`
+<a id="method-resolve"></a>
+
+Method `pkg_deps$resolve()`
 -------------------------------------
 
 ```r
@@ -116,13 +129,12 @@ pkg_deps$resolve()
 Resolve the dependencies of the specified package references. This usually
 means downloading metadata from CRAN and Bioconductor, unless already
 cached, and also from GitHub if GitHub refs were included, either directly
-or indirectly. See [pkg_resolution] for details about dependency
-resolution.
+or indirectly. See ['Dependency resolution'][pkg_resolution] for details.
 
 ### Returns
 
-The same as the `get_resolution()` method (see below), the result of the
-resolution, invisibly.
+The same as the [`get_resolution()`](#method-get-resolution) method
+(see below), the result of the resolution, invisibly.
 
 ### Examples
 
@@ -132,21 +144,25 @@ pd$resolve()
 pd
 ```
 
-`async_resolve()`
+<a id="method-async-resolve"></a>
+
+Method `pkg_deps$async_resolve()`
 -------------------------------------
 
 ```r
 pkg_deps$async_resolve()
 ```
 
-The same as `resolve()`, but asynchronous. This method is for advanced
-use.
+The same as [`resolve()`](#method-resolve), but asynchronous. This method
+is for advanced use.
 
 ### Returns
 
 A deferred value.
 
-`get_resolution()`
+<a id="method-get-resolution"></a>
+
+Method `pkg_deps$get_resolution()`
 -------------------------------------
 
 ```r
@@ -154,7 +170,7 @@ pkg_deps$get_resolution()
 ```
 
 Query the result of the dependency resolution. This method can be
-called after `resolve()` has completed.
+called after [`resolve()`](#method-resolve) has completed.
 
 ### Returns
 
@@ -169,7 +185,9 @@ pd$resolve()
 pd$get_resolution()
 ```
 
-`solve()`
+<a id="method-solve"></a>
+
+Method `pkg_deps$solve()`
 -------------------------------------
 
 ```r
@@ -179,14 +197,16 @@ pkg_deps$solve()
 Solve the package dependencies. Out of the resolved dependencies, it works
 out a set of packages, that includes all directly specified packages,
 and all required (or suggested, depending on the configuration) packages
-as well. It includes every package at most once. See [pkg_solution] for
-details.
+as well. It includes every package at most once. See
+['The dependency solver'][pkg_solution] for details.
 
-`solve()` calls `resolve()` automatically, if it hasn't been called yet.
+`solve()` calls [`resolve()`](#method-resolve) automatically, if it
+hasn't been called yet.
 
 ### Returns
 
-The same as the `get_solution()` method, the result, invisibly.
+The same as the [`get_solution()`](#method-get-solution) method, the
+result, invisibly.
 
 ### Examples
 
@@ -197,7 +217,9 @@ pd$solve()
 pd
 ```
 
-`get_solution()`
+<a id="method-get-solution"></a>
+
+Method `pkg_deps$get_solution()`
 -------------------------------------
 
 ```r
@@ -220,7 +242,9 @@ pd$solve()
 pd$get_solution()
 ```
 
-`draw()`
+<a id="method-draw"></a>
+
+Method `pkg_deps$draw()`
 -------------------------------------
 
 ```r
@@ -243,7 +267,9 @@ pd$solve()
 pd$draw()
 ```
 
-`format()`
+<a id="method-format"></a>
+
+Method `pkg_deps$format()`
 -------------------------------------
 
 ```r
@@ -260,7 +286,9 @@ Format a `pkg_deps` object, typically for printing.
 
 A character vector, each element should be a line in the printout.
 
-`print()`
+<a id="method-print"></a>
+
+Method `pkg_deps$print()`
 -------------------------------------
 
 ```r

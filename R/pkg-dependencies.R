@@ -5,6 +5,14 @@ new_pkg_deps <- function(refs) {
   pkg_deps$new(refs)
 }
 
+#' R6 class for package dependency lookup
+#'
+#' Create a `pkg_deps` object to look up dependencies of R packages.
+#'
+#' @includeRmd tools/doc/pkg-dependencies.Rmd
+#' @name pkg_deps
+NULL
+
 #' @export
 
 pkg_deps <- R6::R6Class(

@@ -725,7 +725,7 @@ format.pkg_solution_result <- function(x, ...) {
     "+ refs:", paste0("  - ", refs),
     if (nc == 0) "+ no constraints",
     if (nc > 0) paste0("+ constraints (", length(cnst), "):"),
-    if (nc > 0) paste0("  - ", head(cnst, 10)),
+    if (nc > 0) paste0("  - ", utils::head(cnst, 10)),
     if (nc > 10) "  ...",
     if (ok) c("+ solution:", paste0("  - ", solrefs)),
     if (!ok) c("x failures:", format(x$failures))

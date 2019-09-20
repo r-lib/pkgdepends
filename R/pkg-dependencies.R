@@ -110,4 +110,5 @@ pkgdeps_format <- function(self, private, ...) {
 
 pkgdeps_print <- function(self, private, ...) {
   cat(self$format(...), sep = "\n")
+  invisible(self)
 }

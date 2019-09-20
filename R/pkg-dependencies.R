@@ -33,7 +33,7 @@ pkg_deps <- R6::R6Class(
       pkgdeps_solve(self, private),
     get_solution = function()
       pkgdeps_get_solution(self, private),
-     draw = function()
+    draw = function()
       pkgdeps_draw(self, private),
 
     format = function(...) pkgdeps_format(self, private, ...),

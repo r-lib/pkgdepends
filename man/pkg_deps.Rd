@@ -2,12 +2,11 @@
 % Please edit documentation in R/pkg-dependencies.R
 \name{pkg_deps}
 \alias{pkg_deps}
-\title{\if{html}{\out{
-<link rel="stylesheet" type="text/css" href="../doc/extra.css">
-}}
-R6 class for package dependency lookup}
+\title{R6 class for package dependency lookup}
 \description{
 Create a \code{pkg_deps} object to look up dependencies of R packages.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 The usual steps to query package dependencies are:
@@ -23,6 +22,7 @@ result of the dependency solver.
 }
 }
 \section{Methods}{
+\subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{pkg_deps$new()}}
 \item \href{#method-get-refs}{\code{pkg_deps$get_refs()}}
@@ -38,11 +38,13 @@ result of the dependency solver.
 }
 
 \if{html}{\out{<a id="method-new">}}\if{html}{\out{</a>}}
-\subsection{Method \code{pkg_deps$new()}}{\preformatted{pkg_deps$initialize(
+}
+
+\subsection{Method \code{pkg_deps$new()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$initialize(
   refs,
   config = list(),
   remote_types = NULL)
-}
+}\if{html}{\out{</div>}}
 
 Create a new \code{pkg_deps} object. The object can be used to look up
 (recursive) dependencies of R packages from various sources. To perform
@@ -63,22 +65,25 @@ and experimental currently.
 A new \code{pkg_deps} object.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
-}\preformatted{## <pkg_dependencies>
+}\if{html}{\out{</div>}}\preformatted{## <pkg_dependencies>
 ## + refs:
 ##   - r-lib/pkgdepends
 ## (use `$resolve()` to resolve dependencies)
 ## (use `$solve()` to solve dependencies)
-}
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-get-refs">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$get_refs()}}{\preformatted{pkg_deps$get_refs()
-}
+\subsection{Method \code{pkg_deps$get_refs()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_refs()
+}\if{html}{\out{</div>}}
 
 The package refs that were used to create the \code{pkg_deps} object.
 \subsection{Returns}{
@@ -87,18 +92,21 @@ A character vector of package refs that were used to create the
 \code{pkg_deps} object.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new(c("pak", "jsonlite"))
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new(c("pak", "jsonlite"))
 pd$get_refs()
-}\preformatted{## [1] "pak"      "jsonlite"
-}
+}\if{html}{\out{</div>}}\preformatted{## [1] "pak"      "jsonlite"
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-get-config">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$get_config()}}{\preformatted{pkg_deps$get_config()
-}
+\subsection{Method \code{pkg_deps$get_config()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_config()
+}\if{html}{\out{</div>}}
 
 Configuration options for the \code{pkg_deps} object. See
 \link[=pkg_config]{‘Configuration’} for details.
@@ -108,26 +116,29 @@ Named list. See \link[=pkg_config]{‘Configuration’} for the configuration
 options.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("pak")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("pak")
 pd$get_config()
-}\preformatted{## + config:
-##   - library: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpKLyPl5/file4b685f966c14
-##   - cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpKLyPl5/file4b6821a50826
+}\if{html}{\out{</div>}}\preformatted{## + config:
+##   - library: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpdRFogt/filead536ae6439a
+##   - cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpdRFogt/filead533676ddcd
 ##   - package_cache_dir: <default>
-##   - metadata_cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpKLyPl5/file4b6859ba080b
+##   - metadata_cache_dir: /var/folders/59/0gkmw1yj2w7bf2dfc3jznv5w0000gn/T//RtmpdRFogt/filead5335dbd9aa
 ##   - platforms: macos, source
 ##   - cran-mirror: https://cloud.r-project.org
 ##   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
 ##   - r-versions: 3.6.1
-}
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-resolve">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$resolve()}}{\preformatted{pkg_deps$resolve()
-}
+\subsection{Method \code{pkg_deps$resolve()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$resolve()
+}\if{html}{\out{</div>}}
 
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
@@ -139,9 +150,9 @@ The same as the \href{#method-get-resolution}{\code{get_resolution()}} method (s
 below), the result of the resolution, invisibly.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("pak")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("pak")
 pd$resolve()
-}\preformatted{## Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
+}\if{html}{\out{</div>}}\preformatted{## Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
 ## Please use `!!` instead.
 ## 
 ##   # Bad:
@@ -152,36 +163,42 @@ pd$resolve()
 ##   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
 ## 
 ## This warning is displayed once per session.
-}\preformatted{pd
-}\preformatted{## <pkg_dependencies>
+}\if{html}{\out{<div class="r r copy">}}\preformatted{pd
+}\if{html}{\out{</div>}}\preformatted{## <pkg_dependencies>
 ## + refs:
 ##   - pak
 ## + has resolution (+43 dependencies)
 ## (use `$get_resolution()` to see resolution results)
 ## (use `$solve()` to solve dependencies)
-}
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-async-resolve">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$async_resolve()}}{\preformatted{pkg_deps$async_resolve()
-}
+\subsection{Method \code{pkg_deps$async_resolve()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$async_resolve()
+}\if{html}{\out{</div>}}
 
 The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous. This
 method is for advanced use.
 \subsection{Returns}{
 
-A deferred value.
+A deferred value.\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-get-resolution">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$get_resolution()}}{\preformatted{pkg_deps$get_resolution()
-}
+\subsection{Method \code{pkg_deps$get_resolution()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_resolution()
+}\if{html}{\out{</div>}}
 
 Query the result of the dependency resolution. This method can be called
 after \href{#method-resolve}{\code{resolve()}} has completed.
@@ -192,10 +209,10 @@ also a tibble. See \link{pkg_resolution_result}
 for its columns.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
-}\preformatted{## # A tibble: 89 x 26
+}\if{html}{\out{</div>}}\preformatted{## # A tibble: 89 x 26
 ##    ref   type  direct status package version license needscompilation
 ##    <chr> <chr> <lgl>  <chr>  <chr>   <chr>   <chr>   <lgl>           
 ##  1 r-li~ gith~ TRUE   OK     pkgdep~ 0.0.0.~ MIT + ~ TRUE            
@@ -214,15 +231,18 @@ pd$get_resolution()
 ## #   deps <list>, mirror <chr>, sources <list>, remote <list>,
 ## #   error <list>, metadata <list>, extra <list>, dep_types <list>,
 ## #   cache_status <chr>
-}
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-solve">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$solve()}}{\preformatted{pkg_deps$solve()
-}
+\subsection{Method \code{pkg_deps$solve()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$solve()
+}\if{html}{\out{</div>}}
 
 Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that includes all directly specified
@@ -238,11 +258,11 @@ The same as the \href{#method-get-solution}{\code{get_solution()}} method, the
 result, invisibly.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
 pd
-}\preformatted{## <pkg_dependencies>
+}\if{html}{\out{</div>}}\preformatted{## <pkg_dependencies>
 ## + refs:
 ##   - r-lib/pkgdepends
 ## + has resolution (+44 dependencies)
@@ -250,15 +270,18 @@ pd
 ## (use `$get_resolution()` to see resolution results)
 ## (use `$get_solution()` to see solution results)
 ## (use `$draw()` to draw the dependency tree)
-}
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-get-solution">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$get_solution()}}{\preformatted{pkg_deps$get_solution()
-}
+\subsection{Method \code{pkg_deps$get_solution()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_solution()
+}\if{html}{\out{</div>}}
 
 Returns the solution of the package dependencies.
 \subsection{Returns}{
@@ -267,11 +290,11 @@ A \link{pkg_solution_result} object, which is a
 list. See \link{pkg_solution_result} for details.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("pkgload")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("pkgload")
 pd$resolve()
 pd$solve()
 pd$get_solution()
-}\preformatted{## <pkg_solution>
+}\if{html}{\out{</div>}}\preformatted{## <pkg_solution>
 ## + result: OK
 ## + refs:
 ##   - pkgload
@@ -305,15 +328,18 @@ pd$get_solution()
 ##   - rprojroot
 ##   - rstudioapi
 ##   - withr
-}
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-draw">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$draw()}}{\preformatted{pkg_deps$draw()
-}
+\subsection{Method \code{pkg_deps$draw()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$draw()
+}\if{html}{\out{</div>}}
 
 Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the
@@ -324,10 +350,10 @@ A \code{tree} object from the cli package, see
 \code{\link[cli:tree]{cli::tree()}}.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("pkgload")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("pkgload")
 pd$solve()
 pd$draw()
-}\preformatted{## pkgload (1.0.2)
+}\if{html}{\out{</div>}}\preformatted{## pkgload (1.0.2)
 ## +-desc (1.2.0)
 ## | +-assertthat (0.2.1)
 ## | +-R6 (2.4.0)
@@ -362,15 +388,18 @@ pd$draw()
 ## | \-backports (1.1.4)
 ## +-rstudioapi (0.10)
 ## \-withr (2.1.2)
-}
+}\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-format">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$format()}}{\preformatted{pkg_deps$format(...)
-}
+\subsection{Method \code{pkg_deps$format()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$format(...)
+}\if{html}{\out{</div>}}
 
 Format a \code{pkg_deps} object, typically for printing.
 \subsection{Parameters}{
@@ -381,15 +410,18 @@ Format a \code{pkg_deps} object, typically for printing.
 
 \subsection{Returns}{
 
-A character vector, each element should be a line in the printout.
+A character vector, each element should be a line in the printout.\if{html}{\out{
+<hr>
+}}
+
 
 \if{html}{\out{<a id="method-print">}}\if{html}{\out{</a>}}
 }
 
 }
 
-\subsection{Method \code{pkg_deps$print()}}{\preformatted{pkg_deps$print(...)
-}
+\subsection{Method \code{pkg_deps$print()}}{\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$print(...)
+}\if{html}{\out{</div>}}
 
 Prints a \code{pkg_deps} object to the screen. The printout includes:
 \itemize{
@@ -413,24 +445,24 @@ See the example below.
 The \code{pkg_deps} object itself, invisibly.
 }
 
-\subsection{Examples}{\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
-}\preformatted{## <pkg_dependencies>
+}\if{html}{\out{</div>}}\preformatted{## <pkg_dependencies>
 ## + refs:
 ##   - r-lib/pkgdepends
 ## (use `$resolve()` to resolve dependencies)
 ## (use `$solve()` to solve dependencies)
-}\preformatted{pd$resolve()
+}\if{html}{\out{<div class="r r copy">}}\preformatted{pd$resolve()
 pd
-}\preformatted{## <pkg_dependencies>
+}\if{html}{\out{</div>}}\preformatted{## <pkg_dependencies>
 ## + refs:
 ##   - r-lib/pkgdepends
 ## + has resolution (+44 dependencies)
 ## (use `$get_resolution()` to see resolution results)
 ## (use `$solve()` to solve dependencies)
-}\preformatted{pd$solve()
+}\if{html}{\out{<div class="r r copy">}}\preformatted{pd$solve()
 pd
-}\preformatted{## <pkg_dependencies>
+}\if{html}{\out{</div>}}\preformatted{## <pkg_dependencies>
 ## + refs:
 ##   - r-lib/pkgdepends
 ## + has resolution (+44 dependencies)
@@ -438,7 +470,10 @@ pd
 ## (use `$get_resolution()` to see resolution results)
 ## (use `$get_solution()` to see solution results)
 ## (use `$draw()` to draw the dependency tree)
-}
+}\if{html}{\out{
+<hr>
+}}
+
 }
 
 }

@@ -6,13 +6,11 @@ new_pkg_deps <- function(refs) {
 }
 
 #' @title
-#' \if{html}{\out{
-#' <link rel="stylesheet" type="text/css" href="../doc/extra.css">
-#' }}
 #' R6 class for package dependency lookup
 #'
 #' @description
 #' Create a `pkg_deps` object to look up dependencies of R packages.
+#' @eval style_man()
 #'
 #' @includeRmd tools/doc/pkg-dependencies.Rmd
 #' @name pkg_deps

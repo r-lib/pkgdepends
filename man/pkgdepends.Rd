@@ -3,7 +3,6 @@
 \docType{package}
 \name{pkgdepends}
 \alias{pkgdepends}
-\alias{pkgdepends-package}
 \title{pkgdepends}
 \description{
 The pkgdepends package
@@ -31,11 +30,11 @@ dependencies.
 \item Builds and installs packages in parallel.
 }
 }
-\section{Install}{\preformatted{install.packages("pkgdepends")
+\section{Install}{\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
+}\if{html}{\out{</div>}}
 }
-}
-\section{Usage}{\preformatted{library(pkgdepends)
-}
+\section{Usage}{\if{html}{\out{<div class="r">}}\preformatted{library(pkgdepends)
+}\if{html}{\out{</div>}}
 \subsection{Package references}{
 
 A package reference (ref) specifies a location from which an R package

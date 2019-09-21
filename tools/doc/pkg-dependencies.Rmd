@@ -5,7 +5,7 @@ options(
   cli.unicode = FALSE)
 knitr::opts_chunk$set(
   cache = TRUE,
-  highlight = TRUE)
+  class.source = "r copy")
 ```
 
 The usual steps to query package dependencies are:
@@ -21,6 +21,9 @@ The usual steps to query package dependencies are:
 
 Methods
 ==========================================================================
+
+Public methods
+-------------------------------------
 
 * [`pkg_deps$new()`](#method-new)
 * [`pkg_deps$get_refs()`](#method-get-refs)
@@ -71,6 +74,8 @@ pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
 ```
 
+<hr>
+
 <a id="method-get-refs"></a>
 
 Method `pkg_deps$get_refs()`
@@ -94,6 +99,8 @@ pd <- pkg_deps$new(c("pak", "jsonlite"))
 pd$get_refs()
 ```
 
+<hr>
+
 <a id="method-get-config"></a>
 
 Method `pkg_deps$get_config()`
@@ -116,6 +123,8 @@ Named list. See ['Configuration'][pkg_config] for the configuration options.
 pd <- pkg_deps$new("pak")
 pd$get_config()
 ```
+
+<hr>
 
 <a id="method-resolve"></a>
 
@@ -144,6 +153,8 @@ pd$resolve()
 pd
 ```
 
+<hr>
+
 <a id="method-async-resolve"></a>
 
 Method `pkg_deps$async_resolve()`
@@ -159,6 +170,8 @@ is for advanced use.
 ### Returns
 
 A deferred value.
+
+<hr>
 
 <a id="method-get-resolution"></a>
 
@@ -184,6 +197,8 @@ pd <- pkg_deps$new("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
 ```
+
+<hr>
 
 <a id="method-solve"></a>
 
@@ -217,6 +232,8 @@ pd$solve()
 pd
 ```
 
+<hr>
+
 <a id="method-get-solution"></a>
 
 Method `pkg_deps$get_solution()`
@@ -241,6 +258,8 @@ pd$resolve()
 pd$solve()
 pd$get_solution()
 ```
+
+<hr>
 
 <a id="method-draw"></a>
 
@@ -267,6 +286,8 @@ pd$solve()
 pd$draw()
 ```
 
+<hr>
+
 <a id="method-format"></a>
 
 Method `pkg_deps$format()`
@@ -285,6 +306,8 @@ Format a `pkg_deps` object, typically for printing.
 ### Returns
 
 A character vector, each element should be a line in the printout.
+
+<hr>
 
 <a id="method-print"></a>
 
@@ -330,3 +353,5 @@ pd
 pd$solve()
 pd
 ```
+
+<hr>

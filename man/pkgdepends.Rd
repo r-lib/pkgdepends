@@ -3,14 +3,25 @@
 \docType{package}
 \name{pkgdepends}
 \alias{pkgdepends}
+\alias{pkgdepends-package}
 \title{pkgdepends}
 \description{
 The pkgdepends package
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 pkgdepends is a toolkit for package dependencies, downloads and
 installations, to be used in other packages. If you are looking for a
 package manager, see \href{https://github.com/r-lib/pak}{pak}.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/r-lib/pkgdepends#readme}
+  \item Report bugs at \url{https://github.com/r-lib/pkgdepends/issues}
+}
+
 }
 \section{Features}{
 \itemize{

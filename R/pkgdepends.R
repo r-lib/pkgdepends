@@ -1,7 +1,7 @@
 
 #' @title pkgdepends
 #' @description The pkgdepends package
+#' @eval style_man()
 #' @name pkgdepends
-#' @docType package
 #' @includeRmd tools/doc/README-body.Rmd
-NULL
+"_PACKAGE"

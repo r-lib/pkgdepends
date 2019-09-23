@@ -87,3 +87,5 @@ TODO
 # License
 
 MIT © RStudio
+
+[parse_pkg_refs()]: https://pkgdepends.r-lib.org/TODO

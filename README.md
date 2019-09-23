@@ -69,7 +69,8 @@ Examples:
     https://github.com/r-lib/pkgdepends
     local::~/works/shiny
 
-Use \[parse\_pkg\_refs()\] to parse package references.
+Use [parse\_pkg\_refs()](https://pkgdepends.r-lib.org/TODO) to parse
+package references.
 
 ## Package dependencies
 

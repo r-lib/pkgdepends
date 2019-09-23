@@ -1,15 +1,27 @@
 
+#' @param refs Package names or references. See
+#'   ['Package references'][pkg_refs] for the syntax.
+#' @param ... Additional arguments, passed to
+#'   [`pkg_deps$new()`]($method-new).
+#'
+#' @details
+#' `new_pkg_deps()` creates a new object from the `pkg_deps` class.
+#' The advantage of `new_pkg_deps()` compared to using the [pkg_deps]
+#' constructor directly is that it avoids making pkgdepends a build time
+#' dependency.
+#'
 #' @export
+#' @rdname pkg_deps
 
-new_pkg_deps <- function(refs) {
-  pkg_deps$new(refs)
+new_pkg_deps <- function(refs, ...) {
+  pkg_deps$new(refs, ...)
 }
 
 #' @title
 #' R6 class for package dependency lookup
 #'
 #' @description
-#' Create a `pkg_deps` object to look up dependencies of R packages.
+#' Look up dependencies of R packages, from various sources.
 #' @eval style_man()
 #'
 #' @includeRmd tools/doc/pkg-dependencies.Rmd

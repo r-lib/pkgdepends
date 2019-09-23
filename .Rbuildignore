@@ -10,3 +10,5 @@
 ^r-packages$
 ^README_cache$
 ^tools$
+^doc$
+^Meta$

@@ -7,6 +7,8 @@
 A package reference (ref) specifies a location from which an R package
 can be obtained from. The full syntax of a reference is \code{type::ref}, but
 \code{type} can be often omitted, the common ref types have shortcuts.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 The currently supported reference types are:
@@ -25,14 +27,12 @@ are applied:
 \itemize{
 \item if the ref is a valid \code{standard} ref type (without the \verb{standard::}
 prefix), then \code{standard} is used;
-\item if the ref is a valid \code{github} ref type (without the \verb{github::} prefix),
-then \code{github} is used;
+\item if the ref is a valid \code{github} ref type (without the \verb{github::}
+prefix), then \code{github} is used;
 \item if the ref is a GitHub URL, then \code{github} is used;
 \item otherwise an error is thrown.
 }
-}
-\section{CRAN packages}{
-
+\subsection{CRAN packages:}{
 
 A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]
 }
@@ -41,37 +41,39 @@ A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> 
 \item \verb{<version>} is either a package version, or
 }
 
-Examples: \code{forecast}, \verb{forecast@8.8}, \verb{forecast@>=8.8},
-\code{cran::forecast}, \code{forecast@last}, \code{forecast@current}.
+Examples:\preformatted{forecast
+forecast@8.8
+forecast@>=8.8
+cran::forecast
+forecast@last
+forecast@current
+}
 
 Note: pkgdepends currently parses the version specification part
 (everything after \verb{@}), but does not use it.
 }
 
-\section{Bioconductor packages}{
+\subsection{Bioconductor packages:}{
 
-
-A package from Bioconductor. The syntax is the same as for CRAN packages,
-except of the prefix of course:\preformatted{[bioc::]<package>[@[>=]<version> | current | last]
+A package from Bioconductor. The syntax is the same as for CRAN
+packages, except of the prefix of course:\preformatted{[bioc::]<package>[@[>=]<version> | current | last]
 }
 }
 
-\section{Standard packages}{
+\subsection{Standard packages:}{
 
-
-These are packages either from CRAN or Bioconductor, the full syntax
-is the same as for CRAN packages, except for the prefix:\preformatted{[standard::]<package>[@[>=]<version> | current | last]
+These are packages either from CRAN or Bioconductor, the full syntax is
+the same as for CRAN packages, except for the prefix:\preformatted{[standard::]<package>[@[>=]<version> | current | last]
 }
 }
 
-\section{GitHub packages}{
-
+\subsection{GitHub packages:}{
 
 Packages from a GitHub repository. Full syntax:\preformatted{[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
 }
 \itemize{
-\item \verb{<package>} is the name of the package. If this is missing, then
-the name of the repository is used.
+\item \verb{<package>} is the name of the package. If this is missing, then the
+name of the repository is used.
 \item \verb{<username>} is a GitHub username or organization name.
 \item \verb{<repository>} is the name of the repository.
 \item \verb{<subdir>} optional subdirectory, if the package is within a
@@ -86,59 +88,69 @@ subdirectory in the repository.
 \item the latest release: \verb{@*release}.
 }
 
-Examples: \code{r-lib/crayon}, \code{github::r-lib/crayon}, \verb{r-lib/crayon@84be6207},
-\code{r-lib/crayon@branch}, \code{r-lib/crayon#41}, \code{r-lib/crayon@release}.
+Examples:\preformatted{r-lib/crayon
+github::r-lib/crayon
+r-lib/crayon@84be6207
+r-lib/crayon@branch
+r-lib/crayon#41
+r-lib/crayon@release
+}
 
-For convenience GitHub HTTP URLs can also be used to specify a
-package from GitHub. Examples:
-\itemize{
-\item \verb{https://github.com/r-lib/withr}
-\item A branch: \verb{https://github.com/r-lib/withr/tree/ghactions}
-\item A tag: \verb{https://github.com/r-lib/withr/tree/v2.1.1}
-\item A commit: \verb{https://github.com/r-lib/withr/commit/8fbcb548e316}
-\item A pull request: \verb{https://github.com/r-lib/withr/pull/76}
-\item A release: \verb{https://github.com/r-lib/withr/releases/tag/v2.1.0}
+For convenience GitHub HTTP URLs can also be used to specify a package
+from GitHub. Examples:\preformatted{https://github.com/r-lib/withr
+# A branch:
+https://github.com/r-lib/withr/tree/ghactions
+# A tag:
+https://github.com/r-lib/withr/tree/v2.1.1
+# A commit:
+https://github.com/r-lib/withr/commit/8fbcb548e316
+# A pull request:
+https://github.com/r-lib/withr/pull/76
+# A release:
+https://github.com/r-lib/withr/releases/tag/v2.1.0
 }
 
 A GitHub remote string can also be used instead of an URL, for example:
 \code{git@github.com:r-lib/pkgdepends.git}
 }
 
-\section{Local packages}{
-
+\subsection{Local packages:}{
 
 A path that refers to a package file built with \verb{R CMD build}, or a
 directory that contains a package. Full syntax:\preformatted{local::<path>
 }
 
-Examples: \verb{local::/foo/bar/package_1.0.0.tar.gz}, \verb{local::/foo/bar/pkg},
-\code{local::.}.
+Examples:\preformatted{local::/foo/bar/package_1.0.0.tar.gz
+local::/foo/bar/pkg
+local::.
+}
 }
 
-\section{Installed packages}{
+\subsection{Installed packages:}{
 
-
-This is usually used internally, but can also be used directly.
-Full syntax:\preformatted{installed::<path>/<package>
+This is usually used internally, but can also be used directly. Full
+syntax:\preformatted{installed::<path>/<package>
 }
 \itemize{
 \item \verb{<path>} is the library the package is installed to.
 \item \verb{<package>} is the package name.
 }
 
-Examples: \verb{installed::~/R/3.6/crayon}.
+Example:\preformatted{installed::~/R/3.6/crayon
+}
 }
 
-\section{Package dependencies}{
-
+\subsection{Package dependencies:}{
 
 Usually used internally, it specifies the dependencies of a local
 package. It can be used to download or install the dependencies of a
-package, without downloading or installing the package itself.
-Full syntax:\preformatted{deps::<path>
+package, without downloading or installing the package itself. Full
+syntax:\preformatted{deps::<path>
 }
 
-Examples: \verb{deps::/foo/bar/package_1.0.0.tar.gz}, \verb{deps::/foo/bar/pkg},
-\code{deps::.}.
+Examples:\preformatted{deps::/foo/bar/package_1.0.0.tar.gz
+deps::/foo/bar/pkg
+deps::.
 }
-
+}
+}

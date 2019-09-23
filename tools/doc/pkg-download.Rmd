@@ -1,0 +1,341 @@
+
+```{r include = FALSE}
+options(
+  pkg.show_progress = FALSE,
+  cli.unicode = FALSE)
+knitr::opts_chunk$set(
+  cache = TRUE,
+  class.source = "r copy")
+```
+
+Typical workflow to download a set of packages:
+
+1. Create a `pkg_download_proposal` object with
+   `new_pkg_download_proposal()`.
+1. Resolve all possible dependencies with
+   [`pkg_download_proposal$resolve()`](#method-resolve).
+1. Download all files with
+   [`pkg_download_proposal$download()`](#method-download).
+1. Get the data about the packages and downloads with
+   [`pkg_download_proposal$get_downloads()`](#method-get-downloads).
+
+Methods
+==========================================================================
+
+Public methods
+-------------------------------------
+
+* [`pkg_download_proposal$new()`](#method-new)
+* [`pkg_download_proposal$get_refs()`](#method-get-refs)
+* [`pkg_download_proposal$get_config()`](#method-get-config)
+* [`pkg_download_proposal$resolve()`](#method-resolve)
+* [`pkg_download_proposal$async_resolve()`](#method-async-resolve)
+* [`pkg_download_proposal$get_resolution()`](#method-get-resolution)
+* [`pkg_download_proposal$download()`](#method-download)
+* [`pkg_download_proposal$async_download()`](#method-async-download)
+* [`pkg_download_proposal$get_downloads()`](#method-get-downloads)
+* [`pkg_download_proposal$format()`](#method-format)
+* [`pkg_download_proposal$print()`](#method-print)
+
+<a id="method-new"></a>
+
+Method `pkg_download_proposal$new()`
+-------------------------------------
+
+```r
+pkg_download_proposal$new(
+  refs,
+  config = list(),
+  remote_types = NULL
+)
+```
+
+Create a new `pkg_download_proposal` object. Consider using
+`new_pkg_download_proposal()` instead of calling the constructor
+directly.
+
+The returned object can be used to look up (recursive) dependencies of R
+packages from various sources, and then to download the package files.
+
+### Parameters
+
+* `refs`: Package names or references. See ['Package references'][pkg_refs]
+  for the syntax.
+* `config`: Configuration options, a named list. See
+  ['Configuration'][pkg_config].
+* `remote_types`: Custom remote ref types, this is for advanced use,
+  and experimental currently.
+
+### Examples
+
+```{r}
+pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+pdl
+```
+
+<hr>
+
+<a id="method-get-refs"></a>
+
+Method `pkg_download_proposal$get_refs()`
+-------------------------------------
+
+```r
+pkg_download_proposal$get_refs()
+```
+
+The package refs that were used to create the `pkg_download_proposal` object.
+
+### Returns
+
+A character vector of package refs that were used to create the
+`pkg_download_proposal` object.
+
+### Examples
+
+```{r}
+pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
+pdl$get_refs()
+```
+
+<hr>
+
+<a id="method-get-config"></a>
+
+Method `pkg_download_proposal$get_config()`
+-------------------------------------
+
+```r
+pkg_download_proposal$get_config()
+```
+
+Configuration options for the `pkg_download_proposal` object. See
+['Configuration'][pkg_config] for details.
+
+### Returns
+
+Named list. See ['Configuration'][pkg_config] for the configuration options.
+
+### Examples
+
+```{r}
+pdl <- new_pkg_download_proposal("pak")
+pdl$get_config()
+```
+
+<hr>
+
+<a id="method-resolve"></a>
+
+Method `pkg_download_proposal$resolve()`
+-------------------------------------
+
+```r
+pkg_download_proposal$resolve()
+```
+
+Resolve the dependencies of the specified package references. This usually
+means downloading metadata from CRAN and Bioconductor, unless already
+cached, and also from GitHub if GitHub refs were included, either directly
+or indirectly. See ['Dependency resolution'][pkg_resolution] for details.
+
+### Returns
+
+The same as the [`get_resolution()`](#method-get-resolution) method
+(see below), the result of the resolution, invisibly.
+
+### Examples
+
+```{r}
+pdl <- new_pkg_download_proposal("pak")
+pdl$resolve()
+pdl
+```
+
+<hr>
+
+<a id="method-async-resolve"></a>
+
+Method `pkg_download_proposal$async_resolve()`
+-------------------------------------
+
+```r
+pkg_download_proposal$async_resolve()
+```
+
+The same as [`resolve()`](#method-resolve), but asynchronous. This method
+is for advanced use.
+
+### Returns
+
+A deferred value.
+
+<hr>
+
+<a id="method-get-resolution"></a>
+
+Method `pkg_download_proposal$get_resolution()`
+-------------------------------------
+
+```r
+pkg_download_proposal$get_resolution()
+```
+
+Query the result of the dependency resolution. This method can be
+called after [`resolve()`](#method-resolve) has completed.
+
+### Returns
+
+A [pkg_resolution_result] object, which is also a tibble. See
+[pkg_resolution_result] for its columns.
+
+### Examples
+
+```{r}
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+pdl$resolve()
+pdl$get_resolution()
+```
+
+<hr>
+
+<a id="method-download"></a>
+
+Method `pkg_download_proposal$download()`
+-------------------------------------
+
+```r
+pkg_download_proposal$download()
+```
+
+Download all resolved packages. It uses the package cache in the pkgcache
+package by default, to avoid downloads if possible.
+
+### Returns
+
+The same as the [`get_downloads()`](#method-get-downloads) method, the
+result, invisibly.
+
+### Examples
+
+```{r}
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+pdl$resolve()
+pdl$download()
+pdl
+```
+
+<hr>
+
+<a id="method-async-download"></a>
+
+Method `pkg_download_proposal$async_download()`
+-------------------------------------
+
+```r
+pkg_download_proposal$async_download()
+```
+
+The same as [`download()`](#method-download), but asynchronous. This method
+is for advanced use.
+
+### Returns
+
+A deferred value.
+
+<hr>
+
+<a id="method-get-downloads"></a>
+
+Method `pkg_download_proposal$get_downloads()`
+-------------------------------------
+
+```r
+pkg_download_proposal$get_solution()
+```
+
+Returns the summary of the package downloads.
+
+### Returns
+
+A [pkg_download_result] object, which is a list. See [pkg_download_result]
+for details.
+
+### Examples
+
+```{r}
+pdl <- new_pkg_download_proposal("pkgload")
+pdl$resolve()
+pdl$download()
+pdl$get_downloads()
+```
+
+<hr>
+
+<a id="method-format"></a>
+
+Method `pkg_download_proposal$format()`
+-------------------------------------
+
+```r
+pkg_download_proposal$format(...)
+```
+
+Format a `pkg_download_proposal` object, typically for printing.
+
+### Parameters
+
+* `...`: not used currently.
+
+### Returns
+
+A character vector, each element should be a line in the printout.
+
+<hr>
+
+<a id="method-print"></a>
+
+Method `pkg_download_proposal$print()`
+-------------------------------------
+
+```r
+pkg_download_proposal$print(...)
+```
+
+Prints a `pkg_download_proposal` object to the screen. The printout includes:
+
+* The package refs.
+* Whether the object has the resolved dependencies.
+* Whether the resolution had errors.
+* Whether the downloads were completed.
+* Whether the downloads had errors.
+* Advice on which methods to call next.
+
+See the example below.
+
+### Parameters
+
+* `...`: not used currently.
+
+### Returns
+
+The `pkg_download_proposal` object itself, invisibly.
+
+### Examples
+
+```{r}
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+pdl
+```
+
+```{r}
+pdl$resolve()
+pdl
+```
+
+```{r}
+pdl$download()
+pdl
+```
+
+<hr>

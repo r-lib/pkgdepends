@@ -10,11 +10,11 @@ knitr::opts_chunk$set(
 
 The usual steps to query package dependencies are:
 
-1. Create a `pkg_deps` object via [`pkg_deps$new()`](#method-new).
-1. Resolve all possible dependencies via
+1. Create a `pkg_deps` object with `new_pkg_deps()`.
+1. Resolve all possible dependencies with
    [`pkg_deps$resolve()`](#method-resolve).
 1. Solve the dependencies, to obtain a subset of all possible
-   dependencies that can be installed together, via
+   dependencies that can be installed together, with
    [`pkg_deps$solve()`](#method-solve).
 1. Call [`pkg_deps$get_solution()`](#method-get-solution) to list the
    result of the dependency solver.
@@ -43,16 +43,19 @@ Method `pkg_deps$new()`
 -------------------------------------
 
 ```r
-pkg_deps$initialize(
+pkg_deps$new(
   refs,
   config = list(),
-  remote_types = NULL)
+  remote_types = NULL
+)
 ```
 
-Create a new `pkg_deps` object. The object can be used to look up
-(recursive) dependencies of R packages from various sources.
-To perform the actual lookup, you'll need to call the
-[`resolve()`](#method-resolve) method.
+Create a new `pkg_deps` object. Consider using `new_pkg_deps()` instead of
+calling the constructor directly.
+
+The returned object can be used to look up (recursive) dependencies of R
+packages from various sources. To perform the actual lookup, you'll need
+to call the [`resolve()`](#method-resolve) method.
 
 ### Parameters
 
@@ -95,7 +98,7 @@ object.
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new(c("pak", "jsonlite"))
+pd <- new_pkg_deps(c("pak", "jsonlite"))
 pd$get_refs()
 ```
 
@@ -120,7 +123,7 @@ Named list. See ['Configuration'][pkg_config] for the configuration options.
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new("pak")
+pd <- new_pkg_deps("pak")
 pd$get_config()
 ```
 
@@ -148,7 +151,7 @@ The same as the [`get_resolution()`](#method-get-resolution) method
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new("pak")
+pd <- new_pkg_deps("pak")
 pd$resolve()
 pd
 ```
@@ -193,7 +196,7 @@ A [pkg_resolution_result] object, which is also a tibble. See
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new("r-lib/pkgdepends")
+pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
 ```
@@ -226,7 +229,7 @@ result, invisibly.
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new("r-lib/pkgdepends")
+pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
 pd
@@ -253,7 +256,7 @@ for details.
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new("pkgload")
+pd <- new_pkg_deps("pkgload")
 pd$resolve()
 pd$solve()
 pd$get_solution()
@@ -281,7 +284,7 @@ A `tree` object from the cli package, see [cli::tree()].
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new("pkgload")
+pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
 ```
@@ -323,7 +326,7 @@ Prints a `pkg_deps` object to the screen. The printout includes:
 * The package refs.
 * Whether the object has the resolved dependencies.
 * Whether the resolution had errors.
-* Whether the objevt has the solved dependencies.
+* Whether the object has the solved dependencies.
 * Whether the solution had errors.
 * Advice on which methods to call next.
 
@@ -340,7 +343,7 @@ The `pkg_deps` object itself, invisibly.
 ### Examples
 
 ```{r}
-pd <- pkg_deps$new("r-lib/pkgdepends")
+pd <- new_pkg_deps("r-lib/pkgdepends")
 pd
 ```
 

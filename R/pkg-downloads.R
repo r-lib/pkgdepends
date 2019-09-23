@@ -1,101 +1,31 @@
 
-#' Create a package download proposal
+#' @param refs Package names or references. See
+#'   ['Package references'][pkg_refs] for the syntax.
+#' @param ... Additional arguments, passed to
+#'   [`pkg_download_proposal$new()`]($method-new).
 #'
-#' A package download proposal can be used to query package dependencies
-#' and/or download package files.
+#' @details
+#' `new_pkg_download_proposal()` creates a new object from the
+#' `pkg_download_proposal` class, that can be used to look up and download
+#' R packages and their dependencies. The advantage of
+#' `new_pkg_download_proposal()` compared to using the
+#' [pkg_download_proposal] constructor directly is that it avoids making
+#' pkgdepends a build time dependency.
 #'
-#' Typical workflow to download a set of packages:
-#' ```
-#' pkgdl <- new_pkg_download_proposal(refs)
-#' pkgdl$resolve()
-#' pkgdl$download()
-#' pkgdl$get_downloads()
-#' ```
-#'
-#' @param refs Package names or references. See [pkg_refs] for the
-#' syntax.
-#'
-#' @seealso [pkg_download_proposal] for the methods returned R6 object.
 #' @export
-#' @examples
-#' \donttest{
-#' dl <- new_pkg_download_proposal("r-lib/pak")
-#' dl
-#' dl$resolve()
-#' dl$get_resolution()[]
-#' dl$download()
-#' dl$get_downloads()[]
-#' }
+#' @rdname pkg_download_proposal
 
-new_pkg_download_proposal <- function(refs) {
-  pkg_download_proposal$new(refs)
+new_pkg_download_proposal <- function(refs, ...) {
+  pkg_download_proposal$new(refs, ...)
 }
 
-#' A package download proposal
+#' @title Package Downloads
 #'
-#' Typical workflow to download a set of packages:
-#' ```
-#' pkgdl <- new_pkg_download_proposal(refs)
-#' pkgdl$resolve()
-#' pkgdl$download()
-#' pkgdl$get_downloads()
-#' ```
+#' @description
+#' Download packages with their dependencies, from various sources.
+#' @eval style_man()
 #'
-#' @section Usage:
-#' ```
-#' dl <- new_pkg_download_proposal(refs)
-#' dl <- pkg_download_proposal$new(refs, config = list(), remote_types = NULL)
-#'
-#' dl$get_refs()
-#' dl$get_config()
-#'
-#' dl$resolve()
-#' dl$async_resolve()
-#' dl$get_resolution()
-#'
-#' dl$download()
-#' dl$async_download()
-#' dl$get_downloads()
-#' ```
-#'
-#' @section Arguments:
-#' * `refs`: Package names or references. See [pkg_refs] for the syntax.
-#' * `config`: Configuration options, a named list. See [pkg_config].
-#' * `remotes_types`: Custom remote ref types, this is for advanced use,
-#'   and experimental currently.
-#'
-#' @section Details:
-#'
-#' [new_pkg_download_proposal()] and `$new()` create a new package download
-#' proposal. The latter has more options, and it is for expert use.
-#'
-#' `$get_refs()` returns the refs of a download proposal, see [pkg_refs].
-#'
-#' `$get_config()` returns the configuration, see [pkg_config].
-#'
-#' `$resolve()` resolves all dependencies of the remote references of the
-#' download proposal. This usually involves downloading metadata from CRAN
-#' and Bioconductor (unless already cached), and also from Github, if GitHub
-#' refs are specified, either directly or indirectly. See [pkg_resolution].
-#'
-#' `$async_resolve()` is the asynchronous version of `$resolve()`, it
-#' uses deferred values, and it is currently for advanced use.
-#'
-#' `$get_resolution()` returns the result of the resolution, in a
-#' `pkg_resolution_result` object, which is also a tibble. See
-#' [pkg_resolution_result] for the format.
-#'
-#' `$download()` downloads all resolved packages. It uses
-#' the package cache in the pkgcache package by default, to avoid downloads
-#' if possible.
-#'
-#' `$async_download()` downloads all resolved packages,
-#' asynchronously. It returns a deferred value, and it is currently for
-#' advanced use.
-#'
-#' `$get_downloads()` returns data about the downloaded packages.
-#' See the format at [pkg_download_result].
-#'
+#' @includeRmd tools/doc/pkg-download.Rmd
 #' @name pkg_download_proposal
 NULL
 

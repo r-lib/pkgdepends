@@ -41,8 +41,11 @@ Suggests:
     debugme,
     digest,
     fs,
+    knitr,
     mockery,
     pingr,
+    rmarkdown,
     rstudioapi,
     testthat
+VignetteBuilder: knitr
 Encoding: UTF-8

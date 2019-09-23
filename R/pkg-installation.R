@@ -17,7 +17,7 @@
 #' @export
 #' @rdname pkg_installation_proposal
 
-new_pkg_installation_proposal <- function(refs, config, ...) {
+new_pkg_installation_proposal <- function(refs, config = list(), ...) {
   config$library <- config$library %||% .libPaths()[[1]]
   pkg_installation_proposal$new(refs, config = config, ...)
 }

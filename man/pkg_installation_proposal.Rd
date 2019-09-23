@@ -5,7 +5,7 @@
 \alias{pkg_installation_proposal}
 \title{R6 class for package download and installation.}
 \usage{
-new_pkg_installation_proposal(refs, config, ...)
+new_pkg_installation_proposal(refs, config = list(), ...)
 }
 \arguments{
 \item{refs}{Package names or references. See

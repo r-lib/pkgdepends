@@ -12,10 +12,10 @@ new_pkg_deps(refs, ...)
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{...}{Additional arguments, passed to
-\href{$method-new}{\code{pkg_deps$new()}}.}
+\href{#method-new}{\code{pkg_deps$new()}}.}
 }
 \description{
-Look up dependencies of R packages, from various sources.
+Look up dependencies of R packages from various sources.
 
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
@@ -264,7 +264,8 @@ pd$get_resolution()
 }\if{html}{\out{</div>}}
 
 Solve the package dependencies. Out of the resolved dependencies, it
-works out a set of packages, that includes all directly specified
+works out a set of packages, that can be installed together to create a
+functional installation. The set includes all directly specified
 packages, and all required (or suggested, depending on the
 configuration) packages as well. It includes every package at most once.
 See \link[=pkg_solution]{‘The dependency solver’} for details.

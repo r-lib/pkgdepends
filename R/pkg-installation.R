@@ -1,167 +1,36 @@
 
-#' Create a package installation proposal
+#' @param refs Package names or references. See
+#'   ['Package references'][pkg_refs] for the syntax.
+#' @param config Configuration options, a named list. See
+#'  ['Configuration'][pkg_config]. It needs to include the package library
+#'  to install to, in `library`.
+#' @param ... Additional arguments, passed to
+#'   [`pkg_installation_proposal$new()`](#method-new).
 #'
-#' A package installation proposal can be used to install or upgrade
-#' a set of packages in a package library.
+#' @details
+#' `new_pkg_installation_proposal()` creates a new object from the
+#' `pkg_installation_proposal` class. The advantage of
+#' `new_pkg_installation_proposal()` compared to using the
+#' [pkg_installation_proposal] constructor directly is that it avoids
+#' making pkgdepends a build time dependency.
 #'
-#' Typical workflow to install a set of packages:
-#' ```
-#' inst <- new_pkg_installation_proposal(refs, library)
-#' inst$solve()
-#' inst$download()
-#' inst$install()
-#' ```
-#'
-#' @param refs Package names or references. See [pkg_refs] for the
-#' syntax.
-#' @param library Path to package library to install to. If it does not
-#' exist, it will be created.
-#' @param upgrade Whether to update packages (including dependencies)
-#' to their latest available version.
-#' @param dependencies Whether dependent packages should be installed,
-#' and which ones. Defaults to installing the required (recursive)
-#' dependencies.
-#'
-#' @seealso [pkg_installation_proposal] for the methods of the returned R6
-#' object.
-#' @examples
-#' \donttest{
-#' inst <- new_pkg_installation_proposal("r-lib/cli", library = tempfile())
-#' inst
-#' inst$solve()
-#' inst$draw()
-#' inst$download()
-#' inst$get_install_plan()
-#' inst$install()
-#' }
+#' @export
+#' @rdname pkg_installation_proposal
 
-new_pkg_installation_proposal <- function(refs, library, upgrade = FALSE,
-                                          dependencies = NA) {
-  policy <- if (upgrade) "upgrade" else "lazy"
-  config <- list(
-    library = library,
-    dependencies = dependencies)
-  pkg_installation_proposal$new(refs, config = config, policy = policy,
-                                remote_types = NULL)
+new_pkg_installation_proposal <- function(refs, config, ...) {
+  config$library <- config$library %||% .libPaths()[[1]]
+  pkg_installation_proposal$new(refs, config = config, ...)
 }
 
-#' A package installation proposal
+#' @title
+#' R6 class for package download and installation.
 #'
-#' Typical workflow to install a set of packages:
-#' ```
-#' inst <- new_pkg_installation_proposal(refs, library)
-#' inst$resolve()
-#' inst$solve()
-#' inst$download()
-#' inst$install()
-#' ```
+#' @description
+#' Download and installa packages, with their dependencies, from various
+#' sources.
+#' @eval style_man()
 #'
-#' @section Usage:
-#' ```
-#' inst <- new_pkg_installation_proposal(refs, library, upgrade = FALSE,
-#'                              dependencies = NA)
-#' inst <- pkg_installation_proposal$new(refs, config = list(),
-#'                              policy = c("lazy", "upgrade"),
-#'                              remote_types = NULL)
-#'
-#' inst$get_refs()
-#' inst$get_config()
-#'
-#' inst$resolve()
-#' inst$async_resolve()
-#' inst$get_resolution()
-#'
-#' inst$get_solve_policy()
-#' inst$set_solve_policy(policy = c("lazy", "upgrade"))
-#' inst$solve()
-#' inst$get_solution()
-#' inst$stop_for_solution_error()
-#' inst$draw()
-#'
-#' inst$download()
-#' inst$async_download()
-#' inst$get_downloads()
-#' inst$stop_for_download_error()
-#'
-#' inst$get_install_plan()
-#' inst$install()
-#' ```
-#'
-#' @section Arguments:
-#' * `refs`: Package names or references. See [pkg_refs] for the syntax.
-#' * `library`: Path to package library to install the packages to. If it
-#'   does not exist, it will be created.
-#' * `upgrade`: Whether to update packages (including dependencies)
-#'   to their latest available version.
-#' * `dependencies`: Whether dependent packages should be installed,
-#'   and which ones. Defaults to installing the required (recursive)
-#'   dependencies.
-#' * `config`: Configuration options, a named list. See [pkg_config].
-#' * `policy`: Solution policy. See [pkg_solve].
-#' * `remotes_types`: Custom remote ref types, this is for advanced use,
-#'   and experimental currently.
-#'
-#' @section Details:
-#'
-#' [new_pkg_installation_proposal()] and `pkg_installation_proposal$new()`
-#' both create a new package installation proposal object. The latter has
-#' more options and it is for expert use.
-#'
-#' `$get_refs()` returns the refs of an installation proposal,
-#' see [pkg_refs].
-#'
-#' `$get_config()` returns the configuration, see [pkg_config].
-#'
-#' `$resolve()` resolves all dependencies of the remote references of the
-#' installation proposal. This usually involves downloading metadata from
-#' CRAN and Bioconductor (unless already cached), and also from Github, if
-#' GitHub refs are specified, either directly or indirectly. See
-#' [pkg_resolution].
-#'
-#' `$async_resolve()` is the asynchronous version of `$resolve()`, it
-#' uses deferred values, and it is currently for advanced use.
-#'
-#' `$get_resolution()` returns the result of the resolution, in a
-#' `pkg_resolution_result` object, which is also a tibble. See
-#' [pkg_resolution_result] for the format.
-#'
-#' `$get_solve_policy()` returns the policy of the dependency solver.
-#' See [pkg_solve].
-#'
-#' `$set_solve_policy()` sets the policy of the dependency solver. If this
-#' policy changes, then you need to run `solve()` again. See [pkg_solve].
-#'
-#' `$solve()` solves the package dependencies to work out the which
-#' of the available versions of each needs to be installed to have a
-#' properly working set of packages. See [pkg_solve].
-#'
-#' `$get_solution()` returns the solution of the installation problem.
-#'
-#' `$stop_for_solution_error()` throws an error, with a meaningful error
-#' message, if the previous `$solve()` call failed.
-#'
-#' `$draw()` draws the package dependency tree of a solution. It only
-#' works once `solve()` was called.
-#'
-#' `$download()` downloads all packages of the solution. It uses
-#' the package cache in the pkgcache package by default, to avoid downloads
-#' if possible.
-#'
-#' `$async_download()` downloads all packages of the solution,
-#' asynchronously. It returns a deferred value, and it is currently for
-#' advanced use.
-#'
-#' `$get_downloads()` returns data about the downloaded packages.
-#' See the format at [pkg_download_result].
-#'
-#' `$stop_for_download_error()` throws an error for a package download
-#' error.
-#'
-#' `$get_install_plan()` returns the package installation plan of the
-#' proposal.
-#'
-#' `$install()` performs the package installation plan.
-#'
+#' @includeRmd tools/doc/pkg-installation.Rmd
 #' @name pkg_installation_proposal
 NULL
 
@@ -260,7 +129,7 @@ pkginst_get_solution <- function(self, private) {
 }
 
 pkginst_stop_for_solution_error <- function(self, private) {
-  private$plan$stop_for_solution_error()
+  private$plan$stop_for_solve_error()
 }
 
 pkginst_draw <- function(self, private) {

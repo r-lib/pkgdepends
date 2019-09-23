@@ -1,0 +1,634 @@
+
+```{r include = FALSE}
+options(
+  pkg.show_progress = FALSE,
+  cli.unicode = FALSE)
+knitr::opts_chunk$set(
+  cache = TRUE,
+  class.source = "r copy")
+```
+
+Typical workflow to install a set of packages:
+
+1. Create a `pkg_installation_proposal` object with
+   `new_pkg_installation_proposal()`.
+1. Resolve all possible dependencies with
+   [`pkg_installation_proposal$resolve()`](#method-resolve).
+1. Solve the package dependencies, to get an installation plan, with
+   [`pkg_installation_proposal$solve()`](#method-solve).
+1. Download all files with
+   [`pkg_installation_proposal$download()`](#method-download).
+1. Install the downloaded files with
+   [`pkg_installation_proposal$install()`](#methods-install).
+
+Methods
+==========================================================================
+
+Public methods
+-------------------------------------
+
+* [`pkg_installation_proposal$new()`](#method-new)
+* [`pkg_installation_proposal$get_refs()`](#method-get-refs)
+* [`pkg_installation_proposal$get_config()`](#method-get-config)
+* [`pkg_installation_proposal$resolve()`](#method-resolve)
+* [`pkg_installation_proposal$async_resolve()`](#method-async-resolve)
+* [`pkg_installation_proposal$get_resolution()`](#method-get-resolution)
+* [`pkg_installation_proposal$get_solve_policy()`](#method-get-solve-policy)
+* [`pkg_installation_proposal$set_solve_policy()`](#method-set-solve-policy)
+* [`pkg_installation_proposal$solve()`](#method-solve)
+* [`pkg_installation_proposal$get_solution()`](#method-get-solution)
+* [`pkg_installation_proposal$draw()`](#method-draw)
+* [`pkg_installation_proposal$stop_for_solution_error()`](#method-stop-for-solution-error)
+* [`pkg_installation_proposal$download()`](#method-download)
+* [`pkg_installation_proposal$async_installation()`](#method-async-download)
+* [`pkg_installation_proposal$get_installations()`](#method-get-downloads)
+* [`pkg_installation_proposal$stop_for_download_error()`](#method-stop-for-download-error)
+* [`pkg_installation_proposal$install()`](#method-install)
+* [`pkg_installation_proposal$get_install_plan()`](#method-get-install-plan)
+* [`pkg_installation_proposal$format()`](#method-format)
+* [`pkg_installation_proposal$print()`](#method-print)
+
+
+<a id="method-new"></a>
+
+Method `pkg_installation_proposal$new()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$new(
+  refs,
+  config = list(),
+  policy = c("lazy", "upgrade"),
+  remote_type = NULL
+)
+```
+
+Create a new `pkg_installation_proposal` object. Consider using
+`new_pkg_installation_proposal()` instead of calling the constructor
+directly.
+
+The returned object can be used to look up (recursive) dependencies of R
+packages from various sources, and then download and install the package
+files.
+
+### Parameters
+
+* `refs`: Package names or references. See ['Package references'][pkg_refs]
+  for the syntax.
+* `config`: Configuration options, a named list. See
+  ['Configuration'][pkg_config]. It needs to include the package library
+  to install to, in `library`.
+* `policy`: Solution policy. See ['The dependency solver'][pkg_solution].
+* `remote_types`: Custom remote ref types, this is for advanced use,
+  and experimental currently.
+
+### Examples
+
+```{r}
+pdi <- pkg_installation_proposal$new(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile()))
+pdi
+```
+
+<hr>
+
+<a id="method-get-refs"></a>
+
+Method `pkg_installation_proposal$get_refs()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$get_refs()
+```
+
+The package refs that were used to create the `pkg_installation_proposal`
+object.
+
+### Returns
+
+A character vector of package refs that were used to create the
+`pkg_installation_proposal` object.
+
+### Examples
+
+```{r}
+pdi <- pkg_installation_proposal$new(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile()))
+pdi$get_refs()
+```
+
+<hr>
+
+<a id="method-get-config"></a>
+
+Method `pkg_installation_proposal$get_config()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$get_config()
+```
+
+Configuration options for the `pkg_installation_proposal` object. See
+['Configuration'][pkg_config] for details.
+
+### Returns
+
+Named list. See ['Configuration'][pkg_config] for the configuration options.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+pdi$get_config()
+```
+
+<hr>
+
+<a id="method-resolve"></a>
+
+Method `pkg_installation_proposal$resolve()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$resolve()
+```
+
+Resolve the dependencies of the specified package references. This usually
+means downloading metadata from CRAN and Bioconductor, unless already
+cached, and also from GitHub if GitHub refs were included, either directly
+or indirectly. See ['Dependency resolution'][pkg_resolution] for details.
+
+### Returns
+
+The same as the [`get_resolution()`](#method-get-resolution) method
+(see below), the result of the resolution, invisibly.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+
+pdi$resolve()
+pdi
+```
+
+<hr>
+
+<a id="method-async-resolve"></a>
+
+Method `pkg_installation_proposal$async_resolve()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$async_resolve()
+```
+
+The same as [`resolve()`](#method-resolve), but asynchronous. This method
+is for advanced use.
+
+### Returns
+
+A deferred value.
+
+<hr>
+
+<a id="method-get-resolution"></a>
+
+Method `pkg_installation_proposal$get_resolution()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$get_resolution()
+```
+
+Query the result of the dependency resolution. This method can be
+called after [`resolve()`](#method-resolve) has completed.
+
+### Returns
+
+A [pkg_resolution_result] object, which is also a tibble. See
+[pkg_resolution_result] for its columns.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$get_resolution()
+```
+
+<hr>
+
+<a id="method-get-solve-policy"></a>
+
+Method `pkg_installation_proposal$get_solve_policy()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$get_solve_policy()
+```
+
+Returns the current policy of the dependency solver.
+See ['The dependency solver'][pkg_solution] for details.
+
+### Returns
+
+A character vector of length one.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile())
+)
+pdi$get_solve_policy()
+pdi$set_solve_policy("upgrade")
+pdi$get_solve_policy()
+```
+
+<hr>
+
+<a id="method-set-solve-policy"></a>
+
+Method `pkg_installation_proposal$set_solve_policy()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$set_solve_policy(policy = c("lazy", "upgrade"))
+```
+
+Set the current policy of the dependency solver.
+If the object already contains a solution and the new policy is different
+than the old policy, then the solution is deleted.
+See ['The dependency solver'][pkg_solution] for details.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile())
+)
+pdi$get_solve_policy()
+pdi$set_solve_policy("upgrade")
+pdi$get_solve_policy()
+```
+
+<hr>
+
+<a id="method-solve"></a>
+
+Method `pkg_installation_proposal$solve()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$solve()
+```
+
+Solve the package dependencies. Out of the resolved dependencies, it works
+out a set of packages, that can be installed together to create a
+functional installation. The set includes all directly specified packages,
+and all required (or suggested, depending on the configuration) packages
+as well. It includes every package at most once. See
+['The dependency solver'][pkg_solution] for details.
+
+### Returns
+
+The same as the [`get_solution()`](#method-get-solution) method, the
+result, invisibly.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi
+```
+
+<hr>
+
+<a id="method-get-solution"></a>
+
+Method `pkg_installation_proposal$get_solution()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$get_solution()
+```
+
+Returns the solution of the package dependencies.
+
+### Returns
+
+A [pkg_solution_result] object, which is a list. See [pkg_solution_result]
+for details.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$get_solution()
+```
+
+<hr>
+
+<a id="method-stop-for-solution-error"></a>
+
+Method `pkg_installation_proposal$stop_for_solution_error()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$stop_for_solution_error()
+```
+
+Error if the dependency solver failed to find a consistent set of
+packages that can be installed together.
+
+### Examples
+
+This is an error, because the packages conflict:
+
+```{r, error = TRUE}
+pdi <- new_pkg_installation_proposal(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi
+pdi$stop_for_solution_error()
+```
+
+<hr>
+
+<a id="method-draw"></a>
+
+Method `pkg_installation_proposal$draw()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$draw()
+```
+
+Draw a tree of package dependencies. It returns a `tree` object, see
+[cli::tree()]. Printing this object prints the dependency tree to the
+screen.
+
+### Returns
+
+A `tree` object from the cli package, see [cli::tree()].
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$draw()
+```
+
+<hr>
+
+<a id="method-download"></a>
+
+Method `pkg_installation_proposal$download()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$download()
+```
+
+Download all packages that are part of the solution. It uses the package
+cache in the pkgcache package by default, to avoid downloads if possible.
+
+### Returns
+
+The same as the [`get_downloads()`](#method-get-downloads) method, the
+result, invisibly.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$download()
+pdi
+```
+
+<hr>
+
+<a id="method-async-download"></a>
+
+Method `pkg_installation_proposal$async_download()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$async_download()
+```
+
+The same as [`download()`](#method-download), but asynchronous. This method
+is for advanced use.
+
+### Returns
+
+A deferred value.
+
+<hr>
+
+<a id="method-get-downloads"></a>
+
+Method `pkg_installation_proposal$get_downloads()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$get_downloads()
+```
+
+Returns the summary of the package downloads.
+
+### Returns
+
+A [pkg_download_result] object, which is a list. See [pkg_download_result]
+for details.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$download()
+pdi$get_downloads()
+```
+
+<hr>
+
+<a id="method-stop-for-download-error"></a>
+
+Method `pkg_installation_proposal$stop_for_download_error()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$stop_for_download_error()
+```
+
+Throw and error if the some of the downloads have failed for the most
+recent [`pkg_installation_proposal$download()`](#method-download) call.
+
+<hr>
+
+<a id="method-install"></a>
+
+Method `pkg_installation_proposal$install()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$install()
+```
+
+Install the downloaded packages. It calls [install_package_plan()].
+
+### Returns
+
+The return value of [install_package_plan()].
+
+<hr>
+
+<a id="method-get-install-plan"></a>
+
+Method `pkg_installation_proposal$get_install_plan()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$get_install_plan()
+```
+
+Create an installation plan for the downloaded packages.
+
+### Returns
+
+An installation plan, see ['Installation plans'][install_plan] for
+the format.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$download()
+pdi$get_install_plan()
+```
+
+<hr>
+
+<a id="method-format"></a>
+
+Method `pkg_installation_proposal$format()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$format(...)
+```
+
+Format a `pkg_installation_proposal` object, typically for printing.
+
+### Parameters
+
+* `...`: not used currently.
+
+### Returns
+
+A character vector, each element should be a line in the printout.
+
+<hr>
+
+
+<a id="method-print"></a>
+
+Method `pkg_installation_proposal$print()`
+-------------------------------------
+
+```r
+pkg_installation_proposal$print(...)
+```
+
+Prints a `pkg_installation_proposal` object to the screen. The printout
+includes:
+
+* The package refs.
+* The policy of the dependency solver.
+* Whether the object has the solved dependencies.
+* Whether the solution had errors.
+* Whether the object has downloads.
+* Whether the downloads had errors.
+* Advice on which methods to call next.
+
+See the example below.
+
+### Parameters
+
+* `...`: not used currently.
+
+### Returns
+
+The `pkg_installation_proposal` object itself, invisibly.
+
+### Examples
+
+```{r}
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+pdi
+```
+
+```{r}
+pdi$resolve()
+pdi
+```
+
+```{r}
+pdi$solve()
+pdi
+```
+
+```{r}
+pdi$download()
+pdi
+```

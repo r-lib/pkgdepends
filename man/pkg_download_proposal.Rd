@@ -15,7 +15,7 @@ new_pkg_download_proposal(refs, ...)
 \href{$method-new}{\code{pkg_download_proposal$new()}}.}
 }
 \description{
-Download pcakages with the dependencies, from various sources.
+Download packages with their dependencies, from various sources.
 
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
@@ -81,7 +81,7 @@ and experimental currently.
 }
 }
 
-\subsection{Exampples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
 pdl
 }\if{html}{\out{</div>}}\preformatted{## <pkg_download_proposal>
 ## + refs:

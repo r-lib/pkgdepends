@@ -2,7 +2,7 @@
 #' @param refs Package names or references. See
 #'   ['Package references'][pkg_refs] for the syntax.
 #' @param ... Additional arguments, passed to
-#'   [`pkg_deps$new()`]($method-new).
+#'   [`pkg_deps$new()`](#method-new).
 #'
 #' @details
 #' `new_pkg_deps()` creates a new object from the `pkg_deps` class.
@@ -21,7 +21,7 @@ new_pkg_deps <- function(refs, ...) {
 #' R6 class for package dependency lookup
 #'
 #' @description
-#' Look up dependencies of R packages, from various sources.
+#' Look up dependencies of R packages from various sources.
 #' @eval style_man()
 #'
 #' @includeRmd tools/doc/pkg-dependencies.Rmd

@@ -213,7 +213,8 @@ pkg_deps$solve()
 ```
 
 Solve the package dependencies. Out of the resolved dependencies, it works
-out a set of packages, that includes all directly specified packages,
+out a set of packages, that can be installed together to create a
+functional installation. The set includes all directly specified packages,
 and all required (or suggested, depending on the configuration) packages
 as well. It includes every package at most once. See
 ['The dependency solver'][pkg_solution] for details.

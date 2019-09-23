@@ -12,8 +12,8 @@ new_pkg_installation_proposal(refs, config = list(), ...)
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{config}{Configuration options, a named list. See
-\link[=pkg_config]{'Configuration'}. It needs to include the package library
-to install to, in \code{library}.}
+\link[=pkg_config]{'Configuration'}. If it does not include \code{library}, then
+\code{.libPaths()[1]} is added as \code{library}.}
 
 \item{...}{Additional arguments, passed to
 \href{#method-new}{\code{pkg_installation_proposal$new()}}.}
@@ -100,7 +100,7 @@ and experimental currently.
 }
 }
 
-\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pdi <- pkg_installation_proposal$new(
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
 pdi
@@ -130,9 +130,7 @@ A character vector of package refs that were used to create the
 \code{pkg_installation_proposal} object.
 }
 
-\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pdi <- pkg_installation_proposal$new(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile()))
+\subsection{Examples}{\if{html}{\out{<div class="r r copy">}}\preformatted{pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
 pdi$get_refs()
 }\if{html}{\out{</div>}}\preformatted{## [1] "r-lib/pkgdepends"
 }\if{html}{\out{

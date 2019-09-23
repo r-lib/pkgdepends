@@ -2,8 +2,8 @@
 #' @param refs Package names or references. See
 #'   ['Package references'][pkg_refs] for the syntax.
 #' @param config Configuration options, a named list. See
-#'  ['Configuration'][pkg_config]. It needs to include the package library
-#'  to install to, in `library`.
+#'  ['Configuration'][pkg_config]. If it does not include `library`, then
+#'  `.libPaths()[1]` is added as `library`.
 #' @param ... Additional arguments, passed to
 #'   [`pkg_installation_proposal$new()`](#method-new).
 #'

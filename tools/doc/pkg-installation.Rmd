@@ -85,7 +85,7 @@ files.
 ### Examples
 
 ```{r}
-pdi <- pkg_installation_proposal$new(
+pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
 pdi
@@ -113,9 +113,7 @@ A character vector of package refs that were used to create the
 ### Examples
 
 ```{r}
-pdi <- pkg_installation_proposal$new(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile()))
+pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
 pdi$get_refs()
 ```
 

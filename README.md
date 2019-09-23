@@ -52,7 +52,28 @@ library(pkgdepends)
 
 ## Package references
 
-TODO
+A package reference (ref) specifies a location from which an R package
+can be obtained from. Examples:
+
+For CRAN and Bioconductor packages, just use the package names, with an
+optional `cran::` or `bioc::` prefix. GitHub packages are in the
+`user/repo` format, or an URL to the repo. Local package files or trees
+use the `local::<path>` format.
+
+Examples:
+
+    devtools
+    cran::devtools
+    bioc::Biobase
+    r-lib/pkgdepends
+    https://github.com/r-lib/pkgdepends
+    local::~/works/shiny
+
+Use \[parse\_pkg\_refs()\] to parse package references.
+
+## Package dependencies
+
+To query package dependencies, use
 
 ## Package downloads
 

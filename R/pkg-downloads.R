@@ -63,8 +63,9 @@ pkg_download_proposal <- R6::R6Class(
     #' pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
     #' pdl
 
-    initialize = function(refs, config = list(), remote_types = NULL)
-      pkgdl_init(self, private, refs, config, remote_types),
+    initialize = function(refs, config = list(), remote_types = NULL) {
+      private$plan <- pkg_plan$new(refs, config, library = NULL, remote_types)
+    },
 
     #' @details
     #' The package refs that were used to create the
@@ -110,8 +111,7 @@ pkg_download_proposal <- R6::R6Class(
     #' pdl$resolve()
     #' pdl
 
-    resolve = function()
-      pkgdl_resolve(self, private),
+    resolve = function() invisible(private$plan$resolve()),
 
     #' @details
     #' The same as [`resolve()`](#method-resolve), but asynchronous.
@@ -120,8 +120,7 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' A deferred value.
 
-    async_resolve = function()
-      pkgdl_async_resolve(self, private),
+    async_resolve = function() private$plan$async_resolve(),
 
     #' @details
     #' Query the result of the dependency resolution. This method can be
@@ -136,8 +135,7 @@ pkg_download_proposal <- R6::R6Class(
     #' pdl$resolve()
     #' pdl$get_resolution()
 
-    get_resolution = function()
-      pkgdl_get_resolution(self, private),
+    get_resolution = function() private$plan$get_resolution(),
 
     #' @details
     #' Download all resolved packages. It uses the package cache in the
@@ -153,8 +151,7 @@ pkg_download_proposal <- R6::R6Class(
     #' pdl$download()
     #' pdl
 
-    download = function()
-      pkgdl_download(self, private),
+    download = function() invisible(private$plan$download_resolution()),
 
     #' @details
     #' The same as [`download()`](#method-download), but asynchronous.
@@ -163,8 +160,7 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' A deferred value.
 
-    async_download = function()
-      pkgdl_async_download(self, private),
+    async_download = function() private$plan$async_download_resolution(),
 
     #' @details
     #' Returns the summary of the package downloads.
@@ -179,8 +175,7 @@ pkg_download_proposal <- R6::R6Class(
     #' pdl$download()
     #' pdl$get_downloads()
 
-    get_downloads = function()
-      pkgdl_get_downloads(self, private),
+    get_downloads = function() private$plan$get_resolution_download(),
 
     #' @details
     #' Format a `pkg_download_proposal` object, typically for printing.
@@ -189,7 +184,32 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' A character vector, each element should be a line in the printout.
 
-    format = function(...) pkgdl_format(self, private, ...),
+    format = function(...) {
+      refs <- private$plan$get_refs()
+
+      has_res <- private$plan$has_resolution()
+      res <- if (has_res) private$plan$get_resolution()
+      res_err <- has_res && any(res$status != "OK")
+
+      has_dls <- private$plan$has_resolution_downloads()
+      dls <- if (has_dls) private$plan$get_resolution_download()
+      dls_err <- has_dls && any(dls$status == "Failed")
+
+      deps <- if (has_res) length(unique(res$package[!res$direct]))
+
+      c("<pkg_download_proposal>",
+        "+ refs:", paste0("  - ", refs),
+        if (has_res) paste0("+ has resolution (+", deps, " dependencies)"),
+        if (res_err) "x has resolution errors",
+        if (has_dls) "+ has downloads",
+        if (dls_err) "x has download errors",
+        if (!has_res) "(use `$resolve()` to resolve dependencies)",
+        if (has_res && !res_err && !has_dls)
+          "(use `$download()` to download packages)",
+        if (has_res) "(use `$get_resolution()` to see resolution results)",
+        if (has_dls) "(use `$get_downloads()` to get download data)"
+        )
+    },
 
     #' @details
     #' Prints a `pkg_download_proposal` object to the screen. The printout
@@ -218,69 +238,10 @@ pkg_download_proposal <- R6::R6Class(
     #' pdl$download()
     #' pdl
 
-    print = function(...) pkgdl_print(self, private, ...)
+    print = function(...) cat(self$format(...), sep = "\n")
   ),
 
   private = list(
     plan = NULL
   )
 )
-
-pkgdl_init <- function(self, private, refs, config, remote_types) {
-  private$plan <- pkg_plan$new(refs, config, library = NULL, remote_types)
-}
-
-pkgdl_async_resolve <- function(self, private) {
-  private$plan$async_resolve()
-}
-
-pkgdl_resolve <- function(self, private) {
-  invisible(private$plan$resolve())
-}
-
-pkgdl_get_resolution <- function(self, private) {
-  private$plan$get_resolution()
-}
-
-pkgdl_async_download <- function(self, private) {
-  private$plan$async_download_resolution()
-}
-
-pkgdl_download <- function(self, private) {
-  invisible(private$plan$download_resolution())
-}
-
-pkgdl_get_downloads <- function(self, private) {
-  private$plan$get_resolution_download()
-}
-
-pkgdl_format <- function(self, private, ...) {
-  refs <- private$plan$get_refs()
-
-  has_res <- private$plan$has_resolution()
-  res <- if (has_res) private$plan$get_resolution()
-  res_err <- has_res && any(res$status != "OK")
-
-  has_dls <- private$plan$has_resolution_downloads()
-  dls <- if (has_dls) private$plan$get_resolution_download()
-  dls_err <- has_dls && any(dls$status == "Failed")
-
-  deps <- if (has_res) length(unique(res$package[!res$direct]))
-
-  c("<pkg_download_proposal>",
-    "+ refs:", paste0("  - ", refs),
-    if (has_res) paste0("+ has resolution (+", deps, " dependencies)"),
-    if (res_err) "x has resolution errors",
-    if (has_dls) "+ has downloads",
-    if (dls_err) "x has download errors",
-    if (!has_res) "(use `$resolve()` to resolve dependencies)",
-    if (has_res && !res_err && !has_dls)
-      "(use `$download()` to download packages)",
-    if (has_res) "(use `$get_resolution()` to see resolution results)",
-    if (has_dls) "(use `$get_downloads()` to get download data)"
-  )
-}
-
-pkgdl_print <- function(self, private, ...) {
-  cat(self$format(...), sep = "\n")
-}

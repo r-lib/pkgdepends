@@ -61,8 +61,16 @@ pkg_deps <- R6::R6Class(
     #' pd <- pkg_deps$new("r-lib/pkgdepends")
     #' pd
 
-    initialize = function(refs, config = list(), remote_types = NULL)
-      pkgdeps_init(self, private, refs, config, remote_types),
+    initialize = function(refs, config = list(), remote_types = NULL) {
+      private$library <- tempfile()
+      dir.create(private$library)
+      private$plan <- pkg_plan$new(
+        refs,
+        config,
+        library = private$library,
+        remote_types
+      )
+    },
 
     #' @details
     #' The package refs that were used to create the `pkg_deps` object.
@@ -107,8 +115,7 @@ pkg_deps <- R6::R6Class(
     #' pd$resolve()
     #' pd
 
-    resolve = function()
-      pkgdeps_resolve(self, private),
+    resolve = function() invisible(private$plan$resolve()),
 
     #' @details
     #' The same as [`resolve()`](#method-resolve), but asynchronous.
@@ -117,8 +124,7 @@ pkg_deps <- R6::R6Class(
     #' @return
     #' A deferred value.
 
-    async_resolve = function()
-      pkgdeps_async_resolve(self, private),
+    async_resolve = function() private$plan$async_resolve(),
 
     #' @details
     #' Query the result of the dependency resolution. This method can be
@@ -133,8 +139,7 @@ pkg_deps <- R6::R6Class(
     #' pd$resolve()
     #' pd$get_resolution()
 
-    get_resolution = function()
-      pkgdeps_get_resolution(self, private),
+    get_resolution = function() private$plan$get_resolution(),
 
     #' @details
     #' Solve the package dependencies. Out of the resolved dependencies, it
@@ -157,8 +162,7 @@ pkg_deps <- R6::R6Class(
     #' pd$solve()
     #' pd
 
-    solve = function()
-      pkgdeps_solve(self, private),
+    solve = function() invisible(private$plan$solve(policy = "lazy")),
 
     #' @details
     #' Returns the solution of the package dependencies.
@@ -172,8 +176,7 @@ pkg_deps <- R6::R6Class(
     #' pd$solve()
     #' pd$get_solution()
 
-    get_solution = function()
-      pkgdeps_get_solution(self, private),
+    get_solution = function() private$plan$get_solution(),
 
     #' @details
     #' Draw a tree of package dependencies. It returns a `tree` object, see
@@ -188,8 +191,7 @@ pkg_deps <- R6::R6Class(
     #' pd$solve()
     #' pd$draw()
 
-    draw = function()
-      pkgdeps_draw(self, private),
+    draw = function() private$plan$draw_solution_tree(),
 
     #' Format a `pkg_deps` object, typically for printing.
     #'
@@ -198,7 +200,32 @@ pkg_deps <- R6::R6Class(
     #' @return
     #' A character vector, each element should be a line in the printout.
 
-    format = function(...) pkgdeps_format(self, private, ...),
+    format = function(...) {
+      refs <- private$plan$get_refs()
+
+      has_res <- private$plan$has_resolution()
+      res <- if (has_res) private$plan$get_resolution()
+      res_err <- has_res && any(res$status != "OK")
+
+      has_sol <- private$plan$has_solution()
+      sol <- if (has_sol) private$plan$get_solution()
+      sol_err <- has_sol && sol$status != "OK"
+
+      deps <- if (has_res) length(unique(res$package[!res$direct]))
+
+      c("<pkg_dependencies>",
+        "+ refs:", paste0("  - ", refs),
+        if (has_res) paste0("+ has resolution (+", deps, " dependencies)"),
+        if (res_err) "x has resolution errors",
+        if (has_sol) "+ has solution",
+        if (sol_err) "x has solution errors",
+        if (!has_res) "(use `$resolve()` to resolve dependencies)",
+        if (has_res) "(use `$get_resolution()` to see resolution results)",
+        if (!has_sol) "(use `$solve()` to solve dependencies)",
+        if (has_sol) "(use `$get_solution()` to see solution results)",
+        if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)"
+        )
+    },
 
     #' @details
     #' Prints a `pkg_deps` object to the screen. The printout includes:
@@ -226,7 +253,10 @@ pkg_deps <- R6::R6Class(
     #' pd$solve()
     #' pd
 
-    print = function(...) pkgdeps_print(self, private, ...)
+    print = function(...) {
+      cat(self$format(...), sep = "\n")
+      invisible(self)
+    }
   ),
 
   private = list(
@@ -234,70 +264,3 @@ pkg_deps <- R6::R6Class(
      library = NULL
   )
 )
-
-pkgdeps_init <- function(self, private, refs, config, remote_types) {
-  private$library <- tempfile()
-  dir.create(private$library)
-  private$plan <- pkg_plan$new(
-    refs,
-    config,
-    library = private$library,
-    remote_types
-  )
-}
-
-pkgdeps_async_resolve <- function(self, private) {
-  private$plan$async_resolve()
-}
-
-pkgdeps_resolve <- function(self, private) {
-  invisible(private$plan$resolve())
-}
-
-pkgdeps_get_resolution <- function(self, private) {
-  private$plan$get_resolution()
-}
-
-pkgdeps_solve <- function(self, private) {
-  invisible(private$plan$solve(policy = "lazy"))
-}
-
-pkgdeps_get_solution <- function(self, private) {
-  private$plan$get_solution()
-}
-
-pkgdeps_draw <- function(self, private) {
-  private$plan$draw_solution_tree()
-}
-
-pkgdeps_format <- function(self, private, ...) {
-  refs <- private$plan$get_refs()
-
-  has_res <- private$plan$has_resolution()
-  res <- if (has_res) private$plan$get_resolution()
-  res_err <- has_res && any(res$status != "OK")
-
-  has_sol <- private$plan$has_solution()
-  sol <- if (has_sol) private$plan$get_solution()
-  sol_err <- has_sol && sol$status != "OK"
-
-  deps <- if (has_res) length(unique(res$package[!res$direct]))
-
-  c("<pkg_dependencies>",
-    "+ refs:", paste0("  - ", refs),
-    if (has_res) paste0("+ has resolution (+", deps, " dependencies)"),
-    if (res_err) "x has resolution errors",
-    if (has_sol) "+ has solution",
-    if (sol_err) "x has solution errors",
-    if (!has_res) "(use `$resolve()` to resolve dependencies)",
-    if (has_res) "(use `$get_resolution()` to see resolution results)",
-    if (!has_sol) "(use `$solve()` to solve dependencies)",
-    if (has_sol) "(use `$get_solution()` to see solution results)",
-    if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)"
-  )
-}
-
-pkgdeps_print <- function(self, private, ...) {
-  cat(self$format(...), sep = "\n")
-  invisible(self)
-}

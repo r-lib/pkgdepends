@@ -73,11 +73,23 @@ pkg_installation_proposal <- R6::R6Class(
     #'   config = list(library = tempfile()))
     #' pdi
 
-    initialize = function(refs, config = list(),
-                          policy = c("lazy", "upgrade"),
-                          remote_types = NULL)
-      pkginst_init(self, private, refs, config, match.arg(policy),
-                   remote_types),
+    initialize = function(
+      refs,
+      config = list(),
+      policy = c("lazy", "upgrade"),
+      remote_types = NULL) {
+
+      policy <- match.arg(policy)
+      assert_that(is_path(config$library))
+      private$library <- config$library
+      private$policy <- policy
+      private$plan <- pkg_plan$new(
+        refs,
+        config = config,
+        library = config$library,
+        remote_types = remote_types
+      )
+    },
 
     #' @details
     #' The package refs that were used to create the
@@ -130,8 +142,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$resolve()
     #' pdi
 
-    resolve = function()
-      pkginst_resolve(self, private),
+    resolve = function() invisible(private$plan$resolve()),
 
     #' @details
     #' The same as [`resolve()`](#method-resolve), but asynchronous. This
@@ -140,8 +151,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' A deferred value.
 
-    async_resolve = function()
-      pkginst_async_resolve(self, private),
+    async_resolve = function() private$plan$async_resolve(),
 
     #' @details
     #' Query the result of the dependency resolution. This method can be
@@ -159,8 +169,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$resolve()
     #' pdi$get_resolution()
 
-    get_resolution = function()
-      pkginst_get_resolution(self, private),
+    get_resolution = function() private$plan$get_resolution(),
 
     #' @details
     #' Returns the current policy of the dependency solver.
@@ -197,8 +206,13 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$set_solve_policy("upgrade")
     #' pdi$get_solve_policy()
 
-    set_solve_policy = function(policy = c("lazy", "upgrade"))
-      pkginst_set_solve_policy(self, private, match.arg(policy)),
+    set_solve_policy = function(policy = c("lazy", "upgrade")) {
+      policy <- match.arg(policy)
+      if (private$policy != policy) {
+        private$plan$delete_solution()
+        private$policy <- policy
+      }
+    },
 
     #' @details
     #' Solve the package dependencies. Out of the resolved dependencies,
@@ -221,8 +235,9 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$solve()
     #' pdi
 
-    solve = function()
-      pkginst_solve(self, private),
+    solve = function() {
+      invisible(private$plan$solve(policy = private$policy))
+    },
 
     #' @details
     #' Returns the solution of the package dependencies.
@@ -240,8 +255,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$solve()
     #' pdi$get_solution()
 
-    get_solution = function()
-      pkginst_get_solution(self, private),
+    get_solution = function() private$plan$get_solution(),
 
     #' @details
     #' Error if the dependency solver failed to find a consistent set of
@@ -258,8 +272,9 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi
     #' pdi$stop_for_solution_error()
 
-    stop_for_solution_error = function()
-      pkginst_stop_for_solution_error(self, private),
+    stop_for_solution_error = function() {
+      private$plan$stop_for_solve_error()
+    },
 
     #' @details
     #' Draw a tree of package dependencies. It returns a `tree` object, see
@@ -278,8 +293,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$solve()
     #' pdi$draw()
 
-    draw = function()
-      pkginst_draw(self, private),
+    draw = function() private$plan$draw_solution_tree(),
 
     #' @details
     #' Download all packages that are part of the solution. It uses the
@@ -300,8 +314,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$download()
     #' pdi
 
-    download = function()
-      pkginst_download(self, private),
+    download = function() invisible(private$plan$download_solution()),
 
     #' @details
     #' The same as [`download()`](#method-download), but asynchronous.
@@ -310,8 +323,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' A deferred value.
 
-    async_download = function()
-      pkginst_async_download(self, private),
+    async_download = function() private$plan$async_download_solution(),
 
     #' @details
     #' Returns the summary of the package downloads.
@@ -330,16 +342,16 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$download()
     #' pdi$get_downloads()
 
-    get_downloads = function()
-      pkginst_get_downloads(self, private),
+    get_downloads = function() private$plan$get_solution_download(),
 
     #' @details
     #' Throw and error if the some of the downloads have failed for the
     #' most recent
     #' [`pkg_installation_proposal$download()`](#method-download) call.
 
-    stop_for_download_error = function()
-      pkginst_stop_for_download_error(self, private),
+    stop_for_download_error = function() {
+      private$plan$stop_for_solution_download_error()
+    },
 
     #' @details
     #' Install the downloaded packages. It calls [install_package_plan()].
@@ -347,8 +359,11 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' The return value of [install_package_plan()].
 
-    install = function()
-      pkginst_install(self, private),
+    install = function() {
+      plan <- private$plan$get_install_plan()
+      nw <- get_num_workers()
+      install_package_plan(plan, lib = private$library, num_workers = nw)
+    },
 
     #' @details
     #' Create an installation plan for the downloaded packages.
@@ -367,8 +382,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$download()
     #' pdi$get_install_plan()
 
-    get_install_plan = function()
-      pkginst_get_install_plan(self, private),
+    get_install_plan = function() private$plan$get_install_plan(),
 
     #' @details
     #' Format a `pkg_installation_proposal` object, typically for printing.
@@ -378,7 +392,34 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' A character vector, each element should be a line in the printout.
 
-    format = function(...) pkginst_format(self, private, ...),
+    format = function(...) {
+      refs <- private$plan$get_refs()
+
+      has_dls <- private$plan$has_solution_downloads()
+      dls <- if (has_dls) private$plan$get_solution_download()
+      dls_err <- has_dls && any(dls$status == "Failed")
+
+      has_sol <- private$plan$has_solution()
+      sol <- if (has_sol) private$plan$get_solution()
+      sol_err <- has_sol && sol$status != "OK"
+
+      c("<pkg_installation_proposal>",
+        "+ refs:", paste0("  - ", refs),
+        paste0("+ solution policy: ", private$policy),
+        if (has_sol) "+ has solution",
+        if (sol_err) "x has solution errors",
+        if (has_dls) "+ has downloads",
+        if (dls_err) "x has download errors",
+        if (!has_sol) "(use `$solve()` to solve dependencies)",
+        if (has_sol && !sol_err && !has_dls)
+          "(use `$download()` to download packages)",
+        if (has_sol) "(use `$get_solution()` to see solution results)",
+        if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)",
+        if (has_dls) "(use `$get_downloads()` to get download data)",
+        if (has_dls) "(use `$get_install_plan()` to get the installation plan)",
+        if (has_dls) "(use `$install()` to install the packages)"
+      )
+    },
 
     #' @details
     #' Prints a `pkg_installation_proposal` object to the screen. The
@@ -414,7 +455,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$download()
     #' pdi
 
-    print = function(...) pkginst_print(self, private, ...)
+    print = function(...) cat(self$format(...), sep = "\n")
   ),
 
   private = list(
@@ -423,107 +464,3 @@ pkg_installation_proposal <- R6::R6Class(
     library = NULL
   )
 )
-
-pkginst_init <- function(self, private, refs, config, policy,
-                         remote_types) {
-  assert_that(is_path(config$library))
-  private$library <- config$library
-  private$policy <- policy
-  private$plan <- pkg_plan$new(refs, config = config,
-                               library = config$library,
-                               remote_types = remote_types)
-}
-
-pkginst_async_resolve <- function(self, private) {
-  private$plan$async_resolve()
-}
-
-pkginst_resolve <- function(self, private) {
-  invisible(private$plan$resolve())
-}
-
-pkginst_get_resolution <- function(self, private) {
-  private$plan$get_resolution()
-}
-
-pkginst_set_solve_policy <- function(self, private, policy) {
-  if (private$policy != policy) {
-    private$plan$delete_solution()
-    private$policy <- policy
-  }
-}
-
-pkginst_solve <- function(self, private) {
-  invisible(private$plan$solve(policy = private$policy))
-}
-
-pkginst_get_solution <- function(self, private) {
-  private$plan$get_solution()
-}
-
-pkginst_stop_for_solution_error <- function(self, private) {
-  private$plan$stop_for_solve_error()
-}
-
-pkginst_draw <- function(self, private) {
-  private$plan$draw_solution_tree()
-}
-
-pkginst_async_download <- function(self, private) {
-  private$plan$async_download_solution()
-}
-
-pkginst_download <- function(self, private) {
-  invisible(private$plan$download_solution())
-}
-
-pkginst_get_downloads <- function(self, private) {
-  private$plan$get_solution_download()
-}
-
-pkginst_stop_for_download_error <- function(self, private) {
-  private$plan$stop_for_solution_download_error()
-}
-
-pkginst_install <- function(self, private) {
-  plan <- private$plan$get_install_plan()
-  nw <- get_num_workers()
-  install_package_plan(plan, lib = private$library, num_workers = nw)
-}
-
-pkginst_get_install_plan <- function(self, private) {
-  private$plan$get_install_plan()
-}
-
-pkginst_format <- function(self, private, ...) {
-  refs <- private$plan$get_refs()
-
-  has_dls <- private$plan$has_solution_downloads()
-  dls <- if (has_dls) private$plan$get_solution_download()
-  dls_err <- has_dls && any(dls$status == "Failed")
-
-  has_sol <- private$plan$has_solution()
-  sol <- if (has_sol) private$plan$get_solution()
-  sol_err <- has_sol && sol$status != "OK"
-
-  c("<pkg_installation_proposal>",
-    "+ refs:", paste0("  - ", refs),
-    paste0("+ solution policy: ", private$policy),
-    if (has_sol) "+ has solution",
-    if (sol_err) "x has solution errors",
-    if (has_dls) "+ has downloads",
-    if (dls_err) "x has download errors",
-    if (!has_sol) "(use `$solve()` to solve dependencies)",
-    if (has_sol && !sol_err && !has_dls)
-      "(use `$download()` to download packages)",
-    if (has_sol) "(use `$get_solution()` to see solution results)",
-    if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)",
-    if (has_dls) "(use `$get_downloads()` to get download data)",
-    if (has_dls) "(use `$get_install_plan()` to get the installation plan)",
-    if (has_dls) "(use `$install()` to install the packages)"
-    )
-}
-
-pkginst_print <- function(self, private, ...) {
-  cat(self$format(...), sep = "\n")
-}

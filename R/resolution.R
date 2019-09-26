@@ -14,7 +14,7 @@ pkgplan_async_resolve <- function(self, private) {
 
   private$dirty <- TRUE
   private$cache$metadata$check_update()
-  private$resolution <- resolution()$new(
+  private$resolution <- new_resolution(
     config = private$config, cache = private$cache,
     library = private$config$library, remote_types = private$remote_types)
 
@@ -39,49 +39,52 @@ pkgplan__subset_resolution <- function(self, private, which) {
   res
 }
 
-resolution <- function() {
-  R6::R6Class(
-    "resolution",
-    public = list(
-      result = NULL,
-      initialize = function(config, cache, library = NULL,
-                            remote_types = NULL)
-        res_init(self, private, config, cache, library, remote_types),
-      push = function(..., direct = FALSE, .list = list())
-        res_push(self, private, ..., direct = direct, .list = .list),
-      when_complete = function() private$deferred
-    ),
-
-    private = list(
-      remote_types = NULL,
-      config = NULL,
-      cache = NULL,
-      library = NULL,
-      deferred = NULL,
-      state = NULL,
-      dependencies = NULL,
-      metadata = NULL,
-      bar = NULL,
-
-      delayed = list(),
-      delayed_refs = character(),
-      resolve_delayed = function(resolve)
-        res__resolve_delayed(self, private, resolve),
-
-      create_progress_bar = function()
-        res__create_progress_bar(self, private),
-      update_progress_bar = function()
-        res__update_progress_bar(self, private),
-      done_progress_bar = function()
-        res__done_progress_bar(self, private),
-
-      set_result = function(row_idx, value)
-        res__set_result(self, private, row_idx, value),
-      try_finish = function(resolve)
-        res__try_finish(self, private, resolve)
-    )
-  )
+new_resolution <- function(config, cache, library = NULL,
+                           remote_types = NULL) {
+  resolution$new(config, cache, library, remote_types)
 }
+
+resolution <- R6::R6Class(
+  "resolution",
+  public = list(
+    result = NULL,
+    initialize = function(config, cache, library = NULL,
+                          remote_types = NULL)
+      res_init(self, private, config, cache, library, remote_types),
+    push = function(..., direct = FALSE, .list = list())
+      res_push(self, private, ..., direct = direct, .list = .list),
+    when_complete = function() private$deferred
+  ),
+  
+  private = list(
+    remote_types = NULL,
+    config = NULL,
+    cache = NULL,
+    library = NULL,
+    deferred = NULL,
+    state = NULL,
+    dependencies = NULL,
+    metadata = NULL,
+    bar = NULL,
+    
+    delayed = list(),
+    delayed_refs = character(),
+    resolve_delayed = function(resolve)
+      res__resolve_delayed(self, private, resolve),
+    
+    create_progress_bar = function()
+      res__create_progress_bar(self, private),
+    update_progress_bar = function()
+      res__update_progress_bar(self, private),
+    done_progress_bar = function()
+      res__done_progress_bar(self, private),
+    
+    set_result = function(row_idx, value)
+      res__set_result(self, private, row_idx, value),
+    try_finish = function(resolve)
+      res__try_finish(self, private, resolve)
+  )
+)
 
 res_init <- function(self, private, config, cache, library,
                      remote_types) {

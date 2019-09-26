@@ -28,7 +28,7 @@ pkg_plan <- R6::R6Class(
       pkgplan_download_resolution(self, private),
     get_resolution_download = function()
       pkgplan_get_resolution_download(self, private),
-    
+
     solve = function(policy = c("lazy", "upgrade"))
       pkgplan_solve(self, private, match.arg(policy)),
     delete_solution = function()

@@ -4,7 +4,7 @@
 \name{pkgdepends-package}
 \alias{pkgdepends}
 \alias{pkgdepends-package}
-\title{pkgdepends}
+\title{pkgdepends: Package Dependency Resolution and Downloads}
 \description{
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 
@@ -38,22 +38,15 @@ dependencies.
 \item Builds and installs packages in parallel.
 }
 }
-\section{Install}{\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
-}\if{html}{\out{</div>}}
+\section{Install}{\preformatted{install.packages("pkgdepends")
 }
-\section{Usage}{\if{html}{\out{<div class="r">}}\preformatted{library(pkgdepends)
-}\if{html}{\out{</div>}}
+}
+\section{Usage}{\preformatted{library(pkgdepends)
+}
 \subsection{Package references}{
 
 A package reference (ref) specifies a location from which an R package
-can be obtained from. Examples:
-
-For CRAN and Bioconductor packages, just use the package names, with an
-optional \verb{cran::} or \verb{bioc::} prefix. GitHub packages are in the
-\code{user/repo} format, or an URL to the repo. Local package files or trees
-use the \verb{local::<path>} format.
-
-Examples:\preformatted{devtools
+can be obtained from. Examples:\preformatted{devtools
 cran::devtools
 bioc::Biobase
 r-lib/pkgdepends
@@ -61,13 +54,12 @@ https://github.com/r-lib/pkgdepends
 local::~/works/shiny
 }
 
-Use \code{\link[=parse_pkg_refs]{parse_pkg_refs()}} to parse package
-references.
+See \link[=pkg_refs]{‘Package references’} for details.
 }
 
 \subsection{Package dependencies}{
 
-To query package dependencies, use
+TODO
 }
 
 \subsection{Package downloads}{
@@ -76,6 +68,26 @@ TODO
 }
 
 \subsection{Package installation}{
+
+TODO
+}
+
+\subsection{Dependency resolution}{
+
+TODO
+}
+
+\subsection{The dependency solver}{
+
+TODO
+}
+
+\subsection{Installation plans}{
+
+TODO
+}
+
+\subsection{Configuration}{
 
 TODO
 }

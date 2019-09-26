@@ -16,71 +16,404 @@
 #'
 #' @export
 #' @rdname pkg_installation_proposal
+#' @eval style_man()
 
 new_pkg_installation_proposal <- function(refs, config = list(), ...) {
   config$library <- config$library %||% .libPaths()[[1]]
   pkg_installation_proposal$new(refs, config = config, ...)
 }
 
-#' @title
 #' R6 class for package download and installation.
 #'
-#' @description
-#' Download and installa packages, with their dependencies, from various
+#' Download and install R packages, with their dependencies, from various
 #' sources.
-#' @eval style_man()
 #'
-#' @includeRmd tools/doc/pkg-installation.Rmd
-#' @name pkg_installation_proposal
-NULL
-
+#' @details
+#' Typical workflow to install a set of packages:
+#'
+#' 1. Create a `pkg_installation_proposal` object with
+#'    `new_pkg_installation_proposal()`.
+#' 1. Resolve all possible dependencies with
+#'    [`pkg_installation_proposal$resolve()`](#method-resolve).
+#' 1. Solve the package dependencies, to get an installation plan, with
+#'    [`pkg_installation_proposal$solve()`](#method-solve).
+#' 1. Download all files with
+#'    [`pkg_installation_proposal$download()`](#method-download).
+#' 1. Install the downloaded files with
+#'    [`pkg_installation_proposal$install()`](#methods-install).
+#'
 #' @export
 
 pkg_installation_proposal <- R6::R6Class(
   "pkg_installation_proposal",
   public = list(
+
+    #' @details
+    #' Create a new `pkg_installation_proposal` object. Consider using
+    #' `new_pkg_installation_proposal()` instead of calling the constructor
+    #' directly.
+    #'
+    #' The returned object can be used to look up (recursive) dependencies
+    #' of R packages from various sources, and then download and install
+    #' the package files.
+    #'
+    #' @param refs Package names or references. See
+    #'   ['Package references'][pkg_refs] for the syntax.
+    #' @param config Configuration options, a named list. See
+    #'   ['Configuration'][pkg_config]. It needs to include the package
+    #'   library to install to, in `library`.
+    #' @param policy Solution policy. See
+    #'   ['The dependency solver'][pkg_solution].
+    #' @param remote_types Custom remote ref types, this is for advanced
+    #'   use, and experimental currently.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "r-lib/pkgdepends",
+    #'   config = list(library = tempfile()))
+    #' pdi
+
     initialize = function(refs, config = list(),
                           policy = c("lazy", "upgrade"),
                           remote_types = NULL)
       pkginst_init(self, private, refs, config, match.arg(policy),
                    remote_types),
+
+    #' @details
+    #' The package refs that were used to create the
+    #' `pkg_installation_proposal` object.
+    #'
+    #' @return
+    #' A character vector of package refs that were used to create the
+    #' `pkg_installation_proposal` object.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
+    #' pdi$get_refs()
+
     get_refs = function() private$plan$get_refs(),
+
+    #' @details
+    #' Configuration options for the `pkg_installation_proposal` object. See
+    #' ['Configuration'][pkg_config] for details.
+    #'
+    #' @return
+    #' Named list. See ['Configuration'][pkg_config] for the configuration
+    #' options.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "pak",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$get_config()
+
     get_config = function() private$plan$get_config(),
+
+    #' @details
+    #' Resolve the dependencies of the specified package references. This
+    #' usually means downloading metadata from CRAN and Bioconductor,
+    #' unless already cached, and also from GitHub if GitHub refs were
+    #' included, either directly or indirectly. See
+    #' ['Dependency resolution'][pkg_resolution] for details.
+    #'
+    #' @return
+    #' The same as the [`get_resolution()`](#method-get-resolution) method
+    #' (see below), the result of the resolution, invisibly.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "pak",
+    #'   config = list(library = tempfile())
+    #' )
+    #'
+    #' pdi$resolve()
+    #' pdi
+
+    resolve = function()
+      pkginst_resolve(self, private),
+
+    #' @details
+    #' The same as [`resolve()`](#method-resolve), but asynchronous. This
+    #' method is for advanced use.
+    #'
+    #' @return
+    #' A deferred value.
 
     async_resolve = function()
       pkginst_async_resolve(self, private),
-    resolve = function()
-      pkginst_resolve(self, private),
+
+    #' @details
+    #' Query the result of the dependency resolution. This method can be
+    #' called after [`resolve()`](#method-resolve) has completed.
+    #'
+    #' @return
+    #' A [pkg_resolution_result] object, which is also a tibble. See
+    #' [pkg_resolution_result] for its columns.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "r-lib/pkgdepends",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$get_resolution()
+
     get_resolution = function()
       pkginst_get_resolution(self, private),
 
+    #' @details
+    #' Returns the current policy of the dependency solver.
+    #' See ['The dependency solver'][pkg_solution] for details.
+    #'
+    #' @return
+    #' A character vector of length one.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "r-lib/pkgdepends",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$get_solve_policy()
+    #' pdi$set_solve_policy("upgrade")
+    #' pdi$get_solve_policy()
+
     get_solve_policy = function() private$policy,
+
+    #' @details
+    #' Set the current policy of the dependency solver.
+    #' If the object already contains a solution and the new policy is
+    #' different than the old policy, then the solution is deleted.
+    #' See ['The dependency solver'][pkg_solution] for details.
+    #'
+    #' @param policy Policy to set.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "r-lib/pkgdepends",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$get_solve_policy()
+    #' pdi$set_solve_policy("upgrade")
+    #' pdi$get_solve_policy()
+
     set_solve_policy = function(policy = c("lazy", "upgrade"))
       pkginst_set_solve_policy(self, private, match.arg(policy)),
+
+    #' @details
+    #' Solve the package dependencies. Out of the resolved dependencies,
+    #' it works out a set of packages, that can be installed together to
+    #' create a functional installation. The set includes all directly
+    #' specified packages, and all required (or suggested, depending on
+    #' the configuration) packages as well. It includes every package at
+    #' most once. See ['The dependency solver'][pkg_solution] for details.
+    #'
+    #' @return
+    #' The same as the [`get_solution()`](#method-get-solution) method, the
+    #' result, invisibly.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "r-lib/pkgdepends",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi
+
     solve = function()
       pkginst_solve(self, private),
+
+    #' @details
+    #' Returns the solution of the package dependencies.
+    #'
+    #' @return
+    #' A [pkg_solution_result] object, which is a list. See
+    #' [pkg_solution_result] for details.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "r-lib/pkgdepends",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi$get_solution()
+
     get_solution = function()
       pkginst_get_solution(self, private),
+
+    #' @details
+    #' Error if the dependency solver failed to find a consistent set of
+    #' packages that can be installed together.
+    #'
+    #' @examples
+    #' # This is an error, because the packages conflict:
+    #' pdi <- new_pkg_installation_proposal(
+    #'   c("r-lib/pak", "cran::pak"),
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi
+    #' pdi$stop_for_solution_error()
+
     stop_for_solution_error = function()
       pkginst_stop_for_solution_error(self, private),
+
+    #' @details
+    #' Draw a tree of package dependencies. It returns a `tree` object, see
+    #' [cli::tree()]. Printing this object prints the dependency tree to the
+    #' screen.
+    #'
+    #' @return
+    #' A `tree` object from the cli package, see [cli::tree()].
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "pak",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi$draw()
+
     draw = function()
       pkginst_draw(self, private),
 
-    async_download = function()
-      pkginst_async_download(self, private),
+    #' @details
+    #' Download all packages that are part of the solution. It uses the
+    #' package cache in the pkgcache package by default, to avoid downloads
+    #' if possible.
+    #'
+    #' @return
+    #' The same as the [`get_downloads()`](#method-get-downloads) method,
+    #' the result, invisibly.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   c("r-lib/pak", "cran::pak"),
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi$download()
+    #' pdi
+
     download = function()
       pkginst_download(self, private),
+
+    #' @details
+    #' The same as [`download()`](#method-download), but asynchronous.
+    #' This method is for advanced use.
+    #'
+    #' @return
+    #' A deferred value.
+
+    async_download = function()
+      pkginst_async_download(self, private),
+
+    #' @details
+    #' Returns the summary of the package downloads.
+    #'
+    #' @return
+    #' A [pkg_download_result] object, which is a list. See
+    #' [pkg_download_result] for details.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   c("r-lib/pak", "cran::pak"),
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi$download()
+    #' pdi$get_downloads()
+
     get_downloads = function()
       pkginst_get_downloads(self, private),
+
+    #' @details
+    #' Throw and error if the some of the downloads have failed for the
+    #' most recent
+    #' [`pkg_installation_proposal$download()`](#method-download) call.
+
     stop_for_download_error = function()
       pkginst_stop_for_download_error(self, private),
 
+    #' @details
+    #' Install the downloaded packages. It calls [install_package_plan()].
+    #'
+    #' @return
+    #' The return value of [install_package_plan()].
+
     install = function()
       pkginst_install(self, private),
+
+    #' @details
+    #' Create an installation plan for the downloaded packages.
+    #'
+    #' @return
+    #' An installation plan, see ['Installation plans'][install_plan] for
+    #' the format.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "pak",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi$download()
+    #' pdi$get_install_plan()
+
     get_install_plan = function()
       pkginst_get_install_plan(self, private),
 
+    #' @details
+    #' Format a `pkg_installation_proposal` object, typically for printing.
+    #'
+    #' @param ... not used currently.
+    #'
+    #' @return
+    #' A character vector, each element should be a line in the printout.
+
     format = function(...) pkginst_format(self, private, ...),
+
+    #' @details
+    #' Prints a `pkg_installation_proposal` object to the screen. The
+    #' printout includes:
+    #'
+    #' * The package refs.
+    #' * The policy of the dependency solver.
+    #' * Whether the object has the solved dependencies.
+    #' * Whether the solution had errors.
+    #' * Whether the object has downloads.
+    #' * Whether the downloads had errors.
+    #' * Advice on which methods to call next.
+    #'
+    #' See the example below.
+    #'
+    #' @param ... not used currently.
+    #' @return
+    #' The `pkg_installation_proposal` object itself, invisibly.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "pak",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi
+    #'
+    #' pdi$resolve()
+    #' pdi
+    #'
+    #' pdi$solve()
+    #' pdi
+    #'
+    #' pdi$download()
+    #' pdi
+
     print = function(...) pkginst_print(self, private, ...)
   ),
 

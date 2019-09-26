@@ -12,46 +12,220 @@
 #'
 #' @export
 #' @rdname pkg_deps
+#' @eval style_man()
 
 new_pkg_deps <- function(refs, ...) {
   pkg_deps$new(refs, ...)
 }
 
-#' @title
 #' R6 class for package dependency lookup
 #'
-#' @description
 #' Look up dependencies of R packages from various sources.
-#' @eval style_man()
 #'
-#' @includeRmd tools/doc/pkg-dependencies.Rmd
-#' @name pkg_deps
-NULL
-
+#' @details
+#' The usual steps to query package dependencies are:
+#'
+#' 1. Create a `pkg_deps` object with `new_pkg_deps()`.
+#' 1. Resolve all possible dependencies with
+#'    [`pkg_deps$resolve()`](#method-resolve).
+#' 1. Solve the dependencies, to obtain a subset of all possible
+#'    dependencies that can be installed together, with
+#'    [`pkg_deps$solve()`](#method-solve).
+#' 1. Call [`pkg_deps$get_solution()`](#method-get-solution) to list the
+#'    result of the dependency solver.
+#'
 #' @export
 
 pkg_deps <- R6::R6Class(
   "pkg_deps",
   public = list(
+
+    #' @details
+    #' Create a new `pkg_deps` object. Consider using `new_pkg_deps()`
+    #' instead of calling the constructor directly.
+    #'
+    #' The returned object can be used to look up (recursive) dependencies
+    #' of R ackages from various sources. To perform the actual lookup,
+    #' you'll need to call the [`resolve()`](#method-resolve) method.
+    #' @param refs Package names or references. See
+    #'   ['Package references'][pkg_refs] for the syntax.
+    #' @param config Configuration options, a named list. See
+    #'   ['Configuration'][pkg_config].
+    #' @param remote_types Custom remote ref types, this is for advanced
+    #'   use, and experimental currently.
+    #'
+    #' @return
+    #'  A new `pkg_deps` object.
+    #'
+    #' @examples
+    #' pd <- pkg_deps$new("r-lib/pkgdepends")
+    #' pd
+
     initialize = function(refs, config = list(), remote_types = NULL)
       pkgdeps_init(self, private, refs, config, remote_types),
+
+    #' @details
+    #' The package refs that were used to create the `pkg_deps` object.
+    #'
+    #' @return
+    #' A character vector of package refs that were used to create the
+    #' `pkg_deps` object.
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps(c("pak", "jsonlite"))
+    #' pd$get_refs()
+
     get_refs = function() private$plan$get_refs(),
+
+    #' @details
+    #' Configuration options for the `pkg_deps` object. See
+    #' ['Configuration'][pkg_config] for details.
+    #'
+    #' @return
+    #' Named list. See ['Configuration'][pkg_config] for the configuration
+    #' options.
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps("pak")
+    #' pd$get_config()
+
     get_config = function() private$plan$get_config(),
-    async_resolve = function()
-      pkgdeps_async_resolve(self, private),
+
+    #' @details
+    #' Resolve the dependencies of the specified package references. This
+    #' usually means downloading metadata from CRAN and Bioconductor, unless
+    #' already cached, and also from GitHub if GitHub refs were included,
+    #' either directly or indirectly. See
+    #' ['Dependency resolution'][pkg_resolution] for details.
+    #'
+    #'@return
+    #' The same as the [`get_resolution()`](#method-get-resolution) method
+    #' (see below), the result of the resolution, invisibly.
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps("pak")
+    #' pd$resolve()
+    #' pd
+
     resolve = function()
       pkgdeps_resolve(self, private),
+
+    #' @details
+    #' The same as [`resolve()`](#method-resolve), but asynchronous.
+    #' This method is for advanced use.
+    #'
+    #' @return
+    #' A deferred value.
+
+    async_resolve = function()
+      pkgdeps_async_resolve(self, private),
+
+    #' @details
+    #' Query the result of the dependency resolution. This method can be
+    #' called after [`resolve()`](#method-resolve) has completed.
+    #'
+    #' @return
+    #' A [pkg_resolution_result] object, which is also a tibble. See
+    #' [pkg_resolution_result] for its columns.
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps("r-lib/pkgdepends")
+    #' pd$resolve()
+    #' pd$get_resolution()
+
     get_resolution = function()
       pkgdeps_get_resolution(self, private),
 
+    #' @details
+    #' Solve the package dependencies. Out of the resolved dependencies, it
+    #' works out a set of packages, that can be installed together to
+    #' create a functional installation. The set includes all directly
+    #' specified packages, and all required (or suggested, depending on
+    #' the configuration) packages as well. It includes every package at
+    #' most once. See ['The dependency solver'][pkg_solution] for details.
+    #'
+    #' `solve()` calls [`resolve()`](#method-resolve) automatically, if it
+    #' hasn't been called yet.
+    #'
+    #' @return
+    #' The same as the [`get_solution()`](#method-get-solution) method, the
+    #' result, invisibly.
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps("r-lib/pkgdepends")
+    #' pd$resolve()
+    #' pd$solve()
+    #' pd
+
     solve = function()
       pkgdeps_solve(self, private),
+
+    #' @details
+    #' Returns the solution of the package dependencies.
+    #' @return
+    #' A [pkg_solution_result] object, which is a list. See
+    #' [pkg_solution_result] for details.
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps("pkgload")
+    #' pd$resolve()
+    #' pd$solve()
+    #' pd$get_solution()
+
     get_solution = function()
       pkgdeps_get_solution(self, private),
+
+    #' @details
+    #' Draw a tree of package dependencies. It returns a `tree` object, see
+    #' [cli::tree()]. Printing this object prints the dependency tree to the
+    #' screen.
+    #'
+    #' @return
+    #' A `tree` object from the cli package, see [cli::tree()].
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps("pkgload")
+    #' pd$solve()
+    #' pd$draw()
+
     draw = function()
       pkgdeps_draw(self, private),
 
+    #' Format a `pkg_deps` object, typically for printing.
+    #'
+    #' @param ... Not used currently.
+    #'
+    #' @return
+    #' A character vector, each element should be a line in the printout.
+
     format = function(...) pkgdeps_format(self, private, ...),
+
+    #' @details
+    #' Prints a `pkg_deps` object to the screen. The printout includes:
+    #'
+    #' * The package refs.
+    #' * Whether the object has the resolved dependencies.
+    #' * Whether the resolution had errors.
+    #' * Whether the object has the solved dependencies.
+    #' * Whether the solution had errors.
+    #' * Advice on which methods to call next.
+    #'
+    #' See the example below.
+    #'
+    #' @param ... not used currently.
+    #' @return
+    #' The `pkg_deps` object itself, invisibly.
+    #'
+    #' @examples
+    #' pd <- new_pkg_deps("r-lib/pkgdepends")
+    #' pd
+    #'
+    #' pd$resolve()
+    #' pd
+    #'
+    #' pd$solve()
+    #' pd
+
     print = function(...) pkgdeps_print(self, private, ...)
   ),
 

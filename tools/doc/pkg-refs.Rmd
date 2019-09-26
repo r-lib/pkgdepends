@@ -4,8 +4,8 @@ options(
   pkg.show_progress = FALSE,
   cli.unicode = FALSE)
 knitr::opts_chunk$set(
-  cache = TRUE,
-  class.source = "r copy")
+  cache = TRUE
+)
 ```
 
 The currently supported reference types are:

@@ -1,7 +1,7 @@
 
-style_man <- function() {
+style_man <- function(where = "@description") {
   c(
-    "@description",
+    where,
     paste0(
       '\\if{html}{\\out{',
       '<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">',

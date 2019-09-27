@@ -59,37 +59,98 @@ See \link[=pkg_refs]{‘Package references’} for details.
 
 \subsection{Package dependencies}{
 
-TODO
+Dependencies of the development version of the cli package:\preformatted{pd <- new_pkg_deps("r-lib/cli")
+pd$solve()
+pd$draw()
+}\preformatted{#> cli (1.9.9.9000)
+#> +-assertthat (0.2.1)
+#> +-crayon (1.3.4)
+#> +-glue (1.3.1)
+#> +-progress (1.2.2)
+#> | +-hms (0.5.1)
+#> | | +-pkgconfig (2.0.3)
+#> | | +-rlang (0.4.0)
+#> | | \-vctrs (0.2.0)
+#> | |   +-backports (1.1.4)
+#> | |   +-ellipsis (0.3.0)
+#> | |   | \-rlang (0.4.0)
+#> | |   +-digest (0.6.21)
+#> | |   +-glue (1.3.1)
+#> | |   +-rlang (0.4.0)
+#> | |   \-zeallot (0.1.0)
+#> | +-prettyunits (1.0.2)
+#> | | +-magrittr (1.5)
+#> | | \-assertthat (0.2.1)
+#> | +-R6 (2.4.0)
+#> | \-crayon (1.3.4)
+#> \-fansi (0.4.0)
+}
+
+See \link[=pkg_deps]{the pkg_deps class} for details.
 }
 
 \subsection{Package downloads}{
 
-TODO
+Downloading all dependencies of a package:\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
+pdl$resolve()
+pdl$download()
+}
+
+See \link[=pkg_download_proposal]{the pkg_download_proposal class} for
+details.
 }
 
 \subsection{Package installation}{
 
-TODO
+Installing or updating a set of package:\preformatted{lib <- tempfile()
+pdi <- new_pkg_installation_proposal(
+  "r-lib/cli",
+  config = list(library = lib)
+)
+pdi$solve()
+pdi$download()
+pdi$install()
+}\preformatted{#> Your system is ready to build packages!
+#> Your system is ready to build packages!
+
+#> Installed: 17
+#> Build time:  3.7s
+#> Intall time: 2s
+}
 }
 
 \subsection{Dependency resolution}{
 
-TODO
+\link{pkg_deps},
+\link{pkg_download_proposal} and
+\link{pkg_installation_proposal} all resolve
+their dependencies recursively, to obtain information about all packages
+needed for the specified \link[=pkg_refs]{package references}. See
+\link[=pkg_resolution]{‘Dependency resolution’} for details.
 }
 
 \subsection{The dependency solver}{
 
-TODO
+The dependency solver takes the resolution information, and works out
+the exact versions of each package that must be installed, such that
+version and other requirements are satisfied. See \link[=pkg_solution]{‘The dependency solver’} for details.
 }
 
 \subsection{Installation plans}{
 
-TODO
+\link{pkg_installation_proposal} can create
+installation plans, and then also install them. It is also possible to
+import installation plans that were created by other tools. See
+\link[=install_plans]{‘Installation plans’} for details.
 }
 
 \subsection{Configuration}{
 
-TODO
+The details of \link{pkg_deps},
+\link{pkg_download_proposal} and
+\link{pkg_installation_proposal} can be tuned
+with a list of configuration options. See
+\link[=pkg_config]{‘Configuration’} for details.
 }
 
 }

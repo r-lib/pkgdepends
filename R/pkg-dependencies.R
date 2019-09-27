@@ -132,7 +132,7 @@ pkg_deps <- R6::R6Class(
     #'
     #' @return
     #' A [pkg_resolution_result] object, which is also a tibble. See
-    #' [pkg_resolution_result] for its columns.
+    #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
     #' @examples
     #' pd <- new_pkg_deps("r-lib/pkgdepends")

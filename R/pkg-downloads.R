@@ -128,7 +128,7 @@ pkg_download_proposal <- R6::R6Class(
     #'
     #' @return
     #' A [pkg_resolution_result] object, which is also a tibble. See
-    #' [pkg_resolution_result] for its columns.
+    #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
     #' @examples
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")

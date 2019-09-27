@@ -1,4 +1,34 @@
 
+#' Package downloads
+#'
+#' The [pkg_download_proposal] and [pkg_installation_proposal] classes
+#' both have download methods, to downloads package files into a
+#' configured directory (see ['Configuration'][pkg_config]).
+#'
+#' They return a `pkg_download_result` object, which is a data frame
+#' (tibble), that adds extra columns to [pkg_resolution_result] (for
+#' [pkg_download_proposal]) or [pkg_solution_result]
+#' (for [pkg_installation_proposal]):
+#'
+#' * `fulltarget`: absolute path to the downloaded file. At most one of
+#'   `fulltarget` and `fulltarget_tree` must exist on the disk.
+#' * `fulltarget_tree`: absolute path to a package tree directory. At most
+#'   one of `fulltarget` and `fulltarget_tree` must exist on the disk.
+#' * `download_status`: `"Had"` or `"Got"`, depending on whether the file
+#'    was obtained from the cache.
+#' * `download_error`: error object for failed downloads.
+#' * `file_size`: Size of the file, or `NA`. For `installed::` refs, it is
+#'   `NA`, and it is also `NA` for refs that created `fulltarget_tree`
+#'   instead of `fulltarget`.
+#'
+#' `fulltarget`, if it exists, contains a packaged (via `R CMD build`)
+#' source R package. If `fulltarget_tree` exists, it is a package tree
+#' directory, that still needs an `R CMD build` call.
+#'
+#' @name pkg_downloads
+#' @aliases pkg_download_result
+NULL
+
 #' @importFrom prettyunits pretty_bytes
 
 pkgplan_download_resolution <- function(self, private) {

@@ -189,7 +189,7 @@ Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{resolve()} has completed.
 \subsection{Returns}{
 A \link{pkg_resolution_result} object, which is also a tibble. See
-\link{pkg_resolution_result} for its columns.
+\link[=pkg_resolution]{'Dependency resolution'} for its columns.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

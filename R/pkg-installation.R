@@ -159,7 +159,7 @@ pkg_installation_proposal <- R6::R6Class(
     #'
     #' @return
     #' A [pkg_resolution_result] object, which is also a tibble. See
-    #' [pkg_resolution_result] for its columns.
+    #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
     #' @examples
     #' pdi <- new_pkg_installation_proposal(
@@ -369,7 +369,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' Create an installation plan for the downloaded packages.
     #'
     #' @return
-    #' An installation plan, see ['Installation plans'][install_plan] for
+    #' An installation plan, see ['Installation plans'][install_plans] for
     #' the format.
     #'
     #' @examples

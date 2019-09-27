@@ -127,6 +127,41 @@ pkgplan_init <- function(self, private, refs, config, library,
   invisible(self)
 }
 
+#' Configuration
+#'
+#' Configuration options for several pkgdepends classes. Not all classes
+#' use all of these options. E.g. [pkg_download_proposal] is not concerned
+#' about package libaries, so it'll ignore the `library` option.
+#'
+#' Options:
+#'
+#' * `library`: package library to use for checking already installed
+#'   packages when considering dependencies in [dependency lookup][pkg_deps]
+#'   or [package installation][pkg_installation_proposal]. Defaults to the
+#'   first path in [.libPaths()].
+#' * `cache_dir`: directory to download the packages to. Defaults to a
+#'   temporary directory within the R session temporary directory, see
+#'   [base::tempdir()].
+#' * `package_cache_dir`: package cache location of
+#'   [pkgcache::package_cache]. The default is the pkgcache default.
+#' * `metadata_cache_dir`: location of metadata replica of
+#'   [pkgcache::cranlike_metadata_cache]. Defaults to a temporary
+#'   directory within the R session temporary directory, see
+#'   [base::tempdir()].
+#' * `platforms`: Character vector of platforms to _download_ or _install_
+#'   for. Possible platforms are `windows`, `macos` and `source`. Defaults
+#'   to the current platform, _and_ `source`.
+#' * `cran-mirror`: CRAN mirror to use. Defaults to the `repos` option
+#'   (see [base::options()]), if that's not set then
+#'   `https://cran.rstudio.com`.
+#' * `dependencies`: Dependencies to consider or download or install.
+#'   Defaults to the hard dependencies, see [pkg_dep_types_hard()].
+#' * `r-versions`: Character vector, R versions to download or install
+#'   packages for. It defaults to the current R version.
+#'
+#' @name pkg_config
+NULL
+
 pkgplan_default_config <- function() {
   structure(list(
     "library"            = NULL,

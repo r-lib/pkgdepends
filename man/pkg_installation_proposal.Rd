@@ -218,7 +218,7 @@ Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{resolve()} has completed.
 \subsection{Returns}{
 A \link{pkg_resolution_result} object, which is also a tibble. See
-\link{pkg_resolution_result} for its columns.
+\link[=pkg_resolution]{'Dependency resolution'} for its columns.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -510,7 +510,7 @@ The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
 \if{html}{\out{</div>}}
 Create an installation plan for the downloaded packages.
 \subsection{Returns}{
-An installation plan, see \link[=install_plan]{'Installation plans'} for
+An installation plan, see \link[=install_plans]{'Installation plans'} for
 the format.
 }
 \subsection{Examples}{

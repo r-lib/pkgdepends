@@ -55,31 +55,69 @@ See ['Package references'][pkg_refs] for details.
 
 ## Package dependencies
 
-TODO
+Dependencies of the development version of the cli package:
+
+```{r}
+pd <- new_pkg_deps("r-lib/cli")
+pd$solve()
+pd$draw()
+```
+
+See [the `pkg_deps` class][pkg_deps] for details.
 
 ## Package downloads
 
-TODO
+Downloading all dependencies of a package:
+
+```{r}
+pdl <- new_pkg_download_proposal("r-lib/cli")
+pdl$resolve()
+pdl$download()
+```
+
+See [the `pkg_download_proposal` class][pkg_download_proposal] for details.
 
 ## Package installation
 
-TODO
+Installing or updating a set of package:
+
+```{r}
+lib <- tempfile()
+pdi <- new_pkg_installation_proposal(
+  "r-lib/cli",
+  config = list(library = lib)
+)
+pdi$solve()
+pdi$download()
+pdi$install()
+```
 
 ## Dependency resolution
 
-TODO
+[pkg_deps], [pkg_download_proposal] and [pkg_installation_proposal]
+all resolve their dependencies recursively, to obtain information about
+all packages needed for the specified [package references][pkg_refs].
+See ['Dependency resolution'][pkg_resolution] for details.
 
 ## The dependency solver
 
-TODO
+The dependency solver takes the resolution information, and works out
+the exact versions of each package that must be installed, such that
+version and other requirements are satisfied. See
+['The dependency solver'][pkg_solution] for details.
 
 ## Installation plans
 
-TODO
+[pkg_installation_proposal] can create installation plans, and then also
+install them. It is also possible to import installation plans that were
+created by other tools. See ['Installation plans'][install_plans] for
+details.
 
 ## Configuration
 
-TODO
+The details of [pkg_deps], [pkg_download_proposal] and
+[pkg_installation_proposal] can be tuned with a list of configuration
+options. See ['Configuration'][pkg_config] for details.
 
 # Related
 

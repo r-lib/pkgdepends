@@ -1,4 +1,11 @@
 
+#' Installation plans
+#'
+#' TODO
+#'
+#' @name install_plans
+NULL
+
 #' Perform a package installation plan, as created by pkgdepends
 #'
 #' @param plan Package plan object, returned by pkgdepends

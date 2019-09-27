@@ -3,8 +3,8 @@
 
 # pkgdepends
 
-> Package Dependency
-Resolution
+> Package Dependency Resolution, Downloads and
+Installation
 
 ![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
 [![Linux Build
@@ -66,31 +66,115 @@ See [‘Package references’](TODO) for details.
 
 ## Package dependencies
 
-TODO
+Dependencies of the development version of the cli package:
+
+``` r
+pd <- new_pkg_deps("r-lib/cli")
+pd$solve()
+```
+
+    #> Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
+    #> Please use `!!` instead.
+    #> 
+    #>   # Bad:
+    #>   dplyr::select(data, !!!enquo(x))
+    #> 
+    #>   # Good:
+    #>   dplyr::select(data, !!enquo(x))    # Unquote single quosure
+    #>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
+    #> 
+    #> This warning is displayed once per session.
+
+``` r
+pd$draw()
+```
+
+    #> cli (1.9.9.9000)
+    #> ├─assertthat (0.2.1)
+    #> ├─crayon (1.3.4)
+    #> ├─glue (1.3.1)
+    #> ├─progress (1.2.2)
+    #> │ ├─hms (0.5.1)
+    #> │ │ ├─pkgconfig (2.0.3)
+    #> │ │ ├─rlang (0.4.0)
+    #> │ │ └─vctrs (0.2.0)
+    #> │ │   ├─backports (1.1.4)
+    #> │ │   ├─ellipsis (0.3.0)
+    #> │ │   │ └─rlang (0.4.0)
+    #> │ │   ├─digest (0.6.21)
+    #> │ │   ├─glue (1.3.1)
+    #> │ │   ├─rlang (0.4.0)
+    #> │ │   └─zeallot (0.1.0)
+    #> │ ├─prettyunits (1.0.2)
+    #> │ │ ├─magrittr (1.5)
+    #> │ │ └─assertthat (0.2.1)
+    #> │ ├─R6 (2.4.0)
+    #> │ └─crayon (1.3.4)
+    #> └─fansi (0.4.0)
+
+See \[the `pkg_deps` class\]\[pkg\_deps\] for details.
 
 ## Package downloads
 
-TODO
+Downloading all dependencies of a package:
+
+``` r
+pdl <- new_pkg_download_proposal("r-lib/cli")
+pdl$resolve()
+pdl$download()
+```
+
+See [the `pkg_download_proposal` class](TODO) for details.
 
 ## Package installation
 
-TODO
+Installing or updating a set of package:
+
+``` r
+lib <- tempfile()
+pdi <- new_pkg_installation_proposal(
+  "r-lib/cli",
+  config = list(library = lib)
+)
+pdi$solve()
+pdi$download()
+pdi$install()
+```
+
+    #> Your system is ready to build packages!
+    #> Your system is ready to build packages!
+
+    #> Installed: 17
+    #> Build time:  3s
+    #> Intall time: 2.1s
 
 ## Dependency resolution
 
-TODO
+\[pkg\_deps\], [pkg\_download\_proposal](TODO) and
+\[pkg\_installation\_proposal\] all resolve their dependencies
+recursively, to obtain information about all packages needed for the
+specified [package references](TODO). See [‘Dependency
+resolution’](TODO) for details.
 
 ## The dependency solver
 
-TODO
+The dependency solver takes the resolution information, and works out
+the exact versions of each package that must be installed, such that
+version and other requirements are satisfied. See [‘The dependency
+solver’](TODO) for details.
 
 ## Installation plans
 
-TODO
+\[pkg\_installation\_proposal\] can create installation plans, and then
+also install them. It is also possible to import installation plans that
+were created by other tools. See [‘Installation plans’](TODO) for
+details.
 
 ## Configuration
 
-TODO
+The details of \[pkg\_deps\], [pkg\_download\_proposal](TODO) and
+\[pkg\_installation\_proposal\] can be tuned with a list of
+configuration options. See [‘Configuration’](TODO) for details.
 
 # Related
 

@@ -132,3 +132,8 @@ options. See ['Configuration'][pkg_config] for details.
 MIT © RStudio
 
 [pkg_refs]: TODO
+[pkg_download_proposal]: TODO
+[pkg_solution]: TODO
+[pkg_resolution]: TODO
+[pkg_config]: TODO
+[install_plans]: TODO

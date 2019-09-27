@@ -107,9 +107,7 @@ done, or \code{NULL}\cr
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\describe{
 New \code{r_untar_process} object.
-}
 }
 }
 }

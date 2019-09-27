@@ -124,10 +124,8 @@ pdi
 The package refs that were used to create the
 \code{pkg_installation_proposal} object.
 \subsection{Returns}{
-\describe{
 A character vector of package refs that were used to create the
 \code{pkg_installation_proposal} object.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -149,10 +147,8 @@ pdi$get_refs()
 Configuration options for the \code{pkg_installation_proposal} object. See
 \link[=pkg_config]{'Configuration'} for details.
 \subsection{Returns}{
-\describe{
 Named list. See \link[=pkg_config]{'Configuration'} for the configuration
 options.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -180,10 +176,8 @@ unless already cached, and also from GitHub if GitHub refs were
 included, either directly or indirectly. See
 \link[=pkg_resolution]{'Dependency resolution'} for details.
 \subsection{Returns}{
-\describe{
 The same as the \href{#method-get-resolution}{get_resolution()} method
 (see below), the result of the resolution, invisibly.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -210,9 +204,7 @@ pdi
 The same as \href{#method-resolve}{resolve()}, but asynchronous. This
 method is for advanced use.
 \subsection{Returns}{
-\describe{
 A deferred value.
-}
 }
 }
 \if{html}{\out{<hr>}}
@@ -225,10 +217,8 @@ A deferred value.
 Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{resolve()} has completed.
 \subsection{Returns}{
-\describe{
 A \link{pkg_resolution_result} object, which is also a tibble. See
 \link{pkg_resolution_result} for its columns.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -254,9 +244,7 @@ pdi$get_resolution()
 Returns the current policy of the dependency solver.
 See \link[=pkg_solution]{'The dependency solver'} for details.
 \subsection{Returns}{
-\describe{
 A character vector of length one.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -320,10 +308,8 @@ specified packages, and all required (or suggested, depending on
 the configuration) packages as well. It includes every package at
 most once. See \link[=pkg_solution]{'The dependency solver'} for details.
 \subsection{Returns}{
-\describe{
 The same as the \href{#method-get-solution}{get_solution()} method, the
 result, invisibly.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -349,10 +335,8 @@ pdi
 \if{html}{\out{</div>}}
 Returns the solution of the package dependencies.
 \subsection{Returns}{
-\describe{
 A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -406,9 +390,7 @@ Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the dependency tree to the
 screen.
 \subsection{Returns}{
-\describe{
 A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -436,10 +418,8 @@ Download all packages that are part of the solution. It uses the
 package cache in the pkgcache package by default, to avoid downloads
 if possible.
 \subsection{Returns}{
-\describe{
 The same as the \href{#method-get-downloads}{get_downloads()} method,
 the result, invisibly.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -467,9 +447,7 @@ pdi
 The same as \href{#method-download}{download()}, but asynchronous.
 This method is for advanced use.
 \subsection{Returns}{
-\describe{
 A deferred value.
-}
 }
 }
 \if{html}{\out{<hr>}}
@@ -481,10 +459,8 @@ A deferred value.
 \if{html}{\out{</div>}}
 Returns the summary of the package downloads.
 \subsection{Returns}{
-\describe{
 A \link{pkg_download_result} object, which is a list. See
 \link{pkg_download_result} for details.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -522,9 +498,7 @@ most recent
 \if{html}{\out{</div>}}
 Install the downloaded packages. It calls \code{\link[=install_package_plan]{install_package_plan()}}.
 \subsection{Returns}{
-\describe{
 The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
-}
 }
 }
 \if{html}{\out{<hr>}}
@@ -536,10 +510,8 @@ The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
 \if{html}{\out{</div>}}
 Create an installation plan for the downloaded packages.
 \subsection{Returns}{
-\describe{
 An installation plan, see \link[=install_plan]{'Installation plans'} for
 the format.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -573,9 +545,7 @@ Format a \code{pkg_installation_proposal} object, typically for printing.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\describe{
 A character vector, each element should be a line in the printout.
-}
 }
 }
 \if{html}{\out{<hr>}}
@@ -606,9 +576,7 @@ See the example below.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\describe{
 The \code{pkg_installation_proposal} object itself, invisibly.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

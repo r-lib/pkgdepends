@@ -52,6 +52,7 @@ Suggests:
     pingr,
     rmarkdown,
     rstudioapi,
+    spelling,
     testthat
 VignetteBuilder: knitr
 Encoding: UTF-8

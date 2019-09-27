@@ -53,6 +53,7 @@ result of the dependency solver.
 \item \href{#method-print}{\code{pkg_deps$print()}}
 }
 }
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
 \if{html}{\out{<div class="r">}}
@@ -367,5 +368,4 @@ pd
 }
 
 }
-\if{html}{\out{<hr>}}
 }

@@ -57,6 +57,7 @@ Typical workflow to download a set of packages:
 \item \href{#method-print}{\code{pkg_download_proposal$print()}}
 }
 }
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
 \if{html}{\out{<div class="r">}}
@@ -350,5 +351,4 @@ pdl
 }
 
 }
-\if{html}{\out{<hr>}}
 }

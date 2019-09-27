@@ -65,11 +65,34 @@ need_internal_tar <- local({
   }
 })
 
+#' R6 class for an external untar process
+#'
+#' @description
+#' Uses the system's `tar` program, in a background process.
+#' @eval style_man()
+#'
+#' @keywords internal
+
 external_untar_process <- R6::R6Class(
   "external_untar_process",
   inherit = callr::process,
 
   public = list(
+
+    #' @details
+    #' Start running the background process that extracts the file.
+    #'
+    #' @param tarfile Path to the `.tar` or `.tar.gz`, etc. file to
+    #' uncompress.
+    #' @param files List of files to uncompress, see [utils::untar()].
+    #' @param exdir Directory to extract the files to.
+    #' @param restore_times Whether to restore modification files.
+    #' @param tar Name of the external `tar` program. Defaults to
+    #' `TAR` environment variable, or `tar` if unset.
+    #' @param post_process Function to call, once the extraction is
+    #' done, or `NULL`
+    #' @return New `r_untar_process` object.
+
     initialize = function(
       tarfile, files = NULL, exdir = ".",
       restore_times = TRUE,
@@ -100,13 +123,33 @@ external_untar_process <- R6::R6Class(
   )
 )
 
+#' R6 class for an R untar process
+#'
+#' @description
+#' Uses [utils::untar()], in a background process.
+#' @eval style_man()
+#'
 #' @importFrom callr r_process_options
+#' @keywords internal
 
 r_untar_process <- R6::R6Class(
   "r_untar_process",
   inherit = callr::r_process,
 
   public = list(
+
+    #' @details
+    #' Start running the background R process that extracts the file.
+    #'
+    #' @param tarfile Path to the `.tar` or `.tar.gz`, etc. file to
+    #' uncompress.
+    #' @param files List of files to uncompress, see [utils::untar()].
+    #' @param exdir Directory to extract the files to.
+    #' @param restore_times Whether to restore modification files.
+    #' @param post_process Function to call, once the extraction is
+    #' done, or `NULL`
+    #' @return New `r_untar_process` object.
+
     initialize = function(tarfile, files = NULL, exdir = ".",
                           restore_times = TRUE, post_process = NULL) {
       options <- list(

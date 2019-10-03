@@ -3,7 +3,7 @@
 #'
 #' Collect information about dependencies of R packages, recursively.
 #'
-#' [pkg_deps], [pkg_download_proposal] and [pkg_installation_proposal]
+#' [`pkg_deps`], [`pkg_download_proposal`] and [`pkg_installation_proposal`]
 #' all resolve their dependencies recursively, to obtain information about
 #' all packages needed for the specified [package references][pkg_refs].
 #'
@@ -100,6 +100,7 @@
 #'
 #' @name pkg_resolution
 #' @aliases pkg_resolution_result
+#' @eval style_man()
 NULL
 
 #' @importFrom prettyunits pretty_dt

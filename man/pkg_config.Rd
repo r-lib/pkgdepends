@@ -5,8 +5,10 @@
 \title{Configuration}
 \description{
 Configuration options for several pkgdepends classes. Not all classes
-use all of these options. E.g. \link{pkg_download_proposal} is not concerned
+use all of these options. E.g. a \code{\link{pkg_download_proposal}} is not concerned
 about package libaries, so it'll ignore the \code{library} option.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 Options:
@@ -19,9 +21,9 @@ first path in \code{\link[=.libPaths]{.libPaths()}}.
 temporary directory within the R session temporary directory, see
 \code{\link[base:tempdir]{base::tempdir()}}.
 \item \code{package_cache_dir}: package cache location of
-\link[pkgcache:package_cache]{pkgcache::package_cache}. The default is the pkgcache default.
+\code{\link[pkgcache:package_cache]{pkgcache::package_cache}}. The default is the pkgcache default.
 \item \code{metadata_cache_dir}: location of metadata replica of
-\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}. Defaults to a temporary
+\code{\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}}. Defaults to a temporary
 directory within the R session temporary directory, see
 \code{\link[base:tempdir]{base::tempdir()}}.
 \item \code{platforms}: Character vector of platforms to \emph{download} or \emph{install}

@@ -130,7 +130,7 @@ pkgplan_init <- function(self, private, refs, config, library,
 #' Configuration
 #'
 #' Configuration options for several pkgdepends classes. Not all classes
-#' use all of these options. E.g. [pkg_download_proposal] is not concerned
+#' use all of these options. E.g. a [`pkg_download_proposal`] is not concerned
 #' about package libaries, so it'll ignore the `library` option.
 #'
 #' Options:
@@ -143,9 +143,9 @@ pkgplan_init <- function(self, private, refs, config, library,
 #'   temporary directory within the R session temporary directory, see
 #'   [base::tempdir()].
 #' * `package_cache_dir`: package cache location of
-#'   [pkgcache::package_cache]. The default is the pkgcache default.
+#'   [`pkgcache::package_cache`]. The default is the pkgcache default.
 #' * `metadata_cache_dir`: location of metadata replica of
-#'   [pkgcache::cranlike_metadata_cache]. Defaults to a temporary
+#'   [`pkgcache::cranlike_metadata_cache`]. Defaults to a temporary
 #'   directory within the R session temporary directory, see
 #'   [base::tempdir()].
 #' * `platforms`: Character vector of platforms to _download_ or _install_
@@ -160,6 +160,7 @@ pkgplan_init <- function(self, private, refs, config, library,
 #'   packages for. It defaults to the current R version.
 #'
 #' @name pkg_config
+#' @eval style_man()
 NULL
 
 pkgplan_default_config <- function() {

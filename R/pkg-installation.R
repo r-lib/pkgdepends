@@ -7,13 +7,6 @@
 #' @param ... Additional arguments, passed to
 #'   [`pkg_installation_proposal$new()`](#method-new).
 #'
-#' @details
-#' `new_pkg_installation_proposal()` creates a new object from the
-#' `pkg_installation_proposal` class. The advantage of
-#' `new_pkg_installation_proposal()` compared to using the
-#' [pkg_installation_proposal] constructor directly is that it avoids
-#' making pkgdepends a build time dependency.
-#'
 #' @export
 #' @rdname pkg_installation_proposal
 #' @eval style_man()
@@ -25,10 +18,17 @@ new_pkg_installation_proposal <- function(refs, config = list(), ...) {
 
 #' R6 class for package download and installation.
 #'
+#' @description
 #' Download and install R packages, with their dependencies, from various
 #' sources.
 #'
 #' @details
+#' `new_pkg_installation_proposal()` creates a new object from the
+#' `pkg_installation_proposal` class. The advantage of
+#' `new_pkg_installation_proposal()` compared to using the
+#' [pkg_installation_proposal] constructor directly is that it avoids
+#' making pkgdepends a build time dependency.
+#'
 #' Typical workflow to install a set of packages:
 #'
 #' 1. Create a `pkg_installation_proposal` object with
@@ -42,13 +42,31 @@ new_pkg_installation_proposal <- function(refs, config = list(), ...) {
 #' 1. Install the downloaded files with
 #'    [`pkg_installation_proposal$install()`](#methods-install).
 #'
+#' @param refs Package names or references. See
+#'   ['Package references'][pkg_refs] for the syntax.
+#'
 #' @export
+#' @examples
+#' pdi <- new_pkg_installation_proposal(
+#'   "pak",
+#'   config = list(library = tempfile())
+#' )
+#' pdi
+#'
+#' pdi$resolve()
+#' pdi
+#'
+#' pdi$solve()
+#' pdi
+#'
+#' pdi$download()
+#' pdi
 
 pkg_installation_proposal <- R6::R6Class(
   "pkg_installation_proposal",
   public = list(
 
-    #' @details
+    #' @description
     #' Create a new `pkg_installation_proposal` object. Consider using
     #' `new_pkg_installation_proposal()` instead of calling the constructor
     #' directly.
@@ -57,13 +75,11 @@ pkg_installation_proposal <- R6::R6Class(
     #' of R packages from various sources, and then download and install
     #' the package files.
     #'
-    #' @param refs Package names or references. See
-    #'   ['Package references'][pkg_refs] for the syntax.
     #' @param config Configuration options, a named list. See
     #'   ['Configuration'][pkg_config]. It needs to include the package
     #'   library to install to, in `library`.
-    #' @param policy Solution policy. See
-    #'   ['The dependency solver'][pkg_solution].
+    #' @param policy Solution policy. See ['The dependency
+    #'   solver'][pkg_solution].
     #' @param remote_types Custom remote ref types, this is for advanced
     #'   use, and experimental currently.
     #'
@@ -91,7 +107,7 @@ pkg_installation_proposal <- R6::R6Class(
       )
     },
 
-    #' @details
+    #' @description
     #' The package refs that were used to create the
     #' `pkg_installation_proposal` object.
     #'
@@ -105,7 +121,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_refs = function() private$plan$get_refs(),
 
-    #' @details
+    #' @description
     #' Configuration options for the `pkg_installation_proposal` object. See
     #' ['Configuration'][pkg_config] for details.
     #'
@@ -122,7 +138,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_config = function() private$plan$get_config(),
 
-    #' @details
+    #' @description
     #' Resolve the dependencies of the specified package references. This
     #' usually means downloading metadata from CRAN and Bioconductor,
     #' unless already cached, and also from GitHub if GitHub refs were
@@ -144,7 +160,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     resolve = function() invisible(private$plan$resolve()),
 
-    #' @details
+    #' @description
     #' The same as [`resolve()`](#method-resolve), but asynchronous. This
     #' method is for advanced use.
     #'
@@ -153,7 +169,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     async_resolve = function() private$plan$async_resolve(),
 
-    #' @details
+    #' @description
     #' Query the result of the dependency resolution. This method can be
     #' called after [`resolve()`](#method-resolve) has completed.
     #'
@@ -171,7 +187,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_resolution = function() private$plan$get_resolution(),
 
-    #' @details
+    #' @description
     #' Returns the current policy of the dependency solver.
     #' See ['The dependency solver'][pkg_solution] for details.
     #'
@@ -189,7 +205,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_solve_policy = function() private$policy,
 
-    #' @details
+    #' @description
     #' Set the current policy of the dependency solver.
     #' If the object already contains a solution and the new policy is
     #' different than the old policy, then the solution is deleted.
@@ -214,7 +230,7 @@ pkg_installation_proposal <- R6::R6Class(
       }
     },
 
-    #' @details
+    #' @description
     #' Solve the package dependencies. Out of the resolved dependencies,
     #' it works out a set of packages, that can be installed together to
     #' create a functional installation. The set includes all directly
@@ -239,7 +255,7 @@ pkg_installation_proposal <- R6::R6Class(
       invisible(private$plan$solve(policy = private$policy))
     },
 
-    #' @details
+    #' @description
     #' Returns the solution of the package dependencies.
     #'
     #' @return
@@ -257,7 +273,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_solution = function() private$plan$get_solution(),
 
-    #' @details
+    #' @description
     #' Error if the dependency solver failed to find a consistent set of
     #' packages that can be installed together.
     #'
@@ -276,7 +292,7 @@ pkg_installation_proposal <- R6::R6Class(
       private$plan$stop_for_solve_error()
     },
 
-    #' @details
+    #' @description
     #' Draw a tree of package dependencies. It returns a `tree` object, see
     #' [cli::tree()]. Printing this object prints the dependency tree to the
     #' screen.
@@ -295,7 +311,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     draw = function() private$plan$draw_solution_tree(),
 
-    #' @details
+    #' @description
     #' Download all packages that are part of the solution. It uses the
     #' package cache in the pkgcache package by default, to avoid downloads
     #' if possible.
@@ -316,7 +332,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     download = function() invisible(private$plan$download_solution()),
 
-    #' @details
+    #' @description
     #' The same as [`download()`](#method-download), but asynchronous.
     #' This method is for advanced use.
     #'
@@ -325,7 +341,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     async_download = function() private$plan$async_download_solution(),
 
-    #' @details
+    #' @description
     #' Returns the summary of the package downloads.
     #'
     #' @return
@@ -344,7 +360,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_downloads = function() private$plan$get_solution_download(),
 
-    #' @details
+    #' @description
     #' Throw and error if the some of the downloads have failed for the
     #' most recent
     #' [`pkg_installation_proposal$download()`](#method-download) call.
@@ -353,7 +369,7 @@ pkg_installation_proposal <- R6::R6Class(
       private$plan$stop_for_solution_download_error()
     },
 
-    #' @details
+    #' @description
     #' Install the downloaded packages. It calls [install_package_plan()].
     #'
     #' @return
@@ -365,7 +381,7 @@ pkg_installation_proposal <- R6::R6Class(
       install_package_plan(plan, lib = private$library, num_workers = nw)
     },
 
-    #' @details
+    #' @description
     #' Create an installation plan for the downloaded packages.
     #'
     #' @return
@@ -384,7 +400,7 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_install_plan = function() private$plan$get_install_plan(),
 
-    #' @details
+    #' @description
     #' Format a `pkg_installation_proposal` object, typically for printing.
     #'
     #' @param ... not used currently.
@@ -421,9 +437,10 @@ pkg_installation_proposal <- R6::R6Class(
       )
     },
 
-    #' @details
-    #' Prints a `pkg_installation_proposal` object to the screen. The
-    #' printout includes:
+    #' @description
+    #' Prints a `pkg_installation_proposal` object to the screen.
+    #'
+    #' The printout includes:
     #'
     #' * The package refs.
     #' * The policy of the dependency solver.

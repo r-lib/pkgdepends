@@ -20,6 +20,7 @@ new_pkg_deps <- function(refs, ...) {
 
 #' R6 class for package dependency lookup
 #'
+#' @description
 #' Look up dependencies of R packages from various sources.
 #'
 #' @details
@@ -40,7 +41,7 @@ pkg_deps <- R6::R6Class(
   "pkg_deps",
   public = list(
 
-    #' @details
+    #' @description
     #' Create a new `pkg_deps` object. Consider using `new_pkg_deps()`
     #' instead of calling the constructor directly.
     #'
@@ -72,7 +73,7 @@ pkg_deps <- R6::R6Class(
       )
     },
 
-    #' @details
+    #' @description
     #' The package refs that were used to create the `pkg_deps` object.
     #'
     #' @return
@@ -85,7 +86,7 @@ pkg_deps <- R6::R6Class(
 
     get_refs = function() private$plan$get_refs(),
 
-    #' @details
+    #' @description
     #' Configuration options for the `pkg_deps` object. See
     #' ['Configuration'][pkg_config] for details.
     #'
@@ -99,7 +100,7 @@ pkg_deps <- R6::R6Class(
 
     get_config = function() private$plan$get_config(),
 
-    #' @details
+    #' @description
     #' Resolve the dependencies of the specified package references. This
     #' usually means downloading metadata from CRAN and Bioconductor, unless
     #' already cached, and also from GitHub if GitHub refs were included,
@@ -117,7 +118,7 @@ pkg_deps <- R6::R6Class(
 
     resolve = function() invisible(private$plan$resolve()),
 
-    #' @details
+    #' @description
     #' The same as [`resolve()`](#method-resolve), but asynchronous.
     #' This method is for advanced use.
     #'
@@ -126,7 +127,7 @@ pkg_deps <- R6::R6Class(
 
     async_resolve = function() private$plan$async_resolve(),
 
-    #' @details
+    #' @description
     #' Query the result of the dependency resolution. This method can be
     #' called after [`resolve()`](#method-resolve) has completed.
     #'
@@ -141,7 +142,7 @@ pkg_deps <- R6::R6Class(
 
     get_resolution = function() private$plan$get_resolution(),
 
-    #' @details
+    #' @description
     #' Solve the package dependencies. Out of the resolved dependencies, it
     #' works out a set of packages, that can be installed together to
     #' create a functional installation. The set includes all directly
@@ -164,7 +165,7 @@ pkg_deps <- R6::R6Class(
 
     solve = function() invisible(private$plan$solve(policy = "lazy")),
 
-    #' @details
+    #' @description
     #' Returns the solution of the package dependencies.
     #' @return
     #' A [pkg_solution_result] object, which is a list. See
@@ -178,7 +179,7 @@ pkg_deps <- R6::R6Class(
 
     get_solution = function() private$plan$get_solution(),
 
-    #' @details
+    #' @description
     #' Draw a tree of package dependencies. It returns a `tree` object, see
     #' [cli::tree()]. Printing this object prints the dependency tree to the
     #' screen.
@@ -227,7 +228,7 @@ pkg_deps <- R6::R6Class(
         )
     },
 
-    #' @details
+    #' @description
     #' Prints a `pkg_deps` object to the screen. The printout includes:
     #'
     #' * The package refs.

@@ -22,6 +22,7 @@ new_pkg_download_proposal <- function(refs, ...) {
 
 #' R6 class for package downloads
 #'
+#' @description
 #' Download packages with their dependencies, from various sources.
 #' @eval style_man()
 #'
@@ -43,7 +44,7 @@ pkg_download_proposal <- R6::R6Class(
   "pkg_download_proposal",
   public = list(
 
-    #' @details
+    #' @description
     #' Create a new `pkg_download_proposal` object. Consider using
     #' `new_pkg_download_proposal()` instead of calling the constructor
     #' directly.
@@ -67,7 +68,7 @@ pkg_download_proposal <- R6::R6Class(
       private$plan <- pkg_plan$new(refs, config, library = NULL, remote_types)
     },
 
-    #' @details
+    #' @description
     #' The package refs that were used to create the
     #' `pkg_download_proposal` object.
     #'
@@ -81,7 +82,7 @@ pkg_download_proposal <- R6::R6Class(
 
     get_refs = function() private$plan$get_refs(),
 
-    #' @details
+    #' @description
     #' Configuration options for the `pkg_download_proposal` object. See
     #' ['Configuration'][pkg_config] for details.
     #'
@@ -95,7 +96,7 @@ pkg_download_proposal <- R6::R6Class(
 
     get_config = function() private$plan$get_config(),
 
-    #' @details
+    #' @description
     #' Resolve the dependencies of the specified package references. This
     #' usually means downloading metadata from CRAN and Bioconductor,
     #' unless already cached, and also from GitHub if GitHub refs were
@@ -113,7 +114,7 @@ pkg_download_proposal <- R6::R6Class(
 
     resolve = function() invisible(private$plan$resolve()),
 
-    #' @details
+    #' @description
     #' The same as [`resolve()`](#method-resolve), but asynchronous.
     #' This method is for advanced use.
     #'
@@ -122,7 +123,7 @@ pkg_download_proposal <- R6::R6Class(
 
     async_resolve = function() private$plan$async_resolve(),
 
-    #' @details
+    #' @description
     #' Query the result of the dependency resolution. This method can be
     #' called after [`resolve()`](#method-resolve) has completed.
     #'
@@ -137,7 +138,7 @@ pkg_download_proposal <- R6::R6Class(
 
     get_resolution = function() private$plan$get_resolution(),
 
-    #' @details
+    #' @description
     #' Download all resolved packages. It uses the package cache in the
     #' pkgcache package by default, to avoid downloads if possible.
     #'
@@ -153,7 +154,7 @@ pkg_download_proposal <- R6::R6Class(
 
     download = function() invisible(private$plan$download_resolution()),
 
-    #' @details
+    #' @description
     #' The same as [`download()`](#method-download), but asynchronous.
     #' This method is for advanced use.
     #'
@@ -162,7 +163,7 @@ pkg_download_proposal <- R6::R6Class(
 
     async_download = function() private$plan$async_download_resolution(),
 
-    #' @details
+    #' @description
     #' Returns the summary of the package downloads.
     #'
     #' @return
@@ -177,7 +178,7 @@ pkg_download_proposal <- R6::R6Class(
 
     get_downloads = function() private$plan$get_resolution_download(),
 
-    #' @details
+    #' @description
     #' Format a `pkg_download_proposal` object, typically for printing.
     #'
     #' @param ... not used currently.
@@ -211,7 +212,7 @@ pkg_download_proposal <- R6::R6Class(
         )
     },
 
-    #' @details
+    #' @description
     #' Prints a `pkg_download_proposal` object to the screen. The printout
     #' includes:
     #'

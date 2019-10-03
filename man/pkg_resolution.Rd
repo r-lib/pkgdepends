@@ -6,9 +6,11 @@
 \title{Dependency resolution}
 \description{
 Collect information about dependencies of R packages, recursively.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
-\link{pkg_deps}, \link{pkg_download_proposal} and \link{pkg_installation_proposal}
+\code{\link{pkg_deps}}, \code{\link{pkg_download_proposal}} and \code{\link{pkg_installation_proposal}}
 all resolve their dependencies recursively, to obtain information about
 all packages needed for the specified \link[=pkg_refs]{package references}.
 \subsection{CRAN and Bioconductor packages}{
@@ -34,7 +36,7 @@ From local package files we extract the \code{DESCRIPTION} file, to learn
 about their dependencies.
 }
 
-\subsection{The remotes field in DESCRIPTION}{
+\subsection{The \code{remotes} field in \code{DESCRIPTION}}{
 
 We support the non-standard \code{Remotes} field in the package \code{DESCRIPTION}
 file. This field may contain a list of package references for any of the

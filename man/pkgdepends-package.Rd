@@ -38,11 +38,11 @@ dependencies.
 \item Builds and installs packages in parallel.
 }
 }
-\section{Install}{\preformatted{install.packages("pkgdepends")
+\section{Install}{\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
+}\if{html}{\out{</div>}}
 }
-}
-\section{Usage}{\preformatted{library(pkgdepends)
-}
+\section{Usage}{\if{html}{\out{<div class="r">}}\preformatted{library(pkgdepends)
+}\if{html}{\out{</div>}}
 \subsection{Package references}{
 
 A package reference (ref) specifies a location from which an R package
@@ -59,10 +59,10 @@ See \link[=pkg_refs]{‘Package references’} for details.
 
 \subsection{Package dependencies}{
 
-Dependencies of the development version of the cli package:\preformatted{pd <- new_pkg_deps("r-lib/cli")
+Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/cli")
 pd$solve()
 pd$draw()
-}\preformatted{#> cli (1.9.9.9000)
+}\if{html}{\out{</div>}}\preformatted{#> cli (1.9.9.9000)
 #> +-assertthat (0.2.1)
 #> +-crayon (1.3.4)
 #> +-glue (1.3.1)
@@ -86,23 +86,23 @@ pd$draw()
 #> \-fansi (0.4.0)
 }
 
-See \link[=pkg_deps]{the pkg_deps class} for details.
+See \link[=pkg_deps]{the \code{pkg_deps} class} for details.
 }
 
 \subsection{Package downloads}{
 
-Downloading all dependencies of a package:\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
+Downloading all dependencies of a package:\if{html}{\out{<div class="r">}}\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
 pdl$resolve()
 pdl$download()
-}
+}\if{html}{\out{</div>}}
 
-See \link[=pkg_download_proposal]{the pkg_download_proposal class} for
+See \link[=pkg_download_proposal]{the \code{pkg_download_proposal} class} for
 details.
 }
 
 \subsection{Package installation}{
 
-Installing or updating a set of package:\preformatted{lib <- tempfile()
+Installing or updating a set of package:\if{html}{\out{<div class="r">}}\preformatted{lib <- tempfile()
 pdi <- new_pkg_installation_proposal(
   "r-lib/cli",
   config = list(library = lib)
@@ -110,7 +110,7 @@ pdi <- new_pkg_installation_proposal(
 pdi$solve()
 pdi$download()
 pdi$install()
-}\preformatted{#> Your system is ready to build packages!
+}\if{html}{\out{</div>}}\preformatted{#> Your system is ready to build packages!
 #> Your system is ready to build packages!
 
 #> Installed: 17

@@ -5,15 +5,17 @@
 \alias{pkg_download_result}
 \title{Package downloads}
 \description{
-The \link{pkg_download_proposal} and \link{pkg_installation_proposal} classes
+The \code{\link{pkg_download_proposal}} and \code{\link{pkg_installation_proposal}} classes
 both have download methods, to downloads package files into a
 configured directory (see \link[=pkg_config]{'Configuration'}).
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 They return a \code{pkg_download_result} object, which is a data frame
-(tibble), that adds extra columns to \link{pkg_resolution_result} (for
-\link{pkg_download_proposal}) or \link{pkg_solution_result}
-(for \link{pkg_installation_proposal}):
+(tibble), that adds extra columns to \code{\link{pkg_resolution_result}} (for
+\code{\link{pkg_download_proposal}}) or \code{\link{pkg_solution_result}}
+(for \code{\link{pkg_installation_proposal}}):
 \itemize{
 \item \code{fulltarget}: absolute path to the downloaded file. At most one of
 \code{fulltarget} and \code{fulltarget_tree} must exist on the disk.

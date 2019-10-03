@@ -1,14 +1,14 @@
 
 #' Package downloads
 #'
-#' The [pkg_download_proposal] and [pkg_installation_proposal] classes
+#' The [`pkg_download_proposal`] and [`pkg_installation_proposal`] classes
 #' both have download methods, to downloads package files into a
 #' configured directory (see ['Configuration'][pkg_config]).
 #'
 #' They return a `pkg_download_result` object, which is a data frame
-#' (tibble), that adds extra columns to [pkg_resolution_result] (for
-#' [pkg_download_proposal]) or [pkg_solution_result]
-#' (for [pkg_installation_proposal]):
+#' (tibble), that adds extra columns to [`pkg_resolution_result`] (for
+#' [`pkg_download_proposal`]) or [`pkg_solution_result`]
+#' (for [`pkg_installation_proposal`]):
 #'
 #' * `fulltarget`: absolute path to the downloaded file. At most one of
 #'   `fulltarget` and `fulltarget_tree` must exist on the disk.
@@ -27,6 +27,7 @@
 #'
 #' @name pkg_downloads
 #' @aliases pkg_download_result
+#' @eval style_man()
 NULL
 
 #' @importFrom prettyunits pretty_bytes

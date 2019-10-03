@@ -12,14 +12,12 @@ new_pkg_download_proposal(refs, ...)
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{...}{Additional arguments, passed to
-\href{$method-new}{pkg_download_proposal$new()}.}
+\href{$method-new}{\code{pkg_download_proposal$new()}}.}
 }
 \description{
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 
 Download packages with their dependencies, from various sources.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \code{new_pkg_download_proposal()} creates a new object from the
@@ -34,12 +32,82 @@ Typical workflow to download a set of packages:
 \item Create a \code{pkg_download_proposal} object with
 \code{new_pkg_download_proposal()}.
 \item Resolve all possible dependencies with
-\href{#method-resolve}{pkg_download_proposal$resolve()}.
+\href{#method-resolve}{\code{pkg_download_proposal$resolve()}}.
 \item Download all files with
-\href{#method-download}{pkg_download_proposal$download()}.
+\href{#method-download}{\code{pkg_download_proposal$download()}}.
 \item Get the data about the packages and downloads with
-\href{#method-get-downloads}{pkg_download_proposal$get_downloads()}.
+\href{#method-get-downloads}{\code{pkg_download_proposal$get_downloads()}}.
 }
+}
+\examples{
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$new`
+## ------------------------------------------------
+
+pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+pdl
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$get_refs`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
+pdl$get_refs()
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$get_config`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal("pak")
+pdl$get_config()
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$resolve`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal("pak")
+pdl$resolve()
+pdl
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$get_resolution`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+pdl$resolve()
+pdl$get_resolution()
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$download`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+pdl$resolve()
+pdl$download()
+pdl
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$get_downloads`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal("pkgload")
+pdl$resolve()
+pdl$download()
+pdl$get_downloads()
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$print`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+pdl
+
+pdl$resolve()
+pdl
+
+pdl$download()
+pdl
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -60,10 +128,9 @@ Typical workflow to download a set of packages:
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$new(refs, config = list(), remote_types = NULL)
-}
-\if{html}{\out{</div>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+
+
 Create a new \code{pkg_download_proposal} object. Consider using
 \code{new_pkg_download_proposal()} instead of calling the constructor
 directly.
@@ -71,17 +138,21 @@ directly.
 The returned object can be used to look up (recursive) dependencies
 of R packages from various sources, and then to download the
 package files.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$new(refs, config = list(), remote_types = NULL)}\if{html}{\out{</div>}}
+}
+
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
-\tabular{rl}{
-refs\tab Package names or references. See
-\link[=pkg_refs]{'Package references'} for the syntax.\cr 
+\describe{
+\item{\code{refs}}{Package names or references. See
+\link[=pkg_refs]{'Package references'} for the syntax.}
 
-config\tab Configuration options, a named list. See
-\link[=pkg_config]{'Configuration'}.\cr 
+\item{\code{config}}{Configuration options, a named list. See
+\link[=pkg_config]{'Configuration'}.}
 
-remote_types\tab Custom remote ref types, this is for advanced
-use, and experimental currently.\cr 
+\item{\code{remote_types}}{Custom remote ref types, this is for advanced
+use, and experimental currently.}
 }
 \if{html}{\out{</div>}}
 }
@@ -98,12 +169,12 @@ pdl
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_refs"></a>}}
 \subsection{Method \code{get_refs()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$get_refs()
-}
-\if{html}{\out{</div>}}
 The package refs that were used to create the
 \code{pkg_download_proposal} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_refs()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 A character vector of package refs that were used to create the
 \code{pkg_download_proposal} object.
@@ -121,12 +192,12 @@ pdl$get_refs()
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_config"></a>}}
 \subsection{Method \code{get_config()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$get_config()
-}
-\if{html}{\out{</div>}}
 Configuration options for the \code{pkg_download_proposal} object. See
 \link[=pkg_config]{'Configuration'} for details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_config()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 Named list. See \link[=pkg_config]{'Configuration'} for the configuration
 options.
@@ -144,17 +215,17 @@ pdl$get_config()
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-resolve"></a>}}
 \subsection{Method \code{resolve()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$resolve()
-}
-\if{html}{\out{</div>}}
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
 unless already cached, and also from GitHub if GitHub refs were
 included, either directly or indirectly. See
 \link[=pkg_resolution]{'Dependency resolution'} for details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$resolve()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
-The same as the \href{#method-get-resolution}{get_resolution()} method
+The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
 (see below), the result of the resolution, invisibly.
 }
 \subsection{Examples}{
@@ -171,12 +242,12 @@ pdl
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
 \subsection{Method \code{async_resolve()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$async_resolve()
-}
-\if{html}{\out{</div>}}
-The same as \href{#method-resolve}{resolve()}, but asynchronous.
+The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
 This method is for advanced use.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$async_resolve()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 A deferred value.
 }
@@ -184,12 +255,12 @@ A deferred value.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_resolution"></a>}}
 \subsection{Method \code{get_resolution()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$get_resolution()
-}
-\if{html}{\out{</div>}}
 Query the result of the dependency resolution. This method can be
-called after \href{#method-resolve}{resolve()} has completed.
+called after \href{#method-resolve}{\code{resolve()}} has completed.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_resolution()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 A \link{pkg_resolution_result} object, which is also a tibble. See
 \link[=pkg_resolution]{'Dependency resolution'} for its columns.
@@ -208,14 +279,14 @@ pdl$get_resolution()
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-download"></a>}}
 \subsection{Method \code{download()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$download()
-}
-\if{html}{\out{</div>}}
 Download all resolved packages. It uses the package cache in the
 pkgcache package by default, to avoid downloads if possible.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$download()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
-The same as the \href{#method-get-downloads}{get_downloads()} method,
+The same as the \href{#method-get-downloads}{\code{get_downloads()}} method,
 the result, invisibly.
 }
 \subsection{Examples}{
@@ -233,12 +304,12 @@ pdl
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_download"></a>}}
 \subsection{Method \code{async_download()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$async_download()
-}
-\if{html}{\out{</div>}}
-The same as \href{#method-download}{download()}, but asynchronous.
+The same as \href{#method-download}{\code{download()}}, but asynchronous.
 This method is for advanced use.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$async_download()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 A deferred value.
 }
@@ -246,11 +317,11 @@ A deferred value.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_downloads"></a>}}
 \subsection{Method \code{get_downloads()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$get_downloads()
-}
-\if{html}{\out{</div>}}
 Returns the summary of the package downloads.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_downloads()}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 A \link{pkg_download_result} object, which is a list. See
 \link{pkg_download_result} for details.
@@ -270,15 +341,15 @@ pdl$get_downloads()
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
 \subsection{Method \code{format()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$format(...)
-}
-\if{html}{\out{</div>}}
 Format a \code{pkg_download_proposal} object, typically for printing.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$format(...)}\if{html}{\out{</div>}}
+}
+
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
-\tabular{rl}{
-...\tab not used currently.\cr 
+\describe{
+\item{\code{...}}{not used currently.}
 }
 \if{html}{\out{</div>}}
 }
@@ -289,10 +360,6 @@ A character vector, each element should be a line in the printout.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
 \subsection{Method \code{print()}}{
-\if{html}{\out{<div class="r">}}
-\preformatted{pkg_download_proposal$print(...)
-}
-\if{html}{\out{</div>}}
 Prints a \code{pkg_download_proposal} object to the screen. The printout
 includes:
 \itemize{
@@ -305,10 +372,14 @@ includes:
 }
 
 See the example below.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$print(...)}\if{html}{\out{</div>}}
+}
+
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
-\tabular{rl}{
-...\tab not used currently.\cr 
+\describe{
+\item{\code{...}}{not used currently.}
 }
 \if{html}{\out{</div>}}
 }

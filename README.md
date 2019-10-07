@@ -62,7 +62,7 @@ can be obtained from. Examples:
     https://github.com/r-lib/pkgdepends
     local::~/works/shiny
 
-See [‘Package references’](TODO) for details.
+See [*Package references*](TODO) for details.
 
 ## Package dependencies
 
@@ -153,28 +153,28 @@ pdi$install()
 [`pkg_deps`](TODO), [`pkg_download_proposal`](TODO) and
 [`pkg_installation_proposal`](TODO) all resolve their dependencies
 recursively, to obtain information about all packages needed for the
-specified [package references](TODO). See [‘Dependency
-resolution’](TODO) for details.
+specified [package references](TODO). See [*Dependency
+resolution*](TODO) for details.
 
 ## The dependency solver
 
 The dependency solver takes the resolution information, and works out
 the exact versions of each package that must be installed, such that
-version and other requirements are satisfied. See [‘The dependency
-solver’](TODO) for details.
+version and other requirements are satisfied. See [*The dependency
+solver*](TODO) for details.
 
 ## Installation plans
 
 [`pkg_installation_proposal`](TODO) can create installation plans, and
 then also install them. It is also possible to import installation plans
-that were created by other tools. See [‘Installation plans’](TODO) for
+that were created by other tools. See [*Installation plans*](TODO) for
 details.
 
 ## Configuration
 
 The details of [`pkg_deps`](TODO), [`pkg_download_proposal`](TODO) and
 [`pkg_installation_proposal`](TODO) can be tuned with a list of
-configuration options. See [‘Configuration’](TODO) for details.
+configuration options. See [*Configuration*](TODO) for details.
 
 # Related
 

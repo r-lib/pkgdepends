@@ -22,8 +22,8 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
   start <- Sys.time()
 
   required_columns <- c(
-    "type", "binary", "dependencies", "file", "vignettes",
-    "needscompilation", "metadata", "package")
+    "type", "binary", "dependencies", "file", "needscompilation", "package"
+  )
   stopifnot(
     inherits(plan, "data.frame"),
     all(required_columns %in% colnames(plan)),
@@ -31,6 +31,10 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
     is_count(num_workers, min = 1L)
   )
 
+  if (! "vignettes" %in% colnames(plan)) plan$vignettes <- FALSE
+  if (! "metadata" %in% colnames(plan)) {
+    plan$metadata <- replicate(nrow(plan), character(), simplify = FALSE)
+  }
   if (! "packaged" %in% colnames(plan)) plan$packaged <- TRUE
 
   config <- list(lib = lib, num_workers = num_workers)

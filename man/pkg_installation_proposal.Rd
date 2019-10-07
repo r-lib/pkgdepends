@@ -170,7 +170,8 @@ pdi <- new_pkg_installation_proposal(
 pdi$resolve()
 pdi$solve()
 pdi
-pdi$stop_for_solution_error()
+# This fails:
+# pdi$stop_for_solution_error()
 
 ## ------------------------------------------------
 ## Method `pkg_installation_proposal$draw`
@@ -573,7 +574,8 @@ pdi <- new_pkg_installation_proposal(
 pdi$resolve()
 pdi$solve()
 pdi
-pdi$stop_for_solution_error()
+# This fails:
+# pdi$stop_for_solution_error()
 }
 \if{html}{\out{</div>}}
 

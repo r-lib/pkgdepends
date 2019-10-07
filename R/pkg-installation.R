@@ -286,7 +286,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$resolve()
     #' pdi$solve()
     #' pdi
-    #' pdi$stop_for_solution_error()
+    #' # This fails:
+    #' # pdi$stop_for_solution_error()
 
     stop_for_solution_error = function() {
       private$plan$stop_for_solve_error()

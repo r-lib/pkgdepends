@@ -63,7 +63,7 @@ pd$solve()
 pd$draw()
 ```
 
-See [the `pkg_deps` class][pkg_deps] for details.
+See the [`pkg_deps`][pkg_deps] class for details.
 
 ## Package downloads
 
@@ -75,7 +75,7 @@ pdl$resolve()
 pdl$download()
 ```
 
-See [the `pkg_download_proposal` class][pkg_download_proposal] for details.
+See the [`pkg_download_proposal`][pkg_download_proposal] class for details.
 
 ## Package installation
 
@@ -94,7 +94,8 @@ pdi$install()
 
 ## Dependency resolution
 
-[pkg_deps], [pkg_download_proposal] and [pkg_installation_proposal]
+[`pkg_deps`][pkg_deps], [`pkg_download_proposal`][pkg_download_proposal] and
+[`pkg_installation_proposal`][pkg_installation_proposal]
 all resolve their dependencies recursively, to obtain information about
 all packages needed for the specified [package references][pkg_refs].
 See ['Dependency resolution'][pkg_resolution] for details.
@@ -108,22 +109,24 @@ version and other requirements are satisfied. See
 
 ## Installation plans
 
-[pkg_installation_proposal] can create installation plans, and then also
-install them. It is also possible to import installation plans that were
-created by other tools. See ['Installation plans'][install_plans] for
-details.
+[`pkg_installation_proposal`][pkg_installation_proposal] can create
+installation plans, and then also install them. It is also possible to
+import installation plans that were created by other tools. See
+['Installation plans'][install_plans] for details.
 
 ## Configuration
 
-The details of [pkg_deps], [pkg_download_proposal] and
-[pkg_installation_proposal] can be tuned with a list of configuration
-options. See ['Configuration'][pkg_config] for details.
+The details of [`pkg_deps`][pkg_deps],
+[`pkg_download_proposal`][pkg_download_proposal] and
+[`pkg_installation_proposal`][pkg_installation_proposal] can be tuned with
+a list of configuration options. See ['Configuration'][pkg_config] for
+details.
 
 # Related
 
 * [pak](https://github.com/r-lib/pak) -- R package manager
 * [pkgcache](https://github.com/r-lib/pkgcache) --
-  Metadata and pacakge cache
+  Metadata and package cache
 * [devtools](https://github.com/r-lib/devtools) --
   Tools for R package developers
 
@@ -131,8 +134,10 @@ options. See ['Configuration'][pkg_config] for details.
 
 MIT © RStudio
 
+[pkg_deps]: TODO
 [pkg_refs]: TODO
 [pkg_download_proposal]: TODO
+[pkg_installation_proposal]: TODO
 [pkg_solution]: TODO
 [pkg_resolution]: TODO
 [pkg_config]: TODO

@@ -46,7 +46,7 @@ pkg_deps <- R6::R6Class(
     #' instead of calling the constructor directly.
     #'
     #' The returned object can be used to look up (recursive) dependencies
-    #' of R ackages from various sources. To perform the actual lookup,
+    #' of R packages from various sources. To perform the actual lookup,
     #' you'll need to call the [`resolve()`](#method-resolve) method.
     #' @param refs Package names or references. See
     #'   ['Package references'][pkg_refs] for the syntax.
@@ -194,6 +194,7 @@ pkg_deps <- R6::R6Class(
 
     draw = function() private$plan$draw_solution_tree(),
 
+    #' @description
     #' Format a `pkg_deps` object, typically for printing.
     #'
     #' @param ... Not used currently.

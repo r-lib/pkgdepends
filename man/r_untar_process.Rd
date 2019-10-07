@@ -2,7 +2,7 @@
 % Please edit documentation in R/install-tar.R
 \name{r_untar_process}
 \alias{r_untar_process}
-\title{R6 class for an R untar process}
+\title{R6 class for an R un-tar process}
 \description{
 Uses \code{\link[utils:untar]{utils::untar()}}, in a background process.
 }

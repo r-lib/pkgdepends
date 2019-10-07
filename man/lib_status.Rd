@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-installed.R
 \name{lib_status}
 \alias{lib_status}
-\title{Status of packages in a ibrary}
+\title{Status of packages in a library}
 \usage{
 lib_status(library = .libPaths()[1], packages = NULL)
 }
@@ -16,5 +16,5 @@ Data frame (tibble) the contains data about the packages
 installed in the library.
 }
 \description{
-Status of packages in a ibrary
+Status of packages in a library
 }

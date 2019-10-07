@@ -101,8 +101,6 @@ pd$get_solution()
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-Format a `pkg_deps` object, typically for printing.
-
 
 ## ------------------------------------------------
 ## Method `pkg_deps$print`
@@ -140,7 +138,7 @@ Create a new \code{pkg_deps} object. Consider using \code{new_pkg_deps()}
 instead of calling the constructor directly.
 
 The returned object can be used to look up (recursive) dependencies
-of R ackages from various sources. To perform the actual lookup,
+of R packages from various sources. To perform the actual lookup,
 you'll need to call the \href{#method-resolve}{\code{resolve()}} method.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_deps$new(refs, config = list(), remote_types = NULL)}\if{html}{\out{</div>}}
@@ -356,8 +354,6 @@ A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()
 \preformatted{pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-Format a `pkg_deps` object, typically for printing.
-
 }
 \if{html}{\out{</div>}}
 
@@ -367,6 +363,7 @@ Format a `pkg_deps` object, typically for printing.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
 \subsection{Method \code{format()}}{
+Format a \code{pkg_deps} object, typically for printing.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_deps$format(...)}\if{html}{\out{</div>}}
 }

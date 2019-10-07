@@ -86,7 +86,7 @@ pd$draw()
 #> \-fansi (0.4.0)
 }
 
-See \link[=pkg_deps]{the \code{pkg_deps} class} for details.
+See the \code{\link{pkg_deps}} class for details.
 }
 
 \subsection{Package downloads}{
@@ -96,7 +96,7 @@ pdl$resolve()
 pdl$download()
 }\if{html}{\out{</div>}}
 
-See \link[=pkg_download_proposal]{the \code{pkg_download_proposal} class} for
+See the \code{\link{pkg_download_proposal}} class for
 details.
 }
 
@@ -121,9 +121,9 @@ pdi$install()
 
 \subsection{Dependency resolution}{
 
-\link{pkg_deps},
-\link{pkg_download_proposal} and
-\link{pkg_installation_proposal} all resolve
+\code{\link{pkg_deps}},
+\code{\link{pkg_download_proposal}} and
+\code{\link{pkg_installation_proposal}} all resolve
 their dependencies recursively, to obtain information about all packages
 needed for the specified \link[=pkg_refs]{package references}. See
 \link[=pkg_resolution]{‘Dependency resolution’} for details.
@@ -138,7 +138,7 @@ version and other requirements are satisfied. See \link[=pkg_solution]{‘The de
 
 \subsection{Installation plans}{
 
-\link{pkg_installation_proposal} can create
+\code{\link{pkg_installation_proposal}} can create
 installation plans, and then also install them. It is also possible to
 import installation plans that were created by other tools. See
 \link[=install_plans]{‘Installation plans’} for details.
@@ -146,9 +146,9 @@ import installation plans that were created by other tools. See
 
 \subsection{Configuration}{
 
-The details of \link{pkg_deps},
-\link{pkg_download_proposal} and
-\link{pkg_installation_proposal} can be tuned
+The details of \code{\link{pkg_deps}},
+\code{\link{pkg_download_proposal}} and
+\code{\link{pkg_installation_proposal}} can be tuned
 with a list of configuration options. See
 \link[=pkg_config]{‘Configuration’} for details.
 }
@@ -157,7 +157,7 @@ with a list of configuration options. See
 \section{Related}{
 \itemize{
 \item \href{https://github.com/r-lib/pak}{pak} – R package manager
-\item \href{https://github.com/r-lib/pkgcache}{pkgcache} – Metadata and pacakge
+\item \href{https://github.com/r-lib/pkgcache}{pkgcache} – Metadata and package
 cache
 \item \href{https://github.com/r-lib/devtools}{devtools} – Tools for R package
 developers

@@ -53,7 +53,7 @@ are not documented here may be removed or changed, because they are
 either used internally or experimental.
 \itemize{
 \item \code{built}: The \code{Built} field from the \code{DESCRIPTION} file of binary
-packages, for which this information is availables.
+packages, for which this information is available.
 \item \code{cache_status}: Whether the package file is in the package cache.
 It is \code{NA} for \verb{installed::} package refs.
 \item \code{dep_types}: Character vector of dependency types that were
@@ -90,7 +90,7 @@ zero length vector for \verb{installed::} refs.
 \item \code{status}: Status of the dependency resolution, \code{"OK"} or \code{"FAILED"}.
 \item \code{target}: Path where this package should saved in a CRAN-repository.
 \item \code{type}: Ref type.
-\item \code{version}: Peckage version.
+\item \code{version}: Package version.
 }
 }
 

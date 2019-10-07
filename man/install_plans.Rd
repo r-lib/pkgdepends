@@ -4,5 +4,50 @@
 \alias{install_plans}
 \title{Installation plans}
 \description{
-TODO
+An installation plan contains all data that is needed to install a
+set of package files. It is usually created from an
+\link[=pkg_installation_proposal]{installation proposal} with
+\link[=pkg_solution]{solving} the dependencies and \link[=pkg_downloads]{downloading}
+the package files.
+}
+\details{
+It is also possible to create an installation plan a different way. An
+installation plan object must be a data frame, with at least the
+following columns:
+\itemize{
+\item \code{package}: The name of the package.
+\item \code{type}: The type of the \link[=pkg_refs]{package reference}.
+\item \code{binary}: Whether the package is a binary package.
+\item \code{file}: Full path to the package file or directory.
+\item \code{dependencies}: A list column that lists the names of the dependent
+packages for each package.
+\item \code{needscompilation}: Whether the package needs compilation. This should
+be \code{FALSE} for binary packages.
+}
+
+For installation plans created via \link{pkg_installation_proposal}, the plan
+contains all columns from \code{\link{pkg_download_result}}
+objects, and some additional ones:
+\itemize{
+\item \code{library}: the library the package is supposed to be installed to.
+\item \code{direct}: whether the package was directly requested or it is
+installed as a dependency.
+\item vignettes: whether the vignettes need to be (re)built.
+\item \code{packaged}: whether \verb{R CMD build} was already called for the package.
+}
+}
+\examples{
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$download()
+pdi$get_install_plan()
+
+}
+\seealso{
+\link{pkg_installation_proposal} to create install plans,
+\code{\link[=install_package_plan]{install_package_plan()}} to install plans from any source.
 }

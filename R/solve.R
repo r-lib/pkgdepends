@@ -11,7 +11,7 @@
 #' `upgrade`. The `lazy` policy prefers to minimize installation time,
 #' and it does not perform package upgrades, unless version requirements
 #' require them. The `upgrade` policy prefers to update all package to
-#' theit latest possible versions, but it still considers that version
+#' their latest possible versions, but it still considers that version
 #' requirements.
 #'
 #' ## The integer problem

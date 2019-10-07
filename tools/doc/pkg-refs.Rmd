@@ -88,7 +88,7 @@ Packages from a GitHub repository. Full syntax:
 
 `<detail>` may specify:
 
-- a git branch, tag or (prefix of) a commit sha: `@<commitish>`;
+- a git branch, tag or (prefix of) a commit hash: `@<commitish>`;
 - a pull request: `#<pull-request>`; or
 - the latest release: `@*release`.
 

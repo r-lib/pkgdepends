@@ -43,7 +43,7 @@
 #' either used internally or experimental.
 #'
 #' * `built`: The `Built` field from the `DESCRIPTION` file of binary
-#'   packages, for which this information is availables.
+#'   packages, for which this information is available.
 #' * `cache_status`: Whether the package file is in the package cache.
 #'   It is `NA` for `installed::` package refs.
 #' * `dep_types`: Character vector of dependency types that were
@@ -80,7 +80,7 @@
 #' * `status`: Status of the dependency resolution, `"OK"` or `"FAILED"`.
 #' * `target`: Path where this package should saved in a CRAN-repository.
 #' * `type`: Ref type.
-#' * `version`: Peckage version.
+#' * `version`: Package version.
 #'
 #' ## Package dependency tables
 #'

@@ -112,7 +112,7 @@ pd$draw()
     #> │ └─crayon (1.3.4)
     #> └─fansi (0.4.0)
 
-See \[the `pkg_deps` class\]\[pkg\_deps\] for details.
+See the [`pkg_deps`](TODO) class for details.
 
 ## Package downloads
 
@@ -124,7 +124,7 @@ pdl$resolve()
 pdl$download()
 ```
 
-See [the `pkg_download_proposal` class](TODO) for details.
+See the [`pkg_download_proposal`](TODO) class for details.
 
 ## Package installation
 
@@ -150,8 +150,8 @@ pdi$install()
 
 ## Dependency resolution
 
-\[pkg\_deps\], [pkg\_download\_proposal](TODO) and
-\[pkg\_installation\_proposal\] all resolve their dependencies
+[`pkg_deps`](TODO), [`pkg_download_proposal`](TODO) and
+[`pkg_installation_proposal`](TODO) all resolve their dependencies
 recursively, to obtain information about all packages needed for the
 specified [package references](TODO). See [‘Dependency
 resolution’](TODO) for details.
@@ -165,21 +165,21 @@ solver’](TODO) for details.
 
 ## Installation plans
 
-\[pkg\_installation\_proposal\] can create installation plans, and then
-also install them. It is also possible to import installation plans that
-were created by other tools. See [‘Installation plans’](TODO) for
+[`pkg_installation_proposal`](TODO) can create installation plans, and
+then also install them. It is also possible to import installation plans
+that were created by other tools. See [‘Installation plans’](TODO) for
 details.
 
 ## Configuration
 
-The details of \[pkg\_deps\], [pkg\_download\_proposal](TODO) and
-\[pkg\_installation\_proposal\] can be tuned with a list of
+The details of [`pkg_deps`](TODO), [`pkg_download_proposal`](TODO) and
+[`pkg_installation_proposal`](TODO) can be tuned with a list of
 configuration options. See [‘Configuration’](TODO) for details.
 
 # Related
 
   - [pak](https://github.com/r-lib/pak) – R package manager
-  - [pkgcache](https://github.com/r-lib/pkgcache) – Metadata and pacakge
+  - [pkgcache](https://github.com/r-lib/pkgcache) – Metadata and package
     cache
   - [devtools](https://github.com/r-lib/devtools) – Tools for R package
     developers

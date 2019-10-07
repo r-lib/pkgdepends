@@ -131,7 +131,7 @@ pkgplan_init <- function(self, private, refs, config, library,
 #'
 #' Configuration options for several pkgdepends classes. Not all classes
 #' use all of these options. E.g. a [`pkg_download_proposal`] is not concerned
-#' about package libaries, so it'll ignore the `library` option.
+#' about package libraries, so it'll ignore the `library` option.
 #'
 #' Options:
 #'

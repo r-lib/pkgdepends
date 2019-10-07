@@ -97,7 +97,7 @@ make_installed_cache <- function(library, packages = NULL) {
   list(pkgs = pkgs, deps = deps)
 }
 
-#' Status of packages in a ibrary
+#' Status of packages in a library
 #'
 #' @param library Path to library.
 #' @param packages If not `NULL`, then only these packages are shown.

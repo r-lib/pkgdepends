@@ -22,7 +22,7 @@ functions.}
 for convenience.}
 }
 \value{
-\code{parse_pkg_refs()} retuns a list of parsed references.
+\code{parse_pkg_refs()} returns a list of parsed references.
 \code{parse_pkg_ref()} returns one parsed reference. A parsed reference is
 a list, with at least elements:
 \itemize{

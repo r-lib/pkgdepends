@@ -83,7 +83,7 @@ subdirectory in the repository.
 
 \verb{<detail>} may specify:
 \itemize{
-\item a git branch, tag or (prefix of) a commit sha: \verb{@<commitish>};
+\item a git branch, tag or (prefix of) a commit hash: \verb{@<commitish>};
 \item a pull request: \verb{#<pull-request>}; or
 \item the latest release: \verb{@*release}.
 }

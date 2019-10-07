@@ -1,14 +1,57 @@
 
 #' Installation plans
 #'
-#' TODO
+#' An installation plan contains all data that is needed to install a
+#' set of package files. It is usually created from an
+#' [installation proposal][pkg_installation_proposal] with
+#' [solving][pkg_solution] the dependencies and [downloading][pkg_downloads]
+#' the package files.
+#'
+#' It is also possible to create an installation plan a different way. An
+#' installation plan object must be a data frame, with at least the
+#' following columns:
+#'
+#' * `package`: The name of the package.
+#' * `type`: The type of the [package reference][pkg_refs].
+#' * `binary`: Whether the package is a binary package.
+#' * `file`: Full path to the package file or directory.
+#' * `dependencies`: A list column that lists the names of the dependent
+#'   packages for each package.
+#' * `needscompilation`: Whether the package needs compilation. This should
+#'   be `FALSE` for binary packages.
+#'
+#' For installation plans created via [pkg_installation_proposal], the plan
+#' contains all columns from [`pkg_download_result`][pkg_download_result]
+#' objects, and some additional ones:
+#'
+#' * `library`: the library the package is supposed to be installed to.
+#' * `direct`: whether the package was directly requested or it is
+#'   installed as a dependency.
+#' * vignettes: whether the vignettes need to be (re)built.
+#' * `packaged`: whether `R CMD build` was already called for the package.
+#'
+#' @seealso [pkg_installation_proposal] to create install plans,
+#' [install_package_plan()] to install plans from any source.
+#'
+#' @examples
+#' pdi <- new_pkg_installation_proposal(
+#'   "pak",
+#'   config = list(library = tempfile())
+#' )
+#' pdi$resolve()
+#' pdi$solve()
+#' pdi$download()
+#' pdi$get_install_plan()
 #'
 #' @name install_plans
 NULL
 
-#' Perform a package installation plan, as created by pkgdepends
+#' Perform a package installation plan
 #'
-#' @param plan Package plan object, returned by pkgdepends
+#' See ['Installation plans'][install_plans] for the details and the format.
+#'
+#' @param plan Package plan object, a data frame, see
+#' ['Installation plans'][install_plans] for the format.
 #' @param lib Library directory to install to.
 #' @param num_workers Number of worker processes to use.
 #' @return Information about the installation process.

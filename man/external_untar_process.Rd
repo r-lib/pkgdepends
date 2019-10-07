@@ -2,7 +2,7 @@
 % Please edit documentation in R/install-tar.R
 \name{external_untar_process}
 \alias{external_untar_process}
-\title{R6 class for an external untar process}
+\title{R6 class for an external un-tar process}
 \description{
 Uses the system's \code{tar} program, in a background process.
 }

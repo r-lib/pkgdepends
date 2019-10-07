@@ -6,7 +6,7 @@
 \description{
 Configuration options for several pkgdepends classes. Not all classes
 use all of these options. E.g. a \code{\link{pkg_download_proposal}} is not concerned
-about package libaries, so it'll ignore the \code{library} option.
+about package libraries, so it'll ignore the \code{library} option.
 
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }

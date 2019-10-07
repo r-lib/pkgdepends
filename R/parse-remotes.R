@@ -31,14 +31,14 @@ standard_rx <- function(remote_name = "standard") {
   )
 }
 
-#' Match a GH username
+#' Match a GitHub username
 #'
 #' * may only contain alphanumeric characters or hyphens
 #' * cannot have multiple consecutive hyphens
 #' * cannot begin or end with a hyphen
 #' * maximum 39 characters
 #'
-#' Based on https://github.com/shinnn/github-username-regex
+#' Based on <https://github.com/shinnn/github-username-regex>
 #'
 #' @keywords internal
 
@@ -167,7 +167,7 @@ get_remote_types <- function(refs) {
 #'   for advanced use, and experimental currently.
 #' @param ... Additional arguments are passed to the individual parser
 #'   functions.
-#' @return `parse_pkg_refs()` retuns a list of parsed references.
+#' @return `parse_pkg_refs()` returns a list of parsed references.
 #' `parse_pkg_ref()` returns one parsed reference. A parsed reference is
 #' a list, with at least elements:
 #' - `ref`: The original reference string.

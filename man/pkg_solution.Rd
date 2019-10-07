@@ -18,7 +18,7 @@ The dependency solver currently supports two policies: \code{lazy} and
 \code{upgrade}. The \code{lazy} policy prefers to minimize installation time,
 and it does not perform package upgrades, unless version requirements
 require them. The \code{upgrade} policy prefers to update all package to
-theit latest possible versions, but it still considers that version
+their latest possible versions, but it still considers that version
 requirements.
 }
 

@@ -31,8 +31,8 @@ make_untar_process <- function(tarfile, files = NULL, exdir = ".",
 #' Check if we need to use R's internal tar implementation
 #'
 #' This is slow, because we need to start an R child process, and the
-#' implementation is also very slow. So it is better to use an extranl tar
-#' program, if we can. We test this by trying to uncompress a .tar.gz
+#' implementation is also very slow. So it is better to use an external tar
+#' program, if we can. We test this by trying to uncompress a `.tar.gz`
 #' archive using the external program. The name of the tar program is
 #' taken from the `TAR` environment variable, if this is unset then `tar`
 #' is used.
@@ -65,7 +65,7 @@ need_internal_tar <- local({
   }
 })
 
-#' R6 class for an external untar process
+#' R6 class for an external un-tar process
 #'
 #' @description
 #' Uses the system's `tar` program, in a background process.
@@ -123,7 +123,7 @@ external_untar_process <- R6::R6Class(
   )
 )
 
-#' R6 class for an R untar process
+#' R6 class for an R un-tar process
 #'
 #' @description
 #' Uses [utils::untar()], in a background process.

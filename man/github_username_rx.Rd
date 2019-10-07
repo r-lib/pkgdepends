@@ -2,7 +2,7 @@
 % Please edit documentation in R/parse-remotes.R
 \name{github_username_rx}
 \alias{github_username_rx}
-\title{Match a GH username}
+\title{Match a GitHub username}
 \usage{
 github_username_rx()
 }
@@ -15,6 +15,6 @@ github_username_rx()
 }
 }
 \details{
-Based on https://github.com/shinnn/github-username-regex
+Based on \url{https://github.com/shinnn/github-username-regex}
 }
 \keyword{internal}

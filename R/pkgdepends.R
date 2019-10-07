@@ -7,3 +7,7 @@
 #'
 #' @includeRmd tools/doc/README-body.Rmd
 "_PACKAGE"
+
+fix_check <- function() {
+  R6::R6Class()
+}

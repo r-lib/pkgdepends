@@ -59,6 +59,7 @@ pkg_deps <- R6::R6Class(
     #'  A new `pkg_deps` object.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pd <- pkg_deps$new("r-lib/pkgdepends")
     #' pd
 
@@ -81,6 +82,7 @@ pkg_deps <- R6::R6Class(
     #' `pkg_deps` object.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pd <- new_pkg_deps(c("pak", "jsonlite"))
     #' pd$get_refs()
 
@@ -95,6 +97,7 @@ pkg_deps <- R6::R6Class(
     #' options.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pd <- new_pkg_deps("pak")
     #' pd$get_config()
 
@@ -112,6 +115,7 @@ pkg_deps <- R6::R6Class(
     #' (see below), the result of the resolution, invisibly.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pd <- new_pkg_deps("pak")
     #' pd$resolve()
     #' pd
@@ -136,6 +140,7 @@ pkg_deps <- R6::R6Class(
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$get_resolution()
@@ -158,6 +163,7 @@ pkg_deps <- R6::R6Class(
     #' result, invisibly.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$solve()
@@ -172,6 +178,7 @@ pkg_deps <- R6::R6Class(
     #' [pkg_solution_result] for details.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pd <- new_pkg_deps("pkgload")
     #' pd$resolve()
     #' pd$solve()
@@ -188,6 +195,7 @@ pkg_deps <- R6::R6Class(
     #' A `tree` object from the cli package, see [cli::tree()].
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pd <- new_pkg_deps("pkgload")
     #' pd$solve()
     #' pd$draw()
@@ -246,6 +254,7 @@ pkg_deps <- R6::R6Class(
     #' The `pkg_deps` object itself, invisibly.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd
     #'

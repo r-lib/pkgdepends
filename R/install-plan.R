@@ -34,6 +34,7 @@
 #' [install_package_plan()] to install plans from any source.
 #'
 #' @examples
+#' # Needs internet connection: curl::has_internet()
 #' pdi <- new_pkg_installation_proposal(
 #'   "pak",
 #'   config = list(library = tempfile())

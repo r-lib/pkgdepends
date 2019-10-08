@@ -47,6 +47,7 @@ new_pkg_installation_proposal <- function(refs, config = list(), ...) {
 #'
 #' @export
 #' @examples
+#' # Needs internet connection: curl::has_internet()
 #' pdi <- new_pkg_installation_proposal(
 #'   "pak",
 #'   config = list(library = tempfile())
@@ -84,6 +85,7 @@ pkg_installation_proposal <- R6::R6Class(
     #'   use, and experimental currently.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile()))
@@ -116,6 +118,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' `pkg_installation_proposal` object.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
     #' pdi$get_refs()
 
@@ -130,6 +133,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' options.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -150,6 +154,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' (see below), the result of the resolution, invisibly.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -178,6 +183,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -195,6 +201,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' A character vector of length one.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -214,6 +221,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' @param policy Policy to set.
     #'
     #' @examples
+    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -243,6 +251,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' result, invisibly.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -263,6 +272,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' [pkg_solution_result] for details.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -278,6 +288,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' packages that can be installed together.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' # This is an error, because the packages conflict:
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
@@ -302,6 +313,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' A `tree` object from the cli package, see [cli::tree()].
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -322,6 +334,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' the result, invisibly.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
     #'   config = list(library = tempfile())
@@ -350,6 +363,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' [pkg_download_result] for details.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
     #'   config = list(library = tempfile())
@@ -390,6 +404,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' the format.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -458,6 +473,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' The `pkg_installation_proposal` object itself, invisibly.
     #'
     #' @examples
+    #' # Needs internet connection: curl::has_internet()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())

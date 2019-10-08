@@ -46,6 +46,7 @@ Typical workflow to install a set of packages:
 }
 }
 \examples{
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -65,6 +66,7 @@ pdi
 ## Method `pkg_installation_proposal$new`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
@@ -74,6 +76,7 @@ pdi
 ## Method `pkg_installation_proposal$get_refs`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
 pdi$get_refs()
 
@@ -81,6 +84,7 @@ pdi$get_refs()
 ## Method `pkg_installation_proposal$get_config`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -91,6 +95,7 @@ pdi$get_config()
 ## Method `pkg_installation_proposal$resolve`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -103,6 +108,7 @@ pdi
 ## Method `pkg_installation_proposal$get_resolution`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -114,6 +120,7 @@ pdi$get_resolution()
 ## Method `pkg_installation_proposal$get_solve_policy`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -126,6 +133,7 @@ pdi$get_solve_policy()
 ## Method `pkg_installation_proposal$set_solve_policy`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -138,6 +146,7 @@ pdi$get_solve_policy()
 ## Method `pkg_installation_proposal$solve`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -150,6 +159,7 @@ pdi
 ## Method `pkg_installation_proposal$get_solution`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -162,6 +172,7 @@ pdi$get_solution()
 ## Method `pkg_installation_proposal$stop_for_solution_error`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 # This is an error, because the packages conflict:
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
@@ -177,6 +188,7 @@ pdi
 ## Method `pkg_installation_proposal$draw`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -189,6 +201,7 @@ pdi$draw()
 ## Method `pkg_installation_proposal$download`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
@@ -202,6 +215,7 @@ pdi
 ## Method `pkg_installation_proposal$get_downloads`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
@@ -215,6 +229,7 @@ pdi$get_downloads()
 ## Method `pkg_installation_proposal$get_install_plan`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -228,6 +243,7 @@ pdi$get_install_plan()
 ## Method `pkg_installation_proposal$print`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -306,7 +322,8 @@ use, and experimental currently.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs: TRUE
+pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
 pdi
@@ -331,7 +348,8 @@ A character vector of package refs that were used to create the
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
+\preformatted{# Needs: TRUE
+pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
 pdi$get_refs()
 }
 \if{html}{\out{</div>}}
@@ -354,7 +372,8 @@ options.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs: TRUE
+pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
@@ -383,7 +402,8 @@ The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
@@ -424,7 +444,8 @@ A \link{pkg_resolution_result} object, which is also a tibble. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -450,7 +471,8 @@ A character vector of length one.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs: TRUE
+pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -483,7 +505,8 @@ See \link[=pkg_solution]{'The dependency solver'} for details.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs: TRUE
+pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -515,7 +538,8 @@ result, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -542,7 +566,8 @@ A \link{pkg_solution_result} object, which is a list. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -566,7 +591,8 @@ packages that can be installed together.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# This is an error, because the packages conflict:
+\preformatted{# Needs internet connection: curl::has_internet()
+# This is an error, because the packages conflict:
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
@@ -597,7 +623,8 @@ A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
@@ -626,7 +653,8 @@ the result, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
 )
@@ -667,7 +695,8 @@ A \link{pkg_download_result} object, which is a list. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
 )
@@ -718,7 +747,8 @@ the format.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
@@ -784,7 +814,8 @@ The \code{pkg_installation_proposal} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
+\preformatted{# Needs internet connection: curl::has_internet()
+pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )

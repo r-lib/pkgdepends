@@ -45,6 +45,7 @@ Typical workflow to download a set of packages:
 ## Method `pkg_download_proposal$new`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
 pdl
 
@@ -52,6 +53,7 @@ pdl
 ## Method `pkg_download_proposal$get_refs`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
 pdl$get_refs()
 
@@ -59,6 +61,7 @@ pdl$get_refs()
 ## Method `pkg_download_proposal$get_config`
 ## ------------------------------------------------
 
+# Needs: TRUE
 pdl <- new_pkg_download_proposal("pak")
 pdl$get_config()
 
@@ -66,6 +69,7 @@ pdl$get_config()
 ## Method `pkg_download_proposal$resolve`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
 pdl
@@ -74,6 +78,7 @@ pdl
 ## Method `pkg_download_proposal$get_resolution`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$get_resolution()
@@ -82,6 +87,7 @@ pdl$get_resolution()
 ## Method `pkg_download_proposal$download`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
@@ -91,6 +97,7 @@ pdl
 ## Method `pkg_download_proposal$get_downloads`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdl <- new_pkg_download_proposal("pkgload")
 pdl$resolve()
 pdl$download()
@@ -100,6 +107,7 @@ pdl$get_downloads()
 ## Method `pkg_download_proposal$print`
 ## ------------------------------------------------
 
+# Needs internet connection: curl::has_internet()
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl
 
@@ -158,7 +166,8 @@ use, and experimental currently.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+\preformatted{# Needs: TRUE
+pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
 pdl
 }
 \if{html}{\out{</div>}}
@@ -181,7 +190,8 @@ A character vector of package refs that were used to create the
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
+\preformatted{# Needs: TRUE
+pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
 pdl$get_refs()
 }
 \if{html}{\out{</div>}}
@@ -204,7 +214,8 @@ options.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("pak")
+\preformatted{# Needs: TRUE
+pdl <- new_pkg_download_proposal("pak")
 pdl$get_config()
 }
 \if{html}{\out{</div>}}
@@ -230,7 +241,8 @@ The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("pak")
+\preformatted{# Needs internet connection: curl::has_internet()
+pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
 pdl
 }
@@ -267,7 +279,8 @@ A \link{pkg_resolution_result} object, which is also a tibble. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+\preformatted{# Needs internet connection: curl::has_internet()
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$get_resolution()
 }
@@ -291,7 +304,8 @@ the result, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+\preformatted{# Needs internet connection: curl::has_internet()
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
 pdl
@@ -328,7 +342,8 @@ A \link{pkg_download_result} object, which is a list. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("pkgload")
+\preformatted{# Needs internet connection: curl::has_internet()
+pdl <- new_pkg_download_proposal("pkgload")
 pdl$resolve()
 pdl$download()
 pdl$get_downloads()
@@ -388,7 +403,8 @@ The \code{pkg_download_proposal} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+\preformatted{# Needs internet connection: curl::has_internet()
+pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl
 
 pdl$resolve()

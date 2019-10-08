@@ -6,5 +6,6 @@
 *_cache
 /README.html
 /doc
+/docs
 Meta
-doc
+/inst/doc

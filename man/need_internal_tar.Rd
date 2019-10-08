@@ -16,5 +16,7 @@ program, if we can. We test this by trying to uncompress a \code{.tar.gz}
 archive using the external program. The name of the tar program is
 taken from the \code{TAR} environment variable, if this is unset then \code{tar}
 is used.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \keyword{internal}

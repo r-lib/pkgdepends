@@ -14,7 +14,6 @@
 #'
 #' @export
 #' @rdname pkg_download_proposal
-#' @eval style_man()
 
 new_pkg_download_proposal <- function(refs, ...) {
   pkg_download_proposal$new(refs, ...)
@@ -24,7 +23,6 @@ new_pkg_download_proposal <- function(refs, ...) {
 #'
 #' @description
 #' Download packages with their dependencies, from various sources.
-#' @eval style_man()
 #'
 #' @details
 #' Typical workflow to download a set of packages:
@@ -38,6 +36,7 @@ new_pkg_download_proposal <- function(refs, ...) {
 #' 1. Get the data about the packages and downloads with
 #'    [`pkg_download_proposal$get_downloads()`](#method-get-downloads).
 #'
+#' @eval style_man()
 #' @export
 
 pkg_download_proposal <- R6::R6Class(

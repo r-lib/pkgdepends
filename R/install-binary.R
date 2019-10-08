@@ -8,6 +8,7 @@
 #' @param quiet Whether to suppress console output.
 #' @importFrom filelock lock unlock
 #' @importFrom cliapp cli_progress_bar cli_alert_success
+#' @eval style_man()
 #' @export
 
 install_binary <- function(filename, lib = .libPaths()[[1L]],

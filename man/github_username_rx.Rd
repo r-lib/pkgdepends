@@ -13,6 +13,8 @@ github_username_rx()
 \item cannot begin or end with a hyphen
 \item maximum 39 characters
 }
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 Based on \url{https://github.com/shinnn/github-username-regex}

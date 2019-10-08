@@ -9,6 +9,8 @@ set of package files. It is usually created from an
 \link[=pkg_installation_proposal]{installation proposal} with
 \link[=pkg_solution]{solving} the dependencies and \link[=pkg_downloads]{downloading}
 the package files.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 It is also possible to create an installation plan a different way. An

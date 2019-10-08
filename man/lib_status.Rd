@@ -16,5 +16,5 @@ Data frame (tibble) the contains data about the packages
 installed in the library.
 }
 \description{
-Status of packages in a library
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }

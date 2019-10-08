@@ -15,6 +15,7 @@
 #' @param post_process Function to call after the extraction.
 #' @return The [callr::process] object.
 #' @keywords internal
+#' @eval style_man()
 
 make_untar_process <- function(tarfile, files = NULL, exdir = ".",
                                restore_times = TRUE, post_process = NULL) {
@@ -39,6 +40,7 @@ make_untar_process <- function(tarfile, files = NULL, exdir = ".",
 #'
 #' @return Whether we need to use the internal tar implementation.
 #' @keywords internal
+#' @eval style_man()
 
 need_internal_tar <- local({
   internal <- NULL

@@ -41,6 +41,7 @@ standard_rx <- function(remote_name = "standard") {
 #' Based on <https://github.com/shinnn/github-username-regex>
 #'
 #' @keywords internal
+#' @eval style_man()
 
 github_username_rx <- function() {
   "(?<username>(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))"
@@ -178,6 +179,7 @@ get_remote_types <- function(refs) {
 #' The parsed reference always has class `remote_ref_<type>` and
 #' `remote_ref`.
 #'
+#' @eval style_man()
 #' @export
 
 parse_pkg_refs <- function(refs, remote_types = NULL, ...) {

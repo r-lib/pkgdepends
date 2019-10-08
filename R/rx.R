@@ -20,6 +20,7 @@
 #' @return A named list of strings.
 #'
 #' @export
+#' @eval style_man()
 #' @examples
 #' pkg_rx()
 

@@ -45,6 +45,7 @@
 #' pdi$get_install_plan()
 #'
 #' @name install_plans
+#' @eval style_man()
 NULL
 
 #' Perform a package installation plan
@@ -58,6 +59,7 @@ NULL
 #' @return Information about the installation process.
 #'
 #' @importFrom callr poll
+#' @eval style_man()
 #' @export
 
 install_package_plan <- function(plan, lib = .libPaths()[[1]],

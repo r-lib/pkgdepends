@@ -17,6 +17,7 @@ pkg_dep_types_soft <- function() c("Suggests", "Enhances")
 #' @return A string vector of dependency types, capitalized.
 #'
 #' @family package dependency utilities
+#' @eval style_man()
 #' @export
 
 pkg_dep_types <- function() c(pkg_dep_types_hard(), pkg_dep_types_soft())
@@ -163,6 +164,7 @@ resolve_ref_deps <- function(deps, remotes) {
 #' packages.
 #'
 #' @family package dependency utilities
+#' @eval style_man()
 #' @export
 
 as_pkg_dependencies <- function(deps) {

@@ -15,8 +15,6 @@ new_pkg_download_proposal(refs, ...)
 \href{$method-new}{\code{pkg_download_proposal$new()}}.}
 }
 \description{
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
-
 Download packages with their dependencies, from various sources.
 }
 \details{

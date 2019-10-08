@@ -104,6 +104,7 @@ make_installed_cache <- function(library, packages = NULL) {
 #' @return Data frame (tibble) the contains data about the packages
 #'   installed in the library.
 #'
+#' @eval style_man()
 #' @export
 
 lib_status <- function(library = .libPaths()[1], packages = NULL) {

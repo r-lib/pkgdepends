@@ -30,6 +30,8 @@ The \link[callr:process]{callr::process} object.
 \description{
 Use an external tar program, if there is a working one, otherwise use
 the internal implementation.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 When using the internal implementation, we need to start another R

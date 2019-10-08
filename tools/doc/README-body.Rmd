@@ -51,7 +51,7 @@ https://github.com/r-lib/pkgdepends
 local::~/works/shiny
 ```
 
-See [*Package references*][pkg_refs] for details.
+See ["Package references"][pkg_refs] for details.
 
 ## Package dependencies
 
@@ -98,28 +98,28 @@ pdi$install()
 [`pkg_installation_proposal`][pkg_installation_proposal]
 all resolve their dependencies recursively, to obtain information about
 all packages needed for the specified [package references][pkg_refs].
-See [*Dependency resolution*][pkg_resolution] for details.
+See ["Dependency resolution"][pkg_resolution] for details.
 
 ## The dependency solver
 
 The dependency solver takes the resolution information, and works out
 the exact versions of each package that must be installed, such that
 version and other requirements are satisfied. See
-[*The dependency solver*][pkg_solution] for details.
+["The dependency solver"][pkg_solution] for details.
 
 ## Installation plans
 
 [`pkg_installation_proposal`][pkg_installation_proposal] can create
 installation plans, and then also install them. It is also possible to
 import installation plans that were created by other tools. See
-[*Installation plans*][install_plans] for details.
+["Installation plans"][install_plans] for details.
 
 ## Configuration
 
 The details of [`pkg_deps`][pkg_deps],
 [`pkg_download_proposal`][pkg_download_proposal] and
 [`pkg_installation_proposal`][pkg_installation_proposal] can be tuned with
-a list of configuration options. See [*Configuration*][pkg_config] for
+a list of configuration options. See ["Configuration"][pkg_config] for
 details.
 
 # Related

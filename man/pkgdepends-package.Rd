@@ -54,7 +54,7 @@ https://github.com/r-lib/pkgdepends
 local::~/works/shiny
 }
 
-See \link[=pkg_refs]{‘Package references’} for details.
+See \link[=pkg_refs]{“Package references”} for details.
 }
 
 \subsection{Package dependencies}{
@@ -126,14 +126,14 @@ pdi$install()
 \code{\link{pkg_installation_proposal}} all resolve
 their dependencies recursively, to obtain information about all packages
 needed for the specified \link[=pkg_refs]{package references}. See
-\link[=pkg_resolution]{‘Dependency resolution’} for details.
+\link[=pkg_resolution]{“Dependency resolution”} for details.
 }
 
 \subsection{The dependency solver}{
 
 The dependency solver takes the resolution information, and works out
 the exact versions of each package that must be installed, such that
-version and other requirements are satisfied. See \link[=pkg_solution]{‘The dependency solver’} for details.
+version and other requirements are satisfied. See \link[=pkg_solution]{“The dependency solver”} for details.
 }
 
 \subsection{Installation plans}{
@@ -141,7 +141,7 @@ version and other requirements are satisfied. See \link[=pkg_solution]{‘The de
 \code{\link{pkg_installation_proposal}} can create
 installation plans, and then also install them. It is also possible to
 import installation plans that were created by other tools. See
-\link[=install_plans]{‘Installation plans’} for details.
+\link[=install_plans]{“Installation plans”} for details.
 }
 
 \subsection{Configuration}{
@@ -150,7 +150,7 @@ The details of \code{\link{pkg_deps}},
 \code{\link{pkg_download_proposal}} and
 \code{\link{pkg_installation_proposal}} can be tuned
 with a list of configuration options. See
-\link[=pkg_config]{‘Configuration’} for details.
+\link[=pkg_config]{“Configuration”} for details.
 }
 
 }

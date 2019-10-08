@@ -1,4 +1,4 @@
-#! /usr/bin/env sh           # -*- mode:sh -*-
+#! /usr/bin/env sh
 
 echo "** Converting examples to dynamic"
 for i in $(ls man/*.Rd); do

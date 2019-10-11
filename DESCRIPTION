@@ -52,7 +52,7 @@ Suggests:
     mockery,
     pingr (>= 1.2.0),
     rmarkdown,
-    roxygen2,
+    roxygen2 (>= 6.1.99.9001),
     rstudioapi,
     spelling,
     testthat

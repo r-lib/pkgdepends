@@ -46,6 +46,7 @@ Suggests:
     covr,
     debugme,
     digest,
+    fansi,
     fs,
     knitr,
     mockery,

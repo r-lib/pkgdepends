@@ -16,3 +16,5 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^.*cache$
+^vignettes/\.build\.timestamp$

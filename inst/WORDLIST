@@ -1,5 +1,6 @@
 cli
 devtools
+HOWTO
 ILP
 lifecycle
 pak
@@ -8,6 +9,5 @@ RStudio
 SHA
 Shorthands
 tibble
-tos
 un
 uncompress

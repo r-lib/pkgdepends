@@ -2,7 +2,7 @@
 % Please edit documentation in R/install-binary.R
 \name{install_binary}
 \alias{install_binary}
-\title{Install a R binary package}
+\title{Install an R binary package}
 \usage{
 install_binary(
   filename,
@@ -22,5 +22,7 @@ to the \code{DESCRIPTION} after installation.}
 \item{quiet}{Whether to suppress console output.}
 }
 \description{
+Uncompress an R binary package into a package library.
+
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }

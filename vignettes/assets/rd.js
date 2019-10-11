@@ -2,8 +2,8 @@
 var scroll = function() {
     /* Fix anchored link in RStudio */
     var hash = location.hash;
-    location.hash="#this-is-not";
-    location.hash = hash;
+    var el = document.querySelector(location.hash);
+    if (el) el.scrollIntoView();
 }
 
 window.addEventListener('load', (event) => {
@@ -42,4 +42,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
       var clipboard = new ClipboardJS(button);
     }
   });
+
+  /* Remove second (empty) Examples block completely. */
+  var ex = document.evaluate("//h3[text() = 'Examples']", document, null, XPathResult.ANY_TYPE, null );
+  var firstex = ex.iterateNext();
+  var secondex = ex.iterateNext();
+  if (secondex !== null) {
+    var expre = secondex.nextElementSibling;
+    secondex.remove();
+    if (expre !== null) { expre.remove(); }
+  }
 });

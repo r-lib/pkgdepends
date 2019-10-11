@@ -160,7 +160,6 @@ pkgplan_init <- function(self, private, refs, config, library,
 #'   packages for. It defaults to the current R version.
 #'
 #' @name pkg_config
-#' @eval style_man()
 NULL
 
 pkgplan_default_config <- function() {

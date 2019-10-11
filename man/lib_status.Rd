@@ -16,5 +16,7 @@ Data frame (tibble) the contains data about the packages
 installed in the library.
 }
 \description{
+Query data of all packages in a package library.
+
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }

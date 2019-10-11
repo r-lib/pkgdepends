@@ -15,9 +15,9 @@ new_pkg_deps(refs, ...)
 \href{#method-new}{\code{pkg_deps$new()}}.}
 }
 \description{
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
-
 Look up dependencies of R packages from various sources.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \code{new_pkg_deps()} creates a new object from the \code{pkg_deps} class.
@@ -38,12 +38,13 @@ result of the dependency solver.
 }
 }
 \examples{
+\testonly{
 
 ## ------------------------------------------------
 ## Method `pkg_deps$new`
 ## ------------------------------------------------
 
-# Needs: TRUE
+
 pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
 
@@ -51,7 +52,7 @@ pd
 ## Method `pkg_deps$get_refs`
 ## ------------------------------------------------
 
-# Needs: TRUE
+
 pd <- new_pkg_deps(c("pak", "jsonlite"))
 pd$get_refs()
 
@@ -59,7 +60,7 @@ pd$get_refs()
 ## Method `pkg_deps$get_config`
 ## ------------------------------------------------
 
-# Needs: TRUE
+
 pd <- new_pkg_deps("pak")
 pd$get_config()
 
@@ -67,7 +68,8 @@ pd$get_config()
 ## Method `pkg_deps$resolve`
 ## ------------------------------------------------
 
-# Needs internet connection: curl::has_internet()
+
+if (pkgdepends:::is_online()) {
 pd <- new_pkg_deps("pak")
 pd$resolve()
 pd
@@ -76,7 +78,9 @@ pd
 ## Method `pkg_deps$get_resolution`
 ## ------------------------------------------------
 
-# Needs internet connection: curl::has_internet()
+}
+
+if (pkgdepends:::is_online()) {
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
@@ -85,7 +89,9 @@ pd$get_resolution()
 ## Method `pkg_deps$solve`
 ## ------------------------------------------------
 
-# Needs internet connection: curl::has_internet()
+}
+
+if (pkgdepends:::is_online()) {
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
@@ -95,7 +101,9 @@ pd
 ## Method `pkg_deps$get_solution`
 ## ------------------------------------------------
 
-# Needs internet connection: curl::has_internet()
+}
+
+if (pkgdepends:::is_online()) {
 pd <- new_pkg_deps("pkgload")
 pd$resolve()
 pd$solve()
@@ -105,7 +113,9 @@ pd$get_solution()
 ## Method `pkg_deps$draw`
 ## ------------------------------------------------
 
-# Needs internet connection: curl::has_internet()
+}
+
+if (pkgdepends:::is_online()) {
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
@@ -114,7 +124,9 @@ pd$draw()
 ## Method `pkg_deps$print`
 ## ------------------------------------------------
 
-# Needs internet connection: curl::has_internet()
+}
+
+if (pkgdepends:::is_online()) {
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd
 
@@ -123,6 +135,7 @@ pd
 
 pd$solve()
 pd
+}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -172,8 +185,7 @@ A new \code{pkg_deps} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs: TRUE
-pd <- pkg_deps$new("r-lib/pkgdepends")
+\examplesx{pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
 }
 \if{html}{\out{</div>}}
@@ -195,8 +207,7 @@ A character vector of package refs that were used to create the
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs: TRUE
-pd <- new_pkg_deps(c("pak", "jsonlite"))
+\examplesx{pd <- new_pkg_deps(c("pak", "jsonlite"))
 pd$get_refs()
 }
 \if{html}{\out{</div>}}
@@ -219,8 +230,7 @@ options.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs: TRUE
-pd <- new_pkg_deps("pak")
+\examplesx{pd <- new_pkg_deps("pak")
 pd$get_config()
 }
 \if{html}{\out{</div>}}
@@ -246,7 +256,7 @@ The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs internet connection: curl::has_internet()
+\examplesx{# Needs internet connection: pkgdepends:::is_online()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 pd
@@ -284,7 +294,7 @@ A \link{pkg_resolution_result} object, which is also a tibble. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs internet connection: curl::has_internet()
+\examplesx{# Needs internet connection: pkgdepends:::is_online()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
@@ -316,7 +326,7 @@ result, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs internet connection: curl::has_internet()
+\examplesx{# Needs internet connection: pkgdepends:::is_online()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
@@ -341,7 +351,7 @@ A \link{pkg_solution_result} object, which is a list. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs internet connection: curl::has_internet()
+\examplesx{# Needs internet connection: pkgdepends:::is_online()
 pd <- new_pkg_deps("pkgload")
 pd$resolve()
 pd$solve()
@@ -367,7 +377,7 @@ A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs internet connection: curl::has_internet()
+\examplesx{# Needs internet connection: pkgdepends:::is_online()
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
@@ -426,7 +436,7 @@ The \code{pkg_deps} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{# Needs internet connection: curl::has_internet()
+\examplesx{# Needs internet connection: pkgdepends:::is_online()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd
 
@@ -442,3 +452,90 @@ pd
 
 }
 }
+
+\section{Examples}{
+\examplesx{
+## ------------------------------------------------
+## Method `pkg_deps$new`
+## ------------------------------------------------
+
+# Needs: TRUE
+pd <- pkg_deps$new("r-lib/pkgdepends")
+pd
+
+## ------------------------------------------------
+## Method `pkg_deps$get_refs`
+## ------------------------------------------------
+
+# Needs: TRUE
+pd <- new_pkg_deps(c("pak", "jsonlite"))
+pd$get_refs()
+
+## ------------------------------------------------
+## Method `pkg_deps$get_config`
+## ------------------------------------------------
+
+# Needs: TRUE
+pd <- new_pkg_deps("pak")
+pd$get_config()
+
+## ------------------------------------------------
+## Method `pkg_deps$resolve`
+## ------------------------------------------------
+
+# Needs internet connection: pkgdepends:::is_online()
+pd <- new_pkg_deps("pak")
+pd$resolve()
+pd
+
+## ------------------------------------------------
+## Method `pkg_deps$get_resolution`
+## ------------------------------------------------
+
+# Needs internet connection: pkgdepends:::is_online()
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$get_resolution()
+
+## ------------------------------------------------
+## Method `pkg_deps$solve`
+## ------------------------------------------------
+
+# Needs internet connection: pkgdepends:::is_online()
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$solve()
+pd
+
+## ------------------------------------------------
+## Method `pkg_deps$get_solution`
+## ------------------------------------------------
+
+# Needs internet connection: pkgdepends:::is_online()
+pd <- new_pkg_deps("pkgload")
+pd$resolve()
+pd$solve()
+pd$get_solution()
+
+## ------------------------------------------------
+## Method `pkg_deps$draw`
+## ------------------------------------------------
+
+# Needs internet connection: pkgdepends:::is_online()
+pd <- new_pkg_deps("pkgload")
+pd$solve()
+pd$draw()
+
+## ------------------------------------------------
+## Method `pkg_deps$print`
+## ------------------------------------------------
+
+# Needs internet connection: pkgdepends:::is_online()
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd
+
+pd$resolve()
+pd
+
+pd$solve()
+pd}}

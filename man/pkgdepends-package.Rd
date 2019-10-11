@@ -6,11 +6,11 @@
 \alias{pkgdepends-package}
 \title{pkgdepends: Package Dependency Resolution and Downloads}
 \description{
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
-
 pkgdepends is a toolkit for package dependencies, downloads and
 installations, to be used in other packages. If you are looking for a
 package manager, see \href{https://github.com/r-lib/pak}{pak}.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \seealso{
 Useful links:
@@ -61,7 +61,18 @@ See \link[=pkg_refs]{“Package references”} for details.
 
 Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/cli")
 pd$solve()
-pd$draw()
+}\if{html}{\out{</div>}}\preformatted{#> Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
+#> Please use `!!` instead.
+#> 
+#>   # Bad:
+#>   dplyr::select(data, !!!enquo(x))
+#> 
+#>   # Good:
+#>   dplyr::select(data, !!enquo(x))    # Unquote single quosure
+#>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
+#> 
+#> This warning is displayed once per session.
+}\if{html}{\out{<div class="r">}}\preformatted{pd$draw()
 }\if{html}{\out{</div>}}\preformatted{#> cli (1.9.9.9000)
 #> +-assertthat (0.2.1)
 #> +-crayon (1.3.4)
@@ -71,7 +82,7 @@ pd$draw()
 #> | | +-pkgconfig (2.0.3)
 #> | | +-rlang (0.4.0)
 #> | | \-vctrs (0.2.0)
-#> | |   +-backports (1.1.4)
+#> | |   +-backports (1.1.5)
 #> | |   +-ellipsis (0.3.0)
 #> | |   | \-rlang (0.4.0)
 #> | |   +-digest (0.6.21)
@@ -114,8 +125,8 @@ pdi$install()
 #> Your system is ready to build packages!
 
 #> Installed: 17
-#> Build time:  3.7s
-#> Intall time: 2s
+#> Build time:  2.9s
+#> Intall time: 1.6s
 }
 }
 

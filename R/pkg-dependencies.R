@@ -12,7 +12,6 @@
 #'
 #' @export
 #' @rdname pkg_deps
-#' @eval style_man()
 
 new_pkg_deps <- function(refs, ...) {
   pkg_deps$new(refs, ...)
@@ -115,7 +114,7 @@ pkg_deps <- R6::R6Class(
     #' (see below), the result of the resolution, invisibly.
     #'
     #' @examples
-    #' # Needs internet connection: curl::has_internet()
+    #' # Needs internet connection: pkgdepends:::is_online()
     #' pd <- new_pkg_deps("pak")
     #' pd$resolve()
     #' pd
@@ -140,7 +139,7 @@ pkg_deps <- R6::R6Class(
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
     #' @examples
-    #' # Needs internet connection: curl::has_internet()
+    #' # Needs internet connection: pkgdepends:::is_online()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$get_resolution()
@@ -163,7 +162,7 @@ pkg_deps <- R6::R6Class(
     #' result, invisibly.
     #'
     #' @examples
-    #' # Needs internet connection: curl::has_internet()
+    #' # Needs internet connection: pkgdepends:::is_online()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$solve()
@@ -178,7 +177,7 @@ pkg_deps <- R6::R6Class(
     #' [pkg_solution_result] for details.
     #'
     #' @examples
-    #' # Needs internet connection: curl::has_internet()
+    #' # Needs internet connection: pkgdepends:::is_online()
     #' pd <- new_pkg_deps("pkgload")
     #' pd$resolve()
     #' pd$solve()
@@ -195,7 +194,7 @@ pkg_deps <- R6::R6Class(
     #' A `tree` object from the cli package, see [cli::tree()].
     #'
     #' @examples
-    #' # Needs internet connection: curl::has_internet()
+    #' # Needs internet connection: pkgdepends:::is_online()
     #' pd <- new_pkg_deps("pkgload")
     #' pd$solve()
     #' pd$draw()
@@ -254,7 +253,7 @@ pkg_deps <- R6::R6Class(
     #' The `pkg_deps` object itself, invisibly.
     #'
     #' @examples
-    #' # Needs internet connection: curl::has_internet()
+    #' # Needs internet connection: pkgdepends:::is_online()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd
     #'

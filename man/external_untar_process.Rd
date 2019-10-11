@@ -5,6 +5,8 @@
 \title{R6 class for an external un-tar process}
 \description{
 Uses the system's \code{tar} program, in a background process.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \keyword{internal}
 \section{Super class}{
@@ -74,7 +76,6 @@ Uses the system's \code{tar} program, in a background process.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{external_untar_process$new(
   tarfile,
@@ -115,3 +116,4 @@ New \code{r_untar_process} object.
 }
 }
 }
+

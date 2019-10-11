@@ -1,7 +1,0 @@
-#! /usr/bin/env sh
-
-echo "** Converting examples to dynamic"
-for i in $(ls man/*.Rd); do
-    cat ${i} | sed 's/\\examples{/\\examplesx{/' > ${i}.bak
-    mv ${i}.bak ${i}
-done

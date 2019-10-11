@@ -99,12 +99,13 @@ make_installed_cache <- function(library, packages = NULL) {
 
 #' Status of packages in a library
 #'
+#' Query data of all packages in a package library.
+#'
 #' @param library Path to library.
 #' @param packages If not `NULL`, then only these packages are shown.
 #' @return Data frame (tibble) the contains data about the packages
 #'   installed in the library.
 #'
-#' @eval style_man()
 #' @export
 
 lib_status <- function(library = .libPaths()[1], packages = NULL) {

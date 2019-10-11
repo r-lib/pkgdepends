@@ -34,7 +34,7 @@
 #' [install_package_plan()] to install plans from any source.
 #'
 #' @examples
-#' # Needs internet connection: curl::has_internet()
+#' # Needs internet connection: pkgdepends:::is_online()
 #' pdi <- new_pkg_installation_proposal(
 #'   "pak",
 #'   config = list(library = tempfile())
@@ -45,7 +45,6 @@
 #' pdi$get_install_plan()
 #'
 #' @name install_plans
-#' @eval style_man()
 NULL
 
 #' Perform a package installation plan
@@ -59,7 +58,6 @@ NULL
 #' @return Information about the installation process.
 #'
 #' @importFrom callr poll
-#' @eval style_man()
 #' @export
 
 install_package_plan <- function(plan, lib = .libPaths()[[1]],

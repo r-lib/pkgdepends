@@ -15,7 +15,7 @@ LazyData: true
 URL: https://github.com/r-lib/pkgdepends#readme
 BugReports: https://github.com/r-lib/pkgdepends/issues
 RoxygenNote: 6.1.99.9001
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "dynex"))
 Imports:
     assertthat,
     backports,
@@ -49,8 +49,9 @@ Suggests:
     fs,
     knitr,
     mockery,
-    pingr,
+    pingr (>= 1.2.0),
     rmarkdown,
+    roxygen2,
     rstudioapi,
     spelling,
     testthat

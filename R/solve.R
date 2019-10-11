@@ -96,7 +96,6 @@
 #'
 #' @name pkg_solution
 #' @aliases pkg_solution_result
-#' @eval style_man()
 NULL
 
 solve_dummy_obj <- 1000000000

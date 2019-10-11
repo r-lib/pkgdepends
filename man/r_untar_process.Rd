@@ -5,6 +5,8 @@
 \title{R6 class for an R un-tar process}
 \description{
 Uses \code{\link[utils:untar]{utils::untar()}}, in a background process.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \keyword{internal}
 \section{Super classes}{
@@ -74,7 +76,6 @@ Uses \code{\link[utils:untar]{utils::untar()}}, in a background process.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{r_untar_process$new(
   tarfile,
@@ -111,3 +112,4 @@ New \code{r_untar_process} object.
 }
 }
 }
+

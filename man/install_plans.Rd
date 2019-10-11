@@ -39,7 +39,8 @@ installed as a dependency.
 }
 }
 \examples{
-# Needs internet connection: curl::has_internet()
+\testonly{
+if (pkgdepends:::is_online()) {
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -48,9 +49,20 @@ pdi$resolve()
 pdi$solve()
 pdi$download()
 pdi$get_install_plan()
-
+}}
 }
 \seealso{
 \link{pkg_installation_proposal} to create install plans,
 \code{\link[=install_package_plan]{install_package_plan()}} to install plans from any source.
 }
+\section{Examples}{
+\examplesx{# Needs internet connection: pkgdepends:::is_online()
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$download()
+pdi$get_install_plan()
+}}

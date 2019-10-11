@@ -100,7 +100,6 @@
 #'
 #' @name pkg_resolution
 #' @aliases pkg_resolution_result
-#' @eval style_man()
 NULL
 
 #' @importFrom prettyunits pretty_dt

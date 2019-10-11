@@ -27,7 +27,6 @@
 #'
 #' @name pkg_downloads
 #' @aliases pkg_download_result
-#' @eval style_man()
 NULL
 
 #' @importFrom prettyunits pretty_bytes

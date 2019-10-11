@@ -1,6 +1,6 @@
 
 dynex <- function() {
-  if (packageVersion("roxygen2") < "6.1.99.9001") {
+  if (utils::packageVersion("roxygen2") < "6.1.99.9001") {
     stop("pkgdepends needs at least roxygen  7.0.0 (or dev)")
   }
   registerS3method("roclet_output", "roclet_dynex", roclet_output_dynex,

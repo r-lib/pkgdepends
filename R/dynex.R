@@ -1,10 +1,13 @@
 
 dynex <- function() {
+  if (packageVersion("roxygen2") < "6.1.99.9001") {
+    stop("pkgdepends needs at least roxygen  7.0.0 (or dev)")
+  }
   registerS3method("roclet_output", "roclet_dynex", roclet_output_dynex,
                    envir = asNamespace("roxygen2"))
   registerS3method("roclet_process", "roclet_dynex", roclet_process_dynex,
                    envir = asNamespace("roxygen2"))
-  roxygen2::roclet(c("dynex", "rd"))
+  asNamespace("roxygen2")$roclet(c("dynex", "rd"))
 }
 
 roclet_process_dynex <- function(x, blocks, env, base_path) {
@@ -16,7 +19,7 @@ mark_r6_class <- function(block) {
   if ("R6ClassGenerator" %in% class(block$object$value)) {
     block$tags <- c(
       block$tags,
-      list(roxygen2::roxy_tag("concept", raw = "R6-marker", val = "R6-marker"))
+      list(asNamespace("roxygen2")$roxy_tag("concept", raw = "R6-marker", val = "R6-marker"))
     )
   }
   block
@@ -33,7 +36,7 @@ dynamic_examples <- function(page) {
   isr6 <- "R6-marker" %in% concept
   if (isr6) {
     page$add_section(
-      roxygen2::rd_section("concept", setdiff(concept, "R6-marker")),
+      asNamespace("roxygen2")$rd_section("concept", setdiff(concept, "R6-marker")),
       overwrite = TRUE
     )
     make_r6_examples_dynamic(page)
@@ -45,7 +48,7 @@ dynamic_examples <- function(page) {
 
 add_styles <- function(page) {
   if (page$has_section("description")) {
-    page$add_section(roxygen2::rd_section("description", style_man()))
+    page$add_section(asNamespace("roxygen2")$rd_section("description", style_man()))
   }
   page
 }
@@ -75,7 +78,7 @@ make_r6_examples_dynamic <- function(page) {
   rd[methods] <- lapply(rd[methods], process_r6_methods)
 
   value <- deparse_rd(rd)
-  page$add_section(roxygen2::rd_section("rawRd", value), overwrite = TRUE)
+  page$add_section(asNamespace("roxygen2")$rd_section("rawRd", value), overwrite = TRUE)
 
   page
 }
@@ -157,7 +160,7 @@ add_dynamic_examples_section <- function(page) {
     "}"
   )
 
-  page$add_section(roxygen2::rd_section("rawRd", val))
+  page$add_section(asNamespace("roxygen2")$rd_section("rawRd", val))
   page
 }
 
@@ -173,7 +176,7 @@ make_examples_dynamic <- function(page) {
     dynex_add_tests(ex$value),
     "}"
   )
-  page$add_section(roxygen2::rd_section("examples", val), overwrite = TRUE)
+  page$add_section(asNamespace("roxygen2")$rd_section("examples", val), overwrite = TRUE)
   page
 }
 

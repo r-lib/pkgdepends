@@ -61,18 +61,7 @@ See \link[=pkg_refs]{“Package references”} for details.
 
 Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/cli")
 pd$solve()
-}\if{html}{\out{</div>}}\preformatted{#> Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
-#> Please use `!!` instead.
-#> 
-#>   # Bad:
-#>   dplyr::select(data, !!!enquo(x))
-#> 
-#>   # Good:
-#>   dplyr::select(data, !!enquo(x))    # Unquote single quosure
-#>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
-#> 
-#> This warning is displayed once per session.
-}\if{html}{\out{<div class="r">}}\preformatted{pd$draw()
+pd$draw()
 }\if{html}{\out{</div>}}\preformatted{#> cli (1.9.9.9000)
 #> +-assertthat (0.2.1)
 #> +-crayon (1.3.4)
@@ -125,7 +114,7 @@ pdi$install()
 #> Your system is ready to build packages!
 
 #> Installed: 17
-#> Build time:  2.9s
+#> Build time:  3s
 #> Intall time: 1.6s
 }
 }

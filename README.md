@@ -71,21 +71,6 @@ Dependencies of the development version of the cli package:
 ``` r
 pd <- new_pkg_deps("r-lib/cli")
 pd$solve()
-```
-
-    #> Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
-    #> Please use `!!` instead.
-    #> 
-    #>   # Bad:
-    #>   dplyr::select(data, !!!enquo(x))
-    #> 
-    #>   # Good:
-    #>   dplyr::select(data, !!enquo(x))    # Unquote single quosure
-    #>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
-    #> 
-    #> This warning is displayed once per session.
-
-``` r
 pd$draw()
 ```
 
@@ -98,7 +83,7 @@ pd$draw()
     #> │ │ ├─pkgconfig (2.0.3)
     #> │ │ ├─rlang (0.4.0)
     #> │ │ └─vctrs (0.2.0)
-    #> │ │   ├─backports (1.1.4)
+    #> │ │   ├─backports (1.1.5)
     #> │ │   ├─ellipsis (0.3.0)
     #> │ │   │ └─rlang (0.4.0)
     #> │ │   ├─digest (0.6.21)
@@ -145,8 +130,8 @@ pdi$install()
     #> Your system is ready to build packages!
 
     #> Installed: 17
-    #> Build time:  3s
-    #> Intall time: 2.1s
+    #> Build time:  2.8s
+    #> Intall time: 1.6s
 
 ## Dependency resolution
 

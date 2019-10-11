@@ -6,7 +6,8 @@ knitr::opts_chunk$set(
   tidy = FALSE,
   error = FALSE,
   fig.width = 8,
-  fig.height = 8)
+  fig.height = 8,
+  R.options = list(cli.unicode = TRUE))
 ```
 
 # Features
@@ -57,10 +58,21 @@ See ["Package references"][pkg_refs] for details.
 
 Dependencies of the development version of the cli package:
 
-```{r}
+```{r include = FALSE}
+in_roxygen <- function() {
+  rox <- quote(roxygen2::roxygenise)
+  any(sapply(sys.calls(), function(x) identical(x[[1]], rox)))
+}
+```
+
+```{r draw, include = !in_roxygen()}
 pd <- new_pkg_deps("r-lib/cli")
 pd$solve()
 pd$draw()
+```
+
+```{r, include = in_roxygen(), R.options = list(cli.unicode = FALSE)}
+<<draw>>
 ```
 
 See the [`pkg_deps`][pkg_deps] class for details.

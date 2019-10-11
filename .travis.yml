@@ -10,6 +10,10 @@ r:
  - release
  - devel
 
+matrix:
+  allow_failures:
+    - r: 3.2
+
 after_success:
   - test $TRAVIS_R_VERSION_STRING = "release" && Rscript -e 'covr::codecov()'
 

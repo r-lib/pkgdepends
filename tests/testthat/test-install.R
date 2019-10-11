@@ -3,6 +3,8 @@ context("install_packages")
 
 describe("install_packages", {
 
+  skip_if_offline()
+
   it("works with source packages", {
 
   pkg <- source_test_package("foo")

@@ -3,6 +3,9 @@ context("installed ref type")
 
 test_that("resolve", {
 
+  skip_on_cran()
+  skip_if_offline()
+
   conf <- pkgplan_default_config()
 
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))

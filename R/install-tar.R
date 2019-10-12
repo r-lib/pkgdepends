@@ -31,8 +31,8 @@ make_untar_process <- function(tarfile, files = NULL, exdir = ".",
 #' Check if we need to use R's internal tar implementation
 #'
 #' This is slow, because we need to start an R child process, and the
-#' implementation is also very slow. So it is better to use an extranl tar
-#' program, if we can. We test this by trying to uncompress a .tar.gz
+#' implementation is also very slow. So it is better to use an external tar
+#' program, if we can. We test this by trying to uncompress a `.tar.gz`
 #' archive using the external program. The name of the tar program is
 #' taken from the `TAR` environment variable, if this is unset then `tar`
 #' is used.
@@ -65,55 +65,124 @@ need_internal_tar <- local({
   }
 })
 
+#' R6 class for an external un-tar process
+#'
+#' @description
+#' Uses the system's `tar` program, in a background process.
+#'
+#' @keywords internal
+
 external_untar_process <- R6::R6Class(
   "external_untar_process",
   inherit = callr::process,
 
   public = list(
-    initialize = function(tarfile, files = NULL, exdir = ".",
-                          restore_times = TRUE,
-                          tar = Sys.getenv("TAR", "tar"),
-                          post_process = NULL)
-      eup_init(self, private, super, tarfile, files, exdir,
-               restore_times, tar, post_process)
+
+    #' @details
+    #' Start running the background process that extracts the file.
+    #'
+    #' @param tarfile Path to the `.tar` or `.tar.gz`, etc. file to
+    #' uncompress.
+    #' @param files List of files to uncompress, see [utils::untar()].
+    #' @param exdir Directory to extract the files to.
+    #' @param restore_times Whether to restore modification files.
+    #' @param tar Name of the external `tar` program. Defaults to
+    #' `TAR` environment variable, or `tar` if unset.
+    #' @param post_process Function to call, once the extraction is
+    #' done, or `NULL`
+    #' @return New `r_untar_process` object.
+
+    initialize = function(
+      tarfile, files = NULL, exdir = ".",
+      restore_times = TRUE,
+      tar = Sys.getenv("TAR", "tar"),
+      post_process = NULL) {
+
+      private$options <- list(
+        tarfile = normalizePath(tarfile),
+        files = files,
+        exdir = exdir,
+        restore_times = restore_times,
+        tar = tar)
+
+      private$options$args <- eup_get_args(private$options)
+      super$initialize(
+        tar,
+        private$options$args,
+        post_process = post_process,
+        stdout = "|",
+        stderr = "|"
+      )
+      invisible(self)
+    }
   ),
 
   private = list(
     options = NULL
   )
 )
+
+#' R6 class for an R un-tar process
+#'
+#' @description
+#' Uses [utils::untar()], in a background process.
+#'
+#' @importFrom callr r_process_options
+#' @keywords internal
 
 r_untar_process <- R6::R6Class(
   "r_untar_process",
   inherit = callr::r_process,
 
   public = list(
+
+    #' @details
+    #' Start running the background R process that extracts the file.
+    #'
+    #' @param tarfile Path to the `.tar` or `.tar.gz`, etc. file to
+    #' uncompress.
+    #' @param files List of files to uncompress, see [utils::untar()].
+    #' @param exdir Directory to extract the files to.
+    #' @param restore_times Whether to restore modification files.
+    #' @param post_process Function to call, once the extraction is
+    #' done, or `NULL`
+    #' @return New `r_untar_process` object.
+
     initialize = function(tarfile, files = NULL, exdir = ".",
-                          restore_times = TRUE, post_process = NULL)
-      runtar_init(self, private, super, tarfile, files, exdir,
-                  restore_times, tar, post_process)
+                          restore_times = TRUE, post_process = NULL) {
+      options <- list(
+        tarfile = normalizePath(tarfile),
+        files = files,
+        exdir = exdir,
+        restore_times = restore_times,
+        tar = tar,
+        post_process = post_process)
+
+      process_options <- r_process_options()
+      process_options$func <- function(options) {
+        # nocov start
+        ret <- utils::untar(
+                        tarfile = options$tarfile,
+                        files = options$files,
+                        list = FALSE,
+                        exdir = options$exdir,
+                        compressed = NA,
+                        restore_times = options$restore_times,
+                        tar = "internal"
+                      )
+
+        if (!is.null(options$post_process)) options$post_process() else ret
+        # nocov end
+      }
+      process_options$args <- list(options = options)
+      super$initialize(process_options)
+    }
   ),
 
   private = list(
     options = NULL
   )
 )
-
-eup_init <- function(self, private, super, tarfile, files, exdir,
-                     restore_times, tar, post_process) {
-
-  private$options <- list(
-    tarfile = normalizePath(tarfile),
-    files = files,
-    exdir = exdir,
-    restore_times = restore_times,
-    tar = tar)
-
-  private$options$args <- eup_get_args(private$options)
-  super$initialize(tar, private$options$args, post_process = post_process,
-                   stdout = "|", stderr = "|")
-  invisible(self)
-}
 
 eup_get_args <- function(options) {
   c(
@@ -186,39 +255,6 @@ is_zip <- function(buf) {
     buf[2] == 0x4b &&
     (buf[3] == 0x03 || buf[3] == 0x05 || buf[5] == 0x07) &&
     (buf[4] == 0x04 || buf[4] == 0x06 || buf[4] == 0x08)
-}
-
-#' @importFrom callr r_process_options
-
-runtar_init <- function(self, private, super, tarfile, files, exdir,
-                        restore_times, tar, post_process) {
-
-  options <- list(
-    tarfile = normalizePath(tarfile),
-    files = files,
-    exdir = exdir,
-    restore_times = restore_times,
-    tar = tar,
-    post_process = post_process)
-
-  process_options <- r_process_options()
-  process_options$func <- function(options) {
-    # nocov start
-    ret <- utils::untar(
-      tarfile = options$tarfile,
-      files = options$files,
-      list = FALSE,
-      exdir = options$exdir,
-      compressed = NA,
-      restore_times = options$restore_times,
-      tar = "internal"
-    )
-
-    if (!is.null(options$post_process)) options$post_process() else ret
-    # nocov end
-  }
-  process_options$args <- list(options = options)
-  super$initialize(process_options)
 }
 
 make_uncompress_process <- function(archive, exdir = ".", ...) {

@@ -1,9 +1,9 @@
 
 context("solve pieces")
 
-test_that("remotes_i_create_lp_init", {
+test_that("pkgplan_i_create_lp_init", {
   pkgs <- read_fixture("resolution-simple.rds")
-  lp <- remotes_i_lp_init(pkgs, policy = "lazy")
+  lp <- pkgplan_i_lp_init(pkgs, policy = "lazy")
   expect_equal(lp$num_candidates, 2)
   expect_equal(lp$num_direct, 1)
   expect_equal(lp$total, 3)
@@ -16,24 +16,24 @@ test_that("remotes_i_create_lp_init", {
   expect_equal(lp$ruled_out, integer())
 })
 
-test_that("remotes_i_lp_objectives lazy policy", {
+test_that("pkgplan_i_lp_objectives lazy policy", {
   pkgs <- read_fixture("resolution-simple.rds")
-  lp0 <- remotes_i_lp_init(pkgs, policy = "lazy")
-  lp <- remotes_i_lp_objectives(lp0)
+  lp0 <- pkgplan_i_lp_init(pkgs, policy = "lazy")
+  lp <- pkgplan_i_lp_objectives(lp0)
   expect_equal(lp0[setdiff(names(lp0), "obj")], lp[setdiff(names(lp), "obj")])
   expect_true(lp$obj[which(pkgs$platform != "source")] <
               lp$obj[which(pkgs$platform == "source")])
   expect_equal(lp$obj[3], solve_dummy_obj)
 })
 
-test_that("remotes_i_lp_objectives upgrade policy", {
+test_that("pkgplan_i_lp_objectives upgrade policy", {
   ## TODO
 })
 
-test_that("remotes_i_lp_no_multiples", {
+test_that("pkgplan_i_lp_no_multiples", {
   pkgs <- read_fixture("resolution-progress.rds")
-  lp <- remotes_i_lp_init(pkgs, "lazy")
-  lp <- remotes_i_lp_no_multiples(lp)
+  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  lp <- pkgplan_i_lp_no_multiples(lp)
   expect_equal(
     vcapply(lp$conds, "[[", "type"),
     c(rep("exactly-once", length(lp$direct_packages)),
@@ -54,10 +54,10 @@ test_that("remotes_i_lp_no_multiples", {
   )
 })
 
-test_that("remotes_i_lp_satisfy_direct", {
+test_that("pkgplan_i_lp_satisfy_direct", {
   pkgs <- read_fixture("resolution-gh-vs-cran.rds")
-  lp <- remotes_i_lp_init(pkgs, "lazy")
-  lp <- remotes_i_lp_satisfy_direct(lp)
+  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  lp <- pkgplan_i_lp_satisfy_direct(lp)
   expect_equal(
     vcapply(lp$conds, "[[", "type"),
     rep("satisfy-refs", 4)
@@ -70,25 +70,25 @@ test_that("remotes_i_lp_satisfy_direct", {
   expect_equal(vdapply(lp$conds, "[[", "rhs"), rep(0, 4))
 })
 
-test_that("remotes_i_lp_failures", {
+test_that("pkgplan_i_lp_failures", {
   ## TODO
 })
 
-test_that("remotes_i_lp_prefer_installed", {
+test_that("pkgplan_i_lp_prefer_installed", {
   ## TODO
 })
 
-test_that("remotes_i_lp_prefer_binaries", {
+test_that("pkgplan_i_lp_prefer_binaries", {
   ## TODO
 })
 
-test_that("remotes_i_lp_dependencies", {
+test_that("pkgplan_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
-  lp <- remotes_i_lp_init(pkgs, "lazy")
-  lp <- remotes_i_lp_dependencies(lp)
-  expect_equal(length(lp$conds), 16)
+  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  lp <- pkgplan_i_lp_dependencies(lp)
+  expect_equal(length(lp$conds), 32)
   expect_equal(
     digest::digest(lp$conds[[3]]),
-    "8f4367ad78bc677389eaeece32e2f932"
+    "6d6d331b28d58465cf1df058d40041ec"
   )
 })

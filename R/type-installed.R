@@ -97,7 +97,9 @@ make_installed_cache <- function(library, packages = NULL) {
   list(pkgs = pkgs, deps = deps)
 }
 
-#' Status of packages in a ibrary
+#' Status of packages in a library
+#'
+#' Query data of all packages in a package library.
 #'
 #' @param library Path to library.
 #' @param packages If not `NULL`, then only these packages are shown.
@@ -115,7 +117,7 @@ lib_status <- function(library = .libPaths()[1], packages = NULL) {
 
 packages_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
-  cols <- intersect(colnames(pkgs), tolower(dep_types()))
+  cols <- intersect(colnames(pkgs), tolower(pkg_dep_types()))
   ## as.character is for empty tibbles, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))

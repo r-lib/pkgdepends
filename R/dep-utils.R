@@ -1,14 +1,32 @@
 
-dep_types_hard <- function() c("Depends", "Imports", "LinkingTo")
-dep_types_soft <- function() c("Suggests", "Enhances")
-dep_types <- function() c(dep_types_hard(), dep_types_soft())
+#' @export
+#' @rdname pkg_dep_types
+
+pkg_dep_types_hard <- function() c("Depends", "Imports", "LinkingTo")
+
+#' @export
+#' @rdname pkg_dep_types
+
+pkg_dep_types_soft <- function() c("Suggests", "Enhances")
+
+#' Possible package dependency types
+#'
+#' Hard dependencies are needed for a package to load, soft dependencies
+#' are optional.
+#'
+#' @return A string vector of dependency types, capitalized.
+#'
+#' @family package dependency utilities
+#' @export
+
+pkg_dep_types <- function() c(pkg_dep_types_hard(), pkg_dep_types_soft())
 
 #' @importFrom tibble tibble
 #' @importFrom rematch2 re_match
 
 fast_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
-  cols <- intersect(colnames(pkgs), dep_types())
+  cols <- intersect(colnames(pkgs), pkg_dep_types())
   ## as.character is for empty tibbles, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))
@@ -115,29 +133,55 @@ resolve_ref_deps <- function(deps, remotes) {
 
   remotes <- str_trim(na.omit(remotes))
   remotes <- parse(remotes)
-  remotes_packages <- vcapply(parse_remotes(remotes), "[[", "package")
+  remotes_packages <- vcapply(parse_pkg_refs(remotes), "[[", "package")
   keep <- which(remotes_packages %in% deps$package)
   deps$ref[match(remotes_packages[keep], deps$package)] <- remotes[keep]
   deps
 }
 
-interpret_dependencies <- function(dp) {
-  hard <- dep_types_hard()
+#' Shorthands for dependency specifications
+#'
+#' Supports concise ways of specifying which types of dependencies of
+#' a package should be installed. It is similar to how
+#' [utils::install.packages()] interprets its `dependencies` argument.
+#' Possible values for the `deps` argument are:
+#' - `TRUE`: This means all hard dependencies plus `Suggests` for
+#'   direct installations, and hard dependencies only for dependent
+#'   packages.
+#' - `FALSE`: no dependencies are installed at all.
+#' - `NA` (any atomic type, so `NA_character_`, etc. as well): only hard
+#'   dependencies are installed. See [pkg_dep_types_hard()].
+#' - If a list with two entries named `direct` and `indirect`, it is taken
+#'   as the requested dependency types, for direct installations and
+#'   dependent packages.
+#' - If a character vector, then it is taken as the dependency types
+#'   both for direct installations and dependent packages.
+#'
+#' @param deps See above.
+#' @return A named list with two character vectors: `direct`, `indirect`,
+#' the dependency types to use for direct installations and dependent
+#' packages.
+#'
+#' @family package dependency utilities
+#' @export
 
-  res <- if (isTRUE(dp)) {
+as_pkg_dependencies <- function(deps) {
+  hard <- pkg_dep_types_hard()
+
+  res <- if (isTRUE(deps)) {
     list(c(hard, "Suggests"), hard)
 
-  } else if (identical(dp, FALSE)) {
+  } else if (identical(deps, FALSE)) {
     list(character(), character())
 
-  } else if (is_na_scalar(dp)) {
+  } else if (is_na_scalar(deps)) {
     list(hard, hard)
 
-  } else if (is.list(dp) && all(names(dp) == c("direct", "indirect"))) {
-    dp
+  } else if (is.list(deps) && all(names(deps) == c("direct", "indirect"))) {
+    deps
 
   } else {
-    list(dp, dp)
+    list(deps, deps)
   }
 
   names(res) <- c("direct", "indirect")

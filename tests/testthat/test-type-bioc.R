@@ -3,7 +3,7 @@ context("type bioc")
 
 test_that("parse_remote", {
 
-  pr <- parse_remotes("bioc::Biobase")[[1]]
+  pr <- parse_pkg_refs("bioc::Biobase")[[1]]
   expect_equal(pr$package, "Biobase")
   expect_equal(pr$atleast, "")
   expect_equal(pr$version, "")
@@ -18,12 +18,12 @@ test_that("resolve_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL,
                 metadata = pkgcache::get_cranlike_metadata_cache())
 
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_bioc(parse_remotes("bioc::Biobase")[[1]], TRUE, conf,
+    resolve_remote_bioc(parse_pkg_refs("bioc::Biobase")[[1]], TRUE, conf,
                         cache, dependencies = FALSE)
   )
 
@@ -44,12 +44,12 @@ test_that("failed resolution", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ref <- paste0("bioc::", basename(tempfile()))
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_bioc(parse_remotes(ref)[[1]], TRUE, conf,
+    resolve_remote_bioc(parse_pkg_refs(ref)[[1]], TRUE, conf,
                         cache, dependencies = FALSE)
   )
 
@@ -59,7 +59,7 @@ test_that("failed resolution", {
 
   skip("TODO")
 
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     "bioc::Biobase@0.0", config = list(cache_dir = tmp))
   withr::with_options(
     c(pkg.show_progress = FALSE),
@@ -78,7 +78,7 @@ test_that("download_remote", {
   dir.create(tmp2 <- tempfile())
   on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   conf$platforms <- "macos"
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2
@@ -87,7 +87,7 @@ test_that("download_remote", {
     metadata = pkgcache::get_cranlike_metadata_cache())
 
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_bioc(parse_remotes("bioc::Biobase")[[1]], TRUE, conf, cache,
+    resolve_remote_bioc(parse_pkg_refs("bioc::Biobase")[[1]], TRUE, conf, cache,
                         dependencies = FALSE))
 
   target <- file.path(conf$cache_dir, res$target[1])

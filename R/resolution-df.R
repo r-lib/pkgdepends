@@ -57,7 +57,7 @@ res_df_defaults <- local({
         target   =
           quote(file.path("src/contrib", paste0(package, "_", version, ".tar.gz"))),
         deps     = list(make_null_deps()),
-        remote   = quote(parse_remotes(ref)),
+        remote   = quote(parse_pkg_refs(ref)),
         error    = list(list()),
         metadata = list(list()),
         mirror   = NA_character_,

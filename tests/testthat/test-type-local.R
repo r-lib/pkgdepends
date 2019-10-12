@@ -4,7 +4,7 @@ context("local ref type")
 test_that("parse_remote", {
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
-  pr <- parse_remotes(ref)[[1]]
+  pr <- parse_pkg_ref(ref)
   expect_true(is.list(pr))
   expect_equal(pr$path, path)
   expect_equal(pr$ref, ref)
@@ -16,14 +16,14 @@ test_that("resolve_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_local(parse_remotes(ref)[[1]], TRUE, conf,
+    resolve_remote_local(parse_pkg_ref(ref), TRUE, conf,
                          cache, dependencies = FALSE)
   )
 
@@ -45,7 +45,7 @@ test_that("resolve_remote", {
   withr::with_dir(
     fix_dir,
     res <- asNamespace("pkgcache")$synchronise(
-      resolve_remote_local(parse_remotes(ref2)[[1]], TRUE, conf,
+      resolve_remote_local(parse_pkg_ref(ref2), TRUE, conf,
                          cache, dependencies = FALSE)
     )
   )
@@ -64,13 +64,13 @@ test_that("resolve_remote", {
 
 test_that("resolution error", {
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   path <- get_fixture("foobar_10.0.0.tar.gz")
   ref <- paste0("local::", path)
   err <- tryCatch(asNamespace("pkgcache")$synchronise(
-    resolve_remote_local(parse_remotes(ref)[[1]], TRUE, conf,
+    resolve_remote_local(parse_pkg_ref(ref), TRUE, conf,
                          cache, dependencies = FALSE)
   ), error = function(x) x)
 
@@ -85,7 +85,7 @@ test_that("download_remote", {
   dir.create(tmp2 <- tempfile())
   on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
 
-  conf <- remotes_default_config()
+  conf <- pkgplan_default_config()
   conf$platforms <- "macos"
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2
@@ -97,7 +97,7 @@ test_that("download_remote", {
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
 
-  rem <- remotes()$new(ref)
+  rem <- pkg_plan$new(ref)
   rem$resolve()
   res <- rem$get_resolution()
 
@@ -115,7 +115,7 @@ test_that("download_remote", {
   ref2 <- paste0("local::", "foobar_1.0.0.tar.gz")
 
   withr::with_dir(fix_dir, {
-    rem <- remotes()$new(ref2)
+    rem <- pkg_plan$new(ref2)
     rem$resolve()
     res <- rem$get_resolution()
   })
@@ -140,7 +140,7 @@ test_that("download_remote error", {
   path <- get_fixture("foobar_1.0.0.tar.gz")
   file.copy(path, tmp2)
   ref <- paste0("local::", path2 <- file.path(tmp2, basename(path)))
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
   expect_error(r$resolve(), NA)
   unlink(path2)
@@ -148,7 +148,7 @@ test_that("download_remote error", {
   dl <- r$get_resolution_download()
 
   expect_false(file.exists(dl$fulltarget))
-  expect_s3_class(dl, "remotes_downloads")
+  expect_s3_class(dl, "pkgplan_downloads")
   expect_true(all(dl$ref == ref))
   expect_true(all(dl$type == "local"))
   expect_true(all(dl$direct))

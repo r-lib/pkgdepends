@@ -219,11 +219,6 @@ cat0 <- function(..., sep = "") {
   cat(..., sep = sep)
 }
 
-format_line <- function(txt, sep = "\n") {
-  txt2 <- vcapply(txt, glue_data, .x = parent.frame())
-  paste(paste0(txt2, sep), collapse = "")
-}
-
 read_lines <- function(con, ...) {
   if (is.character(con)) {
     con <- file(con)
@@ -326,3 +321,41 @@ have_rstudio_bug_2387 <- function() {
     !is_rstudio_version("1.2.128")
   r
 }
+
+get_num_workers <- function() {
+  n <- tryCatch(
+    suppressWarnings(as.integer(getOption("Ncpus", NA_integer_))),
+    error = function(e) NA_integer_)
+
+  if (length(n) != 1 || is.na(n)) {
+    n <- tryCatch(
+      ps::ps_cpu_count(logical = TRUE),
+      error = function(e) NA_integer_)
+  }
+
+  if (is.na(n)) n <- 1L
+
+  n
+}
+
+is_rcmd_check <- function() {
+  if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+    FALSE
+  } else {
+    Sys.getenv("_R_CHECK_PACKAGE_NAME_", "") != ""
+  }
+}
+
+is_online <- local({
+  online <- TRUE
+  expires <- Sys.time()
+  function() {
+    if (is_rcmd_check()) return(FALSE)
+    t <- Sys.time()
+    if (t >= expires) {
+      online <<- pingr::is_up("google.com")
+      expires <<- t + as.difftime(10, units = "secs")
+    }
+    online
+  }
+})

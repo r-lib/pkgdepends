@@ -1,7 +1,7 @@
 
-context("parse_remotes")
+context("parse_pkg_refs")
 
-test_that("parse_remotes, standard", {
+test_that("parse_pkg_refs, standard", {
 
   cases <- list(
     list("pkg",
@@ -25,7 +25,7 @@ test_that("parse_remotes, standard", {
 
   for (case in cases) {
     expect_equal_named_lists(
-      p <- parse_remotes(case[[1]])[[1]],
+      p <- parse_pkg_refs(case[[1]])[[1]],
       c(case[[2]], ref = case[[1]], type = "standard")
     )
     expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
@@ -33,7 +33,7 @@ test_that("parse_remotes, standard", {
 
 })
 
-test_that("parse_remotes, cran", {
+test_that("parse_pkg_refs, cran", {
 
   cases <- list(
     list("cran::pkg",
@@ -49,7 +49,7 @@ test_that("parse_remotes, cran", {
 
   for (case in cases) {
     expect_equal_named_lists(
-      p <- parse_remotes(case[[1]])[[1]],
+      p <- parse_pkg_refs(case[[1]])[[1]],
       c(case[[2]], ref = case[[1]], type = "cran")
     )
     expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
@@ -147,7 +147,7 @@ test_that("github url regexes", {
   }
 })
 
-test_that("parse_remotes, github", {
+test_that("parse_pkg_refs, github", {
 
   cases <- list(
     list("user/repo"),
@@ -187,7 +187,7 @@ test_that("parse_remotes, github", {
 
   for (case in cases) {
     expect_equal_named_lists(
-      p <- parse_remotes(case[[1]])[[1]],
+      p <- parse_pkg_refs(case[[1]])[[1]],
       utils::modifyList(
         list(package = case$repo %||% "repo", username = "user",
              repo = "repo", subdir = "", commitish = "", pull = "",
@@ -199,8 +199,8 @@ test_that("parse_remotes, github", {
   }
 })
 
-test_that("parse_remotes error on unknown type", {
-  expect_error(parse_remotes("my_package"), "parse remotes")
+test_that("parse_pkg_refs error on unknown type", {
+  expect_error(parse_pkg_refs("my_package"), "parse remotes")
 })
 
 test_that("custom remote types", {
@@ -213,7 +213,7 @@ test_that("custom remote types", {
   }
   res <- withr::with_options(
     list(pkg.remote_types = list(foo = list(parse = parse_remote_foo))),
-    parse_remotes("foo::arbitrary_string/xxx", ex1 = "1", ex2 = "2")
+    parse_pkg_refs("foo::arbitrary_string/xxx", ex1 = "1", ex2 = "2")
   )
   expect_identical(
     res,
@@ -223,7 +223,7 @@ test_that("custom remote types", {
   expect_identical(xspecs, "foo::arbitrary_string/xxx")
   expect_identical(xargs, list(ex1 = "1", ex2 = "2"))
 
-  res2 <- parse_remotes(
+  res2 <- parse_pkg_refs(
     "foo::arbitrary_string/xxx", ex1 = "1", ex2 = "2",
     remote_types = list(foo = list(parse = parse_remote_foo)))
   expect_identical(res, res2)
@@ -243,7 +243,7 @@ test_that("type_default_parse", {
 test_that("default parse function", {
   res <- withr::with_options(
     list(pkg.remote_types = list(foo = list(), foo2 = list())),
-    parse_remotes(c("foo::bar", "package=foo2::bar2"))
+    parse_pkg_refs(c("foo::bar", "package=foo2::bar2"))
   )
   expect_identical(res,
     list(
@@ -255,7 +255,7 @@ test_that("default parse function", {
     )
   )
 
-  res2 <- parse_remotes(
+  res2 <- parse_pkg_refs(
     c("foo::bar", "package=foo2::bar2"),
     remote_types = list(foo = list(), foo2 = list()))
   expect_identical(res, res2)

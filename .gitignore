@@ -3,3 +3,10 @@
 .RData
 /.env
 /r-packages
+*_cache
+/README.html
+/doc
+/docs
+Meta
+/inst/doc
+doc

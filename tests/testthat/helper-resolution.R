@@ -10,10 +10,10 @@ make_fake_deps <- function(...) {
 }
 
 make_fake_resolution1 <- function(ref, args = list()) {
-  pref <- parse_remotes(ref)[[1]]
+  pref <- parse_pkg_refs(ref)[[1]]
   if (!is.null(args$extra)) pref[names(args$extra)] <- args$extra
 
-  mirror <- args$mirror %||% remotes_default_config()$`cran-mirror`
+  mirror <- args$mirror %||% pkgplan_default_config()$`cran-mirror`
   repodir <- args$repodir %||% "src/contrib"
   version <- args$version %||% "1.0.0"
   filename <- paste0(pref$package, "_", version, ".tar.gz")
@@ -28,7 +28,7 @@ make_fake_resolution1 <- function(ref, args = list()) {
       sprintf("%s/%s/Archive/%s/%s", mirror, repodir, pref$package,
               filename)
     ),
-    dep_types = tolower(dep_types_hard())
+    dep_types = tolower(pkg_dep_types_hard())
   )
 
   modifyList(def, args)
@@ -53,8 +53,8 @@ make_fake_resolution <- function(...) {
 }
 
 describe_fake_error <- function(pkgs, policy = "lazy") {
-  lp <- remotes_i_create_lp_problem(pkgs, policy = policy)
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = policy)
+  sol <- pkgplan_i_solve_lp_problem(lp)
 
   expect_true(sol$objval >= solve_dummy_obj - 1)
   solution <- list(status = "FAILED", data = pkgs, problem = lp,

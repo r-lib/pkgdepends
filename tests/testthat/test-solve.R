@@ -3,16 +3,16 @@ context("solve")
 
 test_that("binary preferred over source", {
   pkgs <- read_fixture("resolution-simple.rds")
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_identical(as.logical(sol$solution)[1:2], c(TRUE, FALSE))
 })
 
 test_that("installed preferred over download", {
   pkgs <- read_fixture("resolution-installed.rds")
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_identical(as.logical(sol$solution[1:3]), pkgs$type == "installed")
 })
@@ -26,16 +26,16 @@ test_that("dependency versions are honored", {
       deps = list(make_fake_deps(Imports = "pkgA (>= 2.0.0)")))
   )
 
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
 })
 
 test_that("conflict: different versions required for package", {
   pkgs <- read_fixture("resolution-gh-vs-cran.rds")
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
 
@@ -48,8 +48,8 @@ test_that("conflict: different versions required for package", {
     `cran::pkgA` = list(direct = TRUE),
     `github::user/pkgA` = list(direct = TRUE)
   )
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
 
@@ -67,8 +67,8 @@ test_that("standard direct & github indirect is OK", {
       deps = list(make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA"))),
     `user/pkgA` = list(extra = list(list(remotesha = "badcafe")))
   )
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
 })
@@ -81,8 +81,8 @@ test_that("conflict between direct and indirect ref", {
       deps = list(make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA"))),
     `user/pkgA` = list(list(extra = list(sha = "badcafe")))
   )
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
   expect_equal(as.logical(sol$solution), c(TRUE, FALSE, FALSE, FALSE, TRUE))
@@ -96,8 +96,8 @@ test_that("version conflict", {
       deps = list(make_fake_deps(Imports = "pkgA (>= 2.0.0), pkgC"))),
     `pkgC` = list()
   )
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
 
   solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
@@ -113,8 +113,8 @@ test_that("resolution failure", {
   pkgs <- make_fake_resolution(
     `pkgA` = list(status = "FAILED", direct = TRUE)
   )
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
 
   solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
@@ -134,7 +134,7 @@ test_that("integration test", {
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
   withr::with_options(
     c(pkg.show_progress = FALSE), {
-      r <- remotes()$new(c("r-lib/cli"), lib = lib)
+      r <- pkg_plan$new(c("r-lib/cli"), lib = lib)
       r$resolve()
     })
   sol <- r$solve()
@@ -142,7 +142,7 @@ test_that("integration test", {
 
   withr::with_options(
     c(pkg.show_progress = FALSE), {
-      r <- remotes()$new("cran::cli", lib = lib)
+      r <- pkg_plan$new("cran::cli", lib = lib)
       r$resolve()
     })
   sol <- r$solve()
@@ -151,33 +151,13 @@ test_that("integration test", {
 
   withr::with_options(
     c(pkg.show_progress = FALSE), {
-      r <- remotes()$new(c("cran::cli", "r-lib/cli"), lib = lib)
+      r <- pkg_plan$new(c("cran::cli", "r-lib/cli"), lib = lib)
       r$resolve()
     })
   sol <- r$solve()
   expect_equal(sol$status, "FAILED")
   expect_true("cli" %in% sol$failures$package)
   expect_output(print(sol), "Cannot install.*cran::cli")
-})
-
-test_that("print", {
-  sol <- read_fixture("solution-crayon.rds")
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_output(
-      print(sol),
-      "SOLUTION.*crayon"
-    )
-  )
-
-  sol <- read_fixture("solution-igraph.rds")
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_output(
-      print(sol),
-      "SOLUTION.*igraph.*Dependencies.*lattice.*pkgconfig"
-    )
-  )
 })
 
 test_that("failure in non-needed package is ignored", {
@@ -187,8 +167,8 @@ test_that("failure in non-needed package is ignored", {
     `bb/bb` = list(),
     xx = list()
   )
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1e4)
   expect_equal(as.logical(sol$solution), as.logical(c(1, 0, 1, 1, 0)))
 })
@@ -200,8 +180,8 @@ test_that("failure in dependency of a non-needed package is ignored", {
     bb = list(status = "FAILED"),
     `bb/bb` = list()
   )
-  lp <- remotes_i_create_lp_problem(pkgs, policy = "lazy")
-  sol <- remotes_i_solve_lp_problem(lp)
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
+  sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1e4)
   expect_equal(as.logical(sol$solution), as.logical(c(1, 1, 0, 1, 0)))
 })

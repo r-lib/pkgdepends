@@ -3,7 +3,10 @@ context("installed ref type")
 
 test_that("resolve", {
 
-  conf <- remotes_default_config()
+  skip_on_cran()
+  skip_if_offline()
+
+  conf <- pkgplan_default_config()
 
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))
   cache <- list(
@@ -13,7 +16,7 @@ test_that("resolve", {
 
   ref <- paste0("installed::", tt)
   res <- asNamespace("pkgcache")$synchronise(
-    resolve_remote_installed(parse_remotes(ref)[[1]], TRUE, conf, cache,
+    resolve_remote_installed(parse_pkg_refs(ref)[[1]], TRUE, conf, cache,
                              dependencies = "Imports")
   )
 
@@ -45,7 +48,7 @@ test_that("download", {
 
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))
   ref <- paste0("installed::", tt)
-  r <- remotes()$new(
+  r <- pkg_plan$new(
     ref, library = dirname(tt),
     config = list(dependencies = FALSE, cache_dir = tmp))
   expect_error(r$resolve(), NA)

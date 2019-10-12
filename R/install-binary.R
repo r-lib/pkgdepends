@@ -1,5 +1,7 @@
 
-#' Install a R binary package
+#' Install an R binary package
+#'
+#' Uncompress an R binary package into a package library.
 #'
 #' @param filename filename of built binary package to install
 #' @param lib library to install packages into

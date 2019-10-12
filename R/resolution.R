@@ -1,22 +1,125 @@
 
+#' Dependency resolution
+#'
+#' Collect information about dependencies of R packages, recursively.
+#'
+#' [`pkg_deps`], [`pkg_download_proposal`] and [`pkg_installation_proposal`]
+#' all resolve their dependencies recursively, to obtain information about
+#' all packages needed for the specified [package references][pkg_refs].
+#'
+#' ## CRAN and Bioconductor packages
+#'
+#' Resolution currently start by downloading the CRAN and Bioconductor
+#' metadata, if it is out of date. For CRAN, we also download additional
+#' metadata, that includes file sizes, SHA hashes, system requirements,
+#' and "built" (for binary packages) and "packaged" time stamps. The extra
+#' meta information is updated daily currently, so for some packages it
+#' might be incorrect or missing.
+#'
+#' ## GitHub packages
+#'
+#' For GitHub packages, we query their download URL to be able to
+#' download the package later, and also download their `DESCRIPTION`
+#' file, to learn about their dependencies.
+#'
+#' ## Local packages
+#'
+#' From local package files we extract the `DESCRIPTION` file, to learn
+#' about their dependencies.
+#'
+#' ## The `remotes` field in `DESCRIPTION`
+#'
+#' We support the non-standard `Remotes` field in the package `DESCRIPTION`
+#' file. This field may contain a list of package references for any of the
+#' dependencies that are specified in one of the `Depends`, `Includes`,
+#' `Suggests` or `Enhances` fields. The syntax is a comma separated list of
+#' [package references][pkg_refs].
+#'
+#' ## The result
+#'
+#' The result of the resolution is a data frame (tibble) with lots of
+#' information about the packages and their dependencies. The columns that
+#' are not documented here may be removed or changed, because they are
+#' either used internally or experimental.
+#'
+#' * `built`: The `Built` field from the `DESCRIPTION` file of binary
+#'   packages, for which this information is available.
+#' * `cache_status`: Whether the package file is in the package cache.
+#'   It is `NA` for `installed::` package refs.
+#' * `dep_types`: Character vector of dependency types that were
+#'   considered for this package. (This is a list column.)
+#' * `deps`: Dependencies of the package, in a data frame (tibble). See
+#'   'Package dependency tables' below.
+#' * `direct`: Whether this package (ref, really) was directly specified,
+#'   or added as a dependency.
+#' * `error`: This is a list column that contains error objects for the
+#'   refs that pkgdepends failed to resolve.
+#' * `filesize`: The file size in bytes, or `NA` if this information is
+#'   not available.
+#' * `license`: License of the package, or `NA` if not available.
+#' * `md5sum`: MD5 checksum of the package file, if available, or `NA` if
+#'   not.
+#' * `metadata`: A named character vector. These fields will be (should be)
+#'   added to the installed `DESCRIPTION` file of the package.
+#' * `mirror`: URL of the CRAN(-like) mirror site where the metadata was
+#'   obtained from. It is NA for non-CRAN-like sources, e.g. local files,
+#'   installed packages, GitHub, etc.
+#' * `needscompilation`: Whether the package needs compilation.
+#' * `package`: Package name.
+#' * `priority`: This is `"base"` for base packages, `"recommended"` for
+#'    recommended packages, and `NA` otherwise.
+#' * `ref`: Package reference.
+#' * `remote`: The parsed `remote_ref` objects, see [parse_pkg_refs()].
+#'   This is a list column.
+#' * `repodir`: The directory where this package should be in a CRAN-like
+#'   repository.
+#' * `sha256`: SHA256 hash of the package file, if available, otherwise
+#'   `NA`.
+#' * `sources`: URLs where this package can be downloaded from. This is a
+#'    zero length vector for `installed::` refs.
+#' * `status`: Status of the dependency resolution, `"OK"` or `"FAILED"`.
+#' * `target`: Path where this package should saved in a CRAN-repository.
+#' * `type`: Ref type.
+#' * `version`: Package version.
+#'
+#' ## Package dependency tables
+#'
+#' A package dependency table has five columns currently:
+#'
+#' * `ref`: The package ref of the dependency.
+#' * `type`: The dependency type, in all lowercase. I.e. `imports`,
+#'   `suggests`, etc.
+#' * `op`: Operator for version requirements, e.g. `>=`.
+#' * `version`: Version number, for version requirements.
+#'
+#' ## Resolution failures
+#'
+#' The resolution process does not stop on error. Instead, failed
+#' resolutions return and error object in the `error` column of the result
+#' data frame.
+#'
+#' @name pkg_resolution
+#' @aliases pkg_resolution_result
+NULL
+
 #' @importFrom prettyunits pretty_dt
 
-remotes_resolve <- function(self, private) {
-  "!DEBUG remotes_resolve (sync)"
+pkgplan_resolve <- function(self, private) {
+  "!DEBUG pkgplan_resolve (sync)"
   asNamespace("pkgcache")$synchronise(self$async_resolve())
 }
 
-remotes_async_resolve <- function(self, private) {
-  "!DEBUG remotes_resolve (async)"
+pkgplan_async_resolve <- function(self, private) {
+  "!DEBUG pkgplan_resolve (async)"
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
   private$solution <- NULL
 
   private$dirty <- TRUE
   private$cache$metadata$check_update()
-  private$resolution <- resolution()$new(
+  private$resolution <- new_resolution(
     config = private$config, cache = private$cache,
-    library = private$library, remote_types = private$remote_types)
+    library = private$config$library, remote_types = private$remote_types)
 
   private$resolution$push(direct = TRUE, .list = private$remotes)
 
@@ -27,61 +130,64 @@ remotes_async_resolve <- function(self, private) {
     })
 }
 
-remotes_get_resolution <- function(self, private) {
+pkgplan_get_resolution <- function(self, private) {
   if (is.null(private$resolution$result)) stop("No resolution yet")
   private$resolution$result
 }
 
-remotes__subset_resolution <- function(self, private, which) {
+pkgplan__subset_resolution <- function(self, private, which) {
   if (is.null(private$resolution$result)) stop("No resolution yet")
   res <- private$resolution$result[which, ]
   attr(res, "metadata")  <- attr(private$resolution$result, "metadata")
   res
 }
 
-resolution <- function() {
-  R6::R6Class(
-    "resolution",
-    public = list(
-      result = NULL,
-      initialize = function(config, cache, library = NULL,
-                            remote_types = NULL)
-        res_init(self, private, config, cache, library, remote_types),
-      push = function(..., direct = FALSE, .list = list())
-        res_push(self, private, ..., direct = direct, .list = .list),
-      when_complete = function() private$deferred
-    ),
-
-    private = list(
-      remote_types = NULL,
-      config = NULL,
-      cache = NULL,
-      library = NULL,
-      deferred = NULL,
-      state = NULL,
-      dependencies = NULL,
-      metadata = NULL,
-      bar = NULL,
-
-      delayed = list(),
-      delayed_refs = character(),
-      resolve_delayed = function(resolve)
-        res__resolve_delayed(self, private, resolve),
-
-      create_progress_bar = function()
-        res__create_progress_bar(self, private),
-      update_progress_bar = function()
-        res__update_progress_bar(self, private),
-      done_progress_bar = function()
-        res__done_progress_bar(self, private),
-
-      set_result = function(row_idx, value)
-        res__set_result(self, private, row_idx, value),
-      try_finish = function(resolve)
-        res__try_finish(self, private, resolve)
-    )
-  )
+new_resolution <- function(config, cache, library = NULL,
+                           remote_types = NULL) {
+  resolution$new(config, cache, library, remote_types)
 }
+
+resolution <- R6::R6Class(
+  "resolution",
+  public = list(
+    result = NULL,
+    initialize = function(config, cache, library = NULL,
+                          remote_types = NULL)
+      res_init(self, private, config, cache, library, remote_types),
+    push = function(..., direct = FALSE, .list = list())
+      res_push(self, private, ..., direct = direct, .list = .list),
+    when_complete = function() private$deferred
+  ),
+
+  private = list(
+    remote_types = NULL,
+    config = NULL,
+    cache = NULL,
+    library = NULL,
+    deferred = NULL,
+    state = NULL,
+    dependencies = NULL,
+    metadata = NULL,
+    bar = NULL,
+
+    delayed = list(),
+    delayed_refs = character(),
+    resolve_delayed = function(resolve)
+      res__resolve_delayed(self, private, resolve),
+
+    create_progress_bar = function()
+      res__create_progress_bar(self, private),
+    update_progress_bar = function()
+      res__update_progress_bar(self, private),
+    done_progress_bar = function()
+      res__done_progress_bar(self, private),
+
+    set_result = function(row_idx, value)
+      res__set_result(self, private, row_idx, value),
+    try_finish = function(resolve)
+      res__try_finish(self, private, resolve)
+  )
+)
 
 res_init <- function(self, private, config, cache, library,
                      remote_types) {
@@ -92,7 +198,7 @@ res_init <- function(self, private, config, cache, library,
   private$library <- library
   private$remote_types <- remote_types %||% default_remote_types()
   private$metadata <- list(resolution_start = Sys.time())
-  private$dependencies <- interpret_dependencies(config$dependencies)
+  private$dependencies <- as_pkg_dependencies(config$dependencies)
   private$bar <- private$create_progress_bar()
 
   self$result <- res_make_empty_df()
@@ -121,7 +227,7 @@ res_init <- function(self, private, config, cache, library,
                                mustWork = FALSE)
           refs <- paste0("installed::", lib, "/", npkgs)
           refs <- setdiff(refs, private$state$ref)
-          self$push(.list = parse_remotes(refs))
+          self$push(.list = parse_pkg_refs(refs))
         }
       }
 
@@ -245,7 +351,7 @@ res__set_result <- function(self, private, row_idx, value) {
   value <- if (is.data.frame(value)) value[!done, ] else value[!done]
   if (any(!done)) self$result <- res_add_df_entries(self$result, value)
   "!DEBUG resolution setting result, total: `nrow(self$result)`"
-  if (length(unknown)) self$push(.list = parse_remotes(unknown))
+  if (length(unknown)) self$push(.list = parse_pkg_refs(unknown))
 }
 
 res__try_finish <- function(self, private, resolve) {
@@ -257,7 +363,7 @@ res__try_finish <- function(self, private, resolve) {
     self$result$cache_status <-
       calculate_cache_status(self$result, private$cache)
     attr(self$result, "metadata") <- private$metadata
-    class(self$result) <- c("remotes_resolution", class(self$result))
+    class(self$result) <- c("pkg_resolution_result", class(self$result))
     private$done_progress_bar()
     resolve(self$result)
   }
@@ -332,7 +438,7 @@ resolve_from_description <- function(path, sources, remote, direct,
     md5sum = dsc$get_field("MD5sum", NA_character_),
     built = dsc$get_field("Built", NA_character_),
     platform = platform,
-      rversion = rversion,
+    rversion = rversion,
     deps = list(deps),
     sources = sources,
     remote = list(remote),
@@ -419,7 +525,14 @@ make_failed_resolution <- function(refs, type, direct) {
     sources = replicate(length(refs), NA_character_, simplify = FALSE),
     direct = direct,
     status = "FAILED",
-    remote = parse_remotes(refs),
+    remote = parse_pkg_refs(refs),
     error = replicate(length(refs), err, simplify = FALSE)
   )
+}
+
+#' @export
+
+`[.pkg_resolution_result` <- function (x, i, j, drop = FALSE) {
+  class(x) <- setdiff(class(x), "pkg_resolution_result")
+  NextMethod("[")
 }

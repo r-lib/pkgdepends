@@ -1,0 +1,119 @@
+---
+title: "pkgdepends HOWTO"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{pkgdepends how tos}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  cache = TRUE,
+  R.options = list(cli.unicode = TRUE)
+)
+```
+
+```{r, comment="", results="asis", echo = FALSE}
+if (knitr::opts_knit$get("rmarkdown.pandoc.to") == "html") {
+  old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
+  options(crayon.enabled = TRUE)
+  options(crayon.colors = 256)
+  invisible(crayon::num_colors(forget = TRUE))
+}
+```
+
+# Dependencies
+
+## How to list all dependencies of a CRAN/Bioconductor package?
+
+```{r eval = pkgdepends:::is_online()}
+library(pkgdepends)
+prop <- new_pkg_deps("pak")
+prop$solve()
+prop$get_solution()$data
+```
+
+You can also draw a dependency tree:
+
+```{r eval = pkgdepends:::is_online(), dependson = -1}
+prop$draw()
+```
+
+## How to list all dependencies of a GitHub package?
+
+```{r eval = pkgdepends:::is_online()}
+library(pkgdepends)
+prop <- new_pkg_deps("r-lib/pak")
+prop$solve()
+prop$get_solution()$data
+```
+
+## How to list all dependencies of a local package?
+
+```{r eval = pkgdepends:::is_online()}
+library(pkgdepends)
+prop <- new_pkg_deps("local::.")
+prop$solve()
+prop$get_solution()$data
+```
+
+# Downloads
+
+## How to download a package and all of its dependencies?
+
+```{r eval = pkgdepends:::is_online()}
+library(pkgdepends)
+target_dir <- tempfile()
+dir.create(target_dir)
+prop <- new_pkg_download_proposal("pak", config = list(cache_dir = target_dir))
+prop$resolve()
+prop$download()
+prop$get_downloads()
+dir(target_dir)
+```
+
+# Installation
+
+## How to install a package into a new library?
+
+```{r eval = pkgdepends:::is_online()}
+library(pkgdepends)
+new_lib <- tempfile()
+prop <- new_pkg_installation_proposal("pak", config = list(library = new_lib))
+prop$solve()
+prop$download()
+prop$install()
+lib_status(new_lib)
+```
+
+## How to update a package?
+
+Install an older version first.
+
+```{r eval = pkgdepends:::is_online()}
+library(pkgdepends)
+new_lib <- tempfile()
+config <- list(library = new_lib)
+prop <- new_pkg_installation_proposal("cran/pkgconfig@2.0.2", config = config)
+prop$solve()
+prop$download()
+prop$install()
+lib_status(new_lib)
+```
+
+Now update.
+
+```{r, eval = pkgdepends:::is_online(), dependson = -1}
+library(pkgdepends)
+prop2 <- new_pkg_installation_proposal("pkgconfig", config = config)
+prop2$set_solve_policy("upgrade")
+prop2$solve()
+prop2$download()
+prop2$install()
+lib_status(new_lib)
+```

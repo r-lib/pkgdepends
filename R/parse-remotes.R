@@ -1,8 +1,20 @@
 
+
+#' Package references
+#'
+#' @description
+#' A package reference (ref) specifies a location from which an R package
+#' can be obtained from. The full syntax of a reference is `type::ref`, but
+#' `type` can be often omitted, the common ref types have shortcuts.
+#'
+#' @includeRmd tools/doc/pkg-refs.Rmd
+#' @name pkg_refs
+NULL
+
 package_name_rx <- function() "[[:alpha:]][[:alnum:].]*[[:alnum:]]"
 
 ## CRAN and GitHub are special, because they have shorthands,
-## so we need to know their regexes to find the type of the remotes 
+## so we need to know their regexes to find the type of the remotes
 
 standard_rx <- function(remote_name = "standard") {
   paste0(
@@ -18,14 +30,14 @@ standard_rx <- function(remote_name = "standard") {
   )
 }
 
-#' Match a GH username
+#' Match a GitHub username
 #'
 #' * may only contain alphanumeric characters or hyphens
 #' * cannot have multiple consecutive hyphens
 #' * cannot begin or end with a hyphen
 #' * maximum 39 characters
 #'
-#' Based on https://github.com/shinnn/github-username-regex
+#' Based on <https://github.com/shinnn/github-username-regex>
 #'
 #' @keywords internal
 
@@ -123,43 +135,55 @@ remote_type_rx <- function() {
 
 #' @importFrom rematch2 re_match
 
-type_default_parse <- function(specs, ...) {
-  m <- re_match(specs, remote_type_rx())
+type_default_parse <- function(refs, ...) {
+  m <- re_match(refs, remote_type_rx())
   lapply_rows(m, function(x)
     list(package = x$package, type = x$type, rest = x$rest, ref = x$.text)
   )
 }
 
-get_remote_types <- function(specs) {
-  m <- re_match(specs, remote_type_rx())
+get_remote_types <- function(refs) {
+  m <- re_match(refs, remote_type_rx())
   types <- m$type
 
-  types[types == "" & grepl(standard_rx(), specs, perl = TRUE)] <- "standard"
-  types[types == "" & grepl(github_rx(), specs, perl = TRUE)] <- "github"
-  types[types == "" & grepl(github_url_rx(), specs, perl = TRUE)] <- "github"
+  types[types == "" & grepl(standard_rx(), refs, perl = TRUE)] <- "standard"
+  types[types == "" & grepl(github_rx(), refs, perl = TRUE)] <- "github"
+  types[types == "" & grepl(github_url_rx(), refs, perl = TRUE)] <- "github"
 
   if (any(bad <- types == "")) {
-    stop("Can't parse remotes: ", paste(specs[bad], collapse = ", "))
+    stop("Can't parse remotes: ", paste(refs[bad], collapse = ", "))
   }
 
   types
 }
 
-#' Parse package location specifications
+#' Parse package location references
 #'
-#' @param specs character vector
-#' @param remote_types custom remote types can be added here
-#' @param ... additional arguments are passed to the individual parser
-#'   functions
-#' @return List of parsed specification.
+#' See [pkg_refs] for more about supported package references.
+#'
+#' @param refs Character vector of references.
+#' @param remote_types Custom remote types can be added here, this is
+#'   for advanced use, and experimental currently.
+#' @param ... Additional arguments are passed to the individual parser
+#'   functions.
+#' @return `parse_pkg_refs()` returns a list of parsed references.
+#' `parse_pkg_ref()` returns one parsed reference. A parsed reference is
+#' a list, with at least elements:
+#' - `ref`: The original reference string.
+#' - `type`: The reference type.
+#' - `package`: The package name.
+#' It typically contains additional data, specific to the various
+#' reference types. See [pkg_refs] for details.
+#' The parsed reference always has class `remote_ref_<type>` and
+#' `remote_ref`.
 #'
 #' @export
 
-parse_remotes <- function(specs, remote_types = NULL, ...) {
+parse_pkg_refs <- function(refs, remote_types = NULL, ...) {
   remote_types <- c(default_remote_types(), remote_types)
-  types <- get_remote_types(specs)
+  types <- get_remote_types(refs)
   unique_types <- unique(types)
-  res <- vector("list", length(specs))
+  res <- vector("list", length(refs))
 
   if (any(bad <- setdiff(unique_types, names(remote_types)))) {
     stop("Unknown remote type(s): ", format_items(bad))
@@ -167,8 +191,8 @@ parse_remotes <- function(specs, remote_types = NULL, ...) {
 
   for (this in unique_types) {
     parser <- remote_types[[this]]$parse %||% type_default_parse
-    this_specs <- specs[types == this]
-    new_remotes <- parser(this_specs, ...)
+    this_refs <- refs[types == this]
+    new_remotes <- parser(this_refs, ...)
     new_remotes <- lapply(new_remotes, function(x) { x$type <- this; x })
     new_remotes <- lapply(
       new_remotes,
@@ -178,4 +202,14 @@ parse_remotes <- function(specs, remote_types = NULL, ...) {
     res[types == this] <- new_remotes
   }
   res
+}
+
+#' @param ref A package reference, like `refs`, but a length one vector,
+#' for convenience.
+#' @export
+#' @rdname parse_pkg_refs
+
+parse_pkg_ref <- function(ref, remote_types = NULL, ...) {
+  assert_that(is_string(ref))
+  parse_pkg_refs(ref, remote_types = remote_types, ...)[[1]]
 }

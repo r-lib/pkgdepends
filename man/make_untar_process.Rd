@@ -4,8 +4,13 @@
 \alias{make_untar_process}
 \title{Create a tar background process}
 \usage{
-make_untar_process(tarfile, files = NULL, exdir = ".",
-  restore_times = TRUE, post_process = NULL)
+make_untar_process(
+  tarfile,
+  files = NULL,
+  exdir = ".",
+  restore_times = TRUE,
+  post_process = NULL
+)
 }
 \arguments{
 \item{tarfile}{Tar file.}
@@ -25,6 +30,8 @@ The \link[callr:process]{callr::process} object.
 \description{
 Use an external tar program, if there is a working one, otherwise use
 the internal implementation.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 When using the internal implementation, we need to start another R

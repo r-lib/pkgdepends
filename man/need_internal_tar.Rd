@@ -11,10 +11,12 @@ Whether we need to use the internal tar implementation.
 }
 \description{
 This is slow, because we need to start an R child process, and the
-implementation is also very slow. So it is better to use an extranl tar
-program, if we can. We test this by trying to uncompress a .tar.gz
+implementation is also very slow. So it is better to use an external tar
+program, if we can. We test this by trying to uncompress a \code{.tar.gz}
 archive using the external program. The name of the tar program is
 taken from the \code{TAR} environment variable, if this is unset then \code{tar}
 is used.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \keyword{internal}

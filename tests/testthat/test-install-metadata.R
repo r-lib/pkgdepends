@@ -23,6 +23,8 @@ test_that("install_binary metadata", {
 
 test_that("install_package_plan metadata", {
 
+  skip_if_offline()
+
   pkg <- source_test_package("foo")
   libpath <- test_temp_dir()
 

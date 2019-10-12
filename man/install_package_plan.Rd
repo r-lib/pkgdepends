@@ -2,12 +2,13 @@
 % Please edit documentation in R/install-plan.R
 \name{install_package_plan}
 \alias{install_package_plan}
-\title{Perform a package installation plan, as created by pkgdepends}
+\title{Perform a package installation plan}
 \usage{
 install_package_plan(plan, lib = .libPaths()[[1]], num_workers = 1)
 }
 \arguments{
-\item{plan}{Package plan object, returned by pkgdepends}
+\item{plan}{Package plan object, a data frame, see
+\link[=install_plans]{'Installation plans'} for the format.}
 
 \item{lib}{Library directory to install to.}
 
@@ -17,5 +18,7 @@ install_package_plan(plan, lib = .libPaths()[[1]], num_workers = 1)
 Information about the installation process.
 }
 \description{
-Perform a package installation plan, as created by pkgdepends
+See \link[=install_plans]{'Installation plans'} for the details and the format.
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }

@@ -1,18 +1,48 @@
 
+#' Package downloads
+#'
+#' The [`pkg_download_proposal`] and [`pkg_installation_proposal`] classes
+#' both have download methods, to downloads package files into a
+#' configured directory (see ['Configuration'][pkg_config]).
+#'
+#' They return a `pkg_download_result` object, which is a data frame
+#' (tibble), that adds extra columns to [`pkg_resolution_result`] (for
+#' [`pkg_download_proposal`]) or [`pkg_solution_result`]
+#' (for [`pkg_installation_proposal`]):
+#'
+#' * `fulltarget`: absolute path to the downloaded file. At most one of
+#'   `fulltarget` and `fulltarget_tree` must exist on the disk.
+#' * `fulltarget_tree`: absolute path to a package tree directory. At most
+#'   one of `fulltarget` and `fulltarget_tree` must exist on the disk.
+#' * `download_status`: `"Had"` or `"Got"`, depending on whether the file
+#'    was obtained from the cache.
+#' * `download_error`: error object for failed downloads.
+#' * `file_size`: Size of the file, or `NA`. For `installed::` refs, it is
+#'   `NA`, and it is also `NA` for refs that created `fulltarget_tree`
+#'   instead of `fulltarget`.
+#'
+#' `fulltarget`, if it exists, contains a packaged (via `R CMD build`)
+#' source R package. If `fulltarget_tree` exists, it is a package tree
+#' directory, that still needs an `R CMD build` call.
+#'
+#' @name pkg_downloads
+#' @aliases pkg_download_result
+NULL
+
 #' @importFrom prettyunits pretty_bytes
 
-remotes_download_resolution <- function(self, private) {
+pkgplan_download_resolution <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
   asNamespace("pkgcache")$synchronise(self$async_download_resolution())
 }
 
-remotes_async_download_resolution <- function(self, private) {
+pkgplan_async_download_resolution <- function(self, private) {
   self ; private
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
-  remotes_async_download_internal(self, private,
+  pkgplan_async_download_internal(self, private,
                                   private$resolution$result,
                                   "resolution")$
     then(function(value) {
@@ -21,17 +51,17 @@ remotes_async_download_resolution <- function(self, private) {
     })
 }
 
-remotes_download_solution <- function(self, private) {
+pkgplan_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
   asNamespace("pkgcache")$synchronise(self$async_download_solution())
 }
 
-remotes_async_download_solution <- function(self, private) {
+pkgplan_async_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
 
-  remotes_async_download_internal(self, private,
+  pkgplan_async_download_internal(self, private,
                                   private$solution$result$data,
                                   "solution")$
     then(function(value) {
@@ -40,7 +70,7 @@ remotes_async_download_solution <- function(self, private) {
     })
 }
 
-remotes_stop_for_solution_download_error <- function(self, private) {
+pkgplan_stop_for_solution_download_error <- function(self, private) {
   dl <- self$get_solution_download()
   if (any(bad <- tolower(dl$download_status) == "failed")) {
     msgs <- vcapply(
@@ -59,7 +89,7 @@ remotes_stop_for_solution_download_error <- function(self, private) {
   }
 }
 
-remotes_async_download_internal <- function(self, private, what, which) {
+pkgplan_async_download_internal <- function(self, private, what, which) {
   if (any(what$status != "OK")) {
     stop("Resolution has errors, cannot start downloading")
   }
@@ -85,7 +115,7 @@ remotes_async_download_internal <- function(self, private, what, which) {
       what$download_status <- vcapply(dls, "[[", "download_status")
       what$download_error <- lapply(dls, function(x) x$download_error[[1]])
       what$file_size <- vdapply(dls, "[[", "file_size")
-      class(what) <- c("remotes_downloads", class(what))
+      class(what) <- c("pkgplan_downloads", class(what))
       attr(what, "metadata")$download_start <- start
       attr(what, "metadata")$download_end <- Sys.time()
       what
@@ -93,7 +123,7 @@ remotes_async_download_internal <- function(self, private, what, which) {
     finally(function() private$done_progress_bar())
 }
 
-remotes_download_res <- function(self, private, res, which, on_progress) {
+pkgplan_download_res <- function(self, private, res, which, on_progress) {
   force(private)
   download_remote(
     res,
@@ -192,105 +222,21 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
   }
 }
 
-remotes_get_resolution_download <- function(self, private) {
+pkgplan_get_resolution_download <- function(self, private) {
   if (is.null(private$downloads)) stop("No downloads")
   private$downloads
 }
 
-remotes_get_solution_download <- function(self, private) {
+pkgplan_get_solution_download <- function(self, private) {
   if (is.null(private$solution_downloads)) stop("No downloads")
   private$solution_downloads
 }
 
 #' @export
 
-print.remotes_downloads <- function(x, ...) {
-  cat(format.remotes_downloads(x, ...))
-}
-
-#' @export
-
-format.remotes_downloads <- function(x, ...) {
-  result <- character()
-  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
-
-  meta <- attr(x, "metadata")
-
-  direct <- unique(x$ref[x$direct])
-  dt <- pretty_dt(meta$download_end - meta$download_start)
-  head <- glue(
-    "PKG DOWNLOADS, {length(direct)} refs, downloaded in {dt} ")
-  width <- getOption("width") - col_nchar(head, type = "width") - 1
-  head <- paste0(head, strrep(symbol$line, max(width, 0)))
-  push(blue(bold(head)), sep = "\n")
-
-  push(format_dls(x, x$direct, header = NULL))
-  push(format_dls(x, (! x$direct), header = "Dependencies", by_type = TRUE))
-  push(format_failed_dls(x))
-
-  paste0(result, collapse = "")
-}
-
-get_failed_dls <- function(dls) {
-  dls$ref[dls$download_status == "Failed"]
-}
-
-format_dls <- function(dls, which, header, by_type = FALSE,
-                       mark_failed = TRUE) {
-  if (!length(dls$ref[which])) return()
-
-  result <- character()
-  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
-
-  if (!is.null(header)) push(blue(bold(paste0(header, ":"))), sep = "\n")
-
-  mark <- function(wh, short = FALSE) {
-    ref <- ref2 <- sort(unique(dls$ref[wh]))
-    if (short) ref2 <- basename(ref)
-    if (mark_failed) {
-      failed_dls <- get_failed_dls(dls[wh,])
-      ref2 <- ifelse(ref %in% failed_dls, bold(red(ref2)), ref2)
-    }
-    ref2
-  }
-
-  if (by_type) {
-    for (t in sort(unique(dls$type[which]))) {
-      push(blue(paste0("  ", t, ":")), sep = "\n")
-      which2 <- which & dls$type == t
-      push(comma_wrap(
-        mark(which2, short = t %in% c("deps", "installed")), indent = 4),
-        sep = "\n")
-    }
-
-  } else {
-    push(comma_wrap(mark(which)), sep = "\n")
-  }
-
-  paste0(result, collapse = "")
-}
-
-format_failed_dls <- function(res) {
-  result <- character()
-  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
-
-  failed <- get_failed_dls(res)
-  if (length(failed) > 0) push(bold(red("Errors:")), sep = "\n")
-  for (f in failed) push(format_failed_dl(res, f))
-
-  paste0(result, collapse = "")
-}
-
-format_failed_dl <- function(dls, failed_dl) {
-  result <- character()
-  push <- function(..., sep = "") result <<- c(result, paste0(c(...), sep))
-
-  push("  ", failed_dl, ": ")
-  wh <- which(failed_dl == dls$ref & dls$download_status == "Failed")
-  errs <- unique(vcapply(dls$download_error[wh], conditionMessage))
-  push(paste(errs, collapse = "\n    "), sep = "\n")
-
-  paste0(result, collapse = "")
+`[.pkgplan_downloads` <- function (x, i, j, drop = FALSE) {
+  class(x) <- setdiff(class(x), "pkgplan_downloads")
+  NextMethod("[")
 }
 
 type_default_download <- function(resolution, target, config, cache,

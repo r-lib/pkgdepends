@@ -1,7 +1,7 @@
 
 #' @importFrom cliapp cli_progress_bar
 
-remotes__create_progress_bar <- function(self, private, what) {
+pkgplan__create_progress_bar <- function(self, private, what) {
   if (!is_verbose()) return(NULL)
   bar <- list()
 
@@ -31,7 +31,7 @@ remotes__create_progress_bar <- function(self, private, what) {
   bar
 }
 
-remotes__update_progress_bar <- function(self, private, idx, data) {
+pkgplan__update_progress_bar <- function(self, private, idx, data) {
   if (!is_verbose()) return(NULL)
 
   if (identical(data, "done")) {
@@ -51,7 +51,7 @@ remotes__update_progress_bar <- function(self, private, idx, data) {
   }
 }
 
-remotes__show_progress_bar <- function(self, private) {
+pkgplan__show_progress_bar <- function(self, private) {
   if (!is_verbose()) return()
   bar <- private$progress_bar
   what <- bar$what[! bar$what$type %in% c("installed", "deps"), ]
@@ -73,7 +73,7 @@ remotes__show_progress_bar <- function(self, private) {
   bar$bar$tick(0, tokens = tokens)
 }
 
-remotes__done_progress_bar <- function(self, private) {
+pkgplan__done_progress_bar <- function(self, private) {
   if (!is_verbose()) return()
   private$progress_bar_timer$cancel()
   private$progress_bar$bar$terminate()

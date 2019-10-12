@@ -1,24 +1,6 @@
 
-offline_check_url <- function() {
-  "cran.rstudio.com"
-}
-
-is_offline <- (function() {
-  offline <- NULL
-  function() {
-    if (is.null(offline)) {
-      offline <<- tryCatch(
-        is.na(pingr::ping_port(offline_check_url(), port = 80, count = 1L)),
-        error = function(e) TRUE
-      )
-      if (offline) cat("We are offline!\n", file = stderr())
-    }
-    offline
-  }
-})()
-
 skip_if_offline <- function() {
-  if (is_offline()) skip("Offline")
+  if (!is_online()) skip("Offline")
 }
 
 expect_equal_named_lists <- function(object, expected, ...) {
@@ -79,4 +61,26 @@ test_temp_dir <- function(pattern = "test-dir-", envir = parent.frame()) {
   tmp <- test_temp_file(pattern = pattern, envir = envir, create = FALSE)
   dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
   normalizePath(tmp)
+}
+
+test_package_root <- function() {
+  x <- tryCatch(
+    rprojroot::find_package_root_file(),
+    error = function(e) NULL)
+
+  if (!is.null(x)) return(x)
+
+  pkg <- testthat::testing_package()
+  x <- tryCatch(
+    rprojroot::find_package_root_file(
+      path = file.path("..", "..", "00_pkg_src", pkg)),
+    error = function(e) NULL)
+
+  if (!is.null(x)) return(x)
+
+  stop("Cannot find package root")
+}
+
+skip_in_covr <- function() {
+  if (Sys.getenv("R_COVR") == "true") skip("In covr")
 }

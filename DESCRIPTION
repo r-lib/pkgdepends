@@ -3,13 +3,19 @@ Title: Package Dependency Resolution and Downloads
 Version: 0.0.0.9006
 Author: Gábor Csárdi
 Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
-Description: Find recursive dependenies of R packages from various sources.
+Description: Find recursive dependencies of R packages from various sources.
+    Solve the dependencies to obtain a consistent set of packages to install.
+    Download packages, and install them. It supports packages on CRAN,
+    Bioconductor and GitHub, and local package tree and files. It caches
+    metadata and package files via the 'pkgcache' package, and performs
+    all HTTP requests, downloads, builds and installations in parallel.
+    pkgdepends is the workhorse of the 'pak' package.
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/r-lib/pkgdepends#readme
 BugReports: https://github.com/r-lib/pkgdepends/issues
-RoxygenNote: 6.1.1
-Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.99.9001
+Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "dynex"))
 Imports:
     assertthat,
     backports,
@@ -27,6 +33,7 @@ Imports:
     pkgbuild (>= 1.0.2),
     pkgcache (>= 1.0.3),
     prettyunits,
+    ps,
     rematch2,
     rprojroot,
     R6,
@@ -39,9 +46,14 @@ Suggests:
     covr,
     debugme,
     digest,
+    fansi,
     fs,
+    knitr,
     mockery,
-    pingr,
+    pingr (>= 1.2.0),
+    rmarkdown,
     rstudioapi,
+    spelling,
     testthat
+VignetteBuilder: knitr
 Encoding: UTF-8

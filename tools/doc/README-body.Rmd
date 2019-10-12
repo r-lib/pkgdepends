@@ -1,0 +1,156 @@
+
+```{r, setup, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  cache = TRUE,
+  tidy = FALSE,
+  error = FALSE,
+  fig.width = 8,
+  fig.height = 8,
+  R.options = list(cli.unicode = TRUE))
+```
+
+# Features
+
+* Look up package dependencies recursively.
+* Visualize package dependencies.
+* Download packages and their dependencies.
+* Install downloaded packages.
+* Includes a dependency solver to find a consistent set of dependencies.
+* Supports CRAN and Bioconductor packages automatically.
+* Supports packages on GitHub.
+* Supports local package file and trees.
+* Supports the `Remotes` entry in the `DESCRIPTION` file.
+* Caches metadata and downloaded packages via
+  [pkgcache](https://github.com/r-lib/pkgcache)
+* Performs all downloads and HTTP queries concurrently.
+* Builds and installs packages in parallel.
+
+# Install
+
+```{r eval = FALSE}
+install.packages("pkgdepends")
+```
+
+# Usage
+
+```{r}
+library(pkgdepends)
+```
+
+## Package references
+
+A package reference (ref) specifies a location from which an R package
+can be obtained from. Examples:
+
+```
+devtools
+cran::devtools
+bioc::Biobase
+r-lib/pkgdepends
+https://github.com/r-lib/pkgdepends
+local::~/works/shiny
+```
+
+See ["Package references"][pkg_refs] for details.
+
+## Package dependencies
+
+Dependencies of the development version of the cli package:
+
+```{r include = FALSE}
+in_roxygen <- function() {
+  rox <- quote(roxygen2::roxygenise)
+  any(sapply(sys.calls(), function(x) identical(x[[1]], rox)))
+}
+```
+
+```{r draw, include = !in_roxygen()}
+pd <- new_pkg_deps("r-lib/cli")
+pd$solve()
+pd$draw()
+```
+
+```{r, include = in_roxygen(), R.options = list(cli.unicode = FALSE)}
+<<draw>>
+```
+
+See the [`pkg_deps`][pkg_deps] class for details.
+
+## Package downloads
+
+Downloading all dependencies of a package:
+
+```{r}
+pdl <- new_pkg_download_proposal("r-lib/cli")
+pdl$resolve()
+pdl$download()
+```
+
+See the [`pkg_download_proposal`][pkg_download_proposal] class for details.
+
+## Package installation
+
+Installing or updating a set of package:
+
+```{r}
+lib <- tempfile()
+pdi <- new_pkg_installation_proposal(
+  "r-lib/cli",
+  config = list(library = lib)
+)
+pdi$solve()
+pdi$download()
+pdi$install()
+```
+
+## Dependency resolution
+
+[`pkg_deps`][pkg_deps], [`pkg_download_proposal`][pkg_download_proposal] and
+[`pkg_installation_proposal`][pkg_installation_proposal]
+all resolve their dependencies recursively, to obtain information about
+all packages needed for the specified [package references][pkg_refs].
+See ["Dependency resolution"][pkg_resolution] for details.
+
+## The dependency solver
+
+The dependency solver takes the resolution information, and works out
+the exact versions of each package that must be installed, such that
+version and other requirements are satisfied. See
+["The dependency solver"][pkg_solution] for details.
+
+## Installation plans
+
+[`pkg_installation_proposal`][pkg_installation_proposal] can create
+installation plans, and then also install them. It is also possible to
+import installation plans that were created by other tools. See
+["Installation plans"][install_plans] for details.
+
+## Configuration
+
+The details of [`pkg_deps`][pkg_deps],
+[`pkg_download_proposal`][pkg_download_proposal] and
+[`pkg_installation_proposal`][pkg_installation_proposal] can be tuned with
+a list of configuration options. See ["Configuration"][pkg_config] for
+details.
+
+# Related
+
+* [pak](https://github.com/r-lib/pak) -- R package manager
+* [pkgcache](https://github.com/r-lib/pkgcache) --
+  Metadata and package cache
+* [devtools](https://github.com/r-lib/devtools) --
+  Tools for R package developers
+
+# License
+
+MIT © RStudio
+
+[pkg_deps]: TODO
+[pkg_refs]: TODO
+[pkg_download_proposal]: TODO
+[pkg_installation_proposal]: TODO
+[pkg_solution]: TODO
+[pkg_resolution]: TODO
+[pkg_config]: TODO
+[install_plans]: TODO

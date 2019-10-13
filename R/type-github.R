@@ -165,11 +165,18 @@ type_github_get_github_description_url <- function(rem) {
 }
 
 type_github_get_github_commit_url <- function(rem) {
-  glue(
-    "https://api.github.com/repos/{rem$username}/{rem$repo}",
-    "/git/trees/{commitish}",
-    commitish = if (nzchar(rem$commitish)) rem$commitish else "master"
-  )
+  if (rem$pull != "") {
+    glue(
+      "https://api.github.com/repos/{rem$username}/{rem$repo}/pulls",
+      "/{rem$pull}"
+      )
+  } else {
+    glue(
+      "https://api.github.com/repos/{rem$username}/{rem$repo}",
+      "/git/trees/{commitish}",
+      commitish = if (nzchar(rem$commitish)) rem$commitish else "master"
+    )
+  }
 }
 
 ## Returns a deferred value
@@ -192,7 +199,7 @@ type_github_get_github_commit_sha <- function(rem) {
   github_get(commit_url)$
     then(function(resp) {
       cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-      cdata$sha
+      cdata$sha %||% cdata$head$sha
     })
 }
 
@@ -219,12 +226,14 @@ type_github_make_resolution <- function(data) {
     RemoteRepo = repo,
     RemoteUsername = username,
     RemotePkgRef = data$remote$ref,
-    RemoteRef = commitish %||% "master",
+    RemoteRef = if (is.null(pull)) commitish %||% "master" else NULL,
+    RemotePull = pull,
     RemoteSha = sha,
     RemoteSubdir = subdir,
     GithubRepo = repo,
     GithubUsername = username,
-    GithubRef = commitish %||% "master",
+    GithubRef = if (is.null(pull)) commitish %||% "master" else NULL,
+    GitHubPull = pull,
     GithubSHA1 = sha,
     GithubSubdir = subdir)
 

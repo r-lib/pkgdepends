@@ -31,8 +31,8 @@ resolve_remote_github <- function(remote, direct, config, cache,
 
   force(direct); force(dependencies)
   ## Get the DESCRIPTION data, and the SHA we need
-  desc <- type_github_get_github_description_data(remote)
-  sha <- type_github_get_github_commit_sha(remote)
+  desc <- type_github_get_description_data(remote)
+  sha <- type_github_get_commit_sha(remote)
   asNamespace("pkgcache")$when_all(
     desc = desc, sha = sha, remote = remote, direct = direct,
     dependencies = dependencies[[2 - direct]])$
@@ -146,61 +146,117 @@ satisfy_remote_github <- function(resolution, candidate,
 ## ----------------------------------------------------------------------
 ## Internal functions
 
-type_github_get_github_headers <- function() {
+type_github_builtin_token <- function() {
+  pats <- c(
+    paste0("3687d8b", "b0556b7c3", "72ba1681d", "e5e689b", "3ec61279"),
+    paste0("8ffecf5", "13a136f3d", "23bfe46c4", "2d67b3c", "966baf7b")
+  )
+  once_per_session(cliapp::cli_alert_warning(c(
+    "Using bundled GitHub PAT. ",
+    "Please add your own PAT to the env var {envvar GITHUB_PAT}"
+  )))
+  sample(pats, 1)
+}
+
+type_github_get_headers <- function() {
   headers <- c("Accept" = "application/vnd.github.v3+json")
-
-  if (nzchar(token <- Sys.getenv("GITHUB_TOKEN",
-                                 Sys.getenv("GITHUB_PAT")))) {
-    headers <- c(headers, c("Authorization" = paste("token", token)))
-  }
+  token <- Sys.getenv("GITHUB_TOKEN", NA_character_)
+  if (is.na(token)) token <- Sys.getenv("GITHUB_PAT", NA_character_)
+  if (is.na(token)) token <- type_github_builtin_token()
+  headers <- c(headers, c("Authorization" = paste("token", token)))
   headers
-}
-
-type_github_get_github_description_url <- function(rem) {
-  commitish <- if (nzchar(rem$commitish)) rem$commitish else "master"
-  subdir <- if (!is.null(rem$subdir)) utils::URLencode(rem$subdir)
-  glue(
-    "https://api.github.com/repos/{rem$username}/{rem$repo}/",
-    "contents/{subdir}/DESCRIPTION?ref={commitish}")
-}
-
-type_github_get_github_commit_url <- function(rem) {
-  if (rem$pull != "") {
-    glue(
-      "https://api.github.com/repos/{rem$username}/{rem$repo}/pulls",
-      "/{rem$pull}"
-      )
-  } else {
-    glue(
-      "https://api.github.com/repos/{rem$username}/{rem$repo}",
-      "/git/trees/{commitish}",
-      commitish = if (nzchar(rem$commitish)) rem$commitish else "master"
-    )
-  }
 }
 
 ## Returns a deferred value
 #' @importFrom base64enc base64decode
 
-type_github_get_github_description_data <- function(rem) {
-  description_url <- type_github_get_github_description_url(rem)
-  github_get(description_url)$
-    then(function(resp) {
-      obj <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-      txt <- rawToChar(base64decode(obj$content))
+type_github_get_description_data <- function(rem) {
+
+  call <- sys.call(-1)
+  user <- rem$username
+  repo <- rem$repo
+  ref <- if (nzchar(rem$commitish)) rem$commitish else "master"
+  subdir <- if (!is.null(rem$subdir) && rem$subdir != "") {
+    paste0(utils::URLencode(rem$subdir), "/")
+  } else {
+    ""
+  }
+
+  query <- glue(
+    "query {
+       repository(owner: \"<user>\", name: \"<repo>\") {
+         object(expression: \"<ref>:<subdir>DESCRIPTION\") {
+           ... on Blob {
+             text
+           }
+         }
+      }
+    }",
+    .open = "<", .close = ">"
+  )
+  selector <- c("data", "repository", "object", "text")
+
+  github_query(query, selector)$
+    then(function(txt) {
+      if (is.null(txt)) throw(new_github_query_no_pkg_error(rem, call))
       desc(text = txt)
     })
 }
 
+new_github_query_no_pkg_error <- function(rem, call) {
+  subdir <- if (!is.null(rem$subdir) && rem$subdir != "") {
+    paste0(", in directory `", rem$subdir, "`")
+  } else {
+    ""
+  }
+  msg <- glue(
+    "Cannot find R package in GitHub repo ",
+    "`{rem$username}/{rem$repo}`{subdir}"
+  )
+  structure(
+    list(
+      message = msg,
+      call = call
+    ),
+    class = c("github_query_error", "error", "condition")
+  )
+}
+
 ## Returns a deferred value
 
-type_github_get_github_commit_sha <- function(rem) {
-  commit_url <- type_github_get_github_commit_url(rem)
-  github_get(commit_url)$
-    then(function(resp) {
-      cdata <- fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-      cdata$sha %||% cdata$head$sha
-    })
+type_github_get_commit_sha <- function(rem) {
+  user <- rem$username
+  repo <- rem$repo
+
+  if (rem$pull != "") {
+    pull <- rem$pull
+    query <- glue(
+      "query {
+         repository(owner: \"<user>\", name: \"<repo>\") {
+           pullRequest(number: <pull>) {
+             headRefOid
+           }
+         }
+       }",
+      .open = "<", .close = ">"
+    )
+    selector <- c("data", "repository", "pullRequest", "headRefOid")
+
+  } else {
+    ref <- if (nzchar(rem$commitish)) rem$commitish else "master"
+    query <- glue(
+      "query {
+         repository(owner: \"<user>\", name: \"<repo>\") {
+           object(expression: \"<ref>\") {
+             oid
+           }
+         }
+      }",
+      .open = "<", .close = ">"
+    )
+    selector <- c("data", "repository", "object", "oid")
+  }
+  github_query(query, selector)
 }
 
 type_github_make_resolution <- function(data) {
@@ -256,51 +312,78 @@ type_github_make_resolution <- function(data) {
   )
 }
 
-github_get <- function(url, headers = character(), ...) {
+github_query <- function(query, selector = "data",
+                         url = "https://api.github.com/graphql",
+                         headers = character(), ...) {
 
-  headers <- c(headers, type_github_get_github_headers())
-  asNamespace("pkgcache")$http_get(url, headers = headers, ...)$
+  query; selector; url; headers; list(...)
+  call <- sys.call(-1)
+
+  headers <- c(headers, type_github_get_headers())
+  data <- jsonlite::toJSON(list(query = query), auto_unbox = TRUE)
+  http_post(url, data = data, headers = headers, ...)$
+    catch(error = function(e) {
+      throw(
+        new_github_error("Cannot query GitHub, are you offline?"),
+        parent = e
+      )
+    })$
     then(function(res) {
-      if (res$status_code >= 300) {
-        stop(github_error(res))
+      json <- rawToChar(res$content %||% raw())
+      obj <- if (nzchar(json)) jsonlite::fromJSON(json, simplifyVector = FALSE)
+
+      if (res$status_code >= 300 || "errors" %in% names(obj)) {
+        throw(new_github_query_error(obj, res, call))
       }
-      res
+
+      if (length(selector)) obj[[selector]] else obj
     })
 }
 
-github_error <- function(res) {
-  res_headers <- curl::parse_headers_list(res$headers)
-  ratelimit_limit <- res_headers$`x-ratelimit-limit`
-  ratelimit_remaining <- res_headers$`x-ratelimit-remaining`
-  ratelimit_reset <- .POSIXct(res_headers$`x-ratelimit-reset`, tz = "UTC")
-  error_details <- fromJSON(rawToChar(res$content))$message
+new_github_error <- function(...) {
+  e <- new_error(...)
+  class(e) <- c("github_error", class(e))
+  e
+}
 
-  pat_guidance <- ""
-  if (identical(as.integer(ratelimit_remaining), 0L)) {
-    pat_guidance <-
-      sprintf(
-"\n\nTo increase your GitHub API rate limit
-  - Use `usethis::browse_github_pat()` to create a Personal Access Token.
-  - Use `usethis::edit_r_environ()` and add the token as `GITHUB_PAT`."
-)
+new_github_query_error <- function(obj, response, call) {
+  if (response$status_code == 401 &&
+      nzchar(obj$message) && grepl("Bad credentials", obj$message)) {
+    msg <- paste0(
+      "Bad GitHub credentials, ",
+      "make sure that your GitHub token is valid."
+    )
+
+  } else if (response$status_code >= 300) {
+    return(new_http_error(response, call))
+
+  } else {
+    ghmsgs <- sub("\\.?$", ".", vcapply(obj$errors, "[[", "message"))
+    types <- vcapply(obj$errors, "[[", "type")
+    msg <- paste0("GitHub error: ", paste0(ghmsgs, collapse = ", "))
+
+    if ("RATE_LIMITED" %in% types) {
+      headers <- curl::parse_headers_list(response$headers)
+      if ("x-ratelimit-reset" %in% names(headers)) {
+        reset <- format(
+          .POSIXct(headers$`x-ratelimit-reset`, tz = "UTC"),
+          usetz = TRUE
+        )
+        msg <- paste0(msg, " Rate limit will reset at ", reset, ".")
+      }
+    }
   }
 
-  msg <- sprintf(
-"HTTP error %s.
-  %s
-
-Rate limit remaining: %s/%s
-Rate limit reset at: %s%s",
-
-    res$status_code,
-    paste(strwrap(error_details), collapse = "\n"),
-    ratelimit_remaining,
-    ratelimit_limit,
-    format(ratelimit_reset, usetz = TRUE),
-    pat_guidance
-  )
-
   structure(
-    list(message = msg, call = NULL),
-    class = c("async_http_error", "simpleError", "error", "condition"))
+    list(
+      message = msg,
+      call = call,
+      response = response
+    ),
+    class = c("github_error", "error", "condition")
+  )
+}
+
+new_http_error <- function(response, call) {
+  asNamespace("pkgcache")$http_error(response, call)
 }

@@ -353,9 +353,41 @@ is_online <- local({
     if (is_rcmd_check()) return(FALSE)
     t <- Sys.time()
     if (t >= expires) {
-      online <<- pingr::is_up("google.com")
+      online <<- pingr::is_up("google.com", timeout = 2)
       expires <<- t + as.difftime(10, units = "secs")
     }
     online
   }
 })
+
+hash <- function(obj) {
+  tmp <- tempfile()
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  serialize(obj, con <- file(tmp, open = "wb"))
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  close(con)
+  tools::md5sum(tmp)[[1]]
+}
+
+once_per_session <- local({
+  seen <- character()
+  function(expr) {
+    h <- hash(substitute(expr))
+    if (! h %in% seen) {
+      seen <<- c(seen, h)
+      expr
+    }
+  }
+})
+
+synchronise <- synchronize <- function(...) {
+  asNamespace("pkgcache")$synchronise(...)
+}
+
+async_map <- function(...) {
+  asNamespace("pkgcache")$async_map(...)
+}
+
+http_post <- function(...) {
+  asNamespace("pkgcache")$http_post(...)
+}

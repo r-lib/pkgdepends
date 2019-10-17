@@ -199,7 +199,10 @@ type_github_get_description_data <- function(rem) {
   github_query(query, selector)$
     then(function(txt) {
       if (is.null(txt)) throw(new_github_query_no_pkg_error(rem, call))
-      desc(text = txt)
+      rethrow(
+        desc(text = txt),
+        new_github_query_desc_parse_error(rem, call, e)
+      )
     })
 }
 
@@ -211,6 +214,25 @@ new_github_query_no_pkg_error <- function(rem, call) {
   }
   msg <- glue(
     "Cannot find R package in GitHub repo ",
+    "`{rem$username}/{rem$repo}`{subdir}"
+  )
+  structure(
+    list(
+      message = msg,
+      call = call
+    ),
+    class = c("github_query_error", "error", "condition")
+  )
+}
+
+new_github_query_desc_parse_error <- function(rem, call, e) {
+  subdir <- if (!is.null(rem$subdir) && rem$subdir != "") {
+    paste0(", in directory `", rem$subdir, "`")
+  } else {
+    ""
+  }
+  msg <- glue(
+    "Cannot parse DESCRIPTION file in GitHub repo ",
     "`{rem$username}/{rem$repo}`{subdir}"
   )
   structure(

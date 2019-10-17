@@ -136,3 +136,34 @@ test_that("type_github_get_description_data", {
       then(function(dsc) expect_true(inherits(dsc, "description")))
   }))
 })
+
+test_that("cannot find R package on GitHub, no DESCRIPTION", {
+  skip_if_offline()
+
+  err <- tryCatch(
+    synchronise(
+      type_github_get_description_data(parse_pkg_ref("r-lib/crayon/R"))
+    ),
+    error = function(e) e
+  )
+  expect_equal(
+    err$message,
+    "Cannot find R package in GitHub repo `r-lib/crayon`, in directory `R`"
+  )
+})
+
+test_that("cannot parse DESCRIPTION on GH", {
+  skip_if_offline()
+
+  ref <- "r-lib/pkgdepends/tests/testthat/fixtures/bad-desc@f5a84c34f5"
+  err <- tryCatch(
+    synchronise(
+      type_github_get_description_data(parse_pkg_ref(ref))
+    ),
+    error = function(e) e
+  )
+  expect_match(
+    err$message,
+    "Cannot parse DESCRIPTION file in GitHub repo"
+  )
+})

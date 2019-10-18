@@ -117,6 +117,21 @@ test_that("type_github_get_commit_sha", {
   }))
 })
 
+test_that("type_github_get_commit_sha errors", {
+  skip_if_offline()
+
+  cases <- list(
+    c("r-lib-xxxxxx/pak", "Could not resolve to a User with the username"),
+    c("r-lib/pak-xxxxxx", "Could not resolve to a Repository with the name")
+  )
+
+  synchronise(async_map(cases, function(c) {
+    rem <- parse_pkg_ref(c[[1]])
+    type_github_get_description_data(rem)$
+      catch(error = function(e) { expect_match(e$message, c[[2]]) })
+  }))
+})
+
 test_that("type_github_get_description_data", {
   skip_if_offline()
 

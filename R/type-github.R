@@ -167,7 +167,6 @@ type_github_get_headers <- function() {
   headers
 }
 
-## Returns a deferred value
 #' @importFrom base64enc base64decode
 
 type_github_get_description_data <- function(rem) {
@@ -175,12 +174,8 @@ type_github_get_description_data <- function(rem) {
   call <- sys.call(-1)
   user <- rem$username
   repo <- rem$repo
-  ref <- if (nzchar(rem$commitish)) rem$commitish else "master"
-  subdir <- if (!is.null(rem$subdir) && rem$subdir != "") {
-    paste0(utils::URLencode(rem$subdir), "/")
-  } else {
-    ""
-  }
+  ref <- rem$commitish %|z|% "master"
+  subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
 
   query <- glue(
     "query {
@@ -198,20 +193,16 @@ type_github_get_description_data <- function(rem) {
 
   github_query(query, selector)$
     then(function(txt) {
-      if (is.null(txt)) throw(new_github_query_no_pkg_error(rem, call))
+      txt %||% throw(new_github_query_no_pkg_error(rem, call))
       rethrow(
         desc(text = txt),
-        new_github_query_desc_parse_error(rem, call, e)
+        new_github_query_desc_parse_error(rem, call)
       )
     })
 }
 
 new_github_query_no_pkg_error <- function(rem, call) {
-  subdir <- if (!is.null(rem$subdir) && rem$subdir != "") {
-    paste0(", in directory `", rem$subdir, "`")
-  } else {
-    ""
-  }
+  subdir <- rem$subdir %&z&% paste0(", in directory `", rem$subdir, "`")
   msg <- glue(
     "Cannot find R package in GitHub repo ",
     "`{rem$username}/{rem$repo}`{subdir}"
@@ -226,11 +217,7 @@ new_github_query_no_pkg_error <- function(rem, call) {
 }
 
 new_github_query_desc_parse_error <- function(rem, call, e) {
-  subdir <- if (!is.null(rem$subdir) && rem$subdir != "") {
-    paste0(", in directory `", rem$subdir, "`")
-  } else {
-    ""
-  }
+  subdir <- rem$subdir %&z&% paste0(", in directory `", rem$subdir, "`")
   msg <- glue(
     "Cannot parse DESCRIPTION file in GitHub repo ",
     "`{rem$username}/{rem$repo}`{subdir}"
@@ -265,7 +252,7 @@ type_github_get_commit_sha <- function(rem) {
     selector <- c("data", "repository", "pullRequest", "headRefOid")
 
   } else {
-    ref <- if (nzchar(rem$commitish)) rem$commitish else "master"
+    ref <- rem$commitish %|z|% "master"
     query <- glue(
       "query {
          repository(owner: \"<user>\", name: \"<repo>\") {

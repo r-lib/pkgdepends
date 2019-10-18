@@ -3,9 +3,11 @@ repoman_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
-`%|z|%` <- function(l, r) {
-  if (identical(l, "")) r else l
-}
+`%&&%` <- function(l, r) if (!is.null(l)) r
+
+`%|z|%` <- function(l, r) if (length(l) == 0 || l == "") r else l
+
+`%&z&%` <- function(l, r) if (length(l) > 0 && l != "") r else ""
 
 get_platform <- function() {
   .Platform

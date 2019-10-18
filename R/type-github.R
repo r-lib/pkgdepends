@@ -234,6 +234,8 @@ new_github_query_desc_parse_error <- function(rem, call, e) {
 ## Returns a deferred value
 
 type_github_get_commit_sha <- function(rem) {
+
+  call <- sys.call(-1)
   user <- rem$username
   repo <- rem$repo
 
@@ -265,7 +267,23 @@ type_github_get_commit_sha <- function(rem) {
     )
     selector <- c("data", "repository", "object", "oid")
   }
-  github_query(query, selector)
+  github_query(query, selector)$
+    then(function(sha) {
+      sha %||% throw(new_github_query_no_ref_error(rem, call))
+    })
+}
+
+new_github_query_no_ref_error <- function(rem, call) {
+  ref <- rem$commitish %|z|% "master"
+  msg <- glue("Cannot find branch/tag/commit `{ref}` in ",
+              "GitHub repo `{rem$username}/{rem$repo}`.")
+  structure(
+    list(
+      message = msg,
+      call = call
+    ),
+    class = c("github_query_error", "error", "condition")
+  )
 }
 
 type_github_make_resolution <- function(data) {
@@ -364,7 +382,7 @@ new_github_query_error <- function(obj, response, call) {
     )
 
   } else if (response$status_code >= 300) {
-    return(new_http_error(response, call))
+    return(new_github_http_error(response, call))
 
   } else {
     ghmsgs <- sub("\\.?$", ".", vcapply(obj$errors, "[[", "message"))
@@ -393,6 +411,6 @@ new_github_query_error <- function(obj, response, call) {
   )
 }
 
-new_http_error <- function(response, call) {
+new_github_http_error <- function(response, call) {
   asNamespace("pkgcache")$http_error(response, call)
 }

@@ -355,7 +355,7 @@ is_online <- local({
     if (is_rcmd_check()) return(FALSE)
     t <- Sys.time()
     if (t >= expires) {
-      online <<- pingr::is_up("google.com", timeout = 2)
+      online <<- pingr::is_online()
       expires <<- t + as.difftime(10, units = "secs")
     }
     online

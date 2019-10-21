@@ -50,7 +50,7 @@ Suggests:
     fs,
     knitr,
     mockery,
-    pingr (>= 1.2.0),
+    pingr (>= 2.0.0),
     rmarkdown,
     rstudioapi,
     spelling,

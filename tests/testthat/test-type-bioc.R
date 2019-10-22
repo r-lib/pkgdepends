@@ -22,7 +22,7 @@ test_that("resolve_remote", {
   cache <- list(package = NULL,
                 metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_bioc(parse_pkg_refs("bioc::Biobase")[[1]], TRUE, conf,
                         cache, dependencies = FALSE)
   )
@@ -48,7 +48,7 @@ test_that("failed resolution", {
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ref <- paste0("bioc::", basename(tempfile()))
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_bioc(parse_pkg_refs(ref)[[1]], TRUE, conf,
                         cache, dependencies = FALSE)
   )
@@ -86,13 +86,13 @@ test_that("download_remote", {
     package = pkgcache::package_cache$new(conf$package_cache_dir),
     metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_bioc(parse_pkg_refs("bioc::Biobase")[[1]], TRUE, conf, cache,
                         dependencies = FALSE))
 
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-tree")
-  dl <- asNamespace("pkgcache")$synchronise(
+  dl <- synchronise(
     download_remote_bioc(res[1,], target, tree, conf, cache,
                          on_progress = NULL))
 
@@ -100,7 +100,7 @@ test_that("download_remote", {
   expect_true(file.exists(target))
 
   unlink(target)
-  dl2 <- asNamespace("pkgcache")$synchronise(
+  dl2 <- synchronise(
     download_remote_bioc(res[1,], target, tree, conf, cache,
                          on_progress = NULL))
   expect_true(dl2 %in% c("Had", "Current"))

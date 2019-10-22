@@ -15,7 +15,7 @@ test_that("resolve", {
     installed = make_installed_cache(dirname(tt)))
 
   ref <- paste0("installed::", tt)
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_installed(parse_pkg_refs(ref)[[1]], TRUE, conf, cache,
                              dependencies = "Imports")
   )

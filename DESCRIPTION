@@ -19,7 +19,6 @@ Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "dynex"))
 Imports:
     assertthat,
     backports,
-    base64enc,
     callr (>= 3.3.1),
     cli (>= 1.0.0.9000),
     cliapp (>= 0.1.0),

@@ -8,8 +8,7 @@ test_that("%|z|%", {
     character(),
     c("", ""),
     "foo",
-    structure("", class = "foo"),
-    NULL
+    structure("", class = "foo")
   )
   for (b in bad) expect_identical(b %|z|% FALSE, b)
 })

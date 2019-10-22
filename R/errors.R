@@ -585,7 +585,7 @@ err <- local({
 # call them through the `err` object.
 
 # new_cond  <- err$new_cond
-# new_error <- err$new_error
+new_error <- err$new_error
 throw     <- err$throw
 rethrow   <- err$rethrow
 # rethrow_call <- err$rethrow_call

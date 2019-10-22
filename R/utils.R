@@ -5,7 +5,7 @@ repoman_data <- new.env(parent = emptyenv())
 
 `%&&%` <- function(l, r) if (!is.null(l)) r
 
-`%|z|%` <- function(l, r) if (length(l) == 0 || l == "") r else l
+`%|z|%` <- function(l, r) if (is.null(l) || identical(l, "")) r else l
 
 `%&z&%` <- function(l, r) if (length(l) > 0 && l != "") r else ""
 
@@ -392,4 +392,20 @@ async_map <- function(...) {
 
 http_post <- function(...) {
   asNamespace("pkgcache")$http_post(...)
+}
+
+when_all <- function(...) {
+  asNamespace("pkgcache")$when_all(...)
+}
+
+async <- function(...) {
+  asNamespace("pkgcache")$async(...)
+}
+
+download_file <- function(...) {
+  asNamespace("pkgcache")$download_file(...)
+}
+
+http_stop_for_status <- function(...) {
+  asNamespace("pkgcache")$http_stop_for_status(...)
 }

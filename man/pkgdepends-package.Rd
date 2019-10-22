@@ -110,12 +110,9 @@ pdi <- new_pkg_installation_proposal(
 pdi$solve()
 pdi$download()
 pdi$install()
-}\if{html}{\out{</div>}}\preformatted{#> Your system is ready to build packages!
-#> Your system is ready to build packages!
-
-#> Installed: 17
-#> Build time:  3s
-#> Intall time: 1.6s
+}\if{html}{\out{</div>}}\preformatted{#> Installed: 17
+#> Build time:  2.9s
+#> Intall time: 2.1s
 }
 }
 

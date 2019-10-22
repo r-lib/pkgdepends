@@ -3,9 +3,11 @@ repoman_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
-`%|z|%` <- function(l, r) {
-  if (identical(l, "")) r else l
-}
+`%&&%` <- function(l, r) if (!is.null(l)) r
+
+`%|z|%` <- function(l, r) if (is.null(l) || identical(l, "")) r else l
+
+`%&z&%` <- function(l, r) if (length(l) > 0 && l != "") r else ""
 
 get_platform <- function() {
   .Platform
@@ -353,9 +355,57 @@ is_online <- local({
     if (is_rcmd_check()) return(FALSE)
     t <- Sys.time()
     if (t >= expires) {
-      online <<- pingr::is_up("google.com")
+      online <<- pingr::is_online()
       expires <<- t + as.difftime(10, units = "secs")
     }
     online
   }
 })
+
+hash <- function(obj) {
+  tmp <- tempfile()
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  serialize(obj, con <- file(tmp, open = "wb"))
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  close(con)
+  tools::md5sum(tmp)[[1]]
+}
+
+once_per_session <- local({
+  seen <- character()
+  function(expr) {
+    h <- hash(substitute(expr))
+    if (! h %in% seen) {
+      seen <<- c(seen, h)
+      expr
+    }
+  }
+})
+
+synchronise <- synchronize <- function(...) {
+  asNamespace("pkgcache")$synchronise(...)
+}
+
+async_map <- function(...) {
+  asNamespace("pkgcache")$async_map(...)
+}
+
+http_post <- function(...) {
+  asNamespace("pkgcache")$http_post(...)
+}
+
+when_all <- function(...) {
+  asNamespace("pkgcache")$when_all(...)
+}
+
+async <- function(...) {
+  asNamespace("pkgcache")$async(...)
+}
+
+download_file <- function(...) {
+  asNamespace("pkgcache")$download_file(...)
+}
+
+http_stop_for_status <- function(...) {
+  asNamespace("pkgcache")$http_stop_for_status(...)
+}

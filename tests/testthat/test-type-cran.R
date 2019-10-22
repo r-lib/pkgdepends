@@ -9,7 +9,7 @@ test_that("resolve_remote", {
   conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
                         dependencies = FALSE))
 
@@ -34,7 +34,7 @@ test_that("resolve_remote, multiple", {
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   rem <- parse_pkg_refs(c("cran::crayon", "cran::glue"))
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
 
   expect_true(is_tibble(res))
@@ -54,7 +54,7 @@ test_that("failed resolution", {
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   nonpkg <- paste0("cran::", basename(tempfile()))
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_cran(parse_pkg_refs(nonpkg)[[1]], TRUE, conf, cache,
                         dependencies = FALSE))
 
@@ -86,7 +86,7 @@ test_that("failed resolution, multiple", {
 
   nonpkg <- paste0("cran::", basename(tempfile()))
   rem <- parse_pkg_refs(c(nonpkg, "cran::crayon"))
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
 
   expect_true("FAILED" %in% res$status)
@@ -107,8 +107,8 @@ test_that("resolve current version", {
                         conf, cache, dependencies = FALSE)
   }
 
-  res <- asNamespace("pkgcache")$synchronise(do("cran::crayon@current"))
-  res2 <- asNamespace("pkgcache")$synchronise(do("cran::crayon"))
+  res <- synchronise(do("cran::crayon@current"))
+  res2 <- synchronise(do("cran::crayon"))
 
   expect_true(is_tibble(res))
   expect_true(all(res$type == "cran"))
@@ -220,19 +220,19 @@ test_that("download_remote", {
     resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
                         dependencies = FALSE)
   }
-  res <- asNamespace("pkgcache")$synchronise(resolve())
+  res <- synchronise(resolve())
 
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-tree")
   download <- function(res) {
     download_remote_cran(res, target, tree, conf, cache, on_progress = NULL)
   }
-  dl1 <- asNamespace("pkgcache")$synchronise(download(res[1,]))
+  dl1 <- synchronise(download(res[1,]))
   expect_equal(dl1, "Got")
   expect_true(file.exists(target))
 
   unlink(target)
-  dl2 <- asNamespace("pkgcache")$synchronise(download(res[1,]))
+  dl2 <- synchronise(download(res[1,]))
   expect_true(dl2 %in% c("Had", "Current"))
   expect_true(file.exists(target))
 })

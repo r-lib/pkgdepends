@@ -106,7 +106,7 @@ NULL
 
 pkgplan_resolve <- function(self, private) {
   "!DEBUG pkgplan_resolve (sync)"
-  asNamespace("pkgcache")$synchronise(self$async_resolve())
+  synchronise(self$async_resolve())
 }
 
 pkgplan_async_resolve <- function(self, private) {
@@ -384,7 +384,7 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     stop("Cannot resolve type", format_items(type))
   }
 
-  asNamespace("pkgcache")$async(resolve)(
+  async(resolve)(
     remote, direct = direct, config = config, cache = cache,
     dependencies = dependencies
   )$

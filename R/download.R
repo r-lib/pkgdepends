@@ -34,7 +34,7 @@ NULL
 pkgplan_download_resolution <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
-  asNamespace("pkgcache")$synchronise(self$async_download_resolution())
+  synchronise(self$async_download_resolution())
 }
 
 pkgplan_async_download_resolution <- function(self, private) {
@@ -54,7 +54,7 @@ pkgplan_async_download_resolution <- function(self, private) {
 pkgplan_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
-  asNamespace("pkgcache")$synchronise(self$async_download_solution())
+  synchronise(self$async_download_solution())
 }
 
 pkgplan_async_download_solution <- function(self, private) {
@@ -108,7 +108,7 @@ pkgplan_async_download_internal <- function(self, private, what, which) {
       finally(function() private$update_progress_bar(idx, "done"))
   })
 
-  asNamespace("pkgcache")$when_all(.list = dl)$
+  when_all(.list = dl)$
     then(function(dls) {
       what$fulltarget <- vcapply(dls, "[[", "fulltarget")
       what$fulltarget_tree <- vcapply(dls, "[[", "fulltarget_tree")
@@ -141,7 +141,7 @@ download_remote <- function(res, config, cache, which,
   target <- file.path(config$cache_dir, res$target)
   target_tree <- file.path(config$cache_dir, paste0(res$target, "-tree"))
   mkdirp(dirname(target))
-  asNamespace("pkgcache")$async(dl)(res, target, target_tree, config,
+  async(dl)(res, target, target_tree, config,
     cache = cache, which = which, on_progress = on_progress)$
     then(function(s) {
       if (length(res$sources[[1]]) && !file.exists(target)

@@ -10,7 +10,7 @@ test_that("resolve_remote", {
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ## CRAN package is found
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_cran(parse_pkg_ref("crayon"), TRUE, conf, cache,
                         dependencies = FALSE))
 
@@ -26,7 +26,7 @@ test_that("resolve_remote", {
   expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
 
   ## BioC package is found
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_cran(parse_pkg_ref("Biobase"), TRUE, conf, cache,
                         dependencies = FALSE))
 
@@ -43,7 +43,7 @@ test_that("resolve_remote", {
 
   ## Proper error for non-existing package
   nonpkg <- basename(tempfile())
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_cran(parse_pkg_ref(nonpkg), TRUE, conf, cache,
                         dependencies = FALSE))
 
@@ -67,13 +67,13 @@ test_that("download_remote", {
     package = pkgcache::package_cache$new(conf$package_cache_dir),
     metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_bioc(parse_pkg_ref("crayon"), TRUE, conf, cache,
                         dependencies = FALSE))
 
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-tree")
-  dl <- asNamespace("pkgcache")$synchronise(
+  dl <- synchronise(
     download_remote_bioc(res[1,], target, tree, conf, cache,
                          on_progress = NULL))
 
@@ -81,7 +81,7 @@ test_that("download_remote", {
   expect_true(file.exists(target))
 
   unlink(target)
-  dl2 <- asNamespace("pkgcache")$synchronise(
+  dl2 <- synchronise(
     download_remote_bioc(res[1,], target, tree, conf, cache,
                          on_progress = NULL))
   expect_true(dl2 %in% c("Had", "Current"))

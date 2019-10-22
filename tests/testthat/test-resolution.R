@@ -19,7 +19,7 @@ test_that("resolving with a list", {
 
   res <- withr::with_options(
     list(pkg.remote_types = list(foo = list(resolve = foo_resolve))),
-    asNamespace("pkgcache")$synchronise(do()))
+    synchronise(do()))
 
   expect_equal(nrow(res), 2)
   expect_identical(res$ref, c("foo::bar", "foo::bar2"))
@@ -50,7 +50,7 @@ test_that("resolving with a tibble", {
                 foo2 = list(resolve = foo_resolve))
   res <- withr::with_options(
     list(pkg.remote_types = types),
-    asNamespace("pkgcache")$synchronise(do()))
+    synchronise(do()))
 
   expect_equal(nrow(res), 4)
   expect_identical(res$ref, c("foo::bar", "foo::bar", "foo2::bar2", "foo2::bar2"))
@@ -81,7 +81,7 @@ test_that("unknown deps are pushed in the queue", {
 
   res <- withr::with_options(
     list(pkg.remote_types = list(foo = list(resolve = foo_resolve))),
-    asNamespace("pkgcache")$synchronise(do()))
+    synchronise(do()))
 
   expect_equal(nrow(res), 2)
   expect_identical(res$ref, c("foo::bar", "foo::bar2"))
@@ -112,7 +112,7 @@ test_that("unknown deps, tibble", {
                 foo2 = list(resolve = foo_resolve))
   res <- withr::with_options(
     list(pkg.remote_types = types),
-    asNamespace("pkgcache")$synchronise(do()))
+    synchronise(do()))
 
   expect_equal(nrow(res), 4)
   expect_identical(res$ref, c("foo::bar", "foo::bar", "foo::bar2", "foo::bar2"))
@@ -142,7 +142,7 @@ test_that("error", {
 
   res <- withr::with_options(
     list(pkg.remote_types = list(foo = list(resolve = foo_resolve))),
-    asNamespace("pkgcache")$synchronise(do()))
+    synchronise(do()))
 
   expect_equal(nrow(res), 2)
   expect_equal(res$ref, c("foo::bar", "foo::bar2"))
@@ -191,7 +191,7 @@ test_that("installed refs are also resolved", {
 
   res <- withr::with_options(
     list(pkg.remote_types = types),
-    asNamespace("pkgcache")$synchronise(do()))
+    synchronise(do()))
 
   expect_equal(nrow(res), 4)
   expect_equal(res$ref[1:2], c("foo::bar", "foo::bar2"))
@@ -211,7 +211,7 @@ test_that("explicit cran", {
     res$when_complete()
   }
 
-  res <- asNamespace("pkgcache")$synchronise(do("cran::dplyr"))
+  res <- synchronise(do("cran::dplyr"))
   expect_true(is_tibble(res))
   expect_true("cran::dplyr" %in% res$ref)
   expect_true(all(grep("::", res$ref, value = TRUE) == "cran::dplyr"))
@@ -249,7 +249,7 @@ test_that("standard", {
     res$when_complete()
   }
 
-  res <- asNamespace("pkgcache")$synchronise(do("dplyr"))
+  res <- synchronise(do("dplyr"))
   expect_true(is_tibble(res))
   expect_true("dplyr" %in% res$ref)
   expect_true(! any(grepl("::", res$ref)))
@@ -288,25 +288,25 @@ test_that("dependencies are honoured", {
   }
 
   ## FALSE means nothing
-  res <- asNamespace("pkgcache")$synchronise(do("cran::dplyr", FALSE))
+  res <- synchronise(do("cran::dplyr", FALSE))
   expect_true(all(res$direct))
   expect_true(all(res$ref == "cran::dplyr"))
 
   ## Exactly the specified ones
-  res <- asNamespace("pkgcache")$synchronise(do("cran::dplyr", "Imports"))
+  res <- synchronise(do("cran::dplyr", "Imports"))
   imported <- unique(unlist(
     lapply(res$deps, function(x) x$package[x$type == "imports"])))
   expect_true(all(res$package[!res$direct] %in% imported))
 
   ## NA means hard ones
-  res <- asNamespace("pkgcache")$synchronise(do("cran::dplyr", NA))
+  res <- synchronise(do("cran::dplyr", NA))
   hard <- c("imports", "depends", "linkingto")
   harddep <- unique(unlist(
     lapply(res$deps, function(x) x$package[x$type %in% hard])))
   expect_true(all(res$package[!res$direct] %in% harddep))
 
   ## TRUE means hard + suggests on direct, hard only on rest
-  res <- asNamespace("pkgcache")$synchronise(do("cran::dplyr", TRUE))
+  res <- synchronise(do("cran::dplyr", TRUE))
   harddep <- unique(unlist(
     lapply(res$deps, function(x) x$package[x$type %in% hard])))
   softdirectdep <- unique(unlist(
@@ -327,7 +327,7 @@ test_that("error if cannot find package", {
   }
 
   bad <-  c("cran::thiscannotexistxxx", "neitherthisonexxx")
-  res <- asNamespace("pkgcache")$synchronise(do(bad))
+  res <- synchronise(do(bad))
   expect_equal(res$ref, bad)
   expect_equal(res$type, c("cran", "standard"))
   expect_equal(res$direct, c(TRUE, TRUE))

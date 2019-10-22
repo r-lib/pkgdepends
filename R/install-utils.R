@@ -24,21 +24,21 @@ new_cnd_msg <- function(msg, .envir) {
   glue(msg, .envir = .envir, .transformer = collapse_quote_transformer)
 }
 
-new_error <- function(msg, package = NULL) {
-  cnd <- err$new_error(new_cnd_msg(msg, .envir = parent.frame()))
+new_pkg_error <- function(msg, package = NULL) {
+  cnd <- new_error(new_cnd_msg(msg, .envir = parent.frame()))
   cnd$package <- package
   cnd
 }
 
 new_fs_error <- function(msg, package = NULL) {
-  cnd <- err$new_error(new_cnd_msg(msg, .envir = parent.frame()))
+  cnd <- new_error(new_cnd_msg(msg, .envir = parent.frame()))
   cnd$package <- package
   class(cnd) <- c("install_filesystem_error", class(cnd))
   cnd
 }
 
 new_input_error <- function(msg, package = NULL) {
-  cnd <- err$new_error(new_cnd_msg(msg, .envir = parent.frame()))
+  cnd <- new_error(new_cnd_msg(msg, .envir = parent.frame()))
   cnd$package <- package
   class(cnd) <- c("install_input_error", class(cnd))
   cnd

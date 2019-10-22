@@ -22,7 +22,7 @@ test_that("resolve_remote", {
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
-  res <- asNamespace("pkgcache")$synchronise(
+  res <- synchronise(
     resolve_remote_local(parse_pkg_ref(ref), TRUE, conf,
                          cache, dependencies = FALSE)
   )
@@ -44,7 +44,7 @@ test_that("resolve_remote", {
   ref2 <- paste0("local::", "foobar_1.0.0.tar.gz")
   withr::with_dir(
     fix_dir,
-    res <- asNamespace("pkgcache")$synchronise(
+    res <- synchronise(
       resolve_remote_local(parse_pkg_ref(ref2), TRUE, conf,
                          cache, dependencies = FALSE)
     )
@@ -69,7 +69,7 @@ test_that("resolution error", {
 
   path <- get_fixture("foobar_10.0.0.tar.gz")
   ref <- paste0("local::", path)
-  err <- tryCatch(asNamespace("pkgcache")$synchronise(
+  err <- tryCatch(synchronise(
     resolve_remote_local(parse_pkg_ref(ref), TRUE, conf,
                          cache, dependencies = FALSE)
   ), error = function(x) x)
@@ -106,7 +106,7 @@ test_that("download_remote", {
   download <- function(res) {
     download_remote_local(res, target, conf, cache, on_progress = NULL)
   }
-  dl1 <- asNamespace("pkgcache")$synchronise(download(res[1,]))
+  dl1 <- synchronise(download(res[1,]))
   expect_equal(dl1, "Got")
   expect_true(file.exists(target))
 

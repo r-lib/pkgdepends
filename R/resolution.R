@@ -341,17 +341,47 @@ res__resolve_delayed <- function(self, private, resolve) {
 }
 
 res__set_result <- function(self, private, row_idx, value) {
+
   unknown <- if ("unknown_deps" %in% names(value)) value$unknown_deps
   if (is.null(unknown) && !is.null(attr(value, "unknown_deps"))) {
     unknown <- attr(value, "unknown_deps")
     attr(value, "unknown_deps") <- NULL
   }
   value <- value[setdiff(names(value), "unknown_deps")]
-  done <- value$ref %in% self$result$ref
-  value <- if (is.data.frame(value)) value[!done, ] else value[!done]
-  if (any(!done)) self$result <- res_add_df_entries(self$result, value)
+
+  if (is.data.frame(value)) {
+    res__set_result_df(self, private, row_idx, value)
+  } else {
+    res__set_result_list(self, private, row_idx, value)
+  }
+
   "!DEBUG resolution setting result, total: `nrow(self$result)`"
   if (length(unknown)) self$push(.list = parse_pkg_refs(unknown))
+}
+
+res__set_result_df <- function(self, private, row_idx, value) {
+  # remove the ones that are already done
+  done <- value$ref %in% self$result$ref
+  value <- value[!done, ]
+
+  # avoid removing the ones that are direct and already on the TODO list
+  running <- intersect(value$ref, private$state$ref)
+  avoid <-
+    !value$direct[match(running, value$ref)] &
+    private$state$direct[match(running, private$state$ref)]
+  value <- value[! value$ref %in% running[avoid], ]
+
+  if (nrow(value)) self$result <- res_add_df_entries(self$result, value)
+}
+
+res__set_result_list <- function(self, private, row_idx, value) {
+  # already done?
+  if (value$ref %in% self$result$ref) return()
+  # direct version already on the TODO list?
+  if (value$ref %in% private$state$ref &&
+      !value$direct &&
+      private$state$direct[match(value$ref, private$state$ref)]) return()
+  self$result <- res_add_df_entries(self$result, value)
 }
 
 res__try_finish <- function(self, private, resolve) {

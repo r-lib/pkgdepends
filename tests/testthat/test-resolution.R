@@ -14,7 +14,7 @@ test_that("resolving with a list", {
 
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
     list(ref = remote$ref, type = remote$type, package = remote$rest,
-         version = "1.0.0", sources = c("src1", "src2"))
+         version = "1.0.0", sources = c("src1", "src2"), direct = direct)
   }
 
   res <- withr::with_options(
@@ -43,7 +43,8 @@ test_that("resolving with a tibble", {
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
     tibble::tibble(ref = remote$ref, type = c("type1", "type2"),
            package = c("pkg1", "pkg2"), version = c("ver1", "ver2"),
-           sources = list(c("s11", "s12"), c("s21", "s22")))
+           sources = list(c("s11", "s12"), c("s21", "s22")),
+           direct = direct)
   }
 
   types <- list(foo = list(resolve = foo_resolve),
@@ -76,7 +77,7 @@ test_that("unknown deps are pushed in the queue", {
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
     list(ref = remote$ref, type = remote$type, package = remote$rest,
          version = "1.0.0", sources = c("src1", "src2"),
-         unknown_deps = "foo::bar2")
+         unknown_deps = "foo::bar2", direct = direct)
   }
 
   res <- withr::with_options(
@@ -105,7 +106,7 @@ test_that("unknown deps, tibble", {
     tibble::tibble(ref = remote$ref, type = c("type1", "type2"),
            package = c("pkg1", "pkg2"), version = c("ver1", "ver2"),
            sources = list(c("s11", "s12"), c("s21", "s22")),
-           unknown_deps = "foo::bar2")
+           unknown_deps = "foo::bar2", direct = direct)
   }
 
   types <- list(foo = list(resolve = foo_resolve),
@@ -184,7 +185,7 @@ test_that("installed refs are also resolved", {
 
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
     list(ref = remote$ref, type = remote$type, package = remote$rest,
-         version = "1.0.0", sources = c("src1", "src2"))
+         version = "1.0.0", sources = c("src1", "src2"), direct = direct)
   }
 
   types <- list(foo = list(resolve = foo_resolve))

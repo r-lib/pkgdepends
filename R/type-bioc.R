@@ -41,8 +41,8 @@ satisfy_remote_bioc <- function(resolution, candidate,
 
   ## 2. installed refs must be from bioc
   if (candidate$type == "installed") {
-    dsc <- candidate$extra[[1]]$description
-    if (is.null(dsc) || is.na(dsc$get("biocViews"))) {
+    repotype <- candidate$extra[[1]]$repotype
+    if (! identical(repotype, "bioc")) {
       return(structure(FALSE, reason = "Installed package not from BioC"))
     }
   }

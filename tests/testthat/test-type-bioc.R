@@ -134,11 +134,9 @@ test_that("satisfies_remote", {
   expect_match(attr(ans, "reason"), "names differ")
 
   ## installed type, but package name does not match
-  fake_desc <- desc::desc("!new")
-  fake_desc$set(biocViews = "foobar")
   bad5 <- make_fake_resolution(`installed::foobar` = list(
     package = "eisa2",
-    extra = list(list(description = fake_desc))))
+    extra = list(list(repotype = "bioc"))))
   expect_false(ans <- satisfy_remote_bioc(res, bad5))
   expect_match(attr(ans, "reason"), "names differ")
 
@@ -156,19 +154,15 @@ test_that("satisfies_remote", {
   expect_true(satisfy_remote_bioc(res, ok2))
 
   ## Same version, installed
-  fake_desc <- desc::desc("!new")
-  fake_desc$set(biocViews ="BioC")
   ok3 <- make_fake_resolution(`installed::foobar` = list(
     package = "eisa",
-    extra = list(list(description = fake_desc))))
+    extra = list(list(repotype = "bioc"))))
   expect_true(satisfy_remote_bioc(res, ok3))
 
   ## Newer version, installed
-  fake_desc <- desc::desc("!new")
-  fake_desc$set(biocViews = "foobar")
   ok4 <- make_fake_resolution(`installed::foobar` = list(
     package = "eisa",
     version = "2.0.0",
-    extra = list(list(description = fake_desc))))
+    extra = list(list(repotype = "bioc"))))
   expect_true(satisfy_remote_bioc(res, ok4))
 })

@@ -59,8 +59,8 @@ test_that("failed resolution", {
                         dependencies = FALSE))
 
   expect_true(all(res$status == "FAILED"))
-  expect_equal(conditionMessage(res$error[[1]]),
-               "Cannot find standard package")
+  expect_match(conditionMessage(res$error[[1]]),
+               "Cannot find standard ref")
 
   ## Existing package, non-existing version
 
@@ -91,7 +91,7 @@ test_that("failed resolution, multiple", {
 
   expect_true("FAILED" %in% res$status)
   err <- res$error[res$ref != "cran::crayon"][[1]]
-  expect_equal(conditionMessage(err), "Cannot find standard package")
+  expect_match(conditionMessage(err), "Cannot find standard ref")
 
 })
 
@@ -265,11 +265,9 @@ test_that("satisfies_remote", {
   expect_match(attr(ans, "reason"), "names differ")
 
   ## installed type, but package name does not match
-  fake_desc <- desc::desc("!new")
-  fake_desc$set(Repository ="CRAN")
   bad5 <- make_fake_resolution(`installed::foobar` = list(
     package = "crayon2",
-    extra = list(list(description = fake_desc))))
+    extra = list(list(repotype = "cran"))))
   expect_false(ans <- satisfy_remote_cran(res, bad5))
   expect_match(attr(ans, "reason"), "names differ")
 
@@ -287,19 +285,15 @@ test_that("satisfies_remote", {
   expect_true(satisfy_remote_cran(res, ok2))
 
   ## Same version, installed
-  fake_desc <- desc::desc("!new")
-  fake_desc$set(Repository ="CRAN")
   ok3 <- make_fake_resolution(`installed::foobar` = list(
     package = "crayon",
-    extra = list(list(description = fake_desc))))
+    extra = list(list(repotype = "cran"))))
   expect_true(satisfy_remote_cran(res, ok3))
 
   ## Newer version, installed
-  fake_desc <- desc::desc("!new")
-  fake_desc$set(Repository ="CRAN")
   ok4 <- make_fake_resolution(`installed::foobar` = list(
     package = "crayon",
     version = "2.0.0",
-    extra = list(list(description = fake_desc))))
+    extra = list(list(repotype = "cran"))))
   expect_true(satisfy_remote_cran(res, ok4))
 })

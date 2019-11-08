@@ -54,9 +54,8 @@ satisfy_remote_cran <- function(resolution, candidate, config, ...) {
 
   ## 2. installed refs must be from CRAN
   if (candidate$type == "installed") {
-    dsc <- candidate$extra[[1]]$description
-    if (is.null(dsc) ||
-        ! identical(dsc$get("Repository")[[1]], "CRAN")) {
+    repotype <- candidate$extra[[1]]$repotype
+    if (! identical(repotype, "cran")) {
       return(structure(FALSE, reason = "Installed package not from CRAN"))
     }
   }

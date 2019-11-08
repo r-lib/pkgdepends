@@ -514,8 +514,9 @@ get_standard_metadata <- function(tab) {
 }
 
 make_failed_resolution <- function(refs, type, direct) {
+  rstr <- paste(refs, collapse = ", ")
   err <- structure(
-    list(message = "Cannot find standard package"),
+    list(message = paste0("Cannot find standard ref(s): ", rstr)),
     class = c("error", "condition"))
   tibble(
     ref = refs,

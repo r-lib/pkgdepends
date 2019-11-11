@@ -442,7 +442,7 @@ stop_task_package_uncompress <- function(state, worker) {
     version <- state$plan$version[pkgidx]
     time <- Sys.time() - state$plan$package_time[[pkgidx]]
     ptime <- pretty_sec(as.numeric(time, units = "secs"))
-    alert("danger", "Failed to package {pkg {pkg}} \\
+    alert("danger", "Failed to uncompress {pkg {pkg}} \\
            {version {version}} {timestamp {ptime}}")
     update_progress_bar(state, 1L)
 
@@ -453,8 +453,16 @@ stop_task_package_uncompress <- function(state, worker) {
     state$plan$package_stderr[[pkgidx]] <- worker$stderr
     state$plan$worker_id[[pkgidx]] <- NA_character_
 
-    throw(new_pkg_error(
-      "Failed to uncompress {pkg} from {state$plan$file[[pkgidx]]}."))
+    throw(new_pkg_uncompress_error(
+      "Failed to uncompress {pkg} from {state$plan$file[[pkgidx]]}.",
+      data = list(
+        package = pkg,
+        version = version,
+        time = time,
+        stdout = worker$stdout,
+        stderr = worker$stderr
+      )
+    ))
   }
 
   start_task_package_build(state, worker$task)
@@ -475,7 +483,7 @@ stop_task_package_build <- function(state, worker) {
     ## Need to save the name of the built package
     state$plan$file[pkgidx] <- worker$process$get_built_file()
   } else {
-    alert("danger", "Failed to package {pkg {pkg}} \\
+    alert("danger", "Failed to create source package {pkg {pkg}} \\
            {version {version}} {timestamp {ptime}}")
   }
   update_progress_bar(state, 1L)
@@ -488,8 +496,17 @@ stop_task_package_build <- function(state, worker) {
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (!success) {
-    throw(new_pkg_error(c("Failed to package {pkg} from source tree ",
-                          "{state$plan$file[[pkgidx]]}.")))
+    throw(new_pkg_packaging_error(
+      c("Failed to create source package {pkg} from source tree ",
+        "{state$plan$file[[pkgidx]]}"),
+      data = list(
+        package = pkg,
+        version = version,
+        stdout = worker$stdout,
+        stderr = worker$stderr,
+        time = time
+      )
+    ))
   }
 
   state
@@ -527,7 +544,16 @@ stop_task_build <- function(state, worker) {
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (!success) {
-    throw(new_pkg_error("Failed to build source package {pkg}."))
+    throw(new_pkg_build_error(
+      "Failed to build source package {pkg}",
+      data = list(
+        package = pkg,
+        version = version,
+        stdout = worker$stdout,
+        stderr = worker$stderr,          # empty, but anyway...
+        time = time
+      )
+    ))
   }
 
   state
@@ -589,7 +615,7 @@ stop_task_install <- function(state, worker) {
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (!success) {
-    throw(new_pkg_error("Failed to install binary package {pkg}."))
+    throw(new_pkg_install_error("Failed to install binary package {pkg}."))
   }
 
   ## Need to remove from the dependency list

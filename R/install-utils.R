@@ -24,9 +24,78 @@ new_cnd_msg <- function(msg, .envir) {
   glue(msg, .envir = .envir, .transformer = collapse_quote_transformer)
 }
 
-new_pkg_error <- function(msg, package = NULL) {
+new_pkg_packaging_error <- function(msg, data) {
+  cnd <- new_error(new_cnd_msg(msg, .envir = parent.frame()))
+  cnd$package <- data$package
+  cnd$data <- data
+  class(cnd) <- c("package_packaging_error", class(cnd))
+  cnd
+}
+
+#' @export
+
+format.package_packaging_error <- function(x, ...) {
+  format_error_with_stdout(x, ...)
+}
+#' @export
+
+print.package_packaging_error <- function(x, ...) {
+  cat(format(x, ...), sep = "\n")
+}
+
+new_pkg_build_error <- function(msg, data) {
+  cnd <- new_error(new_cnd_msg(msg, .envir = parent.frame()))
+  cnd$package <- data$package
+  cnd$data <- data
+  class(cnd) <- c("package_build_error", class(cnd))
+  cnd
+}
+
+#' @export
+
+format.package_uncompress_error <- function(x, ...) {
+  out <- conditionMessage(x)
+  if (!is.null(x$data$stdout)) {
+    stdout <- last_stdout_lines(x$data$stdout, "", prefix = "O> ")[-(1:2)]
+    out <- c(out, "", "Standard output:", stdout)
+  }
+  if (!is.null(x$data$stderr)) {
+    stderr <- last_stdout_lines(x$data$stderr, "", prefix = "E> ")[-(1:2)]
+    out <- c(out, "", "Standard error:", stderr)
+  }
+  out
+}
+
+#' @export
+
+print.package_uncompress_error <- function(x, ...) {
+  cat(format(x, ...), sep = "\n")
+}
+
+new_pkg_uncompress_error <- function(msg, data) {
+  cnd <- new_error(new_cnd_msg(msg, .envir = parent.frame()))
+  cnd$package <- data$package
+  cnd$data <- data
+  class(cnd) <- c("package_uncompress_error", class(cnd))
+  cnd
+}
+
+#' @export
+
+format.package_build_error <- function(x, ...) {
+  format_error_with_stdout(x, ...)
+}
+
+#' @export
+
+print.package_build_error <- function(x, ...) {
+  cat(format(x, ...), sep = "\n")
+}
+
+new_pkg_install_error <- function(msg, package = NULL) {
   cnd <- new_error(new_cnd_msg(msg, .envir = parent.frame()))
   cnd$package <- package
+  class(cnd) <- c("package_install_error", class(cnd))
   cnd
 }
 

@@ -409,3 +409,42 @@ download_file <- function(...) {
 http_stop_for_status <- function(...) {
   asNamespace("pkgcache")$http_stop_for_status(...)
 }
+
+format_error_with_stdout <- function(x, ...) {
+  msg <- conditionMessage(x)
+  if (is.null(x$data$stdout)) {
+    paste0(msg, " output not available")
+  } else {
+    out <- last_stdout_lines(x$data$stdout, "stdout + stderr", "OE> ")
+    c(paste0(msg, out[1]), out[-1])
+  }
+}
+
+last_stdout_lines <- function(lines, std, prefix = "E> ") {
+  if (is_interactive()) {
+    pref <- paste0(
+      ", ", std, if (length(lines) > 10) " (last 10 lines)", ":")
+    out <- paste0(prefix, utils::tail(lines, 10))
+    c(pref, "", out)
+  } else {
+    out <- paste0(prefix, lines)
+    c(paste0(", ", std, ":"), "", out)
+  }
+}
+
+is_interactive <- function() {
+  opt <- getOption("rlib_interactive")
+  if (isTRUE(opt)) {
+    TRUE
+  } else if (identical(opt, FALSE)) {
+    FALSE
+  } else if (tolower(getOption("knitr.in.progress", "false")) == "true") {
+    FALSE
+  } else if (tolower(getOption("rstudio.notebook.executing", "false")) == "true") {
+    FALSE
+  } else if (identical(Sys.getenv("TESTTHAT"), "true")) {
+    FALSE
+  } else {
+    interactive()
+  }
+}

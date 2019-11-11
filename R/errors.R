@@ -54,6 +54,17 @@
 # ### 1.0.2 -- 2019-06-27
 #
 # * Internal change: change topenv of the functions to baseenv()
+#
+# ### 1.1.0 -- 2019-10-26
+#
+# * Register print methods via onload_hook() function, call from .onLoad()
+# * Print the error manually, and the trace in non-interactive sessions
+#
+# ### 1.1.1 -- 2019-11-10
+#
+# * Only use `trace` in parent errors if they are `rlib_error`s.
+#   Because e.g. `rlang_error`s also have a trace, with a slightly
+#   different format.
 
 err <- local({
 
@@ -149,7 +160,9 @@ err <- local({
 
     # If we get here that means that the condition was not caught by
     # an exiting handler. That means that we need to create a trace.
-    cond <- add_trace_back(cond)
+    # If there is a hand-constructed trace already in the error object,
+    # then we'll just leave it there.
+    if (is.null(cond$trace)) cond <- add_trace_back(cond)
 
     # Set up environment to store .Last.error, it will be just before
     # baseenv(), so it is almost as if it was in baseenv() itself, like
@@ -160,8 +173,6 @@ err <- local({
                              name = "org:r-lib"))
     }
     env <- as.environment("org:r-lib")
-    env$print.rlib_error <- print_rlib_error
-    env$print.rlib_trace <- print_rlib_trace
     env$.Last.error <- cond
     env$.Last.error.trace <- cond$trace
 
@@ -175,6 +186,10 @@ err <- local({
       th(cond)
 
     } else {
+      # We print the error message and possibly the stack ourselves,
+      # because the printing in stop() might truncate it.
+      print_on_error(cond)
+
       # Dropping the classes and adding "duplicate_condition" is a workaround
       # for the case when we have non-exiting handlers on throw()-n
       # conditions. These would get the condition twice, because stop()
@@ -183,6 +198,11 @@ err <- local({
       # This is probably quite rare, but for this rare case they can also
       # recognize the duplicates from the "duplicate_condition" extra class.
       class(cond) <- c("duplicate_condition", "condition")
+
+      # And then we turn of the regular error printing to avoid printing
+      # the error twice.
+      opts <- options(show.error.messages = FALSE)
+      on.exit(options(opts), add = TRUE)
       stop(cond)
     }
   }
@@ -329,9 +349,11 @@ err <- local({
     if (is.null(cond$parent)) {
       # Nothing to do, no parent
 
-    } else if (is.null(cond$parent$trace)) {
+    } else if (is.null(cond$parent$trace) ||
+               !inherits(cond$parent, "rlib_error")) {
       # If the parent does not have a trace, that means that it is using
-      # the same trace as us.
+      # the same trace as us. We ignore traces from non-r-lib errors.
+      # E.g. rlang errors have a trace, but we do not use that.
       parent <- cond
       while (!is.null(parent <- parent$parent)) {
         nframes <- c(nframes, parent$`_nframe`)
@@ -430,13 +452,12 @@ err <- local({
   }
 
   print_rlib_trace <- function(x, ...) {
-    cl <- setdiff(x$classes, c("error", "condition"))
-    cl <- paste0(" ERROR TRACE for ", paste(cl, collapse = ", "), "")
+    cl <- paste0(" Stack trace:")
     cat(sep = "", "\n", style_trace_title(cl), "\n\n")
     calls <- map2(x$calls, x$topenv, namespace_calls)
     callstr <- vapply(calls, format_call_src, character(1))
     callstr[x$nframes] <-
-      paste0(callstr[x$nframes], "\n", style_error(x$messages), "\n")
+      paste0(callstr[x$nframes], "\n", style_error_msg(x$messages), "\n")
     callstr <- enumerate(callstr)
 
     # Ignore what we were told to ignore
@@ -466,6 +487,62 @@ err <- local({
 
     cat(callstr, sep = "\n")
     invisible(x)
+  }
+
+  print_on_error <- function(cond) {
+    cat("\n", file = stderr())
+    cat(style_error(gettext("Error: ")), file = stderr())
+    out <- capture_output(print(cond))
+    cat(out, file = stderr(), sep = "\n")
+    if (is_interactive()) {
+      cat(
+        style_advice("\nSee `.Last.error.trace` for a stack trace.\n"),
+        file = stderr()
+      )
+    } else {
+      out <- capture_output(print(cond$trace))
+      cat(out, file = stderr(), sep = "\n")
+    }
+  }
+
+  capture_output <- function(expr) {
+    if (has_crayon()) {
+      opts <- options(crayon.enabled = crayon::has_color())
+      on.exit(options(opts), add = TRUE)
+    }
+
+    out <- NULL
+    file <- textConnection("out", "w", local = TRUE)
+    sink(file)
+    on.exit(sink(NULL), add = TRUE)
+
+    expr
+    if (is.null(out)) invisible(NULL) else out
+  }
+
+  is_interactive <- function() {
+    opt <- getOption("rlib_interactive")
+    if (isTRUE(opt)) {
+      TRUE
+    } else if (identical(opt, FALSE)) {
+      FALSE
+    } else if (tolower(getOption("knitr.in.progress", "false")) == "true") {
+      FALSE
+    } else if (tolower(getOption("rstudio.notebook.executing", "false")) == "true") {
+      FALSE
+    } else if (identical(Sys.getenv("TESTTHAT"), "true")) {
+      FALSE
+    } else {
+      interactive()
+    }
+  }
+
+  onload_hook <- function() {
+    reg_env <- Sys.getenv("R_LIB_ERROR_REGISTER_PRINT_METHODS", "TRUE")
+    if (tolower(reg_env) != "false") {
+      registerS3method("print", "rlib_error", print_rlib_error, baseenv())
+      registerS3method("print", "rlib_trace", print_rlib_trace, baseenv())
+    }
   }
 
   namespace_calls <- function(call, env) {
@@ -539,17 +616,25 @@ err <- local({
     if (has_crayon()) crayon::silver(x) else x
   }
 
+  style_advice <- function(x) {
+    if (has_crayon()) crayon::reset(x) else x
+  }
+
   style_srcref <- function(x) {
     if (has_crayon()) crayon::italic(crayon::cyan(x))
   }
 
   style_error <- function(x) {
+    if (has_crayon()) crayon::bold(crayon::red(x)) else x
+  }
+
+  style_error_msg <- function(x) {
     sx <- paste0("\n x ", x, " ")
-    if (has_crayon()) crayon::bold(crayon::red(sx)) else sx
+    style_error(sx)
   }
 
   style_trace_title <- function(x) {
-    if (has_crayon()) crayon::bold(x) else x
+    x
   }
 
   style_process <- function(x) {
@@ -576,7 +661,8 @@ err <- local({
       rethrow        = rethrow,
       catch_rethrow  = catch_rethrow,
       rethrow_call   = rethrow_call,
-      add_trace_back = add_trace_back
+      add_trace_back = add_trace_back,
+      onload_hook    = onload_hook
     ),
     class = c("standalone_errors", "standalone"))
 })
@@ -584,8 +670,8 @@ err <- local({
 # These are optional, and feel free to remove them if you prefer to
 # call them through the `err` object.
 
-# new_cond  <- err$new_cond
+new_cond  <- err$new_cond
 new_error <- err$new_error
 throw     <- err$throw
 rethrow   <- err$rethrow
-# rethrow_call <- err$rethrow_call
+rethrow_call <- err$rethrow_call

@@ -12,7 +12,7 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, types) {
   }
 
   sol <- self$get_solution()$data
-  pkgs <- pkgs %||% sol$package[sol$direct]
+  pkgs <- pkgs %||% sol$package[sol$directpkg]
 
   data <- sol[, c("package", "deps")]
   deps <- lapply(sol$deps, function(x) x[tolower(x$type) %in% types, ])

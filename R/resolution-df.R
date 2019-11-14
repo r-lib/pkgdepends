@@ -7,6 +7,7 @@ res_make_empty_df <- local({
         ref      = character(),
         type     = character(),
         direct   = logical(),
+        directpkg= logical(),
         status   = character(),         # "OK" or "FAILED"
         package  = character(),
         version  = character(),
@@ -42,6 +43,7 @@ res_df_defaults <- local({
     if (is.null(data)) {
       data <<- list(
         direct   = FALSE,
+        directpkg= FALSE,
         status   = "OK",
         license  = NA_character_,
         needscompilation
@@ -116,7 +118,10 @@ res_check_entries <- function(ent) {
 res_add_df_entries <- function(df, entries) {
   if (!is_tibble(entries)) entries <- res_one_row_tibble(entries)
   entries <- res_add_defaults(entries)
-  as_tibble(rbind(df, entries))[names(df)]
+  ret <- as_tibble(rbind(df, entries))[names(df)]
+  direct <- ret$package[ret$direct]
+  ret$directpkg <- ret$package %in% direct
+  ret
 }
 
 res_one_row_tibble <- function(l) {

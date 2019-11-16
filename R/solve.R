@@ -29,14 +29,14 @@
 #' The objective of the ILP minimization is defined differently for
 #' different solution policies. The ILP conditions are the same.
 #'
-#' 1. For the `lazy` policy, `installed::` packaged get 1 points, binary
-#'    packages 2 point, sources packages 3 points.
+#' 1. For the `lazy` policy, `installed::` packaged get 0 points, binary
+#'    packages 1 point, sources packages 5 points.
 #' 2. For the 'upgrade' policy, we rank all candidates for a given package
 #'    according to their version numbers, and assign more points to older
 #'    versions. Points are assigned by 100 and candidates with equal
 #'    versions get equal points. We still prefer installed packages to
-#'    binaries to source packages, so also add 1 point for already
-#'    installed candidates, 2 extra points for binaries and 3 points for
+#'    binaries to source packages, so also add 0 point for already
+#'    installed candidates, 1 extra points for binaries and 5 points for
 #'    source packages.
 #' 3. For directly specified refs, we aim to install each package exactly
 #'    once. So for these we require that the variables corresponding to
@@ -240,8 +240,8 @@ pkgplan_i_lp_objectives <- function(lp) {
 
   if (policy == "lazy") {
     ## Simple: installed < binary < source
-    lp$obj <- ifelse(pkgs$type == "installed", 1,
-              ifelse(pkgs$platform == "source", 3, 2))
+    lp$obj <- ifelse(pkgs$type == "installed", 0,
+              ifelse(pkgs$platform == "source", 5, 1))
 
   } else if (policy == "upgrade") {
     ## Sort the candidates of a package according to version number

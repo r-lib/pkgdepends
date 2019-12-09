@@ -29,18 +29,23 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
   )
   data$label <- paste(data$label, silver(sol$version))
   data$label[sol$directpkg] <- italic(bold(cyan(data$label[sol$directpkg])))
+  data$trimmed <- data$label
 
   if (annotate) {
     builder <- emoji("builder")
     data$label <- paste(data$label, annotate_tree(sol, builder = builder))
   }
 
-  trees <- unlist(lapply(pkgs, function(p) c(tree(data, root = p), "")))
+  trees <- unlist(lapply(
+    pkgs,
+    function(p) c(tree(data, root = p, trim = TRUE), "")
+  ))
 
   if (annotate) {
     key <- paste0(
+      "Key: ",
       green(emoji("sparkles")), " new | ",
-      green(emoji("fire")), " update | ",
+      green(emoji("rocket")), " update | ",
       green(emoji("hand")), " outdated |",
       green(emoji("dl")), " download | ",
       green(builder), " build | ",
@@ -72,7 +77,7 @@ annotate_tree <- function(sol, builder = NULL) {
 
   green(paste0(
     ifelse(new, emoji("sparkles"), ""),
-    ifelse(upd, emoji("fire"), ""),
+    ifelse(upd, emoji("rocket"), ""),
     ifelse(sol$lib_status == "no-update", emoji("hand"), ""),
     ifelse((new | upd) & sol$platform == "source", builder, ""),
     ifelse(
@@ -98,7 +103,7 @@ emoji <- function(what) {
   emo <- has_emoji()
   switch(
     what,
-    "fire"     = if (emo) "\U1F525" else "[new]",
+    "rocket"   = if (emo) "\U1F680" else "[new]",
     "sparkles" = if (emo) "\u2728"  else "[upd]",
     "hand"     = if (emo) "\u270B"  else "[old]",
     "dl"       = if (emo) " \u2B07"  else "[dl]",

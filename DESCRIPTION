@@ -20,7 +20,7 @@ Imports:
     assertthat,
     backports,
     callr (>= 3.3.1),
-    cli (>= 1.0.0.9000),
+    cli (>= 2.0.0),
     cliapp (>= 0.1.0),
     crayon,
     curl,

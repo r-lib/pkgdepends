@@ -14,7 +14,7 @@ License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/r-lib/pkgdepends#readme
 BugReports: https://github.com/r-lib/pkgdepends/issues
-RoxygenNote: 6.1.99.9001
+RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "dynex"))
 Imports:
     assertthat,

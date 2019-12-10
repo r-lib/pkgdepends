@@ -101,7 +101,7 @@ A package dependency table has five columns currently:
 \item \code{ref}: The package ref of the dependency.
 \item \code{type}: The dependency type, in all lowercase. I.e. \code{imports},
 \code{suggests}, etc.
-\item \code{op}: Operator for version requirements, e.g. \verb{>=}.
+\item \code{op}: Operator for version requirements, e.g. \code{>=}.
 \item \code{version}: Version number, for version requirements.
 }
 }

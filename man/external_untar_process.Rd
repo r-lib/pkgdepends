@@ -16,6 +16,7 @@ Uses the system's \code{tar} program, in a background process.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{external_untar_process$new()}}
+\item \href{#method-clone}{\code{external_untar_process$clone()}}
 }
 }
 \if{html}{
@@ -113,6 +114,22 @@ Start running the background process that extracts the file.
 
 \subsection{Returns}{
 New \code{r_untar_process} object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{external_untar_process$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
 }
 }
 }

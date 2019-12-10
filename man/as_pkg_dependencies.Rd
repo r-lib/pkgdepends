@@ -36,6 +36,7 @@ both for direct installations and dependent packages.
 \if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
 }
 \seealso{
-Other package dependency utilities: \code{\link{pkg_dep_types_hard}()}
+Other package dependency utilities: 
+\code{\link{pkg_dep_types_hard}()}
 }
 \concept{package dependency utilities}

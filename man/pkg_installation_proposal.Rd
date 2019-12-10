@@ -304,6 +304,7 @@ pdi
 \item \href{#method-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
 \item \href{#method-format}{\code{pkg_installation_proposal$format()}}
 \item \href{#method-print}{\code{pkg_installation_proposal$print()}}
+\item \href{#method-clone}{\code{pkg_installation_proposal$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -851,6 +852,22 @@ pdi
 
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
 }
 }
 

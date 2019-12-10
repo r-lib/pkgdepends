@@ -50,7 +50,7 @@ forecast@current
 }
 
 Note: pkgdepends currently parses the version specification part
-(everything after \verb{@}), but does not use it.
+(everything after \code{@}), but does not use it.
 }
 
 \subsection{Bioconductor packages:}{

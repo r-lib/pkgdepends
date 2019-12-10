@@ -1,6 +1,7 @@
 
-#' @importFrom crayon italic bold cyan silver bgRed white
-#' @importFrom cli tree
+#' @importFrom crayon italic bold cyan silver bgRed white green
+#'   strip_style
+#' @importFrom cli tree symbol
 
 pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
                                        annotate) {
@@ -12,7 +13,9 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
     stop("Unknown dependency type(s): ", paste(bad, collapse = ", "))
   }
 
+  self$stop_for_solve_error()
   sol <- self$get_solution()$data
+  sol <- sol[order(sol$package), ]
   pkgs <- pkgs %||% sol$package[sol$directpkg]
 
   data <- sol[, c("package", "deps")]
@@ -22,18 +25,35 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
   deps <- lapply(deps, intersect, data$package)
   data$deps <- deps
 
+  ann_version <- function() {
+    v <- silver(sol$version)
+    upd <- sol$lib_status == "update"
+    if (any(upd)) {
+      v[upd] <- green(paste(sol$old_version[upd], "->", sol$version[upd]))
+    }
+    nupd <- sol$lib_status == "no-update"
+    if (any(nupd)) {
+      v[nupd] <- green(paste(sol$version[nupd], "<", sol$new_version[nupd]))
+    }
+    v
+  }
+
   data$label <- ifelse(
     sol$type %in% c("cran", "bioc", "standard", "installed"),
     data$package,
     sol$ref
   )
-  data$label <- paste(data$label, silver(sol$version))
-  data$label[sol$directpkg] <- italic(bold(cyan(data$label[sol$directpkg])))
   data$trimmed <- data$label
+  data$label <- paste(data$label, ann_version())
+  data$label[sol$directpkg] <- italic(bold(cyan(data$label[sol$directpkg])))
 
   if (annotate) {
     builder <- emoji("builder")
-    data$label <- paste(data$label, annotate_tree(sol, builder = builder))
+    ann <- get_tree_annotation(sol)
+    data$label <- paste(
+      data$label,
+      annotate_tree(sol, ann, builder = builder)
+    )
   }
 
   trees <- unlist(lapply(
@@ -41,16 +61,16 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
     function(p) c(tree(data, root = p, trim = TRUE), "")
   ))
 
-  if (annotate) {
+  if (annotate && any(unlist(ann))) {
     key <- paste0(
-      "Key: ",
-      green(emoji("sparkles")), " new | ",
-      green(emoji("rocket")), " update | ",
-      green(emoji("hand")), " outdated |",
-      green(emoji("dl")), " download | ",
-      green(builder), " build | ",
-      green(emoji("wrench")), " compile"
+      if (any(ann$new))     paste(" |", green(emoji("sparkles")), "new"),
+      if (any(ann$upd))     paste(" |", green(emoji("rocket")), "update"),
+      if (any(ann$noupd))   paste(" |", green(emoji("hand")), "outdated"),
+      if (any(ann$dl))      paste(" |", green(emoji("dl")), "download"),
+      if (any(ann$build))   paste(" |", green(builder), "build"),
+      if (any(ann$compile)) paste(" |", green(emoji("wrench")), "compile")
     )
+    key <- paste0("Key: ", sub("^ [|]", "", key))
     trees <- c(trees, key)
   }
 
@@ -58,7 +78,10 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
   trees
 }
 
+#' @importFrom cli is_utf8_output
+
 has_emoji <- function() {
+  if (!is_utf8_output()) return(FALSE)
   if (isTRUE(opt <- getOption("pkg.emoji"))) return(TRUE)
   if (identical(opt, FALSE)) return(FALSE)
   if (Sys.info()[["sysname"]] != "Darwin") return(FALSE)
@@ -66,26 +89,32 @@ has_emoji <- function() {
   TRUE
 }
 
+get_tree_annotation <- function(sol) {
+  ann <- data.frame(
+    stringsAsFactors = FALSE,
+    new = sol$lib_status == "new",
+    upd = sol$lib_status == "update",
+    noupd = sol$lib_status == "no-update",
+    dl  = !is.na(sol$cache_status) & sol$cache_status == "miss"
+  )
+  ann$build <- (ann$new | ann$upd) & sol$platform == "source"
+  ann$compile <- (ann$new | ann$upd) & !is.na(sol$needscompilation) &
+    sol$needscompilation
+
+  ann
+}
+
 #' @importFrom crayon green
 
-annotate_tree <- function(sol, builder = NULL) {
-  new <- sol$lib_status == "new"
-  dl  <- !is.na(sol$cache_status) & sol$cache_status == "miss"
-  upd <- sol$lib_status == "update"
-
+annotate_tree <- function(sol, ann, builder = NULL) {
   builder <- builder %||% emoji("builder")
-
   green(paste0(
-    ifelse(new, emoji("sparkles"), ""),
-    ifelse(upd, emoji("rocket"), ""),
-    ifelse(sol$lib_status == "no-update", emoji("hand"), ""),
-    ifelse((new | upd) & sol$platform == "source", builder, ""),
-    ifelse(
-      (new | upd) & !is.na(sol$needscompilation) & sol$needscompilation,
-      emoji("wrench"),
-      ""
-    ),
-    ifelse(dl, paste(emoji("dl"), format_file_size(sol$filesize)), "")
+    ifelse(ann$new, emoji("sparkles"), ""),
+    ifelse(ann$upd, emoji("rocket"), ""),
+    ifelse(ann$noupd, emoji("hand"), ""),
+    ifelse(ann$build, builder, ""),
+    ifelse(ann$compile, emoji("wrench"), ""),
+    ifelse(ann$dl, paste(emoji("dl"), format_file_size(sol$filesize)), "")
   ))
 }
 
@@ -103,8 +132,8 @@ emoji <- function(what) {
   emo <- has_emoji()
   switch(
     what,
-    "rocket"   = if (emo) "\U1F680" else "[new]",
-    "sparkles" = if (emo) "\u2728"  else "[upd]",
+    "rocket"   = if (emo) "\U1F680" else "[upd]",
+    "sparkles" = if (emo) "\u2728"  else "[new]",
     "hand"     = if (emo) "\u270B"  else "[old]",
     "dl"       = if (emo) " \u2B07"  else "[dl]",
     "builder"  = if (emo) emo_builder() else "[bld]",

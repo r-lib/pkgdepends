@@ -612,16 +612,23 @@ calculate_lib_status <- function(sol, res) {
       ifelse(is.na(lib_ver), "new",
         ifelse(sol$type == "installed", "current", "update")))
 
+  # Return NA for empty sets
+  mmax <- function(...) c(suppressWarnings(max(...)), NA)[1]
+
   ## Check for no-update
-  could_update <- vlapply(seq_along(sol$package), function(i) {
+  new_version <- vcapply(seq_along(sol$package), function(i) {
     p <- sol$package[i]
     v <- if (is.na(sol$version[i])) NA_character_ else package_version(sol$version[i])
     g <- sres$package == p & !is.na(sres$version)
-    any(v < sres$version[g])
+    mmax(sres$version[g][v < sres$version[g]])
   })
-  status[status == "current" & could_update] <- "no-update"
+  status[status == "current" & !is.na(new_version)] <- "no-update"
 
-  tibble::tibble(lib_status = status, old_version = lib_ver)
+  tibble::tibble(
+    lib_status = status,
+    old_version = lib_ver,
+    new_version = new_version
+  )
 }
 
 ## TODO: non-CRAN packages? E.g. GH based on sha.

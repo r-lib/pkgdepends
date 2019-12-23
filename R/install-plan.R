@@ -112,6 +112,7 @@ make_start_state <- function(plan, config) {
   ## We store the data about build and installation here
   install_cols <- data.frame(
     stringsAsFactors = FALSE,
+    row.names = NULL,
     package_done = plan$packaged,
     package_time = I(rep_list(nrow(plan), as.POSIXct(NA))),
     package_error = I(rep_list(nrow(plan), list())),

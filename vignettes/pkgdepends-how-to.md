@@ -11,65 +11,65 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE, cache = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  out.width = "100%",
-  cache = TRUE
-)
-# Turn on ANSI colors
-options(
-    crayon.enabled = TRUE,
-    crayon.colors = 256)
-crayon::num_colors(forget = TRUE)
-asciicast::init_knitr_engine(
-  startup = quote({
-    set.seed(1) }),
-  echo = TRUE,
-  echo_input = FALSE)
-```
+
   
 # Dependencies
 
 ## How to list all dependencies of a CRAN/Bioconductor package?
 
-```{asciicast}
+
+```asciicast
 library(pkgdepends)
 prop <- new_pkg_deps("pak")
 prop$solve()
 prop$get_solution()$data
 ```
 
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-2.svg" width="100%" />
+
 You can also draw a dependency tree:
 
-```{asciicast}
+
+```asciicast
 prop$draw()
 ```
 
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-3.svg" width="100%" />
+
 ## How to list all dependencies of a GitHub package?
 
-```{asciicast}
+
+```asciicast
 library(pkgdepends)
 prop <- new_pkg_deps("r-lib/pak")
 prop$solve()
 prop$get_solution()$data
 ```
 
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-4.svg" width="100%" />
+
 ## How to list all dependencies of a local package?
 
-```{asciicast}
+
+```asciicast
 library(pkgdepends)
 prop <- new_pkg_deps("local::.")
 prop$solve()
 prop$get_solution()$data
 ```
 
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-5.svg" width="100%" />
+
 # Downloads
 
 ## How to download a package and all of its dependencies?
 
-```{asciicast}
+
+```asciicast
 library(pkgdepends)
 target_dir <- tempfile()
 dir.create(target_dir)
@@ -80,11 +80,15 @@ prop$get_downloads()
 dir(target_dir)
 ```
 
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-6.svg" width="100%" />
+
 # Installation
 
 ## How to install a package into a new library?
 
-```{asciicast}
+
+```asciicast
 library(pkgdepends)
 dir.create(new_lib <- tempfile())
 prop <- new_pkg_installation_proposal("pak", config = list(library = new_lib))
@@ -94,11 +98,15 @@ prop$install()
 lib_status(new_lib)
 ```
 
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-7.svg" width="100%" />
+
 ## How to update a package?
 
 Install an older version first.
 
-```{asciicast}
+
+```asciicast
 library(pkgdepends)
 dir.create(new_lib <- tempfile())
 config <- list(library = new_lib)
@@ -109,9 +117,13 @@ prop$install()
 lib_status(new_lib)
 ```
 
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-8.svg" width="100%" />
+
 Now update.
 
-```{asciicast}
+
+```asciicast
 library(pkgdepends)
 prop2 <- new_pkg_installation_proposal("pkgconfig", config = config)
 prop2$set_solve_policy("upgrade")
@@ -120,3 +132,6 @@ prop2$download()
 prop2$install()
 lib_status(new_lib)
 ```
+
+
+<img src="pkgdepends-how-to_files/figure-html//unnamed-chunk-9.svg" width="100%" />

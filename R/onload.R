@@ -7,7 +7,7 @@
   err$onload_hook()
   lazyrmd$onload_hook(
     local = "if-newer",
-    ci = TRUE,
+    ci = function() has_asciicast_support() && getRversion() >= "3.3",
     cran = FALSE
   )
 }

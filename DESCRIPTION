@@ -48,6 +48,7 @@ Suggests:
     digest,
     fansi,
     fs,
+    htmlwidgets,
     knitr,
     mockery,
     pingr (>= 2.0.0),

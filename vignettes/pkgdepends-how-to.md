@@ -20,7 +20,7 @@ vignette: >
 
 ```asciicast
 library(pkgdepends)
-prop <- new_pkg_deps("pak")
+prop <- new_pkg_deps("ggplot2")
 prop$solve()
 prop$get_solution()$data
 ```
@@ -43,7 +43,7 @@ prop$draw()
 
 ```asciicast
 library(pkgdepends)
-prop <- new_pkg_deps("r-lib/pak")
+prop <- new_pkg_deps("tidyverse/ggplot2")
 prop$solve()
 prop$get_solution()$data
 ```
@@ -73,7 +73,7 @@ prop$get_solution()$data
 library(pkgdepends)
 target_dir <- tempfile()
 dir.create(target_dir)
-prop <- new_pkg_download_proposal("pak", config = list(cache_dir = target_dir))
+prop <- new_pkg_download_proposal("ggplot2", config = list(cache_dir = target_dir))
 prop$resolve()
 prop$download()
 prop$get_downloads()
@@ -91,7 +91,7 @@ dir(target_dir)
 ```asciicast
 library(pkgdepends)
 dir.create(new_lib <- tempfile())
-prop <- new_pkg_installation_proposal("pak", config = list(library = new_lib))
+prop <- new_pkg_installation_proposal("pkgconfig", config = list(library = new_lib))
 prop$solve()
 prop$download()
 prop$install()

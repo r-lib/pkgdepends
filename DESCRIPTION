@@ -54,6 +54,6 @@ Suggests:
     rstudioapi,
     spelling,
     testthat
-VignetteBuilder: knitr
+VignetteBuilder: pkgdepends
 Remotes: r-lib/pkgcache
 Encoding: UTF-8

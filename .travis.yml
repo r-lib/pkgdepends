@@ -2,6 +2,8 @@ language: r
 sudo: false
 cache: packages
 
+r_github_packages:
+  - r-lib/pkgdepends
 r:
  - 3.2
  - 3.3

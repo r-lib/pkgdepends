@@ -6,7 +6,7 @@ output:
     toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{pkgdepends how tos}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{pkgdepends::lazyrmd}
   %\VignetteEncoding{UTF-8}
 ---
 

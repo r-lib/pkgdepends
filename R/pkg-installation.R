@@ -45,8 +45,7 @@ new_pkg_installation_proposal <- function(refs, config = list(), ...) {
 #'   ['Package references'][pkg_refs] for the syntax.
 #'
 #' @export
-#' @examples
-#' # Needs internet connection: pkgdepends:::is_online()
+#' @examplesIf pkgdepends:::is_online()
 #' pdi <- new_pkg_installation_proposal(
 #'   "pak",
 #'   config = list(library = tempfile())
@@ -84,7 +83,6 @@ pkg_installation_proposal <- R6::R6Class(
     #'   use, and experimental currently.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile()))
@@ -117,7 +115,6 @@ pkg_installation_proposal <- R6::R6Class(
     #' `pkg_installation_proposal` object.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
     #' pdi$get_refs()
 
@@ -132,7 +129,6 @@ pkg_installation_proposal <- R6::R6Class(
     #' options.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -152,8 +148,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' The same as the [`get_resolution()`](#method-get-resolution) method
     #' (see below), the result of the resolution, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -181,8 +176,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' A [pkg_resolution_result] object, which is also a tibble. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -200,7 +194,6 @@ pkg_installation_proposal <- R6::R6Class(
     #' A character vector of length one.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -220,7 +213,6 @@ pkg_installation_proposal <- R6::R6Class(
     #' @param policy Policy to set.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -249,8 +241,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' The same as the [`get_solution()`](#method-get-solution) method, the
     #' result, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -270,8 +261,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' A [pkg_solution_result] object, which is a list. See
     #' [pkg_solution_result] for details.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -286,8 +276,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' Error if the dependency solver failed to find a consistent set of
     #' packages that can be installed together.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' # This is an error, because the packages conflict:
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
@@ -311,8 +300,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' A `tree` object from the cli package, see [cli::tree()].
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -332,8 +320,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' The same as the [`get_downloads()`](#method-get-downloads) method,
     #' the result, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
     #'   config = list(library = tempfile())
@@ -361,8 +348,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' A [pkg_download_result] object, which is a list. See
     #' [pkg_download_result] for details.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
     #'   config = list(library = tempfile())
@@ -402,8 +388,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' An installation plan, see ['Installation plans'][install_plans] for
     #' the format.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -471,8 +456,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_installation_proposal` object itself, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())

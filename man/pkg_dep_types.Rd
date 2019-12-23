@@ -19,7 +19,9 @@ A string vector of dependency types, capitalized.
 Hard dependencies are needed for a package to load, soft dependencies
 are optional.
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \seealso{
 Other package dependency utilities: 

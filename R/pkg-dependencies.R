@@ -58,7 +58,6 @@ pkg_deps <- R6::R6Class(
     #'  A new `pkg_deps` object.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pd <- pkg_deps$new("r-lib/pkgdepends")
     #' pd
 
@@ -81,7 +80,6 @@ pkg_deps <- R6::R6Class(
     #' `pkg_deps` object.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pd <- new_pkg_deps(c("pak", "jsonlite"))
     #' pd$get_refs()
 
@@ -96,7 +94,6 @@ pkg_deps <- R6::R6Class(
     #' options.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pd <- new_pkg_deps("pak")
     #' pd$get_config()
 
@@ -113,8 +110,7 @@ pkg_deps <- R6::R6Class(
     #' The same as the [`get_resolution()`](#method-get-resolution) method
     #' (see below), the result of the resolution, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("pak")
     #' pd$resolve()
     #' pd
@@ -138,8 +134,7 @@ pkg_deps <- R6::R6Class(
     #' A [pkg_resolution_result] object, which is also a tibble. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$get_resolution()
@@ -161,8 +156,7 @@ pkg_deps <- R6::R6Class(
     #' The same as the [`get_solution()`](#method-get-solution) method, the
     #' result, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$solve()
@@ -176,8 +170,7 @@ pkg_deps <- R6::R6Class(
     #' A [pkg_solution_result] object, which is a list. See
     #' [pkg_solution_result] for details.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("pkgload")
     #' pd$resolve()
     #' pd$solve()
@@ -193,8 +186,7 @@ pkg_deps <- R6::R6Class(
     #' @return
     #' A `tree` object from the cli package, see [cli::tree()].
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("pkgload")
     #' pd$solve()
     #' pd$draw()
@@ -252,8 +244,7 @@ pkg_deps <- R6::R6Class(
     #' @return
     #' The `pkg_deps` object itself, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd
     #'

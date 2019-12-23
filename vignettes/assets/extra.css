@@ -1,7 +1,13 @@
 
+/* Make sure we use a serif font, unless specified otherwise. In
+   particular, this applies to the headings, which use a monospace
+   font by default. */
+
 body {
     font-family: sans-serif;
 }
+
+/* Style the page header, which is a table. */
 
 body > table:first-child {
     background-color: #f8f8f8;
@@ -9,6 +15,8 @@ body > table:first-child {
     margin: 0 0 10px;
     border: 1px solid #eee;
 }
+
+/* Better styles for headings. */
 
 h1 {
     font-size: 36px;
@@ -53,28 +61,22 @@ h6 {
     font-style: normal;
 }
 
+/* Add a bit of vertical space between the function arguments. */
+
 table p {
     margin-top: 0;
     margin-bottom: 6px;
 }
 
+/* Better function argument formatting, in particular, leave some space
+   after the argument name. */
+
 table[summary="R argblock"] tr td:first-child {
     min-width: 24px;
     padding-right: 12px;
-    font-weight: bold;
-    text-align: right;
 }
 
-div.arguments table tr td:first-child {
-    min-width: 24px;
-    padding-right: 12px;
-    font-weight: bold;
-    text-align: right;
-}
-
-div.arguments table tr td {
-    padding-bottom: 6px;
-}
+/* Nicer formatting of preformatted code. */
 
 pre {
     background-color: #f8f8f8;
@@ -88,10 +90,17 @@ pre {
     font-style: italic;
 }
 
-div.r pre {
+/* Nicer formatting of R code. The 'r' class is added by
+   @includeRmd, or it can also be added manually, with ```r ... ```.
+   The Examples section is also highlighted. */
+
+div.r pre, pre.r {
     color: #333;
     font-style: normal;
 }
+
+/* Make sure that the manual page is not super wide, because long lines
+   are not readable. */
 
 body {
     max-width: 970px;
@@ -100,6 +109,9 @@ body {
     margin-right: auto;
     margin-left: auto;
 }
+
+/* Only underline links when we hover over them.
+   Change their default color */
 
 a:link code {
     color: #375f87;
@@ -114,6 +126,8 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Make lists a bit more spacious. */
+
 ul p {
     margin-top: 0;
     margin-bottom: 6px;
@@ -123,6 +137,10 @@ ol p {
     margin-top: 0;
     margin-bottom: 6px;
 }
+
+/* The rest of this file is a Solarized theme, that is used for syntax
+   highlighting R code, via the rd.js file. */
+
 
 /*
 

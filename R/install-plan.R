@@ -33,8 +33,7 @@
 #' @seealso [pkg_installation_proposal] to create install plans,
 #' [install_package_plan()] to install plans from any source.
 #'
-#' @examples
-#' # Needs internet connection: pkgdepends:::is_online()
+#' @examplesIf pkgdepends:::is_online()
 #' pdi <- new_pkg_installation_proposal(
 #'   "pak",
 #'   config = list(library = tempfile())

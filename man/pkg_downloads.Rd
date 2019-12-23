@@ -9,7 +9,9 @@ The \code{\link{pkg_download_proposal}} and \code{\link{pkg_installation_proposa
 both have download methods, to downloads package files into a
 configured directory (see \link[=pkg_config]{'Configuration'}).
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 They return a \code{pkg_download_result} object, which is a data frame

@@ -10,7 +10,9 @@ set of package files. It is usually created from an
 \link[=pkg_solution]{solving} the dependencies and \link[=pkg_downloads]{downloading}
 the package files.
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 It is also possible to create an installation plan a different way. An
@@ -39,8 +41,7 @@ installed as a dependency.
 }
 }
 \examples{
-\testonly{
-if (pkgdepends:::is_online()) {
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -49,20 +50,9 @@ pdi$resolve()
 pdi$solve()
 pdi$download()
 pdi$get_install_plan()
-}}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \link{pkg_installation_proposal} to create install plans,
 \code{\link[=install_package_plan]{install_package_plan()}} to install plans from any source.
 }
-\section{Examples}{
-\examplesx{# Needs internet connection: pkgdepends:::is_online()
-pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$download()
-pdi$get_install_plan()
-}}

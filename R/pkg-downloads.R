@@ -59,7 +59,6 @@ pkg_download_proposal <- R6::R6Class(
     #'   use, and experimental currently.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
     #' pdl
 
@@ -76,7 +75,6 @@ pkg_download_proposal <- R6::R6Class(
     #' `pkg_download_proposal` object.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
     #' pdl$get_refs()
 
@@ -91,7 +89,6 @@ pkg_download_proposal <- R6::R6Class(
     #' options.
     #'
     #' @examples
-    #' # Needs: TRUE
     #' pdl <- new_pkg_download_proposal("pak")
     #' pdl$get_config()
 
@@ -108,8 +105,7 @@ pkg_download_proposal <- R6::R6Class(
     #' The same as the [`get_resolution()`](#method-get-resolution) method
     #' (see below), the result of the resolution, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdl <- new_pkg_download_proposal("pak")
     #' pdl$resolve()
     #' pdl
@@ -133,8 +129,7 @@ pkg_download_proposal <- R6::R6Class(
     #' A [pkg_resolution_result] object, which is also a tibble. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl$resolve()
     #' pdl$get_resolution()
@@ -149,8 +144,7 @@ pkg_download_proposal <- R6::R6Class(
     #' The same as the [`get_downloads()`](#method-get-downloads) method,
     #' the result, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl$resolve()
     #' pdl$download()
@@ -174,8 +168,7 @@ pkg_download_proposal <- R6::R6Class(
     #' A [pkg_download_result] object, which is a list. See
     #' [pkg_download_result] for details.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdl <- new_pkg_download_proposal("pkgload")
     #' pdl$resolve()
     #' pdl$download()
@@ -234,8 +227,7 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_download_proposal` object itself, invisibly.
     #'
-    #' @examples
-    #' # Needs internet connection: pkgdepends:::is_online()
+    #' @examplesIf pkgdepends:::is_online()
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl
     #'

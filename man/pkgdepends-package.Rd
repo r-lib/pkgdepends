@@ -10,7 +10,9 @@ pkgdepends is a toolkit for package dependencies, downloads and
 installations, to be used in other packages. If you are looking for a
 package manager, see \href{https://github.com/r-lib/pak}{pak}.
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \seealso{
 Useful links:

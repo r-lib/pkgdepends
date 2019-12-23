@@ -17,7 +17,9 @@ new_pkg_download_proposal(refs, ...)
 \description{
 Download packages with their dependencies, from various sources.
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \code{new_pkg_download_proposal()} creates a new object from the
@@ -40,84 +42,35 @@ Typical workflow to download a set of packages:
 }
 }
 \examples{
-\testonly{
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$new`
-## ------------------------------------------------
-
-
 pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
 pdl
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_refs`
-## ------------------------------------------------
-
-
 pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
 pdl$get_refs()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_config`
-## ------------------------------------------------
-
-
 pdl <- new_pkg_download_proposal("pak")
 pdl$get_config()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$resolve`
-## ------------------------------------------------
-
-
-if (pkgdepends:::is_online()) {
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
 pdl
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_resolution`
-## ------------------------------------------------
-
-}
-
-if (pkgdepends:::is_online()) {
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$get_resolution()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$download`
-## ------------------------------------------------
-
-}
-
-if (pkgdepends:::is_online()) {
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
 pdl
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_downloads`
-## ------------------------------------------------
-
-}
-
-if (pkgdepends:::is_online()) {
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("pkgload")
 pdl$resolve()
 pdl$download()
 pdl$get_downloads()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$print`
-## ------------------------------------------------
-
-}
-
-if (pkgdepends:::is_online()) {
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl
 
@@ -126,7 +79,7 @@ pdl
 
 pdl$download()
 pdl
-}}
+\dontshow{\}) # examplesIf}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -175,7 +128,7 @@ use, and experimental currently.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
 pdl
 }
 \if{html}{\out{</div>}}
@@ -198,7 +151,7 @@ A character vector of package refs that were used to create the
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
+\preformatted{pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
 pdl$get_refs()
 }
 \if{html}{\out{</div>}}
@@ -221,7 +174,7 @@ options.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{pdl <- new_pkg_download_proposal("pak")
+\preformatted{pdl <- new_pkg_download_proposal("pak")
 pdl$get_config()
 }
 \if{html}{\out{</div>}}
@@ -247,8 +200,7 @@ The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("pak")
+\preformatted{pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
 pdl
 }
@@ -285,8 +237,7 @@ A \link{pkg_resolution_result} object, which is also a tibble. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$get_resolution()
 }
@@ -310,8 +261,7 @@ the result, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
 pdl
@@ -348,8 +298,7 @@ A \link{pkg_download_result} object, which is a list. See
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("pkgload")
+\preformatted{pdl <- new_pkg_download_proposal("pkgload")
 pdl$resolve()
 pdl$download()
 pdl$get_downloads()
@@ -409,8 +358,7 @@ The \code{pkg_download_proposal} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\examplesx{# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
+\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl
 
 pdl$resolve()
@@ -441,81 +389,3 @@ The objects of this class are cloneable with this method.
 }
 }
 }
-
-\section{Examples}{
-\examplesx{
-## ------------------------------------------------
-## Method `pkg_download_proposal$new`
-## ------------------------------------------------
-
-# Needs: TRUE
-pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
-pdl
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_refs`
-## ------------------------------------------------
-
-# Needs: TRUE
-pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
-pdl$get_refs()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_config`
-## ------------------------------------------------
-
-# Needs: TRUE
-pdl <- new_pkg_download_proposal("pak")
-pdl$get_config()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$resolve`
-## ------------------------------------------------
-
-# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("pak")
-pdl$resolve()
-pdl
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_resolution`
-## ------------------------------------------------
-
-# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
-pdl$resolve()
-pdl$get_resolution()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$download`
-## ------------------------------------------------
-
-# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
-pdl$resolve()
-pdl$download()
-pdl
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$get_downloads`
-## ------------------------------------------------
-
-# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("pkgload")
-pdl$resolve()
-pdl$download()
-pdl$get_downloads()
-
-## ------------------------------------------------
-## Method `pkg_download_proposal$print`
-## ------------------------------------------------
-
-# Needs internet connection: pkgdepends:::is_online()
-pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
-pdl
-
-pdl$resolve()
-pdl
-
-pdl$download()
-pdl}}

@@ -9,7 +9,9 @@ The dependency solver takes the resolution information, and works out
 the exact versions of each package that must be installed, such that
 version and other requirements are satisfied.
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \subsection{Solution policies}{

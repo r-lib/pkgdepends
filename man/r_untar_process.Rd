@@ -6,7 +6,9 @@
 \description{
 Uses \code{\link[utils:untar]{utils::untar()}}, in a background process.
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"><script src="../doc/assets/rd.js"></script>}}
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \keyword{internal}
 \section{Super classes}{
@@ -129,4 +131,3 @@ The objects of this class are cloneable with this method.
 }
 }
 }
-

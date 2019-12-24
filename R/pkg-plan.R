@@ -41,8 +41,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_install_plan(self, private, downloads = TRUE),
     export_install_plan = function(plan_file = stdout())
       pkgplan_export_install_plan(self, private, plan_file),
-    draw_solution_tree = function(pkgs = NULL, types = NULL, annotate = TRUE)
-      pkgplan_draw_solution_tree(self, private, pkgs, types, annotate),
+    draw_solution_tree = function(pkgs = NULL, annotate = TRUE)
+      pkgplan_draw_solution_tree(self, private, pkgs, annotate),
 
     async_download_solution = function()
       pkgplan_async_download_solution(self, private),

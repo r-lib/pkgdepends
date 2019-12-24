@@ -3,15 +3,9 @@
 #'   strip_style
 #' @importFrom cli tree symbol
 
-pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
-                                       annotate) {
+pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
 
   assert_that(is.null(pkgs) || is_character(pkgs))
-  types <- tolower(types %||% pkg_dep_types_hard())
-
-  if (length(bad <- setdiff(types, tolower(pkg_dep_types())))) {
-    stop("Unknown dependency type(s): ", paste(bad, collapse = ", "))
-  }
 
   self$stop_for_solve_error()
   sol <- self$get_solution()$data
@@ -20,7 +14,10 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, types,
 
   data <- sol[, c("package", "deps")]
 
-  deps <- lapply(sol$deps, function(x) x[tolower(x$type) %in% types, ])
+  deps <- lapply(seq_len(nrow(sol)), function(i) {
+    d <- sol$deps[[i]]
+    d[tolower(d$type) %in% tolower(sol$dep_types[[i]]), ]
+  })
   deps <- lapply(deps, "[[", "package")
   deps <- lapply(deps, intersect, data$package)
   data$deps <- deps

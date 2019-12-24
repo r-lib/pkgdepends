@@ -419,8 +419,14 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     dependencies = dependencies
   )$
     then(function(value) {
-      value[["dep_types"]] <-
-        if (NROW(value)) list(dependencies[[2-direct]]) else list()
+      # remote is either direct or indirect dependency, depending on
+      # 'direct', and the rest are all indirect
+      if (NROW(value)) {
+        value[["dep_types"]] <- list(dependencies[[2]])
+        value$dep_types[value$package == remote$package] <- list(dependencies[[2 - direct]])
+      } else {
+        value[["dep_types"]] <- list()
+      }
       value
   })
 }

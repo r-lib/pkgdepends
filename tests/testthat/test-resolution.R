@@ -335,6 +335,34 @@ test_that("error if cannot find package", {
   expect_equal(res$status, c("FAILED", "FAILED"))
 })
 
-test_that("error if cannot find dependency", {
-  ## TODO
+test_that("dependency types", {
+  conf <- pkgplan_default_config()
+  conf$dependencies <- TRUE
+  cache <- list(
+    package = pkgcache::package_cache$new(),
+    metadata = pkgcache::get_cranlike_metadata_cache())
+  do <- function(refs) {
+    res <- new_resolution(config = conf, cache = cache)
+    res$push(.list = parse_pkg_refs(refs), direct = TRUE)
+    res$when_complete()
+  }
+
+  res <- synchronise(do("processx"))
+  dt <- res$dep_types
+  expect_equal(
+    dt[res$package == "processx"],
+    replicate(
+      sum(res$package == "processx"),
+      c("Depends", "Imports", "LinkingTo", "Suggests"),
+      simplify = FALSE
+    )
+  )
+  expect_equal(
+    dt[res$package != "processx"],
+    replicate(
+      sum(res$package != "processx"),
+      c("Depends", "Imports", "LinkingTo"),
+      simplify = FALSE
+    )
+  )
 })

@@ -135,6 +135,8 @@ emoji <- function(what) {
     "dl"       = if (emo) " \u2B07"  else "[dl]",
     "builder"  = if (emo) emo_builder() else "[bld]",
     "wrench"   = if (emo) "\U1F527" else "[cmp]",
+    "pkg"      = if (emo) "\U1F4E6" else "pkg",
+    "pkgs"     = if (emo) "\U1F4E6" else "pkgs",
     ""
   )
 }

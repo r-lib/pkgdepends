@@ -1,48 +1,29 @@
 
-pkg_data <- new.env()
-
-#' @importFrom cli symbol
-#' @importFrom cliapp cli_alert_success cli_alert_info cli_alert_warning
-#'   cli_alert_danger cli_text
+#' @importFrom cli symbol cli_alert_success cli_alert_danger
 
 alert <- function(type, msg, .envir = parent.frame()) {
-  if (!is_verbose()) return()
-  if (have_rstudio_bug_2387()) {
-    switch(
-      type,
-      success = cli_text(paste(symbol$tick, msg), .envir = .envir),
-      info = cli_text(paste(symbol$info, msg), .envir = .envir),
-      warning = cli_alert_warning(msg, .envir = .envir),
-      danger = cli_alert_danger(msg, .envir = .envir)
-    )
-  } else {
-    switch (
-      type,
-      success = cliapp::cli_alert_success(msg, .envir = .envir),
-      info = cli_alert_info(msg, .envir = .envir),
-      warning = cli_alert_warning(msg, .envir = .envir),
-      danger = cli_alert_danger(msg, .envir = .envir)
-    )
-  }
-}
-
-#' @importFrom cli get_spinner
-
-create_progress_bar <- function(state) {
-  if (!is_verbose()) return()
-  pkg_data$spinner <- get_spinner()
-  pkg_data$spinner_state <- 1L
-
-  cli_progress_bar(
-    format = ":xbar ETA :eta | :xbuilt | :xinst | :xmsg",
-    total = sum(!state$plan$build_done) + sum(!state$plan$install_done),
-    force = TRUE
+  switch (
+    type,
+    success = cli_alert_success(msg, .envir = .envir),
+    info = cli_alert_info(msg, .envir = .envir),
+    warning = cli_alert_warning(msg, .envir = .envir),
+    danger = cli_alert_danger(msg, .envir = .envir)
   )
 }
 
-update_progress_bar <- function(state, tick = 0) {
+#' @importFrom cli get_spinner cli_status
 
-  if (!is_verbose()) return()
+create_progress_bar <- function(state) {
+  bar <- new.env(parent = emptyenv())
+  bar$spinner <- get_spinner()
+  bar$spinner_state <- 1L
+  bar$status <- cli_status("Installing packages...", .auto_close = FALSE)
+  bar
+}
+
+#' @importFrom cli cli_status_update
+
+update_progress_bar <- function(state, tick = 0) {
 
   plan <- state$plan
   total <- nrow(plan)
@@ -62,16 +43,15 @@ update_progress_bar <- function(state, tick = 0) {
   }
 
   chars <- progress_chars()
-  tokens <- list(
-    xbar = pp(make_install_bar(installed / total, built/total, width =  15)),
-    xbuilt = pp(make_progress_block(chars$build, built, total, building)),
-    xinst = pp(make_progress_block(chars$inst, installed, total, installing)),
-    xmsg = pp(make_install_trailing_progress_msg(state))
+  xbar <- pp(make_install_bar(installed / total, built/total, width =  15))
+  xbuilt  <- pp(make_progress_block(state, chars$build, built, total, building))
+  xinst <- pp(make_progress_block(state, chars$inst, installed, total, installing))
+  xmsg <- pp(make_install_trailing_progress_msg(state))
+
+  cli_status_update(
+    state$bar$status,
+    "{xbar} | {xbuilt} | {xinst} | {xmsg}"
   )
-
-  saveRDS(tokens, "/tmp/tok.rds")
-
-  state$progress$tick(tick, tokens = tokens)
 }
 
 ## p1 <= p2 must hold
@@ -99,10 +79,10 @@ make_install_bar <- function(p1, p2, width) {
   }
 }
 
-make_progress_block <- function(sym, done, total, prog) {
-  spin <- pkg_data$spinner$frames[[pkg_data$spinner_state]]
-  pkg_data$spinner_state <-
-    pkg_data$spinner_state %% length(pkg_data$spinner$frames) + 1L
+make_progress_block <- function(state, sym, done, total, prog) {
+  prgs <- state$progress
+  spin <- prgs$spinner$frames[[prgs$spinner_state]]
+  prgs$spinner_state <- prgs$spinner_state %% length(prgs$spinner$frames) + 1L
   paste0(
     sym, "  ",
     done, "/", total,
@@ -110,9 +90,10 @@ make_progress_block <- function(sym, done, total, prog) {
   )
 }
 
+#' @importFrom cli cli_status_clear
+
 done_progress_bar <- function(state) {
-  if (!is_verbose()) return()
-  state$progress$terminate()
+  cli_status_clear(state$progress$status)
 }
 
 make_install_trailing_progress_msg <- function(state) {

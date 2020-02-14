@@ -82,13 +82,15 @@ pkg_plan <- R6::R6Class(
       pkgplan__solve_lp_problem(self, private, problem),
 
     create_progress_bar = function(what)
-      pkgplan__create_progress_bar(self, private, what),
+      pkgplan__create_progress_bar(what),
     update_progress_bar = function(idx, data)
-      pkgplan__update_progress_bar(self, private, idx, data),
-    show_progress_bar = function()
-      pkgplan__show_progress_bar(self, private),
-    done_progress_bar = function()
-      pkgplan__done_progress_bar(self, private)
+      pkgplan__update_progress_bar(private$progress_bar, idx, data),
+    done_progress_bar = function() {
+      if (!is.null(private$progress_bar)) {
+        pkgplan__done_progress_bar(private$progress_bar)
+        private$progress_bar <- NULL
+      }
+    }
   )
 )
 

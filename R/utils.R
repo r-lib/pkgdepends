@@ -1,4 +1,11 @@
 
+MyClass <- R6::R6Class("MyClass", active = list(
+  rand = function() runif(1)
+))
+
+#' @export
+m <- MyClass$new()
+
 repoman_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
@@ -259,20 +266,6 @@ lapply_rows <-  function(df, fun, ...) {
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
-is_verbose <- function() {
-  env <- Sys.getenv("R_PKG_SHOW_PROGRESS", "")
-  if (env != "") {
-    tolower(env) == "true"
-  } else {
-    opt <- getOption("pkg.show_progress")
-    if (!is.null(opt)) {
-      return(isTRUE(opt))
-    } else {
-      interactive()
-    }
-  }
-}
-
 add_attr <- function(x, attr, value) {
   attr(x, attr) <- value
   x
@@ -315,14 +308,7 @@ is_rstudio_version <- function(ver) {
   )
 }
 
-have_rstudio_bug_2387 <- function() {
-  if (!is.null(r <- repoman_data$rstudio_bug_2387)) return(r)
-  r <- repoman_data$rstudio_bug_2387 <-
-    Sys.getenv("RSTUDIO", "") != "" &&
-    Sys.getenv("RSTUDIO_TERM", "") == "" &&
-    !is_rstudio_version("1.2.128")
-  r
-}
+is_rstudio <- function() Sys.getenv("RSTUDIO", "") != ""
 
 get_num_workers <- function() {
   n <- tryCatch(
@@ -410,6 +396,10 @@ http_stop_for_status <- function(...) {
   asNamespace("pkgcache")$http_stop_for_status(...)
 }
 
+new_async_timer <- function(...) {
+  asNamespace("pkgcache")$async_timer$new(...)
+}
+
 format_error_with_stdout <- function(x, ...) {
   msg <- conditionMessage(x)
   if (is.null(x$data$stdout)) {
@@ -454,4 +444,8 @@ has_asciicast_support <- function() {
    asNamespace("asciicast")$is_recording_supported() &&
      asNamespace("asciicast")$is_svg_supported()
  }, error = function(e) FALSE)
+}
+
+try_silently <- function(expr) {
+  try(expr, silent = TRUE)
 }

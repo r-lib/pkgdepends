@@ -20,7 +20,6 @@ progress_chars <- function() {
 #' @importFrom cliapp cli_progress_bar
 
 res__create_progress_bar <- function(self, private) {
-  if (!is_verbose()) return(NULL)
   bar <- list()
   bar$spinner <- get_spinner()
   bar$spinner_state <- 1L
@@ -36,8 +35,6 @@ res__create_progress_bar <- function(self, private) {
 }
 
 res__update_progress_bar <- function(self, private) {
-  if (!is_verbose()) return()
-
   deps <- nrow(private$state)
   direct <- sum(private$state$direct)
   direct_done <- sum(!is.na(private$state$status) & private$state$direct)
@@ -62,14 +59,15 @@ make_bar <- function(chars, p, width =  15) {
   w <- if (isTRUE(all.equal(p, 1))) width else trunc(width * p)
 
   pchars <- rep(chars$fill, w)
-  xchars <- rep(" ", max(width - w, 0))
+  xchars <- rep("\u00a0", max(width - w, 0))
   bar <- paste(
-    c(chars$lpar, pchars, xchars, chars$rpar, " "),
+    c(chars$lpar, pchars, xchars, chars$rpar, "\u00a0"),
     collapse = "")
 
   ## This is a workaround for an RStudio bug:
   ## https://github.com/r-lib/pkginstall/issues/42
-  if (! have_rstudio_bug_2387()) {
+  ## It seems that this bug has crept back, so we don't color in RStudio
+  if (! is_rstudio()) {
     crayon::green(bar)
   } else {
     crayon::reset(bar)
@@ -118,6 +116,5 @@ make_trailing_progress_msg <- function(self, private) {
 }
 
 res__done_progress_bar <- function(self, private) {
-  if (!is_verbose()) return()
   private$bar$bar$terminate()
 }

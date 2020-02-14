@@ -30,10 +30,14 @@
 NULL
 
 #' @importFrom prettyunits pretty_bytes
+#' @importFrom cli ansi_hide_cursor ansi_show_cursor
 
 pkgplan_download_resolution <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
+  on.exit(private$done_progress_bar(), add = TRUE)
+  on.exit(ansi_show_cursor(), add = TRUE)
+  ansi_hide_cursor()
   synchronise(self$async_download_resolution())
 }
 
@@ -54,6 +58,9 @@ pkgplan_async_download_resolution <- function(self, private) {
 pkgplan_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
   if (private$dirty) stop("Need to resolve, remote list has changed")
+  on.exit(private$done_progress_bar(), add = TRUE)
+  on.exit(ansi_show_cursor(), add = TRUE)
+  ansi_hide_cursor()
   synchronise(self$async_download_solution())
 }
 

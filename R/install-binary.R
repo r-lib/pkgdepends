@@ -9,19 +9,16 @@
 #'   to the \code{DESCRIPTION} after installation.
 #' @param quiet Whether to suppress console output.
 #' @importFrom filelock lock unlock
-#' @importFrom cliapp cli_progress_bar cli_alert_success
 #' @export
 
 install_binary <- function(filename, lib = .libPaths()[[1L]],
-                           metadata = NULL, quiet = NULL) {
+                           metadata = NULL, quiet = FALSE) {
 
   stopifnot(
     is_string(filename), file.exists(filename),
     is_string(lib),
     all_named(metadata),
     is.null(quiet) || is_flag(quiet))
-
-  quiet <- quiet %||% ! is_verbose()
 
   px <- make_install_process(filename, lib = lib, metadata = metadata)
   stdout <- ""

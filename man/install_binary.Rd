@@ -8,7 +8,7 @@ install_binary(
   filename,
   lib = .libPaths()[[1L]],
   metadata = NULL,
-  quiet = NULL
+  quiet = FALSE
 )
 }
 \arguments{

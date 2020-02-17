@@ -107,12 +107,10 @@ pkgplan_async_download_internal <- function(self, private, what, which) {
     force(idx)
     private$download_res(
       what[idx, ],
-      on_progress = function(data) {
-        private$update_progress_bar(idx, data)
-        TRUE
-      },
-      which = which)$
-      finally(function() private$update_progress_bar(idx, "done"))
+      which = which,
+      on_progress = function(data) private$update_progress_bar(idx, data))$
+      then(function(x) { private$update_progress_bar(idx, "done"); x })$
+      catch(function() private$update_progress_bar(idx, "error"))
   })
 
   when_all(.list = dl)$

@@ -1,6 +1,7 @@
 
 test_that("make_bar", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("initial state", {
@@ -35,7 +36,7 @@ test_that("updates", {
   do <- function() {
     bar <- pkgplan__create_progress_bar(what = what)
     pkgplan__update_progress_bar(bar, 1L, list(current = 5000, total = 10000))
-    pkgplan__update_progress_bar(bar, 4L, "done")
+    pkgplan__update_progress_bar(bar, 4L, list(current = 20000, total = 20000))
     pkgplan__done_progress_bar(bar)
     bar$what
   }
@@ -50,13 +51,21 @@ test_that("updates", {
 })
 
 test_that("rate is calculated properly", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("eta is calculated properly", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("if file size is unknown", {
+  # TODO
+  expect_true(TRUE)
+})
 
+test_that("status bar is cleaned up on interrupt / error", {
+  # TODO
+  expect_true(TRUE)
 })

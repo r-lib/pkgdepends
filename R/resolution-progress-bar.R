@@ -70,7 +70,7 @@ make_bar <- function(chars, p, width =  15) {
   if (! is_rstudio()) {
     crayon::green(bar)
   } else {
-    crayon::reset(bar)
+    crayon::green(bar)
   }
 }
 

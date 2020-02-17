@@ -94,21 +94,22 @@ NULL
 pkgplan__create_progress_bar <- function(what) {
   bar <- new.env(parent = emptyenv())
 
-  whatx <- filter_needed_downloads(what)
+  bar$what <- what[, c("type", "filesize", "package", "cache_status")]
+  bar$what$skip <-
+    what$type %in% c("installed", "deps") |
+    what$cache_status != "miss"
 
   bar$status <- cli_status(
-    "{.alert-info About to download {nrow(whatx)} package{?s}}",
+    "{.alert-info About to download {sum(!bar$what$skip)} package{?s}}",
     .auto_close = FALSE
   )
 
-  bar$chars <- progress_chars()
-
-  bar$what <- what[, c("type", "filesize", "package", "cache_status")]
   bar$what$idx <- seq_len(nrow(what))
   bar$what$current <- 0L                # We got this many bytes
   bar$what$event <- "todo"              # 'todo', "got", "done", "reported"
   bar$what$event_at <- Sys.time()[NA]   # time stamp of last event change
 
+  bar$chars <- progress_chars()
   bar$chunks <- new.env(parent = emptyenv())
   bar$start_at <- Sys.time()
 
@@ -127,43 +128,49 @@ pkgplan__create_progress_bar <- function(what) {
 #'
 #' @param bar The progress bar.
 #' @param idx The row index in the download data table.
-#' @param data Data about this row, either `"done"`, meaning that the
-#'   download has completed, or a list with entries `current` and `total`,
-#'   measured in the number of bytes. If `total` is unknown, then it is
-#'   set to zero.
+#' @param data Data about this row, a list with entries `current` and
+#'   `total`, measured in the number of bytes. If `total` is unknown,
+#'   then it is set to zero. At the end of the download we also get
+#'   `"done"`, and on error `"error"`.
 #'
 #' @keywords internal
 
 pkgplan__update_progress_bar <- function(bar, idx, data) {
+  # Record the time here, and use it in this function, so that this
+  # function runs in a single point of time
   time <- Sys.time()
-  sec <- as.character(floor(as.double(
-    time - bar$start_at,
-    units = "secs"
-  )))
-
-  bar$what$event[idx] <- "got"
   bar$what$event_at[idx] <- time
 
-  if (identical(data, "done")) {
+  # Work out which second we are in. We record the received data per second
+  sec <- as.character(floor(as.double(time - bar$start_at, units = "secs")))
+
+  # If it is "done", then we are done. We don't make assumptions about
+  # libcurl/async signalling the end of every file via file sizes in the
+  # progress bar callback, so we assume that when we get "done", then we
+  # are indeed "done" and set the status and sizes accordingly.
+  # TODO: treat error properly
+  if (identical(data, "done") || identical(data, "error")) {
     bar$what$event[idx] <- "done"
     if (!is.na(bar$what$filesize[idx])) {
       bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
         bar$what$current[idx] + bar$what$filesize[idx]
       bar$what$current[idx] <- bar$what$filesize[idx]
     }
-
-  } else {
-    ## TODO: redirects!
-    bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
-      bar$what$current[idx] + data$current
-    bar$what$current[idx] <- data$current
-    if (data$total > 0) {
-      bar$what$filesize[idx] <- data$total
-    }
-    if (data$total > 0 && data$total == data$current) {
-      bar$what$event[idx] <- "done"
-    }
+    return(TRUE)
   }
+
+  # Otherwise we got a chunk of data
+  bar$what$event[idx] <- "got"
+
+  # Update data chunks
+  bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
+    bar$what$current[idx] + data$current
+
+  # Update current and total
+  bar$what$current[idx] <- data$current
+  if (data$total > 0) bar$what$filesize[idx] <- data$total
+
+  TRUE
 }
 
 #' Show / update the progress bar
@@ -189,11 +196,6 @@ pkgplan__show_progress_bar <- function(bar) {
   cli_status_update(bar$status, str)
 }
 
-filter_needed_downloads <- function(what) {
-  what[(! what$type %in% c("installed", "deps")) &
-       what$cache_status == "miss", ]
-}
-
 calculate_progress_parts <- function(bar) {
 
   parts <- list()
@@ -202,7 +204,7 @@ calculate_progress_parts <- function(bar) {
 
   # We filter these here, instead at the beginning, because otherwise
   # the indices would not work in the update function
-  whatx <- filter_needed_downloads(bar$what)
+  whatx <- bar$what[! bar$what$skip, ]
 
   # Simple numbers
   parts$pkg_done <- sum(whatx$event %in% c("done", "reported"))
@@ -243,21 +245,19 @@ calculate_progress_parts <- function(bar) {
     if (length(idx) == 1) {
       msg <- paste0("Got ", bar$what$package[idx])
     } else {
-      msg <- paste0(
-        "Got ", length(idx), " pkgs: ",
-        glue_collapse(bar$what$package[idx], sep = ", ", last = " and ")
-      )
+      # We are not listing the packages currently, because the
+      # status bar truncates the list, and it looks awkward.
+      msg <- paste0("Got ", length(idx), " pkgs")
     }
     bar$what$event[idx] <- "reported"
-  } else if (any(whatx$event == "got")) {
-    idx <- bar$what$idx[bar$what$event == "got"]
+  } else if (any(whatx$event %in% c("todo", "got"))) {
+    idx <- bar$what$idx[bar$what$event %in% c("todo", "got")]
     if (length(idx) == 1) {
       msg <- paste0("Getting ", bar$what$package[idx])
     } else {
-      msg <- paste0(
-        "Getting ", length(idx), " pkgs: ",
-        glue_collapse(bar$what$package[idx], sep = ", ", last = " and ")
-      )
+      # We are not listing the packages currently, because the
+      # status bar truncates the list, and it looks awkward.
+      msg <- paste0("Getting ", length(idx), " pkgs")
     }
   } else {
     msg <- ""

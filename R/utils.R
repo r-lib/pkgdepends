@@ -1,11 +1,4 @@
 
-MyClass <- R6::R6Class("MyClass", active = list(
-  rand = function() runif(1)
-))
-
-#' @export
-m <- MyClass$new()
-
 repoman_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l

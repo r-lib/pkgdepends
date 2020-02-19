@@ -49,7 +49,7 @@ good as well...
 }
 }
 
-\subsection{All package sizes are known}{\preformatted{230 kB/s (#####      ) 45\% | 14/56 pkgs | ETA ~34s | Got dplyr
+\subsection{All package sizes are known}{\preformatted{230 kB/s (#####      ) 45\% | 14/56 pkgs | ETA ~34s | Getting dplyr
 }
 \itemize{
 \item Rate is informative, serves as an "alive" indicator as well.
@@ -63,7 +63,7 @@ but the whole installation.
 }
 }
 
-\subsection{Some package sizes are unknown}{\preformatted{230 kB/s (#####      ) 45\% | 14/56 pkgs | Got dplyr
+\subsection{Some package sizes are unknown}{\preformatted{230 kB/s (#####      ) 45\% | 14/56 pkgs | Getting dplyr
 }
 \itemize{
 \item Percent is for the packages, not bytes.
@@ -73,17 +73,9 @@ but the whole installation.
 
 \subsection{Events}{
 
-It is a question how to decide what to show in the event part.
-The goal is to show interesting events first. In the order or priority:
-\itemize{
-\item \code{Connecting...} is shown initially, when we have no data.
-\item \verb{Check your connection...} if the current rate is zero and
-the downloads have started more than 4 seconds ago.
-\item \verb{Got 3 pkgs: foo, bar and foobar}
-\item \verb{Getting 3 pkgs: foo, bar and foobar}
-}
-
-We only change the event message every 1/2 sec.
+This is quite simple currently, we just print the packages we are
+"getting" currently, i.e. the packages we received data for in the
+last time slot.
 }
 
 \subsection{Rate (download "speed")}{

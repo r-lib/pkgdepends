@@ -13,7 +13,7 @@ test_that("initial state", {
     "cran",           20000, "bar",    "miss"
   )
   msg <- capture_async_messages(do())
-  expect_match(msg, "About to download 2 packages")
+  expect_match(msg, "Getting 2 pkgs")
 
   what <- rbind(what, tibble::tribble(
     ~type,        ~filesize, ~package, ~cache_status,
@@ -21,7 +21,7 @@ test_that("initial state", {
     "cran",           20000, "bar",    "hit"
   ))
   msg <- capture_async_messages(do())
-  expect_match(msg, "About to download 2 packages")
+  expect_match(msg, "Getting 2 pkgs")
 })
 
 test_that("updates", {
@@ -53,7 +53,7 @@ test_that("updates", {
   }
 
   msg <- capture_async_messages(res <- do())
-  expect_match(msg, "About to download 2 packages (30 kB)", fixed = TRUE)
+  expect_match(msg, "Getting 2 pkgs (30 kB)", fixed = TRUE)
   expect_match(crayon::strip_style(msg), "Got pkg 1.0.0 (source)", fixed = TRUE)
   expect_equal(res$filesize[1], 10000)
   expect_equal(res$filesize[4], 20000)

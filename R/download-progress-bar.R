@@ -83,7 +83,7 @@
 #' @keywords internal
 NULL
 
-#' @importFrom cli get_spinner cli_status
+#' @importFrom cli get_spinner cli_status qty
 
 pkgplan__create_progress_bar <- function(what) {
   bar <- new.env(parent = emptyenv())
@@ -93,18 +93,7 @@ pkgplan__create_progress_bar <- function(what) {
     what$type %in% c("installed", "deps") |
     what$cache_status != "miss"
 
-  unk <- sum(is.na(bar$what$filesize[!bar$what$skip]))
-  num <- sum(!bar$what$skip) - unk
-  bts <- sum(bar$what$filesize[!bar$what$skip], na.rm = TRUE)
-  cli_alert_info(c(
-    "{.alert-info About to download",
-    if (num > 0) " {num} package{?s}",
-    if (bts > 0) " ({pretty_bytes(bts)})",
-    if (num > 0 && unk > 0) " and",
-    if (unk > 0) " {unk} package{?s} with unknown size",
-    "}"
-  ))
-  bar$status <- cli_status("", .auto_close = FALSE)
+  pkgplan__initial_pb_message(bar)
 
   bar$what$idx <- seq_len(nrow(what))
   bar$what$current <- 0L         # We got this many bytes
@@ -124,6 +113,30 @@ pkgplan__create_progress_bar <- function(what) {
   bar$lastmsg <- "Connecting..."
 
   bar
+}
+
+pkgplan__initial_pb_message <- function(bar) {
+  unk <- sum(is.na(bar$what$filesize[!bar$what$skip]))
+  num <- sum(!bar$what$skip) - unk
+  bts <- sum(bar$what$filesize[!bar$what$skip], na.rm = TRUE)
+  nch <- sum(bar$what$cache_status == "hit")
+  cbt <- pretty_bytes(sum(bar$what$filesize[bar$what$cache_status == "hit"]))
+
+  if (num + unk == 0) {
+    cli_alert_info(c(
+      "No downloads are needed",
+      if (nch > 0) ", {nch} pkg{?s} {.size ({cbt})} {qty(nch)}{?is/are} cached"
+    ))
+  } else {
+    cli_alert_info(c(
+      "Getting",
+      if (num > 0) " {num} pkg{?s} {.size ({pretty_bytes(bts)})}",
+      if (num > 0 && unk > 0) " and",
+      if (unk > 0) " {unk} with unknown size",
+      if (nch > 0) ", {nch} {.size ({cbt})} cached"
+    ))
+  }
+  bar$status <- cli_status("", .auto_close = FALSE)
 }
 
 #' Update the progress bar data
@@ -156,6 +169,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
     if (data$download_status == "Got") {
       bar$what$status[idx] <- "got"
       sz <- na.omit(file.size(c(data$fulltarget, data$fulltarget_tree)))[1]
+      if (!is.na(sz)) bar$what$filesize[idx] <- sz
       cli_alert_success(c(
         "Got {.pkg {data$package}} ",
         "{.version {data$version}} ({data$platform}) ",
@@ -237,9 +251,11 @@ calculate_progress_parts <- function(bar) {
   whatx <- bar$what[! bar$what$skip, ]
 
   # Simple numbers
-  parts$pkg_done <- sum(whatx$status %in% c("got", "had", "error"))
-  parts$pkg_total <- nrow(whatx)
-  pkg_percent <- parts$pkg_done / parts$pkg_total
+  pkg_done <- sum(whatx$status %in% c("got", "had", "error"))
+  pkg_total <- nrow(whatx)
+  parts$pkg_done <- sp(format(c(pkg_done, pkg_total), justify = "right")[1])
+  parts$pkg_total <- pkg_total
+  pkg_percent <- pkg_done / pkg_total
   bytes_done <- sum(whatx$current, na.rm = TRUE)
   bytes_total <- sum(whatx$filesize)           # could be NA
   parts$bytes_total <- bytes_total
@@ -298,6 +314,30 @@ calculate_progress_parts <- function(bar) {
 }
 
 pkgplan__done_progress_bar <- function(bar) {
-  # TODO: print a summary?
-  if (!is.null(bar$status)) cli_status_clear(bar$status)
+  if (is.null(bar$status)) return()
+
+  end_at <- Sys.time()
+  dt <- pretty_dt(Sys.time() - bar$start_at)
+
+  cli_status_clear(bar$status)
+  bar$status <- NULL
+
+  bts <- pretty_bytes(sum(bar$what$current))
+  dld <- sum(bar$what$status == "got")
+  cch <- sum(bar$what$status == "had")
+  err <- sum(bar$what$status == "error")
+
+  if (sum(!bar$what$skip) == 0) {
+    # Print nothing, we already printed that no downloads are needed
+  } else if (err == 0 && dld == 0) {
+    cli_alert_success("No downloads needed, all packages are cached")
+  } else if (err == 0) {
+    cli_alert_success(
+      "Downloaded {dld} package{?s} {.size ({bts})} in {.time {dt}}"
+    )
+  } else {
+    cli_alert_danger(
+      "Failed to download {err} package{?s}. "
+    )
+  }
 }

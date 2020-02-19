@@ -4,17 +4,17 @@
 \alias{pkgplan__update_progress_bar}
 \title{Update the progress bar data}
 \usage{
-pkgplan__update_progress_bar(bar, idx, data)
+pkgplan__update_progress_bar(bar, idx, event, data)
 }
 \arguments{
 \item{bar}{The progress bar.}
 
 \item{idx}{The row index in the download data table.}
 
-\item{data}{Data about this row, either \code{"done"}, meaning that the
-download has completed, or a list with entries \code{current} and \code{total},
-measured in the number of bytes. If \code{total} is unknown, then it is
-set to zero.}
+\item{data}{Data about this row, a list with entries \code{current} and
+\code{total}, measured in the number of bytes. If \code{total} is unknown,
+then it is set to zero. At the end of the download we also get
+\code{"done"}, and on error \code{"error"}.}
 }
 \description{
 This is triggered by libcurl.

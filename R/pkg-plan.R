@@ -83,8 +83,8 @@ pkg_plan <- R6::R6Class(
 
     create_progress_bar = function(what)
       pkgplan__create_progress_bar(what),
-    update_progress_bar = function(idx, data)
-      pkgplan__update_progress_bar(private$progress_bar, idx, data),
+    update_progress_bar = function(idx, event, data)
+      pkgplan__update_progress_bar(private$progress_bar, idx, event, data),
     done_progress_bar = function() {
       if (!is.null(private$progress_bar)) {
         pkgplan__done_progress_bar(private$progress_bar)

@@ -35,19 +35,31 @@ test_that("updates", {
 
   do <- function() {
     bar <- pkgplan__create_progress_bar(what = what)
-    pkgplan__update_progress_bar(bar, 1L, list(current = 5000, total = 10000))
-    pkgplan__update_progress_bar(bar, 4L, list(current = 20000, total = 20000))
+    pkgplan__update_progress_bar(bar, 1L, "data", list(current = 5000, total = 10000))
+    pkgplan__update_progress_bar(bar, 4L, "data", list(current = 20000, total = 20000))
+    pkgplan__update_progress_bar(
+      bar, 4L, "done",
+      list(
+        download_status = "Got",
+        package = "pkg",
+        platform = "source",
+        version = "1.0.0",
+        fulltarget = tempfile(),
+        fulltarget_tree = tempfile()
+      )
+    )
     pkgplan__done_progress_bar(bar)
     bar$what
   }
 
   msg <- capture_async_messages(res <- do())
+  expect_match(msg, "About to download 2 packages (30 kB)", fixed = TRUE)
+  expect_match(crayon::strip_style(msg), "Got pkg 1.0.0 (source)", fixed = TRUE)
   expect_equal(res$filesize[1], 10000)
   expect_equal(res$filesize[4], 20000)
   expect_equal(res$current[1], 5000)
   expect_equal(res$current[4], 20000)
-  expect_equal(res$event, c("got", "todo", "todo", "done"))
-  expect_s3_class(res$event_at, "POSIXct")
+  expect_equal(res$status, c("data", "todo", "todo", "got"))
 })
 
 test_that("rate is calculated properly", {

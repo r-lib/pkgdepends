@@ -39,7 +39,7 @@
 #' ## All package sizes are known
 #'
 #' ```
-#' 230 kB/s (#####      ) 45% | 14/56 pkgs | ETA ~34s | Got dplyr
+#' 230 kB/s (#####      ) 45% | 14/56 pkgs | ETA ~34s | Getting dplyr
 #' ```
 #'
 #' * Rate is informative, serves as an "alive" indicator as well.
@@ -54,7 +54,7 @@
 #' ## Some package sizes are unknown
 #'
 #' ```
-#' 230 kB/s (#####      ) 45% | 14/56 pkgs | Got dplyr
+#' 230 kB/s (#####      ) 45% | 14/56 pkgs | Getting dplyr
 #' ```
 #'
 #' * Percent is for the packages, not bytes.
@@ -62,15 +62,9 @@
 #'
 #' ## Events
 #'
-#' It is a question how to decide what to show in the event part.
-#' The goal is to show interesting events first. In the order or priority:
-#' * `Connecting...` is shown initially, when we have no data.
-#' * `Check your connection...` if the current rate is zero and
-#'   the downloads have started more than 4 seconds ago.
-#' * `Got 3 pkgs: foo, bar and foobar`
-#' * `Getting 3 pkgs: foo, bar and foobar`
-#'
-#' We only change the event message every 1/2 sec.
+#' This is quite simple currently, we just print the packages we are
+#' "getting" currently, i.e. the packages we received data for in the
+#' last time slot.
 #'
 #' ## Rate (download "speed")
 #'
@@ -99,15 +93,22 @@ pkgplan__create_progress_bar <- function(what) {
     what$type %in% c("installed", "deps") |
     what$cache_status != "miss"
 
-  bar$status <- cli_status(
-    "{.alert-info About to download {sum(!bar$what$skip)} package{?s}}",
-    .auto_close = FALSE
-  )
+  unk <- sum(is.na(bar$what$filesize[!bar$what$skip]))
+  num <- sum(!bar$what$skip) - unk
+  bts <- sum(bar$what$filesize[!bar$what$skip], na.rm = TRUE)
+  cli_alert_info(c(
+    "{.alert-info About to download",
+    if (num > 0) " {num} package{?s}",
+    if (bts > 0) " ({pretty_bytes(bts)})",
+    if (num > 0 && unk > 0) " and",
+    if (unk > 0) " {unk} package{?s} with unknown size",
+    "}"
+  ))
+  bar$status <- cli_status("", .auto_close = FALSE)
 
   bar$what$idx <- seq_len(nrow(what))
-  bar$what$current <- 0L                # We got this many bytes
-  bar$what$event <- "todo"              # 'todo', "got", "done", "reported"
-  bar$what$event_at <- Sys.time()[NA]   # time stamp of last event change
+  bar$what$current <- 0L         # We got this many bytes
+  bar$what$status <- "todo"      # "todo", "data", "got", "had", "error"
 
   bar$chars <- progress_chars()
   bar$chunks <- new.env(parent = emptyenv())
@@ -118,6 +119,9 @@ pkgplan__create_progress_bar <- function(what) {
     function() pkgplan__show_progress_bar(bar)
   )
   bar$timer$listen_on("error", function(e) { stop(e) })
+
+  bar$events <- list()                  # got, had, error, data
+  bar$lastmsg <- "Connecting..."
 
   bar
 }
@@ -134,12 +138,12 @@ pkgplan__create_progress_bar <- function(what) {
 #'   `"done"`, and on error `"error"`.
 #'
 #' @keywords internal
+#' @importFrom cli cli_alert_success cli_alert_danger
 
-pkgplan__update_progress_bar <- function(bar, idx, data) {
+pkgplan__update_progress_bar <- function(bar, idx, event, data) {
   # Record the time here, and use it in this function, so that this
   # function runs in a single point of time
   time <- Sys.time()
-  bar$what$event_at[idx] <- time
 
   # Work out which second we are in. We record the received data per second
   sec <- as.character(floor(as.double(time - bar$start_at, units = "secs")))
@@ -148,19 +152,43 @@ pkgplan__update_progress_bar <- function(bar, idx, data) {
   # libcurl/async signalling the end of every file via file sizes in the
   # progress bar callback, so we assume that when we get "done", then we
   # are indeed "done" and set the status and sizes accordingly.
-  # TODO: treat error properly
-  if (identical(data, "done") || identical(data, "error")) {
-    bar$what$event[idx] <- "done"
-    if (!is.na(bar$what$filesize[idx])) {
-      bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
-        bar$what$current[idx] + bar$what$filesize[idx]
-      bar$what$current[idx] <- bar$what$filesize[idx]
+  if (event == "done") {
+    if (data$download_status == "Got") {
+      bar$what$status[idx] <- "got"
+      sz <- na.omit(file.size(c(data$fulltarget, data$fulltarget_tree)))[1]
+      cli_alert_success(c(
+        "Got {.pkg {data$package}} ",
+        "{.version {data$version}} ({data$platform}) ",
+        if (!is.na(sz)) "{.size ({pretty_bytes(sz)})}"
+      ))
+      if (!is.na(bar$what$filesize[idx])) {
+        bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
+          bar$what$current[idx] + bar$what$filesize[idx]
+        bar$what$current[idx] <- bar$what$filesize[idx]
+      }
+    } else {
+      bar$what$status[idx] <- "had"
+      bar$what$current[idx] <- 0L
+      if (data$cache_status == "miss") cli_alert_success(c(
+        "Cached copy of {.pkg {data$package}} ",
+        "{.version {data$version}} ({data$platform}) is the latest build"
+      ))
     }
+
     return(TRUE)
   }
 
+  if (event == "error") {
+    cli_alert_danger(c(
+      "Failed to download {.pkg {data$package}} ",
+      "{.version {data$version}} ({data$platform})"
+    ))
+    bar$what$status[idx] <- "error"
+  }
+
   # Otherwise we got a chunk of data
-  bar$what$event[idx] <- "got"
+  bar$what$status[idx] <- "data"
+  bar$events$data <- unique(c(bar$events$data, idx))
 
   # Update data chunks
   bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
@@ -193,6 +221,8 @@ pkgplan__show_progress_bar <- function(bar) {
     if (!is.na(parts$bytes_total)) "| ETA {parts$eta} ",
     "| {parts$msg}"
   )
+
+  bar$events <- list()
   cli_status_update(bar$status, str)
 }
 
@@ -207,7 +237,7 @@ calculate_progress_parts <- function(bar) {
   whatx <- bar$what[! bar$what$skip, ]
 
   # Simple numbers
-  parts$pkg_done <- sum(whatx$event %in% c("done", "reported"))
+  parts$pkg_done <- sum(whatx$status %in% c("got", "had", "error"))
   parts$pkg_total <- nrow(whatx)
   pkg_percent <- parts$pkg_done / parts$pkg_total
   bytes_done <- sum(whatx$current, na.rm = TRUE)
@@ -236,33 +266,15 @@ calculate_progress_parts <- function(bar) {
   }
 
   # Message
-  if (bytes_done == 0) {
-    msg <- "Connecting"
-  } else if (rate == 0 && time_at > 4) {
-    msg <- "Check your connection"
-  } else if (any(whatx$event == "done")) {
-    idx <- bar$what$idx[bar$what$event == "done"]
-    if (length(idx) == 1) {
-      msg <- paste0("Got ", bar$what$package[idx])
-    } else {
-      # We are not listing the packages currently, because the
-      # status bar truncates the list, and it looks awkward.
-      msg <- paste0("Got ", length(idx), " pkgs")
-    }
-    bar$what$event[idx] <- "reported"
-  } else if (any(whatx$event %in% c("todo", "got"))) {
-    idx <- bar$what$idx[bar$what$event %in% c("todo", "got")]
-    if (length(idx) == 1) {
-      msg <- paste0("Getting ", bar$what$package[idx])
-    } else {
-      # We are not listing the packages currently, because the
-      # status bar truncates the list, and it looks awkward.
-      msg <- paste0("Getting ", length(idx), " pkgs")
-    }
-  } else {
-    msg <- ""
+  parts$msg <- bar$lastmsg
+  if (length(bar$events$data) > 0) {
+    pkgs <- bar$what$package[bar$what$idx %in% bar$events$data]
+    parts$msg <- paste0(
+      "Getting ",
+      glue_collapse(pkgs, sep = ", ", last = " and ")
+    )
+    bar$lastmsg <- parts$msg
   }
-  parts$msg <- msg
 
   # Line
   parts$line <- make_bar(bar$chars, percent, width = 15)
@@ -286,5 +298,6 @@ calculate_progress_parts <- function(bar) {
 }
 
 pkgplan__done_progress_bar <- function(bar) {
+  # TODO: print a summary?
   if (!is.null(bar$status)) cli_status_clear(bar$status)
 }

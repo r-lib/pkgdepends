@@ -9,7 +9,7 @@ pkg_plan <- R6::R6Class(
     get_refs = function() private$refs,
     has_resolution = function() !is.null(private$resolution$result),
     has_clean_resolution = function()
-      has_resolution() && (all(private$resolution$result$status == "OK")),
+      self$has_resolution() && (all(private$resolution$result$status == "OK")),
     has_resolution_downloads = function() !is.null(private$downloads),
     has_solution_downloads = function() !is.null(private$solution_downloads),
     has_solution = function() !is.null(private$solution),

@@ -119,7 +119,7 @@ pkgplan__initial_pb_message <- function(bar) {
   unk <- sum(is.na(bar$what$filesize[!bar$what$skip]))
   num <- sum(!bar$what$skip) - unk
   bts <- sum(bar$what$filesize[!bar$what$skip], na.rm = TRUE)
-  nch <- sum(bar$what$cache_status == "hit")
+  nch <- sum(bar$what$cache_status == "hit", na.rm = TRUE)
   cbt <- pretty_bytes(sum(bar$what$filesize[bar$what$cache_status == "hit"]))
 
   if (num + unk == 0) {
@@ -183,7 +183,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
     } else {
       bar$what$status[idx] <- "had"
       bar$what$current[idx] <- 0L
-      if (data$cache_status == "miss") cli_alert_success(c(
+      if (identical(data$cache_status, "miss")) cli_alert_success(c(
         "Cached copy of {.pkg {data$package}} ",
         "{.version {data$version}} ({data$platform}) is the latest build"
       ))
@@ -198,6 +198,8 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
       "{.version {data$version}} ({data$platform})"
     ))
     bar$what$status[idx] <- "error"
+
+    return(TRUE)
   }
 
   # Otherwise we got a chunk of data

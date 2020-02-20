@@ -227,6 +227,8 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 
 pkgplan__show_progress_bar <- function(bar) {
 
+  # Don't show if there is nothing to download
+  if (sum(!bar$what$skip) == 0) return()
   parts <- calculate_progress_parts(bar)
 
   # Ready to update. We can't use the package emoji because its

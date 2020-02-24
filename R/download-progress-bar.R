@@ -260,12 +260,14 @@ pkgplan__show_progress_bar <- function(bar) {
 
   # Ready to update. We can't use the package emoji because its
   # width is not calculated properly
-  str <- c(
+  str <- paste0(
     "\u00a0{parts$rate} {parts$line}\u00a0{parts$percent} ",
     "| {parts$pkg_done}/{parts$pkg_total} pkg{?s} ",
     if (!is.na(parts$bytes_total)) "| ETA {parts$eta} ",
     "| {parts$msg}"
   )
+
+  str <- gsub(" ", "\u00a0", str)
 
   bar$events <- list()
   cli_status_update(bar$status, str)
@@ -280,9 +282,9 @@ calculate_rate <- function(start, now, chunks) {
   fact <- time_at - max(time_at_s - 3, 0)
   rate <- sum(data) / fact
   if (rate == 0 && time_at < 4) {
-    rstr <- strrep("\u00a0", 8)
+    rstr <- strrep(" ", 8)
   } else {
-    rstr <- sp(paste0(pretty_bytes(rate, style = "6"), "/s"))
+    rstr <- paste0(pretty_bytes(rate, style = "6"), "/s")
   }
   list(rate = rate, rstr = rstr)
 }
@@ -290,20 +292,18 @@ calculate_rate <- function(start, now, chunks) {
 calculate_eta <- function(total, current, rate) {
   if (rate == 0) {
     etas <- NA
-    estr <- "??s\u00a0"
+    estr <- "??s "
   } else {
     todo <- total - current
     etas <- as.difftime(todo / rate, units = "secs")
     if (etas < 1) {
-      estr <- "<1s\u00a0\u00a0\u00a0"
+      estr <- "<1s   "
     } else {
-      estr <- sp(format(pretty_dt(etas, compact = TRUE), width = 6))
+      estr <- format(pretty_dt(etas, compact = TRUE), width = 6)
     }
   }
   list(etas = etas, estr = estr)
 }
-
-sp <- function(x) gsub(" ", "\u00a0", x)
 
 calculate_progress_parts <- function(bar) {
 
@@ -318,7 +318,7 @@ calculate_progress_parts <- function(bar) {
   # Simple numbers
   pkg_done <- sum(whatx$status %in% c("got", "had", "error"))
   pkg_total <- nrow(whatx)
-  parts$pkg_done <- sp(format(c(pkg_done, pkg_total), justify = "right")[1])
+  parts$pkg_done <- format(c(pkg_done, pkg_total), justify = "right")[1]
   parts$pkg_total <- as.character(pkg_total)
   pkg_percent <- pkg_done / pkg_total
   bytes_done <- sum(whatx$current, na.rm = TRUE)
@@ -327,11 +327,11 @@ calculate_progress_parts <- function(bar) {
   bytes_percent <- bytes_done / bytes_total # could be NA
   percent <- if (!is.na(bytes_percent)) bytes_percent else pkg_percent
   if (round(percent * 100) == 100 && percent < 1) percent <- 0.99
-  parts$percent <- sp(format(
+  parts$percent <- format(
     paste0(round(100 * percent), "%"),
     width = 4,
     justify = "right"
-  ))
+  )
 
   rate <- calculate_rate(bar$start_at, now, bar$chunks)
   parts$rate <- rate$rstr

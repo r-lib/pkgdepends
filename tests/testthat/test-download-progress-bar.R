@@ -275,17 +275,17 @@ test_that("rate", {
   ))
 
   r <- calculate_rate(now - 5.5, now, chunks)
-  expect_equal(r, list(rate = 200, rstr = "0.2 kB/s"))
+  expect_equal(r, list(rate = 200, rstr = "0.2 kB/s"))
 })
 
 test_that("eta", {
   expect_equal(
     calculate_eta(100, 50, 0),
-    list(etas = NA, estr = "??s\u00a0")
+    list(etas = NA, estr = "??s ")
   )
   expect_equal(
     calculate_eta(100, 50, 10),
-    list(etas = as.difftime(5, units = "secs"), estr = sp("~5s   "))
+    list(etas = as.difftime(5, units = "secs"), estr = "~5s   ")
   )
 })
 
@@ -304,11 +304,11 @@ test_that("parts are calculated properly", {
   parts <- calculate_progress_parts(bar)
   expect_equal(parts$pkg_done, "0")
   expect_equal(parts$pkg_total, "2")
-  expect_equal(parts$percent, "\u00a0\u00a00%")
+  expect_equal(parts$percent, "  0%")
   expect_match(parts$rate, "^\\s+$")
   expect_equal(parts$msg, "Connecting...")
   expect_match(crayon::strip_style(parts$line), "^[(]\\s+[)]$")
-  expect_equal(parts$eta, "??s\u00a0")
+  expect_equal(parts$eta, "??s ")
 })
 
 test_that("parts if file size is unknown", {

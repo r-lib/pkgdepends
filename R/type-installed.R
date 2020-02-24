@@ -78,8 +78,8 @@ make_installed_cache <- function(library, packages = NULL) {
   }
   pkgs$type <- rep("installed", nrow(pkgs))
   pkgs$status <- rep("OK", nrow(pkgs))
-  pkgs$rversion <- vcapply(meta, function(x) as.character(x$Built$R))
-  pkgs$platform <- vcapply(meta, function(x) x$Built$Platform)
+  pkgs$rversion <- unname(vcapply(meta, function(x) as.character(x$Built$R)))
+  pkgs$platform <- unname(vcapply(meta, function(x) x$Built$Platform))
   pkgs$platform[pkgs$platform == ""] <- "*"
   pkgs$sources <- replicate(nrow(pkgs), character(), simplify = FALSE)
   pkgs$needscompilation <- ifelse(

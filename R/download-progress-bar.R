@@ -89,51 +89,66 @@ pkgplan__create_progress_bar <- function(what) {
   bar <- new.env(parent = emptyenv())
 
   bar$what <- what[, c("type", "filesize", "package", "cache_status")]
+  bar$what$idx <- seq_len(nrow(what))
+  bar$what$current <- 0L         # We got this many bytes
+  bar$what$need <- bar$what$filesize
+  bar$what$status <- "todo"      # "todo", "data", "got", "had", "error"
   bar$what$skip <-
     what$type %in% c("installed", "deps") |
     what$cache_status != "miss"
+  bar$what$status[bar$what$skip] <- "skip"
+  bar$what$cache_status[what$type %in% c("installed", "deps")] <- NA_character_
 
   pkgplan__initial_pb_message(bar)
-
-  bar$what$idx <- seq_len(nrow(what))
-  bar$what$current <- 0L         # We got this many bytes
-  bar$what$status <- "todo"      # "todo", "data", "got", "had", "error"
 
   bar$chars <- progress_chars()
   bar$chunks <- new.env(parent = emptyenv())
   bar$start_at <- Sys.time()
+  bar$events <- list()
+  bar$lastmsg <- "Connecting..."
 
+  bar
+}
+
+pkgplan__init_progress_bar <- function(bar) {
   bar$timer <- new_async_timer(
     1/10,
     function() pkgplan__show_progress_bar(bar)
   )
   bar$timer$listen_on("error", function(e) { stop(e) })
 
-  bar$events <- list()                  # got, had, error, data
-  bar$lastmsg <- "Connecting..."
-
   bar
 }
 
 pkgplan__initial_pb_message <- function(bar) {
-  unk <- sum(is.na(bar$what$filesize[!bar$what$skip]))
-  num <- sum(!bar$what$skip) - unk
-  bts <- sum(bar$what$filesize[!bar$what$skip], na.rm = TRUE)
-  nch <- sum(bar$what$cache_status == "hit", na.rm = TRUE)
-  cbt <- pretty_bytes(sum(bar$what$filesize[bar$what$cache_status == "hit"]))
+  # number of packages to _download_
+  num <- sum(bar$what$status == "todo")
+  # number of packages to download, with unknown size
+  unk <- sum(is.na(bar$what$filesize[bar$what$status == "todo"]))
+  # number of bytes to download
+  bts <- sum(bar$what$filesize[bar$what$status == "todo"], na.rm = TRUE)
+  # number of packages that are (surely) cached
+  # for installed and deps refs this should be NA
+  nch <- sum(bar$what$cache_status %in% "hit")
+  # the number of bytes cached (for known file sizes)
+  cbt <- sum(bar$what$filesize[bar$what$cache_status %in% "hit"], na.rm = TRUE)
 
-  if (num + unk == 0) {
+  if (num == 0) {
     cli_alert_info(c(
       "No downloads are needed",
-      if (nch > 0) ", {nch} pkg{?s} {.size ({cbt})} {qty(nch)}{?is/are} cached"
+      if (nch > 0) ", {nch} pkg{?s} ",
+      if (cbt > 0) "{.size ({pretty_bytes(cbt)})} ",
+      if (nch > 0) "{qty(nch)}{?is/are} cached"
     ))
   } else {
     cli_alert_info(c(
       "Getting",
-      if (num > 0) " {num} pkg{?s} {.size ({pretty_bytes(bts)})}",
-      if (num > 0 && unk > 0) " and",
-      if (unk > 0) " {unk} with unknown size",
-      if (nch > 0) ", {nch} {.size ({cbt})} cached"
+      if (bts > 0) " {num-unk} pkg{?s} {.size ({pretty_bytes(bts)})}",
+      if (bts > 0 && unk > 0) " and",
+      if (unk > 0) " {unk} pkg{?s} with unknown size{?s}",
+      if (nch > 0) ", {nch} ",
+      if (cbt > 0) "{.size ({pretty_bytes(cbt)})} ",
+      if (nch > 0) "cached"
     ))
   }
   bar$status <- cli_status("", .auto_close = FALSE)
@@ -180,13 +195,24 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
           bar$what$current[idx] + bar$what$filesize[idx]
         bar$what$current[idx] <- bar$what$filesize[idx]
       }
-    } else {
+    } else if (data$download_status == "Had") {
       bar$what$status[idx] <- "had"
       bar$what$current[idx] <- 0L
+      bar$what$need[idx] <- 0L
       if (identical(data$cache_status, "miss")) cli_alert_success(c(
         "Cached copy of {.pkg {data$package}} ",
         "{.version {data$version}} ({data$platform}) is the latest build"
       ))
+    } else if (data$download_status == "Failed") {
+      cli_alert_danger(c(
+        "Failed to download {.pkg {data$package}} ",
+        "{.version {data$version}} ({data$platform})"
+      ))
+      bar$what$status[idx] <- "error"
+      bar$what$need[idx] <- bar$what$current[idx]
+
+    } else {
+      stop("Unknown download status, internal pkgdepends error :(")
     }
 
     return(TRUE)
@@ -198,6 +224,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
       "{.version {data$version}} ({data$platform})"
     ))
     bar$what$status[idx] <- "error"
+    bar$what$need[idx] <- bar$what$current[idx]
 
     return(TRUE)
   }
@@ -212,7 +239,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 
   # Update current and total
   bar$what$current[idx] <- data$current
-  if (data$total > 0) bar$what$filesize[idx] <- data$total
+  if (data$total > 0) bar$what$filesize[idx] <- bar$what$need[idx] <- data$total
 
   TRUE
 }
@@ -234,7 +261,7 @@ pkgplan__show_progress_bar <- function(bar) {
   # Ready to update. We can't use the package emoji because its
   # width is not calculated properly
   str <- c(
-    "\u00a0{parts$rate} {parts$line}{parts$percent} ",
+    "\u00a0{parts$rate} {parts$line}\u00a0{parts$percent} ",
     "| {parts$pkg_done}/{parts$pkg_total} pkg{?s} ",
     if (!is.na(parts$bytes_total)) "| ETA {parts$eta} ",
     "| {parts$msg}"
@@ -244,24 +271,58 @@ pkgplan__show_progress_bar <- function(bar) {
   cli_status_update(bar$status, str)
 }
 
+calculate_rate <- function(start, now, chunks) {
+  # Rate, see above how this works
+  time_at <- as.double(now - start, units = "secs")
+  time_at_s <- as.integer(floor(time_at))
+  labels <- as.character(seq(time_at_s, time_at_s - 3L, by = -1L))
+  data <- unlist(mget(labels, envir = chunks, ifnotfound = 0L))
+  fact <- time_at - max(time_at_s - 3, 0)
+  rate <- sum(data) / fact
+  if (rate == 0 && time_at < 4) {
+    rstr <- strrep("\u00a0", 8)
+  } else {
+    rstr <- sp(paste0(pretty_bytes(rate, style = "6"), "/s"))
+  }
+  list(rate = rate, rstr = rstr)
+}
+
+calculate_eta <- function(total, current, rate) {
+  if (rate == 0) {
+    etas <- NA
+    estr <- "??s\u00a0"
+  } else {
+    todo <- total - current
+    etas <- as.difftime(todo / rate, units = "secs")
+    if (etas < 1) {
+      estr <- "<1s\u00a0\u00a0\u00a0"
+    } else {
+      estr <- sp(format(pretty_dt(etas, compact = TRUE), width = 6))
+    }
+  }
+  list(etas = etas, estr = estr)
+}
+
+sp <- function(x) gsub(" ", "\u00a0", x)
+
 calculate_progress_parts <- function(bar) {
 
   parts <- list()
-
-  sp <- function(x) gsub(" ", "\u00a0", x)
 
   # We filter these here, instead at the beginning, because otherwise
   # the indices would not work in the update function
   whatx <- bar$what[! bar$what$skip, ]
 
+  now <- Sys.time()
+
   # Simple numbers
   pkg_done <- sum(whatx$status %in% c("got", "had", "error"))
   pkg_total <- nrow(whatx)
   parts$pkg_done <- sp(format(c(pkg_done, pkg_total), justify = "right")[1])
-  parts$pkg_total <- pkg_total
+  parts$pkg_total <- as.character(pkg_total)
   pkg_percent <- pkg_done / pkg_total
   bytes_done <- sum(whatx$current, na.rm = TRUE)
-  bytes_total <- sum(whatx$filesize)           # could be NA
+  bytes_total <- sum(whatx$need)           # could be NA
   parts$bytes_total <- bytes_total
   bytes_percent <- bytes_done / bytes_total # could be NA
   percent <- if (!is.na(bytes_percent)) bytes_percent else pkg_percent
@@ -272,18 +333,8 @@ calculate_progress_parts <- function(bar) {
     justify = "right"
   ))
 
-  # Rate, see above how this works
-  time_at <- as.double(Sys.time() - bar$start_at, units = "secs")
-  time_at_s <- as.integer(floor(time_at))
-  labels <- as.character(seq(time_at_s, time_at_s - 3L, by = -1L))
-  data <- unlist(mget(labels, envir = bar$chunks, ifnotfound = 0L))
-  fact <- time_at - max(time_at_s - 3, 0)
-  rate <- sum(data) / fact
-  if (rate == 0) {
-    parts$rate <- strrep("\u00a0", 8)
-  } else {
-    parts$rate <- sp(paste0(pretty_bytes(rate, style = "6"), "/s"))
-  }
+  rate <- calculate_rate(bar$start_at, now, bar$chunks)
+  parts$rate <- rate$rstr
 
   # Message
   parts$msg <- bar$lastmsg
@@ -301,17 +352,7 @@ calculate_progress_parts <- function(bar) {
 
   # ETA
   if (!is.na(bytes_total)) {
-    if (rate == 0) {
-      parts$eta <- "??s\u00a0"
-    } else {
-      todo <- bytes_total - bytes_done
-      etas <- as.difftime(todo / rate, units = "secs")
-      if (etas < 1) {
-        parts$eta <- "<1s\u00a0\u00a0\u00a0"
-      } else {
-        parts$eta <- sp(format(pretty_dt(etas, compact = TRUE), width = 6))
-      }
-    }
+    parts$eta <- calculate_eta(bytes_total, bytes_done, rate$rate)$estr
   }
 
   parts

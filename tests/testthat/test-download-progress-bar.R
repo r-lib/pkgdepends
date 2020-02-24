@@ -1,78 +1,317 @@
 
 test_that("make_bar", {
-  # TODO
-  expect_true(TRUE)
+  chars <- withr::with_options(list(cli.unicode = FALSE), progress_chars())
+  lapply(
+    seq(0, 1, by = 0.2),
+    function(p) {
+      expect_equal(nchar(crayon::strip_style(make_bar(chars, p, 10))), 10)
+    }
+  )
 })
 
 test_that("initial state", {
-  do <- function() pkgplan__create_progress_bar(what = what)
+  # num = 0, nch = 0, cbt = 0
+  # no downloads are needed, all installed
+  what <- tibble::tribble(
+    ~type,        ~filesize, ~package, ~cache_status,
+    "installed",      10000, "foo",    NA_character_,
+    "installed",      10000, "foo2",   "miss",
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(msg, "No downloads are needed")
 
+  # num = 0, nch = 1, cbt > 0
+  # no downloads needed, all cached or installed
+  what <- tibble::tribble(
+    ~type,        ~filesize, ~package, ~cache_status,
+    "cran",           10000, "foo",    "hit",
+    "installed",      10000, "foo2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(msg, "No downloads are needed, 1 pkg (10 kB) is cached", fixed = TRUE)
+
+  # num = 0, nch = 1, cbt > 0
+  # no downloads needed, but cached size known
+  what <- tibble::tribble(
+    ~type,        ~filesize,       ~package, ~cache_status,
+    "cran",           10000,       "foo",    "hit",
+    "cran",           10000,       "foo2",   "hit",
+    "installed",      10000,       "foo3",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(msg, "No downloads are needed, 2 pkgs (20 kB) are cached", fixed = TRUE)
+
+  # num = 0, nch = 1, cbt = 0
+  # no downloads needed, cached size unknown
+  what <- tibble::tribble(
+    ~type,        ~filesize,       ~package, ~cache_status,
+    "cran",           NA_integer_, "foo",    "hit",
+    "installed",      10000,       "foo2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(msg, "No downloads are needed, 1 pkg is cached", fixed = TRUE)
+
+  # num > 0, bts > 0, unk = 0, nch = 0, cbt = 0
+  # nothing is cached, sizes known
   what <- tibble::tribble(
     ~type,        ~filesize, ~package, ~cache_status,
     "cran",           10000, "foo",    "miss",
     "cran",           20000, "bar",    "miss"
   )
-  msg <- capture_async_messages(do())
-  expect_match(msg, "Getting 2 pkgs")
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(msg, "Getting 2 pkgs (30 kB)", fixed = TRUE)
 
-  what <- rbind(what, tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "installed",      10000, "foo",    "miss",
-    "cran",           20000, "bar",    "hit"
-  ))
-  msg <- capture_async_messages(do())
-  expect_match(msg, "Getting 2 pkgs")
-})
+  # num > 0, bts > 0, unk = 0, nch = 1, cbt = 0
+  # 1 package cached, 2 downloaded, cached size unknown
+  what <- tibble::tribble(
+    ~type,         ~filesize, ~package, ~cache_status,
+    "cran",            10000, "foo",    "miss",
+    "cran",            20000, "bar",    "miss",
+    "installed",       10000, "foo2",   NA_character_,
+    "cran",      NA_integer_, "bar2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(msg, "Getting 2 pkgs (30 kB), 1 cached", fixed = TRUE)
 
-test_that("updates", {
+  # num > 0, bts > 0, unk = 0, nch = 1, cbt > 0
+  # 1 package cached, 2 downloaded, cached size known
   what <- tibble::tribble(
     ~type,        ~filesize, ~package, ~cache_status,
     "cran",           10000, "foo",    "miss",
-    "installed",      10000, "foo",    "miss",    # no download, installed
+    "cran",           20000, "bar",    "miss",
+    "installed",      10000, "foo2",   NA_character_,
+    "cran",           20000, "bar2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(msg, "Getting 2 pkgs (30 kB), 1 (20 kB) cached", fixed = TRUE)
+
+  # num > 0, bts > 0, unk > 0, nch = 0, cbt = 0
+  # downloads with unknown sizes
+  what <- tibble::tribble(
+    ~type,         ~filesize, ~package, ~cache_status,
+    "cran",            20000, "foo",    "miss",
+    "cran",      NA_integer_, "bar",    "miss",
+    "installed",       10000, "foo2",   NA_character_
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(
+    msg,
+    "Getting 1 pkg (20 kB) and 1 pkg with unknown size",
+    fixed = TRUE
+  )
+
+  # num > 0, bts > 0, unk > 0, nch = 1, cbt > 0
+  # downloads with known & unknown sizes, 1 cached with known size
+  what <- tibble::tribble(
+    ~type,         ~filesize,       ~package, ~cache_status,
+    "cran",            10000,       "foo",    "miss",
+    "cran",      NA_integer_,       "bar",    "miss",
+    "installed",       10000,       "foo2",   NA_character_,
+    "cran",            30000,       "bar2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(
+    msg,
+    "Getting 1 pkg (10 kB) and 1 pkg with unknown size, 1 (30 kB) cached",
+    fixed = TRUE
+  )
+
+  # num > 0, bts > 0, unk > 0, nch = 1, cbt = 0
+  # downloads with known sizes, 1 cached with unknown size
+  what <- tibble::tribble(
+    ~type,         ~filesize, ~package, ~cache_status,
+    "cran",            10000, "foo",    "miss",
+    "cran",      NA_integer_, "bar",    "miss",
+    "installed",       10000, "foo2",   NA_character_,
+    "cran",      NA_integer_, "bar2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(
+    msg,
+    "Getting 1 pkg (10 kB) and 1 pkg with unknown size, 1 cached",
+    fixed = TRUE
+  )
+
+  # num > 0, bts = 0, unk > 0, nch = 0, cbt = 0
+  # downloads with only unknown sizes, nothing cached
+  what <- tibble::tribble(
+    ~type,         ~filesize, ~package, ~cache_status,
+    "cran",      NA_integer_, "foo",    "miss",
+    "cran",      NA_integer_, "bar",    "miss",
+    "installed",      10000,  "foo2",   NA_character_
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(
+    msg,
+    "Getting 2 pkgs with unknown sizes",
+    fixed = TRUE
+  )
+
+  # num > 0, bts = 0, unk > 0, nch = 1, cbt = 0
+  # downloads with unknown sizes, 1 cached with unknown size
+  what <- tibble::tribble(
+    ~type,         ~filesize, ~package, ~cache_status,
+    "cran",      NA_integer_, "foo",    "miss",
+    "cran",      NA_integer_, "bar",    "miss",
+    "installed",       10000, "foo2",   NA_character_,
+    "cran",      NA_integer_, "bar2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(
+    msg,
+    "Getting 2 pkgs with unknown sizes, 1 cached",
+    fixed = TRUE
+  )
+
+  # num > 0, bts = 0, unk > 0, nch = 1, cbt > 0
+  # downloads with unknown sizes, 1 cached
+  what <- tibble::tribble(
+    ~type,         ~filesize, ~package, ~cache_status,
+    "cran",      NA_integer_, "foo",    "miss",
+    "cran",      NA_integer_, "bar",    "miss",
+    "installed",       10000, "foo2",   NA_character_,
+    "cran",            30000, "bar2",   "hit"
+  )
+  msg <- capture_messages(pkgplan__create_progress_bar(what))
+  expect_match(
+    msg,
+    "Getting 2 pkgs with unknown sizes, 1 (30 kB) cached",
+    fixed = TRUE
+  )
+})
+
+test_that("data updates", {
+  what <- tibble::tribble(
+    ~type,        ~filesize, ~package, ~cache_status,
+    "cran",           10000, "foo",    "miss",
+    "installed",      10000, "foo2",   "miss",    # no download, installed
     "cran",           20000, "bar",    "hit",     # no download, cached
-    "cran",           20000, "bar",    "miss"
+    "cran",           20000, "bar2",   "miss"
   )
 
   do <- function() {
     bar <- pkgplan__create_progress_bar(what = what)
     pkgplan__update_progress_bar(bar, 1L, "data", list(current = 5000, total = 10000))
     pkgplan__update_progress_bar(bar, 4L, "data", list(current = 20000, total = 20000))
-    pkgplan__update_progress_bar(
-      bar, 4L, "done",
-      list(
-        download_status = "Got",
-        package = "pkg",
-        platform = "source",
-        version = "1.0.0",
-        fulltarget = tempfile(),
-        fulltarget_tree = tempfile()
-      )
-    )
     pkgplan__done_progress_bar(bar)
     bar$what
   }
 
-  msg <- capture_async_messages(res <- do())
+  msg <- capture_messages(res <- do())
   expect_match(msg, "Getting 2 pkgs (30 kB)", fixed = TRUE)
-  expect_match(crayon::strip_style(msg), "Got pkg 1.0.0 (source)", fixed = TRUE)
   expect_equal(res$filesize[1], 10000)
   expect_equal(res$filesize[4], 20000)
   expect_equal(res$current[1], 5000)
   expect_equal(res$current[4], 20000)
-  expect_equal(res$status, c("data", "todo", "todo", "got"))
+  expect_equal(res$status, c("data", "skip", "skip", "data"))
 })
 
-test_that("rate is calculated properly", {
-  # TODO
-  expect_true(TRUE)
+test_that("all finish messages for updates", {
+  do <- function(idx, event = "done", download_status = "Got",
+                 make_tempfile = TRUE) {
+    bar <- pkgplan__create_progress_bar(what = what)
+    tmp <- tempfile()
+    if (make_tempfile) {
+      writeBin(raw(7), tmp)
+      on.exit(unlink(tmp), add = TRUE)
+    }
+    msg <- capture_messages(
+      pkgplan__update_progress_bar(
+        bar, idx, event,
+        list(
+          download_status = download_status,
+          package = "foo",
+          platform = "source",
+          version = "1.0.0",
+          fulltarget = tmp,
+          fulltarget_tree = tempfile()
+        )
+      )
+    )
+    pkgplan__done_progress_bar(bar)
+    list(msg = msg, what = bar$what)
+  }
+
+  what <- tibble::tribble(
+    ~type,        ~filesize, ~package, ~cache_status,
+    "cran",           10000, "foo",    "miss",
+    "installed",      10000, "foo2",   "miss",    # no download, installed
+    "cran",           20000, "bar",    "hit",     # no download, cached
+    "cran",           20000, "bar2",   "miss"
+  )
+
+  ret <- synchronise(do(1L))
+  expect_match(
+    crayon::strip_style(ret$msg),
+    "Got foo 1.0.0 (source) (7 B)",
+    fixed = TRUE
+  )
+
+  ret <- synchronise(do(1L, make_tempfile = FALSE))
+  expect_match(
+    crayon::strip_style(ret$msg),
+    "Got foo 1.0.0 \\(source\\)\\s+$"
+  )
+
+  ret <- synchronise(do(1L, event = "error"))
+  expect_match(
+    crayon::strip_style(ret$msg),
+    "Failed to download foo 1.0.0 (source)",
+    fixed = TRUE
+  )
+
+  expect_equal(ret$what$status[1], "error")
 })
 
-test_that("eta is calculated properly", {
-  # TODO
-  expect_true(TRUE)
+test_that("rate", {
+  now <- Sys.time()
+  chunks <- as.environment(list(
+    "0" = 1000,
+    "1" = 2000,
+    "2" = 0,
+    "3" = 400,
+    "4" = 100,
+    "5" = 200
+  ))
+
+  r <- calculate_rate(now - 5.5, now, chunks)
+  expect_equal(r, list(rate = 200, rstr = "0.2 kB/s"))
 })
 
-test_that("if file size is unknown", {
+test_that("eta", {
+  expect_equal(
+    calculate_eta(100, 50, 0),
+    list(etas = NA, estr = "??s\u00a0")
+  )
+  expect_equal(
+    calculate_eta(100, 50, 10),
+    list(etas = as.difftime(5, units = "secs"), estr = sp("~5s   "))
+  )
+})
+
+test_that("parts are calculated properly", {
+  what <- tibble::tribble(
+    ~type,        ~filesize, ~package, ~cache_status,
+    "cran",           10000, "foo",    "miss",
+    "cran",           20000, "bar",    "miss",
+    "installed",      10000, "foo2",   NA_character_,
+    "cran",           20000, "bar2",   "hit"
+  )
+  bar <- withr::with_options(
+    list(cli.unicode = FALSE),
+    pkgplan__create_progress_bar(what)
+  )
+  parts <- calculate_progress_parts(bar)
+  expect_equal(parts$pkg_done, "0")
+  expect_equal(parts$pkg_total, "2")
+  expect_equal(parts$percent, "\u00a0\u00a00%")
+  expect_match(parts$rate, "^\\s+$")
+  expect_equal(parts$msg, "Connecting...")
+  expect_match(crayon::strip_style(parts$line), "^[(]\\s+[)]$")
+  expect_equal(parts$eta, "??s\u00a0")
+})
+
+test_that("parts if file size is unknown", {
   # TODO
   expect_true(TRUE)
 })

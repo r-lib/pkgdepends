@@ -81,8 +81,11 @@ pkg_plan <- R6::R6Class(
     solve_lp_problem = function(problem)
       pkgplan__solve_lp_problem(self, private, problem),
 
-    create_progress_bar = function(what)
-      pkgplan__create_progress_bar(what),
+    create_progress_bar = function(what) {
+      bar <- pkgplan__create_progress_bar(what)
+      pkgplan__init_progress_bar(bar)
+      bar
+    },
     update_progress_bar = function(idx, event, data)
       pkgplan__update_progress_bar(private$progress_bar, idx, event, data),
     done_progress_bar = function() {

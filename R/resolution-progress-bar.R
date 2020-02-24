@@ -61,7 +61,7 @@ make_bar <- function(chars, p, width =  15) {
   pchars <- rep(chars$fill, w)
   xchars <- rep("\u00a0", max(width - w, 0))
   bar <- paste(
-    c(chars$lpar, pchars, xchars, chars$rpar, "\u00a0"),
+    c(chars$lpar, pchars, xchars, chars$rpar),
     collapse = "")
 
   ## This is a workaround for an RStudio bug:

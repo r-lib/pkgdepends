@@ -20,16 +20,13 @@ install_binary <- function(filename, lib = .libPaths()[[1L]],
     all_named(metadata),
     is.null(quiet) || is_flag(quiet))
 
-  px <- make_install_process(filename, lib = lib, metadata = metadata)
   stdout <- ""
   stderr <- ""
 
-  bar <- cli_progress_bar(
-      format = paste0(":spin Installing ", filename))
+  px <- make_install_process(filename, lib = lib, metadata = metadata)
 
   repeat {
     px$poll_io(100)
-    if (!quiet) bar$tick(0)
     stdout <- paste0(stdout, px$read_output())
     stderr <- paste0(stderr, px$read_error())
     if (!px$is_alive() &&
@@ -38,7 +35,6 @@ install_binary <- function(filename, lib = .libPaths()[[1L]],
     }
   }
 
-  if (!quiet) bar$terminate()
   if (px$get_exit_status() != 0) {
     stop("Package installation failed\n", stderr)
   }

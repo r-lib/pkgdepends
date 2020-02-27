@@ -21,7 +21,6 @@ Imports:
     backports,
     callr (>= 3.3.1),
     cli (>= 2.0.0),
-    cliapp,
     crayon,
     curl,
     desc (>= 1.2.0),

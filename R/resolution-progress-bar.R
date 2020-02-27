@@ -4,53 +4,65 @@
 progress_chars <- function() {
   if (is_utf8_output()) {
     list(
+      build = "\U0001f4e6",
+      inst = "\u2705",
       lpar = "\u2e28",
       rpar = "\u2e29",
-      fill = "\u2588")
+      fill = "\u2588",
+      half = "\u2592"
+    )
 
   } else {
     list(
+      build = "[BLD]",
+      inst = "[INS]",
       lpar = "(",
       rpar = ")",
-      fill = "#")
+      fill = "#",
+      half = "-"
+    )
   }
 }
 
 #' @importFrom cli get_spinner
-#' @importFrom cliapp cli_progress_bar
 
 res__create_progress_bar <- function(self, private) {
-  bar <- list()
+  self; private
+
+  bar <- new.env(parent = emptyenv())
   bar$spinner <- get_spinner()
   bar$spinner_state <- 1L
   bar$chars <- progress_chars()
 
-  bar$bar <- cli_progress_bar(
-    format = ":xbar:xstate :xspinner :xmsg",
-    total = 10e7,
-    force = TRUE
-    )
+  bar$status <- cli_status("", .auto_close = FALSE)
+
+  bar$timer <- new_async_timer(
+    1/10,
+    function() res__show_progress_bar(self, private)
+  )
+  bar$timer$listen_on("error", function(e) { stop(e) })
 
   bar
 }
 
-res__update_progress_bar <- function(self, private) {
+res__show_progress_bar <- function(self, private) {
   deps <- nrow(private$state)
   direct <- sum(private$state$direct)
   direct_done <- sum(!is.na(private$state$status) & private$state$direct)
 
   bar <- if (direct >= 5) {
     make_bar(private$bar$chars, direct_done / direct, width = 15)
+  } else {
+    ""
   }
 
-  tokens <- list(
-    xbar = bar %||% "",
-    xstate = make_progress_main(deps, direct_done, direct),
-    xspinner = make_progress_spinner(self, private),
-    xmsg = make_trailing_progress_msg(self, private)
-  )
+  state <- make_progress_main(deps, direct_done, direct)
+  spinner <- make_progress_spinner(self, private)
+  msg <- make_trailing_progress_msg(self, private)
 
-  private$bar$bar$tick(0, tokens = tokens)
+  str <- "{bar} {state} {spinner} {msg}"
+  str <- gsub(" ", "\u00a0", str)
+  cli_status_update(private$bar$status, str)
 }
 
 make_bar <- function(chars, p, width =  15) {
@@ -116,5 +128,7 @@ make_trailing_progress_msg <- function(self, private) {
 }
 
 res__done_progress_bar <- function(self, private) {
-  private$bar$bar$terminate()
+  if (is.null(private$bar)) return()
+  cli_status_clear(private$bar$status, result = "clear")
+  private$bar <- NULL
 }

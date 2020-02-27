@@ -37,9 +37,9 @@ update_progress_bar <- function(state, tick = 0) {
   ## https://github.com/r-lib/pkginstall/issues/42
   pp <- if (Sys.getenv("RSTUDIO", "") == "" ||
             Sys.getenv("RSTUDIO_TERM", "") != "") {
-    function(x) x
+    function(x) gsub(" ", "\u00a0", x, fixed = TRUE)
   } else {
-    function(x) crayon::strip_style(x)
+    function(x) gsub(" ", "\u00a0", crayon::strip_style(x), fixed = TRUE)
   }
 
   chars <- progress_chars()
@@ -50,7 +50,7 @@ update_progress_bar <- function(state, tick = 0) {
 
   cli_status_update(
     state$bar$status,
-    "{xbar} | {xbuilt} | {xinst} | {xmsg}"
+    gsub(" ", "\u00a0", "{xbar} | {xbuilt} | {xinst} | {xmsg}")
   )
 }
 

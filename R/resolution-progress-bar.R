@@ -4,56 +4,65 @@
 progress_chars <- function() {
   if (is_utf8_output()) {
     list(
+      build = "\U0001f4e6",
+      inst = "\u2705",
       lpar = "\u2e28",
       rpar = "\u2e29",
-      fill = "\u2588")
+      fill = "\u2588",
+      half = "\u2592"
+    )
 
   } else {
     list(
+      build = "[BLD]",
+      inst = "[INS]",
       lpar = "(",
       rpar = ")",
-      fill = "#")
+      fill = "#",
+      half = "-"
+    )
   }
 }
 
 #' @importFrom cli get_spinner
-#' @importFrom cliapp cli_progress_bar
 
 res__create_progress_bar <- function(self, private) {
-  if (!is_verbose()) return(NULL)
-  bar <- list()
+  self; private
+
+  bar <- new.env(parent = emptyenv())
   bar$spinner <- get_spinner()
   bar$spinner_state <- 1L
   bar$chars <- progress_chars()
 
-  bar$bar <- cli_progress_bar(
-    format = ":xbar:xstate :xspinner :xmsg",
-    total = 10e7,
-    force = TRUE
-    )
+  bar$status <- cli_status("", .auto_close = FALSE)
+
+  bar$timer <- new_async_timer(
+    1/10,
+    function() res__show_progress_bar(self, private)
+  )
+  bar$timer$listen_on("error", function(e) { stop(e) })
 
   bar
 }
 
-res__update_progress_bar <- function(self, private) {
-  if (!is_verbose()) return()
-
+res__show_progress_bar <- function(self, private) {
   deps <- nrow(private$state)
   direct <- sum(private$state$direct)
   direct_done <- sum(!is.na(private$state$status) & private$state$direct)
 
   bar <- if (direct >= 5) {
     make_bar(private$bar$chars, direct_done / direct, width = 15)
+  } else {
+    ""
   }
 
-  tokens <- list(
-    xbar = bar %||% "",
-    xstate = make_progress_main(deps, direct_done, direct),
-    xspinner = make_progress_spinner(self, private),
-    xmsg = make_trailing_progress_msg(self, private)
-  )
+  state <- make_progress_main(deps, direct_done, direct)
+  spinner <- make_progress_spinner(self, private)
+  msg <- make_trailing_progress_msg(self, private)
 
-  private$bar$bar$tick(0, tokens = tokens)
+  str <- "{bar} {state} {spinner} {msg}"
+  str <- gsub(" ", "\u00a0", str)
+  cli_status_update(private$bar$status, str)
 }
 
 make_bar <- function(chars, p, width =  15) {
@@ -62,17 +71,18 @@ make_bar <- function(chars, p, width =  15) {
   w <- if (isTRUE(all.equal(p, 1))) width else trunc(width * p)
 
   pchars <- rep(chars$fill, w)
-  xchars <- rep(" ", max(width - w, 0))
+  xchars <- rep("\u00a0", max(width - w, 0))
   bar <- paste(
-    c(chars$lpar, pchars, xchars, chars$rpar, " "),
+    c(chars$lpar, pchars, xchars, chars$rpar),
     collapse = "")
 
   ## This is a workaround for an RStudio bug:
   ## https://github.com/r-lib/pkginstall/issues/42
-  if (! have_rstudio_bug_2387()) {
+  ## It seems that this bug has crept back, so we don't color in RStudio
+  if (! is_rstudio()) {
     crayon::green(bar)
   } else {
-    crayon::reset(bar)
+    crayon::green(bar)
   }
 }
 
@@ -118,6 +128,7 @@ make_trailing_progress_msg <- function(self, private) {
 }
 
 res__done_progress_bar <- function(self, private) {
-  if (!is_verbose()) return()
-  private$bar$bar$terminate()
+  if (is.null(private$bar)) return()
+  cli_status_clear(private$bar$status, result = "clear")
+  private$bar <- NULL
 }

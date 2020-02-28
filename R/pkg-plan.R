@@ -9,7 +9,7 @@ pkg_plan <- R6::R6Class(
     get_refs = function() private$refs,
     has_resolution = function() !is.null(private$resolution$result),
     has_clean_resolution = function()
-      has_resolution() && (all(private$resolution$result$status == "OK")),
+      self$has_resolution() && (all(private$resolution$result$status == "OK")),
     has_resolution_downloads = function() !is.null(private$downloads),
     has_solution_downloads = function() !is.null(private$solution_downloads),
     has_solution = function() !is.null(private$solution),
@@ -81,14 +81,19 @@ pkg_plan <- R6::R6Class(
     solve_lp_problem = function(problem)
       pkgplan__solve_lp_problem(self, private, problem),
 
-    create_progress_bar = function(what)
-      pkgplan__create_progress_bar(self, private, what),
-    update_progress_bar = function(idx, data)
-      pkgplan__update_progress_bar(self, private, idx, data),
-    show_progress_bar = function()
-      pkgplan__show_progress_bar(self, private),
-    done_progress_bar = function()
-      pkgplan__done_progress_bar(self, private)
+    create_progress_bar = function(what) {
+      bar <- pkgplan__create_progress_bar(what)
+      pkgplan__init_progress_bar(bar)
+      bar
+    },
+    update_progress_bar = function(idx, event, data)
+      pkgplan__update_progress_bar(private$progress_bar, idx, event, data),
+    done_progress_bar = function() {
+      if (!is.null(private$progress_bar)) {
+        pkgplan__done_progress_bar(private$progress_bar)
+        private$progress_bar <- NULL
+      }
+    }
   )
 )
 

@@ -305,7 +305,7 @@ start_task_package <- function(state, task) {
   version <- state$plan$version[pkgidx]
 
   state$plan$package_time[[pkgidx]] <- Sys.time()
-  alert("info", "Packaging {pkg {pkg}} {version {version}}")
+  alert("info", "Packaging {.pkg {pkg}} {.version {version}}")
 
   if (file.info(path)$isdir) {
     ## Just build tree_dir
@@ -375,7 +375,7 @@ start_task_build <- function(state, task) {
 
   pkg <- state$plan$package[pkgidx]
   version <- state$plan$version[pkgidx]
-  alert("info", "Building {pkg {pkg}} {version {version}}")
+  alert("info", "Building {.pkg {pkg}} {.version {version}}")
 
   px <- make_build_process(path, tmp_dir, lib, vignettes, needscompilation,
                            binary = TRUE)
@@ -442,8 +442,8 @@ stop_task_package_uncompress <- function(state, worker) {
     version <- state$plan$version[pkgidx]
     time <- Sys.time() - state$plan$package_time[[pkgidx]]
     ptime <- pretty_sec(as.numeric(time, units = "secs"))
-    alert("danger", "Failed to uncompress {pkg {pkg}} \\
-           {version {version}} {timestamp {ptime}}")
+    alert("danger", "Failed to uncompress {.pkg {pkg}} \\
+           {.version {version}} {.timestamp {ptime}}")
     update_progress_bar(state, 1L)
 
     state$plan$package_done[[pkgidx]] <- TRUE
@@ -478,13 +478,13 @@ stop_task_package_build <- function(state, worker) {
   ptime <- pretty_sec(as.numeric(time, units = "secs"))
 
   if (success) {
-    alert("success", "Packaged {pkg {pkg}} {version {version}} \\
-           {timestamp {ptime}}")
+    alert("success", "Packaged {.pkg {pkg}} {.version {version}} \\
+           {.timestamp {ptime}}")
     ## Need to save the name of the built package
     state$plan$file[pkgidx] <- worker$process$get_built_file()
   } else {
-    alert("danger", "Failed to create source package {pkg {pkg}} \\
-           {version {version}} {timestamp {ptime}}")
+    alert("danger", "Failed to create source package {.pkg {pkg}} \\
+           {.version {version}} {.timestamp {ptime}}")
   }
   update_progress_bar(state, 1L)
 
@@ -526,13 +526,13 @@ stop_task_build <- function(state, worker) {
   ptime <- pretty_sec(as.numeric(time, units = "secs"))
 
   if (success) {
-    alert("success", "Built {pkg {pkg}} {version {version}} \\
-           {timestamp {ptime}}")
+    alert("success", "Built {.pkg {pkg}} {.version {version}} \\
+           {.timestamp {ptime}}")
     ## Need to save the name of the built package
     state$plan$file[pkgidx] <- worker$process$get_built_file()
   } else {
-    alert("danger", "Failed to build {pkg {pkg}} \\
-           {version {version}} {timestamp {ptime}}")
+    alert("danger", "Failed to build {.pkg {pkg}} \\
+           {.version {version}} {.timestamp {ptime}}")
   }
   update_progress_bar(state, 1L)
 
@@ -600,10 +600,10 @@ stop_task_install <- function(state, worker) {
   note <- installed_note(state$plan[pkgidx,])
 
   if (success) {
-    alert("success", "Installed {pkg {pkg}} \\
-             {version {version}} {note} {timestamp {ptime}}")
+    alert("success", "Installed {.pkg {pkg}} \\
+             {.version {version}} {note} {.timestamp {ptime}}")
   } else {
-    alert("danger", "Failed to install  {pkg pkg}} {version {version}}")
+    alert("danger", "Failed to install {.pkg {pkg}} {.version {version}}")
   }
   update_progress_bar(state, 1L)
 

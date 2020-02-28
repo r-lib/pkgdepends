@@ -177,8 +177,6 @@ resolution <- R6::R6Class(
 
     create_progress_bar = function()
       res__create_progress_bar(self, private),
-    update_progress_bar = function()
-      res__update_progress_bar(self, private),
     done_progress_bar = function()
       res__done_progress_bar(self, private),
 
@@ -233,7 +231,6 @@ res_init <- function(self, private, config, cache, library,
 
       private$set_result(wh, value)
       private$try_finish(resolve)
-      private$update_progress_bar()
     },
 
     parent_reject = function(value, resolve, id) {
@@ -254,7 +251,6 @@ res_init <- function(self, private, config, cache, library,
       )
       private$set_result(wh, fail_val)
       private$try_finish(resolve)
-      private$update_progress_bar()
     })
 }
 
@@ -300,7 +296,6 @@ res_push <- function(self, private, ..., direct, .list = .list) {
              started_at = Sys.time())
     )
 
-    private$update_progress_bar()
     dx$then(private$deferred)
   }
 }
@@ -334,7 +329,6 @@ res__resolve_delayed <- function(self, private, resolve) {
       )
       dx$then(private$deferred)
     }
-    private$update_progress_bar()
   }
 
   private$try_finish(resolve)

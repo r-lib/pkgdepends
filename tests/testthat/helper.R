@@ -84,3 +84,21 @@ test_package_root <- function() {
 skip_in_covr <- function() {
   if (Sys.getenv("R_COVR") == "true") skip("In covr")
 }
+
+capture_messages <- function(expr) {
+  msg <- ""
+  withCallingHandlers(
+    expr,
+    message = function(m) msg <<- paste0(msg, m$message)
+  )
+  msg
+}
+
+capture_async_messages <- function(expr) {
+  msg <- ""
+  withCallingHandlers(
+    synchronise(expr),
+    message = function(m) msg <<- paste0(msg, m$message)
+  )
+  msg
+}

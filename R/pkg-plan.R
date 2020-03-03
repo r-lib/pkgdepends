@@ -163,7 +163,12 @@ pkgplan_init <- function(self, private, refs, config, library,
 #'   Defaults to the hard dependencies, see [pkg_dep_types_hard()].
 #' * `r-versions`: Character vector, R versions to download or install
 #'   packages for. It defaults to the current R version.
-#'
+#' * `build-vignettes`: Whether to build vignettes for package trees.
+#'   This is only used if the package is obtained from a package tree,
+#'   and not from a source (or binary) package archive. By default vignettes
+#'   are not built in this case. If you set this to `TRUE`, then you need
+#'   to make sure that the vignette builder packages are available, as
+#'   these are not installed by default currently.
 #' @name pkg_config
 NULL
 
@@ -176,7 +181,8 @@ pkgplan_default_config <- function() {
     "platforms"          = default_platforms(),
     "cran-mirror"        = default_cran_mirror(),
     "dependencies"       = pkg_dep_types_hard(),
-    "r-versions"         = current_r_version()
+    "r-versions"         = current_r_version(),
+    "build-vignettes"    = FALSE
   ), class = "pkg_config")
 }
 
@@ -198,8 +204,9 @@ format.pkg_config <- function(x, ...) {
     paste0("  - platforms: ", paste(x$platforms, collapse = ", ")),
     paste0("  - cran-mirror: ", x$`cran-mirror`),
     paste0("  - dependencies: ", format_dependencies(x$dependencies)),
-    paste0("  - r-versions: ", paste(x$`r-versions`, collapse = ", "))
-    )
+    paste0("  - r-versions: ", paste(x$`r-versions`, collapse = ", ")),
+    paste0("  - build-vignettes: ", x$`build-vignettes`)
+  )
 }
 
 #' @export
@@ -221,7 +228,8 @@ is_valid_config <- function(x) {
       platforms          = assert_that(is_platform_list(x[[n]])),
       "cran-mirror"      = assert_that(is_string(x[[n]])),
       dependencies       = assert_that(is_dependencies(x[[n]])),
-      "r-versions"       = assert_that(is_r_version_list(x[[n]]))
+      "r-versions"       = assert_that(is_r_version_list(x[[n]])),
+      "build-vignettes"  = assert_that(is_flag(x[[n]]))
     )
   }
   TRUE

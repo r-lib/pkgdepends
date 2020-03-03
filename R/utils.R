@@ -442,3 +442,9 @@ has_asciicast_support <- function() {
 try_silently <- function(expr) {
   try(expr, silent = TRUE)
 }
+
+rimraf <- function(...) {
+  x <- file.path(...)
+  if ("~" %in% x) stop("Cowardly refusing to delete `~`")
+  unlink(x, recursive = TRUE, force = TRUE)
+}

@@ -80,6 +80,8 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
   }
   if (! "packaged" %in% colnames(plan)) plan$packaged <- TRUE
 
+  plan <- add_recursive_dependencies(plan)
+
   config <- list(lib = lib, num_workers = num_workers)
   state <- make_start_state(plan, config)
   state$progress <- create_progress_bar(state)
@@ -105,6 +107,37 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
   }, error = function(e) kill_all_processes(state))
 
   create_install_result(state)
+}
+
+# See https://github.com/r-lib/pkgdepends/issues/160
+# for why this is needed. We only need to do it for the packages that
+# are built from source, binaries can always be extracted.
+
+add_recursive_dependencies <- function(plan) {
+  # If all packages are source packages then there is nothing to do,
+  # we cannot get into a bad situation. Similarly if we only have
+  # binary packages.
+  if (all(plan$binary) || all(!plan$binary)) return(plan)
+
+  # Otherwise for every source package, we need to add its recursive
+  # dependencies.
+  idx  <- structure(seq_len(nrow(plan)), names = plan$package)
+  xdps <- structure(plan$dependencies, names = plan$package)
+  done <- structure(logical(nrow(plan)), names = plan$package)
+  srcidx <- which(!plan$binary)
+
+  do <- function(i) {
+    if (done[[i]]) return()
+    miss <- idx[names(!done[xdps[[i]]])]
+    for (m in miss) do(m)
+    xdps[[i]] <<- unique(c(xdps[[i]], unlist(xdps[xdps[[i]]])))
+    done[[i]] <<- TRUE
+  }
+
+  for (i in srcidx) do(i)
+
+  plan$dependencies[srcidx] <- unname(xdps[srcidx])
+  plan
 }
 
 make_start_state <- function(plan, config) {

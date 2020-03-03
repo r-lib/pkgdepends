@@ -1,0 +1,13 @@
+Package: pkgdependstest
+Title: Title
+Version: 1.0.0
+Author: Gábor Csárdi
+Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
+Description: Test package.
+License: MIT + file LICENSE
+LazyData: true
+VignetteBuilder: knitr
+Suggests:
+  knitr,
+  rmarkdown
+Encoding: UTF-8

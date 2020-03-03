@@ -38,5 +38,11 @@ to the current platform, \emph{and} \code{source}.
 Defaults to the hard dependencies, see \code{\link[=pkg_dep_types_hard]{pkg_dep_types_hard()}}.
 \item \code{r-versions}: Character vector, R versions to download or install
 packages for. It defaults to the current R version.
+\item \code{build-vignettes}: Whether to build vignettes for package trees.
+This is only used if the package is obtained from a package tree,
+and not from a source (or binary) package archive. By default vignettes
+are not built in this case. If you set this to \code{TRUE}, then you need
+to make sure that the vignette builder packages are available, as
+these are not installed by default currently.
 }
 }

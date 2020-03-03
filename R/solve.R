@@ -552,7 +552,8 @@ pkgplan_install_plan <- function(self, private, downloads) {
     (sol$type == "installed" & sol$package %in% direct_packages)
 
   binary = sol$platform != "source"
-  vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard")
+  vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard") &
+    private$config$`build-vignettes`
 
   sol$library <- private$config$library
   sol$binary <- binary

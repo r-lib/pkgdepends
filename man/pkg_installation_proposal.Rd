@@ -82,7 +82,7 @@ pdi <- new_pkg_installation_proposal(
 )
 
 pdi$resolve()
-pdi
+pdi$get_resolution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
@@ -113,7 +113,7 @@ pdi <- new_pkg_installation_proposal(
 )
 pdi$resolve()
 pdi$solve()
-pdi
+pdi$get_solution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
@@ -153,7 +153,7 @@ pdi <- new_pkg_installation_proposal(
 pdi$resolve()
 pdi$solve()
 pdi$download()
-pdi
+pdi$get_downloads()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
@@ -328,8 +328,7 @@ included, either directly or indirectly. See
 }
 
 \subsection{Returns}{
-The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
-(see below), the result of the resolution, invisibly.
+The \code{pkg_installation_proposal} object, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -339,7 +338,7 @@ The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
 )
 
 pdi$resolve()
-pdi
+pdi$get_resolution()
 }
 \if{html}{\out{</div>}}
 
@@ -460,8 +459,7 @@ most once. See \link[=pkg_solution]{'The dependency solver'} for details.
 }
 
 \subsection{Returns}{
-The same as the \href{#method-get-solution}{\code{get_solution()}} method, the
-result, invisibly.
+The \code{pkg_installation_proposal} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -471,7 +469,7 @@ result, invisibly.
 )
 pdi$resolve()
 pdi$solve()
-pdi
+pdi$get_solution()
 }
 \if{html}{\out{</div>}}
 
@@ -571,8 +569,7 @@ if possible.
 }
 
 \subsection{Returns}{
-The same as the \href{#method-get-downloads}{\code{get_downloads()}} method,
-the result, invisibly.
+The \code{pkg_installation_proposal} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -583,7 +580,7 @@ the result, invisibly.
 pdi$resolve()
 pdi$solve()
 pdi$download()
-pdi
+pdi$get_downloads()
 }
 \if{html}{\out{</div>}}
 

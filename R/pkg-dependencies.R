@@ -107,15 +107,17 @@ pkg_deps <- R6::R6Class(
     #' ['Dependency resolution'][pkg_resolution] for details.
     #'
     #'@return
-    #' The same as the [`get_resolution()`](#method-get-resolution) method
-    #' (see below), the result of the resolution, invisibly.
+    #' The `pkg_deps` object itself, invisibly.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("pak")
     #' pd$resolve()
-    #' pd
+    #' pd$get_resolution()
 
-    resolve = function() invisible(private$plan$resolve()),
+    resolve = function() {
+      private$plan$resolve()
+      invisible(self)
+    },
 
     #' @description
     #' The same as [`resolve()`](#method-resolve), but asynchronous.
@@ -153,16 +155,18 @@ pkg_deps <- R6::R6Class(
     #' hasn't been called yet.
     #'
     #' @return
-    #' The same as the [`get_solution()`](#method-get-solution) method, the
-    #' result, invisibly.
+    #' The `pkg_deps` object itself, invisibly.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$solve()
-    #' pd
+    #' pd$get_solution()
 
-    solve = function() invisible(private$plan$solve(policy = "lazy")),
+    solve = function() {
+      private$plan$solve(policy = "lazy")
+      invisible(self)
+    },
 
     #' @description
     #' Returns the solution of the package dependencies.

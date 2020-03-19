@@ -64,6 +64,7 @@ pkg_download_proposal <- R6::R6Class(
 
     initialize = function(refs, config = list(), remote_types = NULL) {
       private$plan <- pkg_plan$new(refs, config, library = NULL, remote_types)
+      invisible(self)
     },
 
     #' @description
@@ -102,15 +103,17 @@ pkg_download_proposal <- R6::R6Class(
     #' ['Dependency resolution'][pkg_resolution] for details.
     #'
     #' @return
-    #' The same as the [`get_resolution()`](#method-get-resolution) method
-    #' (see below), the result of the resolution, invisibly.
+    #' The `pkg_download_proposal` object itself, invisibly.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' pdl <- new_pkg_download_proposal("pak")
     #' pdl$resolve()
-    #' pdl
+    #' pdl$get_resolution()
 
-    resolve = function() invisible(private$plan$resolve()),
+    resolve = function() {
+      private$plan$resolve()
+      insivible(self)
+    },
 
     #' @description
     #' The same as [`resolve()`](#method-resolve), but asynchronous.
@@ -141,16 +144,18 @@ pkg_download_proposal <- R6::R6Class(
     #' pkgcache package by default, to avoid downloads if possible.
     #'
     #' @return
-    #' The same as the [`get_downloads()`](#method-get-downloads) method,
-    #' the result, invisibly.
+    #' The `pkg_download_proposal` object, invisibly.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl$resolve()
     #' pdl$download()
-    #' pdl
+    #' pdl$get_downloads()
 
-    download = function() invisible(private$plan$download_resolution()),
+    download = function() {
+      private$plan$download_resolution()
+      invisible(self)
+    },
 
     #' @description
     #' The same as [`download()`](#method-download), but asynchronous.

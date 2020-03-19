@@ -51,7 +51,7 @@ pdl$get_config()
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
-pdl
+pdl$get_resolution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
@@ -62,7 +62,7 @@ pdl$get_resolution()
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
-pdl
+pdl$get_downloads()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("pkgload")
@@ -195,14 +195,13 @@ included, either directly or indirectly. See
 }
 
 \subsection{Returns}{
-The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
-(see below), the result of the resolution, invisibly.
+The \code{pkg_download_proposal} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
-pdl
+pdl$get_resolution()
 }
 \if{html}{\out{</div>}}
 
@@ -256,15 +255,14 @@ pkgcache package by default, to avoid downloads if possible.
 }
 
 \subsection{Returns}{
-The same as the \href{#method-get-downloads}{\code{get_downloads()}} method,
-the result, invisibly.
+The \code{pkg_download_proposal} object, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
-pdl
+pdl$get_downloads()
 }
 \if{html}{\out{</div>}}
 

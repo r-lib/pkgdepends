@@ -49,7 +49,7 @@ pd$get_config()
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pd <- new_pkg_deps("pak")
 pd$resolve()
-pd
+pd$get_resolution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pd <- new_pkg_deps("r-lib/pkgdepends")
@@ -60,7 +60,7 @@ pd$get_resolution()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
-pd
+pd$get_solution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pd <- new_pkg_deps("pkgload")
@@ -199,14 +199,13 @@ either directly or indirectly. See
 }
 
 \subsection{Returns}{
-The same as the \href{#method-get-resolution}{\code{get_resolution()}} method
-(see below), the result of the resolution, invisibly.
+The \code{pkg_deps} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{pd <- new_pkg_deps("pak")
 pd$resolve()
-pd
+pd$get_resolution()
 }
 \if{html}{\out{</div>}}
 
@@ -267,15 +266,14 @@ hasn't been called yet.
 }
 
 \subsection{Returns}{
-The same as the \href{#method-get-solution}{\code{get_solution()}} method, the
-result, invisibly.
+The \code{pkg_deps} object itself, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
-pd
+pd$get_solution()
 }
 \if{html}{\out{</div>}}
 

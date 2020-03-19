@@ -145,8 +145,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' ['Dependency resolution'][pkg_resolution] for details.
     #'
     #' @return
-    #' The same as the [`get_resolution()`](#method-get-resolution) method
-    #' (see below), the result of the resolution, invisibly.
+    #' The `pkg_installation_proposal` object, invisibly.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
@@ -155,9 +154,12 @@ pkg_installation_proposal <- R6::R6Class(
     #' )
     #'
     #' pdi$resolve()
-    #' pdi
+    #' pdi$get_resolution()
 
-    resolve = function() invisible(private$plan$resolve()),
+    resolve = function() {
+      private$plan$resolve()
+      invisible(self)
+    },
 
     #' @description
     #' The same as [`resolve()`](#method-resolve), but asynchronous. This
@@ -238,8 +240,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' most once. See ['The dependency solver'][pkg_solution] for details.
     #'
     #' @return
-    #' The same as the [`get_solution()`](#method-get-solution) method, the
-    #' result, invisibly.
+    #' The `pkg_installation_proposal` object itself, invisibly.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
@@ -248,10 +249,11 @@ pkg_installation_proposal <- R6::R6Class(
     #' )
     #' pdi$resolve()
     #' pdi$solve()
-    #' pdi
+    #' pdi$get_solution()
 
     solve = function() {
-      invisible(private$plan$solve(policy = private$policy))
+      private$plan$solve(policy = private$policy)
+      invisible(self)
     },
 
     #' @description
@@ -317,8 +319,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' if possible.
     #'
     #' @return
-    #' The same as the [`get_downloads()`](#method-get-downloads) method,
-    #' the result, invisibly.
+    #' The `pkg_installation_proposal` object itself, invisibly.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' pdi <- new_pkg_installation_proposal(
@@ -328,7 +329,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$resolve()
     #' pdi$solve()
     #' pdi$download()
-    #' pdi
+    #' pdi$get_downloads()
 
     download = function() invisible(private$plan$download_solution()),
 

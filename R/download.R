@@ -96,6 +96,25 @@ pkgplan_stop_for_solution_download_error <- function(self, private) {
   }
 }
 
+pkgplan_stop_for_resolution_download_error <- function(self, private) {
+  dl <- self$get_resolution_download()
+  if (any(bad <- tolower(dl$download_status) == "failed")) {
+    msgs <- vcapply(
+      which(bad),
+      function(i) {
+        urls <- format_items(dl$sources[[i]])
+        glue("Failed to download {dl$package[i]} \\
+              from {urls}.")
+      }
+    )
+    msg <- paste(msgs, collapse = "\n")
+    err <- structure(
+      list(message = msg, call = NULL),
+      class = c("error", "condition"))
+    stop(err)
+  }
+}
+
 pkgplan_async_download_internal <- function(self, private, what, which) {
   if (any(what$status != "OK")) {
     stop("Resolution has errors, cannot start downloading")

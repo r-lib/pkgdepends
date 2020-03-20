@@ -182,6 +182,15 @@ pkg_download_proposal <- R6::R6Class(
     get_downloads = function() private$plan$get_resolution_download(),
 
     #' @description
+    #' Throw and error if the some of the downloads have failed for the
+    #' most recent
+    #' [`pkg_download_proposal$download()`](#method-download) call.
+
+    stop_for_download_error = function() {
+      private$plan$stop_for_resolution_download_error()
+    },
+
+    #' @description
     #' Format a `pkg_download_proposal` object, typically for printing.
     #'
     #' @param ... not used currently.

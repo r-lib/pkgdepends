@@ -93,6 +93,7 @@ pdl
 \item \href{#method-download}{\code{pkg_download_proposal$download()}}
 \item \href{#method-async_download}{\code{pkg_download_proposal$async_download()}}
 \item \href{#method-get_downloads}{\code{pkg_download_proposal$get_downloads()}}
+\item \href{#method-stop_for_download_error}{\code{pkg_download_proposal$stop_for_download_error()}}
 \item \href{#method-format}{\code{pkg_download_proposal$format()}}
 \item \href{#method-print}{\code{pkg_download_proposal$print()}}
 \item \href{#method-clone}{\code{pkg_download_proposal$clone()}}
@@ -303,6 +304,17 @@ pdl$get_downloads()
 }
 \if{html}{\out{</div>}}
 
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-stop_for_download_error"></a>}}
+\subsection{Method \code{stop_for_download_error()}}{
+Throw and error if the some of the downloads have failed for the
+most recent
+\href{#method-download}{\code{pkg_download_proposal$download()}} call.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$stop_for_download_error()}\if{html}{\out{</div>}}
 }
 
 }

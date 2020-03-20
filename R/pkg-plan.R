@@ -52,6 +52,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_get_solution_download(self, private),
     stop_for_solution_download_error = function()
       pkgplan_stop_for_solution_download_error(self, private),
+    stop_for_resolution_download_error = function()
+      pkgplan_stop_for_resolution_download_error(self, private),
 
     print = function(...)
       pkgplan_print(self, private, ...)

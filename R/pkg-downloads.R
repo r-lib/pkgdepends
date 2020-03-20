@@ -112,7 +112,7 @@ pkg_download_proposal <- R6::R6Class(
 
     resolve = function() {
       private$plan$resolve()
-      insivible(self)
+      invisible(self)
     },
 
     #' @description

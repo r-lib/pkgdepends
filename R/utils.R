@@ -9,25 +9,6 @@ repoman_data <- new.env(parent = emptyenv())
 
 `%&z&%` <- function(l, r) if (length(l) > 0 && l != "") r else ""
 
-get_platform <- function() {
-  .Platform
-}
-
-current_r_platform <- function() {
-  type <- get_platform()$pkgType
-  if (!is_string(type))
-    "source"
-  else if (grepl("^mac", type)) {
-    "macos"
-  } else if (grepl("^win", type)) {
-    "windows"
-  } else {
-    "source"
-  }
-}
-
-default_platforms <- function() unique(c(current_r_platform(), "source"))
-
 default_cran_mirror <- function() {
   mirror <- getOption("repos")["CRAN"]
   if (is.null(mirror) || is.na(mirror) || mirror == "@CRAN@") {

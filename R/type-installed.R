@@ -109,7 +109,9 @@ make_installed_cache <- function(library, packages = NULL) {
 #' @export
 
 lib_status <- function(library = .libPaths()[1], packages = NULL) {
-  make_installed_cache(library, packages)$pkgs
+  st <- make_installed_cache(library, packages)$pkgs
+  st$library <- if (nrow(st) > 0) library else character()
+  st[, c("library", setdiff(colnames(st), "library")), drop = FALSE]
 }
 
 #' @importFrom tibble tibble

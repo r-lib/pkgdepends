@@ -183,6 +183,26 @@ pkg_deps <- R6::R6Class(
     get_solution = function() private$plan$get_solution(),
 
     #' @description
+    #' Error if the dependency solver failed to find a consistent set of
+    #' packages that can be installed together.
+    #'
+    #' @examplesIf pkgdepends:::is_online()
+    #' # This is an error, because the packages conflict:
+    #' pd <- new_pkg_deps(
+    #'   c("r-lib/pak", "cran::pak"),
+    #'   config = list(library = tempfile())
+    #' )
+    #' pd$resolve()
+    #' pd$solve()
+    #' pd
+    #' # This fails:
+    #' # pd$stop_for_solution_error()
+
+    stop_for_solution_error = function() {
+      private$plan$stop_for_solve_error()
+    },
+
+    #' @description
     #' Draw a tree of package dependencies. It returns a `tree` object, see
     #' [cli::tree()]. Printing this object prints the dependency tree to the
     #' screen.

@@ -69,6 +69,18 @@ pd$solve()
 pd$get_solution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# This is an error, because the packages conflict:
+pd <- new_pkg_deps(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pd$resolve()
+pd$solve()
+pd
+# This fails:
+# pd$stop_for_solution_error()
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
@@ -95,6 +107,7 @@ pd
 \item \href{#method-get_resolution}{\code{pkg_deps$get_resolution()}}
 \item \href{#method-solve}{\code{pkg_deps$solve()}}
 \item \href{#method-get_solution}{\code{pkg_deps$get_solution()}}
+\item \href{#method-stop_for_solution_error}{\code{pkg_deps$stop_for_solution_error()}}
 \item \href{#method-draw}{\code{pkg_deps$draw()}}
 \item \href{#method-format}{\code{pkg_deps$format()}}
 \item \href{#method-print}{\code{pkg_deps$print()}}
@@ -298,6 +311,33 @@ A \link{pkg_solution_result} object, which is a list. See
 pd$resolve()
 pd$solve()
 pd$get_solution()
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
+\subsection{Method \code{stop_for_solution_error()}}{
+Error if the dependency solver failed to find a consistent set of
+packages that can be installed together.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$stop_for_solution_error()}\if{html}{\out{</div>}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{# This is an error, because the packages conflict:
+pd <- new_pkg_deps(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pd$resolve()
+pd$solve()
+pd
+# This fails:
+# pd$stop_for_solution_error()
 }
 \if{html}{\out{</div>}}
 

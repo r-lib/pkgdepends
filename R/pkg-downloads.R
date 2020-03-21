@@ -194,7 +194,7 @@ pkg_download_proposal <- R6::R6Class(
     #' Format a `pkg_download_proposal` object, typically for printing.
     #'
     #' @param ... not used currently.
-    #' @return
+    #' @return Nothing.
     #' A character vector, each element should be a line in the printout.
 
     format = function(...) {

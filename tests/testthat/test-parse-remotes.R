@@ -1,6 +1,27 @@
 
 context("parse_pkg_refs")
 
+test_that("package_name_rx", {
+  good <- c("A1", "a1", "Z1", "z1", "foo.bar", "foo.bar.baz", "a1.b2")
+
+  for (t in good) expect_true(is_valid_package_name(t), info = t)
+
+  bad <- list(
+    c("pkg", "forbidden"),
+    c("pak\u00e1ge", "ASCII"),
+    c("good-package", "letters, numbers and dot"),
+    c("x", "two characters"),
+    c("1stpackage", "must start with a letter"),
+    c("dots.", "must not end with a dot")
+  )
+
+  for (t in bad) {
+    ans <- is_valid_package_name(t[1])
+    expect_false(ans, info = t[1])
+    expect_match(attr(ans, "reason"), t[2], info = t[1])
+  }
+})
+
 test_that("parse_pkg_refs, standard", {
 
   cases <- list(

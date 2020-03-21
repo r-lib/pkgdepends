@@ -10,7 +10,7 @@
 #' @name pkg_refs
 NULL
 
-package_name_rx <- function() "[[:alpha:]][[:alnum:].]*[[:alnum:]]"
+package_name_rx <- function() "[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9]"
 
 ## CRAN and GitHub are special, because they have shorthands,
 ## so we need to know their regexes to find the type of the remotes

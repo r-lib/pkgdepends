@@ -334,6 +334,7 @@ Format a \code{pkg_download_proposal} object, typically for printing.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
+Nothing.
 A character vector, each element should be a line in the printout.
 }
 }

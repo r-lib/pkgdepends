@@ -82,7 +82,6 @@ has_emoji <- function() {
   if (isTRUE(opt <- getOption("pkg.emoji"))) return(TRUE)
   if (identical(opt, FALSE)) return(FALSE)
   if (Sys.info()[["sysname"]] != "Darwin") return(FALSE)
-  if (! isatty(stdout()) && Sys.getenv("RSTUDIO") == "") return(FALSE)
   TRUE
 }
 

@@ -184,7 +184,7 @@ parse_pkg_refs <- function(refs, remote_types = NULL, ...) {
   unique_types <- unique(types)
   res <- vector("list", length(refs))
 
-  if (any(bad <- setdiff(unique_types, names(remote_types)))) {
+  if (length(bad <- setdiff(unique_types, names(remote_types))) > 0) {
     stop("Unknown remote type(s): ", format_items(bad))
   }
 

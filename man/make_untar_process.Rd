@@ -25,7 +25,7 @@ make_untar_process(
 \item{post_process}{Function to call after the extraction.}
 }
 \value{
-The \link[callr:process]{callr::process} object.
+The \link[processx:process]{processx::process} object.
 }
 \description{
 Use an external tar program, if there is a working one, otherwise use

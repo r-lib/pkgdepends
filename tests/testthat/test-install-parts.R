@@ -38,8 +38,8 @@ test_that("poll_workers", {
   skip_on_os("windows")
 
   ## These might fail, but that does not matter much here
-  p1 <- callr::process$new("true", stdout = "|")
-  p2 <- callr::process$new("true", stdout = "|")
+  p1 <- processx::process$new("true", stdout = "|")
+  p2 <- processx::process$new("true", stdout = "|")
 
   state <- list(workers = list(list(process = p1)))
   expect_equal(poll_workers(state), TRUE)
@@ -282,9 +282,9 @@ test_that("kill_all_processes", {
 
   skip_on_os("windows")
 
-  p1 <- callr::process$new("true", stdout = "|")
+  p1 <- processx::process$new("true", stdout = "|")
   on.exit(p1$kill(), add = TRUE)
-  p2 <- callr::process$new("true", stdout = "|")
+  p2 <- processx::process$new("true", stdout = "|")
   on.exit(p2$kill(), add = TRUE)
   opts <- callr::r_process_options(func = function() Sys.sleep(5))
   p3 <- callr::r_process$new(opts)
@@ -320,7 +320,7 @@ test_that("kill_all_processes that catch/ignore SIGINT", {
       sleep 1
     done"
 
-  px <- callr::process$new("bash", c("-c", sh), stdout = "|", stderr = "|")
+  px <- processx::process$new("bash", c("-c", sh), stdout = "|", stderr = "|")
   expect_true(px$is_alive())
 
   state <- list(workers = list(list(process = px)))

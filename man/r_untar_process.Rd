@@ -25,7 +25,6 @@ Uses \code{\link[utils:untar]{utils::untar()}}, in a background process.
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="as_ps_handle">}\href{../../processx/html/process.html#method-as_ps_handle}{\code{processx::process$as_ps_handle()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="finalize">}\href{../../processx/html/process.html#method-finalize}{\code{processx::process$finalize()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="format">}\href{../../processx/html/process.html#method-format}{\code{processx::process$format()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_cmdline">}\href{../../processx/html/process.html#method-get_cmdline}{\code{processx::process$get_cmdline()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_cpu_times">}\href{../../processx/html/process.html#method-get_cpu_times}{\code{processx::process$get_cpu_times()}}\out{</span>}
@@ -72,6 +71,7 @@ Uses \code{\link[utils:untar]{utils::untar()}}, in a background process.
 \item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="suspend">}\href{../../processx/html/process.html#method-suspend}{\code{processx::process$suspend()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="wait">}\href{../../processx/html/process.html#method-wait}{\code{processx::process$wait()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="processx" data-topic="process" data-id="write_input">}\href{../../processx/html/process.html#method-write_input}{\code{processx::process$write_input()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="callr" data-topic="r_process" data-id="finalize">}\href{../../callr/html/r_process.html#method-finalize}{\code{callr::r_process$finalize()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="callr" data-topic="r_process" data-id="get_result">}\href{../../callr/html/r_process.html#method-get_result}{\code{callr::r_process$get_result()}}\out{</span>}
 }
 \out{</details>}

@@ -31,6 +31,7 @@ Imports:
     pkgbuild (>= 1.0.2),
     pkgcache (>= 1.0.6),
     prettyunits (>= 1.1.1),
+    processx (>= 3.4.2),
     ps,
     rematch2,
     rprojroot,

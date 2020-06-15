@@ -13,7 +13,7 @@
 #' @param exdir Where to extract the archive. It must exist.
 #' @param restore_times Whether to restore file modification times.
 #' @param post_process Function to call after the extraction.
-#' @return The [callr::process] object.
+#' @return The [processx::process] object.
 #' @keywords internal
 
 make_untar_process <- function(tarfile, files = NULL, exdir = ".",
@@ -74,7 +74,7 @@ need_internal_tar <- local({
 
 external_untar_process <- R6::R6Class(
   "external_untar_process",
-  inherit = callr::process,
+  inherit = processx::process,
 
   public = list(
 

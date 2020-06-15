@@ -116,6 +116,7 @@ pd
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{pkg_deps} object. Consider using \code{new_pkg_deps()}
 instead of calling the constructor directly.
@@ -156,6 +157,7 @@ pd
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_refs"></a>}}
+\if{latex}{\out{\hypertarget{method-get_refs}{}}}
 \subsection{Method \code{get_refs()}}{
 The package refs that were used to create the \code{pkg_deps} object.
 \subsection{Usage}{
@@ -178,6 +180,7 @@ pd$get_refs()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_config"></a>}}
+\if{latex}{\out{\hypertarget{method-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_deps} object. See
 \link[=pkg_config]{'Configuration'} for details.
@@ -201,6 +204,7 @@ pd$get_config()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-resolve}{}}}
 \subsection{Method \code{resolve()}}{
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
@@ -227,6 +231,7 @@ pd$get_resolution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-async_resolve}{}}}
 \subsection{Method \code{async_resolve()}}{
 The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
 This method is for advanced use.
@@ -240,6 +245,7 @@ A deferred value.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_resolution"></a>}}
+\if{latex}{\out{\hypertarget{method-get_resolution}{}}}
 \subsection{Method \code{get_resolution()}}{
 Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
@@ -264,6 +270,7 @@ pd$get_resolution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-solve"></a>}}
+\if{latex}{\out{\hypertarget{method-solve}{}}}
 \subsection{Method \code{solve()}}{
 Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that can be installed together to
@@ -295,6 +302,7 @@ pd$get_solution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solution"></a>}}
+\if{latex}{\out{\hypertarget{method-get_solution}{}}}
 \subsection{Method \code{get_solution()}}{
 Returns the solution of the package dependencies.
 \subsection{Usage}{
@@ -319,6 +327,7 @@ pd$get_solution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
+\if{latex}{\out{\hypertarget{method-stop_for_solution_error}{}}}
 \subsection{Method \code{stop_for_solution_error()}}{
 Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
@@ -346,6 +355,7 @@ pd
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-draw"></a>}}
+\if{latex}{\out{\hypertarget{method-draw}{}}}
 \subsection{Method \code{draw()}}{
 Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the dependency tree to the
@@ -370,6 +380,7 @@ pd$draw()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
 \subsection{Method \code{format()}}{
 Format a \code{pkg_deps} object, typically for printing.
 \subsection{Usage}{
@@ -389,6 +400,7 @@ A character vector, each element should be a line in the printout.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
 Prints a \code{pkg_deps} object to the screen. The printout includes:
 \itemize{
@@ -433,6 +445,7 @@ pd
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

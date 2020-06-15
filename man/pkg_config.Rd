@@ -21,13 +21,13 @@ or \link[=pkg_installation_proposal]{package installation}. Defaults to the
 first path in \code{\link[=.libPaths]{.libPaths()}}.
 \item \code{cache_dir}: directory to download the packages to. Defaults to a
 temporary directory within the R session temporary directory, see
-\code{\link[base:tempdir]{base::tempdir()}}.
+\code{\link[base:tempfile]{base::tempdir()}}.
 \item \code{package_cache_dir}: package cache location of
 \code{\link[pkgcache:package_cache]{pkgcache::package_cache}}. The default is the pkgcache default.
 \item \code{metadata_cache_dir}: location of metadata replica of
 \code{\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}}. Defaults to a temporary
 directory within the R session temporary directory, see
-\code{\link[base:tempdir]{base::tempdir()}}.
+\code{\link[base:tempfile]{base::tempdir()}}.
 \item \code{platforms}: Character vector of platforms to \emph{download} or \emph{install}
 for. Possible platforms are \code{windows}, \code{macos} and \code{source}. Defaults
 to the current platform, \emph{and} \code{source}.

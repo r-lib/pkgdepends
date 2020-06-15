@@ -101,6 +101,7 @@ pdl
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{pkg_download_proposal} object. Consider using
 \code{new_pkg_download_proposal()} instead of calling the constructor
@@ -139,6 +140,7 @@ pdl
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_refs"></a>}}
+\if{latex}{\out{\hypertarget{method-get_refs}{}}}
 \subsection{Method \code{get_refs()}}{
 The package refs that were used to create the
 \code{pkg_download_proposal} object.
@@ -162,6 +164,7 @@ pdl$get_refs()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_config"></a>}}
+\if{latex}{\out{\hypertarget{method-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_download_proposal} object. See
 \link[=pkg_config]{'Configuration'} for details.
@@ -185,6 +188,7 @@ pdl$get_config()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-resolve}{}}}
 \subsection{Method \code{resolve()}}{
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
@@ -211,6 +215,7 @@ pdl$get_resolution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-async_resolve}{}}}
 \subsection{Method \code{async_resolve()}}{
 The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
 This method is for advanced use.
@@ -224,6 +229,7 @@ A deferred value.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_resolution"></a>}}
+\if{latex}{\out{\hypertarget{method-get_resolution}{}}}
 \subsection{Method \code{get_resolution()}}{
 Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
@@ -248,6 +254,7 @@ pdl$get_resolution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-download"></a>}}
+\if{latex}{\out{\hypertarget{method-download}{}}}
 \subsection{Method \code{download()}}{
 Download all resolved packages. It uses the package cache in the
 pkgcache package by default, to avoid downloads if possible.
@@ -272,6 +279,7 @@ pdl$get_downloads()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_download"></a>}}
+\if{latex}{\out{\hypertarget{method-async_download}{}}}
 \subsection{Method \code{async_download()}}{
 The same as \href{#method-download}{\code{download()}}, but asynchronous.
 This method is for advanced use.
@@ -285,6 +293,7 @@ A deferred value.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_downloads"></a>}}
+\if{latex}{\out{\hypertarget{method-get_downloads}{}}}
 \subsection{Method \code{get_downloads()}}{
 Returns the summary of the package downloads.
 \subsection{Usage}{
@@ -309,6 +318,7 @@ pdl$get_downloads()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_download_error"></a>}}
+\if{latex}{\out{\hypertarget{method-stop_for_download_error}{}}}
 \subsection{Method \code{stop_for_download_error()}}{
 Throw and error if the some of the downloads have failed for the
 most recent
@@ -320,6 +330,7 @@ most recent
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
 \subsection{Method \code{format()}}{
 Format a \code{pkg_download_proposal} object, typically for printing.
 \subsection{Usage}{
@@ -340,6 +351,7 @@ A character vector, each element should be a line in the printout.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
 Prints a \code{pkg_download_proposal} object to the screen. The printout
 includes:
@@ -385,6 +397,7 @@ pdl
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

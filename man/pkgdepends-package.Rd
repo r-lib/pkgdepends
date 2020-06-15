@@ -14,14 +14,6 @@ package manager, see \href{https://github.com/r-lib/pak}{pak}.
 
 \if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
-\seealso{
-Useful links:
-\itemize{
-  \item \url{https://github.com/r-lib/pkgdepends#readme}
-  \item Report bugs at \url{https://github.com/r-lib/pkgdepends/issues}
-}
-
-}
 \section{Features}{
 \itemize{
 \item Look up package dependencies recursively.
@@ -40,10 +32,14 @@ dependencies.
 \item Builds and installs packages in parallel.
 }
 }
-\section{Install}{\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
+
+\section{Install}{
+\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
 }\if{html}{\out{</div>}}
 }
-\section{Usage}{\if{html}{\out{<div class="r">}}\preformatted{library(pkgdepends)
+
+\section{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{library(pkgdepends)
 }\if{html}{\out{</div>}}
 \subsection{Package references}{
 
@@ -151,8 +147,8 @@ The details of \code{\link{pkg_deps}},
 with a list of configuration options. See
 \link[=pkg_config]{“Configuration”} for details.
 }
-
 }
+
 \section{Related}{
 \itemize{
 \item \href{https://github.com/r-lib/pak}{pak} – R package manager

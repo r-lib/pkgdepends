@@ -220,6 +220,7 @@ pdi
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{pkg_installation_proposal} object. Consider using
 \code{new_pkg_installation_proposal()} instead of calling the constructor
@@ -268,6 +269,7 @@ pdi
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_refs"></a>}}
+\if{latex}{\out{\hypertarget{method-get_refs}{}}}
 \subsection{Method \code{get_refs()}}{
 The package refs that were used to create the
 \code{pkg_installation_proposal} object.
@@ -291,6 +293,7 @@ pdi$get_refs()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_config"></a>}}
+\if{latex}{\out{\hypertarget{method-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_installation_proposal} object. See
 \link[=pkg_config]{'Configuration'} for details.
@@ -317,6 +320,7 @@ pdi$get_config()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-resolve}{}}}
 \subsection{Method \code{resolve()}}{
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
@@ -347,6 +351,7 @@ pdi$get_resolution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-async_resolve}{}}}
 \subsection{Method \code{async_resolve()}}{
 The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous. This
 method is for advanced use.
@@ -360,6 +365,7 @@ A deferred value.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_resolution"></a>}}
+\if{latex}{\out{\hypertarget{method-get_resolution}{}}}
 \subsection{Method \code{get_resolution()}}{
 Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
@@ -387,6 +393,7 @@ pdi$get_resolution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-get_solve_policy}{}}}
 \subsection{Method \code{get_solve_policy()}}{
 Returns the current policy of the dependency solver.
 See \link[=pkg_solution]{'The dependency solver'} for details.
@@ -414,6 +421,7 @@ pdi$get_solve_policy()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-set_solve_policy}{}}}
 \subsection{Method \code{set_solve_policy()}}{
 Set the current policy of the dependency solver.
 If the object already contains a solution and the new policy is
@@ -447,6 +455,7 @@ pdi$get_solve_policy()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-solve"></a>}}
+\if{latex}{\out{\hypertarget{method-solve}{}}}
 \subsection{Method \code{solve()}}{
 Solve the package dependencies. Out of the resolved dependencies,
 it works out a set of packages, that can be installed together to
@@ -478,6 +487,7 @@ pdi$get_solution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solution"></a>}}
+\if{latex}{\out{\hypertarget{method-get_solution}{}}}
 \subsection{Method \code{get_solution()}}{
 Returns the solution of the package dependencies.
 \subsection{Usage}{
@@ -505,6 +515,7 @@ pdi$get_solution()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
+\if{latex}{\out{\hypertarget{method-stop_for_solution_error}{}}}
 \subsection{Method \code{stop_for_solution_error()}}{
 Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
@@ -532,6 +543,7 @@ pdi
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-draw"></a>}}
+\if{latex}{\out{\hypertarget{method-draw}{}}}
 \subsection{Method \code{draw()}}{
 Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the dependency tree to the
@@ -560,6 +572,7 @@ pdi$draw()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-download"></a>}}
+\if{latex}{\out{\hypertarget{method-download}{}}}
 \subsection{Method \code{download()}}{
 Download all packages that are part of the solution. It uses the
 package cache in the pkgcache package by default, to avoid downloads
@@ -589,6 +602,7 @@ pdi$get_downloads()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_download"></a>}}
+\if{latex}{\out{\hypertarget{method-async_download}{}}}
 \subsection{Method \code{async_download()}}{
 The same as \href{#method-download}{\code{download()}}, but asynchronous.
 This method is for advanced use.
@@ -602,6 +616,7 @@ A deferred value.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_downloads"></a>}}
+\if{latex}{\out{\hypertarget{method-get_downloads}{}}}
 \subsection{Method \code{get_downloads()}}{
 Returns the summary of the package downloads.
 \subsection{Usage}{
@@ -630,6 +645,7 @@ pdi$get_downloads()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_download_error"></a>}}
+\if{latex}{\out{\hypertarget{method-stop_for_download_error}{}}}
 \subsection{Method \code{stop_for_download_error()}}{
 Throw and error if the some of the downloads have failed for the
 most recent
@@ -641,6 +657,7 @@ most recent
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-install"></a>}}
+\if{latex}{\out{\hypertarget{method-install}{}}}
 \subsection{Method \code{install()}}{
 Install the downloaded packages. It calls \code{\link[=install_package_plan]{install_package_plan()}}.
 \subsection{Usage}{
@@ -653,6 +670,7 @@ The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_install_plan"></a>}}
+\if{latex}{\out{\hypertarget{method-get_install_plan}{}}}
 \subsection{Method \code{get_install_plan()}}{
 Create an installation plan for the downloaded packages.
 \subsection{Usage}{
@@ -681,6 +699,7 @@ pdi$get_install_plan()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
 \subsection{Method \code{format()}}{
 Format a \code{pkg_installation_proposal} object, typically for printing.
 \subsection{Usage}{
@@ -700,6 +719,7 @@ A character vector, each element should be a line in the printout.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
 Prints a \code{pkg_installation_proposal} object to the screen.
 
@@ -753,6 +773,7 @@ pdi
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

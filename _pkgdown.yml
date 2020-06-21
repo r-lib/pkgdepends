@@ -1,1 +1,7 @@
-destination: docs
+
+authors:
+  "Gábor Csárdi":
+    href: https://github.com/gaborcsardi
+
+development:
+  mode: auto

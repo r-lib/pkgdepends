@@ -11,7 +11,6 @@ Installation
 Status](https://travis-ci.org/r-lib/pkgdepends.svg?branch=master)](https://travis-ci.org/r-lib/pkgdepends)
 [![Windows Build
 status](https://ci.appveyor.com/api/projects/status/github/r-lib/pkgdepends?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pkgdepends)
-[![](http://www.r-pkg.org/badges/version/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)
 [![CRAN RStudio mirror
 downloads](http://cranlogs.r-pkg.org/badges/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)
 [![Coverage

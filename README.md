@@ -6,15 +6,12 @@
 > Package Dependency Resolution, Downloads and
 Installation
 
+<!-- badges: start -->
 ![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
-[![Linux Build
-Status](https://travis-ci.org/r-lib/pkgdepends.svg?branch=master)](https://travis-ci.org/r-lib/pkgdepends)
-[![Windows Build
-status](https://ci.appveyor.com/api/projects/status/github/r-lib/pkgdepends?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pkgdepends)
-[![CRAN RStudio mirror
-downloads](http://cranlogs.r-pkg.org/badges/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)
-[![Coverage
-Status](https://img.shields.io/codecov/c/github/r-lib/pkgdepends/master.svg)](https://codecov.io/github/r-lib/pkgdepends?branch=master)
+[![R build status](https://github.com/r-lib/pkgdepends/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/pkgdepends/actions)
+[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pkgdepends)](http://www.r-pkg.org/pkg/pkgdepends)
+[![Coverage Status](https://img.shields.io/codecov/c/github/r-lib/pkgdepends/master.svg)](https://codecov.io/github/r-lib/pkgdepends?branch=master)
+<!-- badges: end -->
 
 pkgdepends is a toolkit for package dependencies, downloads and
 installations, to be used in other packages. If you are looking for a

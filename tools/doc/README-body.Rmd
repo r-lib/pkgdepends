@@ -7,7 +7,28 @@ knitr::opts_chunk$set(
   error = FALSE,
   fig.width = 8,
   fig.height = 8,
-  R.options = list(cli.unicode = TRUE))
+  R.options = list(
+    pkg.show_progress = FALSE,
+    cli.unicode = FALSE
+  )
+)
+
+# Does not seem to work in `R.options` :(
+options(cli.default_handler = function(cond) {
+  if (!is.null(findRestart("cli_message_handled"))) {
+    invokeRestart("cli_message_handled")
+  } else if (!is.null(findRestart("muffleMessage"))) {
+    invokeRestart("muffleMessage")
+  }
+})
+
+# This does not work as a chunk option, because we need
+# to call `num_colors()` to update the config.
+options(crayon.enabled = FALSE)
+invisible(crayon::num_colors(forget = TRUE))
+
+# For nicer output
+library(tibble)
 ```
 
 # Features
@@ -66,7 +87,7 @@ in_roxygen <- function() {
 ```
 
 ```{r draw, include = !in_roxygen()}
-pd <- new_pkg_deps("r-lib/cli")
+pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
 ```
@@ -144,7 +165,7 @@ details.
 
 # License
 
-MIT © RStudio
+MIT (c) RStudio
 
 [pkg_deps]: TODO
 [pkg_refs]: TODO

@@ -57,31 +57,57 @@ See \link[=pkg_refs]{“Package references”} for details.
 
 \subsection{Package dependencies}{
 
-Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/cli")
+Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
-}\if{html}{\out{</div>}}\preformatted{#> cli (1.9.9.9000)
-#> +-assertthat (0.2.1)
-#> +-crayon (1.3.4)
-#> +-glue (1.3.1)
-#> +-progress (1.2.2)
-#> | +-hms (0.5.1)
-#> | | +-pkgconfig (2.0.3)
-#> | | +-rlang (0.4.0)
-#> | | \-vctrs (0.2.0)
-#> | |   +-backports (1.1.5)
-#> | |   +-ellipsis (0.3.0)
-#> | |   | \-rlang (0.4.0)
-#> | |   +-digest (0.6.21)
-#> | |   +-glue (1.3.1)
-#> | |   +-rlang (0.4.0)
-#> | |   \-zeallot (0.1.0)
-#> | +-prettyunits (1.0.2)
-#> | | +-magrittr (1.5)
-#> | | \-assertthat (0.2.1)
-#> | +-R6 (2.4.0)
-#> | \-crayon (1.3.4)
-#> \-fansi (0.4.0)
+}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.0.7.9000 [new][bld][cmp][dl] (unknown size)
+#> +-assertthat 0.2.1 [new][dl] (54.98 kB)
+#> +-callr 3.4.3 [new][dl] (390.40 kB)
+#> | +-processx 3.4.2 [new][dl] (428.13 kB)
+#> | | +-ps 1.3.3 [new][dl] (333.41 kB)
+#> | | \-R6 2.4.1 [new][dl] (59.31 kB)
+#> | \-R6
+#> +-cli 2.0.2 [new][dl] (397.89 kB)
+#> | +-assertthat
+#> | +-crayon 1.3.4 [new][dl] (749.89 kB)
+#> | +-glue 1.4.1 [new][dl] (154.03 kB)
+#> | \-fansi 0.4.1 [new][dl] (223.88 kB)
+#> +-curl 4.3 [new][dl] (4.13 MB)
+#> +-digest 0.6.25 [new][dl] (249.47 kB)
+#> +-filelock 1.0.2 [new][dl] (39.80 kB)
+#> +-glue
+#> +-prettyunits 1.1.1 [new][dl] (37.68 kB)
+#> +-R6
+#> +-processx
+#> +-rappdirs 0.3.1 [new][dl] (87.24 kB)
+#> +-rlang 0.4.6 [new][dl] (1.13 MB)
+#> +-tibble 3.0.1 [new][dl] (411.98 kB)
+#> | +-cli
+#> | +-crayon
+#> | +-ellipsis 0.3.1 [new][dl] (45.93 kB)
+#> | | \-rlang
+#> | +-fansi
+#> | +-lifecycle 0.2.0 [new][dl] (101.70 kB)
+#> | | +-glue
+#> | | \-rlang
+#> | +-magrittr 1.5 [new][dl] (157.57 kB)
+#> | +-pillar 1.4.4 [new][dl] (186.10 kB)
+#> | | +-cli
+#> | | +-crayon
+#> | | +-fansi
+#> | | +-rlang
+#> | | +-utf8 1.1.4 [new][dl] (215.31 kB)
+#> | | \-vctrs 0.3.1 [new][dl] (1.18 MB)
+#> | |   +-ellipsis
+#> | |   +-digest
+#> | |   +-glue
+#> | |   \-rlang
+#> | +-pkgconfig 2.0.3 [new][dl] (22.17 kB)
+#> | +-rlang
+#> | \-vctrs
+#> \-uuid 0.1-4 [new][dl] (33.61 kB)
+#> 
+#> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 }
 
 See the \code{\link{pkg_deps}} class for details.
@@ -108,9 +134,9 @@ pdi <- new_pkg_installation_proposal(
 pdi$solve()
 pdi$download()
 pdi$install()
-}\if{html}{\out{</div>}}\preformatted{#> Installed: 17
-#> Build time:  2.9s
-#> Intall time: 2.1s
+}\if{html}{\out{</div>}}\preformatted{#> Installed: 5
+#> Build time:  5.5s
+#> Intall time: 599ms
 }
 }
 
@@ -158,7 +184,16 @@ cache
 developers
 }
 }
-\section{License}{
 
-MIT © RStudio
+\section{License}{
+MIT (c) RStudio
+}
+
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/r-lib/pkgdepends#readme}
+  \item Report bugs at \url{https://github.com/r-lib/pkgdepends/issues}
+}
+
 }

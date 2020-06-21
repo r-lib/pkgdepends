@@ -2,9 +2,12 @@
 % Please edit documentation in R/platform.R
 \name{current_r_platform}
 \alias{current_r_platform}
+\alias{default_platforms}
 \title{The current R platform for packages}
 \usage{
 current_r_platform()
+
+default_platforms()
 }
 \value{
 \code{current_r_platform()} returns a string:

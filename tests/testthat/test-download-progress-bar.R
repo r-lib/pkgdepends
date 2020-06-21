@@ -307,7 +307,7 @@ test_that("parts are calculated properly", {
   expect_equal(parts$percent, "  0%")
   expect_match(parts$rate, "^\\s+$")
   expect_equal(parts$msg, "Connecting...")
-  expect_match(crayon::strip_style(parts$line), "^[(]\\s+[)]$")
+  expect_match(crayon::strip_style(parts$line), "^[(][\\s\u00a0]+[)]$")
   expect_equal(parts$eta, "??s ")
 })
 

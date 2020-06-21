@@ -9,5 +9,7 @@
 "_PACKAGE"
 
 fix_check <- function() {
-  R6::R6Class()
+  R6::R6Class
+  processx::process
+  invisible()
 }

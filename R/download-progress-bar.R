@@ -281,6 +281,7 @@ calculate_rate <- function(start, now, chunks) {
   data <- unlist(mget(labels, envir = chunks, ifnotfound = 0L))
   fact <- time_at - max(time_at_s - 3, 0)
   rate <- sum(data) / fact
+  if (is.nan(rate)) rate <- 0
   if (rate == 0 && time_at < 4) {
     rstr <- strrep(" ", 8)
   } else {

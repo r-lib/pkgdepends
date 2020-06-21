@@ -17,4 +17,4 @@
 ^docs$
 ^pkgdown$
 ^.*cache$
-^vignettes/\.build\.timestamp$
+^vignettes$

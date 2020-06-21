@@ -58,5 +58,4 @@ Suggests:
     rstudioapi,
     spelling,
     testthat
-VignetteBuilder: pkgdepends
 Encoding: UTF-8

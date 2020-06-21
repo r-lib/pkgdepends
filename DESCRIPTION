@@ -43,6 +43,7 @@ Imports:
     withr (>= 2.1.1),
     zip (>= 2.0.3)
 Suggests:
+    asciicast,
     covr,
     debugme,
     digest,

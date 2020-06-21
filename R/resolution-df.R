@@ -144,6 +144,8 @@ res_add_defaults <- function(df) {
   df[names(def)] <- def
   df <- df[, names(all_types)]
 
+  if ("filesize" %in% names(df)) df$filesize <- as.integer(df$filesize)
+
   ent_types <- vcapply(df, typeof)
   exp_types <- all_types[names(df)]
   if (any(bad <- ent_types != exp_types)) {

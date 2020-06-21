@@ -429,3 +429,21 @@ rimraf <- function(...) {
   if ("~" %in% x) stop("Cowardly refusing to delete `~`")
   unlink(x, recursive = TRUE, force = TRUE)
 }
+
+strrep <- function(x, times) {
+  x <- as.character(x)
+  if (length(x) == 0L) return(x)
+  r <- .mapply(
+    function(x, times) {
+      if (is.na(x) || is.na(times)) return(NA_character_)
+      if (times <= 0L) return("")
+      paste0(replicate(times, x), collapse = "")
+    },
+    list(x = x, times = times),
+    MoreArgs = list()
+  )
+
+  res <- unlist(r, use.names = FALSE)
+  Encoding(res) <- Encoding(x)
+  res
+}

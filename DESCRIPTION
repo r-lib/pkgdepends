@@ -43,17 +43,14 @@ Imports:
     withr (>= 2.1.1),
     zip (>= 2.0.3)
 Suggests:
-    asciicast,
     covr,
     debugme,
     digest,
     fansi,
     fs,
     htmlwidgets,
-    knitr,
     mockery,
     pingr (>= 2.0.0),
-    rmarkdown,
     rstudioapi,
     spelling,
     testthat

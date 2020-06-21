@@ -11,7 +11,7 @@ test_that("type_github_get_data, sha, description", {
 
   cases <- c(
     "r-lib/pak",
-    "r-lib/pak@master",
+    "r-lib/pak@HEAD",
     "r-lib/pak@v0.1.2",
     "r-lib/pak@e65de1e9630d",
     "r-lib/pak@e65de1e9630dbfcaf1044718b742bf806486b107",

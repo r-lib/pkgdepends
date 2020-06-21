@@ -191,7 +191,7 @@ type_github_get_data <- function(rem) {
 type_github_get_data_ref <- function(rem) {
   user <- rem$username
   repo <- rem$repo
-  ref <- rem$commitish %|z|% "master"
+  ref <- rem$commitish %|z|% "HEAD"
   subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
 
   query <- glue("{
@@ -326,13 +326,13 @@ type_github_make_resolution <- function(data) {
     RemoteRepo = repo,
     RemoteUsername = username,
     RemotePkgRef = data$remote$ref,
-    RemoteRef = if (is.null(pull)) commitish %||% "master" else NULL,
+    RemoteRef = if (is.null(pull)) commitish %||% "HEAD" else NULL,
     RemotePull = pull,
     RemoteSha = sha,
     RemoteSubdir = subdir,
     GithubRepo = repo,
     GithubUsername = username,
-    GithubRef = if (is.null(pull)) commitish %||% "master" else NULL,
+    GithubRef = if (is.null(pull)) commitish %||% "HEAD" else NULL,
     GitHubPull = pull,
     GithubSHA1 = sha,
     GithubSubdir = subdir)
@@ -500,7 +500,7 @@ new_github_nopr_error <- function(rem, obj, call. = NULL) {
 # No such branch/tag/ref
 
 new_github_noref_error <- function(rem, call. = NULL) {
-  ref <- rem$commitish %|z|% "master"
+  ref <- rem$commitish %|z|% "HEAD"
   msg <- glue("Cannot find branch/tag/commit `{ref}` in ",
               "GitHub repo `{rem$username}/{rem$repo}`.")
   new_github_error(msg)

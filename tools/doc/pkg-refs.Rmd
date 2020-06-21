@@ -92,6 +92,9 @@ Packages from a GitHub repository. Full syntax:
 - a pull request: `#<pull-request>`; or
 - the latest release: `@*release`.
 
+If `<detail>` is missing, then the latest commit of the _default_
+branch is used.
+
 Examples:
 ```
 r-lib/crayon

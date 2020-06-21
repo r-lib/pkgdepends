@@ -10,6 +10,8 @@ test_that("resolve_remote", {
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
   refs <- c(
+    "gaborcsardi/secret",
+    "gaborcsardi/secret@x",
     "r-lib/crayon",
     "github::r-lib/crayon",
     "crayon=r-lib/crayon",
@@ -39,21 +41,21 @@ test_that("resolve_remote", {
   expect_true(all(vcapply(res$metadata, "[[", "RemoteType") == "github"))
   expect_equal(vcapply(res$metadata, "[[", "RemotePkgRef")[ord], refs)
   expect_equal(
-    vcapply(res$metadata, "[[", "RemoteSha")[ord][6],
+    vcapply(res$metadata, "[[", "RemoteSha")[ord][8],
     "b5221ab0246050dc687dc8b9964d5c44c947b265")
   expect_equal(
     vcapply(res$metadata, "[[", "RemoteUsername")[ord],
-    c("r-lib", "r-lib", "r-lib", "r-lib", "wesm", rep("r-lib", 4)))
+    c("gaborcsardi", "gaborcsardi", rep("r-lib", 4), "wesm", rep("r-lib", 4)))
   expect_equal(
     vcapply(res$metadata, "[[", "RemoteRepo")[ord],
-    c("crayon", "crayon", "crayon", "crayon", "feather", "crayon",
+    c("secret", "secret", rep("crayon", 4), "feather", "crayon",
       "crayon", "testthat", "pkgconfig"))
   expect_equal(
     vcapply(res$metadata, "[", "RemoteSubdir")[ord],
-    c(NA, NA, NA, NA, "R", NA, NA, NA, NA))
+    c(NA, NA, NA, NA, NA, NA, "R", NA, NA, NA, NA))
   expect_true(all(vcapply(res$metadata, "[[", "RemoteHost") == "api.github.com"))
   expect_equal(
-    vcapply(res$metadata, "[[", "RemoteSha")[ord][9],
+    vcapply(res$metadata, "[[", "RemoteSha")[ord][11],
     "6c61f82a5c793c250a28f02a7ef14ae52eb83336")
 
   expect_equal(vcapply(res$metadata, "[[", "GithubRepo"),

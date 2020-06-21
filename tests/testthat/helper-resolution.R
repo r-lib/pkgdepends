@@ -1,6 +1,6 @@
 
 make_fake_deps <- function(...) {
-  assertthat::assert_that(all_named(list(...)))
+  assert_that(all_named(list(...)))
 
   d <- desc::desc("!new")
   if (length(list(...))) d$set(...)
@@ -43,7 +43,7 @@ make_fake_metadata <- function() {
 
 make_fake_resolution <- function(...) {
   pkgs <- list(...)
-  assertthat::assert_that(all_named(pkgs))
+  assert_that(all_named(pkgs))
   ress <- lapply_with_names(
     names(pkgs), function(n) make_fake_resolution1(n, pkgs[[n]]))
 

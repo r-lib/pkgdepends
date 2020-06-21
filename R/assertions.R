@@ -1,7 +1,4 @@
 
-#' @importFrom assertthat assert_that on_failure<-
-NULL
-
 is_character <- function(x) {
   is.character(x) && ! any(is.na(x))
 }

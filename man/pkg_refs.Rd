@@ -90,6 +90,9 @@ subdirectory in the repository.
 \item the latest release: \verb{@*release}.
 }
 
+If \verb{<detail>} is missing, then the latest commit of the \emph{default} branch
+is used.
+
 Examples:\preformatted{r-lib/crayon
 github::r-lib/crayon
 r-lib/crayon@84be6207

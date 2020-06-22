@@ -67,7 +67,11 @@ test_that("type_github_get_data, no such repo", {
 
 test_that("github_query, invalid PAT", {
   skip_if_offline()
-  withr::local_envvar(c("GITHUB_TOKEN" = "invalid"))
+  withr::local_envvar(c(
+    GITHUB_TOKEN = "invalid",
+    GITHUB_PAT = "invalid",
+    CI_GITHUB_TOKEN = "invalid"
+  ))
 
   rem <- parse_pkg_ref("r-lib/pak-xxx-xxx")
   expect_error(

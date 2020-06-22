@@ -165,7 +165,8 @@ type_github_builtin_token <- function() {
 
 type_github_get_headers <- function() {
   headers <- c("Accept" = "application/vnd.github.v3+json")
-  token <- Sys.getenv("GITHUB_TOKEN", NA_character_)
+  token <- Sys.getenv("CI_GITHUB_TOKEN", NA_character_)
+  if (is.na(token)) token <- Sys.getenv("GITHUB_TOKEN", NA_character_)
   if (is.na(token)) token <- Sys.getenv("GITHUB_PAT", NA_character_)
   if (is.na(token)) token <- type_github_builtin_token()
   headers <- c(headers, c("Authorization" = paste("token", token)))

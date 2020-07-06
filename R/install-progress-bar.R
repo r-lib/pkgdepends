@@ -35,11 +35,11 @@ update_progress_bar <- function(state, tick = 0) {
 
   ## This is a workaround for an RStudio bug:
   ## https://github.com/r-lib/pkginstall/issues/42
-  pp <- if (Sys.getenv("RSTUDIO", "") == "" ||
-            Sys.getenv("RSTUDIO_TERM", "") != "") {
-    function(x) gsub(" ", "\u00a0", x, fixed = TRUE)
-  } else {
+  ## https://github.com/rstudio/rstudio/issues/7278
+  pp <- if (rstudio$detect()$type == "rstudio_console") {
     function(x) gsub(" ", "\u00a0", crayon::strip_style(x), fixed = TRUE)
+  } else {
+    function(x) gsub(" ", "\u00a0", x, fixed = TRUE)
   }
 
   chars <- progress_chars()

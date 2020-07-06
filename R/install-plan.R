@@ -671,20 +671,24 @@ print.pkginstall_result <- function(x, ...) {
   upd   <- sum(x$lib_status == "update")
   noupd <- sum(x$lib_status == "no-update")
   curr  <- sum(x$lib_status == "current")
-  if (newly) cat("Installed: ",  newly, "\n", sep = "")
-  if (upd)   cat("Updated: ",    upd,   "\n", sep = "")
-  if (noupd) cat("Not updated:", noupd, "\n", sep = "")
-  if (curr)  cat("Current: ",    curr,  "\n", sep = "")
 
-  ## TODO
   build_time <- sum(unlist(x$build_time), na.rm = TRUE)
   inst_time <- sum(unlist(x$install_time), na.rm = TRUE)
 
-  cat("Build time:  ", pretty_sec(build_time), "\n", sep = "")
-  cat("Intall time: ", pretty_sec(inst_time), "\n", sep = "")
+  res <- c(
+    "DONE",
+    if (newly) paste0(emoji("sparkles"), " ", newly),
+    if (upd)   paste0(emoji("rocket"), " ", upd),
+    if (noupd + curr) paste0(emoji("hand"), " ", noupd + curr),
+    if (nrow(x) > 1) emoji("pkgs") else emoji("pkg"),
+    paste0("in ", pretty_sec(build_time + inst_time))
+  )
+
+  cli_alert_success(paste0(res, collapse = "  "))
 
   invisible(x)
 }
+
 
 kill_all_processes <- function(state) {
   alive <- FALSE

@@ -77,22 +77,29 @@ make_bar <- function(chars, p, width =  15) {
     collapse = "")
 
   ## This is a workaround for an RStudio bug:
-  ## https://github.com/r-lib/pkginstall/issues/42
-  ## It seems that this bug has crept back, so we don't color in RStudio
-  if (! is_rstudio()) {
-    crayon::green(bar)
+  ## https://github.com/rstudio/rstudio/issues/2387
+  ## This has been fixed, but there is another bug as well:
+  ## https://github.com/rstudio/rstudio/issues/7278
+  if (rstudio$detect()$type == "rstudio_console") {
+    bar
   } else {
     crayon::green(bar)
   }
 }
 
 make_progress_main <- function(deps, done, total) {
-  bggrey <- crayon::make_style("grey", bg = TRUE)
+  ## https://github.com/rstudio/rstudio/issues/7278 bites again
+  if (rstudio$detect()$type == "rstudio_console") {
+    bggrey <- fgdark <- function(x) x
+  } else {
+    bggrey <- crayon::make_style("grey", bg = TRUE)
+    fgdark <- crayon::black
+  }
   paste0(
     "Found ",
-    bggrey(crayon::black(paste0(" ", deps, " "))),
+    bggrey(fgdark(paste0(" ", deps, " "))),
     " deps for ",
-    bggrey(crayon::black(paste0(" ", done, "/", total, " "))),
+    bggrey(fgdark(paste0(" ", done, "/", total, " "))),
     " pkgs"
   )
 }

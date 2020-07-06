@@ -275,15 +275,6 @@ drop_nulls <- function(x) {
 ## R CMD check fixes
 self <- private <- "foobar"
 
-is_rstudio_version <- function(ver) {
-  tryCatch(
-    rstudioapi::getVersion() >=ver,
-    error = function(e) FALSE
-  )
-}
-
-is_rstudio <- function() Sys.getenv("RSTUDIO", "") != ""
-
 get_num_workers <- function() {
   n <- tryCatch(
     suppressWarnings(as.integer(getOption("Ncpus", NA_integer_))),

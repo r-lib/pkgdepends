@@ -141,25 +141,37 @@ emoji <- function(what) {
 }
 
 emo_builder <- function(n = 1) {
-  ppl <- c(
-    "\U1F477",
+  base <- "\U1F477"
+  tone <- c(
+    "\U1F477\U1F3FB",
+    "\U1F477\U1F3FC",
+    "\U1F477\U1F3FD",
+    "\U1F477\U1F3FE",
+    "\U1F477\U1F3FF"
+  )
+  gend <- c(
     "\U1F477\u200D\u2640\uFE0F",
     "\U1F477\u200D\u2642\uFE0F",
-    "\U1F477\U1F3FB",
     "\U1F477\U1F3FB\u200D\u2640\uFE0F",
     "\U1F477\U1F3FB\u200D\u2642\uFE0F",
-    "\U1F477\U1F3FC",
     "\U1F477\U1F3FC\u200D\u2640\uFE0F",
     "\U1F477\U1F3FC\u200D\U2642\uFE0F",
-    "\U1F477\U1F3FD",
     "\U1F477\U1F3FD\u200D\u2640\uFE0F",
     "\U1F477\U1F3FD\u200D\u2642\uFE0F",
-    "\U1F477\U1F3FE",
     "\U1F477\U1F3FE\u200D\u2640\uFE0F",
     "\U1F477\U1F3FE\u200D\u2642\uFE0F",
-    "\U1F477\U1F3FF",
     "\U1F477\U1F3FF\u200D\u2640\uFE0F",
     "\U1F477\U1F3FF\u200D\u2642\uFE0F"
   )
+
+  rstudio_type <- rstudio$detect()$type
+  if (rstudio_type == "rstudio_terminal") {
+    ppl <- base
+  } else if (rstudio_type == "rstudio_console") {
+    ppl <- c(base, tone)
+  } else {
+    ppl <- c(base, tone, gend)
+  }
+
   paste(sample(ppl, n, replace = TRUE), collapse = "")
 }

@@ -1,6 +1,4 @@
 
-context("github utility functions")
-
 test_that("type_github_get_data, sha, description", {
   skip_if_offline()
 
@@ -35,14 +33,14 @@ test_that("type_github_get_data, no such user", {
   rem <- parse_pkg_ref("r-lib-xxx-xxx/pak")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "username .*r-lib-xxx-xxx.*",
+    "Could not resolve to a Repository .*r-lib-xxx-xxx.*",
     class = "github_error"
   )
 
   rem <- parse_pkg_ref("r-lib-xxx-xxx/pak#90")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "username .*r-lib-xxx-xxx.*",
+    "Could not resolve to a Repository .*r-lib-xxx-xxx.*",
     class = "github_error"
   )
 })

@@ -59,7 +59,7 @@ test_that("conflict: different versions required for package", {
   expect_equal(dsc$failure_type, rep("satisfy-direct", 2))
 })
 
-test_that("standard direct & github indirect is OK", {
+test_that("standard direct & github indirect is not OK", {
   pkgs <- make_fake_resolution(
     `pkgA` = list(direct = TRUE),
     `pkgB` = list(
@@ -70,7 +70,7 @@ test_that("standard direct & github indirect is OK", {
   lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
-  expect_identical(as.logical(sol$solution[1:3]), c(FALSE, TRUE, TRUE))
+  expect_true(sum(sol$solution * sol$objective) > 1e+8)
 })
 
 test_that("conflict between direct and indirect ref", {

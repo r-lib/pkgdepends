@@ -39,7 +39,21 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
     return(structure(FALSE, reason = "Package names differ"))
   }
 
-  ## 2. version requirements must be satisfied
+  ## 2. if this is a direct ref, then it has to be a CRAN or
+  ## bioc package. If the candidate is an installed package, we
+  ## need to check where it was installed from.
+  if (resolution$direct) {
+    if (candidate$type == "installed") {
+      type <- candidate$extra[[1]]$repotype %||% "unknown"
+    } else {
+      type <- candidate$type
+    }
+    if (!type %in% c("cran", "bioc", "standard")) {
+      return(structure(FALSE, reason = "User requested CRAN package"))
+    }
+  }
+
+  ## 3. version requirements must be satisfied
   version <- tryCatch(resolution$remote[[1]]$version, error = function(e) "")
   if (version == "") return(TRUE)
 

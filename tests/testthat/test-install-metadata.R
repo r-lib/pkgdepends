@@ -1,6 +1,4 @@
 
-context("metadata")
-
 test_that("install_binary metadata", {
 
   pkg <- binary_test_package("foo")

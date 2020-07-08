@@ -1,6 +1,4 @@
 
-context("resolution")
-
 test_that("resolving with a list", {
   conf <- pkgplan_default_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)

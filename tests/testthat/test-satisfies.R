@@ -1,6 +1,4 @@
 
-context("satisfies_remote")
-
 test_that("CRAN packages", {
 
   ## Satisfies itself

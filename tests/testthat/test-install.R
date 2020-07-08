@@ -1,6 +1,4 @@
 
-context("install_packages")
-
 describe("install_packages", {
 
   skip_if_offline()

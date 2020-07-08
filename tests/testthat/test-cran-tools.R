@@ -1,6 +1,4 @@
 
-context("cran utility functions")
-
 test_that("parse_deps", {
 
   expect_equal(

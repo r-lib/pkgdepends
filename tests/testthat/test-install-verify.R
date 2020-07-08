@@ -1,6 +1,4 @@
 
-context("verify_extracted_package")
-
 describe("verify_extracted_package", {
 
   tmp <- tempfile()

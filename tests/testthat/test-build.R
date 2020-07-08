@@ -1,6 +1,4 @@
 
-context("build")
-
 test_that("build_package", {
   args <- NULL
   mockery::stub(build_package, "build", function(...) args <<- list(...))

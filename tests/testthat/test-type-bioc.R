@@ -1,6 +1,4 @@
 
-context("type bioc")
-
 test_that("parse_remote", {
 
   pr <- parse_pkg_refs("bioc::Biobase")[[1]]

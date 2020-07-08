@@ -1,6 +1,4 @@
 
-context("assertions")
-
 test_that("is_character", {
   pos <- list("", "NA", "foobar", character(), letters, c(a = "b"))
   neg <- list(1, 1L, NA, NA_character_, c("x", NA_character_), NULL)

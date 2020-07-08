@@ -1,6 +1,4 @@
 
-context("type github")
-
 test_that("resolve_remote", {
 
   skip_if_offline()

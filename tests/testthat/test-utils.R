@@ -1,6 +1,4 @@
 
-context("utils")
-
 test_that("%|z|%", {
   expect_true("" %|z|% TRUE)
 

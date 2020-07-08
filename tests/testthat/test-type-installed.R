@@ -1,6 +1,4 @@
 
-context("installed ref type")
-
 test_that("resolve", {
 
   skip_on_cran()

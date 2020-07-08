@@ -1,6 +1,4 @@
 
-context("local ref type")
-
 test_that("parse_remote", {
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)

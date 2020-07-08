@@ -1,6 +1,4 @@
 
-context("solve policies")
-
 test_that("newer version preferred", {
   pkgs <- make_fake_resolution(
     `aa` = list(version = "1-0-1", platform = "source", direct = TRUE),

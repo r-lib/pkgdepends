@@ -1,6 +1,4 @@
 
-context("package versions")
-
 test_that("version_satisfies", {
   pos <- list(
     list("1.2.3", ">=", "1.2.3"),

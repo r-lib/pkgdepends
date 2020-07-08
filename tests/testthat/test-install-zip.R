@@ -1,6 +1,4 @@
 
-context("zip")
-
 test_that("make_unzip_process", {
 
   zipfile <- system.file(package = .packageName, "tools", "xxx.zip")

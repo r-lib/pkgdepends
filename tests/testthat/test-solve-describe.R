@@ -1,6 +1,4 @@
 
-context("solve + describe")
-
 test_that("failed resolution", {
   pkgs <- make_fake_resolution(
     aa = list(status = "FAILED", direct = TRUE, error = list(

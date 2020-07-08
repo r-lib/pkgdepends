@@ -1,6 +1,4 @@
 
-context("solve pieces")
-
 test_that("pkgplan_i_create_lp_init", {
   pkgs <- read_fixture("resolution-simple.rds")
   lp <- pkgplan_i_lp_init(pkgs, policy = "lazy")

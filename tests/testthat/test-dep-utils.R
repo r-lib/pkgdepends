@@ -1,6 +1,4 @@
 
-context("dependency utilities")
-
 test_that("resolve_ref_deps", {
 
   deps <- data.frame(

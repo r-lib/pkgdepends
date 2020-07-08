@@ -1,12 +1,10 @@
 
-context("hard solve instances")
-
 test_that("hard example, because easch package has many candidates", {
 
   skip_on_cran()
   skip_if_offline()
   skip("unfinished")
-  
+
   lib <- test_temp_dir()
   install.packages(
     c("dplyr", "rcmdcheck", "qgraph", "usethis", "ggplot2", "knitr"),

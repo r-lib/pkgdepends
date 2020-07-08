@@ -1,6 +1,4 @@
 
-context("resolution-df")
-
 test_that("res_make_empty_df", {
   df <- res_make_empty_df()
   expect_true(tibble::is_tibble(df))

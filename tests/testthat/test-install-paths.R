@@ -1,6 +1,4 @@
 
-context("non-trivial paths")
-
 test_that("folders with potentially problematic characters", {
 
   skip_on_cran()

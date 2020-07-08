@@ -1,6 +1,4 @@
 
-context("parse_pkg_refs")
-
 test_that("package_name_rx", {
   good <- c("A1", "a1", "Z1", "z1", "foo.bar", "foo.bar.baz", "a1.b2")
 

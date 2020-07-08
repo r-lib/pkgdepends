@@ -1,6 +1,4 @@
 
-context("package a tree")
-
 test_that("can package a tree", {
 
   dir.create(tmp <- tempfile())

@@ -1,6 +1,4 @@
 
-context("dependency tree")
-
 test_that("draw_solution_tree", {
 
   skip_if_offline()

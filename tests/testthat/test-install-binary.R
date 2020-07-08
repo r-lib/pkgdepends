@@ -1,6 +1,4 @@
 
-context("install_binary")
-
 test_that("install_binary", {
 
   pkg <- binary_test_package("foo")

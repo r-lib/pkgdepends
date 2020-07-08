@@ -1,6 +1,4 @@
 
-context("install parts")
-
 test_that("make_start_state", {
   plan <- readRDS("fixtures/sample_plan.rds")
   state <- make_start_state(plan, list(foo = "bar"))

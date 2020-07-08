@@ -1,6 +1,4 @@
 
-context("tar")
-
 test_that("is_gzip, is_bzip2, is_xz, iz_zip", {
 
   cases <- list(

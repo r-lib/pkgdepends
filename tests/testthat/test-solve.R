@@ -1,6 +1,4 @@
 
-context("solve")
-
 test_that("binary preferred over source", {
   pkgs <- read_fixture("resolution-simple.rds")
   lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy")

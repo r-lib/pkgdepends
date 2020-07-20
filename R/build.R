@@ -8,5 +8,6 @@ build_package <- function(path, build_args = list()) {
     manual = TRUE, args = NULL, quiet = TRUE
   )
   args <- modifyList(default_args, build_args)
-  do.call(build, args)
+  zip_path <- system.file(package = "zip", "bin", .Platform$r_arch)
+  withr::with_path(zip_path, do.call(build, args))
 }

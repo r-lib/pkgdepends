@@ -31,9 +31,7 @@ test_that("install_package_plan metadata", {
       paste0("local::", pkg), lib = libpath)
     plan$metadata[[1]] <- c("Foo" = "Bar", "Foobar" = "baz")
     plan$vignettes <- FALSE
-    expect_error_free(
-      install_package_plan(plan, lib = libpath, num_workers = 1)
-    )
+    install_package_plan(plan, lib = libpath, num_workers = 1)
   })
 
   dsc <- desc::desc(file.path(libpath, "foo"))

@@ -56,5 +56,6 @@ Suggests:
     spelling,
     testthat
 Remotes:
-    r-lib/zip
+    r-lib/zip,
+    r-lib/testthat
 Encoding: UTF-8

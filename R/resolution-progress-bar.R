@@ -9,7 +9,8 @@ progress_chars <- function() {
       lpar = "\u2e28",
       rpar = "\u2e29",
       fill = "\u2588",
-      half = "\u2592"
+      half = "\u2592",
+      space = "\u00a0"
     )
 
   } else {
@@ -19,7 +20,8 @@ progress_chars <- function() {
       lpar = "(",
       rpar = ")",
       fill = "#",
-      half = "-"
+      half = "-",
+      space = " "
     )
   }
 }
@@ -61,7 +63,7 @@ res__show_progress_bar <- function(self, private) {
   msg <- make_trailing_progress_msg(self, private)
 
   str <- "{bar} {state} {spinner} {msg}"
-  str <- gsub(" ", "\u00a0", str)
+  str <- gsub(" ", private$bar$chars$space, str)
   cli_status_update(private$bar$status, str)
 }
 
@@ -71,7 +73,7 @@ make_bar <- function(chars, p, width =  15) {
   w <- if (isTRUE(all.equal(p, 1))) width else trunc(width * p)
 
   pchars <- rep(chars$fill, w)
-  xchars <- rep("\u00a0", max(width - w, 0))
+  xchars <- rep(chars$space, max(width - w, 0))
   bar <- paste(
     c(chars$lpar, pchars, xchars, chars$rpar),
     collapse = "")

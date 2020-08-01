@@ -48,6 +48,9 @@ res__create_progress_bar <- function(self, private) {
 }
 
 res__show_progress_bar <- function(self, private) {
+  # This can be called _after_ the resolution is over
+  if (is.null(private$bar$status)) return()
+
   deps <- nrow(private$state)
   direct <- sum(private$state$direct)
   direct_done <- sum(!is.na(private$state$status) & private$state$direct)

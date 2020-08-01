@@ -33,16 +33,17 @@ update_progress_bar <- function(state, tick = 0) {
   building <- sum(buildingl <- !plan$build_done & !is.na(plan$worker_id))
   installing <- sum(!buildingl & !is.na(plan$worker_id))
 
-  ## This is a workaround for an RStudio bug:
+  chars <- progress_chars()
+
+## This is a workaround for an RStudio bug:
   ## https://github.com/r-lib/pkginstall/issues/42
   ## https://github.com/rstudio/rstudio/issues/7278
   pp <- if (rstudio$detect()$type == "rstudio_console") {
-    function(x) gsub(" ", "\u00a0", crayon::strip_style(x), fixed = TRUE)
+    function(x) gsub(" ", chars$space, crayon::strip_style(x), fixed = TRUE)
   } else {
-    function(x) gsub(" ", "\u00a0", x, fixed = TRUE)
+    function(x) gsub(" ", chars$space, x, fixed = TRUE)
   }
 
-  chars <- progress_chars()
   xbar <- pp(make_install_bar(installed / total, built/total, width =  15))
   xbuilt  <- pp(make_progress_block(state, chars$build, built, total, building))
   xinst <- pp(make_progress_block(state, chars$inst, installed, total, installing))
@@ -50,7 +51,7 @@ update_progress_bar <- function(state, tick = 0) {
 
   cli_status_update(
     state$bar$status,
-    gsub(" ", "\u00a0", "{xbar} | {xbuilt} | {xinst} | {xmsg}")
+    gsub(" ", chars$space, "{xbar} | {xbuilt} | {xinst} | {xmsg}")
   )
 }
 

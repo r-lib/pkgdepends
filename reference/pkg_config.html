@@ -134,7 +134,7 @@ about package libraries, so it'll ignore the library option.
 
     <div class="ref-description">
     <p>Configuration options for several pkgdepends classes. Not all classes
-use all of these options. E.g. a <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_download_proposal.html'>pkg_download_proposal</a></code> is not concerned
+use all of these options. E.g. a <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> is not concerned
 about package libraries, so it'll ignore the <code>library</code> option.</p>
 <p><link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"></p>
 <p><script src="../doc/assets/rd.js"></script></p>
@@ -146,8 +146,8 @@ about package libraries, so it'll ignore the <code>library</code> option.</p>
 
     <p>Options:</p><ul>
 <li><p><code>library</code>: package library to use for checking already installed
-packages when considering dependencies in <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>dependency lookup</a>
-or <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_installation_proposal.html'>package installation</a>. Defaults to the
+packages when considering dependencies in <a href='new_pkg_deps.html'>dependency lookup</a>
+or <a href='new_pkg_installation_proposal.html'>package installation</a>. Defaults to the
 first path in <code><a href='https://rdrr.io/r/base/libPaths.html'>.libPaths()</a></code>.</p></li>
 <li><p><code>cache_dir</code>: directory to download the packages to. Defaults to a
 temporary directory within the R session temporary directory, see
@@ -165,7 +165,7 @@ to the current platform, <em>and</em> <code>source</code>.</p></li>
 (see <code><a href='https://rdrr.io/r/base/options.html'>base::options()</a></code>), if that's not set then
 <code>https://cran.rstudio.com</code>.</p></li>
 <li><p><code>dependencies</code>: Dependencies to consider or download or install.
-Defaults to the hard dependencies, see <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_dep_types.html'>pkg_dep_types_hard()</a></code>.</p></li>
+Defaults to the hard dependencies, see <code><a href='pkg_dep_types_hard.html'>pkg_dep_types_hard()</a></code>.</p></li>
 <li><p><code>r-versions</code>: Character vector, R versions to download or install
 packages for. It defaults to the current R version.</p></li>
 <li><p><code>build-vignettes</code>: Whether to build vignettes for package trees.

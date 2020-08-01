@@ -136,7 +136,7 @@
 <p><script src="../doc/assets/rd.js"></script></p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='kw'>refs</span>, <span class='kw'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>new_pkg_deps</span>(<span class='kw'>refs</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -144,7 +144,7 @@
     <tr>
       <th>refs</th>
       <td><p>Package names or references. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>'Package references'</a> for the syntax.</p></td>
+<a href='pkg_refs.html'>'Package references'</a> for the syntax.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -155,12 +155,12 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps()</a></code> creates a new object from the <code>pkg_deps</code> class.
-The advantage of <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps()</a></code> compared to using the <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>pkg_deps</a>
+    <p><code>new_pkg_deps()</code> creates a new object from the <code>pkg_deps</code> class.
+The advantage of <code>new_pkg_deps()</code> compared to using the pkg_deps
 constructor directly is that it avoids making pkgdepends a build time
 dependency.</p>
 <p>The usual steps to query package dependencies are:</p><ol>
-<li><p>Create a <code>pkg_deps</code> object with <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps()</a></code>.</p></li>
+<li><p>Create a <code>pkg_deps</code> object with <code>new_pkg_deps()</code>.</p></li>
 <li><p>Resolve all possible dependencies with
 <a href='#method-resolve'><code>pkg_deps$resolve()</code></a>.</p></li>
 <li><p>Solve the dependencies, to obtain a subset of all possible
@@ -192,7 +192,7 @@ result of the dependency solver.</p></li>
 </ul>
 <p><hr>
 <a id="method-new"></a></p><h3>Method <code>new()</code></h3>
-<p>Create a new <code>pkg_deps</code> object. Consider using <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps()</a></code>
+<p>Create a new <code>pkg_deps</code> object. Consider using <code>new_pkg_deps()</code>
 instead of calling the constructor directly.</p>
 <p>The returned object can be used to look up (recursive) dependencies
 of R packages from various sources. To perform the actual lookup,
@@ -202,10 +202,10 @@ you'll need to call the <a href='#method-resolve'><code>resolve()</code></a> met
 <h3>Arguments</h3>
 <p><div class="arguments"></p><dl>
 <dt><code>refs</code></dt><dd><p>Package names or references. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>'Package references'</a> for the syntax.</p></dd>
+<a href='pkg_refs.html'>'Package references'</a> for the syntax.</p></dd>
 
 <dt><code>config</code></dt><dd><p>Configuration options, a named list. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_config.html'>'Configuration'</a>.</p></dd>
+<a href='pkg_config.html'>'Configuration'</a>.</p></dd>
 
 <dt><code>remote_types</code></dt><dd><p>Custom remote ref types, this is for advanced
 use, and experimental currently.</p></dd>
@@ -226,20 +226,20 @@ use, and experimental currently.</p></dd>
 <p>A character vector of package refs that were used to create the
 <code>pkg_deps</code> object.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span>))
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span>))
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_refs</span>()</pre><p></div></p>
 
 <p><hr>
 <a id="method-get_config"></a></p><h3>Method <code>get_config()</code></h3>
 <p>Configuration options for the <code>pkg_deps</code> object. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_config.html'>'Configuration'</a> for details.</p><h3>Usage</h3>
+<a href='pkg_config.html'>'Configuration'</a> for details.</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='kw'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_config</span>()</pre><p></div></p>
 
 <h3>Returns</h3>
-<p>Named list. See <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_config.html'>'Configuration'</a> for the configuration
+<p>Named list. See <a href='pkg_config.html'>'Configuration'</a> for the configuration
 options.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pak"</span>)
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pak"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_config</span>()</pre><p></div></p>
 
 <p><hr>
@@ -248,13 +248,13 @@ options.</p>
 usually means downloading metadata from CRAN and Bioconductor, unless
 already cached, and also from GitHub if GitHub refs were included,
 either directly or indirectly. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_resolution.html'>'Dependency resolution'</a> for details.</p><h3>Usage</h3>
+<a href='pkg_resolution.html'>'Dependency resolution'</a> for details.</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='kw'>pkg_deps</span><span class='op'>$</span><span class='fu'>resolve</span>()</pre><p></div></p>
 
 <h3>Returns</h3>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pak"</span>)
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pak"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span>()</pre><p></div></p>
 
@@ -273,10 +273,10 @@ called after <a href='#method-resolve'><code>resolve()</code></a> has completed.
 <p><div class="r"></p><pre><span class='kw'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_resolution</span>()</pre><p></div></p>
 
 <h3>Returns</h3>
-<p>A <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_resolution.html'>pkg_resolution_result</a> object, which is also a tibble. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_resolution.html'>'Dependency resolution'</a> for its columns.</p>
+<p>A <a href='pkg_resolution.html'>pkg_resolution_result</a> object, which is also a tibble. See
+<a href='pkg_resolution.html'>'Dependency resolution'</a> for its columns.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgdepends"</span>)
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"r-lib/pkgdepends"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span>()</pre><p></div></p>
 
@@ -287,7 +287,7 @@ works out a set of packages, that can be installed together to
 create a functional installation. The set includes all directly
 specified packages, and all required (or suggested, depending on
 the configuration) packages as well. It includes every package at
-most once. See <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_solution.html'>'The dependency solver'</a> for details.</p>
+most once. See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p>
 <p><code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code> calls <a href='#method-resolve'><code>resolve()</code></a> automatically, if it
 hasn't been called yet.</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='kw'>pkg_deps</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()</pre><p></div></p>
@@ -295,7 +295,7 @@ hasn't been called yet.</p><h3>Usage</h3>
 <h3>Returns</h3>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgdepends"</span>)
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"r-lib/pkgdepends"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span>()</pre><p></div></p>
@@ -306,10 +306,10 @@ hasn't been called yet.</p><h3>Usage</h3>
 <p><div class="r"></p><pre><span class='kw'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_solution</span>()</pre><p></div></p>
 
 <h3>Returns</h3>
-<p>A <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_solution.html'>pkg_solution_result</a> object, which is a list. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_solution.html'>pkg_solution_result</a> for details.</p>
+<p>A <a href='pkg_solution.html'>pkg_solution_result</a> object, which is a list. See
+<a href='pkg_solution.html'>pkg_solution_result</a> for details.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pkgload"</span>)
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pkgload"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span>()</pre><p></div></p>
@@ -322,7 +322,7 @@ packages that can be installed together.</p><h3>Usage</h3>
 
 <h3>Examples</h3>
 <p><div class="r example copy"></p><pre><span class='co'># This is an error, because the packages conflict:</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span>),
   config = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(library = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
 )
@@ -342,7 +342,7 @@ screen.</p><h3>Usage</h3>
 <h3>Returns</h3>
 <p>A <code>tree</code> object from the cli package, see <code><a href='https://rdrr.io/pkg/cli/man/tree.html'>cli::tree()</a></code>.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pkgload"</span>)
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pkgload"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>draw</span>()</pre><p></div></p>
 
@@ -380,7 +380,7 @@ screen.</p><h3>Usage</h3>
 <h3>Returns</h3>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
 <h3>Examples</h3>
-<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgdepends"</span>)
+<p><div class="r example copy"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"r-lib/pkgdepends"</span>)
 <span class='kw'>pd</span>
 
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
@@ -408,23 +408,23 @@ screen.</p><h3>Usage</h3>
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
 #&gt; (use `$resolve()` to resolve dependencies)
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span>))
-<span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_refs</span>()</div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pak"</span>)
+#&gt; (use `$solve()` to solve dependencies)</div><div class='input'><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span>))
+<span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_refs</span>()</div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pak"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_config</span>()</div><div class='output co'>#&gt; + config:
-#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp5MVJLA/file7bf3cd20049
-#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp5MVJLA/file7bf68571075
+#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpT8cgsd/file4be954b43875
+#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpT8cgsd/file4be95e562d8f
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp5MVJLA/file7bf2bf9a6d7
+#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpT8cgsd/file4be96bc937ab
 #&gt;   - platforms: macos, source
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
 #&gt;   - r-versions: 4.0.2
 #&gt;   - build-vignettes: FALSE</div><div class='input'><span class='co'>if</span> (<span class='kw'>pkgdepends</span>:::<span class='fu'>is_online</span>()) (<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/numeric_version.html'>getRversion</a></span>() <span class='op'>&gt;=</span> <span class='st'>"3.4"</span>) <span class='kw'>withAutoprint</span> <span class='co'>else</span> <span class='kw'>force</span>)({ <span class='co'># examplesIf</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pak"</span>)
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pak"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span>()
 }) <span class='co'># examplesIf</span></div><div class='output co'>#&gt; &gt; pd &lt;- new_pkg_deps("pak")
-#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [0/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found <span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                          </span></div><div class='output co'>#&gt; &gt; pd$get_resolution()
+#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [7/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found <span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                          </span></div><div class='output co'>#&gt; &gt; pd$get_resolution()
 #&gt; </span><span style='color: #555555;'># A tibble: 86 x 27</span><span>
 #&gt;    ref   type  direct directpkg status package version license needscompilation
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>           
@@ -443,11 +443,11 @@ screen.</p><h3>Usage</h3>
 #&gt; </span><span style='color: #555555;'>#   repodir </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, target </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, deps </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, mirror </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='co'>if</span> (<span class='kw'>pkgdepends</span>:::<span class='fu'>is_online</span>()) (<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/numeric_version.html'>getRversion</a></span>() <span class='op'>&gt;=</span> <span class='st'>"3.4"</span>) <span class='kw'>withAutoprint</span> <span class='co'>else</span> <span class='kw'>force</span>)({ <span class='co'># examplesIf</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgdepends"</span>)
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"r-lib/pkgdepends"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span>()
 }) <span class='co'># examplesIf</span></div><div class='output co'>#&gt; &gt; pd &lt;- new_pkg_deps("r-lib/pkgdepends")
-#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [8/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT to the env var </span><span style='color: #000000;background-color: #BBBBBB;'>`GITHUB_PAT`</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠙] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠹] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠸] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='output co'>#&gt; &gt; pd$get_resolution()
+#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [12/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>                                                     </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT to the env var </span><span style='color: #000000;background-color: #BBBBBB;'>`GITHUB_PAT`</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠙] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='output co'>#&gt; &gt; pd$get_resolution()
 #&gt; </span><span style='color: #555555;'># A tibble: 69 x 27</span><span>
 #&gt;    ref   type  direct directpkg status package version license needscompilation
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>           
@@ -466,18 +466,18 @@ screen.</p><h3>Usage</h3>
 #&gt; </span><span style='color: #555555;'>#   repodir </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, target </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span style='color: #555555;'>, deps </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, mirror </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='co'>if</span> (<span class='kw'>pkgdepends</span>:::<span class='fu'>is_online</span>()) (<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/numeric_version.html'>getRversion</a></span>() <span class='op'>&gt;=</span> <span class='st'>"3.4"</span>) <span class='kw'>withAutoprint</span> <span class='co'>else</span> <span class='kw'>force</span>)({ <span class='co'># examplesIf</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgdepends"</span>)
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"r-lib/pkgdepends"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span>()
 }) <span class='co'># examplesIf</span></div><div class='output co'>#&gt; &gt; pd &lt;- new_pkg_deps("r-lib/pkgdepends")
-#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [4/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠙] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠹] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='output co'>#&gt; &gt; pd$solve()
+#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [9/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'>                                                             </span></div><div class='output co'>#&gt; &gt; pd$solve()
 #&gt; &gt; pd$get_solution()
 #&gt; &lt;pkg_solution&gt;
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + constraints (171):
+#&gt; + constraints (150):
 #&gt;   - select pkgdepends exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
@@ -525,7 +525,7 @@ screen.</p><h3>Usage</h3>
 #&gt;   - vctrs
 #&gt;   - withr
 #&gt;   - zip</div><div class='input'><span class='co'>if</span> (<span class='kw'>pkgdepends</span>:::<span class='fu'>is_online</span>()) (<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/numeric_version.html'>getRversion</a></span>() <span class='op'>&gt;=</span> <span class='st'>"3.4"</span>) <span class='kw'>withAutoprint</span> <span class='co'>else</span> <span class='kw'>force</span>)({ <span class='co'># examplesIf</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pkgload"</span>)
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pkgload"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span>()
@@ -536,7 +536,7 @@ screen.</p><h3>Usage</h3>
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - pkgload
-#&gt; + constraints (66):
+#&gt; + constraints (65):
 #&gt;   - select pkgload exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
@@ -568,7 +568,7 @@ screen.</p><h3>Usage</h3>
 #&gt;   - rstudioapi
 #&gt;   - withr</div><div class='input'><span class='co'>if</span> (<span class='kw'>pkgdepends</span>:::<span class='fu'>is_online</span>()) (<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/numeric_version.html'>getRversion</a></span>() <span class='op'>&gt;=</span> <span class='st'>"3.4"</span>) <span class='kw'>withAutoprint</span> <span class='co'>else</span> <span class='kw'>force</span>)({ <span class='co'># examplesIf</span>
 <span class='co'># This is an error, because the packages conflict:</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span>),
   config = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(library = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
 )
@@ -578,7 +578,7 @@ screen.</p><h3>Usage</h3>
 <span class='co'># This fails:</span>
 <span class='co'># pd$stop_for_solution_error()</span>
 }) <span class='co'># examplesIf</span></div><div class='output co'>#&gt; &gt; pd &lt;- new_pkg_deps(c("r-lib/pak", "cran::pak"), config = list(library = tempfile()))
-#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [8/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/2 </span><span> pkgs [⠋] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/2 </span><span> pkgs [⠙] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/2 </span><span> pkgs [⠹] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 16 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 2/2 </span><span> pkgs [⠸] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 16 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 2/2 </span><span> pkgs [⠼] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 25 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 2/2 </span><span> pkgs [⠴] Resolving r-hub/pkgsearch </span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 27 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 2/2 </span><span> pkgs [⠦] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='output co'>#&gt; &gt; pd$solve()
+#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [9/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/2 </span><span> pkgs [⠋] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/2 </span><span> pkgs [⠙] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 16 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 2/2 </span><span> pkgs [⠹] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 16 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 2/2 </span><span> pkgs [⠸] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 27 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 2/2 </span><span> pkgs [⠼] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='output co'>#&gt; &gt; pd$solve()
 #&gt; &gt; pd
 #&gt; &lt;pkg_dependencies&gt;
 #&gt; + refs:
@@ -589,12 +589,12 @@ screen.</p><h3>Usage</h3>
 #&gt; x has solution errors
 #&gt; (use `$get_resolution()` to see resolution results)
 #&gt; (use `$get_solution()` to see solution results)</div><div class='input'><span class='co'>if</span> (<span class='kw'>pkgdepends</span>:::<span class='fu'>is_online</span>()) (<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/numeric_version.html'>getRversion</a></span>() <span class='op'>&gt;=</span> <span class='st'>"3.4"</span>) <span class='kw'>withAutoprint</span> <span class='co'>else</span> <span class='kw'>force</span>)({ <span class='co'># examplesIf</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"pkgload"</span>)
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"pkgload"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>draw</span>()
 }) <span class='co'># examplesIf</span></div><div class='output co'>#&gt; &gt; pd &lt;- new_pkg_deps("pkgload")
-#&gt; &gt; pd$solve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [0/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                          </span></div><div class='output co'>#&gt; &gt; pd$draw()
-#&gt; </span><span style='color: #00BBBB;font-weight: bold;font-style: italic;'>pkgload </span><span style='color: #555555;font-weight: bold;font-style: italic;'>1.1.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(150.03 kB)</span><span>
+#&gt; &gt; pd$solve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [9/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                          </span></div><div class='output co'>#&gt; &gt; pd$draw()
+#&gt; </span><span style='color: #00BBBB;font-weight: bold;font-style: italic;'>pkgload </span><span style='color: #555555;font-weight: bold;font-style: italic;'>1.1.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(150.88 kB)</span><span>
 #&gt; ├─cli </span><span style='color: #555555;'>2.0.2</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(393.96 kB)</span><span>
 #&gt; │ ├─assertthat </span><span style='color: #555555;'>0.2.1</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(52.47 kB)</span><span>
 #&gt; │ ├─crayon </span><span style='color: #555555;'>1.3.4</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(748.25 kB)</span><span>
@@ -606,10 +606,10 @@ screen.</p><h3>Usage</h3>
 #&gt; │ ├─R6 </span><span style='color: #555555;'>2.4.1</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(57.31 kB)</span><span>
 #&gt; │ ├─crayon
 #&gt; │ └─rprojroot </span><span style='color: #555555;'>1.3-2</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(78.79 kB)</span><span>
-#&gt; │   └─backports </span><span style='color: #555555;'>1.1.8</span><span> </span><span style='color: #00BB00;'>✨</span><span>
-#&gt; ├─pkgbuild </span><span style='color: #555555;'>1.0.8</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(135.84 kB)</span><span>
+#&gt; │   └─backports </span><span style='color: #555555;'>1.1.8</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(71.78 kB)</span><span>
+#&gt; ├─pkgbuild </span><span style='color: #555555;'>1.1.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─callr </span><span style='color: #555555;'>3.4.3</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(389.41 kB)</span><span>
-#&gt; │ │ ├─processx </span><span style='color: #555555;'>3.4.2</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(252.49 kB)</span><span>
+#&gt; │ │ ├─processx </span><span style='color: #555555;'>3.4.3</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(277.66 kB)</span><span>
 #&gt; │ │ │ ├─ps </span><span style='color: #555555;'>1.3.3</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(215.85 kB)</span><span>
 #&gt; │ │ │ └─R6
 #&gt; │ │ └─R6
@@ -620,13 +620,13 @@ screen.</p><h3>Usage</h3>
 #&gt; │ ├─R6
 #&gt; │ ├─rprojroot
 #&gt; │ └─withr </span><span style='color: #555555;'>2.2.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(204.42 kB)</span><span>
-#&gt; ├─rlang </span><span style='color: #555555;'>0.4.6</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(1.18 MB)</span><span>
+#&gt; ├─rlang </span><span style='color: #555555;'>0.4.7</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; ├─rprojroot
 #&gt; ├─rstudioapi </span><span style='color: #555555;'>0.11</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(254.97 kB)</span><span>
 #&gt; └─withr
 #&gt; 
 #&gt; Key:  </span><span style='color: #00BB00;'>✨</span><span> new | </span><span style='color: #00BB00;'> ⬇</span><span> download</div><div class='input'><span class='co'>if</span> (<span class='kw'>pkgdepends</span>:::<span class='fu'>is_online</span>()) (<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/numeric_version.html'>getRversion</a></span>() <span class='op'>&gt;=</span> <span class='st'>"3.4"</span>) <span class='kw'>withAutoprint</span> <span class='co'>else</span> <span class='kw'>force</span>)({ <span class='co'># examplesIf</span>
-<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgdepends"</span>)
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span>(<span class='st'>"r-lib/pkgdepends"</span>)
 <span class='kw'>pd</span>
 
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>resolve</span>()
@@ -641,7 +641,7 @@ screen.</p><h3>Usage</h3>
 #&gt;   - r-lib/pkgdepends
 #&gt; (use `$resolve()` to resolve dependencies)
 #&gt; (use `$solve()` to solve dependencies)
-#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>⠙ Updating metadata [9/12] | Downloading [19.92 kB / 19.92 kB]</span></div><div class='output co'>#&gt; <span class='message'>                                                              </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠙] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠹] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='output co'>#&gt; &gt; pd
+#&gt; &gt; pd$resolve()</div><div class='output co'>#&gt; <span class='message'>Checking 12 metadata files</span></div><div class='output co'>#&gt; <span class='message'>⠋ Updating metadata [0/12] | Downloading [0 B / 0 B]</span></div><div class='output co'>#&gt; <span class='message'>                                                    </span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠙] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='output co'>#&gt; &gt; pd
 #&gt; &lt;pkg_dependencies&gt;
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends

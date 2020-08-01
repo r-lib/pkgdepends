@@ -140,9 +140,9 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>pkg_deps</a></code>, <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_download_proposal.html'>pkg_download_proposal</a></code> and <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_installation_proposal.html'>pkg_installation_proposal</a></code>
+    <p><code><a href='new_pkg_deps.html'>pkg_deps</a></code>, <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> and <code><a href='new_pkg_installation_proposal.html'>pkg_installation_proposal</a></code>
 all resolve their dependencies recursively, to obtain information about
-all packages needed for the specified <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>package references</a>.</p><h3>CRAN and Bioconductor packages</h3>
+all packages needed for the specified <a href='pkg_refs.html'>package references</a>.</p><h3>CRAN and Bioconductor packages</h3>
 
 
 <p>Resolution currently start by downloading the CRAN and Bioconductor
@@ -172,7 +172,7 @@ about their dependencies.</p>
 file. This field may contain a list of package references for any of the
 dependencies that are specified in one of the <code>Depends</code>, <code>Includes</code>,
 <code>Suggests</code> or <code>Enhances</code> fields. The syntax is a comma separated list of
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>package references</a>.</p>
+<a href='pkg_refs.html'>package references</a>.</p>
 
 <h3>The result</h3>
 
@@ -208,7 +208,7 @@ installed packages, GitHub, etc.</p></li>
 <li><p><code>priority</code>: This is <code>"base"</code> for base packages, <code>"recommended"</code> for
 recommended packages, and <code>NA</code> otherwise.</p></li>
 <li><p><code>ref</code>: Package reference.</p></li>
-<li><p><code>remote</code>: The parsed <code>remote_ref</code> objects, see <code><a href='https://rdrr.io/pkg/pkgdepends/man/parse_pkg_refs.html'>parse_pkg_refs()</a></code>.
+<li><p><code>remote</code>: The parsed <code>remote_ref</code> objects, see <code><a href='parse_pkg_refs.html'>parse_pkg_refs()</a></code>.
 This is a list column.</p></li>
 <li><p><code>repodir</code>: The directory where this package should be in a CRAN-like
 repository.</p></li>

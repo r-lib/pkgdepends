@@ -131,14 +131,14 @@
     </div>
 
     <div class="ref-description">
-    <p>See <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>pkg_refs</a> for more about supported package references.</p>
+    <p>See <a href='pkg_refs.html'>pkg_refs</a> for more about supported package references.</p>
 <p><link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"></p>
 <p><script src="../doc/assets/rd.js"></script></p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/parse_pkg_refs.html'>parse_pkg_refs</a></span>(<span class='kw'>refs</span>, remote_types = <span class='kw'>NULL</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>parse_pkg_refs</span>(<span class='kw'>refs</span>, remote_types = <span class='kw'>NULL</span>, <span class='kw'>...</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/parse_pkg_refs.html'>parse_pkg_ref</a></span>(<span class='kw'>ref</span>, remote_types = <span class='kw'>NULL</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'>parse_pkg_ref</span>(<span class='kw'>ref</span>, remote_types = <span class='kw'>NULL</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,14 +166,14 @@ for convenience.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code><a href='https://rdrr.io/pkg/pkgdepends/man/parse_pkg_refs.html'>parse_pkg_refs()</a></code> returns a list of parsed references.
-<code><a href='https://rdrr.io/pkg/pkgdepends/man/parse_pkg_refs.html'>parse_pkg_ref()</a></code> returns one parsed reference. A parsed reference is
+    <p><code>parse_pkg_refs()</code> returns a list of parsed references.
+<code>parse_pkg_ref()</code> returns one parsed reference. A parsed reference is
 a list, with at least elements:</p><ul>
 <li><p><code>ref</code>: The original reference string.</p></li>
 <li><p><code>type</code>: The reference type.</p></li>
 <li><p><code>package</code>: The package name.
 It typically contains additional data, specific to the various
-reference types. See <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>pkg_refs</a> for details.
+reference types. See <a href='pkg_refs.html'>pkg_refs</a> for details.
 The parsed reference always has class <code>remote_ref_&lt;type&gt;</code> and
 <code>remote_ref</code>.</p></li>
 </ul>

@@ -179,12 +179,12 @@ https://github.com/r-lib/pkgdepends
 local::~/works/shiny
 </pre>
 
-<p>See <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>“Package references”</a> for details.</p>
+<p>See <a href='pkg_refs.html'>“Package references”</a> for details.</p>
 
 <h3>Package dependencies</h3>
 
 
-<p>Dependencies of the development version of the cli package:<div class="r"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgcache"</span>)
+<p>Dependencies of the development version of the cli package:<div class="r"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgcache"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'>draw</span>()</pre><p></div></p><pre><span class='co'>#&gt; r-lib/pkgcache 1.0.7.9000 [new][bld][cmp][dl] (unknown size)</span>
 <span class='co'>#&gt; +-assertthat 0.2.1 [new][dl] (54.98 kB)</span>
@@ -235,22 +235,22 @@ local::~/works/shiny
 <span class='co'>#&gt; </span>
 <span class='co'>#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span></pre>
 
-<p>See the <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>pkg_deps</a></code> class for details.</p>
+<p>See the <code><a href='new_pkg_deps.html'>pkg_deps</a></code> class for details.</p>
 
 <h3>Package downloads</h3>
 
 
-<p>Downloading all dependencies of a package:<div class="r"></p><pre><span class='kw'>pdl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_download_proposal.html'>new_pkg_download_proposal</a></span>(<span class='st'>"r-lib/cli"</span>)
+<p>Downloading all dependencies of a package:<div class="r"></p><pre><span class='kw'>pdl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_download_proposal.html'>new_pkg_download_proposal</a></span>(<span class='st'>"r-lib/cli"</span>)
 <span class='kw'>pdl</span><span class='op'>$</span><span class='fu'>resolve</span>()
 <span class='kw'>pdl</span><span class='op'>$</span><span class='fu'>download</span>()</pre><p></div></p>
-<p>See the <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_download_proposal.html'>pkg_download_proposal</a></code> class for
+<p>See the <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> class for
 details.</p>
 
 <h3>Package installation</h3>
 
 
 <p>Installing or updating a set of package:<div class="r"></p><pre><span class='kw'>lib</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>()
-<span class='kw'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_installation_proposal.html'>new_pkg_installation_proposal</a></span>(
+<span class='kw'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_installation_proposal.html'>new_pkg_installation_proposal</a></span>(
   <span class='st'>"r-lib/cli"</span>,
   config = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(library = <span class='kw'>lib</span>)
 )
@@ -264,36 +264,36 @@ details.</p>
 <h3>Dependency resolution</h3>
 
 
-<p><code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>pkg_deps</a></code>,
-<code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_download_proposal.html'>pkg_download_proposal</a></code> and
-<code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_installation_proposal.html'>pkg_installation_proposal</a></code> all resolve
+<p><code><a href='new_pkg_deps.html'>pkg_deps</a></code>,
+<code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> and
+<code><a href='new_pkg_installation_proposal.html'>pkg_installation_proposal</a></code> all resolve
 their dependencies recursively, to obtain information about all packages
-needed for the specified <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_refs.html'>package references</a>. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_resolution.html'>“Dependency resolution”</a> for details.</p>
+needed for the specified <a href='pkg_refs.html'>package references</a>. See
+<a href='pkg_resolution.html'>“Dependency resolution”</a> for details.</p>
 
 <h3>The dependency solver</h3>
 
 
 <p>The dependency solver takes the resolution information, and works out
 the exact versions of each package that must be installed, such that
-version and other requirements are satisfied. See <a href='https://rdrr.io/pkg/pkgdepends/man/pkg_solution.html'>“The dependency solver”</a> for details.</p>
+version and other requirements are satisfied. See <a href='pkg_solution.html'>“The dependency solver”</a> for details.</p>
 
 <h3>Installation plans</h3>
 
 
-<p><code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_installation_proposal.html'>pkg_installation_proposal</a></code> can create
+<p><code><a href='new_pkg_installation_proposal.html'>pkg_installation_proposal</a></code> can create
 installation plans, and then also install them. It is also possible to
 import installation plans that were created by other tools. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/install_plans.html'>“Installation plans”</a> for details.</p>
+<a href='install_plans.html'>“Installation plans”</a> for details.</p>
 
 <h3>Configuration</h3>
 
 
-<p>The details of <code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_deps.html'>pkg_deps</a></code>,
-<code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_download_proposal.html'>pkg_download_proposal</a></code> and
-<code><a href='https://rdrr.io/pkg/pkgdepends/man/pkg_installation_proposal.html'>pkg_installation_proposal</a></code> can be tuned
+<p>The details of <code><a href='new_pkg_deps.html'>pkg_deps</a></code>,
+<code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> and
+<code><a href='new_pkg_installation_proposal.html'>pkg_installation_proposal</a></code> can be tuned
 with a list of configuration options. See
-<a href='https://rdrr.io/pkg/pkgdepends/man/pkg_config.html'>“Configuration”</a> for details.</p>
+<a href='pkg_config.html'>“Configuration”</a> for details.</p>
 
     <h2 class="hasAnchor" id="related"><a class="anchor" href="#related"></a>Related</h2>
 

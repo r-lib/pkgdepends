@@ -261,13 +261,13 @@ pkgplan__show_progress_bar <- function(bar) {
   # Ready to update. We can't use the package emoji because its
   # width is not calculated properly
   str <- paste0(
-    "\u00a0{parts$rate} {parts$line}\u00a0{parts$percent} ",
+    "{bar$chars$space}{parts$rate} {parts$line}{bar$chars$space}{parts$percent} ",
     "| {parts$pkg_done}/{parts$pkg_total} pkg{?s} ",
     if (!is.na(parts$bytes_total)) "| ETA {parts$eta} ",
     "| {parts$msg}"
   )
 
-  str <- gsub(" ", "\u00a0", str)
+  str <- gsub(" ", bar$chars$space, str)
 
   bar$events <- list()
   cli_status_update(bar$status, str)

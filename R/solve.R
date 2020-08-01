@@ -542,6 +542,9 @@ pkgplan_install_plan <- function(self, private, downloads) {
     seq_len(nrow(sol)),
     function(i) {
       x <- sol$deps[[i]]
+      if (sol$platform[[i]] != "source") {
+        x <- x[tolower(x$type) != "linkingto", ]
+      }
       x$package[tolower(x$type) %in% tolower(sol$dep_types[[i]])]
     })
   deps <- lapply(deps, setdiff, y = c("R", base_packages()))

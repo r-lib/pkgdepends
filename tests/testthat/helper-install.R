@@ -47,10 +47,6 @@ source_test_package <- function(name) {
   pkgbuild::build(file.path(tmp, name), binary = FALSE, quiet = TRUE)
 }
 
-expect_error_free <- function(...) {
-  testthat::expect_error(..., regexp = NA)
-}
-
 #' @importFrom callr r_process r_process_options
 
 dummy_worker_process <- R6::R6Class(

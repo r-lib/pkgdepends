@@ -6,8 +6,7 @@ test_that("install_binary metadata", {
   libpath <- test_temp_dir()
 
   metadata <- c("Foo" = "Bar", "Foobar" = "baz")
-  expect_error_free(
-    install_binary(pkg, lib = libpath, metadata = metadata, quiet = TRUE))
+  install_binary(pkg, lib = libpath, metadata = metadata, quiet = TRUE)
 
   dsc <- desc::desc(file.path(libpath, "foo"))
   expect_equal(dsc$get("Foo")[[1]], "Bar")

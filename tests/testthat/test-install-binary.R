@@ -4,13 +4,11 @@ test_that("install_binary", {
   pkg <- binary_test_package("foo")
   libpath <- test_temp_dir()
 
-  expect_error_free(
-    install_binary(pkg, lib = libpath, quiet = TRUE))
-  expect_error_free(
-    x <- callr::r(function(l) {
-      library("foo", lib.loc = l)
-      foo::foo()
-    }, list(libpath)))
+  install_binary(pkg, lib = libpath, quiet = TRUE)
+  x <- callr::r(function(l) {
+    library("foo", lib.loc = l)
+    foo::foo()
+  }, list(libpath))
   expect_null(x)
 })
 
@@ -24,13 +22,11 @@ test_that("install_binary works for simultaneous installs", {
   num <- 5
 
   # install and load foo here to test loaded DLLs in another process
-  expect_error_free(
-    install_binary(pkg, lib = libpath, quiet = TRUE))
-  expect_error_free(
-    x <- callr::r(function(l) {
-      library("foo", lib.loc = l)
-      foo::foo()
-    }, list(libpath)))
+  install_binary(pkg, lib = libpath, quiet = TRUE)
+  x <- callr::r(function(l) {
+    library("foo", lib.loc = l)
+    foo::foo()
+  }, list(libpath))
   expect_null(x)
 
   processes <- replicate(num, simplify = FALSE,

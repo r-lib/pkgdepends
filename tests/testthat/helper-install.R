@@ -34,17 +34,17 @@ local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
 binary_test_package <- function(name) {
   mkdirp(tmp <- tempfile())
   file.copy(test_path(name), tmp, recursive = TRUE)
-  pkgbuild::build(file.path(tmp, name), binary = TRUE, quiet = TRUE)
+  zip_path <- system.file(package = "zip", "bin", .Platform$r_arch)
+  withr::with_path(
+    zip_path,
+    pkgbuild::build(file.path(tmp, name), binary = TRUE, quiet = TRUE)
+  )
 }
 
 source_test_package <- function(name) {
   mkdirp(tmp <- tempfile())
   file.copy(test_path(name), tmp, recursive = TRUE)
   pkgbuild::build(file.path(tmp, name), binary = FALSE, quiet = TRUE)
-}
-
-expect_error_free <- function(...) {
-  testthat::expect_error(..., regexp = NA)
 }
 
 #' @importFrom callr r_process r_process_options

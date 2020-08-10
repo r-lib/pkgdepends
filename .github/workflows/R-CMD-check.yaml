@@ -43,6 +43,11 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
+      - name: Set Rtools home env var
+        if: runner.os == 'Windows'
+        run: |
+          echo "::set-env name=RTOOLS40_HOME::c:\rtools40"
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -71,6 +76,12 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
+
+      - name: Environment
+        run: |
+          options(width = 100)
+          Sys.getenv()
         shell: Rscript {0}
 
       - name: Session info

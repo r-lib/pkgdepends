@@ -12,7 +12,7 @@ test_that("folders with potentially problematic characters", {
 
   folders <- c(
     "s p a c e s",
-    enc2native("\u00fa\u00e1\u00f6\u0151\u00e9"),
+    "\u00fa\u00e1\u00f6\u0151\u00e9",
     "s' p' a' c' e' s'"
   )
 
@@ -37,8 +37,8 @@ test_that("folders with potentially problematic characters", {
     ## Reset this
     environment(need_internal_tar)$internal <- NULL
 
-    expect_error_free(install_binary(pkg, lib = libpath, quiet = TRUE))
-    expect_error_free(library("foo", lib.loc = libpath))
+    install_binary(pkg, lib = libpath, quiet = TRUE)
+    library("foo", lib.loc = libpath)
     expect_equal(foo::foo(), NULL)
     unloadNamespace("foo")
 
@@ -49,11 +49,11 @@ test_that("folders with potentially problematic characters", {
     environment(need_internal_tar)$internal <- NULL
     withr::with_envvar(c(TAR = NA),
       withr::with_path("foobar", action = "replace", {
-        expect_error_free(install_binary(pkg, lib = libpath, quiet = TRUE))
+        install_binary(pkg, lib = libpath, quiet = TRUE)
       })
     )
 
-    expect_error_free(library("foo", lib.loc = libpath))
+    library("foo", lib.loc = libpath)
     expect_equal(foo::foo(), NULL)
     unloadNamespace("foo")
   }

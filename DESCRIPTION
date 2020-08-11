@@ -55,6 +55,4 @@ Suggests:
     rstudioapi,
     spelling,
     testthat
-Remotes:
-    r-lib/testthat
 Encoding: UTF-8

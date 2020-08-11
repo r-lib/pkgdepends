@@ -41,7 +41,7 @@ Imports:
     tibble,
     utils,
     withr (>= 2.1.1),
-    zip (>= 2.0.4.9000)
+    zip (>= 2.1.0)
 Suggests:
     asciicast,
     covr,
@@ -56,6 +56,5 @@ Suggests:
     spelling,
     testthat
 Remotes:
-    r-lib/zip,
     r-lib/testthat
 Encoding: UTF-8

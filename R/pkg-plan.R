@@ -124,7 +124,7 @@ pkgplan_init <- function(self, private, refs, config, library,
     metadata = pkgcache::cranlike_metadata_cache$new(
       replica_path = private$config$metadata_cache_dir,
       platforms = private$config$platforms,
-      r_version = private$config$`r-version`,
+      r_version = private$config$`r-versions`,
       cran_mirror = private$config$`cran-mirror`),
     package = pkgcache::package_cache$new(private$config$package_cache_dir),
     installed = if (!is.null(library)) make_installed_cache(library)

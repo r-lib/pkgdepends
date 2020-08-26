@@ -60,7 +60,7 @@ NULL
 #' @export
 
 install_package_plan <- function(plan, lib = .libPaths()[[1]],
-                                 num_workers = 1) {
+                                 num_workers = 1, show_progress_bar = TRUE) {
 
   start <- Sys.time()
 
@@ -84,8 +84,10 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
 
   config <- list(lib = lib, num_workers = num_workers)
   state <- make_start_state(plan, config)
-  state$progress <- create_progress_bar(state)
-  on.exit(done_progress_bar(state), add =  TRUE)
+  if (show_progress_bar) {
+    state$progress <- create_progress_bar(state)
+    on.exit(done_progress_bar(state), add =  TRUE)
+  }
 
   withCallingHandlers({
 
@@ -97,10 +99,10 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
 
     repeat {
       if (are_we_done(state)) break;
-      update_progress_bar(state)
+      if (show_progress_bar) update_progress_bar(state)
 
       events <- poll_workers(state)
-      state <- handle_events(state, events)
+      state <- handle_events(state, events, show_progress_bar)
       task  <- select_next_task(state)
       state <- start_task(state, task)
     }
@@ -194,13 +196,13 @@ poll_workers <- function(state) {
 
 get_timeout <- function(state) 100
 
-handle_events <- function(state, events) {
-  for (i in which(events)) state <- handle_event(state, i)
+handle_events <- function(state, events, show_progress_bar) {
+  for (i in which(events)) state <- handle_event(state, i, show_progress_bar)
   state$workers <- drop_nulls(state$workers)
   state
 }
 
-handle_event <- function(state, evidx) {
+handle_event <- function(state, evidx, show_progress_bar) {
   proc <- state$workers[[evidx]]$process
 
   ## Read out stdout and stderr. If process is done, then read out all
@@ -234,7 +236,7 @@ handle_event <- function(state, evidx) {
   worker$stderr <- cut_into_lines(worker$stderr)
 
   ## Record what was done
-  stop_task(state, worker)
+  stop_task(state, worker, show_progress_bar)
 }
 
 select_next_task <- function(state) {
@@ -429,7 +431,9 @@ start_task_install <- function(state, task) {
 
   pkg <- state$plan$package[pkgidx]
   version <- state$plan$version[pkgidx]
-  update_progress_bar(state)
+  if (show_progress_bar) {
+    update_progress_bar(state)
+  }
 
   px <- make_install_process(filename, lib = lib, metadata = metadata)
   worker <- list(
@@ -443,30 +447,30 @@ start_task_install <- function(state, task) {
   state
 }
 
-stop_task <- function(state, worker) {
+stop_task <- function(state, worker, show_progress_bar) {
   if (worker$task$name == "package") {
-    stop_task_package(state, worker)
+    stop_task_package(state, worker, show_progress_bar)
 
   } else if (worker$task$name == "build") {
-    stop_task_build(state, worker)
+    stop_task_build(state, worker, show_progress_bar)
 
   } else if (worker$task$name == "install") {
-    stop_task_install(state, worker)
+    stop_task_install(state, worker, show_progress_bar)
 
   } else {
     stop("Unknown task, internal error")
   }
 }
 
-stop_task_package <- function(state, worker) {
+stop_task_package <- function(state, worker, show_progress_bar) {
   if (worker$task$args$phase == "uncompress") {
-    stop_task_package_uncompress(state, worker)
+    stop_task_package_uncompress(state, worker, show_progress_bar)
   } else {
-    stop_task_package_build(state, worker)
+    stop_task_package_build(state, worker, show_progress_bar)
   }
 }
 
-stop_task_package_uncompress <- function(state, worker) {
+stop_task_package_uncompress <- function(state, worker, show_progress_bar) {
   pkgidx <- worker$task$args$pkgidx
   success <- worker$process$get_exit_status() == 0
 
@@ -477,7 +481,10 @@ stop_task_package_uncompress <- function(state, worker) {
     ptime <- pretty_sec(as.numeric(time, units = "secs"))
     alert("danger", "Failed to uncompress {.pkg {pkg}} \\
            {.version {version}} {.timestamp {ptime}}")
-    update_progress_bar(state, 1L)
+
+    if (show_progress_bar) {
+      update_progress_bar(state, 1L)
+    }
 
     state$plan$package_done[[pkgidx]] <- TRUE
     state$plan$package_time[[pkgidx]] <- time
@@ -501,7 +508,7 @@ stop_task_package_uncompress <- function(state, worker) {
   start_task_package_build(state, worker$task)
 }
 
-stop_task_package_build <- function(state, worker) {
+stop_task_package_build <- function(state, worker, show_progress_bar) {
   pkgidx <- worker$task$args$pkgidx
   success <- worker$process$get_exit_status() == 0
 
@@ -519,7 +526,9 @@ stop_task_package_build <- function(state, worker) {
     alert("danger", "Failed to create source package {.pkg {pkg}} \\
            {.version {version}} {.timestamp {ptime}}")
   }
-  update_progress_bar(state, 1L)
+  if (show_progress_bar) {
+    update_progress_bar(state, 1L)
+  }
 
   state$plan$package_done[[pkgidx]] <- TRUE
   state$plan$package_time[[pkgidx]] <- time
@@ -547,7 +556,7 @@ stop_task_package_build <- function(state, worker) {
 
 #' @importFrom prettyunits pretty_sec
 
-stop_task_build <- function(state, worker) {
+stop_task_build <- function(state, worker, show_progress_bar) {
 
   ## TODO: make sure exit status is non-zero on build error!
   success <- worker$process$get_exit_status() == 0
@@ -567,7 +576,10 @@ stop_task_build <- function(state, worker) {
     alert("danger", "Failed to build {.pkg {pkg}} \\
            {.version {version}} {.timestamp {ptime}}")
   }
-  update_progress_bar(state, 1L)
+
+  if (show_progress_bar) {
+    update_progress_bar(state, 1L)
+  }
 
   state$plan$build_done[[pkgidx]] <- TRUE
   state$plan$build_time[[pkgidx]] <- time
@@ -620,7 +632,7 @@ installed_note <- function(pkg) {
 
 #' @importFrom prettyunits pretty_sec
 
-stop_task_install <- function(state, worker) {
+stop_task_install <- function(state, worker, show_progress_bar) {
 
   ## TODO: make sure the install status is non-zero on exit
   success <- worker$process$get_exit_status() == 0
@@ -638,7 +650,10 @@ stop_task_install <- function(state, worker) {
   } else {
     alert("danger", "Failed to install {.pkg {pkg}} {.version {version}}")
   }
-  update_progress_bar(state, 1L)
+
+  if (show_progress_bar) {
+    update_progress_bar(state, 1L)
+  }
 
   state$plan$install_done[[pkgidx]] <- TRUE
   state$plan$install_time[[pkgidx]] <- time

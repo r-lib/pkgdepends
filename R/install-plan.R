@@ -327,8 +327,9 @@ make_build_process <- function(path, tmp_dir, lib, vignettes,
     pkgbuild_process$new(
       path, tmp_dir, binary = binary, vignettes = vignettes,
       needs_compilation = needscompilation, compile_attributes = FALSE,
-      args = if (binary) glue("--library={lib}"))
+      args = c("--no-lock", if (binary) glue("--library={lib}"))
     )
+  )
 }
 
 start_task_package <- function(state, task) {

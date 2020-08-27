@@ -163,7 +163,7 @@ prefix), then <code>github</code> is used;</p></li>
 <li><p>if the ref is a GitHub URL, then <code>github</code> is used;</p></li>
 <li><p>otherwise an error is thrown.</p></li>
 </ul>
-<h3>CRAN packages:</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>CRAN packages:</h3>
 
 
 <p>A package from CRAN. Full syntax:</p><pre>[cran::]&lt;package&gt;[@[&gt;=]&lt;version&gt; | current | last]
@@ -184,7 +184,7 @@ forecast@current
 <p>Note: pkgdepends currently parses the version specification part
 (everything after <code><a href='https://rdrr.io/r/base/slotOp.html'>@</a></code>), but does not use it.</p>
 
-<h3>Bioconductor packages:</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Bioconductor packages:</h3>
 
 
 <p>A package from Bioconductor. The syntax is the same as for CRAN
@@ -192,7 +192,7 @@ packages, except of the prefix of course:</p><pre>[bioc::]&lt;package&gt;[@[&gt;
 </pre>
 
 
-<h3>Standard packages:</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Standard packages:</h3>
 
 
 <p>These are packages either from CRAN or Bioconductor, the full syntax is
@@ -200,7 +200,7 @@ the same as for CRAN packages, except for the prefix:</p><pre>[standard::]&lt;pa
 </pre>
 
 
-<h3>GitHub packages:</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>GitHub packages:</h3>
 
 
 <p>Packages from a GitHub repository. Full syntax:</p><pre>[&lt;package&gt;=][github::]&lt;username&gt;/&lt;repository&gt;[/&lt;subdir&gt;][&lt;detail&gt;]
@@ -248,7 +248,7 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 <p>A GitHub remote string can also be used instead of an URL, for example:
 <code>git@github.com:r-lib/pkgdepends.git</code></p>
 
-<h3>Local packages:</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Local packages:</h3>
 
 
 <p>A path that refers to a package file built with <code>R CMD build</code>, or a
@@ -261,7 +261,7 @@ local::.
 </pre>
 
 
-<h3>Installed packages:</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Installed packages:</h3>
 
 
 <p>This is usually used internally, but can also be used directly. Full
@@ -276,7 +276,7 @@ syntax:</p><pre>installed::&lt;path&gt;/&lt;package&gt;
 </pre>
 
 
-<h3>Package dependencies:</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package dependencies:</h3>
 
 
 <p>Usually used internally, it specifies the dependencies of a local

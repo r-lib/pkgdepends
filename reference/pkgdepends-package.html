@@ -164,10 +164,12 @@ dependencies.</p></li>
 
     <h2 class="hasAnchor" id="install"><a class="anchor" href="#install"></a>Install</h2>
 
-    <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span>(<span class='st'>"pkgdepends"</span>)</pre><p></div></p>
+    <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span>(<span class='st'>"pkgdepends"</span>)
+</pre><p></div></p>
     <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
 
-    <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/r-lib/pkgdepends#readme'>pkgdepends</a></span>)</pre><p></div></p><h3>Package references</h3>
+    <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/r-lib/pkgdepends#readme'>pkgdepends</a></span>)
+</pre><p></div></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package references</h3>
 
 
 <p>A package reference (ref) specifies a location from which an R package
@@ -181,12 +183,13 @@ local::~/works/shiny
 
 <p>See <a href='pkg_refs.html'>“Package references”</a> for details.</p>
 
-<h3>Package dependencies</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package dependencies</h3>
 
 
 <p>Dependencies of the development version of the cli package:<div class="r"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgcache"</span>)
 <span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
-<span class='kw'>pd</span><span class='op'>$</span><span class='fu'>draw</span>()</pre><p></div></p><pre><span class='co'>#&gt; r-lib/pkgcache 1.0.7.9000 [new][bld][cmp][dl] (unknown size)</span>
+<span class='kw'>pd</span><span class='op'>$</span><span class='fu'>draw</span>()
+</pre><p></div></p><pre><span class='co'>#&gt; r-lib/pkgcache 1.0.7.9000 [new][bld][cmp][dl] (unknown size)</span>
 <span class='co'>#&gt; +-assertthat 0.2.1 [new][dl] (54.98 kB)</span>
 <span class='co'>#&gt; +-callr 3.4.3 [new][dl] (390.40 kB)</span>
 <span class='co'>#&gt; | +-processx 3.4.2 [new][dl] (428.13 kB)</span>
@@ -233,20 +236,22 @@ local::~/works/shiny
 <span class='co'>#&gt; | \-vctrs</span>
 <span class='co'>#&gt; \-uuid 0.1-4 [new][dl] (33.61 kB)</span>
 <span class='co'>#&gt; </span>
-<span class='co'>#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span></pre>
+<span class='co'>#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span>
+</pre>
 
 <p>See the <code><a href='new_pkg_deps.html'>pkg_deps</a></code> class for details.</p>
 
-<h3>Package downloads</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package downloads</h3>
 
 
 <p>Downloading all dependencies of a package:<div class="r"></p><pre><span class='kw'>pdl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_download_proposal.html'>new_pkg_download_proposal</a></span>(<span class='st'>"r-lib/cli"</span>)
 <span class='kw'>pdl</span><span class='op'>$</span><span class='fu'>resolve</span>()
-<span class='kw'>pdl</span><span class='op'>$</span><span class='fu'>download</span>()</pre><p></div></p>
+<span class='kw'>pdl</span><span class='op'>$</span><span class='fu'>download</span>()
+</pre><p></div></p>
 <p>See the <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> class for
 details.</p>
 
-<h3>Package installation</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package installation</h3>
 
 
 <p>Installing or updating a set of package:<div class="r"></p><pre><span class='kw'>lib</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>()
@@ -256,12 +261,14 @@ details.</p>
 )
 <span class='kw'>pdi</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
 <span class='kw'>pdi</span><span class='op'>$</span><span class='fu'>download</span>()
-<span class='kw'>pdi</span><span class='op'>$</span><span class='fu'>install</span>()</pre><p></div></p><pre><span class='co'>#&gt; Installed: 5</span>
+<span class='kw'>pdi</span><span class='op'>$</span><span class='fu'>install</span>()
+</pre><p></div></p><pre><span class='co'>#&gt; Installed: 5</span>
 <span class='co'>#&gt; Build time:  5.5s</span>
-<span class='co'>#&gt; Intall time: 599ms</span></pre>
+<span class='co'>#&gt; Intall time: 599ms</span>
+</pre>
 
 
-<h3>Dependency resolution</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Dependency resolution</h3>
 
 
 <p><code><a href='new_pkg_deps.html'>pkg_deps</a></code>,
@@ -271,14 +278,14 @@ their dependencies recursively, to obtain information about all packages
 needed for the specified <a href='pkg_refs.html'>package references</a>. See
 <a href='pkg_resolution.html'>“Dependency resolution”</a> for details.</p>
 
-<h3>The dependency solver</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>The dependency solver</h3>
 
 
 <p>The dependency solver takes the resolution information, and works out
 the exact versions of each package that must be installed, such that
 version and other requirements are satisfied. See <a href='pkg_solution.html'>“The dependency solver”</a> for details.</p>
 
-<h3>Installation plans</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Installation plans</h3>
 
 
 <p><code><a href='new_pkg_installation_proposal.html'>pkg_installation_proposal</a></code> can create
@@ -286,7 +293,7 @@ installation plans, and then also install them. It is also possible to
 import installation plans that were created by other tools. See
 <a href='install_plans.html'>“Installation plans”</a> for details.</p>
 
-<h3>Configuration</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Configuration</h3>
 
 
 <p>The details of <code><a href='new_pkg_deps.html'>pkg_deps</a></code>,

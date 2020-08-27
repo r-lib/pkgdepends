@@ -24,6 +24,9 @@ create_progress_bar <- function(state) {
 #' @importFrom cli cli_status_update
 
 update_progress_bar <- function(state, tick = 0) {
+  if (!isTRUE(getOption("pkg.show_progress", FALSE))) {
+    return()
+  }
 
   plan <- state$plan
   total <- nrow(plan)

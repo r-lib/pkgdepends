@@ -438,3 +438,7 @@ strrep <- function(x, times) {
   Encoding(res) <- Encoding(x)
   res
 }
+
+is_windows <- function() {
+  identical(tolower(Sys.info()[["sysname"]]), "windows")
+}

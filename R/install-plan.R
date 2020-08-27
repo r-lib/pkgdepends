@@ -321,6 +321,12 @@ get_worker_id <- (function() {
 make_build_process <- function(path, tmp_dir, lib, vignettes,
                                needscompilation, binary) {
 
+  # For windows, we need ensure the zip.exe bundled with the zip package is on the PATH
+  if (is_windows()) {
+    zip_tool_path <- asNamespace("zip")$get_tool("zip")
+    withr::local_path(paste0(dirname(zip_tool_path), .Platform$path.sep, Sys.getenv("PATH")))
+  }
+
   ## with_libpath() is needed for newer callr, which forces the current
   ## lib path in the child process.
   withr::with_libpaths(lib, action = "prefix",

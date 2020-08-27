@@ -84,8 +84,10 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
 
   config <- list(lib = lib, num_workers = num_workers)
   state <- make_start_state(plan, config)
-  state$progress <- create_progress_bar(state)
-  on.exit(done_progress_bar(state), add =  TRUE)
+  if (isTRUE(getOption("pkg.show_progress", FALSE))) {
+    state$progress <- create_progress_bar(state)
+    on.exit(done_progress_bar(state), add =  TRUE)
+  }
 
   withCallingHandlers({
 

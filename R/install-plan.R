@@ -129,9 +129,9 @@ add_recursive_dependencies <- function(plan) {
   do <- function(i) {
     if (done[[i]]) return()
     miss <- idx[names(!done[xdps[[i]]])]
+    done[[i]] <<- TRUE
     for (m in miss) do(m)
     xdps[[i]] <<- unique(c(xdps[[i]], unlist(xdps[xdps[[i]]])))
-    done[[i]] <<- TRUE
   }
 
   for (i in srcidx) do(i)

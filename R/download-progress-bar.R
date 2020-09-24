@@ -253,6 +253,9 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 #' @importFrom prettyunits pretty_bytes pretty_dt
 
 pkgplan__show_progress_bar <- function(bar) {
+  if (!isTRUE(getOption("pkg.show_progress", FALSE))) {
+    return()
+  }
 
   # Don't show if there is nothing to download
   if (sum(!bar$what$skip) == 0) return()

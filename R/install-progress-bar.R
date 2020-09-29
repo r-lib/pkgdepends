@@ -17,7 +17,7 @@ create_progress_bar <- function(state) {
   bar <- new.env(parent = emptyenv())
   bar$spinner <- get_spinner()
   bar$spinner_state <- 1L
-  if (isTRUE(getOption("pkg.show_progress", FALSE))) {
+  if (isTRUE(getOption("pkg.show_progress", TRUE))) {
     bar$status <- cli_status("Installing...", .auto_close = FALSE)
   } else {
     bar$status <- cli_status(character(), .auto_close = FALSE)
@@ -28,7 +28,7 @@ create_progress_bar <- function(state) {
 #' @importFrom cli cli_status_update
 
 update_progress_bar <- function(state, tick = 0) {
-  if (!isTRUE(getOption("pkg.show_progress", FALSE))) {
+  if (!isTRUE(getOption("pkg.show_progress", TRUE))) {
     return()
   }
 

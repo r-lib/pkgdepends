@@ -83,12 +83,6 @@ package manager, see pak.
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -164,11 +158,11 @@ dependencies.</p></li>
 
     <h2 class="hasAnchor" id="install"><a class="anchor" href="#install"></a>Install</h2>
 
-    <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span>(<span class='st'>"pkgdepends"</span>)
+    <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='st'>"pkgdepends"</span><span class='op'>)</span>
 </pre><p></div></p>
     <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
 
-    <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/r-lib/pkgdepends#readme'>pkgdepends</a></span>)
+    <p><div class="r"></p><pre><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/r-lib/pkgdepends#readme'>pkgdepends</a></span><span class='op'>)</span>
 </pre><p></div></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package references</h3>
 
 
@@ -186,55 +180,57 @@ local::~/works/shiny
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package dependencies</h3>
 
 
-<p>Dependencies of the development version of the cli package:<div class="r"></p><pre><span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_deps.html'>new_pkg_deps</a></span>(<span class='st'>"r-lib/pkgcache"</span>)
-<span class='kw'>pd</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
-<span class='kw'>pd</span><span class='op'>$</span><span class='fu'>draw</span>()
-</pre><p></div></p><pre><span class='co'>#&gt; r-lib/pkgcache 1.0.7.9000 [new][bld][cmp][dl] (unknown size)</span>
-<span class='co'>#&gt; +-assertthat 0.2.1 [new][dl] (54.98 kB)</span>
-<span class='co'>#&gt; +-callr 3.4.3 [new][dl] (390.40 kB)</span>
-<span class='co'>#&gt; | +-processx 3.4.2 [new][dl] (428.13 kB)</span>
-<span class='co'>#&gt; | | +-ps 1.3.3 [new][dl] (333.41 kB)</span>
-<span class='co'>#&gt; | | \-R6 2.4.1 [new][dl] (59.31 kB)</span>
+<p>Dependencies of the development version of the cli package:<div class="r"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_deps.html'>new_pkg_deps</a></span><span class='op'>(</span><span class='st'>"r-lib/pkgcache"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p><pre><span class='co'>#&gt; r-lib/pkgcache 1.1.0.9000 [new][bld][cmp][dl] (unknown size)</span>
+<span class='co'>#&gt; +-assertthat 0.2.1 [new][dl] (52.47 kB)</span>
+<span class='co'>#&gt; +-callr 3.4.3 [new][dl] (389.41 kB)</span>
+<span class='co'>#&gt; | +-processx 3.4.3 [new][dl] (277.66 kB)</span>
+<span class='co'>#&gt; | | +-ps 1.3.3 [new][dl] (215.85 kB)</span>
+<span class='co'>#&gt; | | \-R6 2.4.1 [new][dl] (57.31 kB)</span>
 <span class='co'>#&gt; | \-R6</span>
-<span class='co'>#&gt; +-cli 2.0.2 [new][dl] (397.89 kB)</span>
+<span class='co'>#&gt; +-cli 2.0.2 [new][dl] (393.96 kB)</span>
 <span class='co'>#&gt; | +-assertthat</span>
-<span class='co'>#&gt; | +-crayon 1.3.4 [new][dl] (749.89 kB)</span>
-<span class='co'>#&gt; | +-glue 1.4.1 [new][dl] (154.03 kB)</span>
-<span class='co'>#&gt; | \-fansi 0.4.1 [new][dl] (223.88 kB)</span>
-<span class='co'>#&gt; +-curl 4.3 [new][dl] (4.13 MB)</span>
-<span class='co'>#&gt; +-digest 0.6.25 [new][dl] (249.47 kB)</span>
-<span class='co'>#&gt; +-filelock 1.0.2 [new][dl] (39.80 kB)</span>
+<span class='co'>#&gt; | +-crayon 1.3.4 [new][dl] (748.25 kB)</span>
+<span class='co'>#&gt; | +-glue 1.4.1 [new][dl] (138.38 kB)</span>
+<span class='co'>#&gt; | \-fansi 0.4.1 [new][dl] (210.40 kB)</span>
+<span class='co'>#&gt; +-curl 4.3 [new][dl] (741.06 kB)</span>
+<span class='co'>#&gt; +-digest 0.6.25 [new][dl] (245.67 kB)</span>
+<span class='co'>#&gt; +-filelock 1.0.2 [new][dl] (26.67 kB)</span>
 <span class='co'>#&gt; +-glue</span>
-<span class='co'>#&gt; +-prettyunits 1.1.1 [new][dl] (37.68 kB)</span>
+<span class='co'>#&gt; +-prettyunits 1.1.1 [new][dl] (34.79 kB)</span>
 <span class='co'>#&gt; +-R6</span>
 <span class='co'>#&gt; +-processx</span>
-<span class='co'>#&gt; +-rappdirs 0.3.1 [new][dl] (87.24 kB)</span>
-<span class='co'>#&gt; +-rlang 0.4.6 [new][dl] (1.13 MB)</span>
-<span class='co'>#&gt; +-tibble 3.0.1 [new][dl] (411.98 kB)</span>
+<span class='co'>#&gt; +-rappdirs 0.3.1 [new][dl] (145.56 kB)</span>
+<span class='co'>#&gt; +-rlang 0.4.7 [new]</span>
+<span class='co'>#&gt; +-tibble 3.0.3 [new]</span>
 <span class='co'>#&gt; | +-cli</span>
 <span class='co'>#&gt; | +-crayon</span>
-<span class='co'>#&gt; | +-ellipsis 0.3.1 [new][dl] (45.93 kB)</span>
+<span class='co'>#&gt; | +-ellipsis 0.3.1 [new][dl] (33.48 kB)</span>
 <span class='co'>#&gt; | | \-rlang</span>
 <span class='co'>#&gt; | +-fansi</span>
-<span class='co'>#&gt; | +-lifecycle 0.2.0 [new][dl] (101.70 kB)</span>
+<span class='co'>#&gt; | +-lifecycle 0.2.0 [new][dl] (91.64 kB)</span>
 <span class='co'>#&gt; | | +-glue</span>
 <span class='co'>#&gt; | | \-rlang</span>
-<span class='co'>#&gt; | +-magrittr 1.5 [new][dl] (157.57 kB)</span>
-<span class='co'>#&gt; | +-pillar 1.4.4 [new][dl] (186.10 kB)</span>
+<span class='co'>#&gt; | +-magrittr 1.5 [new][dl] (152.51 kB)</span>
+<span class='co'>#&gt; | +-pillar 1.4.6 [new]</span>
 <span class='co'>#&gt; | | +-cli</span>
 <span class='co'>#&gt; | | +-crayon</span>
+<span class='co'>#&gt; | | +-ellipsis</span>
 <span class='co'>#&gt; | | +-fansi</span>
+<span class='co'>#&gt; | | +-lifecycle</span>
 <span class='co'>#&gt; | | +-rlang</span>
-<span class='co'>#&gt; | | +-utf8 1.1.4 [new][dl] (215.31 kB)</span>
-<span class='co'>#&gt; | | \-vctrs 0.3.1 [new][dl] (1.18 MB)</span>
+<span class='co'>#&gt; | | +-utf8 1.1.4 [new][dl] (195.28 kB)</span>
+<span class='co'>#&gt; | | \-vctrs 0.3.2 [new]</span>
 <span class='co'>#&gt; | |   +-ellipsis</span>
 <span class='co'>#&gt; | |   +-digest</span>
 <span class='co'>#&gt; | |   +-glue</span>
 <span class='co'>#&gt; | |   \-rlang</span>
-<span class='co'>#&gt; | +-pkgconfig 2.0.3 [new][dl] (22.17 kB)</span>
+<span class='co'>#&gt; | +-pkgconfig 2.0.3 [new][dl] (17.63 kB)</span>
 <span class='co'>#&gt; | +-rlang</span>
 <span class='co'>#&gt; | \-vctrs</span>
-<span class='co'>#&gt; \-uuid 0.1-4 [new][dl] (33.61 kB)</span>
+<span class='co'>#&gt; \-uuid 0.1-4 [new][dl] (27.75 kB)</span>
 <span class='co'>#&gt; </span>
 <span class='co'>#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span>
 </pre>
@@ -244,9 +240,9 @@ local::~/works/shiny
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package downloads</h3>
 
 
-<p>Downloading all dependencies of a package:<div class="r"></p><pre><span class='kw'>pdl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_download_proposal.html'>new_pkg_download_proposal</a></span>(<span class='st'>"r-lib/cli"</span>)
-<span class='kw'>pdl</span><span class='op'>$</span><span class='fu'>resolve</span>()
-<span class='kw'>pdl</span><span class='op'>$</span><span class='fu'>download</span>()
+<p>Downloading all dependencies of a package:<div class="r"></p><pre><span class='va'>pdl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_download_proposal.html'>new_pkg_download_proposal</a></span><span class='op'>(</span><span class='st'>"r-lib/cli"</span><span class='op'>)</span>
+<span class='va'>pdl</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdl</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
 <p>See the <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> class for
 details.</p>
@@ -254,19 +250,15 @@ details.</p>
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package installation</h3>
 
 
-<p>Installing or updating a set of package:<div class="r"></p><pre><span class='kw'>lib</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>()
-<span class='kw'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_installation_proposal.html'>new_pkg_installation_proposal</a></span>(
+<p>Installing or updating a set of package:<div class="r"></p><pre><span class='va'>lib</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_installation_proposal.html'>new_pkg_installation_proposal</a></span><span class='op'>(</span>
   <span class='st'>"r-lib/cli"</span>,
-  config = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(library = <span class='kw'>lib</span>)
-)
-<span class='kw'>pdi</span><span class='op'>$</span><span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span>()
-<span class='kw'>pdi</span><span class='op'>$</span><span class='fu'>download</span>()
-<span class='kw'>pdi</span><span class='op'>$</span><span class='fu'>install</span>()
-</pre><p></div></p><pre><span class='co'>#&gt; Installed: 5</span>
-<span class='co'>#&gt; Build time:  5.5s</span>
-<span class='co'>#&gt; Intall time: 599ms</span>
-</pre>
-
+  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='va'>lib</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>install</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
 
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Dependency resolution</h3>
 
@@ -340,7 +332,7 @@ developers</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -9,8 +9,7 @@ progress_chars <- function() {
       lpar = "\u2e28",
       rpar = "\u2e29",
       fill = "\u2588",
-      half = "\u2592",
-      space = "\u00a0"
+      half = "\u2592"
     )
 
   } else {
@@ -20,8 +19,7 @@ progress_chars <- function() {
       lpar = "(",
       rpar = ")",
       fill = "#",
-      half = "-",
-      space = " "
+      half = "-"
     )
   }
 }
@@ -65,8 +63,8 @@ res__show_progress_bar <- function(self, private) {
   spinner <- make_progress_spinner(self, private)
   msg <- make_trailing_progress_msg(self, private)
 
+  # TODO: check width
   str <- "{bar} {state} {spinner} {msg}"
-  str <- gsub(" ", private$bar$chars$space, str)
   cli_status_update(private$bar$status, str)
 }
 
@@ -76,25 +74,16 @@ make_bar <- function(chars, p, width =  15) {
   w <- if (isTRUE(all.equal(p, 1))) width else trunc(width * p)
 
   pchars <- rep(chars$fill, w)
-  xchars <- rep(chars$space, max(width - w, 0))
+  xchars <- rep(" ", max(width - w, 0))
   bar <- paste(
     c(chars$lpar, pchars, xchars, chars$rpar),
     collapse = "")
 
-  ## This is a workaround for an RStudio bug:
-  ## https://github.com/rstudio/rstudio/issues/2387
-  ## This has been fixed, but there is another bug as well:
-  ## https://github.com/rstudio/rstudio/issues/7278
-  if (rstudio$detect()$type == "rstudio_console") {
-    bar
-  } else {
-    crayon::green(bar)
-  }
+  if (is_older_rstudio()) bar else crayon::green(bar)
 }
 
 make_progress_main <- function(deps, done, total) {
-  ## https://github.com/rstudio/rstudio/issues/7278 bites again
-  if (rstudio$detect()$type == "rstudio_console") {
+  if (is_older_rstudio()) {
     bggrey <- fgdark <- function(x) x
   } else {
     bggrey <- crayon::make_style("grey", bg = TRUE)

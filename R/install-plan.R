@@ -63,6 +63,8 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
                                  num_workers = 1) {
 
   start <- Sys.time()
+  cli::ansi_hide_cursor()
+  on.exit(cli::ansi_show_cursor())
 
   required_columns <- c(
     "type", "binary", "dependencies", "file", "needscompilation", "package"

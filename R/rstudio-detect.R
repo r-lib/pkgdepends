@@ -160,7 +160,11 @@ rstudio <- local({
     )
   }
 
-  get_caps <- function(data, type = data$type) caps[[type]](data)
+  get_caps <- function(data, type = data$type) {
+    ret <- caps[[type]](data)
+    ret$version <- data$ver
+    ret
+  }
 
   structure(
     list(

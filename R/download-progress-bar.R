@@ -253,7 +253,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 #' @importFrom prettyunits pretty_bytes pretty_dt
 
 pkgplan__show_progress_bar <- function(bar) {
-  if (!isTRUE(getOption("pkg.show_progress", FALSE))) {
+  if (!isTRUE(getOption("pkg.show_progress", TRUE))) {
     return()
   }
 
@@ -264,13 +264,11 @@ pkgplan__show_progress_bar <- function(bar) {
   # Ready to update. We can't use the package emoji because its
   # width is not calculated properly
   str <- paste0(
-    "{bar$chars$space}{parts$rate} {parts$line}{bar$chars$space}{parts$percent} ",
+    " {parts$rate} {parts$line} {parts$percent} ",
     "| {parts$pkg_done}/{parts$pkg_total} pkg{?s} ",
     if (!is.na(parts$bytes_total)) "| ETA {parts$eta} ",
     "| {parts$msg}"
   )
-
-  str <- gsub(" ", bar$chars$space, str)
 
   bar$events <- list()
   cli_status_update(bar$status, str)

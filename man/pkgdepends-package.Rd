@@ -60,52 +60,54 @@ See \link[=pkg_refs]{“Package references”} for details.
 Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
-}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.0.7.9000 [new][bld][cmp][dl] (unknown size)
-#> +-assertthat 0.2.1 [new][dl] (54.98 kB)
-#> +-callr 3.4.3 [new][dl] (390.40 kB)
-#> | +-processx 3.4.2 [new][dl] (428.13 kB)
-#> | | +-ps 1.3.3 [new][dl] (333.41 kB)
-#> | | \-R6 2.4.1 [new][dl] (59.31 kB)
+}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.1.0.9000 [new][bld][cmp][dl] (unknown size)
+#> +-assertthat 0.2.1 [new][dl] (52.47 kB)
+#> +-callr 3.4.3 [new][dl] (389.41 kB)
+#> | +-processx 3.4.3 [new][dl] (277.66 kB)
+#> | | +-ps 1.3.3 [new][dl] (215.85 kB)
+#> | | \-R6 2.4.1 [new][dl] (57.31 kB)
 #> | \-R6
-#> +-cli 2.0.2 [new][dl] (397.89 kB)
+#> +-cli 2.0.2 [new][dl] (393.96 kB)
 #> | +-assertthat
-#> | +-crayon 1.3.4 [new][dl] (749.89 kB)
-#> | +-glue 1.4.1 [new][dl] (154.03 kB)
-#> | \-fansi 0.4.1 [new][dl] (223.88 kB)
-#> +-curl 4.3 [new][dl] (4.13 MB)
-#> +-digest 0.6.25 [new][dl] (249.47 kB)
-#> +-filelock 1.0.2 [new][dl] (39.80 kB)
+#> | +-crayon 1.3.4 [new][dl] (748.25 kB)
+#> | +-glue 1.4.1 [new][dl] (138.38 kB)
+#> | \-fansi 0.4.1 [new][dl] (210.40 kB)
+#> +-curl 4.3 [new][dl] (741.06 kB)
+#> +-digest 0.6.25 [new][dl] (245.67 kB)
+#> +-filelock 1.0.2 [new][dl] (26.67 kB)
 #> +-glue
-#> +-prettyunits 1.1.1 [new][dl] (37.68 kB)
+#> +-prettyunits 1.1.1 [new][dl] (34.79 kB)
 #> +-R6
 #> +-processx
-#> +-rappdirs 0.3.1 [new][dl] (87.24 kB)
-#> +-rlang 0.4.6 [new][dl] (1.13 MB)
-#> +-tibble 3.0.1 [new][dl] (411.98 kB)
+#> +-rappdirs 0.3.1 [new][dl] (145.56 kB)
+#> +-rlang 0.4.7 [new]
+#> +-tibble 3.0.3 [new]
 #> | +-cli
 #> | +-crayon
-#> | +-ellipsis 0.3.1 [new][dl] (45.93 kB)
+#> | +-ellipsis 0.3.1 [new][dl] (33.48 kB)
 #> | | \-rlang
 #> | +-fansi
-#> | +-lifecycle 0.2.0 [new][dl] (101.70 kB)
+#> | +-lifecycle 0.2.0 [new][dl] (91.64 kB)
 #> | | +-glue
 #> | | \-rlang
-#> | +-magrittr 1.5 [new][dl] (157.57 kB)
-#> | +-pillar 1.4.4 [new][dl] (186.10 kB)
+#> | +-magrittr 1.5 [new][dl] (152.51 kB)
+#> | +-pillar 1.4.6 [new]
 #> | | +-cli
 #> | | +-crayon
+#> | | +-ellipsis
 #> | | +-fansi
+#> | | +-lifecycle
 #> | | +-rlang
-#> | | +-utf8 1.1.4 [new][dl] (215.31 kB)
-#> | | \-vctrs 0.3.1 [new][dl] (1.18 MB)
+#> | | +-utf8 1.1.4 [new][dl] (195.28 kB)
+#> | | \-vctrs 0.3.2 [new]
 #> | |   +-ellipsis
 #> | |   +-digest
 #> | |   +-glue
 #> | |   \-rlang
-#> | +-pkgconfig 2.0.3 [new][dl] (22.17 kB)
+#> | +-pkgconfig 2.0.3 [new][dl] (17.63 kB)
 #> | +-rlang
 #> | \-vctrs
-#> \-uuid 0.1-4 [new][dl] (33.61 kB)
+#> \-uuid 0.1-4 [new][dl] (27.75 kB)
 #> 
 #> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 }
@@ -134,10 +136,7 @@ pdi <- new_pkg_installation_proposal(
 pdi$solve()
 pdi$download()
 pdi$install()
-}\if{html}{\out{</div>}}\preformatted{#> Installed: 5
-#> Build time:  5.5s
-#> Intall time: 599ms
-}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Dependency resolution}{

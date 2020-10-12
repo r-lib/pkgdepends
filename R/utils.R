@@ -442,3 +442,15 @@ strrep <- function(x, times) {
 is_windows <- function() {
   identical(tolower(Sys.info()[["sysname"]]), "windows")
 }
+
+# This is a workaround for some RStudio bugs:
+# https://github.com/r-lib/pkginstall/issues/42
+# https://github.com/rstudio/rstudio/issues/2387
+# https://github.com/rstudio/rstudio/issues/7278
+
+is_older_rstudio <- function() {
+  rs <- rstudio$detect()
+  rs$type == "rstudio_console" &&
+    !is.null(rs$version) &&
+    rs$version <= "1.4.800"
+}

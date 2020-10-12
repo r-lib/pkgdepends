@@ -22,10 +22,14 @@ create_progress_bar <- function(state) {
   } else {
     bar$status <- cli_status(character(), .auto_close = FALSE)
   }
+
+  bar$simple <- is_older_rstudio()
+
   bar
 }
 
 #' @importFrom cli cli_status_update
+#' @importFrom crayon col_nchar
 
 update_progress_bar <- function(state, tick = 0) {
   if (!isTRUE(getOption("pkg.show_progress", TRUE))) {
@@ -42,24 +46,25 @@ update_progress_bar <- function(state, tick = 0) {
 
   chars <- progress_chars()
 
-## This is a workaround for an RStudio bug:
-  ## https://github.com/r-lib/pkginstall/issues/42
-  ## https://github.com/rstudio/rstudio/issues/7278
-  pp <- if (rstudio$detect()$type == "rstudio_console") {
-    function(x) gsub(" ", chars$space, crayon::strip_style(x), fixed = TRUE)
+  xbar <- make_install_bar(installed / total, built/total, width =  15)
+  xbuilt  <- make_progress_block(state, chars$build, built, total, building)
+  xinst <- make_progress_block(state, chars$inst, installed, total, installing)
+  xmsg <- make_install_trailing_progress_msg(state)
+
+  w <- cli::console_width()
+  v1 <- paste0(xbuilt, " | ", xinst, " | ")
+  v2 <- paste0(xbar, " | ", v1)
+  v3 <- paste0(v2, xmsg)
+  if (col_nchar(v3, type = "width") <= w) {
+    st <- v3
+  } else if (col_nchar(v2, type = "width") <= w) {
+    st <- v2
   } else {
-    function(x) gsub(" ", chars$space, x, fixed = TRUE)
+    st <- v1
   }
 
-  xbar <- pp(make_install_bar(installed / total, built/total, width =  15))
-  xbuilt  <- pp(make_progress_block(state, chars$build, built, total, building))
-  xinst <- pp(make_progress_block(state, chars$inst, installed, total, installing))
-  xmsg <- pp(make_install_trailing_progress_msg(state))
-
-  cli_status_update(
-    state$bar$status,
-    gsub(" ", chars$space, "{xbar} | {xbuilt} | {xinst} | {xmsg}")
-  )
+  if (state$progress$simple) st <- crayon::strip_style(st)
+  cli_status_update(state$progress$status, st)
 }
 
 ## p1 <= p2 must hold
@@ -77,14 +82,7 @@ make_install_bar <- function(p1, p2, width) {
   bar <- paste(
     c(chars$lpar, p1chars, p2chars, xchars, chars$rpar), collapse = "")
 
-  ## This is a workaround for an RStudio bug:
-  ## https://github.com/r-lib/pkginstall/issues/42
-  if (Sys.getenv("RSTUDIO", "") == "" ||
-      Sys.getenv("RSTUDIO_TERM", "") != "") {
-    crayon::green(bar)
-  } else {
-    bar
-  }
+  if (is_older_rstudio()) bar else crayon::green(bar)
 }
 
 make_progress_block <- function(state, sym, done, total, prog) {

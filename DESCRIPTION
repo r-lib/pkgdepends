@@ -21,7 +21,7 @@ Roxygen: list(
     roclets = c("collate", "namespace", "roxygenlabs::roxygenlabs_rd"))
 Imports:
     callr (>= 3.3.1),
-    cli (>= 2.1.0),
+    cli (>= 2.0.2.9000),
     crayon,
     curl,
     desc (>= 1.2.0),

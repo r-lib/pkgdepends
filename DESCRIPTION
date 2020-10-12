@@ -42,6 +42,8 @@ Imports:
     utils,
     withr (>= 2.1.1),
     zip (>= 2.1.0)
+Remotes:
+    r-lib/cli
 Suggests:
     asciicast,
     covr,

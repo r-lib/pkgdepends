@@ -320,13 +320,31 @@ get_worker_id <- (function() {
   }
 })()
 
+get_rtools_path <- function() {
+  if (!is.null(pkgd_data$rtools_path)) return(pkgd_data$rtools_path)
+  pkgd_data$rtools_path <- pkgbuild::without_cache({
+    if (suppressMessages(pkgbuild::has_rtools())) {
+      gsub("/", "\\", pkgbuild::rtools_path(), fixed = TRUE)
+    }
+  })
+  pkgd_data$rtools_path
+}
+
 make_build_process <- function(path, tmp_dir, lib, vignettes,
                                needscompilation, binary) {
 
   # For windows, we need ensure the zip.exe bundled with the zip package is on the PATH
   if (is_windows()) {
     zip_tool_path <- asNamespace("zip")$get_tool("zip")
-    withr::local_path(paste0(dirname(zip_tool_path), .Platform$path.sep, Sys.getenv("PATH")))
+    rtools <- get_rtools_path()
+    withr::local_path(
+      paste0(
+        dirname(zip_tool_path),
+        .Platform$path.sep,
+        if (!is.null(rtools)) paste0(rtools, .Platform$path.sep),
+        Sys.getenv("PATH")
+      )
+    )
   }
 
   ## with_libpath() is needed for newer callr, which forces the current

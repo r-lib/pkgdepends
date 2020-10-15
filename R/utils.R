@@ -1,5 +1,5 @@
 
-repoman_data <- new.env(parent = emptyenv())
+pkgd_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
@@ -44,11 +44,11 @@ str_trim <- function(x) {
 #' @importFrom utils installed.packages
 
 base_packages <- function() {
-  if (is.null(repoman_data$base_packages)) {
-    repoman_data$base_packages <-
+  if (is.null(pkgd_data$base_packages)) {
+    pkgd_data$base_packages <-
       rownames(installed.packages(priority = "base"))
   }
-  repoman_data$base_packages
+  pkgd_data$base_packages
 }
 
 lapply_with_names <- function(X, FUN, ...) {

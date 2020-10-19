@@ -114,7 +114,7 @@ new_input_error <- function(msg, package = NULL) {
 }
 
 new_fs_warning <- function(msg, package = NULL) {
-  cnd <- err$new_cnd(new_cnd_msg(msg, .envir = parent.frame()))
+  cnd <- err$new_cond(new_cnd_msg(msg, .envir = parent.frame()))
   cnd$package <- package
   class(cnd) <- c("install_filesystem_warning", "warning", class(cnd))
   cnd

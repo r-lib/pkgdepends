@@ -274,6 +274,26 @@ pkg_installation_proposal <- R6::R6Class(
 
     get_solution = function() private$plan$get_solution(),
 
+
+    #' @description
+    #' Show the solution on the screen.
+    #'
+    #' @return
+    #' A [pkg_solution_result] object, which is a list. See
+    #' [pkg_solution_result] for details.
+    #'
+    #' @examplesIf pkgdepends:::is_online()
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "r-lib/pkgdepends",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi$get_solution()
+    #' pdi$show_solution()
+
+    show_solution = function() private$plan$show_solution(),
+
     #' @description
     #' Error if the dependency solver failed to find a consistent set of
     #' packages that can be installed together.

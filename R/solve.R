@@ -529,6 +529,72 @@ pkgplan_get_solution <- function(self, private) {
   private$solution$result
 }
 
+#' Highlight version numbers
+#'
+#' @param sol Sultion data, data frame, with at least these columns:
+#' `type`, `package`, `old_version`, `version`, `lib_status`,
+#' `cache_status`, `platform`, `needscompilation`. Just what
+#' `$get_solution()$data` returns, basically.
+#' @return Character vector of highlighted list. All strings will have the
+#' same (printed) length. Packages that do not involve installation will
+#' have `NA` in the result.
+#'
+#' @noRd
+
+highlight_versions <- function(sol) {
+  arrow <- cli::symbol$arrow_right
+
+  ins <- sol$type != "installed" & sol$type != "deps"
+  sol <- sol[ins, ]
+
+  pkg <- format(sol$package)
+  old <- format(ifelse(is.na(sol$old_version), "", sol$old_version))
+  arr <- format(ifelse(is.na(sol$old_version), "", arrow))
+  new <- format(sol$version)
+
+  bld <- sol$lib_status %in% c("new", "update") & sol$platform == "source"
+  cmp <- sol$lib_status %in% c("new", "update") &
+    !is.na(sol$needscompilation) & sol$needscompilation
+  dnl <- !is.na(sol$cache_status) & sol$cache_status == "miss"
+
+  ann <- paste0(
+    ifelse(
+      bld, if (has_emoji()) emo_builder(sum(ins)) else emoji("builder"), ""),
+    ifelse(cmp, emoji("wrench"), ""),
+    ifelse(dnl, emoji("dl"), ""),
+    ifelse(dnl, paste0(" ", format_file_size(sol$filesize)), "")
+  )
+
+  lns <- paste0(pkg, " ", old, " ", arr, " ", new, " ", ann)
+
+  ret <- rep(NA_character_, length(ins))
+  ret[ins] <- lns
+
+  key <- paste0(c(
+    if (any(bld)) paste(emoji("builder"), "build"),
+    if (any(cmp)) paste(emoji("wrench"), "compile"),
+    if (any(dnl)) paste(emoji("dl"), "download")
+  ), collapse = " | ")
+
+  attr(ret, "key") <- paste("[", key, "]")
+  ret
+}
+
+pkgplan_show_solution <- function(self, private, key = FALSE) {
+  self$stop_for_solve_error()
+  sol <- self$get_solution()$data
+
+  hl <- highlight_versions(sol)
+  hl2 <- gsub(" ", "\u00a0", na.omit(hl))
+
+  if (length(hl)) {
+    cli::cli_ul(hl2)
+    if (key) cli::cli_verbatim(attr(hl, "key"))
+  }
+
+  invisible(self$get_solution())
+}
+
 pkgplan_install_plan <- function(self, private, downloads) {
   "!DEBUG creating install plan"
   sol <- if (downloads) {

@@ -14,7 +14,7 @@
 #' @param restore_times Whether to restore file modification times.
 #' @param post_process Function to call after the extraction.
 #' @return The [processx::process] object.
-#' @keywords internal
+#' @noRd
 
 make_untar_process <- function(tarfile, files = NULL, exdir = ".",
                                restore_times = TRUE, post_process = NULL) {
@@ -38,7 +38,7 @@ make_untar_process <- function(tarfile, files = NULL, exdir = ".",
 #' is used.
 #'
 #' @return Whether we need to use the internal tar implementation.
-#' @keywords internal
+#' @noRd
 
 need_internal_tar <- local({
   internal <- NULL
@@ -70,7 +70,7 @@ need_internal_tar <- local({
 #' @description
 #' Uses the system's `tar` program, in a background process.
 #'
-#' @keywords internal
+#' @noRd
 
 external_untar_process <- R6::R6Class(
   "external_untar_process",
@@ -128,7 +128,7 @@ external_untar_process <- R6::R6Class(
 #' Uses [utils::untar()], in a background process.
 #'
 #' @importFrom callr r_process_options
-#' @keywords internal
+#' @noRd
 
 r_untar_process <- R6::R6Class(
   "r_untar_process",

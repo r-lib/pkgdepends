@@ -80,7 +80,7 @@
 #' In the first 3 seconds we use all the available data.
 #'
 #' @name pkgdepends-download-progress-bar
-#' @keywords internal
+#' @noRd
 NULL
 
 #' @importFrom cli get_spinner cli_status qty
@@ -165,7 +165,7 @@ pkgplan__initial_pb_message <- function(bar) {
 #'   then it is set to zero. At the end of the download we also get
 #'   `"done"`, and on error `"error"`.
 #'
-#' @keywords internal
+#' @noRd
 #' @importFrom cli cli_alert_success cli_alert_danger
 
 pkgplan__update_progress_bar <- function(bar, idx, event, data) {
@@ -248,7 +248,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 #'
 #' @param bar The progress bar object.
 #'
-#' @keywords internal
+#' @noRd
 #' @importFrom glue glue_collapse
 #' @importFrom prettyunits pretty_bytes pretty_dt
 

@@ -38,7 +38,7 @@ standard_rx <- function(remote_name = "standard") {
 #'
 #' Based on <https://github.com/shinnn/github-username-regex>
 #'
-#' @keywords internal
+#' @noRd
 
 github_username_rx <- function() {
   "(?<username>(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))"

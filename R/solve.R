@@ -617,7 +617,7 @@ pkgplan_show_solution <- function(self, private, key = FALSE) {
   hl <- highlight_package_list(sol)
   hl2 <- na.omit(hl)
 
-  if (length(hl)) {
+  if (length(hl2)) {
     hl2 <- paste0(crayon::silver("+ "), hl2)
     if (key && attr(hl, "key") != "") hl2 <- c(hl2, " ", attr(hl, "key"))
     out <- paste(hl2, collapse = "\n")

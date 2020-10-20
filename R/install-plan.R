@@ -66,6 +66,14 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
   cli::ansi_hide_cursor()
   on.exit(cli::ansi_show_cursor())
 
+  cli::cli_div(
+    theme = list(".timestamp" = list(
+      color = "darkgrey",
+      before = "(",
+      after = ")"
+    ))
+  )
+
   required_columns <- c(
     "type", "binary", "dependencies", "file", "needscompilation", "package"
   )
@@ -703,11 +711,10 @@ print.pkginstall_result <- function(x, ...) {
   inst_time <- sum(unlist(x$install_time), na.rm = TRUE)
 
   res <- c(
-    "DONE",
-    if (newly) paste0(emoji("sparkles"), " ", newly),
-    if (upd)   paste0(emoji("rocket"), " ", upd),
-    if (noupd + curr) paste0(emoji("hand"), " ", noupd + curr),
-    if (nrow(x) > 1) emoji("pkgs") else emoji("pkg"),
+    "Summary:",
+    if (newly) paste0(emoji("sparkles", ""), " ", newly, " new"),
+    if (upd)   paste0(emoji("rocket", ""), " ", upd, " updated"),
+    if (noupd + curr) paste0(emoji("hand", ""), " ", noupd + curr, " kept"),
     paste0("in ", pretty_sec(build_time + inst_time))
   )
 

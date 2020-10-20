@@ -124,18 +124,18 @@ format_file_size <- function(x) {
   )
 }
 
-emoji <- function(what) {
+emoji <- function(what, alt = NULL) {
   emo <- has_emoji()
   switch(
     what,
-    "rocket"   = if (emo) "\U1F680" else "[upd]",
-    "sparkles" = if (emo) "\u2728"  else "[new]",
-    "hand"     = if (emo) "\u270B"  else "[old]",
-    "dl"       = if (emo) " \u2B07"  else "[dl]",
-    "builder"  = if (emo) emo_builder() else "[bld]",
-    "wrench"   = if (emo) "\U1F527" else "[cmp]",
-    "pkg"      = if (emo) "\U1F4E6" else "pkg",
-    "pkgs"     = if (emo) "\U1F4E6" else "pkgs",
+    "rocket"   = if (emo) "\U1F680" else alt %||% "[upd]",
+    "sparkles" = if (emo) "\u2728"  else alt %||% "[new]",
+    "hand"     = if (emo) "\u270B"  else alt %||% "[old]",
+    "dl"       = if (emo) " \u2B07"  else alt %||% "[dl]",
+    "builder"  = if (emo) emo_builder() else alt %||% "[bld]",
+    "wrench"   = if (emo) "\U1F527" else alt %||% "[cmp]",
+    "pkg"      = if (emo) "\U1F4E6" else alt %||% "pkg",
+    "pkgs"     = if (emo) "\U1F4E6" else alt %||% "pkgs",
     ""
   )
 }

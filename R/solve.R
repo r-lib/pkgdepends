@@ -529,7 +529,36 @@ pkgplan_get_solution <- function(self, private) {
   private$solution$result
 }
 
-#' Highlight version numbers
+#' Highlight version number changes
+#'
+#' @param old Character vector, old versions. `NA` for new installs.
+#' @param new Character vector, the new versions to highlight.
+#' @return Character vector, like `new`, but the change highlighted
+#'
+#' @noRd
+#' @importFrom cli style_bold
+
+highlight_version <- function(old, new) {
+  if (length(old) != length(new)) stop("`old` and `new` length must match")
+  if (length(new) == 0) return(new)
+
+  wch <- !is.na(old) & old != new
+
+  oldv <- strsplit(old[wch], "(?=[.-])", perl = TRUE)
+  newv <- strsplit(new[wch], "(?=[.-])", perl = TRUE)
+  new[wch] <- mapply(oldv, newv, FUN = function(o, n) {
+    length(o) <- length(n) <- max(length(o), length(n))
+    idx <- which(is.na(o) | is.na(n) | (o != n & o != "." & o != "-"))[1]
+    paste0(
+      if (idx > 1) paste(n[1:(idx-1)], collapse = ""),
+      style_bold(paste(n[idx:length(n)]), collapse = "")
+    )
+  })
+
+  new
+}
+
+#' Highlight package list
 #'
 #' @param sol Sultion data, data frame, with at least these columns:
 #' `type`, `package`, `old_version`, `version`, `lib_status`,
@@ -540,18 +569,18 @@ pkgplan_get_solution <- function(self, private) {
 #' have `NA` in the result.
 #'
 #' @noRd
-#' @importFrom cli symbol
+#' @importFrom cli symbol col_blue
 
-highlight_versions <- function(sol) {
+highlight_package_list <- function(sol) {
   arrow <- symbol$arrow_right
 
   ins <- sol$type != "installed" & sol$type != "deps"
   sol <- sol[ins, ]
 
-  pkg <- col_align(sol$package)
+  pkg <- col_align(col_blue(sol$package))
   old <- col_align(ifelse(is.na(sol$old_version), "", sol$old_version))
   arr <- col_align(ifelse(is.na(sol$old_version), "", arrow))
-  new <- col_align(sol$version)
+  new <- col_align(highlight_version(sol$old_version, sol$version))
 
   bld <- sol$lib_status %in% c("new", "update") & sol$platform == "source"
   cmp <- sol$lib_status %in% c("new", "update") &
@@ -577,7 +606,7 @@ highlight_versions <- function(sol) {
     if (any(dnl)) paste(emoji("dl"), "download")
   ), collapse = " | ")
 
-  attr(ret, "key") <- paste("[", key, "]")
+  attr(ret, "key") <-  if (key == "") "" else paste("[", key, "]")
   ret
 }
 
@@ -585,12 +614,12 @@ pkgplan_show_solution <- function(self, private, key = FALSE) {
   self$stop_for_solve_error()
   sol <- self$get_solution()$data
 
-  hl <- highlight_versions(sol)
+  hl <- highlight_package_list(sol)
   hl2 <- na.omit(hl)
 
   if (length(hl)) {
-    hl2 <- paste0("+ ", hl2)
-    if (key) hl2 <- c(hl2, key)
+    hl2 <- paste0(crayon::silver("+ "), hl2)
+    if (key && attr(hl, "key") != "") hl2 <- c(hl2, " ", attr(hl, "key"))
     out <- paste(hl2, collapse = "\n")
     cli::cli_verbatim(hl2)
   }

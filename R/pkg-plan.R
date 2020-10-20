@@ -37,8 +37,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_stop_for_solve_error(self, private),
     get_solution = function()
       pkgplan_get_solution(self, private),
-    show_solution = function()
-      pkgplan_show_solution(self, private),
+    show_solution = function(key = FALSE)
+      pkgplan_show_solution(self, private, key),
     get_install_plan = function()
       pkgplan_install_plan(self, private, downloads = TRUE),
     export_install_plan = function(plan_file = stdout())

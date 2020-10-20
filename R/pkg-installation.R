@@ -278,6 +278,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' @description
     #' Show the solution on the screen.
     #'
+    #' @param key Whether to show the key to the package list annotation.
     #' @return
     #' A [pkg_solution_result] object, which is a list. See
     #' [pkg_solution_result] for details.
@@ -292,7 +293,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$get_solution()
     #' pdi$show_solution()
 
-    show_solution = function() private$plan$show_solution(),
+    show_solution = function(key = FALSE) private$plan$show_solution(key),
 
     #' @description
     #' Error if the dependency solver failed to find a consistent set of

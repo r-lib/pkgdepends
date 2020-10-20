@@ -1,4 +1,5 @@
 cli
+cloneable
 devtools
 HOWTO
 ILP
@@ -9,5 +10,4 @@ RStudio
 SHA
 Shorthands
 tibble
-un
-uncompress
+Uncompress

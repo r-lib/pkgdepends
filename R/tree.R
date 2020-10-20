@@ -173,5 +173,5 @@ emo_builder <- function(n = 1) {
     ppl <- c(base, tone, gend)
   }
 
-  paste(sample(ppl, n, replace = TRUE), collapse = "")
+  sample(ppl, n, replace = TRUE)
 }

@@ -540,17 +540,18 @@ pkgplan_get_solution <- function(self, private) {
 #' have `NA` in the result.
 #'
 #' @noRd
+#' @importFrom cli symbol
 
 highlight_versions <- function(sol) {
-  arrow <- cli::symbol$arrow_right
+  arrow <- symbol$arrow_right
 
   ins <- sol$type != "installed" & sol$type != "deps"
   sol <- sol[ins, ]
 
-  pkg <- format(sol$package)
-  old <- format(ifelse(is.na(sol$old_version), "", sol$old_version))
-  arr <- format(ifelse(is.na(sol$old_version), "", arrow))
-  new <- format(sol$version)
+  pkg <- col_align(sol$package)
+  old <- col_align(ifelse(is.na(sol$old_version), "", sol$old_version))
+  arr <- col_align(ifelse(is.na(sol$old_version), "", arrow))
+  new <- col_align(sol$version)
 
   bld <- sol$lib_status %in% c("new", "update") & sol$platform == "source"
   cmp <- sol$lib_status %in% c("new", "update") &
@@ -585,11 +586,13 @@ pkgplan_show_solution <- function(self, private, key = FALSE) {
   sol <- self$get_solution()$data
 
   hl <- highlight_versions(sol)
-  hl2 <- gsub(" ", "\u00a0", na.omit(hl))
+  hl2 <- na.omit(hl)
 
   if (length(hl)) {
-    cli::cli_ul(hl2)
-    if (key) cli::cli_verbatim(attr(hl, "key"))
+    hl2 <- paste0("+ ", hl2)
+    if (key) hl2 <- c(hl2, key)
+    out <- paste(hl2, collapse = "\n")
+    cli::cli_verbatim(hl2)
   }
 
   invisible(self$get_solution())

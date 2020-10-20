@@ -529,6 +529,105 @@ pkgplan_get_solution <- function(self, private) {
   private$solution$result
 }
 
+#' Highlight version number changes
+#'
+#' @param old Character vector, old versions. `NA` for new installs.
+#' @param new Character vector, the new versions to highlight.
+#' @return Character vector, like `new`, but the change highlighted
+#'
+#' @noRd
+#' @importFrom cli style_bold
+
+highlight_version <- function(old, new) {
+  if (length(old) != length(new)) stop("`old` and `new` length must match")
+  if (length(new) == 0) return(new)
+
+  wch <- !is.na(old) & old != new
+
+  oldv <- strsplit(old[wch], "(?=[.-])", perl = TRUE)
+  newv <- strsplit(new[wch], "(?=[.-])", perl = TRUE)
+  new[wch] <- mapply(oldv, newv, FUN = function(o, n) {
+    length(o) <- length(n) <- max(length(o), length(n))
+    idx <- which(is.na(o) | is.na(n) | (o != n & o != "." & o != "-"))[1]
+    n <- na.omit(n)
+    paste0(
+      if (idx > 1) paste(n[1:(idx-1)], collapse = ""),
+      style_bold(paste(n[idx:length(n)]), collapse = "")
+    )
+  })
+
+  new
+}
+
+#' Highlight package list
+#'
+#' @param sol Sultion data, data frame, with at least these columns:
+#' `type`, `package`, `old_version`, `version`, `lib_status`,
+#' `cache_status`, `platform`, `needscompilation`. Just what
+#' `$get_solution()$data` returns, basically.
+#' @return Character vector of highlighted list. All strings will have the
+#' same (printed) length. Packages that do not involve installation will
+#' have `NA` in the result.
+#'
+#' @noRd
+#' @importFrom cli symbol col_blue
+
+highlight_package_list <- function(sol) {
+  arrow <- symbol$arrow_right
+
+  ins <- sol$type != "installed" & sol$type != "deps"
+  sol <- sol[ins, ]
+
+  pkg <- col_align(col_blue(sol$package))
+  old <- col_align(ifelse(is.na(sol$old_version), "", sol$old_version))
+  arr <- col_align(ifelse(is.na(sol$old_version), "", arrow))
+  new <- col_align(highlight_version(sol$old_version, sol$version))
+
+  bld <- sol$lib_status %in% c("new", "update") & sol$platform == "source"
+  cmp <- sol$lib_status %in% c("new", "update") &
+    !is.na(sol$needscompilation) & sol$needscompilation
+  dnl <- !is.na(sol$cache_status) & sol$cache_status == "miss"
+
+  ann <- paste0(
+    ifelse(
+      bld, if (has_emoji()) emo_builder(sum(ins)) else emoji("builder"), ""),
+    ifelse(cmp, emoji("wrench"), ""),
+    ifelse(dnl, emoji("dl"), ""),
+    ifelse(dnl, paste0(" ", format_file_size(sol$filesize)), "")
+  )
+
+  lns <- paste0(pkg, " ", old, " ", arr, " ", new, " ", ann)
+
+  ret <- rep(NA_character_, length(ins))
+  ret[ins] <- lns
+
+  key <- paste0(c(
+    if (any(bld)) paste(emoji("builder"), "build"),
+    if (any(cmp)) paste(emoji("wrench"), "compile"),
+    if (any(dnl)) paste(emoji("dl"), "download")
+  ), collapse = " | ")
+
+  attr(ret, "key") <-  if (key == "") "" else paste("[", key, "]")
+  ret
+}
+
+pkgplan_show_solution <- function(self, private, key = FALSE) {
+  self$stop_for_solve_error()
+  sol <- self$get_solution()$data
+
+  hl <- highlight_package_list(sol)
+  hl2 <- na.omit(hl)
+
+  if (length(hl2)) {
+    hl2 <- paste0(crayon::silver("+ "), hl2)
+    if (key && attr(hl, "key") != "") hl2 <- c(hl2, " ", attr(hl, "key"))
+    out <- paste(hl2, collapse = "\n")
+    cli::cli_verbatim(hl2)
+  }
+
+  invisible(self$get_solution())
+}
+
 pkgplan_install_plan <- function(self, private, downloads) {
   "!DEBUG creating install plan"
   sol <- if (downloads) {

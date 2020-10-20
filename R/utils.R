@@ -454,3 +454,9 @@ is_older_rstudio <- function() {
     !is.null(rs$version) &&
     rs$version <= "1.4.800"
 }
+
+col_align <- function(text, align = c("left", "center", "right")) {
+  if (length(text) == 0) return(text)
+  width <- max(crayon::col_nchar(text, type = "width"))
+  crayon::col_align(text, align = align, width = width)
+}

@@ -125,6 +125,16 @@ pdi$solve()
 pdi$get_solution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+pdi <- new_pkg_installation_proposal(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$get_solution()
+pdi$show_solution()
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # This is an error, because the packages conflict:
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
@@ -205,6 +215,7 @@ pdi
 \item \href{#method-set_solve_policy}{\code{pkg_installation_proposal$set_solve_policy()}}
 \item \href{#method-solve}{\code{pkg_installation_proposal$solve()}}
 \item \href{#method-get_solution}{\code{pkg_installation_proposal$get_solution()}}
+\item \href{#method-show_solution}{\code{pkg_installation_proposal$show_solution()}}
 \item \href{#method-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
 \item \href{#method-draw}{\code{pkg_installation_proposal$draw()}}
 \item \href{#method-download}{\code{pkg_installation_proposal$download()}}
@@ -507,6 +518,42 @@ A \link{pkg_solution_result} object, which is a list. See
 pdi$resolve()
 pdi$solve()
 pdi$get_solution()
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-show_solution"></a>}}
+\if{latex}{\out{\hypertarget{method-show_solution}{}}}
+\subsection{Method \code{show_solution()}}{
+Show the solution on the screen.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$show_solution(key = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{key}}{Whether to show the key to the package list annotation.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \link{pkg_solution_result} object, which is a list. See
+\link{pkg_solution_result} for details.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{pdi <- new_pkg_installation_proposal(
+  "r-lib/pkgdepends",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$get_solution()
+pdi$show_solution()
 }
 \if{html}{\out{</div>}}
 

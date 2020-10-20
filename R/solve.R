@@ -549,6 +549,7 @@ highlight_version <- function(old, new) {
   new[wch] <- mapply(oldv, newv, FUN = function(o, n) {
     length(o) <- length(n) <- max(length(o), length(n))
     idx <- which(is.na(o) | is.na(n) | (o != n & o != "." & o != "-"))[1]
+    n <- na.omit(n)
     paste0(
       if (idx > 1) paste(n[1:(idx-1)], collapse = ""),
       style_bold(paste(n[idx:length(n)]), collapse = "")

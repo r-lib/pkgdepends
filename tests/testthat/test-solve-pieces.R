@@ -91,6 +91,15 @@ test_that("pkgplan_i_lp_dependencies", {
   )
 })
 
+test_that("pkgplan_i_lp_rversion", {
+  pkgs <- read_fixture("resolution-progress.rds")
+  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  lp <- pkgplan_i_lp_rversion(lp, "3.1.3")
+  fmt <- format(lp)
+  expect_true(any(grepl("`rlang` needs a newer R version", fmt, fixed = TRUE)))
+  expect_true(any(grepl("`vctrs` needs a newer R version", fmt, fixed = TRUE)))
+})
+
 test_that("highlight_version", {
   local_colors()
   b <- cli::style_bold

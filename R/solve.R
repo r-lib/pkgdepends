@@ -110,8 +110,9 @@ pkgplan_solve <- function(self, private, policy) {
 
   metadata <- list(solution_start = Sys.time())
   pkgs <- self$get_resolution()
+  rversion <- private$config$`r-version`
 
-  prb <- private$create_lp_problem(pkgs, policy)
+  prb <- private$create_lp_problem(pkgs, policy, rversion)
   sol <- private$solve_lp_problem(prb)
 
   if (sol$status != 0) {
@@ -156,8 +157,9 @@ pkgplan_stop_for_solve_error <- function(self, private) {
   }
 }
 
-pkgplan__create_lp_problem <- function(self, private, pkgs, policy) {
-  pkgplan_i_create_lp_problem(pkgs, policy)
+pkgplan__create_lp_problem <- function(self, private, pkgs, policy,
+                                       rversion) {
+  pkgplan_i_create_lp_problem(pkgs, policy, rversion)
 }
 
 ## Add a condition, for a subset of variables, with op and rhs
@@ -178,7 +180,7 @@ pkgplan_i_lp_add_cond <- function(
 ## * 1:num are candidates
 ## * (num+1):(num+num_direct_pkgs) are the relax variables for direct refs
 
-pkgplan_i_create_lp_problem <- function(pkgs, policy) {
+pkgplan_i_create_lp_problem <- function(pkgs, policy, rversion) {
   "!DEBUG creating LP problem"
 
   ## TODO: we could already rule out (standard) source packages if binary
@@ -194,6 +196,7 @@ pkgplan_i_create_lp_problem <- function(pkgs, policy) {
   lp <- pkgplan_i_lp_failures(lp)
   lp <- pkgplan_i_lp_prefer_installed(lp)
   lp <- pkgplan_i_lp_prefer_binaries(lp)
+  lp <- pkgplan_i_lp_rversion(lp, rversion)
   lp <- pkgplan_i_lp_dependencies(lp)
 
   lp
@@ -306,6 +309,31 @@ pkgplan_i_lp_satisfy_direct <-  function(lp) {
     }
   }
   lapply(seq_len(lp$num_candidates)[lp$pkgs$direct], satisfy)
+
+  lp
+}
+
+pkgplan_i_lp_rversion <- function(lp, rversion) {
+  rversion <- package_version(rversion)
+  pkgs <- lp$pkgs
+  num_candidates <- lp$num_candidates
+  ruled_out <- lp$ruled_out
+  base <- base_packages()
+
+  depconds <- function(wh) {
+    if (pkgs$status[wh] != "OK") return()
+    deps <- pkgs$deps[[wh]]
+    deps <- deps[! deps$ref %in% base, ]
+    if (! "R" %in% deps$ref) return()
+    needrver <- deps$version[deps$ref == "R"]
+    if (any(rversion < needrver)) {
+      lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
+                                   type = "bad-rversion")
+      lp$ruled_out <<- c(lp$ruled_out, wh)
+    }
+  }
+
+  lapply(setdiff(seq_len(num_candidates), ruled_out), depconds)
 
   lp
 }
@@ -457,6 +485,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "ok-resolution") {
     ref <- x$pkgs$ref[cond$vars]
     glue("`{ref}` resolution failed")
+
+  } else if (cond$type == "bad-rversion") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` needs a newer R version")
 
   } else if (cond$type == "prefer-installed") {
     ref <- x$pkgs$ref[cond$vars]

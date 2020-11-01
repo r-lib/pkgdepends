@@ -80,8 +80,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_download_res(self, private, res, which, on_progress),
     subset_resolution = function(which)
       pkgplan__subset_resolution(self, private, which),
-    create_lp_problem = function(pkgs, policy)
-      pkgplan__create_lp_problem(self, private, pkgs, policy),
+    create_lp_problem = function(pkgs, policy, rversion)
+      pkgplan__create_lp_problem(self, private, pkgs, policy, rversion),
     solve_lp_problem = function(problem)
       pkgplan__solve_lp_problem(self, private, problem),
 

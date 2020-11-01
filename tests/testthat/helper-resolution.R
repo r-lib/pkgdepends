@@ -52,8 +52,10 @@ make_fake_resolution <- function(...) {
   res
 }
 
-describe_fake_error <- function(pkgs, policy = "lazy") {
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = policy)
+describe_fake_error <- function(pkgs, policy = "lazy",
+                                rversion = getRversion()) {
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = policy,
+                                    rversion = rversion)
   sol <- pkgplan_i_solve_lp_problem(lp)
 
   expect_true(sol$objval >= solve_dummy_obj - 1)

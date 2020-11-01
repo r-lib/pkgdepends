@@ -51,6 +51,14 @@ base_packages <- function() {
   pkgd_data$base_packages
 }
 
+recommended_packages <- function() {
+  if (is.null(pkgd_data$recommended_packages)) {
+    pkgd_data$recommended_packages <-
+      rownames(installed.packages(.Library, priority = "recommended"))
+  }
+  pkgd_data$recommended_packages
+}
+
 lapply_with_names <- function(X, FUN, ...) {
   structure(
     lapply(X, FUN, ...),

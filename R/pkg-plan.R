@@ -122,6 +122,14 @@ pkgplan_init <- function(self, private, refs, config, library,
   }
   mkdirp(private$download_cache <- private$config$cache_dir)
 
+  installed <- NULL
+  if (!is.null(library)) {
+    installed <- merge_installed_caches(
+      make_installed_cache(library),
+      make_installed_cache(.Library, priority = "recommended")
+    )
+  }
+
   private$cache <- list(
     metadata = pkgcache::cranlike_metadata_cache$new(
       replica_path = private$config$metadata_cache_dir,
@@ -129,7 +137,7 @@ pkgplan_init <- function(self, private, refs, config, library,
       r_version = private$config$`r-versions`,
       cran_mirror = private$config$`cran-mirror`),
     package = pkgcache::package_cache$new(private$config$package_cache_dir),
-    installed = if (!is.null(library)) make_installed_cache(library)
+    installed = installed
   )
 
   private$dirty <- TRUE

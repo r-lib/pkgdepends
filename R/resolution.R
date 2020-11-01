@@ -219,7 +219,10 @@ res_init <- function(self, private, config, cache, library,
       npkgs <- value$package[value$type != "installed"]
       ## Installed already? Resolve that as well
       if (!is.null(private$library) && length(npkgs)) {
-        npkgs <- npkgs[file.exists(file.path(private$library, npkgs))]
+        ml <- file.exists(file.path(private$library, npkgs))
+        rc <- file.exists(file.path(.Library, npkgs)) &
+          npkgs %in% recommended_packages()
+        npkgs <- npkgs[ml | rc]
         if (length(npkgs))  {
           lib <- normalizePath(private$library, winslash = "/",
                                mustWork = FALSE)

@@ -47,7 +47,7 @@ type_installed_rx <- function() {
   )
 }
 
-make_installed_cache <- function(library, packages = NULL) {
+make_installed_cache <- function(library, packages = NULL, priority = NULL) {
   pkgs <- packages %||% list.files(library, pattern = "^[a-zA-Z]")
   meta <- drop_nulls(lapply_with_names(pkgs, function(pkg) {
     tryCatch(
@@ -68,6 +68,12 @@ make_installed_cache <- function(library, packages = NULL) {
   ret <- matrix(NA_character_, nrow = length(meta), ncol = length(fields))
   colnames(ret) <- tolower(fields)
   for (i in seq_along(meta)) ret[i,] <- meta[[i]]$DESCRIPTION[fields]
+
+  if (!is.null(priority)) {
+    keep <- ret[, "priority"] %in% priority
+    ret <- ret[keep, , drop = FALSE]
+    meta <- meta[keep]
+  }
 
   pkgs <- as_tibble(ret)
 
@@ -95,6 +101,15 @@ make_installed_cache <- function(library, packages = NULL) {
     deps[,-(1:2)], factor(deps$idx, levels = seq_len(nrow(pkgs))))
   pkgs$deps <- unname(pkgs_deps)
   list(pkgs = pkgs, deps = deps)
+}
+
+merge_installed_caches <- function(c1, c2) {
+  newdeps <- c2$deps
+  newdeps$idx <- newdeps$idx + nrow(c1$pkgs)
+  list(
+    pkgs = rbind_expand(c1$pkgs, c2$pkgs),
+    deps = rbind(c1$deps, newdeps)
+  )
 }
 
 #' Status of packages in a library

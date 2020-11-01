@@ -546,15 +546,15 @@ highlight_version <- function(old, new) {
 
   oldv <- strsplit(old[wch], "(?=[.-])", perl = TRUE)
   newv <- strsplit(new[wch], "(?=[.-])", perl = TRUE)
-  new[wch] <- mapply(oldv, newv, FUN = function(o, n) {
+  new[wch] <- as.character(mapply(oldv, newv, FUN = function(o, n) {
     length(o) <- length(n) <- max(length(o), length(n))
     idx <- which(is.na(o) | is.na(n) | (o != n & o != "." & o != "-"))[1]
     n <- na.omit(n)
     paste0(
       if (idx > 1) paste(n[1:(idx-1)], collapse = ""),
-      style_bold(paste(n[idx:length(n)]), collapse = "")
+      if (idx <= length(n)) style_bold(paste(n[idx:length(n)]), collapse = "")
     )
-  })
+  }))
 
   new
 }

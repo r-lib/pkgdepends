@@ -45,10 +45,12 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
   if (resolution$direct) {
     if (candidate$type == "installed") {
       type <- candidate$extra[[1]]$repotype %||% "unknown"
+      remotetype <- candidate$extra[[1]]$remotetype %||% "unknown"
     } else {
       type <- candidate$type
+      remotetype <- "unknown"
     }
-    if (!type %in% c("cran", "bioc", "standard")) {
+    if (!type %in% c("cran", "bioc", "standard") && remotetype != "standard") {
       return(structure(FALSE, reason = "User requested CRAN package"))
     }
   }

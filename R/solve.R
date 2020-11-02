@@ -191,12 +191,13 @@ pkgplan_i_create_lp_problem <- function(pkgs, policy, rversion) {
 
   lp <- pkgplan_i_lp_init(pkgs, policy)
   lp <- pkgplan_i_lp_objectives(lp)
-  lp <- pkgplan_i_lp_no_multiples(lp)
-  lp <- pkgplan_i_lp_satisfy_direct(lp)
   lp <- pkgplan_i_lp_failures(lp)
+  lp <- pkgplan_i_lp_no_multiples(lp)
+  lp <- pkgplan_i_lp_rversion(lp, rversion)
+  lp <- pkgplan_i_lp_satisfy_direct(lp)
+  lp <- pkgplan_i_lp_latest_direct(lp)
   lp <- pkgplan_i_lp_prefer_installed(lp)
   lp <- pkgplan_i_lp_prefer_binaries(lp)
-  lp <- pkgplan_i_lp_rversion(lp, rversion)
   lp <- pkgplan_i_lp_dependencies(lp)
 
   lp
@@ -309,6 +310,34 @@ pkgplan_i_lp_satisfy_direct <-  function(lp) {
     }
   }
   lapply(seq_len(lp$num_candidates)[lp$pkgs$direct], satisfy)
+
+  lp
+}
+
+## Order matters. By the time this is called, the failed resolutions
+## are ruled out, and R version requirements are also checked.
+## So we only work with the packages that are not ruled out, and select
+## the latest version. This cannot be ruled out later, only because of
+## version requirements, but then it is up to the user to solve this.
+
+pkgplan_i_lp_latest_direct <- function(lp) {
+  pkgs <- lp$pkgs
+  dirpkgs <- unique(lp$pkgs$package[lp$pkgs$direct])
+  for (pkg in dirpkgs) {
+    cand <- which(
+      pkgs$package == pkg &
+      pkgs$type %in% c("cran", "bioc", "standard")
+    )
+    cand <- setdiff(cand, lp$ruled_out)
+    vers <- package_version(pkgs$version[cand])
+    bad <- vers < max(vers)
+    for (wh in cand[bad]) {
+      lp <- pkgplan_i_lp_add_cond(
+        lp, wh, op = "==", rhs = 0, type = "direct-update"
+      )
+    }
+    lp$ruled_out <- c(lp$ruled_out, cand[bad])
+  }
 
   lp
 }
@@ -489,6 +518,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "bad-rversion") {
     ref <- x$pkgs$ref[cond$vars]
     glue("`{ref}` needs a newer R version")
+
+  } else if (cond$type == "direct-update") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` is direct, needs latest version")
 
   } else if (cond$type == "prefer-installed") {
     ref <- x$pkgs$ref[cond$vars]

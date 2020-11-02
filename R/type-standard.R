@@ -42,16 +42,22 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
   ## 2. if this is a direct ref, then it has to be a CRAN or
   ## bioc package. If the candidate is an installed package, we
   ## need to check where it was installed from.
+  ## Also, an installed package is only accepted if it is not older,
+  ## for direct refs.
   if (resolution$direct) {
     if (candidate$type == "installed") {
-      type <- candidate$extra[[1]]$repotype %||% "unknown"
-      remotetype <- candidate$extra[[1]]$remotetype %||% "unknown"
+      type <- candidate$extra[[1]][["repotype"]] %||% "unknown"
+      remotetype <- candidate$extra[[1]][["remotetype"]] %||% "unknown"
     } else {
       type <- candidate$type
       remotetype <- "unknown"
     }
     if (!type %in% c("cran", "bioc", "standard") && remotetype != "standard") {
       return(structure(FALSE, reason = "User requested CRAN package"))
+    }
+    if (candidate$type == "installed" &&
+        package_version(resolution$version) > candidate$version) {
+      return(structure(FALSE, reason = "Direct ref needs update"))
     }
   }
 

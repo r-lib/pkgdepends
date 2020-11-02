@@ -52,7 +52,15 @@ satisfy_remote_bioc <- function(resolution, candidate,
     return(structure(FALSE, reason = "Package names differ"))
   }
 
-  ## 4. version requirements must be satisfied. Otherwise good.
+  ## 4. installed package must not be older for direct refs
+  if (resolution$direct) {
+    if (candidate$type == "installed" &&
+        package_version(resolution$version) > candidate$version) {
+      return(structure(FALSE, reason = "Direct ref needs update"))
+    }
+  }
+
+  ## 5. version requirements must be satisfied. Otherwise good.
   if (resolution$remote[[1]]$version == "") {
     return(TRUE)
   }

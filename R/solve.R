@@ -679,6 +679,7 @@ highlight_package_list <- function(sol) {
 pkgplan_show_solution <- function(self, private, key = FALSE) {
   self$stop_for_solve_error()
   sol <- self$get_solution()$data
+  sol <- sol[order(sol$package), ]
 
   hl <- highlight_package_list(sol)
   hl2 <- na.omit(hl)

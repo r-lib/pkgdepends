@@ -653,6 +653,10 @@ highlight_package_list <- function(sol) {
     !is.na(sol$needscompilation) & sol$needscompilation
   dnl <- !is.na(sol$cache_status) & sol$cache_status == "miss"
 
+  gh <- sol$type == "github"
+  hash <- character(nrow(sol))
+  hash[gh] <- vcapply(sol$extra[gh], function(x) x$remotesha %||% "")
+
   ann <- paste0(
     ifelse(
       bld, if (has_emoji()) emo_builder(sum(ins)) else emoji("builder"), ""),
@@ -662,7 +666,8 @@ highlight_package_list <- function(sol) {
       dnl & !is.na(sol$filesize),
       paste0(" ", format_file_size(sol$filesize)),
       ""
-    )
+    ),
+    ifelse(gh, paste0(" (GitHub: ", substr(hash, 1, 7), ")"), "")
   )
 
   lns <- paste0(pkg, " ", old, " ", arr, " ", new, " ", ann)

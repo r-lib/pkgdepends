@@ -114,14 +114,14 @@
 <div id="install" class="section level1">
 <h1 class="hasAnchor">
 <a href="#install" class="anchor"></a>Install</h1>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pkgdepends"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pkgdepends"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h1>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme">pkgdepends</a></span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme">pkgdepends</a></span><span class="op">)</span></code></pre></div>
 <div id="package-references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#package-references" class="anchor"></a>Package references</h2>
@@ -138,10 +138,10 @@
 <h2 class="hasAnchor">
 <a href="#package-dependencies" class="anchor"></a>Package dependencies</h2>
 <p>Dependencies of the development version of the cli package:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span>
 <span class="va">pd</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span>
-<span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></pre></div>
+<span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">#&gt; cli (1.9.9.9000)</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="co">#&gt; ├─assertthat (0.2.1)</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="co">#&gt; ├─crayon (1.3.4)</span></span>
@@ -170,25 +170,25 @@
 <h2 class="hasAnchor">
 <a href="#package-downloads" class="anchor"></a>Package downloads</h2>
 <p>Downloading all dependencies of a package:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">pdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_pkg_download_proposal.html">new_pkg_download_proposal</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_pkg_download_proposal.html">new_pkg_download_proposal</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span>
 <span class="va">pdl</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span>
-<span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></pre></div>
+<span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>See the <a href="TODO"><code>pkg_download_proposal</code></a> class for details.</p>
 </div>
 <div id="package-installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#package-installation" class="anchor"></a>Package installation</h2>
 <p>Installing or updating a set of package:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">pdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_pkg_installation_proposal.html">new_pkg_installation_proposal</a></span><span class="op">(</span>
   <span class="st">"r-lib/cli"</span>,
   config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="va">lib</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="va">pdi</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span>
 <span class="va">pdi</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span>
-<span class="va">pdi</span><span class="op">$</span><span class="fu">install</span><span class="op">(</span><span class="op">)</span></pre></div>
+<span class="va">pdi</span><span class="op">$</span><span class="fu">install</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">#&gt; Your system is ready to build packages!</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="co">#&gt; Your system is ready to build packages!</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a></span>

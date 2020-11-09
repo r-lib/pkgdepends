@@ -47,7 +47,9 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
   if (resolution$direct) {
     if (candidate$type == "installed") {
       type <- candidate$extra[[1]][["repotype"]] %||% "unknown"
+      if (is.na(type)) type <- "unknown"
       remotetype <- candidate$extra[[1]][["remotetype"]] %||% "unknown"
+      if (is.na(remotetype)) remotetype <- "unknown"
     } else {
       type <- candidate$type
       remotetype <- "unknown"

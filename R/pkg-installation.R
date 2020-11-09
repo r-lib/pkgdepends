@@ -451,7 +451,8 @@ pkg_installation_proposal <- R6::R6Class(
         if (!has_sol) "(use `$solve()` to solve dependencies)",
         if (has_sol && !sol_err && !has_dls)
           "(use `$download()` to download packages)",
-        if (has_sol) "(use `$get_solution()` to see solution results)",
+        if (has_sol) "(use `$show_solution()` to see the packages to install",
+        if (has_sol) "(use `$get_solution()` to see the full solution results)",
         if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)",
         if (has_dls) "(use `$get_downloads()` to get download data)",
         if (has_dls) "(use `$get_install_plan()` to get the installation plan)",

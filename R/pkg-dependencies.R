@@ -247,7 +247,8 @@ pkg_deps <- R6::R6Class(
         if (!has_res) "(use `$resolve()` to resolve dependencies)",
         if (has_res) "(use `$get_resolution()` to see resolution results)",
         if (!has_sol) "(use `$solve()` to solve dependencies)",
-        if (has_sol) "(use `$get_solution()` to see solution results)",
+        if (has_sol) "(use `$show_solution()` to see the dependencies",
+        if (has_sol) "(use `$get_solution()` to see the full solution results)",
         if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)"
         )
     },

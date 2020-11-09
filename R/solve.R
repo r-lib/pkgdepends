@@ -658,7 +658,11 @@ highlight_package_list <- function(sol) {
       bld, if (has_emoji()) emo_builder(sum(ins)) else emoji("builder"), ""),
     ifelse(cmp, emoji("wrench"), ""),
     ifelse(dnl, emoji("dl"), ""),
-    ifelse(dnl, paste0(" ", format_file_size(sol$filesize)), "")
+    ifelse(
+      dnl & !is.na(sol$filesize),
+      paste0(" ", format_file_size(sol$filesize)),
+      ""
+    )
   )
 
   lns <- paste0(pkg, " ", old, " ", arr, " ", new, " ", ann)

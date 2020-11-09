@@ -357,7 +357,7 @@ pkgplan_i_lp_rversion <- function(lp, rversion) {
     needrver <- deps$version[deps$ref == "R"]
     if (any(rversion < needrver)) {
       lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
-                                   type = "bad-rversion")
+                                   type = "bad-rversion", note = needrver)
       lp$ruled_out <<- c(lp$ruled_out, wh)
     }
   }
@@ -837,15 +837,17 @@ describe_solution_error <- function(pkgs, solution) {
 
   ## For each candidate, we work out if it _could_ be installed, and if
   ## not, why not. Possible cases:
-  ## 1. it is is in the install plan, so it can be installed, YES
+  ## 1. it is in the install plan, so it can be installed, YES
   ## 2. it failed resolution, so NO
-  ## 3. it does not satisfy a direct ref for the same package, so NO
-  ## 4. it conflicts with another to-be-installed candidate of the
+  ## 3. it needs a newer R version, so NO
+  ## 4. it does not satisfy a direct ref for the same package, so NO
+  ## 5. it conflicts with another to-be-installed candidate of the
   ##    same package, so NO
-  ## 5. one of its (downstream) dependencies cannot be installed, so NO
-  ## 6. otherwise YES
+  ## 6. one of its (downstream) dependencies cannot be installed, so NO
+  ## 7. otherwise YES
 
-  FAILS <- c("failed-res", "satisfy-direct", "conflict", "dep-failed")
+  FAILS <- c("failed-res", "satisfy-direct", "conflict", "dep-failed",
+             "bad-rversion")
 
   state <- rep("maybe-good", num)
   note <- replicate(num, NULL)
@@ -863,6 +865,14 @@ describe_solution_error <- function(pkgs, solution) {
     if (length(e <- pkgs$error[[fv]])) {
       note[[fv]] <- c(note[[fv]], conditionMessage(e))
     }
+  }
+
+  ## Candidates that need a newer R version
+  for (w in which(typ == "bad-rversion")) {
+    sv <- var[[w]]
+    needs <- cnd[[w]]$note
+    state[sv] <- "bad-rversion"
+    note[[sv]] <- c(note[[sv]], glue("Needs R {needs}"))
   }
 
   ## Candidates that conflict with a direct package

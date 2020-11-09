@@ -183,3 +183,54 @@ test_that("failure in dependency of a non-needed package is ignored", {
   expect_true(sol$objval < 1e4)
   expect_equal(as.logical(sol$solution), as.logical(c(1, 1, 0, 1, 0)))
 })
+
+test_that("failure if package needs newer R version", {
+  pkgs <- make_fake_resolution(
+    `pkgA` = list(
+      version = "1.0.0",
+      direct = TRUE,
+      deps = list(make_fake_deps(Depends = "R (>= 1000.0)"))
+    ),
+    `pkgB` = list(
+      direct = TRUE,
+      deps = list(make_fake_deps(Imports = "pkgC"))
+    ),
+    `pkgC` = list()
+  )
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy", rversion = getRversion())
+  sol <- pkgplan_i_solve_lp_problem(lp)
+
+  solution <- list(status = "FAILED", data = NULL, problem = lp,
+                   solution = sol)
+  dsc <- describe_solution_error(pkgs, solution)
+  expect_equal(dsc$failure_type, c("bad-rversion"))
+
+  expect_equal(sol$status, 0)
+  expect_true(sol$objval >= solve_dummy_obj - 1L)
+  expect_equal(as.logical(sol$solution), c(FALSE, TRUE, TRUE, TRUE, FALSE))
+})
+
+test_that("failure if dependency needs newer R version", {
+  pkgs <- make_fake_resolution(
+    `pkgA` = list(
+      version = "1.0.0",
+      deps = list(make_fake_deps(Depends = "R (>= 1000.0)"))
+    ),
+    `pkgB` = list(
+      direct = TRUE,
+      deps = list(make_fake_deps(Imports = "pkgA (>= 1.0.0), pkgC"))
+    ),
+    `pkgC` = list()
+  )
+  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy", rversion = getRversion())
+  sol <- pkgplan_i_solve_lp_problem(lp)
+
+  solution <- list(status = "FAILED", data = NULL, problem = lp,
+                   solution = sol)
+  dsc <- describe_solution_error(pkgs, solution)
+  expect_equal(dsc$failure_type, c("bad-rversion", "dep-failed"))
+
+  expect_equal(sol$status, 0)
+  expect_true(sol$objval >= solve_dummy_obj - 1L)
+  expect_equal(as.logical(sol$solution), c(FALSE, FALSE, FALSE, TRUE))
+})

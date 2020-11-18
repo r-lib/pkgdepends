@@ -960,11 +960,11 @@ format.pkg_solution_failures <- function(x, ...) {
     done[i] <<- TRUE
     msgs <- unique(fails$failure_message[[i]])
 
-    fail <- paste0("* ", crayon::bold(fails$ref[i]))
+    fail <- paste0("* ", crayon::bold(fails$ref[i]), ":")
     if (length(msgs) == 1) {
-      fail <- paste0(fail, ": ", msgs)
+      fail <- paste0(fail, " ", msgs)
     } else {
-      fail <- paste0(fail, ".\n", paste0("  * ", msgs, "\n"))
+      fail <- paste0(fail, "\n", paste0("  * ", msgs, collapse = "\n"))
     }
 
     res <<- c(res, fail)

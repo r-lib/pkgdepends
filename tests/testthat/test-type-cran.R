@@ -57,8 +57,7 @@ test_that("failed resolution", {
                         dependencies = FALSE))
 
   expect_true(all(res$status == "FAILED"))
-  expect_match(conditionMessage(res$error[[1]]),
-               "Cannot find standard ref")
+  expect_match(conditionMessage(res$error[[1]]), "Can't find package")
 
   ## Existing package, non-existing version
 
@@ -89,7 +88,7 @@ test_that("failed resolution, multiple", {
 
   expect_true("FAILED" %in% res$status)
   err <- res$error[res$ref != "cran::crayon"][[1]]
-  expect_match(conditionMessage(err), "Cannot find standard ref")
+  expect_match(conditionMessage(err), "Can't find package")
 
 })
 

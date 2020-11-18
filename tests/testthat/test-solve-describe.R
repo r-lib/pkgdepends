@@ -31,7 +31,7 @@ test_that("failed resolution", {
   expect_equal(dsc$direct, TRUE)
   expect_equal(dsc$status, "FAILED")
   expect_equal(dsc$failure_type, "failed-res")
-  expect_match(dsc$failure_message[[1]], "Cannot find standard ref")
+  expect_match(dsc$failure_message[[1]], "Can't find package")
 })
 
 test_that("failed resolution of a dependency", {

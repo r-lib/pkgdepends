@@ -881,7 +881,7 @@ describe_solution_error <- function(pkgs, solution) {
     down <- pkgs$ref[sv]
     up <- pkgs$ref[cnd[[w]]$note]
     state[sv] <- "satisfy-direct"
-    note[[sv]] <- c(note[[sv]], glue("Conflicts {up}"))
+    note[[sv]] <- c(note[[sv]], glue("Conflicts with {up}"))
   }
 
   ## Find "conflict". These are candidates that are not installed,
@@ -897,7 +897,7 @@ describe_solution_error <- function(pkgs, solution) {
       for (v in vv) {
         note[[v]] <- c(
           note[[v]],
-          glue("{pkgs$ref[v]} conflict with {inst}, to be installed"))
+          glue("{pkgs$ref[v]} conflicts with {inst}, to be installed"))
       }
     }
   }
@@ -913,7 +913,7 @@ describe_solution_error <- function(pkgs, solution) {
     pkg <- cnd[type_dep][[x]]$note$ref
     state[dep_up[x]] <- "dep-failed"
     note[[ dep_up[x] ]] <-
-      c(note[[ dep_up[x] ]], glue("Cannot install dependency {pkg}"))
+      c(note[[ dep_up[x] ]], glue("Can't install dependency {pkg}"))
     downstream[[ dep_up[x] ]] <- c(downstream[[ dep_up[x] ]], pkg)
   }
 
@@ -927,7 +927,7 @@ describe_solution_error <- function(pkgs, solution) {
       pkg <- cnd[type_dep][[x]]$note$ref
       state[ dep_up[x] ] <- "dep-failed"
       note[[ dep_up[x] ]] <- c(
-        note[[ dep_up[x] ]], glue("Cannot install dependency {pkg}"))
+        note[[ dep_up[x] ]], glue("Can't install dependency {pkg}"))
       downstream[[ dep_up[x] ]] <- c(downstream[[ dep_up[x] ]], pkg)
     }
     new <- dep_up[which_new]
@@ -959,12 +959,15 @@ format.pkg_solution_failures <- function(x, ...) {
     if (done[i]) return()
     done[i] <<- TRUE
     msgs <- unique(fails$failure_message[[i]])
-    res <<- c(
-      res, paste0(
-             glue("  x Cannot install `{fails$ref[i]}`."),
-             if (length(msgs)) paste0("\n    - ", msgs)
-           )
-    )
+
+    fail <- paste0("* ", crayon::bold(fails$ref[i]))
+    if (length(msgs) == 1) {
+      fail <- paste0(fail, ": ", msgs)
+    } else {
+      fail <- paste0(fail, ".\n", paste0("  * ", msgs, "\n"))
+    }
+
+    res <<- c(res, fail)
     down <- which(fails$ref %in% fails$failure_down[[i]])
     lapply(down, do)
   }

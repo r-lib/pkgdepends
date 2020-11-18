@@ -436,34 +436,26 @@ new_github_query_error <- function(rem, response, obj, call. = NULL) {
 # No such user/org
 
 new_github_nouser_error <- function(rem, obj, call. = NULL) {
-  ghmsgs <- sub("\\.?$", ".", vcapply(obj$errors, "[[", "message"))
-  ghmsg <- grep("Could not resolve to a User", ghmsgs, value = TRUE)[1]
-  msg <- glue(
-    "Cannot resolve GitHub repo `{rem$username}/{rem$repo}`. ",
-    "{ghmsg}"
+  new_github_error(
+    "Can't find GitHub user {rem$username}.",
+    call. = call.
   )
-  new_github_error(msg, call. = call.)
 }
 
 # No such repo
 
 new_github_norepo_error <- function(rem, obj, call. = NULL) {
-  ghmsgs <- sub("\\.?$", ".", vcapply(obj$errors, "[[", "message"))
-  ghmsg <- grep("Could not resolve to a Repository", ghmsgs, value = TRUE)[1]
-  msg <- glue(
-    "Cannot resolve GitHub repo `{rem$username}/{rem$repo}`. ",
-    "{ghmsg}"
+  new_github_error(
+    glue("Can't find GitHub repo {rem$username}/{rem$repo}."),
+    call. = call.
   )
-  new_github_error(msg, call. = call.)
 }
-
 # Not an R package?
 
 new_github_no_package_error <- function(rem, call. = NULL) {
-  subdir <- rem$subdir %&z&% paste0(", in directory `", rem$subdir, "`")
+  subdir <- rem$subdir %&z&% paste0(" in directory '", rem$subdir, "'")
   msg <- glue(
-    "Cannot find R package in GitHub repo ",
-    "`{rem$username}/{rem$repo}`{subdir}"
+    "Can't find R package in GitHub repo {rem$username}/{rem$repo}{subdir}"
   )
   new_github_error(msg, call. = call.)
 }
@@ -482,29 +474,24 @@ new_github_badpat_error <- function(call. = NULL) {
 new_github_baddesc_error <- function(rem, call. = NULL) {
   subdir <- rem$subdir %&z&% paste0(", in directory `", rem$subdir, "`")
   msg <- glue(
-    "Cannot parse DESCRIPTION file in GitHub repo ",
-    "`{rem$username}/{rem$repo}`{subdir}"
+    "Can't parse DESCRIPTION file in GitHub repo {rem$username}/{rem$repo}`{subdir}"
   )
-  new_github_error(msg)
+  new_github_error(msg, call. = call.)
 }
 
 # No such PR
 
 new_github_nopr_error <- function(rem, obj, call. = NULL) {
-  msg <- glue(
-    "Cannot find pull request #{rem$pull} at repo ",
-    "`{rem$username}/{rem$repo}`"
-  )
-  new_github_error(msg)
+  msg <- glue("Can't find PR #{rem$pull} in GitHub repo {rem$username}/{rem$repo}")
+  new_github_error(msg, call. = call.)
 }
 
 # No such branch/tag/ref
 
 new_github_noref_error <- function(rem, call. = NULL) {
   ref <- rem$commitish %|z|% "HEAD"
-  msg <- glue("Cannot find branch/tag/commit `{ref}` in ",
-              "GitHub repo `{rem$username}/{rem$repo}`.")
-  new_github_error(msg)
+  msg <- glue("Can't find reference @{ref} in GitHub repo {rem$username}/{rem$repo}.")
+  new_github_error(msg, call. = call.)
 }
 
 # Rate limited

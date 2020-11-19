@@ -418,10 +418,10 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; + config:
-#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp5DoQ4x/file8b4649eff39
-#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp5DoQ4x/file8b43c0745ed
+#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpVI4euJ/filea251e93856a
+#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpVI4euJ/filea253e8fd31c
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp5DoQ4x/file8b417fe965
+#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpVI4euJ/filea25546cf35a
 #&gt;   - platforms: macos, source
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
@@ -429,40 +429,40 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt;   - build-vignettes: FALSE</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found <span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                          </span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 86 x 27</span><span>
+</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 83 x 27</span><span>
 #&gt;    ref   type  direct directpkg status package version license needscompilation
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>           
 #&gt; </span><span style='color: #555555;'> 1</span><span> R6    stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
 #&gt; </span><span style='color: #555555;'> 2</span><span> asse… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #555555;'> 3</span><span> back… stan… FALSE  FALSE     OK     backpo… 1.2.0   GPL-2 … FALSE           
-#&gt; </span><span style='color: #555555;'> 4</span><span> base… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … FALSE           
-#&gt; </span><span style='color: #555555;'> 5</span><span> callr stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 6</span><span> cli   stan… FALSE  FALSE     OK     cli     2.1.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 7</span><span> clia… stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 8</span><span> cray… stan… FALSE  FALSE     OK     crayon  1.3.4   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 9</span><span> curl  stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'>10</span><span> desc  stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'># … with 76 more rows, and 18 more variables: priority </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, md5sum </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'> 3</span><span> base… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … FALSE           
+#&gt; </span><span style='color: #555555;'> 4</span><span> callr stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 5</span><span> cli   stan… FALSE  FALSE     OK     cli     2.1.0   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 6</span><span> clia… stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 7</span><span> cray… stan… FALSE  FALSE     OK     crayon  1.3.4   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 8</span><span> curl  stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 9</span><span> desc  stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'>10</span><span> dige… stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
+#&gt; </span><span style='color: #555555;'># … with 73 more rows, and 18 more variables: priority </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, md5sum </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   sha256 </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, filesize </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, built </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, platform </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rversion </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   repodir </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, target </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, deps </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, mirror </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT to the env var </span><span style='color: #000000;background-color: #BBBBBB;'>`GITHUB_PAT`</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠙] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠹] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠸] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 69 x 27</span><span>
+</div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT to the env var </span><span style='color: #000000;background-color: #BBBBBB;'>`GITHUB_PAT`</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠙] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 67 x 27</span><span>
 #&gt;    ref   type  direct directpkg status package version license needscompilation
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>           
 #&gt; </span><span style='color: #555555;'> 1</span><span> r-li… gith… TRUE   TRUE      OK     pkgdep… 0.0.0.… MIT + … TRUE            
 #&gt; </span><span style='color: #555555;'> 2</span><span> R6    stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
 #&gt; </span><span style='color: #555555;'> 3</span><span> asse… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #555555;'> 4</span><span> back… stan… FALSE  FALSE     OK     backpo… 1.2.0   GPL-2 … FALSE           
-#&gt; </span><span style='color: #555555;'> 5</span><span> callr stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 6</span><span> cli   stan… FALSE  FALSE     OK     cli     2.1.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 7</span><span> cray… stan… FALSE  FALSE     OK     crayon  1.3.4   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 8</span><span> curl  stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 9</span><span> desc  stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'>10</span><span> dige… stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
-#&gt; </span><span style='color: #555555;'># … with 59 more rows, and 18 more variables: priority </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, md5sum </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'> 4</span><span> callr stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 5</span><span> cli   stan… FALSE  FALSE     OK     cli     2.1.0   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 6</span><span> cray… stan… FALSE  FALSE     OK     crayon  1.3.4   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 7</span><span> curl  stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 8</span><span> desc  stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
+#&gt; </span><span style='color: #555555;'> 9</span><span> dige… stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
+#&gt; </span><span style='color: #555555;'>10</span><span> elli… stan… FALSE  FALSE     OK     ellips… 0.3.1   GPL-3   FALSE           
+#&gt; </span><span style='color: #555555;'># … with 57 more rows, and 18 more variables: priority </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, md5sum </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   sha256 </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, filesize </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, built </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, platform </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rversion </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   repodir </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, target </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span style='color: #555555;'>, deps </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, mirror </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
@@ -474,21 +474,20 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + constraints (150):
+#&gt; + constraints (149):
 #&gt;   - select pkgdepends exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
-#&gt;   - select backports at most once
 #&gt;   - select callr at most once
 #&gt;   - select cli at most once
 #&gt;   - select crayon at most once
 #&gt;   - select curl at most once
 #&gt;   - select desc at most once
 #&gt;   - select digest at most once
+#&gt;   - select ellipsis at most once
 #&gt;   ...
 #&gt; + solution:
 #&gt;   - assertthat
-#&gt;   - backports
 #&gt;   - callr
 #&gt;   - cli
 #&gt;   - crayon
@@ -529,21 +528,20 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - pkgload
-#&gt; + constraints (65):
+#&gt; + constraints (62):
 #&gt;   - select pkgload exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
-#&gt;   - select backports at most once
 #&gt;   - select callr at most once
 #&gt;   - select cli at most once
 #&gt;   - select crayon at most once
 #&gt;   - select desc at most once
 #&gt;   - select fansi at most once
 #&gt;   - select glue at most once
+#&gt;   - select pkgbuild at most once
 #&gt;   ...
 #&gt; + solution:
 #&gt;   - assertthat
-#&gt;   - backports
 #&gt;   - callr
 #&gt;   - cli
 #&gt;   - crayon
@@ -565,13 +563,13 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
   config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/2 </span><span> pkgs [⠋] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/2 </span><span> pkgs [⠙] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/2 </span><span> pkgs [⠹] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/2 </span><span> pkgs [⠸] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'>                                                      </span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/2 </span><span> pkgs [⠋] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 2 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/2 </span><span> pkgs [⠙] Resolving r-lib/pak</span></div><div class='output co'>#&gt; <span class='message'>                                                      </span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span>
 </div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
 #&gt; + refs:
 #&gt;   - r-lib/pak
 #&gt;   - cran::pak
-#&gt; + has resolution (+42 dependencies)
+#&gt; + has resolution (+41 dependencies)
 #&gt; + has solution
 #&gt; x has solution errors
 #&gt; (use `$get_resolution()` to see resolution results)
@@ -592,8 +590,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; │ ├─assertthat
 #&gt; │ ├─R6 </span><span style='color: #555555;'>2.5.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─crayon
-#&gt; │ └─rprojroot </span><span style='color: #555555;'>1.3-2</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(78.79 kB)</span><span>
-#&gt; │   └─backports </span><span style='color: #555555;'>1.2.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
+#&gt; │ └─rprojroot </span><span style='color: #555555;'>2.0.2</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; ├─pkgbuild </span><span style='color: #555555;'>1.1.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─callr </span><span style='color: #555555;'>3.5.1</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ │ ├─processx </span><span style='color: #555555;'>3.4.4</span><span> </span><span style='color: #00BB00;'>✨</span><span>
@@ -609,7 +606,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; │ └─withr </span><span style='color: #555555;'>2.3.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; ├─rlang </span><span style='color: #555555;'>0.4.8</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; ├─rprojroot
-#&gt; ├─rstudioapi </span><span style='color: #555555;'>0.11</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(254.97 kB)</span><span>
+#&gt; ├─rstudioapi </span><span style='color: #555555;'>0.13</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(271.96 kB)</span><span>
 #&gt; └─withr
 #&gt; 
 #&gt; Key:  </span><span style='color: #00BB00;'>✨</span><span> new | </span><span style='color: #00BB00;'> ⬇</span><span> download</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
@@ -620,11 +617,11 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; (use `$resolve()` to resolve dependencies)
 #&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠙] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠹] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠸] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='input'><span class='va'>pd</span>
+</div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'></span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 1 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 0/1 </span><span> pkgs [⠋] Resolving r-lib/pkgdepends</span></div><div class='output co'>#&gt; <span class='message'> Found </span><span style='color: #000000;background-color: #BBBBBB;'> 21 </span><span> deps for </span><span style='color: #000000;background-color: #BBBBBB;'> 1/1 </span><span> pkgs [⠙] Resolving standard (CRAN/BioC) packages</span></div><div class='output co'>#&gt; <span class='message'>                                                                           </span></div><div class='input'><span class='va'>pd</span>
 </div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + has resolution (+34 dependencies)
+#&gt; + has resolution (+33 dependencies)
 #&gt; (use `$get_resolution()` to see resolution results)
 #&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
@@ -632,7 +629,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + has resolution (+34 dependencies)
+#&gt; + has resolution (+33 dependencies)
 #&gt; + has solution
 #&gt; (use `$get_resolution()` to see resolution results)
 #&gt; (use `$show_solution()` to see the dependencies

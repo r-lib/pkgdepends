@@ -33,14 +33,14 @@ test_that("type_github_get_data, no such user", {
   rem <- parse_pkg_ref("r-lib-xxx-xxx/pak")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Could not resolve to a Repository .*r-lib-xxx-xxx.*",
+    "Can't find GitHub repo .*r-lib-xxx-xxx.*",
     class = "github_error"
   )
 
   rem <- parse_pkg_ref("r-lib-xxx-xxx/pak#90")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Could not resolve to a Repository .*r-lib-xxx-xxx.*",
+    "Can't find GitHub repo .*r-lib-xxx-xxx.*",
     class = "github_error"
   )
 })
@@ -51,14 +51,14 @@ test_that("type_github_get_data, no such repo", {
   rem <- parse_pkg_ref("r-lib/pak-xxx-xxx")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Repository with the name .*pak-xxx-xxx.*",
+    "GitHub repo .*pak-xxx-xxx.*",
     class = "github_error"
   )
 
   rem <- parse_pkg_ref("r-lib/pak-xxx-xxx#90")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Repository with the name .*pak-xxx-xxx.*",
+    "GitHub repo .*pak-xxx-xxx.*",
     class = "github_error"
   )
 })
@@ -112,7 +112,7 @@ test_that("github_query, access denied", {
   rem <- parse_pkg_ref("gaborcsardi/secret-test")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Repository with the name .*secret-test*",
+    "GitHub repo .*secret-test*",
     class = "github_error"
   )
 })
@@ -120,17 +120,24 @@ test_that("github_query, access denied", {
 test_that("cannot find R package on GitHub, no DESCRIPTION", {
   skip_if_offline()
 
+  rem <- parse_pkg_ref("tidyverse/tidyverse.org")
+  expect_error(
+    synchronise(type_github_get_data(rem)),
+    "Can't find R package in GitHub repo tidyverse/tidyverse.org",
+    class = "github_error"
+  )
+
   rem <- parse_pkg_ref("r-lib/crayon/R")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Cannot find R package in GitHub repo `r-lib/crayon`, in directory `R`",
+    "Can't find R package in GitHub repo r-lib/crayon in directory 'R'",
     class = "github_error"
   )
 
   rem <- parse_pkg_ref("r-lib/crayon/R#79")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Cannot find R package in GitHub repo `r-lib/crayon`, in directory `R`",
+    "Can't find R package in GitHub repo r-lib/crayon in directory 'R'",
     class = "github_error"
   )
 })
@@ -141,14 +148,14 @@ test_that("cannot parse DESCRIPTION on GH", {
   ref <- "r-lib/pkgdepends/tests/testthat/fixtures/bad-desc@f5a84c34f5"
   expect_error(
     synchronise(type_github_get_data(parse_pkg_ref(ref))),
-    "Cannot parse DESCRIPTION file in GitHub repo",
+    "Can't parse DESCRIPTION file in GitHub repo",
     class = "github_error"
   )
 
   ref <- "r-lib/pkgdepends/tests/testthat/fixtures/bad-desc#144"
   expect_error(
     synchronise(type_github_get_data(parse_pkg_ref(ref))),
-    "Cannot parse DESCRIPTION file in GitHub repo",
+    "Can't parse DESCRIPTION file in GitHub repo",
     class = "github_error"
   )
 })
@@ -170,7 +177,7 @@ test_that("no such PR error", {
   rem <- parse_pkg_ref("r-lib/pak#89")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    "Cannot find pull request #89 at repo",
+    "Can't find PR #89 in",
     class = "github_error"
   )
 })
@@ -179,9 +186,7 @@ test_that("no such ref error", {
   rem <- parse_pkg_ref("r-lib/pak@bad-ref-no-no-no")
   expect_error(
     synchronise(type_github_get_data(rem)),
-    paste0(
-      "Cannot find branch/tag/commit `bad-ref-no-no-no` ",
-      "in GitHub repo `r-lib/pak`"),
+    "Can't find reference @bad-ref-no-no-no in GitHub repo r-lib/pak",
     fixed = TRUE,
     class = "github_error"
   )

@@ -31,7 +31,7 @@ test_that("failed resolution", {
   expect_equal(dsc$direct, TRUE)
   expect_equal(dsc$status, "FAILED")
   expect_equal(dsc$failure_type, "failed-res")
-  expect_match(dsc$failure_message[[1]], "Cannot find standard ref")
+  expect_match(dsc$failure_message[[1]], "Can't find package")
 })
 
 test_that("failed resolution of a dependency", {
@@ -53,8 +53,8 @@ test_that("failed resolution of a dependency", {
   expect_equal(dsc$failure_type, c("dep-failed", "dep-failed", "failed-res"))
   expect_equal(
     dsc$failure_message,
-    list("Cannot install dependency bb",
-         "Cannot install dependency cc",
+    list("Can't install dependency bb",
+         "Can't install dependency cc",
          "EEE"))
 })
 
@@ -72,7 +72,7 @@ test_that("conflicting direct refs", {
   expect_equal(dsc$failure_type, c("satisfy-direct", "satisfy-direct"))
   expect_equal(
     dsc$failure_message,
-    list("Conflicts aa/aa", "Conflicts cran::aa"))
+    list("Conflicts with aa/aa", "Conflicts with cran::aa"))
 })
 
 test_that("dependency conflicts direct ref", {
@@ -92,9 +92,9 @@ test_that("dependency conflicts direct ref", {
                                    "dep-failed"))
   expect_equal(
     dsc$failure_message,
-    list("Conflicts cran::aa",
-         "Cannot install dependency cc",
-         "Cannot install dependency aa/aa"))
+    list("Conflicts with cran::aa",
+         "Can't install dependency cc",
+         "Can't install dependency aa/aa"))
 })
 
 test_that("conflicting dependencies", {
@@ -115,8 +115,8 @@ test_that("conflicting dependencies", {
   expect_equal(dsc$failure_type, c("dep-failed", "conflict"))
   expect_equal(
     dsc$failure_message,
-    list("Cannot install dependency cran::cc",
-         "cran::cc conflict with cc/cc, to be installed"))
+    list("Can't install dependency cran::cc",
+         "cran::cc conflicts with cc/cc, to be installed"))
 })
 
 test_that("conflicting dependencies downstream", {
@@ -138,7 +138,7 @@ test_that("conflicting dependencies downstream", {
   expect_equal(dsc$failure_type, c("dep-failed", "dep-failed", "conflict"))
   expect_equal(
     dsc$failure_message,
-    list("Cannot install dependency bb",
-         "Cannot install dependency cc/cc",
-         "cc/cc conflict with cran::cc, to be installed"))
+    list("Can't install dependency bb",
+         "Can't install dependency cc/cc",
+         "cc/cc conflicts with cran::cc, to be installed"))
 })

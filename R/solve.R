@@ -110,7 +110,7 @@ pkgplan_solve <- function(self, private, policy) {
 
   metadata <- list(solution_start = Sys.time())
   pkgs <- self$get_resolution()
-  rversion <- private$config$`r-version`
+  rversion <- private$config$`r-versions`
 
   prb <- private$create_lp_problem(pkgs, policy, rversion)
   sol <- private$solve_lp_problem(prb)

@@ -168,6 +168,9 @@ and not from a source (or binary) package archive. By default vignettes
 are not built in this case. If you set this to <code>TRUE</code>, then you need
 to make sure that the vignette builder packages are available, as
 these are not installed by default currently.</p></li>
+<li><p><code>metadata-update-after</code>: A time interval as a <a href='https://rdrr.io/r/base/difftime.html'>difftime</a> object.
+pkgdepends will update the metadata cache if it is older than this.
+The default is one day.</p></li>
 </ul>
 
 

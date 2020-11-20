@@ -116,7 +116,6 @@ pkgplan_async_resolve <- function(self, private) {
   private$solution <- NULL
 
   private$dirty <- TRUE
-  private$cache$metadata$check_update()
   private$resolution <- new_resolution(
     config = private$config, cache = private$cache,
     library = private$config$library, remote_types = private$remote_types)

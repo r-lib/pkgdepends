@@ -60,28 +60,28 @@ See \link[=pkg_refs]{“Package references”} for details.
 Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
-}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.1.0.9000 [new][bld][cmp][dl] (unknown size)
+}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.1.1.9000 [new][bld][cmp][dl] (unknown size)
 #> +-assertthat 0.2.1 [new][dl] (52.47 kB)
-#> +-callr 3.4.3 [new][dl] (389.41 kB)
-#> | +-processx 3.4.3 [new][dl] (277.66 kB)
-#> | | +-ps 1.3.3 [new][dl] (215.85 kB)
-#> | | \-R6 2.4.1 [new][dl] (57.31 kB)
+#> +-callr 3.5.1 [new]
+#> | +-processx 3.4.4 [new]
+#> | | +-ps 1.4.0 [new]
+#> | | \-R6 2.5.0 [new]
 #> | \-R6
-#> +-cli 2.0.2 [new][dl] (393.96 kB)
+#> +-cli 2.1.0 [new]
 #> | +-assertthat
 #> | +-crayon 1.3.4 [new][dl] (748.25 kB)
-#> | +-glue 1.4.1 [new][dl] (138.38 kB)
+#> | +-glue 1.4.2 [new]
 #> | \-fansi 0.4.1 [new][dl] (210.40 kB)
 #> +-curl 4.3 [new][dl] (741.06 kB)
-#> +-digest 0.6.25 [new][dl] (245.67 kB)
+#> +-digest 0.6.27 [new]
 #> +-filelock 1.0.2 [new][dl] (26.67 kB)
 #> +-glue
 #> +-prettyunits 1.1.1 [new][dl] (34.79 kB)
 #> +-R6
 #> +-processx
 #> +-rappdirs 0.3.1 [new][dl] (145.56 kB)
-#> +-rlang 0.4.7 [new]
-#> +-tibble 3.0.3 [new]
+#> +-rlang 0.4.8 [new]
+#> +-tibble 3.0.4 [new]
 #> | +-cli
 #> | +-crayon
 #> | +-ellipsis 0.3.1 [new][dl] (33.48 kB)
@@ -90,7 +90,7 @@ pd$draw()
 #> | +-lifecycle 0.2.0 [new][dl] (91.64 kB)
 #> | | +-glue
 #> | | \-rlang
-#> | +-magrittr 1.5 [new][dl] (152.51 kB)
+#> | +-magrittr 2.0.1 [new][dl] (unknown size)
 #> | +-pillar 1.4.6 [new]
 #> | | +-cli
 #> | | +-crayon
@@ -99,7 +99,7 @@ pd$draw()
 #> | | +-lifecycle
 #> | | +-rlang
 #> | | +-utf8 1.1.4 [new][dl] (195.28 kB)
-#> | | \-vctrs 0.3.2 [new]
+#> | | \-vctrs 0.3.5 [new][dl] (unknown size)
 #> | |   +-ellipsis
 #> | |   +-digest
 #> | |   +-glue

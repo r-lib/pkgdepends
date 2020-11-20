@@ -135,7 +135,8 @@ pkgplan_init <- function(self, private, refs, config, library,
       replica_path = private$config$metadata_cache_dir,
       platforms = private$config$platforms,
       r_version = private$config$`r-versions`,
-      cran_mirror = private$config$`cran-mirror`),
+      cran_mirror = private$config$`cran-mirror`,
+      update_after = private$config$`metadata-update-after`),
     package = pkgcache::package_cache$new(private$config$package_cache_dir),
     installed = installed
   )
@@ -181,6 +182,9 @@ pkgplan_init <- function(self, private, refs, config, library,
 #'   are not built in this case. If you set this to `TRUE`, then you need
 #'   to make sure that the vignette builder packages are available, as
 #'   these are not installed by default currently.
+#' * `metadata-update-after`: A time interval as a [difftime] object.
+#'   pkgdepends will update the metadata cache if it is older than this.
+#'   The default is one day.
 #' @name pkg_config
 NULL
 
@@ -194,7 +198,8 @@ pkgplan_default_config <- function() {
     "cran-mirror"        = default_cran_mirror(),
     "dependencies"       = pkg_dep_types_hard(),
     "r-versions"         = current_r_version(),
-    "build-vignettes"    = FALSE
+    "build-vignettes"    = FALSE,
+    "metadata-update-after" = as.difftime(24, units = "hours")
   ), class = "pkg_config")
 }
 
@@ -217,7 +222,8 @@ format.pkg_config <- function(x, ...) {
     paste0("  - cran-mirror: ", x$`cran-mirror`),
     paste0("  - dependencies: ", format_dependencies(x$dependencies)),
     paste0("  - r-versions: ", paste(x$`r-versions`, collapse = ", ")),
-    paste0("  - build-vignettes: ", x$`build-vignettes`)
+    paste0("  - build-vignettes: ", x$`build-vignettes`),
+    paste0("  - metadata-update-after: ", format(x$`metadata-update-after`))
   )
 }
 
@@ -241,7 +247,8 @@ is_valid_config <- function(x) {
       "cran-mirror"      = assert_that(is_string(x[[n]])),
       dependencies       = assert_that(is_dependencies(x[[n]])),
       "r-versions"       = assert_that(is_r_version_list(x[[n]])),
-      "build-vignettes"  = assert_that(is_flag(x[[n]]))
+      "build-vignettes"  = assert_that(is_flag(x[[n]])),
+      "metadata-update-after" = assert_that(is_difftime(x[[n]]))
     )
   }
   TRUE

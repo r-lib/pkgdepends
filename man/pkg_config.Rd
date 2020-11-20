@@ -44,5 +44,8 @@ and not from a source (or binary) package archive. By default vignettes
 are not built in this case. If you set this to \code{TRUE}, then you need
 to make sure that the vignette builder packages are available, as
 these are not installed by default currently.
+\item \code{metadata-update-after}: A time interval as a \link{difftime} object.
+pkgdepends will update the metadata cache if it is older than this.
+The default is one day.
 }
 }

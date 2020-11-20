@@ -66,6 +66,7 @@ test_that("type_github_get_data, no such repo", {
 test_that("github_query, invalid PAT", {
   skip_if_offline()
   withr::local_envvar(c(
+    GITHUB_PAT_GITHUB_COM = "invalid",
     GITHUB_TOKEN = "invalid",
     GITHUB_PAT = "invalid",
     CI_GITHUB_TOKEN = "invalid"
@@ -106,7 +107,9 @@ test_that("github_query, rate limited", {
 test_that("github_query, access denied", {
   skip_if_offline()
   withr::local_envvar(
-    c(GITHUB_TOKEN = NA_character_, GITHUB_PAT = NA_character_)
+    c(GITHUB_PAT_GITHUB_COM = NA_character_,
+      GITHUB_TOKEN = NA_character_,
+      GITHUB_PAT = NA_character_)
   )
 
   rem <- parse_pkg_ref("gaborcsardi/secret-test")
@@ -162,7 +165,11 @@ test_that("cannot parse DESCRIPTION on GH", {
 
 test_that("http error", {
   # Do not send a real token to httpbin.org
-  withr::local_envvar(c(GITHUB_TOKEN = "foobar", GITHUB_PAT = "foobar"))
+  withr::local_envvar(c(
+    GITHUB_PAT_GITHUB_COM = "foobar",
+    GITHUB_TOKEN = "foobar",
+    GITHUB_PAT = "foobar"
+  ))
 
   err <- tryCatch(
     synchronise(github_query("foobar", url = "https://httpbin.org/status/404")),

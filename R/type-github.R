@@ -158,16 +158,15 @@ type_github_builtin_token <- function() {
   )
   once_per_session(cli_alert_warning(c(
     "Using bundled GitHub PAT. ",
-    "Please add your own PAT to the env var {.envvar GITHUB_PAT}"
+    "Please add your own PAT using {.code gitcreds::gitcreds_set()}."
   )))
   sample(pats, 1)
 }
 
 type_github_get_headers <- function() {
   headers <- c("Accept" = "application/vnd.github.v3+json")
-  token <- Sys.getenv("CI_GITHUB_TOKEN", NA_character_)
-  if (is.na(token)) token <- Sys.getenv("GITHUB_TOKEN", NA_character_)
-  if (is.na(token)) token <- Sys.getenv("GITHUB_PAT", NA_character_)
+  token <- tryCatch(gitcreds_get()$password, error = function(e) NA_character_)
+  if (is.na(token)) token <- Sys.getenv("CI_GITHUB_TOKEN", NA_character_)
   if (is.na(token)) token <- type_github_builtin_token()
   headers <- c(headers, c("Authorization" = paste("token", token)))
   headers

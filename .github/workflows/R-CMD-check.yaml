@@ -43,11 +43,6 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
-      - name: Set Rtools home env var
-        if: runner.os == 'Windows'
-        run: |
-          echo "::set-env name=RTOOLS40_HOME::c:\rtools40"
-
       - name: Query dependencies
         run: |
           install.packages('remotes')

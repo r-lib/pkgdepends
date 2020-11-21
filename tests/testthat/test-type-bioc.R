@@ -59,9 +59,7 @@ test_that("failed resolution", {
 
   r <- pkg_plan$new(
     "bioc::Biobase@0.0", config = list(cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   expect_true(all(res$data$status == "FAILED"))

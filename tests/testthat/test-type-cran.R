@@ -65,9 +65,7 @@ test_that("failed resolution", {
 
   r <- pkg_plan$new(
     "cran::crayon@0.0", config = list(cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   expect_true(all(res$status == "FAILED"))
@@ -127,9 +125,7 @@ test_that("resolve an old version", {
   r <- pkg_plan$new(
     "cran::crayon@1.1.0",
     config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   expect_s3_class(res, "pkg_resolution_result")
@@ -152,9 +148,7 @@ test_that("resolve current version, specified via version number", {
   r <- pkg_plan$new(
     "cran::crayon@current",
     config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   ver <- res$version[1]
@@ -162,9 +156,7 @@ test_that("resolve current version, specified via version number", {
   ref <- paste0("cran::crayon@", ver)
   r2 <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r2$resolve(), NA))
+  expect_error(r2$resolve(), NA)
   res2 <- r2$get_resolution()
 
   expect_true(all(res2$version == ver))
@@ -182,9 +174,7 @@ test_that("resolve a version range", {
   r <- pkg_plan$new(
     "cran::crayon@>=1.3.2",
     config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   expect_s3_class(res, "pkg_resolution_result")

@@ -23,9 +23,7 @@ test_that("resolve_remote", {
 
   r <- pkg_plan$new(
     refs, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   expect_s3_class(res, "pkg_resolution_result")
@@ -79,9 +77,7 @@ test_that("failed resolution", {
   nonrepo <- paste0(basename(tempfile()), "/", basename(tempfile()))
   r <- pkg_plan$new(
     nonrepo, config = list(dependencies = FALSE, cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   expect_true(all(res$status == "FAILED"))
@@ -90,9 +86,7 @@ test_that("failed resolution", {
 
   r <- pkg_plan$new(
     "github::r-lib/crayon/R", config = list(cache_dir = tmp))
-  withr::with_options(
-    c(pkg.show_progress = FALSE),
-    expect_error(r$resolve(), NA))
+  expect_error(r$resolve(), NA)
   res <- r$get_resolution()
 
   expect_true(all(res$status == "FAILED"))
@@ -118,11 +112,8 @@ test_that("download_remote", {
 
   ## -----------------------------------------------------
   ## We get the tree zip first
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      expect_error(r$resolve(), NA)
-      expect_error(r$download_resolution(), NA)
-    })
+  expect_error(r$resolve(), NA)
+  expect_error(r$download_resolution(), NA)
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "pkgplan_downloads")
@@ -145,11 +136,8 @@ test_that("download_remote", {
   r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      expect_error(r$resolve(), NA)
-      expect_error(r$download_resolution(), NA)
-    })
+  expect_error(r$resolve(), NA)
+  expect_error(r$download_resolution(), NA)
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "pkgplan_downloads")
@@ -177,11 +165,8 @@ test_that("download_remote", {
   r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      expect_error(r$resolve(), NA)
-      expect_error(r$download_resolution(), NA)
-    })
+  expect_error(r$resolve(), NA)
+  expect_error(r$download_resolution(), NA)
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "pkgplan_downloads")

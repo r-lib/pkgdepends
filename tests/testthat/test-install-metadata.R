@@ -25,13 +25,11 @@ test_that("install_package_plan metadata", {
   pkg <- source_test_package("foo")
   libpath <- test_temp_dir()
 
-  withr::with_options(list(pkg.show_progress = FALSE), {
-    plan <- make_install_plan(
-      paste0("local::", pkg), lib = libpath)
-    plan$metadata[[1]] <- c("Foo" = "Bar", "Foobar" = "baz")
-    plan$vignettes <- FALSE
-    install_package_plan(plan, lib = libpath, num_workers = 1)
-  })
+  plan <- make_install_plan(
+    paste0("local::", pkg), lib = libpath)
+  plan$metadata[[1]] <- c("Foo" = "Bar", "Foobar" = "baz")
+  plan$vignettes <- FALSE
+  install_package_plan(plan, lib = libpath, num_workers = 1)
 
   dsc <- desc::desc(file.path(libpath, "foo"))
   expect_equal(dsc$get("Foo")[[1]], "Bar")

@@ -130,28 +130,19 @@ test_that("integration test", {
 
   mkdirp(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      r <- pkg_plan$new(c("r-lib/cli"), lib = lib)
-      r$resolve()
-    })
+  r <- pkg_plan$new(c("r-lib/cli"), lib = lib)
+  r$resolve()
   sol <- r$solve()
   expect_true("r-lib/cli" %in% sol$data$ref)
 
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      r <- pkg_plan$new("cran::cli", lib = lib)
-      r$resolve()
-    })
+  r <- pkg_plan$new("cran::cli", lib = lib)
+  r$resolve()
   sol <- r$solve()
   expect_true("cran::cli" %in% sol$data$ref)
   expect_true("cli" %in% r$get_solution()$data$package)
 
-  withr::with_options(
-    c(pkg.show_progress = FALSE), {
-      r <- pkg_plan$new(c("cran::cli", "r-lib/cli"), lib = lib)
-      r$resolve()
-    })
+  r <- pkg_plan$new(c("cran::cli", "r-lib/cli"), lib = lib)
+  r$resolve()
   sol <- r$solve()
   expect_equal(sol$status, "FAILED")
   expect_true("cli" %in% sol$failures$package)

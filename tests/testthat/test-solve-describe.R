@@ -20,10 +20,8 @@ test_that("failed resolution", {
   skip_on_cran()
   skip_if_offline()
 
-  withr::with_options(list(pkg.show_progress = FALSE), {
-    r <- pkg_plan$new("nonexistentpackage", lib = tempfile())
-    r$resolve()
-  })
+  r <- pkg_plan$new("nonexistentpackage", lib = tempfile())
+  r$resolve()
   sol <- r$solve()
   dsc <- describe_solution_error(r$get_resolution(), sol)
   expect_equal(dsc$ref, "nonexistentpackage")

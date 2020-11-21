@@ -66,8 +66,6 @@ test_that("handle_event, process still running", {
     make_dummy_worker_process())
 
   ## Run a dummy worker that runs for 10s, writes to stdout & stderr
-  withr::local_options(list(pkg.show_progress = FALSE))
-
   state <- start_task_build(state, task("build", pkgidx = 1))
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
@@ -97,8 +95,6 @@ test_that("handle_event, build process finished", {
     start_task_build, "make_build_process",
     make_dummy_worker_process(n_iter = 2, sleep = 0))
 
-  withr::local_options(list(pkg.show_progress = FALSE))
-
   state <- start_task_build(state, task("build", pkgidx = 1))
 
   proc <- state$workers[[1]]$process
@@ -127,8 +123,6 @@ test_that("handle event, build process finished, but failed", {
     start_task_install, "make_install_process",
     make_dummy_worker_process(n_iter = 2, sleep = 0, status = 1))
 
-  withr::local_options(list(pkg.show_progress = FALSE))
-
   state <- start_task_install(state, task("install", pkgidx = 1))
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
@@ -152,8 +146,6 @@ test_that("handle_event, install process finished", {
   mockery::stub(
     start_task_install, "make_install_process",
     make_dummy_worker_process(n_iter = 2, sleep = 0))
-
-  withr::local_options(list(pkg.show_progress = FALSE))
 
   state <- start_task_install(state, task("install", pkgidx = 1))
   proc <- state$workers[[1]]$process
@@ -182,8 +174,6 @@ test_that("handle event, install process finished, but failed", {
   mockery::stub(
     start_task_install, "make_install_process",
     make_dummy_worker_process(n_iter = 2, sleep = 0, status = 1))
-
-  withr::local_options(list(pkg.show_progress = FALSE))
 
   state <- start_task_install(state, task("install", pkgidx = 1))
   proc <- state$workers[[1]]$process

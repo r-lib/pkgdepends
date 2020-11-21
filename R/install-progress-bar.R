@@ -17,7 +17,7 @@ create_progress_bar <- function(state) {
   bar <- new.env(parent = emptyenv())
   bar$spinner <- get_spinner()
   bar$spinner_state <- 1L
-  if (isTRUE(getOption("pkg.show_progress", TRUE))) {
+  if (should_show_progress_bar()) {
     bar$status <- cli_status("Installing...", .auto_close = FALSE)
   } else {
     bar$status <- cli_status(character(), .auto_close = FALSE)
@@ -32,7 +32,7 @@ create_progress_bar <- function(state) {
 #' @importFrom crayon col_nchar
 
 update_progress_bar <- function(state, tick = 0) {
-  if (!isTRUE(getOption("pkg.show_progress", TRUE))) {
+  if (!should_show_progress_bar()) {
     return()
   }
 

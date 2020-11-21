@@ -9,10 +9,8 @@ describe("install_packages", {
 
     libpath <- test_temp_dir()
 
-    withr::with_options(list(pkg.show_progress = FALSE), {
-      plan <- make_install_plan(paste0("local::", pkg), lib = libpath)
-      install_package_plan(plan, lib = libpath)
-    })
+    plan <- make_install_plan(paste0("local::", pkg), lib = libpath)
+    install_package_plan(plan, lib = libpath)
 
     callr::r(function(l) library("foo", lib.loc = l), list(libpath))
   })

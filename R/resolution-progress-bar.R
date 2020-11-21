@@ -28,6 +28,7 @@ progress_chars <- function() {
 
 res__create_progress_bar <- function(self, private) {
   self; private
+  if (!isTRUE(getOption("pkg.show_progress", TRUE))) return()
 
   bar <- new.env(parent = emptyenv())
   bar$spinner <- get_spinner()
@@ -46,6 +47,9 @@ res__create_progress_bar <- function(self, private) {
 }
 
 res__show_progress_bar <- function(self, private) {
+  # Maybe progress is off
+  if (is.null(private$bar)) return()
+
   # This can be called _after_ the resolution is over
   if (is.null(private$bar$status)) return()
 

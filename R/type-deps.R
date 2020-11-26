@@ -11,13 +11,49 @@ parse_remote_deps <- function(specs, config, ...) {
   )
 }
 
+#' @importFrom tibble as_tibble
+
 resolve_remote_deps <- function(remote, direct, config, cache,
                                      dependencies, ...) {
 
   ret <- resolve_remote_local(remote, direct, config, cache,
                               dependencies, ...)
+
+  # We need to do some extra work for the case when a dependency
+  # depends on the ref itself. E.g. when in pak::local_install_dev_deps()
+  # a soft dependency depends on the local package.
+  # - Because of this, we add a "-deps" postfix to the package name
+  #   of the deps:: ref, so it not taken as the solution for the package
+  #   by the solver.
+  # - We also add a local:: ref for the package, because maybe the local
+  #   package is not available from CRAN, or the upgrade policy is used
+  #   and the local version is more recent. (This is typically the case
+  #   while working on a package, and also on the CI.)
+
+  # Workaround to be able to put this in a tibble
+  ret$metadata <- list(ret$metadata)
+
+  # Need to pass this to te new result
+  unknown <- ret$unknown_deps
+  ret$unknown_deps <- NULL
+
+  # Create the local:: ref and update it properly
+  local <- ret
+  local$type <- "local"
+  local$ref <- sub("^deps::", "local::", local$ref)
+  local$direct <- FALSE
+  local$remote[[1]] <- parse_pkg_ref(local$ref)
+
+  # Now make sure deps:: is not used by the solver.
+  # The installer will treat deps:: specially and just ignore it, anyway.
+  ret$package <- paste0(ret$package, "-deps")
   ret$sources <- list(character())
-  ret
+
+  # rbind.data.frame is not good with the list columns, use tibble instead
+  ret2 <- rbind(as_tibble(ret), as_tibble(local))
+  attr(ret2, "unknown_deps") <- unknown
+
+  ret2
 }
 
 download_remote_deps <- function(resolution, target, target_tree, config,

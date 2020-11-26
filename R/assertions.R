@@ -111,3 +111,7 @@ is_r_version_list <- function(x) {
 on_failure(is_r_version_list) <- function(call, env) {
   paste0(deparse(call$x), " must be a list or R version numbers")
 }
+
+is_difftime <- function(x) {
+  inherits(x, "difftime")
+}

@@ -357,11 +357,12 @@ make_build_process <- function(path, tmp_dir, lib, vignettes,
 
   ## with_libpath() is needed for newer callr, which forces the current
   ## lib path in the child process.
-  withr::with_libpaths(lib, action = "prefix",
+  mkdirp(tmplib <- tempfile("pkg-lib"))
+  withr::with_libpaths(c(tmplib, lib), action = "prefix",
     pkgbuild_process$new(
       path, tmp_dir, binary = binary, vignettes = vignettes,
       needs_compilation = needscompilation, compile_attributes = FALSE,
-      args = c("--no-lock", if (binary) glue("--library={lib}"))
+      args = c("--no-lock", if (binary) glue("--library={tmplib}"))
     )
   )
 }

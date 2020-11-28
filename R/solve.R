@@ -853,13 +853,17 @@ describe_solution_error <- function(pkgs, solution) {
   note <- replicate(num, NULL)
   downstream <- replicate(num, character(), simplify = FALSE)
 
-  state[sol_pkg == 1] <- "installed"
+  ## If a candidate of a package is OK, then we should not report errors
+  ## about other candidates.
+  ok_pkgs <- unique(pkgs$package[sol_pkg == 1])
+  state[pkgs$package %in% ok_pkgs] <- "installed"
 
   ## Candidates that failed resolution
   cnd <- solution$problem$conds
   typ <- vcapply(cnd, "[[", "type")
   var <- lapply(cnd, "[[", "vars")
   fres_vars <- unlist(var[typ == "ok-resolution"])
+  fres_vars <- intersect(fres_vars, which(state == "maybe-good"))
   state[fres_vars] <- "failed-res"
   for (fv in fres_vars) {
     if (length(e <- pkgs$error[[fv]])) {
@@ -870,6 +874,7 @@ describe_solution_error <- function(pkgs, solution) {
   ## Candidates that need a newer R version
   for (w in which(typ == "bad-rversion")) {
     sv <- var[[w]]
+    if (state[sv] != "maybe-good") next
     needs <- cnd[[w]]$note
     state[sv] <- "bad-rversion"
     note[[sv]] <- c(note[[sv]], glue("Needs R {needs}"))

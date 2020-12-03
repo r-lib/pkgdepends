@@ -10,7 +10,7 @@ test_that("resolve_ref_deps", {
   )
   remotes <- c(Remotes = "\n    jeroen/curl,\n  foo/bar")
 
-  obj <- resolve_ref_deps(deps, remotes)
+  obj <- resolve_ref_deps(deps, remotes, NULL)
 
   exp <- tibble::tibble(
     ref = c("covr", "jsonlite", "testthat", "assertthat",

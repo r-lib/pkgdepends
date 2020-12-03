@@ -122,25 +122,33 @@ get_cran_extension <- function(platform) {
   )
 }
 
-resolve_ref_deps <- function(deps, remotes) {
+resolve_ref_deps <- function(deps, remotes, extra) {
   deps <- deps_from_desc(deps, last = FALSE)
-
-  if (is.na(remotes)) return (deps)
 
   parse <- function(x) {
     str_trim(strsplit(x, "\\s*,\\s*", perl = TRUE)[[1]])
   }
 
-  remotes <- str_trim(na.omit(remotes))
-  remotes <- parse(remotes)
-  remotes_packages <- vcapply(parse_pkg_refs(remotes), "[[", "package")
-  keep <- which(remotes_packages %in% deps$package)
-  deps$ref[match(remotes_packages[keep], deps$package)] <- remotes[keep]
+  if (!is.na(remotes)) {
+    remotes <- str_trim(na.omit(remotes))
+    remotes <- parse(remotes)
+    remotes_packages <- vcapply(parse_pkg_refs(remotes), "[[", "package")
+    keep <- which(remotes_packages %in% deps$package)
+    deps$ref[match(remotes_packages[keep], deps$package)] <- remotes[keep]
+  }
+
+  if (length(extra) > 0) {
+    xdeps <- parse_all_deps(extra)
+    xdeps$package <- vcapply(parse_pkg_refs(xdeps$package), "[[", "package")
+    deps <- rbind(deps, xdeps)
+  }
+
   deps
 }
 
 #' Shorthands for dependency specifications
 #'
+#' @details
 #' Supports concise ways of specifying which types of dependencies of
 #' a package should be installed. It is similar to how
 #' [utils::install.packages()] interprets its `dependencies` argument.
@@ -155,9 +163,26 @@ resolve_ref_deps <- function(deps, remotes) {
 #'   as the requested dependency types, for direct installations and
 #'   dependent packages.
 #' - If a character vector, then it is taken as the dependency types
-#'   both for direct installations and dependent packages.
+#'   both for direct installations, and the hard dependencies are
+#'   used for the dependent packages.
 #'
-#' @param deps See above.
+#' If `"hard"` is included, then it is replaced by the hard dependency
+#' types. If `"soft"` or `"all"` is included, then it is replaced by all
+#' dependency types.
+#'
+#' ## Extra dependencies
+#'
+#' pkgdepends supports extra dependency types for direct installations.
+#' These are specified with a `Config/Needs/` prefix in `DESCRIPTION`
+#' and they can contain package references, separated by commas.
+#' For example you can specify packages that are only needed for the
+#' pkgdown website of the package:
+#'
+#' ```
+#' Config/Needs/website: r-lib/pkgdown
+#' ```
+#'
+#' @param deps See below.
 #' @return A named list with two character vectors: `direct`, `indirect`,
 #' the dependency types to use for direct installations and dependent
 #' packages.
@@ -166,7 +191,10 @@ resolve_ref_deps <- function(deps, remotes) {
 #' @export
 
 as_pkg_dependencies <- function(deps) {
+  assert_that(is_dependencies(deps))
+
   hard <- pkg_dep_types_hard()
+  soft <- pkg_dep_types()
 
   res <- if (isTRUE(deps)) {
     list(c(hard, "Suggests"), hard)
@@ -181,9 +209,23 @@ as_pkg_dependencies <- function(deps) {
     deps
 
   } else {
-    list(deps, deps)
+    list(deps, hard)
   }
+
+  res <- lapply(res, function(x) {
+    if ("hard" %in% x) {
+      x <- unique(hard, setdiff(c, "hard"))
+    }
+    if (any(c("soft", "all") %in% x)) {
+      x <- unique(soft, setdiff(c, c("all", "soft")))
+    }
+    x
+  })
 
   names(res) <- c("direct", "indirect")
   res
+}
+
+extra_config_fields <- function(x) {
+  grep("^config/needs/", x, value = TRUE, ignore.case = TRUE)
 }

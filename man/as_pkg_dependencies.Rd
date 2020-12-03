@@ -7,7 +7,7 @@
 as_pkg_dependencies(deps)
 }
 \arguments{
-\item{deps}{See above.}
+\item{deps}{See below.}
 }
 \value{
 A named list with two character vectors: \code{direct}, \code{indirect},
@@ -15,6 +15,13 @@ the dependency types to use for direct installations and dependent
 packages.
 }
 \description{
+Shorthands for dependency specifications
+
+\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+
+\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
+}
+\details{
 Supports concise ways of specifying which types of dependencies of
 a package should be installed. It is similar to how
 \code{\link[utils:install.packages]{utils::install.packages()}} interprets its \code{dependencies} argument.
@@ -30,12 +37,22 @@ dependencies are installed. See \code{\link[=pkg_dep_types_hard]{pkg_dep_types_h
 as the requested dependency types, for direct installations and
 dependent packages.
 \item If a character vector, then it is taken as the dependency types
-both for direct installations and dependent packages.
+both for direct installations, and the hard dependencies are
+used for the dependent packages.
 }
 
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
+If \code{"hard"} is included, then it is replaced by the hard dependency
+types. If \code{"soft"} or \code{"all"} is included, then it is replaced by all
+dependency types.
+\subsection{Extra dependencies}{
 
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
+pkgdepends supports extra dependency types for direct installations.
+These are specified with a \verb{Config/Needs/} prefix in \code{DESCRIPTION}
+and they can contain package references, separated by commas.
+For example you can specify packages that are only needed for the
+pkgdown website of the package:\preformatted{Config/Needs/website: r-lib/pkgdown
+}
+}
 }
 \seealso{
 Other package dependency utilities: 

@@ -44,7 +44,6 @@ Imports:
     zip (>= 2.1.0)
 Suggests:
     asciicast,
-    covr,
     debugme,
     digest,
     fansi,
@@ -55,4 +54,8 @@ Suggests:
     rstudioapi,
     spelling,
     testthat
+Config/Needs/website:
+    pkgdown
+Config/Needs/coverage:
+    covr
 Encoding: UTF-8

@@ -84,10 +84,14 @@ on_failure(is_platform_list) <- function(call, env) {
 }
 
 is_dependencies <- function(x) {
+  valid <- function(x) {
+    x %in% c(pkg_dep_types(), c("soft", "hard", "all")) |
+      x %in% extra_config_fields(x)
+  }
   is_na_scalar(x) || isTRUE(x) || identical(x, FALSE) ||
-    (is_character(x) && all(x %in% pkg_dep_types())) ||
+    (is_character(x) && all(valid(x))) ||
     (is.list(x) && all(names(x) == c("direct", "indirect")) &&
-     all(unlist(x) %in% pkg_dep_types()))
+     all(valid(unlist(x))))
 }
 
 on_failure(is_dependencies) <- function(call, env) {

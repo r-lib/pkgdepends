@@ -63,7 +63,9 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
     "Package", "Title", "Version", "Depends", "Suggests", "Imports",
     "LinkingTo", "Enhances", "Built", "MD5sum", "NeedsCompilation",
     "Platform", "License", "Priority", "Repository", "biocViews",
-    grep("^Remote", all_fields, value = TRUE)))
+    grep("^Remote", all_fields, value = TRUE),
+    grep("^Config/Needs/", all_fields, value = TRUE)
+  ))
 
   ret <- matrix(NA_character_, nrow = length(meta), ncol = length(fields))
   colnames(ret) <- tolower(fields)
@@ -126,11 +128,15 @@ merge_installed_caches <- function(c1, c2) {
 lib_status <- function(library = .libPaths()[1], packages = NULL) {
   st <- make_installed_cache(library, packages)$pkgs
   st$library <- if (nrow(st) > 0) library else character()
-  st[, c("library", setdiff(colnames(st), "library")), drop = FALSE]
+  st <- st[, c("library", setdiff(colnames(st), "library")), drop = FALSE]
+  rm <- extra_config_fields(colnames(st))
+  st[, setdiff(colnames(st), rm), drop = FALSE]
 }
 
 #' @importFrom tibble tibble
 #' @importFrom rematch2 re_match
+
+# TODO: parse Remotes and Config/Needs/* fields
 
 packages_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)

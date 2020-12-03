@@ -6,7 +6,9 @@ make_fake_deps <- function(...) {
   if (length(list(...))) d$set(...)
   resolve_ref_deps(
     d$get_deps(),
-    d$get("Remotes")[[1]])
+    d$get("Remotes")[[1]],
+    NULL
+  )
 }
 
 make_fake_resolution1 <- function(ref, args = list()) {

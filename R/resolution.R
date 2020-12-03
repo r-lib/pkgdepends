@@ -437,7 +437,11 @@ resolve_from_description <- function(path, sources, remote, direct,
                                      config, cache, dependencies) {
 
   dsc <- desc(file = path)
-  deps <- resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes")[[1]])
+  deps <- resolve_ref_deps(
+    dsc$get_deps(),
+    dsc$get("Remotes")[[1]],
+    dsc$get(extra_config_fields(dsc$fields()))
+  )
 
   rversion <- tryCatch(
     get_minor_r_version(dsc$get_built()$R),
@@ -485,6 +489,8 @@ resolve_from_description <- function(path, sources, remote, direct,
     metadata = meta
   )
 }
+
+# TODO: Parse remotes and Config/Needs/* fields
 
 resolve_from_metadata <- function(remotes, direct, config, cache,
                                   dependencies) {

@@ -305,7 +305,11 @@ check_github_response_pull2 <- function(resp, obj, rem, call.) {
 
 type_github_make_resolution <- function(data) {
 
-  deps <- resolve_ref_deps(data$desc$get_deps(), data$desc$get("Remotes"))
+  deps <- resolve_ref_deps(
+    data$desc$get_deps(),
+    data$desc$get("Remotes"),
+    data$desc$get(extra_config_fields(data$desc$fields()))
+  )
 
   sha <- data$sha
   username <- data$remote$username

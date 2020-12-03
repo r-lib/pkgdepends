@@ -40,23 +40,7 @@
 
 
 <meta property="og:title" content="Shorthands for dependency specifications — as_pkg_dependencies" />
-<meta property="og:description" content="Supports concise ways of specifying which types of dependencies of
-a package should be installed. It is similar to how
-utils::install.packages() interprets its dependencies argument.
-Possible values for the deps argument are:
-TRUE: This means all hard dependencies plus Suggests for
-direct installations, and hard dependencies only for dependent
-packages.
-FALSE: no dependencies are installed at all.
-NA (any atomic type, so NA_character_, etc. as well): only hard
-dependencies are installed. See pkg_dep_types_hard().
-If a list with two entries named direct and indirect, it is taken
-as the requested dependency types, for direct installations and
-dependent packages.
-If a character vector, then it is taken as the dependency types
-both for direct installations and dependent packages.
-
-
+<meta property="og:description" content="Shorthands for dependency specifications
 
 " />
 
@@ -141,6 +125,29 @@ both for direct installations and dependent packages.
     </div>
 
     <div class="ref-description">
+    <p>Shorthands for dependency specifications</p>
+<p><link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"></p>
+<p><script src="../doc/assets/rd.js"></script></p>
+    </div>
+
+    <pre class="usage"><span class='fu'>as_pkg_dependencies</span><span class='op'>(</span><span class='va'>deps</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>deps</th>
+      <td><p>See below.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A named list with two character vectors: <code>direct</code>, <code>indirect</code>,
+the dependency types to use for direct installations and dependent
+packages.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
     <p>Supports concise ways of specifying which types of dependencies of
 a package should be installed. It is similar to how
 <code><a href='https://rdrr.io/r/utils/install.packages.html'>utils::install.packages()</a></code> interprets its <code>dependencies</code> argument.
@@ -155,29 +162,23 @@ dependencies are installed. See <code><a href='pkg_dep_types_hard.html'>pkg_dep_
 as the requested dependency types, for direct installations and
 dependent packages.</p></li>
 <li><p>If a character vector, then it is taken as the dependency types
-both for direct installations and dependent packages.</p></li>
+both for direct installations, and the hard dependencies are
+used for the dependent packages.</p></li>
 </ul>
 
-<p><link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"></p>
-<p><script src="../doc/assets/rd.js"></script></p>
-    </div>
+<p>If <code>"hard"</code> is included, then it is replaced by the hard dependency
+types. If <code>"soft"</code> or <code>"all"</code> is included, then it is replaced by all
+dependency types.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Extra dependencies</h3>
 
-    <pre class="usage"><span class='fu'>as_pkg_dependencies</span><span class='op'>(</span><span class='va'>deps</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>deps</th>
-      <td><p>See above.</p></td>
-    </tr>
-    </table>
+<p>pkgdepends supports extra dependency types for direct installations.
+These are specified with a <code>Config/Needs/</code> prefix in <code>DESCRIPTION</code>
+and they can contain package references, separated by commas.
+For example you can specify packages that are only needed for the
+pkgdown website of the package:</p><pre><span class='va'>Config</span><span class='op'>/</span><span class='va'>Needs</span><span class='op'>/</span><span class='va'>website</span><span class='op'>:</span> <span class='va'>r</span><span class='op'>-</span><span class='va'>lib</span><span class='op'>/</span><span class='va'>pkgdown</span>
+</pre>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A named list with two character vectors: <code>direct</code>, <code>indirect</code>,
-the dependency types to use for direct installations and dependent
-packages.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other package dependency utilities: 

@@ -174,7 +174,7 @@ resolve_ref_deps <- function(deps, remotes, extra) {
 #'
 #' pkgdepends supports extra dependency types for direct installations.
 #' These are specified with a `Config/Needs/` prefix in `DESCRIPTION`
-#' and they can contain package references, separateed by commas.
+#' and they can contain package references, separated by commas.
 #' For example you can specify packages that are only needed for the
 #' pkgdown website of the package:
 #'

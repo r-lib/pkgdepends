@@ -34,7 +34,7 @@ dependencies.
 }
 
 \section{Install}{
-\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
+Once on CRAN, install the package with:\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
 }\if{html}{\out{</div>}}
 }
 

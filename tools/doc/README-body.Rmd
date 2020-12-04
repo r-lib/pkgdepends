@@ -49,6 +49,8 @@ library(tibble)
 
 # Install
 
+Once on CRAN, install the package with:
+
 ```{r eval = FALSE}
 install.packages("pkgdepends")
 ```

@@ -56,6 +56,14 @@ pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
 \dontshow{\}) # examplesIf}
+pdi <- new_pkg_deps("r-lib/pkgdepends")
+pdi$get_solve_policy()
+pdi$set_solve_policy("upgrade")
+pdi$get_solve_policy()
+pdi <- new_pkg_deps("r-lib/pkgdepends")
+pdi$get_solve_policy()
+pdi$set_solve_policy("upgrade")
+pdi$get_solve_policy()
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
@@ -105,6 +113,8 @@ pd
 \item \href{#method-resolve}{\code{pkg_deps$resolve()}}
 \item \href{#method-async_resolve}{\code{pkg_deps$async_resolve()}}
 \item \href{#method-get_resolution}{\code{pkg_deps$get_resolution()}}
+\item \href{#method-get_solve_policy}{\code{pkg_deps$get_solve_policy()}}
+\item \href{#method-set_solve_policy}{\code{pkg_deps$set_solve_policy()}}
 \item \href{#method-solve}{\code{pkg_deps$solve()}}
 \item \href{#method-get_solution}{\code{pkg_deps$get_solution()}}
 \item \href{#method-stop_for_solution_error}{\code{pkg_deps$stop_for_solution_error()}}
@@ -125,7 +135,12 @@ The returned object can be used to look up (recursive) dependencies
 of R packages from various sources. To perform the actual lookup,
 you'll need to call the \href{#method-resolve}{\code{resolve()}} method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$new(refs, config = list(), remote_types = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$new(
+  refs,
+  config = list(),
+  policy = c("lazy", "upgrade"),
+  remote_types = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -136,6 +151,8 @@ you'll need to call the \href{#method-resolve}{\code{resolve()}} method.
 
 \item{\code{config}}{Configuration options, a named list. See
 \link[=pkg_config]{'Configuration'}.}
+
+\item{\code{policy}}{Solution policy. See \link[=pkg_solution]{'The dependency solver'}.}
 
 \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.}
@@ -262,6 +279,62 @@ A \link{pkg_resolution_result} object, which is also a tibble. See
 \preformatted{pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-get_solve_policy}{}}}
+\subsection{Method \code{get_solve_policy()}}{
+Returns the current policy of the dependency solver.
+See \link[=pkg_solution]{'The dependency solver'} for details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_solve_policy()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A character vector of length one.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{pdi <- new_pkg_deps("r-lib/pkgdepends")
+pdi$get_solve_policy()
+pdi$set_solve_policy("upgrade")
+pdi$get_solve_policy()
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-set_solve_policy}{}}}
+\subsection{Method \code{set_solve_policy()}}{
+Set the current policy of the dependency solver.
+If the object already contains a solution and the new policy is
+different than the old policy, then the solution is deleted.
+See \link[=pkg_solution]{'The dependency solver'} for details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$set_solve_policy(policy = c("lazy", "upgrade"))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{policy}}{Policy to set.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{pdi <- new_pkg_deps("r-lib/pkgdepends")
+pdi$get_solve_policy()
+pdi$set_solve_policy("upgrade")
+pdi$get_solve_policy()
 }
 \if{html}{\out{</div>}}
 

@@ -51,6 +51,8 @@ pkg_deps <- R6::R6Class(
     #'   ['Package references'][pkg_refs] for the syntax.
     #' @param config Configuration options, a named list. See
     #'   ['Configuration'][pkg_config].
+    #' @param policy Solution policy. See ['The dependency
+    #'   solver'][pkg_solution].
     #' @param remote_types Custom remote ref types, this is for advanced
     #'   use, and experimental currently.
     #'
@@ -61,8 +63,13 @@ pkg_deps <- R6::R6Class(
     #' pd <- pkg_deps$new("r-lib/pkgdepends")
     #' pd
 
-    initialize = function(refs, config = list(), remote_types = NULL) {
+    initialize = function(refs, config = list(),
+                          policy = c("lazy", "upgrade"),
+                          remote_types = NULL) {
+
       private$library <- tempfile()
+      policy <- match.arg(policy)
+      private$policy <- policy
       dir.create(private$library)
       private$plan <- pkg_plan$new(
         refs,
@@ -144,6 +151,42 @@ pkg_deps <- R6::R6Class(
     get_resolution = function() private$plan$get_resolution(),
 
     #' @description
+    #' Returns the current policy of the dependency solver.
+    #' See ['The dependency solver'][pkg_solution] for details.
+    #'
+    #' @return
+    #' A character vector of length one.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_deps("r-lib/pkgdepends")
+    #' pdi$get_solve_policy()
+    #' pdi$set_solve_policy("upgrade")
+    #' pdi$get_solve_policy()
+
+    get_solve_policy = function() private$policy,
+
+    #' @description
+    #' Set the current policy of the dependency solver.
+    #' If the object already contains a solution and the new policy is
+    #' different than the old policy, then the solution is deleted.
+    #' See ['The dependency solver'][pkg_solution] for details.
+    #'
+    #' @param policy Policy to set.
+    #'
+    #' @examples
+    #' pdi <- new_pkg_deps("r-lib/pkgdepends")
+    #' pdi$get_solve_policy()
+    #' pdi$set_solve_policy("upgrade")
+    #' pdi$get_solve_policy()
+
+    set_solve_policy = function(policy = c("lazy", "upgrade")) {
+      policy <- match.arg(policy)
+      if (private$policy != policy) {
+        private$plan$delete_solution()
+        private$policy <- policy
+      }
+    },
+    #' @description
     #' Solve the package dependencies. Out of the resolved dependencies, it
     #' works out a set of packages, that can be installed together to
     #' create a functional installation. The set includes all directly
@@ -164,7 +207,7 @@ pkg_deps <- R6::R6Class(
     #' pd$get_solution()
 
     solve = function() {
-      private$plan$solve(policy = "lazy")
+      private$plan$solve(policy = private$policy)
       invisible(self)
     },
 
@@ -287,6 +330,7 @@ pkg_deps <- R6::R6Class(
 
   private = list(
     plan = NULL,
-     library = NULL
+    policy = NULL,
+    library = NULL
   )
 )

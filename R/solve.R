@@ -720,7 +720,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
       if (sol$platform[[i]] != "source") {
         x <- x[tolower(x$type) != "linkingto", ]
       }
-      x$package[tolower(x$type) %in% hard_deps]
+      x$package[tolower(x$type) %in% tolower(hard_deps)]
     })
   deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   installed <- ifelse(

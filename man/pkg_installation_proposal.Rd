@@ -180,6 +180,16 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
+pdi$resolve()
+pdi$solve()
+pdi$download()
+pdi$get_install_plan()
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
 pdi
 
 pdi$resolve()
@@ -214,6 +224,7 @@ pdi
 \item \href{#method-get_downloads}{\code{pkg_installation_proposal$get_downloads()}}
 \item \href{#method-stop_for_download_error}{\code{pkg_installation_proposal$stop_for_download_error()}}
 \item \href{#method-install}{\code{pkg_installation_proposal$install()}}
+\item \href{#method-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
 \item \href{#method-format}{\code{pkg_installation_proposal$format()}}
 \item \href{#method-print}{\code{pkg_installation_proposal$print()}}
 \item \href{#method-clone}{\code{pkg_installation_proposal$clone()}}
@@ -735,7 +746,36 @@ Install the downloaded packages. It calls \code{\link[=install_package_plan]{ins
 
 \subsection{Returns}{
 The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
+Create an installation plan for the downloaded packages.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_install_plan"></a>}}
+\if{latex}{\out{\hypertarget{method-get_install_plan}{}}}
+\subsection{Method \code{get_install_plan()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_install_plan()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+An installation plan, see \link[=install_plans]{'Installation plans'} for
+the format.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{pdi <- new_pkg_installation_proposal(
+  "pak",
+  config = list(library = tempfile())
+)
+pdi$resolve()
+pdi$solve()
+pdi$download()
+pdi$get_install_plan()
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}

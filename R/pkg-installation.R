@@ -425,6 +425,24 @@ pkg_installation_proposal <- R6::R6Class(
       install_package_plan(plan, lib = private$library, num_workers = nw)
     },
 
+    #' Create an installation plan for the downloaded packages.
+    #'
+    #' @return
+    #' An installation plan, see ['Installation plans'][install_plans] for
+    #' the format.
+    #'
+    #' @examplesIf pkgdepends:::is_online()
+    #' pdi <- new_pkg_installation_proposal(
+    #'   "pak",
+    #'   config = list(library = tempfile())
+    #' )
+    #' pdi$resolve()
+    #' pdi$solve()
+    #' pdi$download()
+    #' pdi$get_install_plan()
+
+    get_install_plan = function() private$plan$get_install_plan(),
+
     #' @description
     #' Format a `pkg_installation_proposal` object, typically for printing.
     #'
@@ -459,6 +477,7 @@ pkg_installation_proposal <- R6::R6Class(
         if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)",
         if (has_sol) "(use `$create_lockfile()` to write a lock file)",
         if (has_dls) "(use `$get_downloads()` to get download data)",
+        if (has_dls) "(use `$get_install_plan()` to get the installation plan)",
         if (has_dls) "(use `$install()` to install the packages)"
       )
     },

@@ -3,8 +3,9 @@ pkg_plan <- R6::R6Class(
   "pkg_plan",
   public = list(
     initialize = function(refs, config = list(), library = NULL,
-                          remote_types = NULL)
-      pkgplan_init(self, private, refs, config, library, remote_types),
+                          remote_types = NULL, lockfile = NULL)
+      pkgplan_init(self, private, refs, config, library, remote_types,
+                   lockfile),
 
     get_refs = function() private$refs,
     has_resolution = function() !is.null(private$resolution$result),
@@ -41,8 +42,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_show_solution(self, private, key),
     get_install_plan = function()
       pkgplan_install_plan(self, private, downloads = TRUE),
-    export_install_plan = function(plan_file = stdout())
-      pkgplan_export_install_plan(self, private, plan_file),
+    export_install_plan = function(plan_file = "pkg.lock", version = 1)
+      pkgplan_export_install_plan(self, private, plan_file, version),
     draw_solution_tree = function(pkgs = NULL, annotate = TRUE)
       pkgplan_draw_solution_tree(self, private, pkgs, annotate),
 
@@ -104,7 +105,18 @@ pkg_plan <- R6::R6Class(
 #' @importFrom utils modifyList
 
 pkgplan_init <- function(self, private, refs, config, library,
-                         remote_types) {
+                         remote_types, lockfile) {
+
+  if (!is.null(lockfile)) {
+    return(pkgplan_init_lockfile(
+      self,
+      private,
+      lockfile,
+      config,
+      library,
+      remote_types
+    ))
+  }
 
   assert_that(is_character(refs),
               is_valid_config(config),
@@ -142,6 +154,86 @@ pkgplan_init <- function(self, private, refs, config, library,
   )
 
   private$dirty <- TRUE
+  invisible(self)
+}
+
+pkgplan_init_lockfile <- function(self, private, lockfile, config,
+                                   library, remote_types) {
+  assert_that(
+    is_path(lockfile),
+    is_valid_config(config),
+    is_path_or_null(library)
+  )
+
+  private$config <- modifyList(pkgplan_default_config(), config)
+  private$config$library <- library
+  private$remote_types <- remote_types %||% default_remote_types()
+
+  if (!is.null(library)) {
+    mkdirp(library, msg = "Creating library directory")
+    library <- normalizePath(library)
+  }
+  mkdirp(private$download_cache <- private$config$cache_dir)
+
+  raw <- fromJSON(readLines(lockfile), simplifyVector = FALSE)
+  if (raw$lockfile_version != 1) {
+    stop("Unknown lockfile version: ", raw$lockfile_version)
+  }
+
+  pkgs <- raw$packages
+  refs <- vcapply(pkgs, "[[", "ref")
+  soldata <- tibble(
+    ref              = refs,
+    type             = vcapply(pkgs, "[[", "type"),
+    direct           = vlapply(pkgs, "[[", "direct"),
+    directpkg        = vlapply(pkgs, "[[", "directpkg"),
+    status           = "OK",
+    package          = vcapply(pkgs, "[[", "package"),
+    version          = vcapply(pkgs, "[[", "version"),
+    license          = vcapply(pkgs, "[[", "license"),
+    needscompilation = vlapply(pkgs, "[[", "needscompilation"),
+    sha256           = vcapply(pkgs, function(x) x$sha256 %||% NA_character_),
+    filesize         = viapply(pkgs, function(x) x$filesize %||% NA_integer_),
+    built            = vcapply(pkgs, function(x) x$built %||% NA_character_),
+    platform         = vcapply(pkgs, "[[", "platform"),
+    rversion         = vcapply(pkgs, "[[", "rversion"),
+    target           = vcapply(pkgs, "[[", "target"),
+    dependencies     = lapply(pkgs, function(x) unlist(x$dependencies) %||% character()),
+    sources          = lapply(pkgs, function(x) unlist(x$sources)),
+    metadata         = lapply(pkgs, function(x) unlist(x$metadata)),
+    dep_types        = lapply(pkgs, function(x) unlist(x$dep_types)),
+    remote           = parse_pkg_refs(refs),
+    cache_status     = "miss",
+    lib_status       = "new",
+    old_version      = NA_character_,
+    new_version      = version,
+    extra            = list(list())
+
+  )
+
+  private$refs <- refs[soldata$direct]
+  private$remotes <- soldata$remote
+  private$dirty <- FALSE
+
+  private$cache <- list(
+    metadata = NULL,
+    package = pkgcache::package_cache$new(private$config$package_cache_dir),
+    installed = NULL
+  )
+
+  private$resolution <- list(result = soldata)
+  private$solution <- list(
+    result = structure(
+      class = c("pkg_solution_result", "list"),
+      list(
+        status = "OK",
+        data = soldata,
+        problem = list(pkgs = soldata),
+        solution = NULL
+      )
+    )
+  )
+
   invisible(self)
 }
 

@@ -12,15 +12,19 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
   sol <- sol[order(sol$package), ]
   pkgs <- pkgs %||% sol$package[sol$directpkg]
 
-  data <- sol[, c("package", "deps")]
+  data <- sol[, "package"]
 
-  deps <- lapply(seq_len(nrow(sol)), function(i) {
-    d <- sol$deps[[i]]
-    d[tolower(d$type) %in% tolower(sol$dep_types[[i]]), ]
-  })
-  deps <- lapply(deps, "[[", "package")
-  deps <- lapply(deps, intersect, data$package)
-  data$deps <- deps
+  if ("dependencies" %in% names(sol)) {
+    data$deps <- sol$dependencies
+  } else {
+    deps <- lapply(seq_len(nrow(sol)), function(i) {
+      d <- sol$deps[[i]]
+      d[tolower(d$type) %in% tolower(sol$dep_types[[i]]), ]
+    })
+    deps <- lapply(deps, "[[", "package")
+    data$deps <- deps
+  }
+  data$deps <- lapply(data$deps, intersect, data$package)
 
   ann_version <- function() {
     v <- silver(sol$version)

@@ -316,6 +316,28 @@ pkg_installation_proposal <- R6::R6Class(
     },
 
     #' @description
+    #' Create a lock file that contains the information to perform
+    #' the installation later, possibly in another R session.
+    #'
+    #' @details
+    #' Note, since the URLs of CRAN and most CRAN-like repositories change
+    #' over time, in practice you cannot perform the plan of the lock file
+    #' _much_ later. For example, binary packages of older package version
+    #' are removed, and won't be found.
+    #'
+    #' Currently the intended use case of lock files in on CI systems, to
+    #' facilitate caching. The (hash of the) lock file provides a good key
+    #' for caching systems.
+    #'
+    #' @param path Name of the lock file. The default is `pkg.lock` in the
+    #'   current working directory.
+    #' @param version Only version 1 is supported currently.
+
+    create_lockfile = function(path = "pkg.lock", version = 1) {
+      private$plan$export_install_plan(plan_file = path, version = version)
+    },
+
+    #' @description
     #' Draw a tree of package dependencies. It returns a `tree` object, see
     #' [cli::tree()]. Printing this object prints the dependency tree to the
     #' screen.
@@ -403,7 +425,6 @@ pkg_installation_proposal <- R6::R6Class(
       install_package_plan(plan, lib = private$library, num_workers = nw)
     },
 
-    #' @description
     #' Create an installation plan for the downloaded packages.
     #'
     #' @return
@@ -454,6 +475,7 @@ pkg_installation_proposal <- R6::R6Class(
         if (has_sol) "(use `$show_solution()` to see the packages to install",
         if (has_sol) "(use `$get_solution()` to see the full solution results)",
         if (has_sol && !sol_err) "(use `$draw()` to draw the dependency tree)",
+        if (has_sol) "(use `$create_lockfile()` to write a lock file)",
         if (has_dls) "(use `$get_downloads()` to get download data)",
         if (has_dls) "(use `$get_install_plan()` to get the installation plan)",
         if (has_dls) "(use `$install()` to install the packages)"

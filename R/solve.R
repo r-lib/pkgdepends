@@ -655,7 +655,7 @@ highlight_package_list <- function(sol) {
 
   gh <- sol$type == "github"
   hash <- character(nrow(sol))
-  hash[gh] <- vcapply(sol$extra[gh], function(x) x$remotesha %||% "")
+  hash[gh] <- vcapply(sol$metadata[gh], function(x) x["RemoteSha"])
 
   ann <- paste0(
     ifelse(
@@ -740,7 +740,19 @@ pkgplan_install_plan <- function(self, private, downloads) {
   sol$library <- private$config$library
   sol$binary <- binary
   sol$direct <- direct
-  sol$dependencies <- I(deps)
+  if (! "dependencies" %in% names(sol)) {
+    deps <- lapply(
+      seq_len(nrow(sol)),
+      function(i) {
+        x <- sol$deps[[i]]
+        if (sol$platform[[i]] != "source") {
+          x <- x[tolower(x$type) != "linkingto", ]
+        }
+        x$package[tolower(x$type) %in% tolower(sol$dep_types[[i]])]
+      })
+    deps <- lapply(deps, setdiff, y = c("R", base_packages()))
+    sol$dependencies <- I(deps)
+  }
   sol$installed <- installed
   sol$vignettes <- vignettes
 
@@ -754,14 +766,20 @@ pkgplan_install_plan <- function(self, private, downloads) {
 }
 
 #' @importFrom rprojroot find_package_root_file
+#' @importFrom jsonlite unbox
 
-pkgplan_export_install_plan <- function(self, private, plan_file) {
+pkgplan_export_install_plan <- function(self, private, plan_file, version) {
   plan_file <- plan_file %||% find_package_root_file("resolution.json")
-  plan <- pkgplan_install_plan(self, private, downloads = FALSE)
-  cols <- c("ref", "package", "version", "type", "direct", "binary",
-            "dependencies", "vignettes", "needscompilation", "metadata",
-            "library", "sources", "target")
-  txt <- as_json_lite_plan(plan[, cols])
+  pkgs <- pkgplan_install_plan(self, private, downloads = FALSE)
+  cols <- unique(c(
+    "ref", "package", "version", "type", "direct", "binary",
+    "dependencies", "vignettes", "needscompilation", "metadata",
+    "sources", "target", "platform", "rversion", "built",
+    "directpkg", "license", "sha256", "filesize", "dep_types"
+  ))
+
+  plan <- list(lockfile_version = unbox(version), packages = pkgs[, cols])
+  txt <- as_json_lite_plan(plan)
   writeLines(txt, plan_file)
 }
 
@@ -769,7 +787,7 @@ pkgplan_export_install_plan <- function(self, private, plan_file) {
 
 as_json_lite_plan <- function(liteplan, pretty = TRUE, ...) {
   tolist1 <- function(x) lapply(x, function(v) lapply(as.list(v), unbox))
-  liteplan$metadata <- tolist1(liteplan$metadata)
+  liteplan$packages$metadata <- tolist1(liteplan$packages$metadata)
   toJSON(liteplan, pretty = pretty, ...)
 }
 

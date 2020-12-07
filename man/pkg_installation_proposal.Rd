@@ -180,16 +180,6 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-pdi$resolve()
-pdi$solve()
-pdi$download()
-pdi$get_install_plan()
-\dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
 pdi
 
 pdi$resolve()
@@ -217,13 +207,13 @@ pdi
 \item \href{#method-get_solution}{\code{pkg_installation_proposal$get_solution()}}
 \item \href{#method-show_solution}{\code{pkg_installation_proposal$show_solution()}}
 \item \href{#method-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
+\item \href{#method-create_lockfile}{\code{pkg_installation_proposal$create_lockfile()}}
 \item \href{#method-draw}{\code{pkg_installation_proposal$draw()}}
 \item \href{#method-download}{\code{pkg_installation_proposal$download()}}
 \item \href{#method-async_download}{\code{pkg_installation_proposal$async_download()}}
 \item \href{#method-get_downloads}{\code{pkg_installation_proposal$get_downloads()}}
 \item \href{#method-stop_for_download_error}{\code{pkg_installation_proposal$stop_for_download_error()}}
 \item \href{#method-install}{\code{pkg_installation_proposal$install()}}
-\item \href{#method-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
 \item \href{#method-format}{\code{pkg_installation_proposal$format()}}
 \item \href{#method-print}{\code{pkg_installation_proposal$print()}}
 \item \href{#method-clone}{\code{pkg_installation_proposal$clone()}}
@@ -589,6 +579,38 @@ pdi
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-create_lockfile"></a>}}
+\if{latex}{\out{\hypertarget{method-create_lockfile}{}}}
+\subsection{Method \code{create_lockfile()}}{
+Create a lock file that contains the information to perform
+the installation later, possibly in another R session.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$create_lockfile(path = "pkg.lock", version = 1)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{path}}{Name of the lock file. The default is \code{pkg.lock} in the
+current working directory.}
+
+\item{\code{version}}{Only version 1 is supported currently.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+Note, since the URLs of CRAN and most CRAN-like repositories change
+over time, in practice you cannot perform the plan of the lock file
+\emph{much} later. For example, binary packages of older package version
+are removed, and won't be found.
+
+Currently the intended use case of lock files in on CI systems, to
+facilitate caching. The (hash of the) lock file provides a good key
+for caching systems.
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-draw"></a>}}
 \if{latex}{\out{\hypertarget{method-draw}{}}}
 \subsection{Method \code{draw()}}{
@@ -714,35 +736,6 @@ Install the downloaded packages. It calls \code{\link[=install_package_plan]{ins
 \subsection{Returns}{
 The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_install_plan"></a>}}
-\if{latex}{\out{\hypertarget{method-get_install_plan}{}}}
-\subsection{Method \code{get_install_plan()}}{
-Create an installation plan for the downloaded packages.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_install_plan()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-An installation plan, see \link[=install_plans]{'Installation plans'} for
-the format.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$download()
-pdi$get_install_plan()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}

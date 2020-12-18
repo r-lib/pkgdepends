@@ -102,7 +102,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/r-lib/pkgdepends/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -176,6 +176,8 @@ result of the dependency solver.</p></li>
 <li><p><a href='#method-resolve'><code>pkg_deps$resolve()</code></a></p></li>
 <li><p><a href='#method-async_resolve'><code>pkg_deps$async_resolve()</code></a></p></li>
 <li><p><a href='#method-get_resolution'><code>pkg_deps$get_resolution()</code></a></p></li>
+<li><p><a href='#method-get_solve_policy'><code>pkg_deps$get_solve_policy()</code></a></p></li>
+<li><p><a href='#method-set_solve_policy'><code>pkg_deps$set_solve_policy()</code></a></p></li>
 <li><p><a href='#method-solve'><code>pkg_deps$solve()</code></a></p></li>
 <li><p><a href='#method-get_solution'><code>pkg_deps$get_solution()</code></a></p></li>
 <li><p><a href='#method-stop_for_solution_error'><code>pkg_deps$stop_for_solution_error()</code></a></p></li>
@@ -191,7 +193,12 @@ instead of calling the constructor directly.</p>
 <p>The returned object can be used to look up (recursive) dependencies
 of R packages from various sources. To perform the actual lookup,
 you'll need to call the <a href='#method-resolve'><code>resolve()</code></a> method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>refs</span>, config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>, remote_types <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+  <span class='va'>refs</span>,
+  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  policy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lazy"</span>, <span class='st'>"upgrade"</span><span class='op'>)</span>,
+  remote_types <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
@@ -200,6 +207,8 @@ you'll need to call the <a href='#method-resolve'><code>resolve()</code></a> met
 
 <dt><code>config</code></dt><dd><p>Configuration options, a named list. See
 <a href='pkg_config.html'>'Configuration'</a>.</p></dd>
+
+<dt><code>policy</code></dt><dd><p>Solution policy. See <a href='pkg_solution.html'>'The dependency solver'</a>.</p></dd>
 
 <dt><code>remote_types</code></dt><dd><p>Custom remote ref types, this is for advanced
 use, and experimental currently.</p></dd>
@@ -277,6 +286,41 @@ called after <a href='#method-resolve'><code>resolve()</code></a> has completed.
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<p><hr>
+<a id="method-get_solve_policy"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_solve_policy()</code></h3>
+<p>Returns the current policy of the dependency solver.
+See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>A character vector of length one.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<p><hr>
+<a id="method-set_solve_policy"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>set_solve_policy()</code></h3>
+<p>Set the current policy of the dependency solver.
+If the object already contains a solution and the new policy is
+different than the old policy, then the solution is deleted.
+See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span>policy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lazy"</span>, <span class='st'>"upgrade"</span><span class='op'>)</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>policy</code></dt><dd><p>Policy to set.</p></dd>
+
+</dl><p></div></p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
@@ -418,10 +462,10 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; + config:
-#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmptRwsMt/file81e33d57780
-#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmptRwsMt/file81e6fe6c64f
+#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp696xnS/filea36459d4234
+#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp696xnS/filea36328de491
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmptRwsMt/file81e17e5a5ee
+#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp696xnS/filea361990585
 #&gt;   - platforms: macos, source
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
@@ -467,7 +511,15 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; </span><span style='color: #555555;'>#   sha256 </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, filesize </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, built </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, platform </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rversion </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   repodir </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, target </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span style='color: #555555;'>, deps </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, mirror </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+#&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "upgrade"</div><div class='input'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "upgrade"</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
@@ -475,7 +527,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + constraints (147):
+#&gt; + constraints (150):
 #&gt;   - select pkgdepends exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
@@ -592,10 +644,10 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; │ ├─R6 </span><span style='color: #555555;'>2.5.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─crayon
 #&gt; │ └─rprojroot </span><span style='color: #555555;'>2.0.2</span><span> </span><span style='color: #00BB00;'>✨</span><span>
-#&gt; ├─pkgbuild </span><span style='color: #555555;'>1.1.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
+#&gt; ├─pkgbuild </span><span style='color: #555555;'>1.2.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(unknown size)</span><span>
 #&gt; │ ├─callr </span><span style='color: #555555;'>3.5.1</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ │ ├─processx </span><span style='color: #555555;'>3.4.5</span><span> </span><span style='color: #00BB00;'>✨</span><span>
-#&gt; │ │ │ ├─ps </span><span style='color: #555555;'>1.4.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
+#&gt; │ │ │ ├─ps </span><span style='color: #555555;'>1.5.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ │ │ └─R6
 #&gt; │ │ └─R6
 #&gt; │ ├─cli

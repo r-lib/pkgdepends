@@ -135,7 +135,13 @@ satisfy_remote_github <- function(resolution, candidate,
     }
   }
 
-  ## 2. other refs are also good, as long as they have the same sha
+  ## 2. local packages satisfy a GH remote
+  ## See https://github.com/r-lib/pkgdepends/issues/229
+  if (candidate$type == "local") {
+    return (TRUE)
+  }
+
+  ## 3. other refs are also good, as long as they have the same sha
   sha1 <- tryCatch(candidate$extra[[1]]$remotesha, error = function(e) "")
   sha2 <- resolution$extra[[1]]$remotesha
   ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)

@@ -212,7 +212,7 @@ test_that("satisfies_remote", {
   expect_match(attr(ans, "reason"), "Installed package sha mismatch")
 
   ## Other package, different sha
-  bad4 <- make_fake_resolution(`local::bar` = list(
+  bad4 <- make_fake_resolution(`bioc::bar` = list(
     package = "crayon",
     extra = list(list(remotesha = "notsobad"))))
   expect_false(ans <- satisfy_remote_github(res, bad4))
@@ -230,4 +230,11 @@ test_that("satisfies_remote", {
     package = "crayon",
     extra = list(list(remotesha = "badcafe"))))
   expect_true(ans <- satisfy_remote_github(res, ok2))
+
+  ## Local packages are OK, even w/o sha
+  ## https://github.com/r-lib/pkgdepends/issues/229
+  ok3 <- make_fake_resolution(`local::bar` = list(
+    package = "crayon"
+  ))
+  expect_true(ans <- satisfy_remote_github(res, ok3))
 })

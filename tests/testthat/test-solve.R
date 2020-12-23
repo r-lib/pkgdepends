@@ -146,7 +146,8 @@ test_that("integration test", {
   sol <- r$solve()
   expect_equal(sol$status, "FAILED")
   expect_true("cli" %in% sol$failures$package)
-  expect_output(print(sol), "cran::cli:")
+  out <- capture_output(print(sol))
+  expect_match(crayon::strip_style(out), "cran::cli:")
 })
 
 test_that("failure in non-needed package is ignored", {

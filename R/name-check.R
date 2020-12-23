@@ -1,4 +1,5 @@
 
+# -------------------------------------------------------------------------
 #' @export
 
 pkg_name_check <- function(name, dictionaries = NULL) {
@@ -24,25 +25,52 @@ async_pkg_name_check <- function(name, dictionaries = NULL) {
   )
   dicts <- dictionaries %||% default_dictionaries
 
+  basics <- async_pnc_basics(name, profanity = "profanity" %in% dicts)
   result <- when_all(
-    valid =    valid_pkg_name_check(name),
-    cranlike = async_cranlike_check(name),
-    crandb =   async_crandb_check(name),
-
-    wikipedia =  if ("wikipedia"  %in% dicts) async_wikipedia_get (name),
+    basics     = basics,
+    wikipedia  = if ("wikipedia"  %in% dicts) async_wikipedia_get (name),
     wiktionary = if ("wiktionary" %in% dicts) async_wiktionary_get(name),
-    acromine =   if ("acromine"   %in% dicts) async_acromine_get  (name),
-    profanity =  if ("profanity"  %in% dicts) async_profanity_get (name),
-    sentiment =  if ("sentiment"  %in% dicts) async_sentiment_get (name),
-    urban =      if ("urban"      %in% dicts) async_urban_get     (name)
-  )
+    acromine   = if ("acromine"   %in% dicts) async_acromine_get  (name),
+    urban      = if ("urban"      %in% dicts) async_urban_get     (name)
+  )$then(function(res) add_format(add_class(res, "pkg_name_check")))
 }
 
-valid_pkg_name_check <- function(name) {
-  if (!grepl(pkg_rx()$pkg_name, name)) return(FALSE)
-  if (any(charToRaw(name) > 127)) return(FALSE)
-  TRUE
+format.pkg_name_check <- function(x, limit = 6, ...) {
+  unlist(lapply(x, format, limit = limit, ...))
 }
+
+async_pnc_basics <- function(name, profanity = TRUE) {
+  when_all(
+    name       = name,
+    valid      = pnc_valid(name),
+    base       = pnc_base(name),
+    crandb     = async_pnc_crandb(name),
+    bioc       = async_pnc_bioc(name),
+    profanity  = if (profanity) async_profanity_get (name)
+  )$then(function(res) add_format(add_class(res, "pkg_name_check_basics")))
+}
+
+# -------------------------------------------------------------------------
+
+pnc_valid <- function(name) {
+  ans <- TRUE
+  if (!grepl(pkg_rx()$pkg_name, name)) ans <- FALSE
+  if (ans && any(charToRaw(name) > 127)) ans <- FALSE
+  add_format(add_class(ans, "pkg_name_check_valid"))
+}
+
+# -------------------------------------------------------------------------
+
+pnc_base <- function(name) {
+  bs <- base_packages()
+  mch <- match(tolower(name), tolower(bs))
+  add_format(add_class(
+    list(base = is.na(mch), package = if (!is.na(mch)) bs[mch]),
+    "pkg_name_check_base"
+  ))
+}
+
+# -------------------------------------------------------------------------
 
 async_cranlike_check <- function(name) {
   name
@@ -61,36 +89,103 @@ async_cranlike_check <- function(name) {
 
   meta$async_check_update()$
     then(function(data) {
-      mch <- match(name, data$pkgs$package)
-      ret <- list(cran = TRUE, bioc = TRUE)
+      mch <- match(tolower(name), tolower(data$pkgs$package))
+      ret <- list(cran = TRUE, bioc = TRUE, package = NA_character_)
       if (!is.na(mch)) {
+        ret$package <- data$pkgs$package[mch]
         type <- data$pkgs$type[mch]
         if (type == "cran") ret$cran <- FALSE
         if (type == "bioc") ret$bioc <- FALSE
       }
       ret
-    })$
-    then(function(res) add_class(res, "pkg_cranlike_check"))
+    })$then(function(res) {
+      add_format(add_class(res, "pkg_name_check_cranlike"))
+    })
 }
 
-async_crandb_check <- function(name) {
-  url <- paste0("https://crandb.r-pkg.org/", name)
-  http_get(url)$
-    then(function(ret) {
-      if (ret$status_code == 200) return(list(crandb = FALSE))
-      if (ret$status_code == 404) return(list(crandb = TRUE))
-      http_stop_for_status(ret)
-    })$
-    then(function(res) add_class(res, "pkg_crandb_check"))
+# -------------------------------------------------------------------------
+
+async_pnc_crandb <- function(name) {
+  async_pnc_crandb_query(name)$
+    then(pnc_crandb_process)
 }
+
+async_pnc_crandb_query <- function(name) {
+  base <- Sys.getenv(
+    "PKG_NAME_CHECK_CRANDB_URL",
+    "https://crandb.r-pkg.org:6984/cran/_design/app/_view/alllower"
+  )
+  url <- paste0(base, "?key=%22", tolower(name), "%22")
+  http_get(url)
+}
+
+pnc_crandb_process <- function(response) {
+  http_stop_for_status(response)
+  ans <- fromJSON(rawToChar(response$content), simplifyVector = FALSE)
+  ret <- list(
+    crandb = length(ans$rows) == 0,
+    package = if (length(ans$rows) > 0) vcapply(ans$rows, "[[", "value")
+  )
+  add_format(add_class(ret, "pkg_name_check_crandb"))
+}
+
+# -------------------------------------------------------------------------
+
+#' @export
+
+format.pkg_name_check_basics <- function(x, ...) {
+
+  cw <- cli::console_width()
+  stars <- cli::col_yellow(strrep(cli::symbol$star, 3))
+  title <- paste0(
+    "Package name check: ",
+    stars, " ",
+    cli::style_bold(cli::col_blue(x$name)),
+    " ", stars
+  )
+  tbox <- cli::boxx(
+    cli::ansi_align(title, width = cw - 4, align = "center"),
+    padding = c(0,1,0,1),
+    border_style = "double",
+  )
+
+  ys <- cli::col_green(cli::symbol$tick)
+  no <- cli::col_red(cli::symbol$cross)
+  mark <- function(x) if (x) ys else no
+  str <- c(
+    paste(mark(x$valid), " valid name"),
+    paste(mark(x$base$base && x$crandb$crandb), " CRAN"),
+    paste(mark(x$bioc$bioc), " Bioconductor"),
+    if ("profanity" %in% names(x)) {
+      paste0(
+        mark(!x$profanity),
+        if (!x$profanity) "  not a" else " ", " profanity")
+    }
+  )
+  cols <- cli::ansi_columns(str, width = cw - 4, max_cols = length(str))
+  bbox <- cli::boxx(cols, padding = c(0,1,0,1))
+
+  c(tbox, bbox)
+}
+
+# -------------------------------------------------------------------------
 
 async_wikipedia_get <- function(terms) {
-  url <- "https://en.wikipedia.org/w/api.php"
-  data <- make_wikipedia_data(terms)
-  http_post(url, data = data)$
+  async_wikipedia_get_query(terms)$
     then(http_stop_for_status)$
-    then(function(resp) process_wikipedia_response(terms, resp))$
-    then(function(res) add_class(res, "pkg_wikipedia_check"))
+    then(function(resp) wikipedia_get_process(terms, resp))$
+    then(function(res) {
+      add_format(add_class(res, "pkg_name_check_wikipedia"))
+    })
+}
+
+async_wikipedia_get_query <- function(terms) {
+  url <- Sys.getenv(
+    "PKG_NAME_CHECK_WIKIPEDIA_URL",
+    "https://en.wikipedia.org/w/api.php"
+  )
+  data <- make_wikipedia_data(terms)
+  http_post(url, data = data)
 }
 
 make_wikipedia_data <- function(terms, intro = TRUE) {
@@ -108,7 +203,7 @@ make_wikipedia_data <- function(terms, intro = TRUE) {
   charToRaw(pstr)
 }
 
-process_wikipedia_response <- function(
+wikipedia_get_process <- function(
     terms, resp, base_url = "https://en.wikipedia.org/wiki/") {
 
   obj <- jsonlite::fromJSON(
@@ -146,26 +241,109 @@ process_wikipedia_response <- function(
   )
 }
 
+#' @export
+
+format.pkg_name_check_wikipedia <- function(x, limit = 6, ...) {
+  x <- x[1,, drop = FALSE]
+
+  if (is.na(x$text)) {
+    x$text <- "No definition found"
+    x$url <- ""
+  }
+
+  txt <- paste(
+    cli::style_underline(x$redirected),
+    if (x$redirected != x$normalized) paste0("(from ", x$normalized, ")"),
+    clean_wikipedia_text(x$text)
+  )
+
+  cw <- cli::console_width()
+  wrp <- cli::ansi_strwrap(txt, width = cw - 4)
+  hdr <- cli::col_green("Wikipedia")
+  ftr <- cli::col_blue(x$url)
+  alg <- cli::ansi_align(wrp, width = cw - 4)
+  if (length(alg) > limit) alg <- c(alg[1:limit], cli::symbol$ellipsis)
+  cli::boxx(alg, padding = c(0,1,0,1), header = hdr, footer = ftr)
+}
+
+clean_wikipedia_text <- function(x) {
+  x <- sub(
+    "may refer to:$",
+    "may refer to multiple articles, see link.",
+    x
+  )
+  x <- gsub(" ()", "", x, fixed = TRUE)
+  x <- gsub("\n", "\n\n", x , fixed = TRUE)
+}
+
+# -------------------------------------------------------------------------
+
 async_wiktionary_get <- function(terms) {
   url <- "https://en.wiktionary.org/w/api.php"
   data <- make_wiktionary_data(terms)
   http_post(url, data = data)$
     then(http_stop_for_status)$
-    then(function(resp) process_wiktionary_response(terms, resp))$
-    then(function(res) add_class(res, "pkg_wiktionary_check"))
+    then(function(resp) wiktionary_get_process(terms, resp))$
+    then(function(res) {
+      add_format(add_class(res, "pkg_name_check_wiktionary"))
+    })
 }
 
 make_wiktionary_data <- function(terms) {
   make_wikipedia_data(terms, intro = FALSE)
 }
 
-process_wiktionary_response <- function(terms, resp) {
-  process_wikipedia_response(
+wiktionary_get_process <- function(terms, resp) {
+  wikipedia_get_process(
     terms,
     resp,
     base_url = "https://en.wiktionary.org/wiki/"
   )[, c("term", "text", "url")]
 }
+
+#' @export
+
+format.pkg_name_check_wiktionary <- function(x, limit = 6, ...) {
+  x <- x[1,, drop = FALSE]
+
+  if (is.na(x$text)) {
+    x$text <- "No definition found"
+    x$url <- ""
+  }
+
+  txt <- paste(cli::style_underline(x$term), clean_wiktionary_text(x$text))
+
+  cw <- cli::console_width()
+  wrp <- cli::ansi_strwrap(txt, width = cw - 4)
+  wrp <- wrp[cli::ansi_strip(wrp) != ""]
+  if (length(wrp) > limit) wrp <- c(wrp[1:limit], cli::symbol$ellipsis)
+  hdr <- cli::col_green("Wiktionary")
+  ftr <- cli::col_blue(x$url)
+  alg <- cli::ansi_align(wrp, width = cw - 4)
+  cli::boxx(alg, padding = c(0,1,0,1), header = hdr, footer = ftr)
+}
+
+clean_wiktionary_text <- function(x) {
+  langs <- strsplit(x, "\n== ", x)[[1]][-1]
+  eng <- grep("^English", langs, value = TRUE)
+  if (length(eng) == 0) return("No English definition found")
+  eng2 <- sub("^English ==", "", eng)
+  # remove pronunciation
+  eng3 <- sub("\n=== Pronunciation ===\n+[^=]*\n+===", "\n===", eng2)
+  # remove empty subsections
+  eng4 <- gsub("\n==== [^=]+ ====\n", "\n\n", eng3)
+  eng5 <- gsub(
+    "\n=== ([^=]+) ===\n",
+    paste0("\n\n", cli::style_underline("\\1:"), " "),
+    eng4
+  )
+  eng6 <- cli::ansi_trimws(eng5)
+  eng7 <- gsub("\n[\n]+", "\n\n", eng6)
+  eng8 <- gsub("([^\n])\n([^\n])", "\\1 \\2", eng7)
+  eng8
+}
+
+# -------------------------------------------------------------------------
 
 async_acromine_get <- function(term) {
   base <- "http://www.nactem.ac.uk/software/acromine/dictionary.py"
@@ -173,11 +351,13 @@ async_acromine_get <- function(term) {
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("[]")))$
-    then(function(resp) process_acromine_response(term, resp))$
-    then(function(res) add_class(res, "pkg_acromine_check"))
+    then(function(resp) acromine_get_process(term, resp))$
+    then(function(res) {
+      add_format(add_class(res, "pkg_name_check_acromine"))
+    })
 }
 
-process_acromine_response <- function(term, resp) {
+acromine_get_process <- function(term, resp) {
   obj <- jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
   if (length(obj) == 0) obj <- list(list())
   tibble(
@@ -189,20 +369,47 @@ process_acromine_response <- function(term, resp) {
   )
 }
 
+#' @export
+
+format.pkg_name_check_acromine <- function(x, limit = 6, ...) {
+  if (nrow(x) == 0) {
+    txt <- "No acronyms found."
+  } else {
+    txt <- paste0(
+      seq_len(nrow(x)), ". ", x$long_form, " (", x$frequency, ")",
+      collapse = "\n\n"
+    )
+  }
+
+  cw <- cli::console_width()
+  wrp <- cli::ansi_strwrap(txt, width = cw - 4)
+  wrp <- wrp[cli::ansi_strip(wrp) != ""]
+  hdr <- cli::col_green("Acroynms (from Acromine)")
+  alg <- cli::ansi_align(wrp, width = cw - 4)
+  if (length(alg) > limit) alg <- c(alg[1:limit], cli::symbol$ellipsis)
+  cli::boxx(alg, padding = c(0,1,0,1), header = hdr)
+}
+
+# -------------------------------------------------------------------------
+
 async_profanity_get <- function(term) {
   base <- "https://www.purgomalum.com/service/containsprofanity"
   url <- paste0(base, "?text=", URLencode(term))
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("NA")))$
-    then(function(resp) process_profanity_response(term, resp))$
-    then(function(res) add_class(res, "pkg_profanity_check"))
+    then(function(resp) profanity_get_process(term, resp))$
+    then(function(res) {
+      add_format(add_class(res, "pkg_name_check_profanity"))
+    })
 }
 
-process_profanity_response <- function(term, resp) {
+profanity_get_process <- function(term, resp) {
   txt <- rawToChar(resp$content)
-  list (profanity = as.logical(txt))
+  as.logical(txt)
 }
+
+# -------------------------------------------------------------------------
 
 async_sentiment_get <- function(term) {
   start <- if (is.null(pkgd_data$sentiment)) {
@@ -213,11 +420,14 @@ async_sentiment_get <- function(term) {
 
   start$
     then(function(stm) structure(stm[term], names = term))$
-    then(function(res) add_class(res, "pkg_sentiment_check"))
+    then(function(res) {
+      add_format(add_class(res, "pkg_name_check_sentiment"))
+    })
 }
 
 async_sentiment_get_data <- function() {
-  url <- "https://raw.githubusercontent.com/words/afinn-165/master/index.json"
+  url <-
+    "https://raw.githubusercontent.com/words/afinn-165/master/index.json"
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("{}")))$
@@ -226,17 +436,19 @@ async_sentiment_get_data <- function() {
     })
 }
 
+# -------------------------------------------------------------------------
+
 async_urban_get <- function(term) {
   base <- "http://api.urbandictionary.com/v0/"
   url <- paste0(base, "define?term=", URLencode(term))
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw('{"list":[]}')))$
-    then(function(resp) process_urban_response(term, resp))$
-    then(function(res) add_class(res, "pkg_urban_check"))
+    then(function(resp) urban_get_process(term, resp))$
+    then(function(res) add_format(add_class(res, "pkg_name_check_urban")))
 }
 
-process_urban_response <- function(term, resp) {
+urban_get_process <- function(term, resp) {
   obj <- jsonlite::fromJSON(
     rawToChar(resp$content),
     simplifyVector = FALSE
@@ -250,4 +462,169 @@ process_urban_response <- function(term, resp) {
     example = vcapply(obj, "[[", "example"),
     thumbs_down = viapply(obj, "[[", "thumbs_down")
   )
+}
+
+#' @export
+
+format.pkg_name_check_urban <- function(x, limit = 6, ...) {
+  if (nrow(x) == 0) {
+    txt <- "No definition found."
+    ftr <- ""
+  } else {
+    x <- x[1, , drop = FALSE]
+    txt <- clean_urban(x$definition)
+    ftr <- cli::col_blue(x$permalink)
+  }
+  cw <- cli::console_width()
+  wrp <- cli::ansi_strwrap(txt, width = cw - 4)
+  hdr <- cli::col_green("Urban dictionary")
+  alg <- cli::ansi_align(wrp, width = cw - 4)
+  if (length(alg) > limit) alg <- c(alg[1:limit], cli::symbol$ellipsis)
+  cli::boxx(alg, padding = c(0,1,0,1), header = hdr, footer = ftr)
+ }
+
+clean_urban <- function(x) {
+  gsub("[\r\n]", " ", x)
+}
+
+# -------------------------------------------------------------------------
+
+async_pnc_bioc <- function(name) {
+  # A removed package? Although maybe this is OK?
+  removed <- pnc_bioc_removed()
+  mch <- match(tolower(name), tolower(removed))
+  if (!is.na(mch)) return(pnc_bioc_false(removed[mch]))
+
+  # An annotatation package?
+  ann <- pnc_bioc_old_annotation()
+  mch <- match(tolower(name), tolower(ann))
+  if (!is.na(mch)) return(pnc_bioc_false(ann[mch]))
+
+  # Need to query
+  async_pnc_bioc_web(name)
+}
+
+pnc_bioc_false <- function(pkg) {
+  async_constant(list(bioc = FALSE, package = pkg))
+}
+
+async_pnc_bioc_web <- function(name) {
+  name
+  pnc_bioc_query(name)$
+    then(function(response) pnc_bioc_process(name, response))
+}
+
+pnc_bioc_query <- function(name) {
+  base1 <- "https://git.bioconductor.org/info?packages/"
+  url1 <- paste0(base1, substr(tolower(name), 1, 1))
+  url2 <- paste0(base1, substr(toupper(name), 1, 1))
+  url3 <- paste0(
+    pkgcache::bioc_repos(pkgcache::bioc_devel_version())[["BioCann"]],
+    "/src/contrib/PACKAGES.gz"
+  )
+  when_all(http_get(url1), http_get(url2), http_get(url3))
+}
+
+pnc_bioc_process <- function(name, response) {
+  pkgs <- unique(c(
+    pnc_bioc_parse(response[[1]]),
+    pnc_bioc_parse(response[[2]]),
+    pnc_bioc_parse_pgz(response[[3]])
+  ))
+  mch <- match(tolower(name), tolower(pkgs))
+  add_format(add_class(
+    list(bioc = is.na(mch), package = if (!is.na(mch)) pkgs[mch]),
+    "pkg_name_check_bioc"
+  ))
+}
+
+pnc_bioc_parse <- function(response) {
+  http_stop_for_status(response)
+  cnt <- strsplit(rawToChar(response$content), "\n")[[1]]
+  mch <- re_match(cnt, "packages/(?<package>[a-zA-Z.]+)")
+  na.omit(mch$package)
+}
+
+pnc_bioc_parse_pgz <- function(response) {
+  rc <- rawConnection(response$content)
+  on.exit(close(rc), add = TRUE)
+  pkgs <- read.dcf(gzcon(rc))
+  pkgs[, "Package"]
+}
+
+# These are the packages that are not in the Bioconductor git repo
+
+pnc_bioc_removed <- function() {
+  c(# removed in 3.5
+    "betr", "encoDnaseI", "ggtut",
+    # removed in 3.4
+    "AffyTiling", "cellHTS", "DASiR", "DAVIDQuery", "GenoView",
+    "inSilicoDb", "inSilicoMerging", "jmosaic", "metaX", "MMDiff",
+    "neaGUI", "Rolexa", "RWebServices", "SJava", "SomaticCA", "spade",
+    # removed in 3.1
+    "asmn", "COPDSexualDimorphism", "DNaseR", "flowFlowJo", "flowPhyto",
+    # removed in 3.0
+    "RMAPPER", "virtualArray",
+    # removed in 2.14
+    "Agi4x44PreProcess", "maDB", "pgUtils",
+    # removed in 2.13
+    "dualKS", "externalVector", "GeneGroupAnalysis", "iFlow", "KEGGSOAP",
+    "xmapcore",
+    # removed in 2.12
+    "cosmo", "cosmoGUI", "gene2pathway",
+    # removed in 2.11
+    "PatientGeneSets",
+    # removed in 2.10
+    "edd", "GeneRfold", "ontoTools", "GeneR", "RMAGEML", "RTooks4TB",
+    # Packages removed with Bioconductor 2.9 release
+    "GeneSpring", "GeneTraffic", "makePlatformDesign", "Rdbi", "RdbiPgSQL",
+    "rflowcyt", "Rredland", "Ruuid", "simulatorAPMS", "snpMatrix",
+    # Packages removed with Bioconductor 2.8 release
+    "exonmap", "biocDatasets",
+    # Packages removed with Bioconductor 2.7 release
+    "matchprobes", "GeneticsBase", "fbat",
+    # Packages removed with Bioconductor 2.6 release
+    "keggorth",
+    # Packages removed with Bioconductor 2.5 release
+    "stam", "Rintact",
+    # Packages removed with Bioconductor 2.4 release
+    "AnnBuilder", "RSNPer",
+    # Packages removed with Bioconductor 2.3 release
+    "SemSim", "WidgetInvoke",
+    # Packages removed with Bioconductor 2.2 release
+    "SAGElyzer", "GeneTS", "arrayMagic", "chromoViz", "iSPlot", "iSNetword",
+    # Packages removed with Bioconductor 2.1 release
+    "bim", "arrayQCplot",
+    # Packages removed with Bioconductor 2.0 release
+    "gff3Plotter", "mmgmos", "applera",
+    # Packages removed with Bioconductor 1.9 release
+    "reposTools", "exprExternal", "SNAData", "rfcdmin", "goCluster",
+    "GenomeBase", "y2hStat",
+    # Packages removed with Bioconductor 1.8 release
+    "msbase", "ideogram",
+    # Packages removed with Bioconductor 1.7 release
+    "mscalib"
+  )
+}
+
+function() {
+  bv <- setdiff(
+    as.character(pkgcache::bioc_version_map()$bioc_version),
+    c("1.6", "1.7")
+  )
+  pkgs <- lapply(bv, function(v) {
+    repos <- pkgcache::bioc_repos(v)["BioCann"]
+    rownames(utils::available.packages(repos = repos))
+  })
+  packages <- sort(unique(unlist(pkgs)))
+  saveRDS(
+    packages,
+    file = "inst/exdata/biocpackages.rds",
+    version = 2,
+    compress = "xz"
+  )
+}
+
+pnc_bioc_old_annotation <- function() {
+  readRDS(system.file("exdata", "biocpackages.rds", package = "pkgdepends"))
 }

@@ -30,7 +30,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild (>= 1.0.2),
-    pkgcache (>= 1.0.6),
+    pkgcache (>= 1.1.1.9000),
     prettyunits (>= 1.1.1),
     processx (>= 3.4.2),
     ps,
@@ -54,6 +54,8 @@ Suggests:
     rstudioapi,
     spelling,
     testthat
+Remotes:
+    r-lib/pkgcache
 Config/Needs/website:
     pkgdown
 Config/Needs/coverage:

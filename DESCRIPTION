@@ -53,9 +53,11 @@ Suggests:
     pingr (>= 2.0.0),
     rstudioapi,
     spelling,
-    testthat
+    testthat,
+    webfakes
 Remotes:
-    r-lib/pkgcache
+    r-lib/pkgcache,
+    r-lib/cli
 Config/Needs/website:
     pkgdown
 Config/Needs/coverage:

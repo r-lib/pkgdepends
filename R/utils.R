@@ -341,7 +341,7 @@ once_per_session <- local({
   }
 })
 
-synchronise <- synchronize <- function(...) {
+synchronise <- synchronize <- sy <- function(...) {
   asNamespace("pkgcache")$synchronise(...)
 }
 

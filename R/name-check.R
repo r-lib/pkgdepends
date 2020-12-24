@@ -1,6 +1,48 @@
 
 # -------------------------------------------------------------------------
+#' Check if an R package name is available.
+#'
+#' Additionally, look up the candidate name in a number of
+#' dictionaries, to make sure that it does not have a negative
+#' meaning.
+#'
+#' ## Valid package name check
+#'
+#' Check the validity of `name` as a package name. See 'Writing R
+#' Extensions' for the allowed package names. Also checkd against a list
+#' of names that are known to cause problems.
+#' 
+#' ## CRAN checks
+#'
+#' Check `name` againts the names of all past and current packages on
+#' CRAN, including base and recommended packages.
+#' 
+#' ## Bioconductor checks
+#'
+#' Check `name` against all past and current Bioconductor packages.
+#' 
+#' ## Profanity check
+#'
+#' Check `name` with https://www.purgomalum.com/service/containsprofanity
+#' to make sure it is not a profanity.
+#'
+#' ## Dictionaries
+#'
+#' See the `dictionaries` argument.
+#' 
+#' @param name Package name candidate.
+#' @param dictionaries Character vector, the dictionaries to query.
+#'   Available dictionaries:
+#'     * `wikipedia`
+#'     * `wiktionary`,
+#'     * `acromine` (http://www.nactem.ac.uk/software/acromine/),
+#'     * `sentiment` (https://github.com/fnielsen/afinn),
+#'     * `urban` (Urban Dictionary).
+#'   If `NULL` (by default), the Urban Dictionary is omitted, as it
+#'   is often offensive.
 #' @export
+#' @examplesIf pkgdepends:::is_online()
+#' pkg_name_check("cli")
 
 pkg_name_check <- function(name, dictionaries = NULL) {
   synchronise(async_pkg_name_check(name, dictionaries))
@@ -19,44 +61,61 @@ async_pkg_name_check <- function(name, dictionaries = NULL) {
     "wikipedia",
     "wiktionary",
     "acromine",
-    "profanity",
-    "sentiment",
-    "urban"
+    "sentiment"
   )
   dicts <- dictionaries %||% default_dictionaries
 
-  basics <- async_pnc_basics(name, profanity = "profanity" %in% dicts)
+  basics <- async_pnc_basics(name)
   result <- when_all(
     basics     = basics,
     wikipedia  = if ("wikipedia"  %in% dicts) async_wikipedia_get (name),
     wiktionary = if ("wiktionary" %in% dicts) async_wiktionary_get(name),
     acromine   = if ("acromine"   %in% dicts) async_acromine_get  (name),
+    sentiment  = if ("sentiment"  %in% dicts) async_sentiment_get (name),
     urban      = if ("urban"      %in% dicts) async_urban_get     (name)
-  )$then(function(res) add_format(add_class(res, "pkg_name_check")))
+  )$then(function(res) add_class(res, "pkg_name_check"))
 }
 
+#' @export
+
 format.pkg_name_check <- function(x, limit = 6, ...) {
+  x <- x[!vlapply(x, is.null)]
   unlist(lapply(x, format, limit = limit, ...))
 }
 
-async_pnc_basics <- function(name, profanity = TRUE) {
+#' @export
+
+print.pkg_name_check <- function(x, ...) {
+  cat(format(x, ...), sep = "\n")
+  invisible(x)
+}
+
+async_pnc_basics <- function(name) {
   when_all(
     name       = name,
     valid      = pnc_valid(name),
     base       = pnc_base(name),
     crandb     = async_pnc_crandb(name),
     bioc       = async_pnc_bioc(name),
-    profanity  = if (profanity) async_profanity_get (name)
-  )$then(function(res) add_format(add_class(res, "pkg_name_check_basics")))
+    profanity  = async_profanity_get (name)
+  )$then(function(res) add_class(res, "pkg_name_check_basics"))
 }
 
 # -------------------------------------------------------------------------
 
+forbidden_package_names <- function() {
+  c("pkg", "description")
+}
+
 pnc_valid <- function(name) {
   ans <- TRUE
-  if (!grepl(pkg_rx()$pkg_name, name)) ans <- FALSE
-  if (ans && any(charToRaw(name) > 127)) ans <- FALSE
-  add_format(add_class(ans, "pkg_name_check_valid"))
+  rx <- paste0("^", pkg_rx()$pkg_name, "$")
+  if (!grepl(rx, name)) ans <- FALSE
+  # This is not needed currently. But just in case character ranges will
+  # accept non-ascii characters on some platforms, we keep it.
+  if (ans && any(charToRaw(name) > 127)) ans <- FALSE  # nocov
+  if (ans && name %in% forbidden_package_names()) ans <- FALSE
+  add_class(ans, "pkg_name_check_valid")
 }
 
 # -------------------------------------------------------------------------
@@ -64,13 +123,14 @@ pnc_valid <- function(name) {
 pnc_base <- function(name) {
   bs <- base_packages()
   mch <- match(tolower(name), tolower(bs))
-  add_format(add_class(
+  add_class(
     list(base = is.na(mch), package = if (!is.na(mch)) bs[mch]),
     "pkg_name_check_base"
-  ))
+  )
 }
 
 # -------------------------------------------------------------------------
+# TODO: this is not included currently. Do we need it?
 
 async_cranlike_check <- function(name) {
   name
@@ -98,9 +158,7 @@ async_cranlike_check <- function(name) {
         if (type == "bioc") ret$bioc <- FALSE
       }
       ret
-    })$then(function(res) {
-      add_format(add_class(res, "pkg_name_check_cranlike"))
-    })
+    })$then(function(res) add_class(res, "pkg_name_check_cranlike"))
 }
 
 # -------------------------------------------------------------------------
@@ -126,7 +184,7 @@ pnc_crandb_process <- function(response) {
     crandb = length(ans$rows) == 0,
     package = if (length(ans$rows) > 0) vcapply(ans$rows, "[[", "value")
   )
-  add_format(add_class(ret, "pkg_name_check_crandb"))
+  add_class(ret, "pkg_name_check_crandb")
 }
 
 # -------------------------------------------------------------------------
@@ -136,17 +194,13 @@ pnc_crandb_process <- function(response) {
 format.pkg_name_check_basics <- function(x, ...) {
 
   cw <- cli::console_width()
-  stars <- cli::col_yellow(strrep(cli::symbol$star, 3))
-  title <- paste0(
-    "Package name check: ",
-    stars, " ",
-    cli::style_bold(cli::col_blue(x$name)),
-    " ", stars
-  )
+  stars <- cli::col_yellow(cli::symbol$en_dash, "*", cli::symbol$en_dash)
+  title <- paste(stars, cli::style_bold(cli::col_blue(x$name)), stars)
   tbox <- cli::boxx(
     cli::ansi_align(title, width = cw - 4, align = "center"),
     padding = c(0,1,0,1),
     border_style = "double",
+    border_col = cli::col_yellow
   )
 
   ys <- cli::col_green(cli::symbol$tick)
@@ -163,7 +217,7 @@ format.pkg_name_check_basics <- function(x, ...) {
     }
   )
   cols <- cli::ansi_columns(str, width = cw - 4, max_cols = length(str))
-  bbox <- cli::boxx(cols, padding = c(0,1,0,1))
+  bbox <- cli::boxx(cols, padding = c(0,1,0,1), border_col = cli::col_silver)
 
   c(tbox, bbox)
 }
@@ -174,9 +228,7 @@ async_wikipedia_get <- function(terms) {
   async_wikipedia_get_query(terms)$
     then(http_stop_for_status)$
     then(function(resp) wikipedia_get_process(terms, resp))$
-    then(function(res) {
-      add_format(add_class(res, "pkg_name_check_wikipedia"))
-    })
+    then(function(res) add_class(res, "pkg_name_check_wikipedia"))
 }
 
 async_wikipedia_get_query <- function(terms) {
@@ -263,10 +315,17 @@ format.pkg_name_check_wikipedia <- function(x, limit = 6, ...) {
   ftr <- cli::col_blue(x$url)
   alg <- cli::ansi_align(wrp, width = cw - 4)
   if (length(alg) > limit) alg <- c(alg[1:limit], cli::symbol$ellipsis)
-  cli::boxx(alg, padding = c(0,1,0,1), header = hdr, footer = ftr)
+  cli::boxx(
+    alg,
+    padding = c(0,1,0,1),
+    header = hdr,
+    footer = ftr,
+    border_col = cli::col_silver
+  )
 }
 
 clean_wikipedia_text <- function(x) {
+  x <- trimws(x)
   x <- sub(
     "may refer to:$",
     "may refer to multiple articles, see link.",
@@ -284,9 +343,7 @@ async_wiktionary_get <- function(terms) {
   http_post(url, data = data)$
     then(http_stop_for_status)$
     then(function(resp) wiktionary_get_process(terms, resp))$
-    then(function(res) {
-      add_format(add_class(res, "pkg_name_check_wiktionary"))
-    })
+    then(function(res) add_class(res, "pkg_name_check_wiktionary"))
 }
 
 make_wiktionary_data <- function(terms) {
@@ -320,7 +377,13 @@ format.pkg_name_check_wiktionary <- function(x, limit = 6, ...) {
   hdr <- cli::col_green("Wiktionary")
   ftr <- cli::col_blue(x$url)
   alg <- cli::ansi_align(wrp, width = cw - 4)
-  cli::boxx(alg, padding = c(0,1,0,1), header = hdr, footer = ftr)
+  cli::boxx(
+    alg,
+    padding = c(0,1,0,1),
+    header = hdr,
+    footer = ftr,
+    border_col = cli::col_silver
+  )
 }
 
 clean_wiktionary_text <- function(x) {
@@ -347,14 +410,12 @@ clean_wiktionary_text <- function(x) {
 
 async_acromine_get <- function(term) {
   base <- "http://www.nactem.ac.uk/software/acromine/dictionary.py"
-  url <- paste0(base, "?sf=", URLencode(term))
+  url <- paste0(base, "?sf=", utils::URLencode(term))
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("[]")))$
     then(function(resp) acromine_get_process(term, resp))$
-    then(function(res) {
-      add_format(add_class(res, "pkg_name_check_acromine"))
-    })
+    then(function(res) add_class(res, "pkg_name_check_acromine"))
 }
 
 acromine_get_process <- function(term, resp) {
@@ -387,21 +448,24 @@ format.pkg_name_check_acromine <- function(x, limit = 6, ...) {
   hdr <- cli::col_green("Acroynms (from Acromine)")
   alg <- cli::ansi_align(wrp, width = cw - 4)
   if (length(alg) > limit) alg <- c(alg[1:limit], cli::symbol$ellipsis)
-  cli::boxx(alg, padding = c(0,1,0,1), header = hdr)
+  cli::boxx(
+    alg,
+    padding = c(0,1,0,1),
+    header = hdr,
+    border_col = cli::col_silver
+  )
 }
 
 # -------------------------------------------------------------------------
 
 async_profanity_get <- function(term) {
   base <- "https://www.purgomalum.com/service/containsprofanity"
-  url <- paste0(base, "?text=", URLencode(term))
+  url <- paste0(base, "?text=", utils::URLencode(term))
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("NA")))$
     then(function(resp) profanity_get_process(term, resp))$
-    then(function(res) {
-      add_format(add_class(res, "pkg_name_check_profanity"))
-    })
+    then(function(res) add_class(res, "pkg_name_check_profanity"))
 }
 
 profanity_get_process <- function(term, resp) {
@@ -420,9 +484,7 @@ async_sentiment_get <- function(term) {
 
   start$
     then(function(stm) structure(stm[term], names = term))$
-    then(function(res) {
-      add_format(add_class(res, "pkg_name_check_sentiment"))
-    })
+    then(function(res) add_class(res, "pkg_name_check_sentiment"))
 }
 
 async_sentiment_get_data <- function() {
@@ -436,16 +498,58 @@ async_sentiment_get_data <- function() {
     })
 }
 
+sentiment_string <- function(x) {
+  emo <- c(
+    "-5" = "\U0001F62D\U0001F62D",
+    "-4" = "\U0001F62D",
+    "-3" = "\U0001F61E\U0001F61E",
+    "-2" = "\U0001F61E",
+    "-1" = "\U0001F610",
+    "0"  = "\U0001F610",
+    "1"  = "\U0001F642",
+    "2"  = "\U0001F642\U0001F642",
+    "3"  = "\U0001F606",
+    "4"  = "\U0001F606\U0001F606",
+    "5"  = "\U0001F970"
+  )
+
+  asc <- c(
+    "-5" = ";(;(",
+    "-4" = ";(",
+    "-3" = ":(:(",
+    "-2" = ":(",
+    "-1" = ":|",
+    "0"  = ":|",
+    "1"  = ":)",
+    "2"  = ":):)",
+    "3"  = ":D",
+    "4"  = ":D:D",
+    "5"  = ""
+  )
+  if (has_emoji()) emo[as.character(x)] else asc[as.character(x)]
+}
+
+#' @export
+
+format.pkg_name_check_sentiment <- function(x, ...) {
+  if (is.na(x)) x <- 0
+  str <- sentiment_string(x)
+  txt <- paste0("Sentiment: ", str, cli::col_silver(paste0(" (", x, ")")))
+  cw <- cli::console_width()
+  alg <- cli::ansi_align(txt, width = cw - 4)  
+  cli::boxx(alg, padding = c(0,1,0,1), border_col = cli::col_silver)
+}
+
 # -------------------------------------------------------------------------
 
 async_urban_get <- function(term) {
   base <- "http://api.urbandictionary.com/v0/"
-  url <- paste0(base, "define?term=", URLencode(term))
+  url <- paste0(base, "define?term=", utils::URLencode(term))
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw('{"list":[]}')))$
     then(function(resp) urban_get_process(term, resp))$
-    then(function(res) add_format(add_class(res, "pkg_name_check_urban")))
+    then(function(res) add_class(res, "pkg_name_check_urban"))
 }
 
 urban_get_process <- function(term, resp) {
@@ -480,7 +584,13 @@ format.pkg_name_check_urban <- function(x, limit = 6, ...) {
   hdr <- cli::col_green("Urban dictionary")
   alg <- cli::ansi_align(wrp, width = cw - 4)
   if (length(alg) > limit) alg <- c(alg[1:limit], cli::symbol$ellipsis)
-  cli::boxx(alg, padding = c(0,1,0,1), header = hdr, footer = ftr)
+  cli::boxx(
+    alg,
+    padding = c(0,1,0,1),
+    header = hdr,
+    footer = ftr,
+    border_col = cli::col_silver
+  )
  }
 
 clean_urban <- function(x) {
@@ -532,10 +642,10 @@ pnc_bioc_process <- function(name, response) {
     pnc_bioc_parse_pgz(response[[3]])
   ))
   mch <- match(tolower(name), tolower(pkgs))
-  add_format(add_class(
+  add_class(
     list(bioc = is.na(mch), package = if (!is.na(mch)) pkgs[mch]),
     "pkg_name_check_bioc"
-  ))
+  )
 }
 
 pnc_bioc_parse <- function(response) {

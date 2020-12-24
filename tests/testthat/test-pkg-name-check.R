@@ -1,4 +1,26 @@
 
+test_that("pkg_name_check", {
+  ## TODO
+  expect_true(TRUE)
+})
+
+test_that("async_pnc_basics", {
+  ## TODO
+  expect_true(TRUE)
+})
+
+test_that("async_cranlike_check", {
+  ## TODO
+  expect_true(TRUE)
+})
+
+test_that("pnc_valid", {
+  good <- c("A3", "aa", "a.3", "foo.bar.foobar")
+  bad <- c("3aaa", "a.", "aaaa.", "aaa-bbb", "description", "ff\u00e1f")
+  for (c in good) expect_true(pnc_valid(c))
+  for (c in bad) expect_false(pnc_valid(c))
+})
+
 test_that("pnc_base", {
   local_edition(3)
   expect_snapshot(pnc_base("base"))

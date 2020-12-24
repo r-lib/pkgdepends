@@ -9,12 +9,12 @@
 #' ## Valid package name check
 #'
 #' Check the validity of `name` as a package name. See 'Writing R
-#' Extensions' for the allowed package names. Also checkd against a list
+#' Extensions' for the allowed package names. Also checked against a list
 #' of names that are known to cause problems.
 #' 
 #' ## CRAN checks
 #'
-#' Check `name` againts the names of all past and current packages on
+#' Check `name` against the names of all past and current packages on
 #' CRAN, including base and recommended packages.
 #' 
 #' ## Bioconductor checks
@@ -23,7 +23,7 @@
 #' 
 #' ## Profanity check
 #'
-#' Check `name` with https://www.purgomalum.com/service/containsprofanity
+#' Check `name` with <https://www.purgomalum.com/service/containsprofanity>
 #' to make sure it is not a profanity.
 #'
 #' ## Dictionaries
@@ -35,8 +35,8 @@
 #'   Available dictionaries:
 #'     * `wikipedia`
 #'     * `wiktionary`,
-#'     * `acromine` (http://www.nactem.ac.uk/software/acromine/),
-#'     * `sentiment` (https://github.com/fnielsen/afinn),
+#'     * `acromine` (<http://www.nactem.ac.uk/software/acromine/>),
+#'     * `sentiment` (<https://github.com/fnielsen/afinn>),
 #'     * `urban` (Urban Dictionary).
 #'   If `NULL` (by default), the Urban Dictionary is omitted, as it
 #'   is often offensive.

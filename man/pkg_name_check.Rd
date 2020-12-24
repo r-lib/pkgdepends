@@ -13,8 +13,8 @@ pkg_name_check(name, dictionaries = NULL)
 Available dictionaries:
 * \code{wikipedia}
 * \code{wiktionary},
-* \code{acromine} (http://www.nactem.ac.uk/software/acromine/),
-* \code{sentiment} (https://github.com/fnielsen/afinn),
+* \code{acromine} (\url{http://www.nactem.ac.uk/software/acromine/}),
+* \code{sentiment} (\url{https://github.com/fnielsen/afinn}),
 * \code{urban} (Urban Dictionary).
 If \code{NULL} (by default), the Urban Dictionary is omitted, as it
 is often offensive.}
@@ -32,13 +32,13 @@ meaning.
 \subsection{Valid package name check}{
 
 Check the validity of \code{name} as a package name. See 'Writing R
-Extensions' for the allowed package names. Also checkd against a list
+Extensions' for the allowed package names. Also checked against a list
 of names that are known to cause problems.
 }
 
 \subsection{CRAN checks}{
 
-Check \code{name} againts the names of all past and current packages on
+Check \code{name} against the names of all past and current packages on
 CRAN, including base and recommended packages.
 }
 
@@ -49,7 +49,7 @@ Check \code{name} against all past and current Bioconductor packages.
 
 \subsection{Profanity check}{
 
-Check \code{name} with https://www.purgomalum.com/service/containsprofanity
+Check \code{name} with \url{https://www.purgomalum.com/service/containsprofanity}
 to make sure it is not a profanity.
 }
 

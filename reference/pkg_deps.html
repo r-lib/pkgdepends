@@ -462,10 +462,10 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; + config:
-#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp696xnS/filea36459d4234
-#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp696xnS/filea36328de491
+#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpiuxdn1/file8f616a8709c
+#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpiuxdn1/file8f671131c1a
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp696xnS/filea361990585
+#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpiuxdn1/file8f61d9a28f5
 #&gt;   - platforms: macos, source
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
@@ -493,7 +493,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; </span><span style='color: #555555;'>#   remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT using </span><span style='color: #000000;background-color: #BBBBBB;'>`gitcreds::gitcreds_set()`</span><span>.</span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT using </span><span style='color: #262626;background-color: #DADADA;'>`gitcreds::gitcreds_set()`</span><span>.</span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 67 x 27</span><span>
 #&gt;    ref   type  direct directpkg status package version license needscompilation
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>           
@@ -527,7 +527,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + constraints (150):
+#&gt; + constraints (148):
 #&gt;   - select pkgdepends exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
@@ -542,7 +542,6 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + solution:
 #&gt;   - assertthat
 #&gt;   - callr
-#&gt;   - cli
 #&gt;   - crayon
 #&gt;   - curl
 #&gt;   - desc
@@ -557,11 +556,12 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt;   - magrittr
 #&gt;   - pillar
 #&gt;   - pkgbuild
-#&gt;   - pkgcache
 #&gt;   - pkgconfig
 #&gt;   - prettyunits
 #&gt;   - processx
 #&gt;   - ps
+#&gt;   - r-lib/cli
+#&gt;   - r-lib/pkgcache
 #&gt;   - r-lib/pkgdepends
 #&gt;   - R6
 #&gt;   - rappdirs
@@ -644,7 +644,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; │ ├─R6 </span><span style='color: #555555;'>2.5.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─crayon
 #&gt; │ └─rprojroot </span><span style='color: #555555;'>2.0.2</span><span> </span><span style='color: #00BB00;'>✨</span><span>
-#&gt; ├─pkgbuild </span><span style='color: #555555;'>1.2.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(unknown size)</span><span>
+#&gt; ├─pkgbuild </span><span style='color: #555555;'>1.2.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─callr </span><span style='color: #555555;'>3.5.1</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ │ ├─processx </span><span style='color: #555555;'>3.4.5</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ │ │ ├─ps </span><span style='color: #555555;'>1.5.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>

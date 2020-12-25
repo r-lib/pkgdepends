@@ -341,12 +341,20 @@ once_per_session <- local({
   }
 })
 
-synchronise <- synchronize <- function(...) {
+synchronise <- synchronize <- sy <- function(...) {
   asNamespace("pkgcache")$synchronise(...)
+}
+
+async_constant <- function(...) {
+  asNamespace("pkgcache")$async_constant(...)
 }
 
 async_map <- function(...) {
   asNamespace("pkgcache")$async_map(...)
+}
+
+http_get <- function(...) {
+  asNamespace("pkgcache")$http_get(...)
 }
 
 http_post <- function(...) {

@@ -62,14 +62,14 @@ fixture <- local({
     testthat::test_local(filter = files)
   }
 
-  update1 <- function() {
+  update_next <- function() {
     options(fixtures.update1 = TRUE)
   }
 
   list(
     get = get,
     update = update,
-    update1 = update1,
+    update_next = update_next,
     .internal = environment()
   )
 })

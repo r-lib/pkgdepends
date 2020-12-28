@@ -1,32 +1,26 @@
 
 test_that("pkg_name_check", {
   ## TODO
-  expect_true(TRUE)
+})
+
+test_that("async_pkg_name_check", {
+  ## TODO
+})
+
+test_that("format.pkg_name_check", {
+  ## TODO
+})
+
+test_that("print.pkg_name_check", {
+  ## TODO
 })
 
 test_that("async_pnc_basics", {
   ## TODO
-  expect_true(TRUE)
 })
 
-test_that("format.pkg_name_basics", {
-  local_edition(3)
-  local_reproducible_output()
-  bss <- fixture$get({
-    list(
-      sy(async_pnc_basics("pwr")),
-      sy(async_pnc_basics(paste0("s", "h", "i", "t")))
-    )
-  })
-  expect_snapshot_output({
-    writeLines(format(bss[[1]]))
-    writeLines(format(bss[[2]]))
-  })
-})
-
-test_that("async_cranlike_check", {
-  ## TODO: need a CRAN dummy for this
-  expect_true(TRUE)
+test_that("forbidden_package_names", {
+  ## TODO
 })
 
 test_that("pnc_valid", {
@@ -43,6 +37,26 @@ test_that("pnc_base", {
   expect_snapshot(pnc_base("Base"))
   expect_snapshot(pnc_base("TOOLS"))
   expect_snapshot(pnc_base("definitely-not"))
+})
+
+test_that("async_cranlike_check", {
+  ## TODO: need a CRAN dummy for this
+  expect_true(TRUE)
+})
+
+test_that("format.pkg_name_basics", {
+  local_edition(3)
+  local_reproducible_output()
+  bss <- fixture$get({
+    list(
+      sy(async_pnc_basics("pwr")),
+      sy(async_pnc_basics(paste0("s", "h", "i", "t")))
+    )
+  })
+  expect_snapshot_output({
+    writeLines(format(bss[[1]]))
+    writeLines(format(bss[[2]]))
+  })
 })
 
 test_that("crandb_check", {
@@ -98,6 +112,14 @@ test_that("wikipedia request", {
   withr::local_envvar(PKG_NAME_CHECK_WIKIPEDIA_URL = check_app$url("/echo"))
   ret <- synchronize(async_wikipedia_get_query("foobar"))
   expect_snapshot(show_request(ret))
+})
+
+test_that("async_wiktionary_get", {
+
+})
+
+test_that("async_wiktionary_get_query", {
+
 })
 
 test_that("pnc_bioc_process", {

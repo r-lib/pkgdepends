@@ -11,16 +11,16 @@
 #' Check the validity of `name` as a package name. See 'Writing R
 #' Extensions' for the allowed package names. Also checked against a list
 #' of names that are known to cause problems.
-#' 
+#'
 #' ## CRAN checks
 #'
 #' Check `name` against the names of all past and current packages on
 #' CRAN, including base and recommended packages.
-#' 
+#'
 #' ## Bioconductor checks
 #'
 #' Check `name` against all past and current Bioconductor packages.
-#' 
+#'
 #' ## Profanity check
 #'
 #' Check `name` with <https://www.purgomalum.com/service/containsprofanity>
@@ -29,7 +29,7 @@
 #' ## Dictionaries
 #'
 #' See the `dictionaries` argument.
-#' 
+#'
 #' @param name Package name candidate.
 #' @param dictionaries Character vector, the dictionaries to query.
 #'   Available dictionaries:
@@ -338,24 +338,26 @@ clean_wikipedia_text <- function(x) {
 # -------------------------------------------------------------------------
 
 async_wiktionary_get <- function(terms) {
-  url <- "https://en.wiktionary.org/w/api.php"
-  data <- make_wiktionary_data(terms)
-  http_post(url, data = data)$
-    then(http_stop_for_status)$
-    then(function(resp) wiktionary_get_process(terms, resp))$
-    then(function(res) add_class(res, "pkg_name_check_wiktionary"))
+  async_wiktionary_get_query(terms)$
+    then(function(resp) wiktionary_get_process(terms, resp))
 }
 
-make_wiktionary_data <- function(terms) {
-  make_wikipedia_data(terms, intro = FALSE)
+async_wiktionary_get_query <- function(terms) {
+  url <- "https://en.wiktionary.org/w/api.php"
+  data <-   make_wikipedia_data(terms, intro = FALSE)
+  http_post(url, data = data)
 }
 
 wiktionary_get_process <- function(terms, resp) {
-  wikipedia_get_process(
+  http_stop_for_status(resp)
+
+  res <- wikipedia_get_process(
     terms,
     resp,
     base_url = "https://en.wiktionary.org/wiki/"
   )[, c("term", "text", "url")]
+
+  add_class(res, "pkg_name_check_wiktionary")
 }
 
 #' @export
@@ -536,7 +538,7 @@ format.pkg_name_check_sentiment <- function(x, ...) {
   str <- sentiment_string(x)
   txt <- paste0("Sentiment: ", str, cli::col_silver(paste0(" (", x, ")")))
   cw <- cli::console_width()
-  alg <- cli::ansi_align(txt, width = cw - 4)  
+  alg <- cli::ansi_align(txt, width = cw - 4)
   cli::boxx(alg, padding = c(0,1,0,1), border_col = cli::col_silver)
 }
 

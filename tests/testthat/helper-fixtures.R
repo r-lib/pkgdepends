@@ -4,9 +4,9 @@ fixture <- local({
   hash <- function(obj) {
     tmp <- tempfile()
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-    serialize(deparse(obj), con <- file(tmp, open = "wb"))
-    on.exit(try(close(con), silent = TRUE), add = TRUE)
-    close(con)
+    dump <- serialize(deparse(obj), NULL, version = 2)
+    # Skip the header, because it contains the R version that created it
+    writeBin(dump[-(1:9)], tmp)
     tools::md5sum(tmp)[[1]]
   }
 

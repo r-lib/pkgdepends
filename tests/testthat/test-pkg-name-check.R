@@ -9,8 +9,23 @@ test_that("async_pnc_basics", {
   expect_true(TRUE)
 })
 
+test_that("format.pkg_name_basics", {
+  local_edition(3)
+  local_reproducible_output()
+  bss <- fixture$get({
+    list(
+      sy(async_pnc_basics("pwr")),
+      sy(async_pnc_basics(paste0("s", "h", "i", "t")))
+    )
+  })
+  expect_snapshot_output({
+    writeLines(format(bss[[1]]))
+    writeLines(format(bss[[2]]))
+  })
+})
+
 test_that("async_cranlike_check", {
-  ## TODO
+  ## TODO: need a CRAN dummy for this
   expect_true(TRUE)
 })
 
@@ -23,6 +38,7 @@ test_that("pnc_valid", {
 
 test_that("pnc_base", {
   local_edition(3)
+  local_reproducible_output()
   expect_snapshot(pnc_base("base"))
   expect_snapshot(pnc_base("Base"))
   expect_snapshot(pnc_base("TOOLS"))
@@ -30,7 +46,7 @@ test_that("pnc_base", {
 })
 
 test_that("crandb_check", {
-  if (Sys.getenv("PKG_NAME_CHECK_REAL") != "") {
+  if (Sys.getenv("PKG_NAME_CHECK_REAL") == "") {
     withr::local_envvar(PKG_NAME_CHECK_CRANDB_URL = check_app$url("/crandb"))
   }
 
@@ -61,9 +77,35 @@ test_that("wikipedia_get", {
   expect_equal(ret$normalized, "Foobar")
 })
 
+test_that("format.pkg_name_check_wikipedia", {
+  local_edition(3)
+  local_reproducible_output()
+  wpd <- fixture$get({
+    list(
+      sy(async_wikipedia_get("cli")),
+      sy(async_wikipedia_get("surely-not-this"))
+    )
+  })
+  expect_snapshot_output({
+    writeLines(format(wpd[[1]]))
+    writeLines(format(wpd[[2]]))
+  })
+})
+
 test_that("wikipedia request", {
   local_edition(3)
+  local_reproducible_output()
   withr::local_envvar(PKG_NAME_CHECK_WIKIPEDIA_URL = check_app$url("/echo"))
   ret <- synchronize(async_wikipedia_get_query("foobar"))
   expect_snapshot(show_request(ret))
+})
+
+test_that("pnc_bioc_process", {
+  response <- fixture$get({
+    sy(pnc_bioc_query("all"))
+  })
+  ans <- pnc_bioc_process("all", response)
+  expect_s3_class(ans, "pkg_name_check_bioc")
+  expect_false(ans$bioc)
+  expect_equal(ans$package, "ALL")
 })

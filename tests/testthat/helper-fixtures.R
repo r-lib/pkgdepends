@@ -4,7 +4,8 @@ fixture <- local({
   hash <- function(obj) {
     tmp <- tempfile()
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-    dump <- serialize(deparse(obj), NULL, version = 2)
+    code <- rlang::quo_text(obj)
+    dump <- serialize(code, NULL, version = 2)
     # Skip the header, because it contains the R version that created it
     writeBin(dump[-(1:9)], tmp)
     tools::md5sum(tmp)[[1]]

@@ -53,7 +53,7 @@ test_that("format.pkg_name_basics", {
       sy(async_pnc_basics(paste0("s", "h", "i", "t")))
     )
   })
-  expect_snapshot_output({
+  expect_snapshot({
     writeLines(format(bss[[1]]))
     writeLines(format(bss[[2]]))
   })
@@ -100,7 +100,7 @@ test_that("format.pkg_name_check_wikipedia", {
       sy(async_wikipedia_get("surely-not-this"))
     )
   })
-  expect_snapshot_output({
+  expect_snapshot({
     writeLines(format(wpd[[1]]))
     writeLines(format(wpd[[2]]))
   })

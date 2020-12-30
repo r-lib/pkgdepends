@@ -48,12 +48,12 @@ fixture <- local({
       return()
     }
 
-    if (!rstudioapi::hasFun("executeCommand")) {
+    if (!asNamespace("rstudioapi")$hasFun("executeCommand")) {
       return()
     }
 
-    rstudioapi::executeCommand("vcsRefresh")
-    rstudioapi::executeCommand("refreshFiles")
+    asNamespace("rstudioapi")$executeCommand("vcsRefresh")
+    asNamespace("rstudioapi")$executeCommand("refreshFiles")
   }
 
   read_lines <- function(path, n = -1L, encoding = "UTF-8") {

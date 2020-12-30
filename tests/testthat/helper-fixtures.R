@@ -9,7 +9,7 @@ fixture <- local({
   }
 
   get_test_data <- function(expr) {
-    code <- enc2utf8(rlang::quo_text(expr))
+    code <- enc2utf8(paste0(deparse(expr, backtick = TRUE), collapse = "\n"))
     hash <- hash(code)
     snap <- getOption("testthat.snapshotter")
     list(

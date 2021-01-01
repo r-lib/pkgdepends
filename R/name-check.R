@@ -660,13 +660,13 @@ async_pnc_bioc_query <- function(name) {
   )
   url1 <- paste0(base1, substr(tolower(name), 1, 1))
   url2 <- paste0(base1, substr(toupper(name), 1, 1))
-  url3 <- Sys.getenv(
-    "PKG_NAME_CHECK_BIOC_ANN_URL",
-    paste0(
+  url3 <- Sys.getenv("PKG_NAME_CHECK_BIOC_ANN_URL")
+  if (url3 == "") {
+    url3 <- paste0(
       pkgcache::bioc_repos(pkgcache::bioc_devel_version())[["BioCann"]],
       "/src/contrib/PACKAGES.gz"
     )
-  )
+  }
   when_all(http_get(url1), http_get(url2), http_get(url3))
 }
 

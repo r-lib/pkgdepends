@@ -459,8 +459,12 @@ test_that("pnc_bioc_query", {
   local_edition(3)
   local_reproducible_output()
   withr::local_envvar(
-    PKG_NAME_CHECK_BIOC_URL = check_app$url("/bioc/"),
-    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url("/biocann/PACKAGES.gz")
+    PKG_NAME_CHECK_BIOC_URL = check_app$url("/bioc/")
+  )
+  mockery::stub(
+    async_pnc_bioc_query,
+    "pkgcache::bioc_repos",
+    list(BioCann = check_app$url("/biocann/"))
   )
   ans <- pnc_bioc_process("all", sy(async_pnc_bioc_query("all")))
   ans2 <- pnc_bioc_process("Agcdf", sy(async_pnc_bioc_query("Agcdf")))
@@ -485,7 +489,7 @@ test_that("pnc_bioc_parse", {
   local_reproducible_output()
   withr::local_envvar(
     PKG_NAME_CHECK_BIOC_URL = check_app$url("/bioc/"),
-    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url("/biocann/PACKAGES.gz")
+    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url("/biocann/src/contrib/PACKAGES.gz")
   )
   pkg1 <- pnc_bioc_parse(sy(async_pnc_bioc_query("all"))[[1]])
   pkg2 <- pnc_bioc_parse(sy(async_pnc_bioc_query("all"))[[2]])
@@ -498,7 +502,7 @@ test_that("pnc_bioc_parse_pgz", {
   local_reproducible_output()
   withr::local_envvar(
     PKG_NAME_CHECK_BIOC_URL = check_app$url("/bioc/"),
-    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url("/biocann/PACKAGES.gz")
+    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url("/biocann/src/contrib/PACKAGES.gz")
   )
   pkg <- pnc_bioc_parse_pgz(sy(async_pnc_bioc_query("all"))[[3]])
   expect_snapshot(pkg)

@@ -87,7 +87,7 @@ new_check_app <- function() {
     ), "\n"))
   })
 
-  app$get("/biocann/PACKAGES.gz", function(req, res) {
+  app$get("/biocann/src/contrib/PACKAGES.gz", function(req, res) {
     tmp <- tempfile(fileext = ".gz")
     on.exit(unlink(tmp), add = TRUE)
     l <- c(

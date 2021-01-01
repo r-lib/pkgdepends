@@ -31,8 +31,7 @@ fixture <- local({
   find_test_file <- function(ctx, root) {
     ptn <- paste0("^test[-_]", ctx, "[.][Rr]")
     file <- grep(ptn, dir(root), value = TRUE)[1]
-    if (is.na(file)) stop("Cannot determine test file for fixtures")
-    file
+    as.character(file)
   }
 
   context_name <- function(filename) {
@@ -74,6 +73,12 @@ fixture <- local({
 
   indent_add <- function(x, prefix = "    ") {
     paste0(prefix, gsub("\n", paste0("\n", prefix), x, fixed = TRUE))
+  }
+
+  indent_del <- function(x, prefix = "    ") {
+    x <- gsub(paste0("^", prefix), "", x)
+    x <- gsub(paste0("\n", prefix), "\n", x)
+    x
   }
 
   compact <- function(x) {
@@ -174,7 +179,7 @@ fixture <- local({
       )
     )
 
-    fixer <- FixtureReporter$new(data$xseen)
+    fixer <- FixtureReporter$new(data$seen)
 
     fixer
   }
@@ -186,6 +191,7 @@ fixture <- local({
       if (class(rep)[1] != "MultiReporter") return()
       fixer <- new_fixture_reporter(data)
       file <- find_test_file(data$file, data$root)
+      if (is.na(file)) stop("Cannot determine test file for fixtures")
       fixer$start_file(file, data$test)
       rep$reporters <- c(rep$reporters, list(fixer))
     }
@@ -196,18 +202,17 @@ fixture <- local({
   }
 
   get <- function(expr, envir = parent.frame()) {
-    data <- get_test_data(substitute(expr))
+    expr <- substitute(expr)
+    data <- get_test_data(expr)
     if (!is.null(data$file)) setup_reporter(data)
     fxfile <- paste0(data$hash, ".rds")
     fxpath <- file.path(data$root, "_fixtures", fxfile)
     upd <- isTRUE(getOption("fixtures.update"))
     upd1 <- isTRUE(getOption("fixtures.update1"))
     if (upd || upd1) {
-      if (upd1) options(fixture.update1 = NULL)
-      value <- force(expr)
+      if (upd1) options(fixtures.update1 = NULL)
+      value <- eval(expr, envir = envir)
       mkdirp(dirname(fxpath))
-      jsfile <- paste0(data$hash, ".json")
-      jspath <- file.path(data$root, "_fixtures", jsfile)
       saveRDS(value, fxpath, version = 2L)
       value
 
@@ -221,20 +226,89 @@ fixture <- local({
     }
   }
 
-  update <- function(files = NULL) {
+  update <- function(files = NULL, ...) {
     opt <- options(fixtures.update = TRUE)
     on.exit(options(opt), add = TRUE)
-    testthat::test_local(filter = files)
+    testthat::test_local(filter = files, ...)
   }
 
   update_next <- function() {
     options(fixtures.update1 = TRUE)
   }
 
+  snap_from_md <- function(lines) {
+    lines <- gsub("\r", "", lines, fixed = TRUE)
+
+    h2 <- grepl("^# ", lines)
+    tests_group <- cumsum(h2)
+    tests <- split(lines[!h2], tests_group[!h2])
+    names(tests) <- gsub("^# ", "", lines[h2])
+
+    split_tests <- function(lines) {
+      sep <- grepl("^-{3, }", lines)
+      case_group <- cumsum(sep)
+
+      # Remove first line and last line, separator, line above and line below
+      sep_loc <- which(sep)
+      drop <- c(1, sep_loc, sep_loc + 1, sep_loc - 1, length(lines))
+
+      cases <- unname(split(lines[-drop], case_group[-drop]))
+      code_unblock <- function(x) paste0(indent_del(x), collapse = "\n")
+      vapply(cases, code_unblock, character(1))
+    }
+
+    lapply(tests, split_tests)
+  }
+
+  read_hashes <- function(path) {
+    lines <- readLines(path)
+    fixes <- snap_from_md(lines)
+    hashes <- sub("^Hash\n[ ]+([a-f0-9]+)\n.*$", "\\1", unlist(fixes))
+    unique(sort(unname(hashes)))
+  }
+
+  read_all_hashes <- function(root, reports) {
+    unique(sort(unlist(lapply(file.path(root, reports), read_hashes))))
+  }
+
+  cleanup <- function(force = FALSE) {
+    root <- testthat::test_path()
+    fixroot <- file.path(root, "_fixtures")
+    reports <- dir(fixroot, pattern = "[.]md$")
+    tests <- testthat::find_test_scripts(root, full.names = FALSE)
+    tests_used <- vcapply(sub("[.]md$", "", reports), find_test_file, root)
+    old <- names(tests_used)[which(is.na(tests_used))]
+    old <- setdiff(old, "_other")
+    if (length(old) > 0) {
+      old <- paste0(old, ".md")
+      message("Unused test fixture reports: ", paste(old, collapse = ", "))
+      reports <- setdiff(reports, old)
+    }
+
+    allfix <- dir(fixroot, pattern = "[.]rds$")
+    usedfix <- paste0(read_all_hashes(fixroot, reports), ".rds")
+
+    old2 <- setdiff(allfix, usedfix)
+    if (length(old2) > 0) {
+      message("Unused test fixture files: ", paste(old2, collapse = ", "))
+    }
+
+    if (length(old) > 0 || length(old2) > 0) {
+      if (!force) {
+        message("Call with `force = TRUE` to remove these files")
+      } else {
+        message("Removing them.")
+        unlink(file.path(fixroot, old))
+        unlink(file.path(fixroot, old2))
+      }
+    }
+  }
+
   list(
     get = get,
     update = update,
     update_next = update_next,
+    cleanup = cleanup,
     .internal = environment()
   )
 })

@@ -113,7 +113,7 @@ pnc_valid <- function(name) {
   if (!grepl(rx, name)) ans <- FALSE
   # This is not needed currently. But just in case character ranges will
   # accept non-ascii characters on some platforms, we keep it.
-  if (ans && any(charToRaw(name) > 127)) ans <- FALSE  # nocov
+  if (ans && any(charToRaw(name) > 127)) ans <- FALSE
   if (ans && name %in% forbidden_package_names()) ans <- FALSE
   add_class(ans, "pkg_name_check_valid")
 }
@@ -343,8 +343,11 @@ async_wiktionary_get <- function(terms) {
 }
 
 async_wiktionary_get_query <- function(terms) {
-  url <- "https://en.wiktionary.org/w/api.php"
-  data <-   make_wikipedia_data(terms, intro = FALSE)
+  url <- Sys.getenv(
+    "PKG_NAME_CHECK_WIKTIONARY_URL",
+    "https://en.wiktionary.org/w/api.php"
+  )
+  data <- make_wikipedia_data(terms, intro = FALSE)
   http_post(url, data = data)
 }
 
@@ -411,25 +414,32 @@ clean_wiktionary_text <- function(x) {
 # -------------------------------------------------------------------------
 
 async_acromine_get <- function(term) {
-  base <- "http://www.nactem.ac.uk/software/acromine/dictionary.py"
-  url <- paste0(base, "?sf=", utils::URLencode(term))
-  http_get(url)$
+  async_acromine_get_query(term)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("[]")))$
-    then(function(resp) acromine_get_process(term, resp))$
-    then(function(res) add_class(res, "pkg_name_check_acromine"))
+    then(function(resp) acromine_get_process(term, resp))
+}
+
+async_acromine_get_query <- function(term) {
+  base <- Sys.getenv(
+    "PKG_NAME_CHECK_ACROMINE_URL",
+    "http://www.nactem.ac.uk/software/acromine/dictionary.py"
+  )
+  url <- paste0(base, "?sf=", utils::URLencode(term))
+  http_get(url)
 }
 
 acromine_get_process <- function(term, resp) {
   obj <- jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
   if (length(obj) == 0) obj <- list(list())
-  tibble(
+  tbl <- tibble(
     term = term,
     short_form = obj[[1]]$sf %||% character(),
     long_form = vcapply(obj[[1]]$lfs, "[[", "lf"),
     frequency = viapply(obj[[1]]$lfs, "[[", "freq"),
     since = viapply(obj[[1]]$lfs, "[[", "since")
   )
+  add_class(tbl, "pkg_name_check_acromine")
 }
 
 #' @export
@@ -461,24 +471,32 @@ format.pkg_name_check_acromine <- function(x, limit = 6, ...) {
 # -------------------------------------------------------------------------
 
 async_profanity_get <- function(term) {
-  base <- "https://www.purgomalum.com/service/containsprofanity"
-  url <- paste0(base, "?text=", utils::URLencode(term))
-  http_get(url)$
+  async_profanity_get_query(term)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("NA")))$
-    then(function(resp) profanity_get_process(term, resp))$
-    then(function(res) add_class(res, "pkg_name_check_profanity"))
+    then(function(resp) profanity_get_process(term, resp))
+}
+
+async_profanity_get_query <- function(term) {
+  base <- Sys.getenv(
+    "PKG_NAME_CHECK_PROFANITY_URL",
+    "https://www.purgomalum.com/service/containsprofanity"
+  )
+  url <- paste0(base, "?text=", utils::URLencode(term))
+  http_get(url)
 }
 
 profanity_get_process <- function(term, resp) {
-  txt <- rawToChar(resp$content)
-  as.logical(txt)
+  txt <- as.logical(rawToChar(resp$content))
+  add_class(txt, "pkg_name_check_profanity")
 }
 
 # -------------------------------------------------------------------------
 
+sentiment_get_has_data <- function() ! is.null(pkgd_data$sentiment)
+
 async_sentiment_get <- function(term) {
-  start <- if (is.null(pkgd_data$sentiment)) {
+  start <- if (! sentiment_get_has_data()) {
     async_sentiment_get_data()
   } else {
     async_constant(pkgd_data$sentiment)
@@ -490,8 +508,10 @@ async_sentiment_get <- function(term) {
 }
 
 async_sentiment_get_data <- function() {
-  url <-
+  url <- Sys.getenv(
+    "PKG_NAME_CHECK_SENTIMENT_URL",
     "https://raw.githubusercontent.com/words/afinn-165/master/index.json"
+  )
   http_get(url)$
     then(http_stop_for_status)$
     catch(error = function(err) list(content = charToRaw("{}")))$
@@ -545,13 +565,19 @@ format.pkg_name_check_sentiment <- function(x, ...) {
 # -------------------------------------------------------------------------
 
 async_urban_get <- function(term) {
-  base <- "http://api.urbandictionary.com/v0/"
+  async_urban_get_query(term)$
+    then(function(resp) urban_get_process(term, resp))
+}
+
+async_urban_get_query <- function(term) {
+  base <- Sys.getenv(
+    "PKG_NAME_CHECK_URBAN_URL",
+    "http://api.urbandictionary.com/v0/"
+  )
   url <- paste0(base, "define?term=", utils::URLencode(term))
   http_get(url)$
     then(http_stop_for_status)$
-    catch(error = function(err) list(content = charToRaw('{"list":[]}')))$
-    then(function(resp) urban_get_process(term, resp))$
-    then(function(res) add_class(res, "pkg_name_check_urban"))
+    catch(error = function(err) list(content = charToRaw('{"list":[]}')))
 }
 
 urban_get_process <- function(term, resp) {
@@ -559,7 +585,7 @@ urban_get_process <- function(term, resp) {
     rawToChar(resp$content),
     simplifyVector = FALSE
     )$list
-  tibble(
+  tbl <- tibble(
     definition = vcapply(obj, "[[", "definition"),
     permalink = vcapply(obj, "[[", "permalink"),
     thumbs_up = viapply(obj, "[[", "thumbs_up"),
@@ -568,6 +594,7 @@ urban_get_process <- function(term, resp) {
     example = vcapply(obj, "[[", "example"),
     thumbs_down = viapply(obj, "[[", "thumbs_down")
   )
+  add_class(tbl, "pkg_name_check_urban")
 }
 
 #' @export
@@ -622,17 +649,23 @@ pnc_bioc_false <- function(pkg) {
 
 async_pnc_bioc_web <- function(name) {
   name
-  pnc_bioc_query(name)$
+  async_pnc_bioc_query(name)$
     then(function(response) pnc_bioc_process(name, response))
 }
 
-pnc_bioc_query <- function(name) {
-  base1 <- "https://git.bioconductor.org/info?packages/"
+async_pnc_bioc_query <- function(name) {
+  base1 <- Sys.getenv(
+    "PKG_NAME_CHECK_BIOC_URL",
+    "https://git.bioconductor.org/info?packages/"
+  )
   url1 <- paste0(base1, substr(tolower(name), 1, 1))
   url2 <- paste0(base1, substr(toupper(name), 1, 1))
-  url3 <- paste0(
-    pkgcache::bioc_repos(pkgcache::bioc_devel_version())[["BioCann"]],
-    "/src/contrib/PACKAGES.gz"
+  url3 <- Sys.getenv(
+    "PKG_NAME_CHECK_BIOC_ANN_URL",
+    paste0(
+      pkgcache::bioc_repos(pkgcache::bioc_devel_version())[["BioCann"]],
+      "/src/contrib/PACKAGES.gz"
+    )
   )
   when_all(http_get(url1), http_get(url2), http_get(url3))
 }
@@ -653,7 +686,7 @@ pnc_bioc_process <- function(name, response) {
 pnc_bioc_parse <- function(response) {
   http_stop_for_status(response)
   cnt <- strsplit(rawToChar(response$content), "\n")[[1]]
-  mch <- re_match(cnt, "packages/(?<package>[a-zA-Z.]+)")
+  mch <- re_match(cnt, "packages/(?<package>[a-z0-9A-Z.]+)")
   na.omit(mch$package)
 }
 
@@ -719,6 +752,7 @@ pnc_bioc_removed <- function() {
   )
 }
 
+# nocov start
 function() {
   bv <- setdiff(
     as.character(pkgcache::bioc_version_map()$bioc_version),
@@ -736,6 +770,7 @@ function() {
     compress = "xz"
   )
 }
+#nocov end
 
 pnc_bioc_old_annotation <- function() {
   readRDS(system.file("exdata", "biocpackages.rds", package = "pkgdepends"))

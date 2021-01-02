@@ -122,7 +122,12 @@ new_check_app <- function() {
     writeLines(l, con <- gzfile(tmp, open = "wb"))
     close(con)
 
-    res$send_file(tmp, root = "/")
+    # We don't use send_file, because of a webfakes bug on Windows
+    # with absolute paths. Webfakes prepends '/' to 'c:/...'.
+    blob <- readBin(tmp, what = "raw", n = 10000)
+    res$
+      set_type("application/gzip")$
+      send(blob)
   })
 
   app

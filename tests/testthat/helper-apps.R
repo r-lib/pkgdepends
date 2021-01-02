@@ -38,7 +38,7 @@ new_check_app <- function() {
     res$send_json(ret, auto_unbox = TRUE)
   })
 
-  app$all("/echo", function(req, res) {
+  app$all(c("/echo", "/echo/define"), function(req, res) {
     out <- list(
       method = req$method,
       query = req$query_string,
@@ -46,6 +46,88 @@ new_check_app <- function() {
       body = rawToChar(req$.body %||% raw())
     )
     res$send_json(out, auto_unbox = TRUE)
+  })
+
+  app$get("/sentiment", function(req, res) {
+    json <- list(abuse = -3, irony = -1, xo = 3, xoxoxo = 4)
+    res$send_json(json, auto_unbox = TRUE)
+  })
+
+  app$get("/bioc/a", function(req, res) {
+    res$send(paste0(collapse = "", c(
+      "hello nobody, this is httpd@ip-172-30-0-33 running gitolite3 v3.6.6-6-g7c8f0ab on git 2.28.0",
+      "",
+      " R  \tpackages/a4",
+      " R  \tpackages/a4Base",
+      " R  \tpackages/a4Classif",
+      " R  \tpackages/a4Core",
+      " R  \tpackages/a4Preproc",
+      " R  \tpackages/a4Reporting",
+      " R  \tpackages/aCGH",
+      " R  \tpackages/abseqR",
+      " R  \tpackages/ag.db"
+    ), "\n"))
+  })
+
+  app$get("/bioc/A", function(req, res) {
+    res$send(paste0(collapse = "", c(
+      "hello nobody, this is httpd@ip-172-30-0-33 running gitolite3 v3.6.6-6-g7c8f0ab on git 2.28.0",
+      "",
+      " R  \tpackages/ABAData",
+      " R  \tpackages/ABAEnrichment",
+      " R  \tpackages/ABSSeq",
+      " R  \tpackages/AGDEX",
+      " R  \tpackages/AHPathbankDbs",
+      " R  \tpackages/AIMS",
+      " R  \tpackages/ALDEx2",
+      " R  \tpackages/ALL",
+      " R  \tpackages/ALLMLL",
+      " R  \tpackages/ALPS",
+      " R  \tpackages/AMARETTO"
+    ), "\n"))
+  })
+
+  app$get("/biocann/src/contrib/PACKAGES.gz", function(req, res) {
+    tmp <- tempfile(fileext = ".gz")
+    on.exit(unlink(tmp), add = TRUE)
+    l <- c(
+      "Package: adme16cod.db",
+      "Version: 3.4.0",
+      "Depends: R (>= 2.7.0), methods, AnnotationDbi (>= 1.31.18),",
+      "        org.Rn.eg.db (>= 3.2.1)",
+      "Imports: methods, AnnotationDbi",
+      "Suggests: annotate, RUnit",
+      "License: Artistic-2.0",
+      "MD5sum: 3902516a40a503302ef732143b2394b9",
+      "NeedsCompilation: no",
+      "",
+      "Package: ag.db",
+      "Version: 3.2.3",
+      "Depends: R (>= 2.7.0), methods, AnnotationDbi (>= 1.34.3),",
+      "        org.At.tair.db (>= 3.3.0)",
+      "Imports: methods, AnnotationDbi",
+      "Suggests: DBI, annotate, RUnit",
+      "License: Artistic-2.0",
+      "MD5sum: e5913da38fe4487202306cacd885840d",
+      "NeedsCompilation: no",
+      "",
+      "Package: agcdf",
+      "Version: 2.18.0",
+      "Depends: utils",
+      "Imports: AnnotationDbi",
+      "License: LGPL",
+      "MD5sum: 5dd14bc6a6d2729f5e7b170105c78e48",
+      "NeedsCompilation: no"
+    )
+    writeLines(l, con <- gzfile(tmp, open = "wb"))
+    close(con)
+
+    # We don't use send_file, because of a webfakes bug on Windows
+    # with absolute paths. Webfakes prepends '/' to 'c:/...'.
+    blob <- readBin(tmp, what = "raw", n = 10000)
+    res$
+      set_type("application/gzip")$
+      send(blob)
   })
 
   app

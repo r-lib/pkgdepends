@@ -51,6 +51,7 @@ Suggests:
     htmlwidgets,
     mockery,
     pingr (>= 2.0.0),
+    rlang,
     rstudioapi,
     spelling,
     testthat,

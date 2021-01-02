@@ -148,7 +148,7 @@ test_that("format.pkg_name_check_wikipedia", {
     list(
       sy(async_wikipedia_get("cli")),
       sy(async_wikipedia_get("surely-not-this")),
-      sy(async_wikipedia_get("philosophy"))
+      sy(async_wikipedia_get("GNU R"))
     )
   })
   expect_snapshot({

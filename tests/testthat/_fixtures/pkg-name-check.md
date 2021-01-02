@@ -20,11 +20,11 @@
 # format.pkg_name_check_wikipedia
 
     Hash
-      eed14b3cd97b53e675dff6fe8806ebd5
+      1e01504bf366a3d1d8a30a1bbfe42923
     Code
       {
           list(sy(async_wikipedia_get("cli")), sy(async_wikipedia_get("surely-not-this")), 
-              sy(async_wikipedia_get("philosophy")))
+              sy(async_wikipedia_get("GNU R")))
       }
 
 # async_wiktionary_get

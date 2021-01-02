@@ -151,14 +151,14 @@
       writeLines(format(wpd[[3]]))
     Output
       + Wikipedia -------------------------------------------------------------------+
-      | Philosophy Philosophy (from Greek: φιλοσοφία, philosophia, 'love of          |
-      | wisdom') is the study of general and fundamental questions, such as those    |
-      | about reason, existence, knowledge, values, mind, and language. Such         |
-      | questions are often posed as problems to be studied or resolved. The term    |
-      | was probably coined by Pythagoras (c. 570 – c. 495 BCE). Philosophical       |
-      | methods include questioning, critical discussion, rational argument, and     |
+      | R (programming language) (from GNU R) R is a programming language and free   |
+      | software environment for statistical computing and graphics supported by     |
+      | the R Foundation for Statistical Computing. The R language is widely used    |
+      | among statisticians and data miners for developing statistical software and  |
+      | data analysis. Polls, data mining surveys, and studies of scholarly          |
+      | literature databases show substantial increases in popularity; as of         |
       | ...                                                                          |
-      +------------------------------------ https://en.wikipedia.org/wiki/Philosophy +
+      +---------------------- https://en.wikipedia.org/wiki/R_(programming_language) +
 
 # async_wiktionary_get
 

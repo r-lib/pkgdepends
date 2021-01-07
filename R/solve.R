@@ -740,19 +740,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
   sol$library <- private$config$library
   sol$binary <- binary
   sol$direct <- direct
-  if (! "dependencies" %in% names(sol)) {
-    deps <- lapply(
-      seq_len(nrow(sol)),
-      function(i) {
-        x <- sol$deps[[i]]
-        if (sol$platform[[i]] != "source") {
-          x <- x[tolower(x$type) != "linkingto", ]
-        }
-        x$package[tolower(x$type) %in% tolower(sol$dep_types[[i]])]
-      })
-    deps <- lapply(deps, setdiff, y = c("R", base_packages()))
-    sol$dependencies <- I(deps)
-  }
+  sol$dependencies <- I(deps)
   sol$installed <- installed
   sol$vignettes <- vignettes
 

@@ -150,7 +150,8 @@ pkgplan_init <- function(self, private, refs, config, library,
       cran_mirror = private$config$`cran-mirror`,
       update_after = private$config$`metadata-update-after`),
     package = pkgcache::package_cache$new(private$config$package_cache_dir),
-    installed = installed
+    installed = installed,
+    archive = NULL
   )
 
   private$dirty <- TRUE

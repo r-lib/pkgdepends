@@ -95,7 +95,10 @@ type_cran_resolve_current <- function(remote, direct, config, cache,
 }
 
 type_cran_resolve_version <- function(remote, direct, config,
-                                      crancache, dependencies) {
-  ## TODO
-  stop("Not implemented yet")
+                                      cache, dependencies) {
+  cache$archive <- cache$archive %||% get_archive_rds(config)
+}
+
+get_archive_rds <- function(config) {
+
 }

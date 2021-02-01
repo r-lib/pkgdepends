@@ -18,7 +18,17 @@ parse_remote_standard <- function(specs, config, ...) {
 
 resolve_remote_standard <- function(remote, direct, config,
                                     cache, dependencies, ...) {
-  resolve_from_metadata(remote, direct, config, cache, dependencies)
+  versions <- if ("type" %in% names(remote)) {
+    remote$version
+  } else  {
+    vcapply(remote, "[[", "version")
+  }
+
+  if (all(versions %in% c("", "current"))) {
+    resolve_from_metadata(remote, direct, config, cache, dependencies)
+  } else {
+    type_cran_resolve_version(remote, direct, config, cache, dependencies)
+  }
 }
 
 download_remote_standard <- function(resolution, target, target_tree,

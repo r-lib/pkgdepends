@@ -105,7 +105,8 @@ download_remote_github <- function(resolution, target, target_tree,
 type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,
                                       package, cache, on_progress) {
   ## TODO: progress
-  download_file(urls, repo_zip, on_progress = on_progress)$
+  headers <- type_github_get_headers()
+  download_file(urls, repo_zip, on_progress = on_progress, headers = headers)$
     then(function() {
       cache$package$add(
         repo_zip, rel_zip, package = package, sha = sha, built = FALSE)

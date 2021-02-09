@@ -26,7 +26,7 @@ test_that("can package a compressed tree", {
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  pkgzip <- file.path(tmp, "foo-tree.zip")
+  pkgzip <- file.path(tmp, "foo-t.zip")
   zip::zipr(pkgzip, test_path("foo"))
 
   dir.create(lib <- tempfile())

@@ -163,7 +163,7 @@ download_remote <- function(res, config, cache, which,
   remote_types <- c(default_remote_types(), remote_types)
   dl <- remote_types[[res$type]]$download %||% type_default_download
   target <- file.path(config$cache_dir, res$target)
-  target_tree <- file.path(config$cache_dir, paste0(res$target, "-tree"))
+  target_tree <- file.path(config$cache_dir, paste0(res$target, "-t"))
   mkdirp(dirname(target))
   async(dl)(res, target, target_tree, config,
     cache = cache, which = which, on_progress = on_progress)$

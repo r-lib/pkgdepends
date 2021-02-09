@@ -93,7 +93,7 @@ download_remote_github <- function(resolution, target, target_tree,
 
   "!DEBUG Need to download GH package `resolution$ref`@`sha`"
   urls <- resolution$sources[[1]]
-  rel_zip <- paste0(rel_target, "-tree")
+  rel_zip <- paste0(rel_target, "-t")
   type_github_download_repo(urls, target_tree, rel_zip, sha, package, cache,
                             on_progress)$
     then(function() {
@@ -320,6 +320,7 @@ type_github_make_resolution <- function(data) {
   )
 
   sha <- data$sha
+  sha7 <- substr(sha, 1, 7)
   username <- data$remote$username
   repo <- data$remote$repo
   subdir <- data$remote$subdir %|z|% NULL
@@ -359,7 +360,7 @@ type_github_make_resolution <- function(data) {
     license = data$desc$get_field("License", NA_character_),
     sources = glue(
       "https://api.github.com/repos/{username}/{repo}/zipball/{sha}"),
-    target = glue("src/contrib/{package}_{version}_{sha}.tar.gz"),
+    target = glue("src/contrib/{package}_{version}_{sha7}.tar.gz"),
     remote = list(data$remote),
     deps = list(deps),
     unknown_deps = unknown,

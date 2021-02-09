@@ -70,7 +70,7 @@ test_that("download_remote", {
                         dependencies = FALSE))
 
   target <- file.path(conf$cache_dir, res$target[1])
-  tree <- paste0(target, "-tree")
+  tree <- paste0(target, "-t")
   dl <- synchronise(
     download_remote_bioc(res[1,], target, tree, conf, cache,
                          on_progress = NULL))

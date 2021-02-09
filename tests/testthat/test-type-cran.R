@@ -210,7 +210,7 @@ test_that("download_remote", {
   res <- synchronise(resolve())
 
   target <- file.path(conf$cache_dir, res$target[1])
-  tree <- paste0(target, "-tree")
+  tree <- paste0(target, "-t")
   download <- function(res) {
     download_remote_cran(res, target, tree, conf, cache, on_progress = NULL)
   }

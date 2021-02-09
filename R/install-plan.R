@@ -382,7 +382,7 @@ start_task_package <- function(state, task) {
     start_task_package_build(state, task)
   } else {
     ## Uncompress to tree_dir, then build it
-    task$args$tree_dir <- paste0(path, "-tree")
+    task$args$tree_dir <- paste0(path, "-t")
     start_task_package_uncompress(state, task)
   }
 }

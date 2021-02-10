@@ -1,13 +1,13 @@
 
 #' @importFrom cli symbol cli_alert_success cli_alert_danger
 
-alert <- function(type, msg, .envir = parent.frame()) {
+alert <- function(type, msg, ..., .envir = parent.frame()) {
   switch (
     type,
-    success = cli_alert_success(msg, .envir = .envir),
-    info = cli_alert_info(msg, .envir = .envir),
-    warning = cli_alert_warning(msg, .envir = .envir),
-    danger = cli_alert_danger(msg, .envir = .envir)
+    success = cli_alert_success(msg, ..., .envir = .envir),
+    info = cli_alert_info(msg, ..., .envir = .envir),
+    warning = cli_alert_warning(msg, ..., .envir = .envir),
+    danger = cli_alert_danger(msg, ..., .envir = .envir)
   )
 }
 

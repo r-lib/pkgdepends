@@ -338,7 +338,7 @@ get_rtools_path <- function() {
   pkgd_data$rtools_path
 }
 
-make_build_process <- function(path, tmp_dir, lib, vignettes,
+make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
                                needscompilation, binary) {
 
   # For windows, we need ensure the zip.exe bundled with the zip package is on the PATH
@@ -355,6 +355,8 @@ make_build_process <- function(path, tmp_dir, lib, vignettes,
     )
   }
 
+  warn_for_long_paths(path, pkg)
+
   ## with_libpath() is needed for newer callr, which forces the current
   ## lib path in the child process.
   mkdirp(tmplib <- tempfile("pkg-lib"))
@@ -364,6 +366,23 @@ make_build_process <- function(path, tmp_dir, lib, vignettes,
       needs_compilation = needscompilation, compile_attributes = FALSE,
       args = c("--no-lock", if (binary) glue("--library={tmplib}"))
     )
+  )
+}
+
+warn_for_long_paths <- function(path, pkg) {
+  if (.Platform$OS.type != "windows") return()
+  pkg_paths <- dir(path, recursive = TRUE, full.names = TRUE)
+  # No files here for R CMD INSTALL --build, path is a file there
+  max_len <- max(c(0, nchar(pkg_paths)))
+  if (max_len < 255) return(path)
+  alert(
+    "warning",
+    paste0(
+      "The {.pkg {pkg}} package has very long paths. The installation ",
+      "will probably fail because most Windows versions do not support ",
+      "long paths. Please tell the package authors about this."
+    ),
+    wrap = TRUE
   )
 }
 
@@ -382,7 +401,8 @@ start_task_package <- function(state, task) {
     start_task_package_build(state, task)
   } else {
     ## Uncompress to tree_dir, then build it
-    task$args$tree_dir <- paste0(path, "-t")
+    task$args$tree_dir <- file.path(tempdir(), "X", pkg)
+    unlink(task$args$tree_dir, recursive = TRUE)
     start_task_package_uncompress(state, task)
   }
 }
@@ -406,6 +426,7 @@ start_task_package_uncompress <- function(state, task) {
 
 start_task_package_build <- function(state, task) {
   pkgidx <- task$args$pkgidx
+  pkg <- state$plan$package[pkgidx]
 
   ## The actual package might be in a subdirectory, e.g. when the
   ## tree was downloaded from GitHub
@@ -421,7 +442,7 @@ start_task_package_build <- function(state, task) {
   lib <- state$config$lib
 
   task$args$phase <- "build"
-  px <- make_build_process(tree_dir, dirname(tree_dir), lib, vignettes,
+  px <- make_build_process(tree_dir, pkg, create_temp_dir(), lib, vignettes,
                            needscompilation, binary = FALSE)
   worker <- list(id = get_worker_id(), task = task, process = px,
                  stdout = character(), stderr = character())
@@ -446,7 +467,7 @@ start_task_build <- function(state, task) {
   version <- state$plan$version[pkgidx]
   alert("info", "Building {.pkg {pkg}} {.version {version}}")
 
-  px <- make_build_process(path, tmp_dir, lib, vignettes, needscompilation,
+  px <- make_build_process(path, pkg, tmp_dir, lib, vignettes, needscompilation,
                            binary = TRUE)
   worker <- list(id = get_worker_id(), task = task, process = px,
                  stdout = character(), stderr = character())

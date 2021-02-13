@@ -61,9 +61,15 @@ base::grep().
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -175,7 +181,7 @@ base::grep().
 #&gt; [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+)(?:/(?&lt;subdir&gt;(?:[^@#]*[^@#/])/?))?(?:(?:(?:@(?&lt;commitish&gt;[^*].*)))|(?:(?:#(?&lt;pull&gt;[0-9]+)))|(?:(?:@(?&lt;release&gt;[*]release))))?$"
 #&gt; 
 #&gt; $type_local
-#&gt; [1] "^(?:local::)(?&lt;path&gt;.*)$"
+#&gt; [1] "^(?|local::(?&lt;path&gt;.*)|(?&lt;path&gt;(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*))$"
 #&gt; 
 #&gt; $type_deps
 #&gt; [1] "^(?:deps::)(?&lt;path&gt;.*)$"
@@ -215,6 +221,8 @@ base::grep().
 
   
 
+
+  
 
   </body>
 </html>

@@ -62,9 +62,15 @@ type can be often omitted, the common ref types have shortcuts.
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -251,9 +257,18 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 directory that contains a package. Full syntax:</p><pre>local::&lt;path&gt;
 </pre>
 
+<p>For brevity, you can omit the <code>local::</code> prefix, if you specify an
+absolute path, a path from the user’s home directory, starting with <code><a href='https://rdrr.io/r/base/tilde.html'>~</a></code>,
+or a relative path starting with <code>./</code> or <code>.\</code>.</p>
+<p>A single dot (<code>"."</code>) is considered to be a local package in the current
+working directory.</p>
 <p>Examples:</p><pre>local::/foo/bar/package_1.0.0.tar.gz
 local::/foo/bar/pkg
 local::.
+/absolute/path/package_1.0.0.tar.gz
+~/path/from/home
+./relative/path
+.
 </pre>
 
 
@@ -311,6 +326,8 @@ deps::.
 
   
 
+
+  
 
   </body>
 </html>

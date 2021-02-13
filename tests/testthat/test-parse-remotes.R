@@ -279,3 +279,30 @@ test_that("default parse function", {
     remote_types = list(foo = list(), foo2 = list()))
   expect_identical(res, res2)
 })
+
+test_that("parse_pkg_refs, local", {
+
+  cases <- list(
+    list("local::path", "path"),
+    list("local::/path", "/path"),
+    list("local::~/path", "~/path"),
+    list("local::./path", "./path"),
+    list("local::\\path", "\\path"),
+    list("/path", "/path"),
+    list("~/path", "~/path"),
+    list("./path", "./path"),
+    list(".\\path", ".\\path"),
+    list("\\path", "\\path"),
+    list(".", ".")
+  )
+
+  for (c in cases) {
+    expect_equal(
+      parse_pkg_ref(c[[1]]),
+      structure(
+        list(path = c[[2]], ref = paste0("local::", c[[2]]), type = "local"),
+        class = c("remote_ref_local", "remote_ref", "list")
+      )
+    )
+  }
+})

@@ -3,8 +3,8 @@
 ### API
 
 parse_remote_local <- function(specs, config, ...) {
-  parsed_specs <- re_match(specs, type_local_rx())
-  parsed_specs$ref <- parsed_specs$.text
+  parsed_specs <- re_match(specs, local_rx())
+  parsed_specs$ref <- paste0("local::", parsed_specs$path)
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
   parsed_specs <- parsed_specs[, cn]
   parsed_specs$type <- "local"
@@ -45,18 +45,6 @@ download_remote_local <- function(resolution, target, target_tree, config,
 }
 
 satisfy_remote_local <- function(resolution, candidate, config, ...) {
-    ## TODO: we can probably do better than this
-    FALSE
-  }
-
-## ----------------------------------------------------------------------
-## Internal functions
-
-type_local_rx <- function() {
-  paste0(
-    "^",
-    "(?:local::)",
-    "(?<path>.*)",
-    "$"
-  )
+  ## TODO: we can probably do better than this
+  FALSE
 }

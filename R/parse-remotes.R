@@ -132,6 +132,16 @@ remote_type_rx <- function() {
   )
 }
 
+local_rx <- function() {
+  typed <- "local::(?<path>.*)"
+  sugar <- "(?<path>(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*)"
+  paste0(
+    "^",
+    "(?|", typed, "|", sugar, ")",
+    "$"
+  )
+}
+
 #' @importFrom rematch2 re_match
 
 type_default_parse <- function(refs, ...) {
@@ -148,6 +158,7 @@ get_remote_types <- function(refs) {
   types[types == "" & grepl(standard_rx(), refs, perl = TRUE)] <- "standard"
   types[types == "" & grepl(github_rx(), refs, perl = TRUE)] <- "github"
   types[types == "" & grepl(github_url_rx(), refs, perl = TRUE)] <- "github"
+  types[types == "" & grepl(local_rx(), refs, perl = TRUE)] <- "local"
 
   if (any(bad <- types == "")) {
     stop("Can't parse remotes: ", paste(refs[bad], collapse = ", "))

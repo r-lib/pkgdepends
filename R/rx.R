@@ -30,7 +30,7 @@ pkg_rx <- function() {
     type_bioc        = standard_rx("bioc"),
     type_standard    = standard_rx("standard"),
     type_github      = github_rx(),
-    type_local       = type_local_rx(),
+    type_local       = local_rx(),
     type_deps        = type_deps_rx(),
     type_installed   = type_installed_rx(),
     github_username  = github_username_rx(),

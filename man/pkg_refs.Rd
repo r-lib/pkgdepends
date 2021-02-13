@@ -125,9 +125,20 @@ A path that refers to a package file built with \verb{R CMD build}, or a
 directory that contains a package. Full syntax:\preformatted{local::<path>
 }
 
+For brevity, you can omit the \verb{local::} prefix, if you specify an
+absolute path, a path from the user’s home directory, starting with \code{~},
+or a relative path starting with \verb{./} or \verb{.\\}.
+
+A single dot (\code{"."}) is considered to be a local package in the current
+working directory.
+
 Examples:\preformatted{local::/foo/bar/package_1.0.0.tar.gz
 local::/foo/bar/pkg
 local::.
+/absolute/path/package_1.0.0.tar.gz
+~/path/from/home
+./relative/path
+.
 }
 }
 

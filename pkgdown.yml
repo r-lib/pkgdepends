@@ -1,7 +1,7 @@
 pandoc: 2.7.3
 pkgdown: 1.6.1.9000
-pkgdown_sha: a3116bdc25a2ff881b7d7ba2b094b29349595295
+pkgdown_sha: 1c28ef9d9476e35974e1933de76a9aaa24d4cd27
 articles:
   pkgdepends-how-to: pkgdepends-how-to.html
-last_built: 2021-02-13T19:33Z
+last_built: 2021-02-15T15:54Z
 

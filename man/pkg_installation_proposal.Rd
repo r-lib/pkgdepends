@@ -615,6 +615,12 @@ over time, in practice you cannot perform the plan of the lock file
 \emph{much} later. For example, binary packages of older package version
 are removed, and won't be found.
 
+Similarly, for \verb{url::} remote types, the URL might hold an updated
+version of the package, compared to when the lock file was created.
+Should this happen, pkgdepends prints a warning, but it will try
+to continue the installation. The installation might fail if the
+updated package has different (e.g. new) dependencies.
+
 Currently the intended use case of lock files in on CI systems, to
 facilitate caching. The (hash of the) lock file provides a good key
 for caching systems.

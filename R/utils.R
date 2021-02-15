@@ -9,6 +9,8 @@ pkgd_data <- new.env(parent = emptyenv())
 
 `%&z&%` <- function(l, r) if (length(l) > 0 && l != "") r else ""
 
+get_private <- function(x) x$.__enclos_env__$private
+
 default_cran_mirror <- function() {
   mirror <- getOption("repos")["CRAN"]
   if (is.null(mirror) || is.na(mirror) || mirror == "@CRAN@") {
@@ -476,3 +478,11 @@ col_align <- function(text, align = c("left", "center", "right")) {
   width <- max(crayon::col_nchar(text, type = "width"))
   crayon::col_align(text, align = align, width = width)
 }
+
+get_id <- local({
+  id <- 0L
+  function() {
+    id <<- id + 1L
+    id
+  }
+})

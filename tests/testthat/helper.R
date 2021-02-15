@@ -11,8 +11,6 @@ expect_equal_named_lists <- function(object, expected, ...) {
   expect_equal(object, expected)
 }
 
-get_private <- function(x) x$.__enclos_env__$private
-
 `set_private<-` <- function(x, member, value) {
   pr <- get_private(x)
   pr[[member]] <- value

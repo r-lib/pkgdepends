@@ -210,8 +210,10 @@ res_init <- function(self, private, config, cache, library,
 
   private$deferred <- asNamespace("pkgcache")$deferred$new(
     type = "resolution_queue",
-    parent_resolve = function(value, resolve, id) {
+    parent_resolve = function(value, resolve) {
       "!DEBUG resolution done"
+      id <- value$id
+      value <- value$value
       wh <- which(id == private$state$async_id)
       private$state$status[wh] <- "OK"
 
@@ -235,8 +237,9 @@ res_init <- function(self, private, config, cache, library,
       private$try_finish(resolve)
     },
 
-    parent_reject = function(value, resolve, id) {
+    parent_reject = function(value, resolve) {
       "!DEBUG resolution failed"
+      id <- value$id
       wh <- which(id == private$state$async_id)
       private$state$status[wh] <- "FAILED"
       rec <- private$state[wh,]
@@ -294,11 +297,10 @@ res_push <- function(self, private, ..., direct, .list = .list) {
     private$state <- rbind(
       private$state,
       tibble(ref = n$ref, remote = list(n), status = NA_character_,
-             direct = direct, async_id = dx$get_id(),
-             started_at = Sys.time())
+             direct = direct, async_id = dx$id, started_at = Sys.time())
     )
 
-    dx$then(private$deferred)
+    dx$dx$then(private$deferred)
   }
 }
 
@@ -327,9 +329,9 @@ res__resolve_delayed <- function(self, private, resolve) {
         private$state,
         tibble(ref = vcapply(n2, "[[", "ref"), remote = n2,
                status = NA_character_, direct = FALSE,
-               async_id = dx$get_id(), started_at = Sys.time())
+               async_id = dx$id, started_at = Sys.time())
       )
-      dx$then(private$deferred)
+      dx$dx$then(private$deferred)
     }
   }
 
@@ -410,7 +412,8 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     stop("Cannot resolve type", format_items(type))
   }
 
-  async(resolve)(
+  id <- get_id()
+  dx <- async(resolve)(
     remote, direct = direct, config = config, cache = cache,
     dependencies = dependencies
   )$
@@ -429,8 +432,14 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
       } else {
         value[["dep_types"]] <- list()
       }
-      value
-  })
+      list(value = value, id = id)
+  })$
+    catch(error = function(err) {
+      err$id <- id
+      stop(err)
+    })
+
+  list(dx = dx, id = id)
 }
 
 resolve_from_description <- function(path, sources, remote, direct,

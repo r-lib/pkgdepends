@@ -383,6 +383,10 @@ new_async_timer <- function(...) {
   asNamespace("pkgcache")$async_timer$new(...)
 }
 
+external_process <- function(...) {
+  asNamespace("pkgcache")$external_process(...)
+}
+
 format_error_with_stdout <- function(x, ...) {
   msg <- conditionMessage(x)
   if (is.null(x$data$stdout)) {

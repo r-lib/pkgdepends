@@ -13,18 +13,24 @@
 #' @param exdir Where to extract the archive. It must exist.
 #' @param restore_times Whether to restore file modification times.
 #' @param post_process Function to call after the extraction.
+#' @param stdout Standard output of process.
+#' @param stderr Standard error of process.
+#' @param ... Extra arguments for the process constructor.
 #' @return The [processx::process] object.
 #' @noRd
 
 make_untar_process <- function(tarfile, files = NULL, exdir = ".",
-                               restore_times = TRUE, post_process = NULL) {
+                               restore_times = TRUE, post_process = NULL,
+                               stdout = "|", stderr = "|", ...) {
   internal <- need_internal_tar()
   if (internal) {
     r_untar_process$new(tarfile, files, exdir, restore_times,
-                        post_process = post_process)
+                        post_process = post_process, stdout = stdout,
+                        stderr = stderr, ...)
   } else {
     external_untar_process$new(tarfile, files, exdir, restore_times,
-                               post_process = post_process)
+                               post_process = post_process,
+                               stdout = stdout, stderr = stderr, ...)
   }
 }
 
@@ -88,30 +94,38 @@ external_untar_process <- R6::R6Class(
     #' @param restore_times Whether to restore modification files.
     #' @param tar Name of the external `tar` program. Defaults to
     #' `TAR` environment variable, or `tar` if unset.
+    #' @param stdout Standard output of process.
+    #' @param stderr Standard error of process.
     #' @param post_process Function to call, once the extraction is
     #' done, or `NULL`
+    #' @param ... Extra arguments for the process constructor.
     #' @return New `r_untar_process` object.
 
     initialize = function(
       tarfile, files = NULL, exdir = ".",
       restore_times = TRUE,
       tar = Sys.getenv("TAR", "tar"),
-      post_process = NULL) {
+      stdout = "|",
+      stderr = "|",
+      post_process = NULL,
+      ...) {
 
       private$options <- list(
         tarfile = normalizePath(tarfile),
         files = files,
         exdir = exdir,
         restore_times = restore_times,
-        tar = tar)
+        tar = tar
+      )
 
       private$options$args <- eup_get_args(private$options)
       super$initialize(
         tar,
         private$options$args,
         post_process = post_process,
-        stdout = "|",
-        stderr = "|"
+        stdout = stdout,
+        stderr = stderr,
+        ...
       )
       invisible(self)
     }
@@ -146,10 +160,14 @@ r_untar_process <- R6::R6Class(
     #' @param restore_times Whether to restore modification files.
     #' @param post_process Function to call, once the extraction is
     #' done, or `NULL`
+    #' @param stdout Standard output of process.
+    #' @param stderr Standard error of process.
+    #' @param ... Extra arguments for the process cosntructor.
     #' @return New `r_untar_process` object.
 
     initialize = function(tarfile, files = NULL, exdir = ".",
-                          restore_times = TRUE, post_process = NULL) {
+                          restore_times = TRUE, post_process = NULL,
+                          stdout = "|", stderr = "|", ...) {
       options <- list(
         tarfile = normalizePath(tarfile),
         files = files,
@@ -158,7 +176,7 @@ r_untar_process <- R6::R6Class(
         tar = tar,
         post_process = post_process)
 
-      process_options <- r_process_options()
+      process_options <- r_process_options(stdout = stdout, stderr = stderr)
       process_options$func <- function(options) {
         # nocov start
         ret <- utils::untar(
@@ -269,5 +287,35 @@ make_uncompress_process <- function(archive, exdir = ".", ...) {
     make_unzip_process(archive, exdir = exdir)
   } else {
     make_untar_process(archive, exdir = exdir)
+  }
+}
+
+# This is similar but uses the async framework
+
+run_uncompress_process <- function(archive, exdir = ".", ...) {
+  type <- detect_package_archive_type(archive)
+  if (type == "unknown") {
+    throw(new_input_error(
+      "Cannot extract {.path {archive}}, unknown archive type?"
+    ))
+  }
+
+  if (type == "zip") {
+    external_process(
+      make_unzip_process,
+      zipfile = archive,
+      exdir = exdir,
+      stdout = tempfile(),
+      stderr = tempfile()
+      )
+
+  } else {
+    external_process(
+      make_untar_process,
+      tarfile = archive,
+      exdir = exdir,
+      stdout = tempfile(),
+      stderr = tempfile()
+    )
   }
 }

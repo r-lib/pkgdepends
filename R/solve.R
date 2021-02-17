@@ -745,7 +745,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
   sol$vignettes <- vignettes
 
   if (downloads) {
-    tree <- ! file.exists(sol$fulltarget) & file.exists(sol$fulltarget_tree)
+    tree <- file.exists(sol$fulltarget_tree)
     sol$packaged <- !tree
     sol$file <- ifelse(tree, sol$fulltarget_tree, sol$fulltarget)
   }

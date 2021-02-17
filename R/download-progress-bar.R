@@ -195,7 +195,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
           bar$what$current[idx] + bar$what$filesize[idx]
         bar$what$current[idx] <- bar$what$filesize[idx]
       }
-    } else if (data$download_status == "Had") {
+    } else if (data$download_status %in% c("Had", "Current")) {
       bar$what$status[idx] <- "had"
       bar$what$current[idx] <- 0L
       bar$what$need[idx] <- 0L

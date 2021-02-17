@@ -20,6 +20,7 @@ The currently supported reference types are:
 \item \code{standard}: a package from CRAN or Bioconductor.
 \item \code{github}: A package from GitHub.
 \item \code{local}: A local package file or directory.
+\item \code{url}: An URL to a package archive.
 \item \code{installed} An installed package.
 \item \code{deps} The dependencies of a local package file or directory.
 }
@@ -139,6 +140,25 @@ local::.
 ~/path/from/home
 ./relative/path
 .
+}
+}
+
+\subsection{URLs:}{
+
+You can use \verb{url::} to refer to URLs that hold R package archives
+(i.e. properly built with \verb{R CMD build}), or compressed directories of
+package trees (i.e. not built with \verb{R CMD build}). pkgdepends will
+figure out if it needs to run \verb{R CMD build} on the package first.
+
+This remote type supports \code{.tar.gz} and \code{.zip} files.
+
+Note that URLs are not ideal remote types, because pkgdepends needs to
+download the package file to resolve its dependencies. When this
+happens, it puts the package file in the cache, so no further downloads
+are needed when installing the package later.
+
+Examples:\preformatted{url::https://cloud.r-project.org/src/contrib/Archive/cli/cli_1.0.0.tar.gz
+url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 }
 }
 

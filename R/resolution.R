@@ -531,6 +531,7 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
       res$built <- data[["built"]] %||% rep(NA_character_, nrow(res))
       idx <- match(res$package, packages)
       res$ref[!is.na(idx)] <- na.omit(refs[idx])
+      res$repotype <- res$type
       res$type[] <- "standard"
       res$type[!is.na(idx)] <- na.omit(types[idx])
       res$needscompilation <-

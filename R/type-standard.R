@@ -18,14 +18,37 @@ parse_remote_standard <- function(specs, config, ...) {
 
 resolve_remote_standard <- function(remote, direct, config,
                                     cache, dependencies, ...) {
-  resolve_from_metadata(remote, direct, config, cache, dependencies)
+  force(remote); force(direct); force(dependencies)
+  versions <- if ("type" %in% names(remote)) {
+    remote$version
+  } else  {
+    vcapply(remote, "[[", "version")
+  }
+
+  if (all(versions %in% c("", "current"))) {
+    resolve_from_metadata(remote, direct, config, cache, dependencies)
+  } else {
+    type_cran_resolve_version(remote, direct, config, cache, dependencies)
+  }
 }
 
 download_remote_standard <- function(resolution, target, target_tree,
                                      config, cache, which, on_progress) {
 
-  download_ping_if_no_sha(resolution, target, config, cache,
-                          on_progress)
+  # This is slightly different for cran and bioc packages.
+  rptp <- resolution$repotype
+  if (identical(rptp, "cran")) {
+    download_remote_cran(resolution, target, target_tree, config, cache,
+                         on_progress)
+  } else if (identical(rptp, "bioc")) {
+    download_remote_bioc(resolution, target, target_tree, config, cache,
+                         on_progress)
+  } else {
+    # this will always ping in practice, because we only have a sha in
+    # the metadata for CRAN currently
+    download_ping_if_no_sha(resolution, target, config, cache,
+                            on_progress)
+  }
 }
 
 satisfy_remote_standard <- function(resolution, candidate, config, ...) {

@@ -40,6 +40,8 @@ resolve_remote_cran <- function(remote, direct, config, cache,
 download_remote_cran <- function(resolution, target, target_tree, config,
                                  cache, which, on_progress) {
 
+  # if we don't have a shain the metadata, then we need to ping.
+  # otherwise we can use the cache.
   download_ping_if_no_sha(resolution, target, config, cache,
                           on_progress)
 }
@@ -96,6 +98,8 @@ type_cran_resolve_current <- function(remote, direct, config, cache,
 
 type_cran_resolve_version <- function(remote, direct, config,
                                       crancache, dependencies) {
-  ## TODO
-  stop("Not implemented yet")
+  ## TODO: implement for list
+  if (!"type" %in% names(remote)) stop("Internal error: only single remote")
+
+  tmpd <- type_versioned_resolve
 }

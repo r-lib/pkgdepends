@@ -21,6 +21,7 @@ res_make_empty_df <- local({
         built    = character(),
         platform = character(),         # "source" or platform string
         rversion = character(),         # * or version number (prefix)
+        repotype = character(),
         repodir  = character(),
         target   = character(),
         deps     = list(),
@@ -55,6 +56,7 @@ res_df_defaults <- local({
         built    = NA_character_,
         platform = "source",
         rversion = "*",
+        repotype = NA_character_,
         repodir  =  "src/contrib",
         target   =
           quote(file.path("src/contrib", paste0(package, "_", version, ".tar.gz"))),

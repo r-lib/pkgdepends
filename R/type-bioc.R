@@ -20,12 +20,25 @@ parse_remote_bioc <- function(specs, config, ...) {
 
 resolve_remote_bioc <- function(remote, direct, config, cache,
                                 dependencies, progress_bar, ...) {
-  resolve_from_metadata(remote, direct, config, cache, dependencies)
+  force(remote); force(direct); force(dependencies)
+  versions <- if ("type" %in% names(remote)) {
+    remote$version
+  } else  {
+    vcapply(remote, "[[", "version")
+  }
+
+ if (all(versions %in% c("", "current"))) {
+    resolve_from_metadata(remote, direct, config, cache, dependencies)
+  } else {
+    type_cran_resolve_version(remote, direct, config, cache, dependencies)
+  }
 }
 
 download_remote_bioc <- function(resolution, target, target_tree, config,
                                  cache, which, on_progress) {
 
+  # we need to check if there is a new binary build. for source packages
+  # we can always use the cache
   download_ping_if_not_source(resolution, target, config, cache,
                               on_progress)
 }

@@ -98,8 +98,5 @@ type_cran_resolve_current <- function(remote, direct, config, cache,
 
 type_cran_resolve_version <- function(remote, direct, config,
                                       crancache, dependencies) {
-  ## TODO: implement for list
-  if (!"type" %in% names(remote)) stop("Internal error: only single remote")
-
-  tmpd <- type_versioned_resolve
+  stop("Versioned CRAN packages are not implemented yet")
 }

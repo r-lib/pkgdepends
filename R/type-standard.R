@@ -39,10 +39,10 @@ download_remote_standard <- function(resolution, target, target_tree,
   rptp <- resolution$repotype
   if (identical(rptp, "cran")) {
     download_remote_cran(resolution, target, target_tree, config, cache,
-                         on_progress)
+                         which, on_progress)
   } else if (identical(rptp, "bioc")) {
     download_remote_bioc(resolution, target, target_tree, config, cache,
-                         on_progress)
+                         which, on_progress)
   } else {
     # this will always ping in practice, because we only have a sha in
     # the metadata for CRAN currently

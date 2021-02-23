@@ -306,3 +306,35 @@ test_that("parse_pkg_refs, local", {
     )
   }
 })
+
+test_that("parse_query", {
+  empty <- c(a = "1")[-1]
+  cases <- list(
+    list("", empty),
+    list("?", empty),
+    list("?foo", c(foo = "")),
+    list("?foo=1", c(foo = "1")),
+    list("?foo&bar", c(foo = "", bar = "")),
+    list("?foo=1&bar=2&foo", c(foo = "1", bar = "2", foo = "")),
+    list("?foo=1%202&bar=x", c(foo = "1 2", bar = "x"))
+  )
+
+  for (c in cases) {
+    expect_equal(parse_query(c[[1]]), c[[2]])
+  }
+})
+
+test_that("parameters", {
+  cases <- list(
+    list("foo", "?bar", c(bar = "")),
+    list("foo", "?bar=1&foo&bar=11", c(bar = "1", foo = "", bar = "11")),
+    list("user/repo", "?source", c(source = ""))
+  )
+
+  for (c in cases) {
+    wo <- parse_pkg_ref(c[[1]])
+    wi <- parse_pkg_ref(paste0(c[[1]], c[[2]]))
+    wo$params <- c[[3]]
+    expect_equal(wi, wo)
+  }
+})

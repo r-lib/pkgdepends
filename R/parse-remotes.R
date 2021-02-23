@@ -191,6 +191,8 @@ get_remote_types <- function(refs) {
 
 parse_pkg_refs <- function(refs, remote_types = NULL, ...) {
   remote_types <- c(default_remote_types(), remote_types)
+  params <- parse_ref_params(refs)
+  refs <- params$refs
   types <- get_remote_types(refs)
   unique_types <- unique(types)
   res <- vector("list", length(refs))
@@ -211,7 +213,8 @@ parse_pkg_refs <- function(refs, remote_types = NULL, ...) {
     )
     res[types == this] <- new_remotes
   }
-  res
+
+  add_ref_params(res, params$params)
 }
 
 #' @param ref A package reference, like `refs`, but a length one vector,
@@ -222,4 +225,34 @@ parse_pkg_refs <- function(refs, remote_types = NULL, ...) {
 parse_pkg_ref <- function(ref, remote_types = NULL, ...) {
   assert_that(is_string(ref))
   parse_pkg_refs(ref, remote_types = remote_types, ...)[[1]]
+}
+
+parse_ref_params <- function(refs) {
+  list(
+    refs = sub("[?].*$", "", refs),
+    params = lapply(sub("^[^?]*(\\?|$)", "", refs), parse_query)
+  )
+}
+
+add_ref_params <- function(res, params) {
+  if (length(res) != length(params)) {
+    stop("Internal error, param length mismath")
+  }
+  for (i in seq_along(res)) {
+    if (length(params[[i]])) res[[i]]$params <- params[[i]]
+  }
+
+  res
+}
+
+parse_query <- function(query) {
+  query <- sub("^[?]", "", query)
+  query <- chartr("+", " ", query)
+  argstr <- strsplit(query, "&", fixed = TRUE)[[1]]
+  argstr <- strsplit(argstr, "=", fixed = TRUE)
+  keys <- vcapply(argstr, function(x) utils::URLdecode(x[[1]]))
+  vals <- vcapply(argstr, function(x) {
+    if (length(x) == 2) utils::URLdecode(x[[2]]) else ""
+  })
+  structure(vals, names = keys)
 }

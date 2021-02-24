@@ -239,7 +239,7 @@ add_ref_params <- function(res, params) {
     stop("Internal error, param length mismath")
   }
   for (i in seq_along(res)) {
-    if (length(params[[i]])) res[[i]]$params <- params[[i]]
+    res[[i]]$params <- if (length(params[[i]])) params[[i]] else character()
   }
 
   res

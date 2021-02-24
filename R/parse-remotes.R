@@ -256,3 +256,8 @@ parse_query <- function(query) {
   })
   structure(vals, names = keys)
 }
+
+is_true_param <- function(params, which) {
+  which %in% names(params) &&
+    tolower(params[[which]]) %in% c("", "true", "yes", "y", "on", "1")
+}

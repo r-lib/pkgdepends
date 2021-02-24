@@ -477,19 +477,33 @@ pkgplan_i_lp_prefer_binaries <- function(lp) {
     ## We can't do this for other packages, because version is not
     ## exclusive for those
     if (! pkgs$type[same[1]] %in% c("cran", "bioc", "standard")) next
-    ## TODO: choose the right one for the current R version
-    selected <- same[pkgs$platform[same] != "source"][1]
-    ## No binary package, maybe there is RSPM. This is temporary,
-    ## until we get proper RSPM support.
-    if (is.na(selected)) {
-      selected <- same[grepl("__linux__", pkgs$mirror[same])][1]
-    }
-    if (is.na(selected)) next
-    ruledout <- setdiff(same, selected)
-    lp$ruled_out <- c(lp$ruled_out, ruledout)
-    for (r in ruledout) {
-      lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
-                                  type = "prefer-binary")
+
+    if (any(vlapply(pkgs$params[same], is_true_param, "source"))) {
+      ## Maybe a source package is requested
+      selected <- same[pkgs$platform[same] == "source"][1]
+      ruledout <- setdiff(same, selected)
+      lp$ruled_out <- c(lp$ruled_out, ruledout)
+      for (r in ruledout) {
+        lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+                                    type = "source-requested")
+      }
+
+    } else {
+
+      ## TODO: choose the right one for the current R version
+      selected <- same[pkgs$platform[same] != "source"][1]
+      ## No binary package, maybe there is RSPM. This is temporary,
+      ## until we get proper RSPM support.
+      if (is.na(selected)) {
+        selected <- same[grepl("__linux__", pkgs$mirror[same])][1]
+      }
+      if (is.na(selected)) next
+      ruledout <- setdiff(same, selected)
+      lp$ruled_out <- c(lp$ruled_out, ruledout)
+      for (r in ruledout) {
+        lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+                                    type = "prefer-binary")
+      }
     }
   }
 
@@ -530,6 +544,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "prefer-binary")  {
     ref <- x$pkgs$ref[cond$vars]
     glue("binary is preferred for `{ref}`")
+
+  } else if (cond$type == "source-requested") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("source package is requested for `{ref}`")
 
   } else if (cond$type == "exactly-once") {
     ref <- na.omit(x$pkgs$package[cond$vars])[1]

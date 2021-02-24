@@ -214,10 +214,10 @@ as_pkg_dependencies <- function(deps) {
 
   res <- lapply(res, function(x) {
     if ("hard" %in% x) {
-      x <- unique(hard, setdiff(c, "hard"))
+      x <- unique(c(hard, setdiff(x, "hard")))
     }
     if (any(c("soft", "all") %in% x)) {
-      x <- unique(soft, setdiff(c, c("all", "soft")))
+      x <- unique(c(soft, setdiff(x, c("all", "soft"))))
     }
     x
   })

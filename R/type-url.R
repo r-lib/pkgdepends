@@ -162,6 +162,7 @@ type_url_resolve <- function(remote, cache, config, direct = FALSE,
       x$extra[[1]][["resolve_download_status"]] <- tmpd$status
       x$metadata[["RemotePackaged"]] <-
         x$extra[[1]]$description$has_fields("Packaged")
+      x$params[[1]] <- remote$params
       list(resolution = x, data = xdirs)
     })
 }

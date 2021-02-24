@@ -495,7 +495,8 @@ resolve_from_description <- function(path, sources, remote, direct,
     remote = list(remote),
     unknown_deps = setdiff(unknown, "R"),
     extra = list(list(description = dsc)),
-    metadata = meta
+    metadata = meta,
+    params = list(remote$params)
   )
 }
 
@@ -511,10 +512,12 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
     packages <- remotes$package
     refs <- remotes$ref
     types <- remotes$type
+    params <- list(remotes$params)
   } else  {
     packages <- vcapply(remotes, "[[", "package")
     refs <- vcapply(remotes,  "[[", "ref")
     types <-  vcapply(remotes, "[[", "type")
+    params <- lapply(remotes, "[[", "params")
   }
 
   if (!direct) dependencies <- dependencies$indirect
@@ -537,6 +540,8 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
       res$needscompilation <-
         tolower(res$needscompilation) %in% c("yes", "true")
       res$direct <- direct & res$ref %in% refs
+      res$params <- replicate(nrow(res), character())
+      res$params[!is.na(idx)] <- params[na.omit(idx)]
 
       res$metadata <- get_standard_metadata(res)
 

@@ -365,7 +365,8 @@ type_github_make_resolution <- function(data) {
     deps = list(deps),
     unknown_deps = unknown,
     extra = list(list(remotesha = sha)),
-    metadata = meta
+    metadata = meta,
+    params = data$remote$params
   )
 }
 

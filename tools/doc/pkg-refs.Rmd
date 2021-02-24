@@ -47,7 +47,7 @@ cran::testthat?source=true
 Currently supported parameters:
 * `source` is a binary parameter. If specified, then a source R package
   is requested from a CRAN-like repository. This parameter is supported
-  for `cran::`, `bioc::` and `standard::` remore types, and it is ignored
+  for `cran::`, `bioc::` and `standard::` remote types, and it is ignored
   for others.
 
 ### CRAN packages:

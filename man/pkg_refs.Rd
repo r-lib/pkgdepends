@@ -52,7 +52,7 @@ cran::testthat?source=true
 Currently supported parameters: * \code{source} is a binary parameter. If
 specified, then a source R package is requested from a CRAN-like
 repository. This parameter is supported for \verb{cran::}, \verb{bioc::} and
-\verb{standard::} remore types, and it is ignored for others.
+\verb{standard::} remote types, and it is ignored for others.
 \subsection{CRAN packages:}{
 
 A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]

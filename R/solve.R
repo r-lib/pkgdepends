@@ -763,10 +763,15 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     "ref", "package", "version", "type", "direct", "binary",
     "dependencies", "vignettes", "needscompilation", "metadata",
     "sources", "target", "platform", "rversion", "built",
-    "directpkg", "license", "sha256", "filesize", "dep_types"
+    "directpkg", "license", "sha256", "filesize", "dep_types", "params"
   ))
 
-  plan <- list(lockfile_version = unbox(version), packages = pkgs[, cols])
+  packages <- pkgs[, cols]
+  packages$params <- lapply(
+    packages$params,
+    function(x) lapply(as.list(x), unbox)
+  )
+  plan <- list(lockfile_version = unbox(version), packages = packages)
   txt <- as_json_lite_plan(plan)
   writeLines(txt, plan_file)
 }

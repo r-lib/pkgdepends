@@ -13,6 +13,8 @@ can be obtained from. The full syntax of a reference is \code{type::ref}, but
 \if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
+\subsection{Introduction}{
+
 The currently supported reference types are:
 \itemize{
 \item \code{cran}: a CRAN package.
@@ -35,6 +37,22 @@ prefix), then \code{github} is used;
 \item if the ref is a GitHub URL, then \code{github} is used;
 \item otherwise an error is thrown.
 }
+}
+
+\subsection{Parameters}{
+
+Package refs may have optional parameters, added after a question mark.
+Different parameters are separated by an ampersand (\code{&}) character.
+Parameters might be binary, or have a string value, assigned with an
+equal sign (\code{=}). If no value is assigned, then we assume the \code{true}
+value. For example these two package refs are the same:\preformatted{cran::testthat?source
+cran::testthat?source=true
+}
+
+Currently supported parameters: * \code{source} is a binary parameter. If
+specified, then a source R package is requested from a CRAN-like
+repository. This parameter is supported for \verb{cran::}, \verb{bioc::} and
+\verb{standard::} remore types, and it is ignored for others.
 \subsection{CRAN packages:}{
 
 A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]
@@ -188,5 +206,7 @@ Examples:\preformatted{deps::/foo/bar/package_1.0.0.tar.gz
 deps::/foo/bar/pkg
 deps::.
 }
+}
+
 }
 }

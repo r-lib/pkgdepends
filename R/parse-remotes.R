@@ -245,6 +245,8 @@ add_ref_params <- function(res, params) {
   res
 }
 
+known_query_params <- c("source")
+
 parse_query <- function(query) {
   query <- sub("^[?]", "", query)
   query <- chartr("+", " ", query)
@@ -254,6 +256,11 @@ parse_query <- function(query) {
   vals <- vcapply(argstr, function(x) {
     if (length(x) == 2) utils::URLdecode(x[[2]]) else ""
   })
+
+  if (length(bad <- unique(setdiff(keys, known_query_params)))) {
+    cli_alert_warning("Unknown package parameter{?s}: {.val {bad}}.")
+  }
+
   structure(vals, names = keys)
 }
 

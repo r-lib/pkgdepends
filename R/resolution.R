@@ -220,7 +220,7 @@ res_init <- function(self, private, config, cache, library,
       ## Rule out installed:: refs and packages with ?source param
       not_inst <- value$type != "installed"
       prms <- value[["params"]]
-      if ("ref" %in% names(value)) prms <- list(prms)
+      if (!is.data.frame(value)) prms <- list(prms)
       want_source <- vlapply(prms, is_true_param, "source")
       want_reinst <- vlapply(prms, is_true_param, "reinstall")
       npkgs <- value$package[not_inst & ! want_source & ! want_reinst]

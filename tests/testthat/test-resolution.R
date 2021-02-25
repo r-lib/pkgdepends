@@ -104,7 +104,8 @@ test_that("unknown deps, tibble", {
     tibble::tibble(ref = remote$ref, type = c("type1", "type2"),
            package = c("pkg1", "pkg2"), version = c("ver1", "ver2"),
            sources = list(c("s11", "s12"), c("s21", "s22")),
-           unknown_deps = "foo::bar2", direct = direct)
+           unknown_deps = "foo::bar2", direct = direct,
+           params = list(character()))
   }
 
   types <- list(foo = list(resolve = foo_resolve),

@@ -217,7 +217,15 @@ res_init <- function(self, private, config, cache, library,
       wh <- which(id == private$state$async_id)
       private$state$status[wh] <- "OK"
 
-      npkgs <- value$package[value$type != "installed"]
+      ## Rule out installed:: refs and packages with ?source param
+      not_inst <- value$type != "installed"
+      if (is.null(value[["params"]])) {
+        want_source <- FALSE
+      } else {
+        want_source <- vlapply(value$params, is_true_param, "source")
+      }
+      npkgs <- value$package[not_inst & ! want_source]
+
       ## Installed already? Resolve that as well
       if (!is.null(private$library) && length(npkgs)) {
         ml <- file.exists(file.path(private$library, npkgs))
@@ -544,6 +552,11 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
       res$params[!is.na(idx)] <- params[na.omit(idx)]
 
       res$metadata <- get_standard_metadata(res)
+
+      # Drop binaries if source package was requested
+      want_source <- vlapply(res$params, is_true_param, "source")
+      todrop <- res$platform != "source" & want_source
+      if (any(todrop)) res <- res[!todrop, ]
 
       if (length(bad <- attr(data, "unknown"))) {
         idx <- match(bad, packages)

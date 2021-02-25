@@ -52,7 +52,7 @@ cran::testthat?source=true&nocache=true
 Currently supported parameters: * \code{source} is a binary parameter. If
 specified, then a source R package is requested from a CRAN-like
 repository. For package installations \code{source} always triggers a
-re-install. In otherwords, \code{source} implies the \code{reinstall} parameter.
+re-install. In other words, \code{source} implies the \code{reinstall} parameter.
 This parameter is supported for \verb{bioc::}, \verb{cran::} and \verb{standard::}
 remote types, and it is ignore for others. * \code{reinstall} requests a
 re-install for package installations. It is supported by the \verb{bioc::},
@@ -67,7 +67,7 @@ A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> 
 }
 \itemize{
 \item \verb{<package>} is a valid package name.
-\item \verb{<version>} is either a package version, or
+\item \verb{<version>} is a version or a version requirement.
 }
 
 Examples:\preformatted{forecast

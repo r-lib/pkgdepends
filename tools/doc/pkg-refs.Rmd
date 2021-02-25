@@ -47,7 +47,7 @@ cran::testthat?source=true&nocache=true
 Currently supported parameters:
 * `source` is a binary parameter. If specified, then a source R package
   is requested from a CRAN-like repository. For package installations
-  `source` always triggers a re-install. In otherwords, `source` implies the
+  `source` always triggers a re-install. In other words, `source` implies the
   `reinstall` parameter. This parameter is supported for `bioc::`, `cran::`
   and `standard::` remote types, and it is ignore for others.
 * `reinstall` requests a re-install for package installations. It is
@@ -67,7 +67,7 @@ A package from CRAN. Full syntax:
 ```
 
 - `<package>` is a valid package name.
-- `<version>` is either a package version, or 
+- `<version>` is a version or a version requirement.
 
 Examples:
 ```

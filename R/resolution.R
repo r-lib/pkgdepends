@@ -217,7 +217,14 @@ res_init <- function(self, private, config, cache, library,
       wh <- which(id == private$state$async_id)
       private$state$status[wh] <- "OK"
 
-      npkgs <- value$package[value$type != "installed"]
+      ## Rule out installed:: refs and packages with ?source param
+      not_inst <- value$type != "installed"
+      prms <- value[["params"]]
+      if (!is.data.frame(value)) prms <- list(prms)
+      want_source <- vlapply(prms, is_true_param, "source")
+      want_reinst <- vlapply(prms, is_true_param, "reinstall")
+      npkgs <- value$package[not_inst & ! want_source & ! want_reinst]
+
       ## Installed already? Resolve that as well
       if (!is.null(private$library) && length(npkgs)) {
         ml <- file.exists(file.path(private$library, npkgs))
@@ -495,7 +502,8 @@ resolve_from_description <- function(path, sources, remote, direct,
     remote = list(remote),
     unknown_deps = setdiff(unknown, "R"),
     extra = list(list(description = dsc)),
-    metadata = meta
+    metadata = meta,
+    params = list(remote$params)
   )
 }
 
@@ -511,10 +519,12 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
     packages <- remotes$package
     refs <- remotes$ref
     types <- remotes$type
+    params <- list(remotes$params)
   } else  {
     packages <- vcapply(remotes, "[[", "package")
     refs <- vcapply(remotes,  "[[", "ref")
     types <-  vcapply(remotes, "[[", "type")
+    params <- lapply(remotes, "[[", "params")
   }
 
   if (!direct) dependencies <- dependencies$indirect
@@ -537,8 +547,15 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
       res$needscompilation <-
         tolower(res$needscompilation) %in% c("yes", "true")
       res$direct <- direct & res$ref %in% refs
+      res$params <- replicate(nrow(res), character())
+      res$params[!is.na(idx)] <- params[na.omit(idx)]
 
       res$metadata <- get_standard_metadata(res)
+
+      # Drop binaries if source package was requested
+      want_source <- vlapply(res$params, is_true_param, "source")
+      todrop <- res$platform != "source" & want_source
+      if (any(todrop)) res <- res[!todrop, ]
 
       if (length(bad <- attr(data, "unknown"))) {
         idx <- match(bad, packages)

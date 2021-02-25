@@ -375,6 +375,10 @@ download_file <- function(...) {
   asNamespace("pkgcache")$download_file(...)
 }
 
+download_one_of <- function(...) {
+  asNamespace("pkgcache")$download_one_of(...)
+}
+
 http_stop_for_status <- function(...) {
   asNamespace("pkgcache")$http_stop_for_status(...)
 }

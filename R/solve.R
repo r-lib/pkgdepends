@@ -447,11 +447,13 @@ pkgplan_i_lp_failures <- function(lp) {
 
 pkgplan_i_lp_prefer_installed <- function(lp) {
   pkgs <- lp$pkgs
-  inst <- which(pkgs$type == "installed")
-  for (i in inst) {
+  inst <- which(
+    pkgs$type == "installed" & ! seq_along(pkgs$type) %in% lp$ruled_out
+  )
+  for (i in inst) {    
     ## If not a CRAN or BioC package, skip it
     repotype <- pkgs$extra[[i]]$repotype
-    if (is.null(repotype) || ! repotype %in% c("cran", "bioc")) next
+    if (is.null(repotype) || ! repotype %in% c("cran", "bioc")) next    
 
     ## Look for others with cran/bioc/standard type and same name & ver
     package <- pkgs$package[i]
@@ -459,6 +461,7 @@ pkgplan_i_lp_prefer_installed <- function(lp) {
 
     ruledout <- which(pkgs$type %in% c("cran", "bioc", "standard") &
                       pkgs$package == package & pkgs$version == version)
+
     lp$ruled_out <- c(lp$ruled_out, ruledout)
     for (r in ruledout) {
       lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
@@ -477,6 +480,7 @@ pkgplan_i_lp_prefer_binaries <- function(lp) {
     ## We can't do this for other packages, because version is not
     ## exclusive for those
     if (! pkgs$type[same[1]] %in% c("cran", "bioc", "standard")) next
+
     ## TODO: choose the right one for the current R version
     selected <- same[pkgs$platform[same] != "source"][1]
     ## No binary package, maybe there is RSPM. This is temporary,
@@ -530,6 +534,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "prefer-binary")  {
     ref <- x$pkgs$ref[cond$vars]
     glue("binary is preferred for `{ref}`")
+
+  } else if (cond$type == "source-requested") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("source package is requested for `{ref}`")
 
   } else if (cond$type == "exactly-once") {
     ref <- na.omit(x$pkgs$package[cond$vars])[1]
@@ -763,10 +771,15 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     "ref", "package", "version", "type", "direct", "binary",
     "dependencies", "vignettes", "needscompilation", "metadata",
     "sources", "target", "platform", "rversion", "built",
-    "directpkg", "license", "sha256", "filesize", "dep_types"
+    "directpkg", "license", "sha256", "filesize", "dep_types", "params"
   ))
 
-  plan <- list(lockfile_version = unbox(version), packages = pkgs[, cols])
+  packages <- pkgs[, cols]
+  packages$params <- lapply(
+    packages$params,
+    function(x) lapply(as.list(x), unbox)
+  )
+  plan <- list(lockfile_version = unbox(version), packages = packages)
   txt <- as_json_lite_plan(plan)
   writeLines(txt, plan_file)
 }
@@ -824,9 +837,10 @@ calculate_lib_status <- function(sol, res) {
 
 calculate_cache_status <- function(soldata, cache) {
   toinst <- soldata$sha256[soldata$type != "installed"]
+  nocache <- vlapply(soldata$params, is_true_param, "nocache")
   cached <- cache$package$find(sha256 = toinst)
   ifelse(soldata$type == "installed", NA_character_,
-         ifelse(soldata$sha256 %in% cached$sha256, "hit", "miss"))
+         ifelse(soldata$sha256 %in% cached$sha256 & !nocache, "hit", "miss"))
 }
 
 describe_solution_error <- function(pkgs, solution) {

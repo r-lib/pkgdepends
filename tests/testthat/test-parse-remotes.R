@@ -45,7 +45,7 @@ test_that("parse_pkg_refs, standard", {
   for (case in cases) {
     expect_equal_named_lists(
       p <- parse_pkg_refs(case[[1]])[[1]],
-      c(case[[2]], ref = case[[1]], type = "standard")
+      c(case[[2]], list(ref = case[[1]], type = "standard", params = character()))
     )
     expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
   }
@@ -69,7 +69,7 @@ test_that("parse_pkg_refs, cran", {
   for (case in cases) {
     expect_equal_named_lists(
       p <- parse_pkg_refs(case[[1]])[[1]],
-      c(case[[2]], ref = case[[1]], type = "cran")
+      c(case[[2]], list(ref = case[[1]], type = "cran", params = character()))
     )
     expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
   }
@@ -210,7 +210,8 @@ test_that("parse_pkg_refs, github", {
       utils::modifyList(
         list(package = case$repo %||% "repo", username = "user",
              repo = "repo", subdir = "", commitish = "", pull = "",
-             release = "", ref = case[[1]], type = "github"),
+             release = "", ref = case[[1]], type = "github",
+             params = character()),
         case[-1]
       )
     )
@@ -236,7 +237,7 @@ test_that("custom remote types", {
   )
   expect_identical(
     res,
-    list(structure(list(type = "foo"),
+    list(structure(list(type = "foo", params = character()),
                    class = c("remote_ref_foo", "remote_ref", "list")))
   )
   expect_identical(xspecs, "foo::arbitrary_string/xxx")
@@ -266,10 +267,11 @@ test_that("default parse function", {
   )
   expect_identical(res,
     list(
-      structure(list(package = "", type = "foo", rest = "bar", ref = "foo::bar"),
+      structure(list(package = "", type = "foo", rest = "bar", ref = "foo::bar",
+                     params = character()),
                 class = c("remote_ref_foo", "remote_ref", "list")),
       structure(list(package = "package", type = "foo2", rest = "bar2",
-                     ref = "package=foo2::bar2"),
+                     ref = "package=foo2::bar2", params = character()),
                 class = c("remote_ref_foo2", "remote_ref", "list"))
     )
   )
@@ -300,9 +302,42 @@ test_that("parse_pkg_refs, local", {
     expect_equal(
       parse_pkg_ref(c[[1]]),
       structure(
-        list(path = c[[2]], ref = paste0("local::", c[[2]]), type = "local"),
+        list(path = c[[2]], ref = paste0("local::", c[[2]]), type = "local",
+             params = character()),
         class = c("remote_ref_local", "remote_ref", "list")
       )
     )
+  }
+})
+
+test_that("parse_query", {
+  empty <- c(a = "1")[-1]
+  cases <- list(
+    list("", empty),
+    list("?", empty),
+    list("?foo", c(foo = "")),
+    list("?foo=1", c(foo = "1")),
+    list("?foo&bar", c(foo = "", bar = "")),
+    list("?foo=1&bar=2&foo", c(foo = "1", bar = "2", foo = "")),
+    list("?foo=1%202&bar=x", c(foo = "1 2", bar = "x"))
+  )
+
+  for (c in cases) {
+    expect_equal(parse_query(c[[1]]), c[[2]])
+  }
+})
+
+test_that("parameters", {
+  cases <- list(
+    list("foo", "?bar", c(bar = "")),
+    list("foo", "?bar=1&foo&bar=11", c(bar = "1", foo = "", bar = "11")),
+    list("user/repo", "?source", c(source = ""))
+  )
+
+  for (c in cases) {
+    wo <- parse_pkg_ref(c[[1]])
+    wi <- parse_pkg_ref(paste0(c[[1]], c[[2]]))
+    wo$params <- c[[3]]
+    expect_equal(wi, wo)
   }
 })

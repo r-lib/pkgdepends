@@ -8,6 +8,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Introduction
+
 The currently supported reference types are:
 
 - `cran`: a CRAN package.
@@ -29,7 +31,34 @@ are applied:
 - if the ref is a GitHub URL, then `github` is used;
 - otherwise an error is thrown.
 
-## CRAN packages:
+## Parameters
+
+Package refs may have optional parameters, added after a question
+mark. Different parameters are separated by an ampersand (`&`) character.
+Parameters might be binary, or have a string value, assigned with an
+equal sign (`=`). If no value is assigned, then we assume the `true`
+value. For example these two package refs are the same:
+
+```
+cran::testthat?source&nocache
+cran::testthat?source=true&nocache=true
+```
+
+Currently supported parameters:
+* `source` is a binary parameter. If specified, then a source R package
+  is requested from a CRAN-like repository. For package installations
+  `source` always triggers a re-install. In other words, `source` implies the
+  `reinstall` parameter. This parameter is supported for `bioc::`, `cran::`
+  and `standard::` remote types, and it is ignore for others.
+* `reinstall` requests a re-install for package installations. It is
+  supported by the `bioc::`, `cran::`, `github::`, `local::`, `standard::`,
+  and `url::` remote types.
+* `nocache` will ignore the package cache. It will always download the
+  package file, and it will not add the downloaded (and built) file to the
+  package cache. It is supported by the `bioc::`, `cran::`, `github::`,
+  `standard::` and `url::` remote types.
+
+### CRAN packages:
 
 A package from CRAN. Full syntax:
 
@@ -38,7 +67,7 @@ A package from CRAN. Full syntax:
 ```
 
 - `<package>` is a valid package name.
-- `<version>` is either a package version, or 
+- `<version>` is a version or a version requirement.
 
 Examples:
 ```
@@ -53,7 +82,7 @@ forecast@current
 Note: pkgdepends currently parses the version specification part
 (everything after `@`), but does not use it.
 
-## Bioconductor packages:
+### Bioconductor packages:
 
 A package from Bioconductor. The syntax is the same as for CRAN packages,
 except of the prefix of course:
@@ -62,7 +91,7 @@ except of the prefix of course:
 [bioc::]<package>[@[>=]<version> | current | last]
 ```
 
-## Standard packages:
+### Standard packages:
 
 These are packages either from CRAN or Bioconductor, the full syntax
 is the same as for CRAN packages, except for the prefix:
@@ -71,7 +100,7 @@ is the same as for CRAN packages, except for the prefix:
 [standard::]<package>[@[>=]<version> | current | last]
 ```
 
-## GitHub packages:
+### GitHub packages:
 
 Packages from a GitHub repository. Full syntax:
 
@@ -126,7 +155,7 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 A GitHub remote string can also be used instead of an URL, for example:
 `git@github.com:r-lib/pkgdepends.git`
 
-## Local packages:
+### Local packages:
 
 A path that refers to a package file built with `R CMD build`, or a
 directory that contains a package. Full syntax:
@@ -153,7 +182,7 @@ local::.
 .
 ```
 
-## URLs:
+### URLs:
 
 You can use `url::` to refer to URLs that hold R package archives
 (i.e. properly built with `R CMD build`), or compressed directories
@@ -173,7 +202,7 @@ url::https://cloud.r-project.org/src/contrib/Archive/cli/cli_1.0.0.tar.gz
 url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 ```
 
-## Installed packages:
+### Installed packages:
 
 This is usually used internally, but can also be used directly.
 Full syntax:
@@ -190,7 +219,7 @@ Example:
 installed::~/R/3.6/crayon
 ```
 
-## Package dependencies:
+### Package dependencies:
 
 Usually used internally, it specifies the dependencies of a local
 package. It can be used to download or install the dependencies of a

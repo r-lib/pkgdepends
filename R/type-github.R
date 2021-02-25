@@ -63,6 +63,7 @@ download_remote_github <- function(resolution, target, target_tree,
   package <- resolution$package
   sha <- resolution$extra[[1]]$remotesha
   need_vignettes <- which == "resolution"
+  nocache <- is_true_param(resolution$params[[1]], "nocache")
 
   ## 1. Check if we have a built package in the cache. We do not check the
   ## ref or the type, so the package could have been built from a local
@@ -70,23 +71,27 @@ download_remote_github <- function(resolution, target, target_tree,
   ## fine. If we don't require vignetted, then a package with or without
   ## vignettes is fine.
 
-  hit <- cache$package$copy_to(
-    target, package = package, sha256 = sha, built = TRUE,
-    .list = c(if (need_vignettes) c(vignettes = TRUE)))
-  if (nrow(hit)) {
-    "!DEBUG found GH `resolution$ref`@`sha` in the cache"
-    return("Had")
+  if (!nocache) {
+    hit <- cache$package$copy_to(
+      target, package = package, sha256 = sha, built = TRUE,
+      .list = c(if (need_vignettes) c(vignettes = TRUE)))
+    if (nrow(hit)) {
+      "!DEBUG found GH `resolution$ref`@`sha` in the cache"
+      return("Had")
+    }
   }
 
   ## 2. Check if we have a repo snapshot in the cache.
 
   rel_target <- resolution$target
-  subdir <- resolution$remote[[1]]$subdir
-  hit <- cache$package$copy_to(
-    target_tree, package = package, sha256 = sha, built = FALSE)
-  if (nrow(hit)) {
-    "!DEBUG found GH zip for `resolution$ref`@`sha` in the cache"
-    return("Had")
+  if (!nocache) {
+    subdir <- resolution$remote[[1]]$subdir
+    hit <- cache$package$copy_to(
+      target_tree, package = package, sha256 = sha, built = FALSE)
+    if (nrow(hit)) {
+      "!DEBUG found GH zip for `resolution$ref`@`sha` in the cache"
+      return("Had")
+    }
   }
 
   ## 3. Need to download the repo
@@ -126,6 +131,10 @@ satisfy_remote_github <- function(resolution, candidate,
 
   ## 1. installed ref is good, if it has the same sha
   if (candidate$type == "installed") {
+    want_reinst <- is_true_param(resolution$params[[1]], "reinstall")
+    if (want_reinst) {
+      return(structure(FALSE, reason = "Re-install requested"))
+    }
     sha1 <- tryCatch(candidate$extra[[1]]$remotesha, error = function(e) "")
     sha2 <- resolution$extra[[1]]$remotesha
     ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)
@@ -365,7 +374,8 @@ type_github_make_resolution <- function(data) {
     deps = list(deps),
     unknown_deps = unknown,
     extra = list(list(remotesha = sha)),
-    metadata = meta
+    metadata = meta,
+    params = data$remote$params
   )
 }
 

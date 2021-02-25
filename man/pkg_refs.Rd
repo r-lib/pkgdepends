@@ -13,6 +13,8 @@ can be obtained from. The full syntax of a reference is \code{type::ref}, but
 \if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
+\subsection{Introduction}{
+
 The currently supported reference types are:
 \itemize{
 \item \code{cran}: a CRAN package.
@@ -35,13 +37,37 @@ prefix), then \code{github} is used;
 \item if the ref is a GitHub URL, then \code{github} is used;
 \item otherwise an error is thrown.
 }
+}
+
+\subsection{Parameters}{
+
+Package refs may have optional parameters, added after a question mark.
+Different parameters are separated by an ampersand (\code{&}) character.
+Parameters might be binary, or have a string value, assigned with an
+equal sign (\code{=}). If no value is assigned, then we assume the \code{true}
+value. For example these two package refs are the same:\preformatted{cran::testthat?source&nocache
+cran::testthat?source=true&nocache=true
+}
+
+Currently supported parameters: * \code{source} is a binary parameter. If
+specified, then a source R package is requested from a CRAN-like
+repository. For package installations \code{source} always triggers a
+re-install. In other words, \code{source} implies the \code{reinstall} parameter.
+This parameter is supported for \verb{bioc::}, \verb{cran::} and \verb{standard::}
+remote types, and it is ignore for others. * \code{reinstall} requests a
+re-install for package installations. It is supported by the \verb{bioc::},
+\verb{cran::}, \verb{github::}, \verb{local::}, \verb{standard::}, and \verb{url::} remote types.
+* \code{nocache} will ignore the package cache. It will always download the
+package file, and it will not add the downloaded (and built) file to the
+package cache. It is supported by the \verb{bioc::}, \verb{cran::}, \verb{github::},
+\verb{standard::} and \verb{url::} remote types.
 \subsection{CRAN packages:}{
 
 A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]
 }
 \itemize{
 \item \verb{<package>} is a valid package name.
-\item \verb{<version>} is either a package version, or
+\item \verb{<version>} is a version or a version requirement.
 }
 
 Examples:\preformatted{forecast
@@ -188,5 +214,7 @@ Examples:\preformatted{deps::/foo/bar/package_1.0.0.tar.gz
 deps::/foo/bar/pkg
 deps::.
 }
+}
+
 }
 }

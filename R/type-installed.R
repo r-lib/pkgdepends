@@ -179,9 +179,13 @@ resolve_installed  <- function(cache, remotes, direct, dependencies) {
 
   ## Single remote, or a list of remotes
   if ("ref" %in% names(remotes)) {
+    refs <- remotes$ref
     packages <- remotes$package
+    params <- list(remotes$params %||% character())
   } else  {
+    refs <- vcapply(remotes, "[[", "ref")
     packages <- vcapply(remotes, "[[", "package")
+    params <- lapply(remotes, "[[", "params")
   }
 
   pkgs <- cache$installed$pkgs
@@ -195,6 +199,10 @@ resolve_installed  <- function(cache, remotes, direct, dependencies) {
   res$direct <- direct
   res$metadata <- get_installed_metadata(res)
   res$deps <- lapply(res$deps, function(x) x[x$type %in% dependencies,])
+  # this might include extra rows from recommended packages
+  idx <- match(res$ref, refs)
+  res$params <- replicate(nrow(res), character())
+  res$params[!is.na(idx)] <- params[na.omit(idx)]
 
   extracols <- c("repotype", grep("^remote", names(pkgs), value = TRUE))
   extra <- pkgs[pkgs$package %in% packages, extracols]

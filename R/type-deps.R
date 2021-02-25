@@ -42,7 +42,7 @@ resolve_remote_deps <- function(remote, direct, config, cache,
   local$type <- "local"
   local$ref <- sub("^deps::", "local::", local$ref)
   local$direct <- FALSE
-  local$remote[[1]] <- parse_pkg_ref(local$ref)
+  local$remote[[1]] <- parse_pkg_ref(remote$ref)
 
   # Now make sure deps:: is not used by the solver.
   # The installer will treat deps:: specially and just ignore it, anyway.

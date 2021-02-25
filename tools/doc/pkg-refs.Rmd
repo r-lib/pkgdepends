@@ -46,9 +46,13 @@ cran::testthat?source=true
 
 Currently supported parameters:
 * `source` is a binary parameter. If specified, then a source R package
-  is requested from a CRAN-like repository. This parameter is supported
-  for `cran::`, `bioc::` and `standard::` remote types, and it is ignored
-  for others.
+  is requested from a CRAN-like repository. For package installations
+  `source` always triggers a re-install. In otherwords, `source` implies the
+  `reinstall` parameter. This parameter is supported for `bioc::`, `cran::`
+  and `standard::` remote types, and it is ignore for others.
+* `reinstall` requests a re-install for package installations. It is
+  supported by the `bioc::`, `cran::`, `github::`, `local::`, `standard::`,
+  and `url::` remote types.
 
 ### CRAN packages:
 

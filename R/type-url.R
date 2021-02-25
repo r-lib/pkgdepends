@@ -79,6 +79,10 @@ satisfy_remote_url <- function(resolution, candidate, config, ...) {
 
   ## 2. installed ref is good, if it has the same etag
   if (candidate$type == "installed") {
+    want_reinst <- is_true_param(resolution$params[[1]], "reinstall")
+    if (want_reinst) {
+      return(structure(FALSE, reason = "Re-install requested"))
+    }
     t1 <- tryCatch(candidate$extra[[1]]$remoteetag, error = function(e) "")
     t2 <- resolution$metadata[[1]][["RemoteEtag"]]
     ok <- is_string(t1) && is_string(t2) && t1 == t2
@@ -88,6 +92,8 @@ satisfy_remote_url <- function(resolution, candidate, config, ...) {
       return(TRUE)
     }
   }
+
+  structure(FALSE, reason = "Repo type mismatch")
 }
 
 # -----------------------------------------------------------------------

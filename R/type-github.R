@@ -126,6 +126,10 @@ satisfy_remote_github <- function(resolution, candidate,
 
   ## 1. installed ref is good, if it has the same sha
   if (candidate$type == "installed") {
+    want_reinst <- is_true_param(resolution$params[[1]], "reinstall")
+    if (want_reinst) {
+      return(structure(FALSE, reason = "Re-install requested"))
+    }
     sha1 <- tryCatch(candidate$extra[[1]]$remotesha, error = function(e) "")
     sha2 <- resolution$extra[[1]]$remotesha
     ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)

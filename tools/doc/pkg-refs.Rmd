@@ -40,8 +40,8 @@ equal sign (`=`). If no value is assigned, then we assume the `true`
 value. For example these two package refs are the same:
 
 ```
-cran::testthat?source
-cran::testthat?source=true
+cran::testthat?source&nocache
+cran::testthat?source=true&nocache=true
 ```
 
 Currently supported parameters:
@@ -53,6 +53,10 @@ Currently supported parameters:
 * `reinstall` requests a re-install for package installations. It is
   supported by the `bioc::`, `cran::`, `github::`, `local::`, `standard::`,
   and `url::` remote types.
+* `nocache` will ignore the package cache. It will always download the
+  package file, and it will not add the downloaded (and built) file to the
+  package cache. It is supported by the `bioc::`, `cran::`, `github::`,
+  `standard::` and `url::` remote types.
 
 ### CRAN packages:
 

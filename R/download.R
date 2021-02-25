@@ -198,7 +198,15 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
   resolution; target; config; cache; on_progress
   mkdirp(dirname(target))
 
-  if (resolution$platform == "source") {
+  if (is_true_param(resolution$params[[1]], "nocache")) {
+    ## If the cache is ignored, then we just download it and put it
+    ## at the right place
+    download_one_of(
+      resolution$sources[[1]], target, on_progress = on_progress
+    )$
+      then(~ "Got")
+
+  } else if (resolution$platform == "source") {
     ## If it is a source package, then the package name, version number
     ## and package type must match. If there is such a package in the cache
     ## we just take it
@@ -224,7 +232,15 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
   resolution; target; config; cache; on_progress
   mkdirp(dirname(target))
 
-  if (! "sha256" %in% names(resolution) || is.na(resolution$sha256)) {
+  if (is_true_param(resolution$params[[1]], "nocache")) {
+    ## If the cache is ignored, then we just download it and put it
+    ## at the right place
+    download_one_of(
+      resolution$sources[[1]], target, on_progress = on_progress
+    )$
+      then(~ "Got")
+
+  } else  if (! "sha256" %in% names(resolution) || is.na(resolution$sha256)) {
     ## If we don't know the hash of the CRAN package, then just download
     ## it. This happens if there is some discrepancy between the package
     ## data and the metadata.

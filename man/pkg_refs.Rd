@@ -45,14 +45,22 @@ Package refs may have optional parameters, added after a question mark.
 Different parameters are separated by an ampersand (\code{&}) character.
 Parameters might be binary, or have a string value, assigned with an
 equal sign (\code{=}). If no value is assigned, then we assume the \code{true}
-value. For example these two package refs are the same:\preformatted{cran::testthat?source
-cran::testthat?source=true
+value. For example these two package refs are the same:\preformatted{cran::testthat?source&nocache
+cran::testthat?source=true&nocache=true
 }
 
 Currently supported parameters: * \code{source} is a binary parameter. If
 specified, then a source R package is requested from a CRAN-like
-repository. This parameter is supported for \verb{cran::}, \verb{bioc::} and
-\verb{standard::} remote types, and it is ignored for others.
+repository. For package installations \code{source} always triggers a
+re-install. In otherwords, \code{source} implies the \code{reinstall} parameter.
+This parameter is supported for \verb{bioc::}, \verb{cran::} and \verb{standard::}
+remote types, and it is ignore for others. * \code{reinstall} requests a
+re-install for package installations. It is supported by the \verb{bioc::},
+\verb{cran::}, \verb{github::}, \verb{local::}, \verb{standard::}, and \verb{url::} remote types.
+* \code{nocache} will ignore the package cache. It will always download the
+package file, and it will not add the downloaded (and built) file to the
+package cache. It is supported by the \verb{bioc::}, \verb{cran::}, \verb{github::},
+\verb{standard::} and \verb{url::} remote types.
 \subsection{CRAN packages:}{
 
 A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]

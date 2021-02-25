@@ -837,9 +837,10 @@ calculate_lib_status <- function(sol, res) {
 
 calculate_cache_status <- function(soldata, cache) {
   toinst <- soldata$sha256[soldata$type != "installed"]
+  nocache <- vlapply(soldata$params, is_true_param, "nocache")
   cached <- cache$package$find(sha256 = toinst)
   ifelse(soldata$type == "installed", NA_character_,
-         ifelse(soldata$sha256 %in% cached$sha256, "hit", "miss"))
+         ifelse(soldata$sha256 %in% cached$sha256 & !nocache, "hit", "miss"))
 }
 
 describe_solution_error <- function(pkgs, solution) {

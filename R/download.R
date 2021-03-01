@@ -172,7 +172,7 @@ download_remote <- function(res, config, cache, which,
           && !file.exists(target_tree)) {
         stop("Failed to download ", res$type, " package ", res$package)
       }
-      if (!identical(s, "Had") && !identical(s, "Got") &&
+      if (!grepl("^Had", s) && !identical(s, "Got") &&
           !identical(s, "Current")) s <- "Got"
       dlres <- res
       dlres$fulltarget <- target

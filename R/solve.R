@@ -741,7 +741,8 @@ pkgplan_install_plan <- function(self, private, downloads) {
   direct <- sol$direct |
     (sol$type == "installed" & sol$package %in% direct_packages)
 
-  binary = sol$platform != "source"
+  had <- paste("Had", current_r_platform())
+  binary = sol$platform != "source" | sol$download_status == had
   vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard") &
     private$config$`build-vignettes`
 

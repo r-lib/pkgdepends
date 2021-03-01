@@ -54,13 +54,14 @@ NULL
 #' ['Installation plans'][install_plans] for the format.
 #' @param lib Library directory to install to.
 #' @param num_workers Number of worker processes to use.
+#' @param cache Package cache to use, or `NULL`.
 #' @return Information about the installation process.
 #'
 #' @importFrom callr poll
 #' @export
 
 install_package_plan <- function(plan, lib = .libPaths()[[1]],
-                                 num_workers = 1) {
+                                 num_workers = 1, cache = NULL) {
 
   start <- Sys.time()
   cli::ansi_hide_cursor()
@@ -94,6 +95,7 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
 
   config <- list(lib = lib, num_workers = num_workers)
   state <- make_start_state(plan, config)
+  state$cache <- cache
   state$progress <- create_progress_bar(state)
   on.exit(done_progress_bar(state), add =  TRUE)
 
@@ -599,6 +601,21 @@ stop_task_package_build <- function(state, worker) {
     ))
   }
 
+  prms <- state$plan$params[[pkgidx]]
+  if (!is.null(state$cache) && !is_true_param(prms, "nocache")) {
+    tryCatch(
+      state$cache$add(state$plan$file[pkgidx], state$plan$target[pkgidx],
+                      package = pkg, version = version, built = TRUE,
+                      sha256 = state$plan$extra[[pkgidx]]$remotesha,
+                      vignettes = state$plan$vignette[pkgidx],
+                      platform = "source"),
+      error = function(err) {
+        alert("warning", "Failed to add {.pkg {pkg}} \\
+               {.version {version}} to the cache")
+      }
+    )
+  }
+
   state
 }
 
@@ -645,6 +662,25 @@ stop_task_build <- function(state, worker) {
       )
     ))
   }
+
+  prms <- state$plan$params[[pkgidx]]
+  if (!is.null(state$cache) && !is_true_param(prms, "nocache")) {
+    ptfm <- current_r_platform()
+    rv <- current_r_version()
+    target <- paste0(state$plan$target[pkgidx], "-", ptfm, "-", rv)
+    tryCatch(
+      state$cache$add(state$plan$file[pkgidx], target,
+                      package = pkg, version = version, built = TRUE,
+                      sha256 = state$plan$extra[[pkgidx]]$remotesha,
+                      vignettes = state$plan$vignette[pkgidx],
+                      platform = ptfm, rversion = rv),
+      error = function(err) {
+        alert("warning", "Failed to add {.pkg {pkg}} \\
+               {.version {version}} ({ptfm}) to the cache")
+      }
+    )
+  }
+
 
   state
 }

@@ -1,7 +1,7 @@
 
 test_that("make_unzip_process", {
 
-  zipfile <- system.file(package = .packageName, "tools", "xxx.zip")
+  zipfile <- system.file(package = "pkgdepends", "tools", "xxx.zip")
   mkdirp(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 

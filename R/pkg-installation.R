@@ -428,7 +428,9 @@ pkg_installation_proposal <- R6::R6Class(
     install = function() {
       plan <- private$plan$get_install_plan()
       nw <- get_num_workers()
-      install_package_plan(plan, lib = private$library, num_workers = nw)
+      cache <- get_private(private$plan)$cache$package
+      install_package_plan(plan, lib = private$library, num_workers = nw,
+                           cache = cache)
     },
 
     #' Create an installation plan for the downloaded packages.

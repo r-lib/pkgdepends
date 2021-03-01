@@ -108,7 +108,7 @@ make_dl_status <- function(status, url, target, bytes, error = NULL) {
   } else if (status == "Failed") {
     obj$error <- error
 
-  } else if (status == "Had") {
+  } else if (grepl("^Had", status)) {
     obj$bytes <- as.double(bytes)
   }
 

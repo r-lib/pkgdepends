@@ -4,7 +4,12 @@
 \alias{install_package_plan}
 \title{Perform a package installation plan}
 \usage{
-install_package_plan(plan, lib = .libPaths()[[1]], num_workers = 1)
+install_package_plan(
+  plan,
+  lib = .libPaths()[[1]],
+  num_workers = 1,
+  cache = NULL
+)
 }
 \arguments{
 \item{plan}{Package plan object, a data frame, see
@@ -13,6 +18,8 @@ install_package_plan(plan, lib = .libPaths()[[1]], num_workers = 1)
 \item{lib}{Library directory to install to.}
 
 \item{num_workers}{Number of worker processes to use.}
+
+\item{cache}{Package cache to use, or \code{NULL}.}
 }
 \value{
 Information about the installation process.

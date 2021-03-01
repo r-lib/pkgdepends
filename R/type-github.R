@@ -53,19 +53,36 @@ download_remote_github <- function(resolution, target, target_tree,
   ## We cache both the downloaded repo snapshot and the built package in
   ## the package cache. So this is how we go:
   ##
-  ## 1. If there is a built package in the cache (including vignettes
-  ##    if they are needed), then we just use that.
-  ## 2. If there is a repo snapshot in the cache, we build an R package
+  ## 1. If there is a locally built bianry in the cache (including
+  ##    vignettes if they are requested), then we use that.
+  ## 2. If there is a built package in the cache (including vignettes
+  ##    if they are needed), then we use that.
+  ## 3. If there is a repo snapshot in the cache, we build an R package
   ##    from it. (Add also add it to the cache.)
-  ## 3. Otherwise we download the repo, add it to the cache, build the
+  ## 4. Otherwise we download the repo, add it to the cache, build the
   ##    R package, and add that to the cache as well.
 
   package <- resolution$package
   sha <- resolution$extra[[1]]$remotesha
   need_vignettes <- which == "resolution"
   nocache <- is_true_param(resolution$params[[1]], "nocache")
+  source <- is_true_param(resolution$params[[1]], "source")
 
-  ## 1. Check if we have a built package in the cache. We do not check the
+  ## 1. Check for a binary package
+
+  if (!nocache && !source) {
+    ptfm <- current_r_platform()
+    hit <- cache$package$copy_to(
+      target, package = package, sha256 = sha, built = TRUE,
+      platform = ptfm, rversion = current_r_version(),
+      .list = c(if (need_vignettes) c(vignettes = TRUE)))
+
+    if (nrow(hit)) {
+      return(paste("Had", ptfm))
+    }
+  }
+
+  ## 2. Check if we have a built package in the cache. We do not check the
   ## ref or the type, so the package could have been built from a local
   ## ref or from another repo. As long as the sha is the same, we are
   ## fine. If we don't require vignetted, then a package with or without
@@ -81,7 +98,7 @@ download_remote_github <- function(resolution, target, target_tree,
     }
   }
 
-  ## 2. Check if we have a repo snapshot in the cache.
+  ## 3. Check if we have a repo snapshot in the cache.
 
   rel_target <- resolution$target
   if (!nocache) {
@@ -94,13 +111,13 @@ download_remote_github <- function(resolution, target, target_tree,
     }
   }
 
-  ## 3. Need to download the repo
+  ## 4. Need to download the repo
 
   "!DEBUG Need to download GH package `resolution$ref`@`sha`"
   urls <- resolution$sources[[1]]
   rel_zip <- paste0(rel_target, "-t")
   type_github_download_repo(urls, target_tree, rel_zip, sha, package, cache,
-                            on_progress)$
+                            on_progress, nocache)$
     then(function() {
       "!DEBUG Building package `resolution$package`"
       return("Got")
@@ -108,13 +125,17 @@ download_remote_github <- function(resolution, target, target_tree,
 }
 
 type_github_download_repo <- function(urls, repo_zip, rel_zip, sha,
-                                      package, cache, on_progress) {
+                                      package, cache, on_progress, nocache) {
+
+  urls; repo_zip; sha; package; cache; on_progress; nocache
   ## TODO: progress
   headers <- type_github_get_headers()
   download_file(urls, repo_zip, on_progress = on_progress, headers = headers)$
     then(function() {
-      cache$package$add(
-        repo_zip, rel_zip, package = package, sha = sha, built = FALSE)
+      if (!nocache) {
+        cache$package$add(
+          repo_zip, rel_zip, package = package, sha = sha, built = FALSE)
+      }
       "Got"
     })
 }

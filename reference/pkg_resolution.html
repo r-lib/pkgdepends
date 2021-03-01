@@ -144,7 +144,7 @@
 
     <p><code><a href='new_pkg_deps.html'>pkg_deps</a></code>, <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> and <code><a href='new_pkg_installation_proposal.html'>pkg_installation_proposal</a></code>
 all resolve their dependencies recursively, to obtain information about
-all packages needed for the specified <a href='pkg_refs.html'>package references</a>.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>CRAN and Bioconductor packages</h3>
+all packages needed for the specified <a href='pkg_refs.html'>package references</a>.</p><h3 class='hasAnchor' id='cran-and-bioconductor-packages'><a class='anchor' href='#cran-and-bioconductor-packages'></a>CRAN and Bioconductor packages</h3>
 
 
 <p>Resolution currently start by downloading the CRAN and Bioconductor
@@ -154,20 +154,41 @@ and "built" (for binary packages) and "packaged" time stamps. The extra
 meta information is updated daily currently, so for some packages it
 might be incorrect or missing.</p>
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>GitHub packages</h3>
+<h3 class='hasAnchor' id='github-packages'><a class='anchor' href='#github-packages'></a>GitHub packages</h3>
 
 
 <p>For GitHub packages, we query their download URL to be able to
 download the package later, and also download their <code>DESCRIPTION</code>
 file, to learn about their dependencies.</p>
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Local packages</h3>
+<h3 class='hasAnchor' id='local-packages'><a class='anchor' href='#local-packages'></a>Local packages</h3>
 
 
 <p>From local package files we extract the <code>DESCRIPTION</code> file, to learn
 about their dependencies.</p>
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>The <code>remotes</code> field in <code>DESCRIPTION</code></h3>
+<h3 class='hasAnchor' id='the-'><a class='anchor' href='#the-'></a>The <code>remotes</code> field in <code>DESCRIPTION</code></h3>
+
+
+<p>We support the non-standard <code>Remotes</code> field in the package <code>DESCRIPTION</code>
+file. This field may contain a list of package references for any of the
+dependencies that are specified in one of the <code>Depends</code>, <code>Includes</code>,
+<code>Suggests</code> or <code>Enhances</code> fields. The syntax is a comma separated list of
+<a href='pkg_refs.html'>package references</a>.</p><h3 class='hasAnchor' id='list-remotes-'><a class='anchor' href='#list-remotes-'></a>The <code>remotes</code> field in <code>DESCRIPTION</code></h3>
+
+
+<p>We support the non-standard <code>Remotes</code> field in the package <code>DESCRIPTION</code>
+file. This field may contain a list of package references for any of the
+dependencies that are specified in one of the <code>Depends</code>, <code>Includes</code>,
+<code>Suggests</code> or <code>Enhances</code> fields. The syntax is a comma separated list of
+<a href='pkg_refs.html'>package references</a>.</p><h3 class='hasAnchor' id='-field-in-'><a class='anchor' href='#-field-in-'></a>The <code>remotes</code> field in <code>DESCRIPTION</code></h3>
+
+
+<p>We support the non-standard <code>Remotes</code> field in the package <code>DESCRIPTION</code>
+file. This field may contain a list of package references for any of the
+dependencies that are specified in one of the <code>Depends</code>, <code>Includes</code>,
+<code>Suggests</code> or <code>Enhances</code> fields. The syntax is a comma separated list of
+<a href='pkg_refs.html'>package references</a>.</p><h3 class='hasAnchor' id='list-description-'><a class='anchor' href='#list-description-'></a>The <code>remotes</code> field in <code>DESCRIPTION</code></h3>
 
 
 <p>We support the non-standard <code>Remotes</code> field in the package <code>DESCRIPTION</code>
@@ -176,7 +197,7 @@ dependencies that are specified in one of the <code>Depends</code>, <code>Includ
 <code>Suggests</code> or <code>Enhances</code> fields. The syntax is a comma separated list of
 <a href='pkg_refs.html'>package references</a>.</p>
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>The result</h3>
+<h3 class='hasAnchor' id='the-result'><a class='anchor' href='#the-result'></a>The result</h3>
 
 
 <p>The result of the resolution is a data frame (tibble) with lots of
@@ -225,7 +246,7 @@ zero length vector for <code>installed::</code> refs.</p></li>
 </ul>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package dependency tables</h3>
+<h3 class='hasAnchor' id='package-dependency-tables'><a class='anchor' href='#package-dependency-tables'></a>Package dependency tables</h3>
 
 
 <p>A package dependency table has five columns currently:</p><ul>
@@ -237,7 +258,7 @@ zero length vector for <code>installed::</code> refs.</p></li>
 </ul>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Resolution failures</h3>
+<h3 class='hasAnchor' id='resolution-failures'><a class='anchor' href='#resolution-failures'></a>Resolution failures</h3>
 
 
 <p>The resolution process does not stop on error. Instead, failed

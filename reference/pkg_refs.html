@@ -146,7 +146,11 @@ can be obtained from. The full syntax of a reference is <code>type::ref</code>, 
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The currently supported reference types are:</p><ul>
+    
+<h3 class='hasAnchor' id='introduction'><a class='anchor' href='#introduction'></a>Introduction</h3>
+
+
+<p>The currently supported reference types are:</p><ul>
 <li><p><code>cran</code>: a CRAN package.</p></li>
 <li><p><code>bioc</code>: A Bioconductor package.</p></li>
 <li><p><code>standard</code>: a package from CRAN or Bioconductor.</p></li>
@@ -166,14 +170,38 @@ prefix), then <code>github</code> is used;</p></li>
 <li><p>if the ref is a GitHub URL, then <code>github</code> is used;</p></li>
 <li><p>otherwise an error is thrown.</p></li>
 </ul>
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>CRAN packages:</h3>
+
+
+<h3 class='hasAnchor' id='parameters'><a class='anchor' href='#parameters'></a>Parameters</h3>
+
+
+<p>Package refs may have optional parameters, added after a question mark.
+Different parameters are separated by an ampersand (<code>&amp;</code>) character.
+Parameters might be binary, or have a string value, assigned with an
+equal sign (<code><a href='https://rdrr.io/r/base/assignOps.html'>=</a></code>). If no value is assigned, then we assume the <code>true</code>
+value. For example these two package refs are the same:</p><pre><span class='fu'>cran</span><span class='fu'>::</span><span class='va'>testthat</span><span class='op'>?</span><span class='va'>source</span><span class='op'>&amp;</span><span class='va'>nocache</span>
+<span class='fu'>cran</span><span class='fu'>::</span><span class='va'>testthat</span><span class='op'>?</span><span class='va'>source</span><span class='op'>=</span><span class='va'>true</span><span class='op'>&amp;</span><span class='va'>nocache</span><span class='op'>=</span><span class='va'>true</span>
+</pre>
+
+<p>Currently supported parameters: * <code>source</code> is a binary parameter. If
+specified, then a source R package is requested from a CRAN-like
+repository. For package installations <code>source</code> always triggers a
+re-install. In other words, <code>source</code> implies the <code>reinstall</code> parameter.
+This parameter is supported for <code>bioc::</code>, <code>cran::</code> and <code>standard::</code>
+remote types, and it is ignore for others. * <code>reinstall</code> requests a
+re-install for package installations. It is supported by the <code>bioc::</code>,
+<code>cran::</code>, <code>github::</code>, <code>local::</code>, <code>standard::</code>, and <code>url::</code> remote types.
+* <code>nocache</code> will ignore the package cache. It will always download the
+package file, and it will not add the downloaded (and built) file to the
+package cache. It is supported by the <code>bioc::</code>, <code>cran::</code>, <code>github::</code>,
+<code>standard::</code> and <code>url::</code> remote types.</p><h4 class='hasAnchor' id='cran-packages-'><a class='anchor' href='#cran-packages-'></a>CRAN packages:</h4>
 
 
 <p>A package from CRAN. Full syntax:</p><pre>[cran::]&lt;package&gt;[@[&gt;=]&lt;version&gt; | current | last]
 </pre>
 <ul>
 <li><p><code>&lt;package&gt;</code> is a valid package name.</p></li>
-<li><p><code>&lt;version&gt;</code> is either a package version, or</p></li>
+<li><p><code>&lt;version&gt;</code> is a version or a version requirement.</p></li>
 </ul>
 
 <p>Examples:</p><pre>forecast
@@ -187,7 +215,7 @@ forecast@current
 <p>Note: pkgdepends currently parses the version specification part
 (everything after <code><a href='https://rdrr.io/r/base/slotOp.html'>@</a></code>), but does not use it.</p>
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Bioconductor packages:</h3>
+<h4 class='hasAnchor' id='bioconductor-packages-'><a class='anchor' href='#bioconductor-packages-'></a>Bioconductor packages:</h4>
 
 
 <p>A package from Bioconductor. The syntax is the same as for CRAN
@@ -195,7 +223,7 @@ packages, except of the prefix of course:</p><pre>[bioc::]&lt;package&gt;[@[&gt;
 </pre>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Standard packages:</h3>
+<h4 class='hasAnchor' id='standard-packages-'><a class='anchor' href='#standard-packages-'></a>Standard packages:</h4>
 
 
 <p>These are packages either from CRAN or Bioconductor, the full syntax is
@@ -203,7 +231,7 @@ the same as for CRAN packages, except for the prefix:</p><pre>[standard::]&lt;pa
 </pre>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>GitHub packages:</h3>
+<h4 class='hasAnchor' id='github-packages-'><a class='anchor' href='#github-packages-'></a>GitHub packages:</h4>
 
 
 <p>Packages from a GitHub repository. Full syntax:</p><pre>[&lt;package&gt;=][github::]&lt;username&gt;/&lt;repository&gt;[/&lt;subdir&gt;][&lt;detail&gt;]
@@ -251,7 +279,7 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 <p>A GitHub remote string can also be used instead of an URL, for example:
 <code>git@github.com:r-lib/pkgdepends.git</code></p>
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Local packages:</h3>
+<h4 class='hasAnchor' id='local-packages-'><a class='anchor' href='#local-packages-'></a>Local packages:</h4>
 
 
 <p>A path that refers to a package file built with <code>R CMD build</code>, or a
@@ -273,7 +301,7 @@ local::.
 </pre>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>URLs:</h3>
+<h4 class='hasAnchor' id='urls-'><a class='anchor' href='#urls-'></a>URLs:</h4>
 
 
 <p>You can use <code>url::</code> to refer to URLs that hold R package archives
@@ -290,7 +318,7 @@ url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 </pre>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Installed packages:</h3>
+<h4 class='hasAnchor' id='installed-packages-'><a class='anchor' href='#installed-packages-'></a>Installed packages:</h4>
 
 
 <p>This is usually used internally, but can also be used directly. Full
@@ -305,7 +333,7 @@ syntax:</p><pre>installed::&lt;path&gt;/&lt;package&gt;
 </pre>
 
 
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package dependencies:</h3>
+<h4 class='hasAnchor' id='package-dependencies-'><a class='anchor' href='#package-dependencies-'></a>Package dependencies:</h4>
 
 
 <p>Usually used internally, it specifies the dependencies of a local
@@ -318,6 +346,8 @@ syntax:</p><pre>deps::&lt;path&gt;
 deps::/foo/bar/pkg
 deps::.
 </pre>
+
+
 
 
 

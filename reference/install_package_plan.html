@@ -138,7 +138,12 @@
 <p><script src="../doc/assets/rd.js"></script></p>
     </div>
 
-    <pre class="usage"><span class='fu'>install_package_plan</span><span class='op'>(</span><span class='va'>plan</span>, lib <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/libPaths.html'>.libPaths</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, num_workers <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>install_package_plan</span><span class='op'>(</span>
+  <span class='va'>plan</span>,
+  lib <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/libPaths.html'>.libPaths</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>,
+  num_workers <span class='op'>=</span> <span class='fl'>1</span>,
+  cache <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,6 +160,10 @@
     <tr>
       <th>num_workers</th>
       <td><p>Number of worker processes to use.</p></td>
+    </tr>
+    <tr>
+      <th>cache</th>
+      <td><p>Package cache to use, or <code>NULL</code>.</p></td>
     </tr>
     </table>
 

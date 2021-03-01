@@ -175,7 +175,7 @@ result of the dependency solver.</p></li>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
+<h3 class='hasAnchor' id='public-methods'><a class='anchor' href='#public-methods'></a>Public methods</h3>
 
 <ul>
 <li><p><a href='#method-new'><code>pkg_deps$new()</code></a></p></li>
@@ -195,12 +195,12 @@ result of the dependency solver.</p></li>
 <li><p><a href='#method-clone'><code>pkg_deps$clone()</code></a></p></li>
 </ul>
 <p><hr>
-<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>new()</code></h3>
 <p>Create a new <code>pkg_deps</code> object. Consider using <code>new_pkg_deps()</code>
 instead of calling the constructor directly.</p>
 <p>The returned object can be used to look up (recursive) dependencies
 of R packages from various sources. To perform the actual lookup,
-you'll need to call the <a href='#method-resolve'><code>resolve()</code></a> method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+you'll need to call the <a href='#method-resolve'><code>resolve()</code></a> method.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
   <span class='va'>refs</span>,
   config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
@@ -222,89 +222,199 @@ you'll need to call the <a href='#method-resolve'><code>resolve()</code></a> met
 use, and experimental currently.</p></dd>
 
 </dl><p></div></p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A new <code>pkg_deps</code> object.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pd</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-new-'><a class='anchor' href='#list-new-'></a>Method <code>new()</code></h3>
+<p>Create a new <code>pkg_deps</code> object. Consider using <code>new_pkg_deps()</code>
+instead of calling the constructor directly.</p>
+<p>The returned object can be used to look up (recursive) dependencies
+of R packages from various sources. To perform the actual lookup,
+you'll need to call the <a href='#method-resolve'><code>resolve()</code></a> method.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+  <span class='va'>refs</span>,
+  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  policy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lazy"</span>, <span class='st'>"upgrade"</span><span class='op'>)</span>,
+  remote_types <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>refs</code></dt><dd><p>Package names or references. See
+<a href='pkg_refs.html'>'Package references'</a> for the syntax.</p></dd>
+
+<dt><code>config</code></dt><dd><p>Configuration options, a named list. See
+<a href='pkg_config.html'>'Configuration'</a>.</p></dd>
+
+<dt><code>policy</code></dt><dd><p>Solution policy. See <a href='pkg_solution.html'>'The dependency solver'</a>.</p></dd>
+
+<dt><code>remote_types</code></dt><dd><p>Custom remote ref types, this is for advanced
+use, and experimental currently.</p></dd>
+
+</dl><p></div></p>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A new <code>pkg_deps</code> object.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span>
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-get_refs"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_refs()</code></h3>
-<p>The package refs that were used to create the <code>pkg_deps</code> object.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<a id="method-get_refs"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>get_refs()</code></h3>
+<p>The package refs that were used to create the <code>pkg_deps</code> object.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A character vector of package refs that were used to create the
 <code>pkg_deps</code> object.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-get-refs-'><a class='anchor' href='#list-get-refs-'></a>Method <code>get_refs()</code></h3>
+<p>The package refs that were used to create the <code>pkg_deps</code> object.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A character vector of package refs that were used to create the
+<code>pkg_deps</code> object.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-get_config"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_config()</code></h3>
+<a id="method-get_config"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>get_config()</code></h3>
 <p>Configuration options for the <code>pkg_deps</code> object. See
-<a href='pkg_config.html'>'Configuration'</a> for details.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<a href='pkg_config.html'>'Configuration'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>Named list. See <a href='pkg_config.html'>'Configuration'</a> for the configuration
 options.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-get-config-'><a class='anchor' href='#list-get-config-'></a>Method <code>get_config()</code></h3>
+<p>Configuration options for the <code>pkg_deps</code> object. See
+<a href='pkg_config.html'>'Configuration'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>Named list. See <a href='pkg_config.html'>'Configuration'</a> for the configuration
+options.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-resolve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>resolve()</code></h3>
+<a id="method-resolve"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>resolve()</code></h3>
 <p>Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
 already cached, and also from GitHub if GitHub refs were included,
 either directly or indirectly. See
-<a href='pkg_resolution.html'>'Dependency resolution'</a> for details.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<a href='pkg_resolution.html'>'Dependency resolution'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-resolve-'><a class='anchor' href='#list-resolve-'></a>Method <code>resolve()</code></h3>
+<p>Resolve the dependencies of the specified package references. This
+usually means downloading metadata from CRAN and Bioconductor, unless
+already cached, and also from GitHub if GitHub refs were included,
+either directly or indirectly. See
+<a href='pkg_resolution.html'>'Dependency resolution'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>The <code>pkg_deps</code> object itself, invisibly.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-async_resolve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>async_resolve()</code></h3>
+<a id="method-async_resolve"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>async_resolve()</code></h3>
 <p>The same as <a href='#method-resolve'><code>resolve()</code></a>, but asynchronous.
-This method is for advanced use.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+This method is for advanced use.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>async_resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A deferred value.</p>
+<h3 class='hasAnchor' id='list-async-resolve-'><a class='anchor' href='#list-async-resolve-'></a>Method <code>async_resolve()</code></h3>
+<p>The same as <a href='#method-resolve'><code>resolve()</code></a>, but asynchronous.
+This method is for advanced use.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>async_resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A deferred value.</p>
 <p><hr>
-<a id="method-get_resolution"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_resolution()</code></h3>
+<a id="method-get_resolution"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>get_resolution()</code></h3>
 <p>Query the result of the dependency resolution. This method can be
-called after <a href='#method-resolve'><code>resolve()</code></a> has completed.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+called after <a href='#method-resolve'><code>resolve()</code></a> has completed.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A <a href='pkg_resolution.html'>pkg_resolution_result</a> object, which is also a tibble. See
 <a href='pkg_resolution.html'>'Dependency resolution'</a> for its columns.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-get-resolution-'><a class='anchor' href='#list-get-resolution-'></a>Method <code>get_resolution()</code></h3>
+<p>Query the result of the dependency resolution. This method can be
+called after <a href='#method-resolve'><code>resolve()</code></a> has completed.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A <a href='pkg_resolution.html'>pkg_resolution_result</a> object, which is also a tibble. See
+<a href='pkg_resolution.html'>'Dependency resolution'</a> for its columns.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-get_solve_policy"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_solve_policy()</code></h3>
+<a id="method-get_solve_policy"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>get_solve_policy()</code></h3>
 <p>Returns the current policy of the dependency solver.
-See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A character vector of length one.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-get-solve-policy-'><a class='anchor' href='#list-get-solve-policy-'></a>Method <code>get_solve_policy()</code></h3>
+<p>Returns the current policy of the dependency solver.
+See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A character vector of length one.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
@@ -312,11 +422,11 @@ See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-set_solve_policy"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>set_solve_policy()</code></h3>
+<a id="method-set_solve_policy"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>set_solve_policy()</code></h3>
 <p>Set the current policy of the dependency solver.
 If the object already contains a solution and the new policy is
 different than the old policy, then the solution is deleted.
-See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span>policy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lazy"</span>, <span class='st'>"upgrade"</span><span class='op'>)</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -324,7 +434,26 @@ See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 
 <dt><code>policy</code></dt><dd><p>Policy to set.</p></dd>
 
 </dl><p></div></p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
+<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-set-solve-policy-'><a class='anchor' href='#list-set-solve-policy-'></a>Method <code>set_solve_policy()</code></h3>
+<p>Set the current policy of the dependency solver.
+If the object already contains a solution and the new policy is
+different than the old policy, then the solution is deleted.
+See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span>policy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lazy"</span>, <span class='st'>"upgrade"</span><span class='op'>)</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>policy</code></dt><dd><p>Policy to set.</p></dd>
+
+</dl><p></div></p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
@@ -332,7 +461,7 @@ See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p><h4 
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-solve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code></h3>
+<a id="method-solve"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code></h3>
 <p>Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that can be installed together to
 create a functional installation. The set includes all directly
@@ -340,12 +469,32 @@ specified packages, and all required (or suggested, depending on
 the configuration) packages as well. It includes every package at
 most once. See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p>
 <p><code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code> calls <a href='#method-resolve'><code>resolve()</code></a> automatically, if it
-hasn't been called yet.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+hasn't been called yet.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-solve-'><a class='anchor' href='#list-solve-'></a>Method <code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code></h3>
+<p>Solve the package dependencies. Out of the resolved dependencies, it
+works out a set of packages, that can be installed together to
+create a functional installation. The set includes all directly
+specified packages, and all required (or suggested, depending on
+the configuration) packages as well. It includes every package at
+most once. See <a href='pkg_solution.html'>'The dependency solver'</a> for details.</p>
+<p><code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code> calls <a href='#method-resolve'><code>resolve()</code></a> automatically, if it
+hasn't been called yet.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>The <code>pkg_deps</code> object itself, invisibly.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
@@ -353,14 +502,28 @@ hasn't been called yet.</p><h4 class='hasAnchor' id='arguments'><a class='anchor
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-get_solution"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_solution()</code></h3>
-<p>Returns the solution of the package dependencies.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<a id="method-get_solution"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>get_solution()</code></h3>
+<p>Returns the solution of the package dependencies.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A <a href='pkg_solution.html'>pkg_solution_result</a> object, which is a list. See
 <a href='pkg_solution.html'>pkg_solution_result</a> for details.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-get-solution-'><a class='anchor' href='#list-get-solution-'></a>Method <code>get_solution()</code></h3>
+<p>Returns the solution of the package dependencies.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A <a href='pkg_solution.html'>pkg_solution_result</a> object, which is a list. See
+<a href='pkg_solution.html'>pkg_solution_result</a> for details.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
@@ -368,12 +531,30 @@ hasn't been called yet.</p><h4 class='hasAnchor' id='arguments'><a class='anchor
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-stop_for_solution_error"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>stop_for_solution_error()</code></h3>
+<a id="method-stop_for_solution_error"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>stop_for_solution_error()</code></h3>
 <p>Error if the dependency solver failed to find a consistent set of
-packages that can be installed together.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+packages that can be installed together.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>stop_for_solution_error</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='co'># This is an error, because the packages conflict:</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
+  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span>
+<span class='co'># This fails:</span>
+<span class='co'># pd$stop_for_solution_error()</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-stop-for-solution-error-'><a class='anchor' href='#list-stop-for-solution-error-'></a>Method <code>stop_for_solution_error()</code></h3>
+<p>Error if the dependency solver failed to find a consistent set of
+packages that can be installed together.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>stop_for_solution_error</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='co'># This is an error, because the packages conflict:</span>
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span>
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
@@ -387,23 +568,37 @@ packages that can be installed together.</p><h4 class='hasAnchor' id='arguments'
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-draw"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>draw()</code></h3>
+<a id="method-draw"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>draw()</code></h3>
 <p>Draw a tree of package dependencies. It returns a <code>tree</code> object, see
 <code><a href='https://rdrr.io/pkg/cli/man/tree.html'>cli::tree()</a></code>. Printing this object prints the dependency tree to the
-screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A <code>tree</code> object from the cli package, see <code><a href='https://rdrr.io/pkg/cli/man/tree.html'>cli::tree()</a></code>.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-draw-'><a class='anchor' href='#list-draw-'></a>Method <code>draw()</code></h3>
+<p>Draw a tree of package dependencies. It returns a <code>tree</code> object, see
+<code><a href='https://rdrr.io/pkg/cli/man/tree.html'>cli::tree()</a></code>. Printing this object prints the dependency tree to the
+screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A <code>tree</code> object from the cli package, see <code><a href='https://rdrr.io/pkg/cli/man/tree.html'>cli::tree()</a></code>.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-format"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>
-<p>Format a <code>pkg_deps</code> object, typically for printing.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<a id="method-format"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>
+<p>Format a <code>pkg_deps</code> object, typically for printing.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>format</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -411,10 +606,21 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <dt><code>...</code></dt><dd><p>Not used currently.</p></dd>
 
 </dl><p></div></p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>A character vector, each element should be a line in the printout.</p>
+<h3 class='hasAnchor' id='list-format-'><a class='anchor' href='#list-format-'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>
+<p>Format a <code>pkg_deps</code> object, typically for printing.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>format</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>...</code></dt><dd><p>Not used currently.</p></dd>
+
+</dl><p></div></p>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>A character vector, each element should be a line in the printout.</p>
 <p><hr>
-<a id="method-print"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code></h3>
+<a id="method-print"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code></h3>
 <p>Prints a <code>pkg_deps</code> object to the screen. The printout includes:</p><ul>
 <li><p>The package refs.</p></li>
 <li><p>Whether the object has the resolved dependencies.</p></li>
@@ -424,7 +630,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <li><p>Advice on which methods to call next.</p></li>
 </ul>
 
-<p>See the example below.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>See the example below.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>print</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -432,9 +638,40 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <dt><code>...</code></dt><dd><p>not used currently.</p></dd>
 
 </dl><p></div></p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pd</span>
+
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span>
+
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span>
+</pre><p></div></p>
+
+<h3 class='hasAnchor' id='list-print-'><a class='anchor' href='#list-print-'></a>Method <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code></h3>
+<p>Prints a <code>pkg_deps</code> object to the screen. The printout includes:</p><ul>
+<li><p>The package refs.</p></li>
+<li><p>Whether the object has the resolved dependencies.</p></li>
+<li><p>Whether the resolution had errors.</p></li>
+<li><p>Whether the object has the solved dependencies.</p></li>
+<li><p>Whether the solution had errors.</p></li>
+<li><p>Advice on which methods to call next.</p></li>
+</ul>
+
+<p>See the example below.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>print</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>...</code></dt><dd><p>not used currently.</p></dd>
+
+</dl><p></div></p>
+<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<p>The <code>pkg_deps</code> object itself, invisibly.</p>
+<h4 class='hasAnchor' id='examples'><a class='anchor' href='#examples'></a>Examples</h4>
 <p><div class="r example copy"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span>
 
@@ -446,8 +683,17 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </pre><p></div></p>
 
 <p><hr>
-<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
-<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
+
+</dl><p></div></p>
+<h3 class='hasAnchor' id='list-clone-'><a class='anchor' href='#list-clone-'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -470,10 +716,10 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; + config:
-#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpZrtiQl/filea041e31adcb
-#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpZrtiQl/filea046bce4b37
+#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpYGnmxK/fileae467e80d9b
+#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpYGnmxK/fileae42527d0ab
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpZrtiQl/filea0434ac3f2c
+#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpYGnmxK/fileae458f49d9b
 #&gt;   - platforms: macos, source
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
@@ -482,44 +728,44 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt;   - metadata-update-after: 24 hours</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 84 x 28</span><span>
-#&gt;    ref   type  direct directpkg status package version license needscompilation
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>           
-#&gt; </span><span style='color: #555555;'> 1</span><span> R6    stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 2</span><span> asse… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #555555;'> 3</span><span> base… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … FALSE           
-#&gt; </span><span style='color: #555555;'> 4</span><span> callr stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 5</span><span> cli   stan… FALSE  FALSE     OK     cli     2.3.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 6</span><span> clia… stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 7</span><span> cray… stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 8</span><span> curl  stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 9</span><span> desc  stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'>10</span><span> dige… stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
-#&gt; </span><span style='color: #555555;'># … with 74 more rows, and 19 more variables: priority </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, md5sum </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   sha256 </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, filesize </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, built </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, platform </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rversion </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   repotype </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, repodir </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, target </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, deps </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, mirror </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 84 x 29</span><span>
+#&gt;    ref    type  direct directpkg status package version license needscompilation
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>           
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> R6     stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> asser… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> base6… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> callr  stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> cli    stan… FALSE  FALSE     OK     cli     2.3.1   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> cliapp stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> curl   stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> desc   stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> digest stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
+#&gt; </span><span style='color: #949494;'># … with 74 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;chr&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT using </span><span style='color: #262626;background-color: #DADADA;'>`gitcreds::gitcreds_set()`</span><span>.</span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 67 x 28</span><span>
-#&gt;    ref   type  direct directpkg status package version license needscompilation
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>           
-#&gt; </span><span style='color: #555555;'> 1</span><span> r-li… gith… TRUE   TRUE      OK     pkgdep… 0.0.0.… MIT + … TRUE            
-#&gt; </span><span style='color: #555555;'> 2</span><span> R6    stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 3</span><span> asse… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #555555;'> 4</span><span> callr stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 5</span><span> cli   stan… FALSE  FALSE     OK     cli     2.3.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 6</span><span> cray… stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 7</span><span> curl  stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 8</span><span> desc  stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
-#&gt; </span><span style='color: #555555;'> 9</span><span> dige… stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
-#&gt; </span><span style='color: #555555;'>10</span><span> elli… stan… FALSE  FALSE     OK     ellips… 0.3.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #555555;'># … with 57 more rows, and 19 more variables: priority </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, md5sum </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   sha256 </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, filesize </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, built </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, platform </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rversion </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   repotype </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, repodir </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, target </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span style='color: #555555;'>, deps </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, mirror </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, remote </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, error </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, metadata </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, extra </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   dep_types </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, cache_status </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 66 x 29</span><span>
+#&gt;    ref    type  direct directpkg status package version license needscompilation
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>           
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> r-lib… gith… TRUE   TRUE      OK     pkgdep… 0.0.0.… MIT + … TRUE            
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> R6     stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> asser… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> callr  stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> cli    stan… FALSE  FALSE     OK     cli     2.3.1   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> curl   stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> desc   stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> digest stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> ellip… stan… FALSE  FALSE     OK     ellips… 0.3.1   GPL-3   FALSE           
+#&gt; </span><span style='color: #949494;'># … with 56 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;glue&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span><span></div><div class='input'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
@@ -535,7 +781,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + constraints (147):
+#&gt; + constraints (142):
 #&gt;   - select pkgdepends exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
@@ -550,6 +796,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + solution:
 #&gt;   - assertthat
 #&gt;   - callr
+#&gt;   - cli
 #&gt;   - crayon
 #&gt;   - curl
 #&gt;   - desc
@@ -568,7 +815,6 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt;   - prettyunits
 #&gt;   - processx
 #&gt;   - ps
-#&gt;   - r-lib/cli
 #&gt;   - r-lib/pkgcache
 #&gt;   - r-lib/pkgdepends
 #&gt;   - R6
@@ -589,7 +835,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - pkgload
-#&gt; + constraints (58):
+#&gt; + constraints (57):
 #&gt;   - select pkgload exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
@@ -639,8 +885,8 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #00BBBB;font-weight: bold;font-style: italic;'>pkgload </span><span style='color: #555555;font-weight: bold;font-style: italic;'>1.1.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(150.88 kB)</span><span>
-#&gt; ├─cli </span><span style='color: #555555;'>2.3.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
+</div><div class='output co'>#&gt; </span><span style='color: #00BBBB;font-weight: bold;font-style: italic;'>pkgload </span><span style='color: #555555;font-weight: bold;font-style: italic;'>1.2.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(150.47 kB)</span><span>
+#&gt; ├─cli </span><span style='color: #555555;'>2.3.1</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─assertthat </span><span style='color: #555555;'>0.2.1</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(52.47 kB)</span><span>
 #&gt; │ └─glue </span><span style='color: #555555;'>1.4.2</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; ├─crayon </span><span style='color: #555555;'>1.4.1</span><span> </span><span style='color: #00BB00;'>✨</span><span>

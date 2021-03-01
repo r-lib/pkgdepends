@@ -57,8 +57,7 @@ Suggests:
     testthat,
     webfakes
 Remotes:
-    r-lib/pkgcache,
-    r-lib/cli
+    r-lib/pkgcache
 Config/Needs/website:
     pkgdown
 Config/Needs/coverage:

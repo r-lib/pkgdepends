@@ -418,11 +418,11 @@ pkgplan_i_lp_prefer_binaries <- function(lp) {
     if (! pkgs$type[same[1]] %in% c("cran", "bioc", "standard")) next
 
     ## TODO: choose the right one for the current R version
-    selected <- same[pkgs$platform[same] != "source"][1]
+    selected <- setdiff(same[pkgs$platform[same] != "source"], lp$ruled_out)[1]
     ## No binary package, maybe there is RSPM. This is temporary,
     ## until we get proper RSPM support.
     if (is.na(selected)) {
-      selected <- same[grepl("__linux__", pkgs$mirror[same])][1]
+      selected <- setdiff(same[grepl("__linux__", pkgs$mirror[same])], lp$ruled_out)[1]
     }
     if (is.na(selected)) next
     ruledout <- setdiff(same, selected)

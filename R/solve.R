@@ -272,6 +272,20 @@ pkgplan_i_lp_objectives <- function(lp) {
   lp
 }
 
+pkgplan_i_lp_failures <- function(lp) {
+
+  ## 5. Can't install failed resolutions
+  failedconds <- function(wh) {
+    if (lp$pkgs$status[wh] != "FAILED") return()
+    lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
+                                 type = "ok-resolution")
+    lp$ruled_out <<- c(lp$ruled_out, wh)
+  }
+  lapply(seq_len(lp$num_candidates), failedconds)
+
+  lp
+}
+
 pkgplan_i_lp_no_multiples <- function(lp) {
 
   ## 1. Each directly specified package exactly once.
@@ -290,6 +304,31 @@ pkgplan_i_lp_no_multiples <- function(lp) {
     wh <- which(lp$pkgs$package == pkg)
     lp <- pkgplan_i_lp_add_cond(lp, wh, op = "<=", type = "at-most-once")
   }
+
+  lp
+}
+
+pkgplan_i_lp_rversion <- function(lp, rversion) {
+  rversion <- package_version(rversion)
+  pkgs <- lp$pkgs
+  num_candidates <- lp$num_candidates
+  ruled_out <- lp$ruled_out
+  base <- base_packages()
+
+  depconds <- function(wh) {
+    if (pkgs$status[wh] != "OK") return()
+    deps <- pkgs$deps[[wh]]
+    deps <- deps[! deps$ref %in% base, ]
+    if (! "R" %in% deps$ref) return()
+    needrver <- deps$version[deps$ref == "R"]
+    if (any(rversion < needrver)) {
+      lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
+                                   type = "bad-rversion", note = needrver)
+      lp$ruled_out <<- c(lp$ruled_out, wh)
+    }
+  }
+
+  lapply(setdiff(seq_len(num_candidates), ruled_out), depconds)
 
   lp
 }
@@ -342,27 +381,57 @@ pkgplan_i_lp_latest_direct <- function(lp) {
   lp
 }
 
-pkgplan_i_lp_rversion <- function(lp, rversion) {
-  rversion <- package_version(rversion)
+pkgplan_i_lp_prefer_installed <- function(lp) {
   pkgs <- lp$pkgs
-  num_candidates <- lp$num_candidates
-  ruled_out <- lp$ruled_out
-  base <- base_packages()
+  inst <- which(
+    pkgs$type == "installed" & ! seq_along(pkgs$type) %in% lp$ruled_out
+  )
+  for (i in inst) {    
+    ## If not a CRAN or BioC package, skip it
+    repotype <- pkgs$extra[[i]]$repotype
+    if (is.null(repotype) || ! repotype %in% c("cran", "bioc")) next    
 
-  depconds <- function(wh) {
-    if (pkgs$status[wh] != "OK") return()
-    deps <- pkgs$deps[[wh]]
-    deps <- deps[! deps$ref %in% base, ]
-    if (! "R" %in% deps$ref) return()
-    needrver <- deps$version[deps$ref == "R"]
-    if (any(rversion < needrver)) {
-      lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
-                                   type = "bad-rversion", note = needrver)
-      lp$ruled_out <<- c(lp$ruled_out, wh)
+    ## Look for others with cran/bioc/standard type and same name & ver
+    package <- pkgs$package[i]
+    version <- pkgs$version[i]
+
+    ruledout <- which(pkgs$type %in% c("cran", "bioc", "standard") &
+                      pkgs$package == package & pkgs$version == version)
+
+    lp$ruled_out <- c(lp$ruled_out, ruledout)
+    for (r in ruledout) {
+      lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+                                  type = "prefer-installed")
     }
   }
 
-  lapply(setdiff(seq_len(num_candidates), ruled_out), depconds)
+  lp
+}
+
+pkgplan_i_lp_prefer_binaries <- function(lp) {
+  pkgs <- lp$pkgs
+  str <- paste0(pkgs$type, "::", pkgs$package, "@", pkgs$version)
+  for (ustr in unique(str)) {
+    same <- which(ustr == str)
+    ## We can't do this for other packages, because version is not
+    ## exclusive for those
+    if (! pkgs$type[same[1]] %in% c("cran", "bioc", "standard")) next
+
+    ## TODO: choose the right one for the current R version
+    selected <- same[pkgs$platform[same] != "source"][1]
+    ## No binary package, maybe there is RSPM. This is temporary,
+    ## until we get proper RSPM support.
+    if (is.na(selected)) {
+      selected <- same[grepl("__linux__", pkgs$mirror[same])][1]
+    }
+    if (is.na(selected)) next
+    ruledout <- setdiff(same, selected)
+    lp$ruled_out <- c(lp$ruled_out, ruledout)
+    for (r in ruledout) {
+      lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+                                  type = "prefer-binary")
+    }
+  }
 
   lp
 }
@@ -427,75 +496,6 @@ pkgplan_i_lp_dependencies <- function(lp) {
     }
   }
   lapply(setdiff(seq_len(num_candidates), ruled_out), depconds)
-
-  lp
-}
-
-pkgplan_i_lp_failures <- function(lp) {
-
-  ## 5. Can't install failed resolutions
-  failedconds <- function(wh) {
-    if (lp$pkgs$status[wh] != "FAILED") return()
-    lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
-                                 type = "ok-resolution")
-    lp$ruled_out <<- c(lp$ruled_out, wh)
-  }
-  lapply(seq_len(lp$num_candidates), failedconds)
-
-  lp
-}
-
-pkgplan_i_lp_prefer_installed <- function(lp) {
-  pkgs <- lp$pkgs
-  inst <- which(
-    pkgs$type == "installed" & ! seq_along(pkgs$type) %in% lp$ruled_out
-  )
-  for (i in inst) {    
-    ## If not a CRAN or BioC package, skip it
-    repotype <- pkgs$extra[[i]]$repotype
-    if (is.null(repotype) || ! repotype %in% c("cran", "bioc")) next    
-
-    ## Look for others with cran/bioc/standard type and same name & ver
-    package <- pkgs$package[i]
-    version <- pkgs$version[i]
-
-    ruledout <- which(pkgs$type %in% c("cran", "bioc", "standard") &
-                      pkgs$package == package & pkgs$version == version)
-
-    lp$ruled_out <- c(lp$ruled_out, ruledout)
-    for (r in ruledout) {
-      lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
-                                  type = "prefer-installed")
-    }
-  }
-
-  lp
-}
-
-pkgplan_i_lp_prefer_binaries <- function(lp) {
-  pkgs <- lp$pkgs
-  str <- paste0(pkgs$type, "::", pkgs$package, "@", pkgs$version)
-  for (ustr in unique(str)) {
-    same <- which(ustr == str)
-    ## We can't do this for other packages, because version is not
-    ## exclusive for those
-    if (! pkgs$type[same[1]] %in% c("cran", "bioc", "standard")) next
-
-    ## TODO: choose the right one for the current R version
-    selected <- same[pkgs$platform[same] != "source"][1]
-    ## No binary package, maybe there is RSPM. This is temporary,
-    ## until we get proper RSPM support.
-    if (is.na(selected)) {
-      selected <- same[grepl("__linux__", pkgs$mirror[same])][1]
-    }
-    if (is.na(selected)) next
-    ruledout <- setdiff(same, selected)
-    lp$ruled_out <- c(lp$ruled_out, ruledout)
-    for (r in ruledout) {
-      lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
-                                  type = "prefer-binary")
-    }
-  }
 
   lp
 }

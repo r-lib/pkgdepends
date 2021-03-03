@@ -494,3 +494,18 @@ get_id <- local({
     id
   }
 })
+
+# tools::md5sum has issues with UTF=8 file names on Windows, <= R 4.0
+
+safe_md5sum <- function(path) {
+  stopifnot(length(path) == 1)
+  tryCatch(
+    tools::md5sum(path),
+    error = function(err) {
+      tmp <- tempfile()
+      on.exit(unlink(tmp, force = TRUE, recursive = TRUE), add = TRUE)
+      file.copy(path, tmp)
+      structure(tools::md5sum(tmp), names = path)
+    }
+  )
+}

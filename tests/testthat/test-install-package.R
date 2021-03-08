@@ -1,6 +1,8 @@
 
 test_that("can package a tree", {
 
+  local_cli_config()
+
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
   file.copy(test_path("foo"), tmp, recursive = TRUE)
@@ -16,13 +18,16 @@ test_that("can package a tree", {
     file = tmp, vignettes = FALSE, needscompilation = FALSE,
     metadata = I(list(character())))
 
-  expect_error(install_package_plan(plan, lib = lib), NA)
+  expect_snapshot(install_package_plan(plan, lib = lib))
+
   expect_true(file.exists(file.path(lib, "foo")))
   expect_true(file.exists(file.path(lib, "foo", "DESCRIPTION")))
   expect_true(file.exists(file.path(lib, "foo", "NAMESPACE")))
 })
 
 test_that("can package a compressed tree", {
+
+  local_cli_config()
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -40,7 +45,7 @@ test_that("can package a compressed tree", {
     file = pkgzip, vignettes = FALSE, needscompilation = FALSE,
     metadata = I(list(character())))
 
-  expect_error(install_package_plan(plan, lib = lib), NA)
+  expect_snapshot(install_package_plan(plan, lib = lib))
   expect_true(file.exists(file.path(lib, "foo")))
   expect_true(file.exists(file.path(lib, "foo", "DESCRIPTION")))
   expect_true(file.exists(file.path(lib, "foo", "NAMESPACE")))

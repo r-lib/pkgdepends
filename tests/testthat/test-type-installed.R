@@ -49,8 +49,8 @@ test_that("download", {
   r <- pkg_plan$new(
     ref, library = dirname(tt),
     config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(r$resolve(), NA)
-  expect_error(r$download_resolution(), NA)
+  expect_error(suppressMessages(r$resolve()), NA)
+  expect_error(suppressMessages(r$download_resolution()), NA)
   dl <- r$get_resolution_download()
   expect_equal(dl$download_status, "Had")
 })

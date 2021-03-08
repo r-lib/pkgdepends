@@ -4,7 +4,9 @@ test_that("install_binary", {
   pkg <- binary_test_package("foo")
   libpath <- test_temp_dir()
 
-  install_binary(pkg, lib = libpath, quiet = TRUE)
+  suppressMessages(
+    install_binary(pkg, lib = libpath, quiet = TRUE)
+  )
   x <- callr::r(function(l) {
     library("foo", lib.loc = l)
     foo::foo()
@@ -22,7 +24,9 @@ test_that("install_binary works for simultaneous installs", {
   num <- 5
 
   # install and load foo here to test loaded DLLs in another process
-  install_binary(pkg, lib = libpath, quiet = TRUE)
+  suppressMessages(
+    install_binary(pkg, lib = libpath, quiet = TRUE)
+  )
   x <- callr::r(function(l) {
     library("foo", lib.loc = l)
     foo::foo()

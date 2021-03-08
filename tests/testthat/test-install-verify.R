@@ -29,7 +29,7 @@ describe("verify_extracted_package", {
       "DESCRIPTION" = c("Package: test3", "Built: 2017-01-01"),
       "tests/testthat/DESCRIPTION" = character(),
       "Meta/package.rds" = character())
-    expect_is(run(f3)$desc, "description")
+    expect_s3_class(run(f3)$desc, "description")
 
     f4 <- local_binary_package("test4",
       "pkgdir/DESCRIPTION" = c("Package: test4", "Built: 2017-01-01"),

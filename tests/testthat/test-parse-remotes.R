@@ -323,7 +323,7 @@ test_that("parse_query", {
   )
 
   for (c in cases) {
-    expect_equal(parse_query(c[[1]]), c[[2]])
+    suppressMessages(expect_equal(parse_query(c[[1]]), c[[2]]))
   }
 })
 
@@ -336,7 +336,7 @@ test_that("parameters", {
 
   for (c in cases) {
     wo <- parse_pkg_ref(c[[1]])
-    wi <- parse_pkg_ref(paste0(c[[1]], c[[2]]))
+    suppressMessages(wi <- parse_pkg_ref(paste0(c[[1]], c[[2]])))
     wo$params <- c[[3]]
     expect_equal(wi, wo)
   }

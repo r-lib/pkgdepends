@@ -93,7 +93,11 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
 
   plan <- add_recursive_dependencies(plan)
 
-  config <- list(lib = lib, num_workers = num_workers)
+  config <- list(
+    lib = lib,
+    num_workers = num_workers,
+    show_time = tolower(Sys.getenv("PKG_OMIT_TIMES")) != "true"
+  )
   state <- make_start_state(plan, config)
   state$cache <- cache
   state$progress <- create_progress_bar(state)
@@ -534,8 +538,7 @@ stop_task_package_uncompress <- function(state, worker) {
     version <- state$plan$version[pkgidx]
     time <- Sys.time() - state$plan$package_time[[pkgidx]]
     ptime <- pretty_sec(as.numeric(time, units = "secs"))
-    alert("danger", "Failed to uncompress {.pkg {pkg}} \\
-           {.version {version}} {.timestamp {ptime}}")
+    alert("danger", "Failed to uncompress {.pkg {pkg}} {.version {version}}")
     update_progress_bar(state, 1L)
 
     state$plan$package_done[[pkgidx]] <- TRUE
@@ -570,13 +573,15 @@ stop_task_package_build <- function(state, worker) {
   ptime <- pretty_sec(as.numeric(time, units = "secs"))
 
   if (success) {
-    alert("success", "Packaged {.pkg {pkg}} {.version {version}} \\
-           {.timestamp {ptime}}")
+    alert("success", paste0(
+      "Packaged {.pkg {pkg}} {.version {version}}",
+      if (isTRUE(state$config$show_time)) " {.timestamp {ptime}}"
+    ))
     ## Need to save the name of the built package
     state$plan$file[pkgidx] <- worker$process$get_built_file()
   } else {
     alert("danger", "Failed to create source package {.pkg {pkg}} \\
-           {.version {version}} {.timestamp {ptime}}")
+           {.version {version}}")
   }
   update_progress_bar(state, 1L)
 
@@ -633,13 +638,14 @@ stop_task_build <- function(state, worker) {
   ptime <- pretty_sec(as.numeric(time, units = "secs"))
 
   if (success) {
-    alert("success", "Built {.pkg {pkg}} {.version {version}} \\
-           {.timestamp {ptime}}")
+    alert("success", paste0(
+      "Built {.pkg {pkg}} {.version {version}}",
+      if (isTRUE(state$config$show_time)) " {.timestamp {ptime}}"
+    ))
     ## Need to save the name of the built package
     state$plan$file[pkgidx] <- worker$process$get_built_file()
   } else {
-    alert("danger", "Failed to build {.pkg {pkg}} \\
-           {.version {version}} {.timestamp {ptime}}")
+    alert("danger", "Failed to build {.pkg {pkg}} {.version {version}}")
   }
   update_progress_bar(state, 1L)
 
@@ -726,8 +732,10 @@ stop_task_install <- function(state, worker) {
   note <- installed_note(state$plan[pkgidx,])
 
   if (success) {
-    alert("success", "Installed {.pkg {pkg}} \\
-             {.version {version}} {note} {.timestamp {ptime}}")
+    alert("success", paste0(
+      "Installed {.pkg {pkg}} {.version {version}} {note}",
+      if (isTRUE(state$config$show_time)) " {.timestamp {ptime}}"
+    ))
   } else {
     alert("danger", "Failed to install {.pkg {pkg}} {.version {version}}")
   }
@@ -773,7 +781,9 @@ print.pkginstall_result <- function(x, ...) {
     if (newly) paste0(emoji("sparkles", ""), " ", newly, " new"),
     if (upd)   paste0(emoji("rocket", ""), " ", upd, " updated"),
     if (noupd + curr) paste0(emoji("hand", ""), " ", noupd + curr, " kept"),
-    paste0("in ", pretty_sec(build_time + inst_time))
+    if (! tolower(Sys.getenv("PKG_OMIT_TIMES")) == "true") {
+      paste0("in ", pretty_sec(build_time + inst_time))
+    }
   )
 
   cli_alert_success(paste0(res, collapse = "  "))

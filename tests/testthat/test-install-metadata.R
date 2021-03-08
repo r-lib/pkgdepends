@@ -6,7 +6,9 @@ test_that("install_binary metadata", {
   libpath <- test_temp_dir()
 
   metadata <- c("Foo" = "Bar", "Foobar" = "baz")
-  install_binary(pkg, lib = libpath, metadata = metadata, quiet = TRUE)
+  suppressMessages(
+    install_binary(pkg, lib = libpath, metadata = metadata, quiet = TRUE)
+  )
 
   dsc <- desc::desc(file.path(libpath, "foo"))
   expect_equal(dsc$get("Foo")[[1]], "Bar")
@@ -21,15 +23,18 @@ test_that("install_binary metadata", {
 test_that("install_package_plan metadata", {
 
   skip_if_offline()
+  local_cli_config()
 
   pkg <- source_test_package("foo")
   libpath <- test_temp_dir()
 
-  plan <- make_install_plan(
-    paste0("local::", pkg), lib = libpath)
-  plan$metadata[[1]] <- c("Foo" = "Bar", "Foobar" = "baz")
-  plan$vignettes <- FALSE
-  install_package_plan(plan, lib = libpath, num_workers = 1)
+  expect_snapshot({
+    plan <- make_install_plan(
+      paste0("local::", pkg), lib = libpath)
+    plan$metadata[[1]] <- c("Foo" = "Bar", "Foobar" = "baz")
+    plan$vignettes <- FALSE
+    install_package_plan(plan, lib = libpath, num_workers = 1)
+  })
 
   dsc <- desc::desc(file.path(libpath, "foo"))
   expect_equal(dsc$get("Foo")[[1]], "Bar")

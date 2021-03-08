@@ -2,15 +2,18 @@
 describe("install_packages", {
 
   skip_if_offline()
+  local_cli_config()
 
   it("works with source packages", {
 
     pkg <- source_test_package("foo")
 
     libpath <- test_temp_dir()
-
-    plan <- make_install_plan(paste0("local::", pkg), lib = libpath)
-    install_package_plan(plan, lib = libpath)
+    
+    expect_snapshot({
+      plan <- make_install_plan(paste0("local::", pkg), lib = libpath)
+      install_package_plan(plan, lib = libpath)
+    })
 
     callr::r(function(l) library("foo", lib.loc = l), list(libpath))
   })

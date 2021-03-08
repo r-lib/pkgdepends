@@ -2,6 +2,7 @@
 test_that("folders with potentially problematic characters", {
 
   skip_on_cran()
+  local_cli_config()
 
   tmp <- tempfile()
   on.exit(tryCatch(unloadNamespace("foo"), error = identity), add = TRUE)
@@ -37,7 +38,9 @@ test_that("folders with potentially problematic characters", {
     ## Reset this
     environment(need_internal_tar)$internal <- NULL
 
-    install_binary(pkg, lib = libpath, quiet = TRUE)
+    suppressMessages(
+      install_binary(pkg, lib = libpath, quiet = TRUE)
+    )
     library("foo", lib.loc = libpath)
     expect_equal(foo::foo(), NULL)
     unloadNamespace("foo")
@@ -49,7 +52,7 @@ test_that("folders with potentially problematic characters", {
     environment(need_internal_tar)$internal <- NULL
     withr::with_envvar(c(TAR = NA),
       withr::with_path("foobar", action = "replace", {
-        install_binary(pkg, lib = libpath, quiet = TRUE)
+        suppressMessages(install_binary(pkg, lib = libpath, quiet = TRUE))
       })
     )
 

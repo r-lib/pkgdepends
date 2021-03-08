@@ -8,16 +8,19 @@ test_that("build_package", {
 
 test_that("vignettes can be turned on and off", {
   skip_if_offline()
+  local_cli_config()
   dir.create(tmplib <- tempfile())
   on.exit(rimraf(tmplib), add = TRUE)
   pkgdir <- test_path("fixtures", "packages", "vignettes")
   inst <- new_pkg_installation_proposal(
-    paste0("local::", pkgdir),
+    paste0("local::", pkgdir, "?nocache"),
     config = list(`build-vignettes` = FALSE, library = tmplib)
   )
-  inst$solve()
-  inst$download()
-  inst$install()
+  expect_snapshot({
+    inst$solve()
+    inst$download()
+    inst$install()
+  })
 
   expect_false("doc" %in% dir(file.path(tmplib, "pkgdependstest")))
   rimraf(tmplib, "pkgdependstest")
@@ -26,9 +29,11 @@ test_that("vignettes can be turned on and off", {
     paste0("local::", pkgdir),
     config = list(`build-vignettes` = TRUE, library = tmplib)
   )
-  inst2$solve()
-  inst2$download()
-  inst2$install()
+  expect_snapshot({
+    inst2$solve()
+    inst2$download()
+    inst2$install()
+  })
 
   expect_true("doc" %in% dir(file.path(tmplib, "pkgdependstest")))
 })

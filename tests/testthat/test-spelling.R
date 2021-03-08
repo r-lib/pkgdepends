@@ -4,7 +4,7 @@ test_that("spell check", {
   skip_in_covr()
   if (packageVersion("spelling") <= "2.1") skip("Needs newer spelling package")
   pkg_dir <- test_package_root()
-  results <- spelling::spell_check_package(pkg_dir)
+  suppressMessages(results <- spelling::spell_check_package(pkg_dir))
 
   if (nrow(results)) {
     output <- sprintf(

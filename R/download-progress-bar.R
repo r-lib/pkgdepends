@@ -106,6 +106,8 @@ pkgplan__create_progress_bar <- function(what) {
   bar$start_at <- Sys.time()
   bar$events <- list()
   bar$lastmsg <- "Connecting..."
+  bar$show_time <- tolower(Sys.getenv("PKG_OMIT_TIMES")) != "true"
+  bar$show_size <- tolower(Sys.getenv("PKG_OMIT_SIZES")) != "true"
 
   bar
 }
@@ -151,7 +153,9 @@ pkgplan__initial_pb_message <- function(bar) {
       if (nch > 0) "cached"
     ))
   }
-  bar$status <- cli_status("", .auto_close = FALSE)
+  if (should_show_progress_bar()) {
+    bar$status <- cli_status("", .auto_close = FALSE)
+  }
 }
 
 #' Update the progress bar data
@@ -187,8 +191,8 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
       if (!is.na(sz)) bar$what$filesize[idx] <- sz
       cli_alert_success(c(
         "Got {.pkg {data$package}} ",
-        "{.version {data$version}} ({data$platform}) ",
-        if (!is.na(sz)) "{.size ({pretty_bytes(sz)})}"
+        "{.version {data$version}} ({data$platform})",
+        if (!is.na(sz) && bar$show_size) " {.size ({pretty_bytes(sz)})}"
       ))
       if (!is.na(bar$what$filesize[idx])) {
         bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
@@ -253,9 +257,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 #' @importFrom prettyunits pretty_bytes pretty_dt
 
 pkgplan__show_progress_bar <- function(bar) {
-  if (!should_show_progress_bar()) {
-    return()
-  }
+  if (is.null(bar$status)) return()
 
   # Don't show if there is nothing to download
   if (sum(!bar$what$skip) == 0) return()
@@ -380,7 +382,10 @@ pkgplan__done_progress_bar <- function(bar) {
     cli_alert_success("No downloads needed, all packages are cached")
   } else if (err == 0) {
     cli_alert_success(
-      "Downloaded {dld} package{?s} {.size ({bts})} in {.time {dt}}"
+      paste0(
+        "Downloaded {dld} package{?s} {.size ({bts})}",
+        if (bar$show_time) "in {.time {dt}}"
+      )
     )
   } else {
     cli_alert_danger(

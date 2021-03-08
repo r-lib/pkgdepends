@@ -23,7 +23,7 @@ test_that("resolve_remote", {
 
   r <- pkg_plan$new(
     refs, config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(r$resolve(), NA)
+  expect_error(suppressMessages(r$resolve()), NA)
   res <- r$get_resolution()
 
   expect_s3_class(res, "pkg_resolution_result")
@@ -112,8 +112,8 @@ test_that("download_remote", {
 
   ## -----------------------------------------------------
   ## We get the tree zip first
-  expect_error(r$resolve(), NA)
-  expect_error(r$download_resolution(), NA)
+  expect_error(suppressMessages(r$resolve()), NA)
+  expect_error(suppressMessages(r$download_resolution()), NA)
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "pkgplan_downloads")
@@ -136,8 +136,8 @@ test_that("download_remote", {
   r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
-  expect_error(r$resolve(), NA)
-  expect_error(r$download_resolution(), NA)
+  expect_error(suppressMessages(r$resolve()), NA)
+  expect_error(suppressMessages(r$download_resolution()), NA)
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "pkgplan_downloads")
@@ -165,8 +165,8 @@ test_that("download_remote", {
   r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
 
-  expect_error(r$resolve(), NA)
-  expect_error(r$download_resolution(), NA)
+  expect_error(suppressMessages(r$resolve()), NA)
+  expect_error(suppressMessages(r$download_resolution()), NA)
   dl <- r$get_resolution_download()
 
   expect_s3_class(dl, "pkgplan_downloads")

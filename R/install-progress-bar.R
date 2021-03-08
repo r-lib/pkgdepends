@@ -19,8 +19,6 @@ create_progress_bar <- function(state) {
   bar$spinner_state <- 1L
   if (should_show_progress_bar()) {
     bar$status <- cli_status("Installing...", .auto_close = FALSE)
-  } else {
-    bar$status <- cli_status(character(), .auto_close = FALSE)
   }
 
   bar$simple <- is_older_rstudio()
@@ -32,9 +30,7 @@ create_progress_bar <- function(state) {
 #' @importFrom crayon col_nchar
 
 update_progress_bar <- function(state, tick = 0) {
-  if (!should_show_progress_bar()) {
-    return()
-  }
+  if (is.null(state$progress$status)) return()
 
   plan <- state$plan
   total <- nrow(plan)
@@ -99,7 +95,9 @@ make_progress_block <- function(state, sym, done, total, prog) {
 #' @importFrom cli cli_status_clear
 
 done_progress_bar <- function(state) {
-  cli_status_clear(state$progress$status)
+  if (!is.null(state$progress$status)) {
+    cli_status_clear(state$progress$status)
+  }
 }
 
 make_install_trailing_progress_msg <- function(state) {

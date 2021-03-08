@@ -66,7 +66,9 @@ test_that("handle_event, process still running", {
     make_dummy_worker_process())
 
   ## Run a dummy worker that runs for 10s, writes to stdout & stderr
-  state <- start_task_build(state, task("build", pkgidx = 1))
+  expect_snapshot(
+    state <- start_task_build(state, task("build", pkgidx = 1))
+  )
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
 
@@ -87,6 +89,7 @@ test_that("handle_event, process still running", {
 })
 
 test_that("handle_event, build process finished", {
+  local_cli_config()
   plan <- readRDS("fixtures/sample_plan.rds")
   state <- make_start_state(plan, list(foo = "bar"))
   state$plan$build_done[1] <- FALSE
@@ -95,16 +98,18 @@ test_that("handle_event, build process finished", {
     start_task_build, "make_build_process",
     make_dummy_worker_process(n_iter = 2, sleep = 0))
 
-  state <- start_task_build(state, task("build", pkgidx = 1))
+  expect_snapshot(
+    state <- start_task_build(state, task("build", pkgidx = 1))
+  )
 
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
 
-  repeat {
+  expect_snapshot(repeat {
     events <- poll_workers(state)
     state <- handle_events(state, events)
     if (all(state$plan$build_done)) break;
-  }
+  })
 
   expect_false(proc$is_alive())
   expect_false(state$plan$build_error[[1]])
@@ -115,26 +120,26 @@ test_that("handle_event, build process finished", {
 })
 
 test_that("handle event, build process finished, but failed", {
+  local_cli_config()
   plan <- readRDS("fixtures/sample_plan.rds")
-  state <- make_start_state(plan, list(foo = "bar"))
+  expect_snapshot(state <- make_start_state(plan, list(foo = "bar")))
   state$plan$build_done[1] <- FALSE
 
   mockery::stub(
     start_task_install, "make_install_process",
     make_dummy_worker_process(n_iter = 2, sleep = 0, status = 1))
 
-  state <- start_task_install(state, task("install", pkgidx = 1))
+  expect_snapshot(
+    state <- start_task_install(state, task("install", pkgidx = 1))
+  )
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
 
-  expect_error(
-    repeat {
+  expect_snapshot(error = TRUE, repeat {
       events <- poll_workers(state)
       state <- handle_events(state, events)
       if (all(state$plan$build_done)) break;
-    },
-    "Failed to install",
-    class = "error"
+    }
   )
 
 })
@@ -152,12 +157,12 @@ test_that("handle_event, install process finished", {
   on.exit(proc$kill(), add = TRUE)
 
   done <- FALSE
-  repeat {
+  expect_snapshot(repeat {
     events <- poll_workers(state)
     state <- handle_events(state, events)
     if (done) break
     if (!proc$is_alive()) done <- TRUE
-  }
+  })
 
   expect_false(proc$is_alive())
   expect_false(state$plan$install_error[[1]])
@@ -179,7 +184,7 @@ test_that("handle event, install process finished, but failed", {
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
 
-  expect_error({
+  expect_snapshot(error = TRUE, {
     done <- FALSE
     repeat {
       events <- poll_workers(state)
@@ -187,7 +192,7 @@ test_that("handle event, install process finished, but failed", {
       if (done) break
       if (!proc$is_alive()) done <- TRUE
     }
-  }, "Failed to install", class = "error")
+  })
 })
 
 test_that("select_next_task", {

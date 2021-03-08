@@ -7,9 +7,11 @@ test_that("resolve_remote", {
   conf <- pkgplan_default_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- synchronise(
-    resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
-                        dependencies = FALSE))
+  suppressMessages(
+    res <- synchronise(
+      resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
+                          dependencies = FALSE))
+  )
 
   expect_true(is_tibble(res))
   expect_true(all(res$ref == "cran::crayon"))

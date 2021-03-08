@@ -20,7 +20,9 @@ test_that("failed resolution", {
   skip_on_cran()
   skip_if_offline()
 
-  r <- pkg_plan$new("nonexistentpackage", lib = tempfile())
+  suppressMessages(
+    r <- pkg_plan$new("nonexistentpackage", lib = tempfile())
+  )
   r$resolve()
   sol <- r$solve()
   dsc <- describe_solution_error(r$get_resolution(), sol)

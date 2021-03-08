@@ -716,10 +716,10 @@ screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>
 </div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; + config:
-#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpYGnmxK/fileae467e80d9b
-#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpYGnmxK/fileae42527d0ab
+#&gt;   - library: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp9XlBCJ/file8f836f11829
+#&gt;   - cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp9XlBCJ/file8f85d6bafc1
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpYGnmxK/fileae458f49d9b
+#&gt;   - metadata_cache_dir: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp9XlBCJ/file8f848dfd7d1
 #&gt;   - platforms: macos, source
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
@@ -739,7 +739,7 @@ screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>
 #&gt; </span><span style='color: #BCBCBC;'> 6</span><span> cliapp stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
 #&gt; </span><span style='color: #BCBCBC;'> 7</span><span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> curl   stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> desc   stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> desc   stan… FALSE  FALSE     OK     desc    1.3.0   MIT + … FALSE           
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> digest stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
 #&gt; </span><span style='color: #949494;'># … with 74 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span><span>
 #&gt; </span><span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span><span>
@@ -748,7 +748,7 @@ screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>
 #&gt; </span><span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>!</span><span> Using bundled GitHub PAT. Please add your own PAT using </span><span style='color: #262626;background-color: #DADADA;'>`gitcreds::gitcreds_set()`</span><span>.</span></div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 66 x 29</span><span>
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 67 x 29</span><span>
 #&gt;    ref    type  direct directpkg status package version license needscompilation
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>           
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> r-lib… gith… TRUE   TRUE      OK     pkgdep… 0.0.0.… MIT + … TRUE            
@@ -758,10 +758,10 @@ screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>
 #&gt; </span><span style='color: #BCBCBC;'> 5</span><span> cli    stan… FALSE  FALSE     OK     cli     2.3.1   MIT + … FALSE           
 #&gt; </span><span style='color: #BCBCBC;'> 6</span><span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
 #&gt; </span><span style='color: #BCBCBC;'> 7</span><span> curl   stan… FALSE  FALSE     OK     curl    4.3     MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> desc   stan… FALSE  FALSE     OK     desc    1.2.0   MIT + … FALSE           
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> desc   stan… FALSE  FALSE     OK     desc    1.3.0   MIT + … FALSE           
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> digest stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… FALSE           
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> ellip… stan… FALSE  FALSE     OK     ellips… 0.3.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #949494;'># … with 56 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'># … with 57 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span><span>
 #&gt; </span><span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span><span>
 #&gt; </span><span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;glue&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span><span>
 #&gt; </span><span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span><span>
@@ -781,7 +781,7 @@ screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + constraints (142):
+#&gt; + constraints (143):
 #&gt;   - select pkgdepends exactly once
 #&gt;   - select R6 at most once
 #&gt;   - select assertthat at most once
@@ -811,11 +811,11 @@ screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>
 #&gt;   - magrittr
 #&gt;   - pillar
 #&gt;   - pkgbuild
+#&gt;   - pkgcache
 #&gt;   - pkgconfig
 #&gt;   - prettyunits
 #&gt;   - processx
 #&gt;   - ps
-#&gt;   - r-lib/pkgcache
 #&gt;   - r-lib/pkgdepends
 #&gt;   - R6
 #&gt;   - rappdirs
@@ -890,15 +890,14 @@ screen.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>
 #&gt; │ ├─assertthat </span><span style='color: #555555;'>0.2.1</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(52.47 kB)</span><span>
 #&gt; │ └─glue </span><span style='color: #555555;'>1.4.2</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; ├─crayon </span><span style='color: #555555;'>1.4.1</span><span> </span><span style='color: #00BB00;'>✨</span><span>
-#&gt; ├─desc </span><span style='color: #555555;'>1.2.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(279.60 kB)</span><span>
-#&gt; │ ├─assertthat
+#&gt; ├─desc </span><span style='color: #555555;'>1.3.0</span><span> </span><span style='color: #00BB00;'>✨ ⬇ </span><span style='color: #555555;'>(unknown size)</span><span>
 #&gt; │ ├─R6 </span><span style='color: #555555;'>2.5.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─crayon
 #&gt; │ └─rprojroot </span><span style='color: #555555;'>2.0.2</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; ├─pkgbuild </span><span style='color: #555555;'>1.2.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ ├─callr </span><span style='color: #555555;'>3.5.1</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ │ ├─processx </span><span style='color: #555555;'>3.4.5</span><span> </span><span style='color: #00BB00;'>✨</span><span>
-#&gt; │ │ │ ├─ps </span><span style='color: #555555;'>1.5.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
+#&gt; │ │ │ ├─ps </span><span style='color: #555555;'>1.6.0</span><span> </span><span style='color: #00BB00;'>✨</span><span>
 #&gt; │ │ │ └─R6
 #&gt; │ │ └─R6
 #&gt; │ ├─cli

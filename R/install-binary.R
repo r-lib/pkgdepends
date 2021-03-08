@@ -119,6 +119,22 @@ add_metadata <- function(pkg_path, metadata) {
   if (!file.exists(source_desc) && !file.exists(binary_desc)) {
     stop("No DESCRIPTION found!", call. = FALSE)
   }
+
+  md5 <- file.path(pkg_path, "MD5")
+  if (file.exists(md5)) {
+    lines <- readLines(md5)
+    f1 <- grep("^[a-fA-F0-9]*[ |*][ |*]*DESCRIPTION", lines)[1]
+    f2 <- grep("^[a-fA-F0-9]*[ |*][ |*]*Meta[/\\\\]package.rds", lines)[1]
+    if (!is.na(f1)) {
+      h1 <- safe_md5sum(source_desc)
+      lines[f1] <- sub("^[a-fA-F0-9]*", h1, lines[f1])
+    }
+    if (!is.na(f2)) {
+      h2 <- safe_md5sum(binary_desc)
+      lines[f2] <- sub("[a-fA-F0-9]*", h2, lines[f2])
+    }
+    if (!is.na(f1) || !is.na(f2)) cat(lines, file = md5, sep = "\n")
+  }
 }
 
 make_install_process <- function(filename, lib = .libPaths()[[1L]],

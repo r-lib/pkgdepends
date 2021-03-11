@@ -19,6 +19,9 @@ Available dictionaries:
 If \code{NULL} (by default), the Urban Dictionary is omitted, as it
 is often offensive.}
 }
+\value{
+\code{pkg_name_check} object with a custom print method.
+}
 \description{
 Additionally, look up the candidate name in a number of
 dictionaries, to make sure that it does not have a negative

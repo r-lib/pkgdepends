@@ -6,6 +6,8 @@
 #'  `.libPaths()[1]` is added as `library`.
 #' @param ... Additional arguments, passed to
 #'   [`pkg_installation_proposal$new()`](#method-new).
+#' @return `new_pkg_installation_proposal()` returns a new
+#'   `pkg_installation_proposal` object.
 #'
 #' @export
 #' @rdname pkg_installation_proposal

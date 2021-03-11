@@ -17,6 +17,10 @@ new_pkg_installation_plan(lockfile = "pkg.lock", config = list(), ...)
 \item{...}{Additional arguments, passed to
 \href{#method-new}{\code{pkg_installation_plan$new()}}.}
 }
+\value{
+\code{new_pkg_installation_plan()} returns a \code{pkg_installation_plan}
+object.
+}
 \description{
 An installation plan is similar to an installation proposal
 (i.e. \link{pkg_installation_proposal}), but it already contains the solved

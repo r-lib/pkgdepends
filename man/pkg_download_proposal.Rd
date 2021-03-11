@@ -14,6 +14,10 @@ new_pkg_download_proposal(refs, ...)
 \item{...}{Additional arguments, passed to
 \href{$method-new}{\code{pkg_download_proposal$new()}}.}
 }
+\value{
+\code{new_pkg_download_proposal()} returns a new
+\code{pkg_download_proposal} object.
+}
 \description{
 Download packages with their dependencies, from various sources.
 }

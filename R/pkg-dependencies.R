@@ -3,6 +3,7 @@
 #'   ['Package references'][pkg_refs] for the syntax.
 #' @param ... Additional arguments, passed to
 #'   [`pkg_deps$new()`](#method-new).
+#' @return `new_pkg_deps()` returns a new `pkg_deps` object.
 #'
 #' @details
 #' `new_pkg_deps()` creates a new object from the `pkg_deps` class.

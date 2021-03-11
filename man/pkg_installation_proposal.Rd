@@ -18,6 +18,10 @@ new_pkg_installation_proposal(refs, config = list(), ...)
 \item{...}{Additional arguments, passed to
 \href{#method-new}{\code{pkg_installation_proposal$new()}}.}
 }
+\value{
+\code{new_pkg_installation_proposal()} returns a new
+\code{pkg_installation_proposal} object.
+}
 \description{
 Download and install R packages, with their dependencies, from various
 sources.

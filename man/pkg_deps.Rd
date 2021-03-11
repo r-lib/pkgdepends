@@ -14,6 +14,9 @@ new_pkg_deps(refs, ...)
 \item{...}{Additional arguments, passed to
 \href{#method-new}{\code{pkg_deps$new()}}.}
 }
+\value{
+\code{new_pkg_deps()} returns a new \code{pkg_deps} object.
+}
 \description{
 Look up dependencies of R packages from various sources.
 }

@@ -5,6 +5,9 @@
 #'  `.libPaths()[1]` is added as `library`.
 #' @param ... Additional arguments, passed to
 #'   [`pkg_installation_plan$new()`](#method-new).
+#' @return `new_pkg_installation_plan()` returns a `pkg_installation_plan`
+#'   object.
+#'
 #' @export
 #' @rdname pkg_installation_plan
 

@@ -40,6 +40,8 @@
 #'     * `urban` (Urban Dictionary).
 #'   If `NULL` (by default), the Urban Dictionary is omitted, as it
 #'   is often offensive.
+#' @return `pkg_name_check` object with a custom print method.
+#'
 #' @export
 #' @examples
 #' \dontrun{

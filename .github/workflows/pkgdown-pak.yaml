@@ -12,6 +12,7 @@ jobs:
     env:
       RSPM: https://packagemanager.rstudio.com/cran/__linux__/focal/latest
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      CI_GITHUB_TOKEN: R{{ secrets.CI_GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2

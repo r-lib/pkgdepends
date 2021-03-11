@@ -169,11 +169,11 @@ details.
 
 MIT (c) RStudio
 
-[pkg_deps]: TODO
-[pkg_refs]: TODO
-[pkg_download_proposal]: TODO
-[pkg_installation_proposal]: TODO
-[pkg_solution]: TODO
-[pkg_resolution]: TODO
-[pkg_config]: TODO
-[install_plans]: TODO
+[pkg_deps]: https://r-lib.github.io/pkgdepends/reference/pkg_deps.html
+[pkg_refs]: https://r-lib.github.io/pkgdepends/reference/pkg_refs.html
+[pkg_download_proposal]: https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html
+[pkg_installation_proposal]: https://r-lib.github.io/pkgdepends/reference/pkg_installation_proposal.html
+[pkg_solution]: https://r-lib.github.io/pkgdepends/reference/pkg_solution.html
+[pkg_resolution]: https://r-lib.github.io/pkgdepends/reference/pkg_resolution.html
+[pkg_config]: https://r-lib.github.io/pkgdepends/reference/pkg_config.html
+[install_plans]: https://r-lib.github.io/pkgdepends/reference/install_plans.html

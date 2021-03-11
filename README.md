@@ -62,7 +62,9 @@ can be obtained from. Examples:
     https://github.com/r-lib/pkgdepends
     local::~/works/shiny
 
-See [“Package references”](TODO) for details.
+See [“Package
+references”](https://r-lib.github.io/pkgdepends/reference/pkg_refs.html)
+for details.
 
 ## Package dependencies
 
@@ -74,58 +76,57 @@ pd$solve()
 pd$draw()
 ```
 
-    #> r-lib/pkgcache 1.1.1.9000 [new][bld][cmp][dl] (unknown size)
-    #> +-assertthat 0.2.1 [new][dl] (52.47 kB)
-    #> +-callr 3.5.1 [new]
-    #> | +-processx 3.4.5 [new][dl] (unknown size)
-    #> | | +-ps 1.4.0 [new]
-    #> | | \-R6 2.5.0 [new]
+    #> r-lib/pkgcache 1.2.0.9000 [new][bld][cmp]
+    #> +-assertthat 0.2.1 [new][dl] (55.06 kB)
+    #> +-callr 3.5.1 [new][dl] (389.12 kB)
+    #> | +-processx 3.4.5 [new][dl] (489.62 kB)
+    #> | | +-ps 1.6.0 [new]
+    #> | | \-R6 2.5.0 [new][dl] (84.13 kB)
     #> | \-R6
-    #> +-cli 2.2.0 [new]
+    #> +-cli 2.3.1 [new]
     #> | +-assertthat
-    #> | +-crayon 1.3.4 [new][dl] (748.25 kB)
-    #> | +-glue 1.4.2 [new]
-    #> | \-fansi 0.4.1 [new][dl] (210.40 kB)
-    #> +-curl 4.3 [new][dl] (741.06 kB)
-    #> +-digest 0.6.27 [new]
-    #> +-filelock 1.0.2 [new][dl] (26.67 kB)
+    #> | \-glue 1.4.2 [new][dl] (154.15 kB)
+    #> +-curl 4.3 [new][dl] (4.13 MB)
+    #> +-digest 0.6.27 [new][dl] (276.00 kB)
+    #> +-filelock 1.0.2 [new][dl] (39.80 kB)
     #> +-glue
-    #> +-prettyunits 1.1.1 [new][dl] (34.79 kB)
+    #> +-jsonlite 1.7.2 [new][dl] (541.92 kB)
+    #> +-prettyunits 1.1.1 [new][dl] (37.53 kB)
     #> +-R6
     #> +-processx
-    #> +-rappdirs 0.3.1 [new][dl] (145.56 kB)
-    #> +-rlang 0.4.9 [new]
-    #> +-tibble 3.0.4 [new]
-    #> | +-cli
-    #> | +-crayon
-    #> | +-ellipsis 0.3.1 [new][dl] (33.48 kB)
+    #> +-rappdirs 0.3.3 [new][dl] (58.65 kB)
+    #> +-rlang 0.4.10 [new]
+    #> +-tibble 3.1.0 [new]
+    #> | +-ellipsis 0.3.1 [new][dl] (46.11 kB)
     #> | | \-rlang
-    #> | +-fansi
-    #> | +-lifecycle 0.2.0 [new][dl] (91.64 kB)
+    #> | +-fansi 0.4.2 [new]
+    #> | +-lifecycle 1.0.0 [new]
     #> | | +-glue
     #> | | \-rlang
-    #> | +-magrittr 2.0.1 [new]
-    #> | +-pillar 1.4.7 [new]
+    #> | +-magrittr 2.0.1 [new][dl] (235.86 kB)
+    #> | +-pillar 1.5.1 [new][dl] (962.38 kB)
     #> | | +-cli
-    #> | | +-crayon
+    #> | | +-crayon 1.4.1 [new]
     #> | | +-ellipsis
     #> | | +-fansi
     #> | | +-lifecycle
     #> | | +-rlang
-    #> | | +-utf8 1.1.4 [new][dl] (195.28 kB)
-    #> | | \-vctrs 0.3.5 [new]
+    #> | | +-utf8 1.1.4 [new][dl] (215.33 kB)
+    #> | | \-vctrs 0.3.6 [new]
     #> | |   +-ellipsis
     #> | |   +-digest
     #> | |   +-glue
     #> | |   \-rlang
-    #> | +-pkgconfig 2.0.3 [new][dl] (17.63 kB)
+    #> | +-pkgconfig 2.0.3 [new][dl] (22.27 kB)
     #> | +-rlang
     #> | \-vctrs
-    #> \-uuid 0.1-4 [new][dl] (27.75 kB)
+    #> \-uuid 0.1-4 [new][dl] (33.61 kB)
     #> 
     #> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 
-See the [`pkg_deps`](TODO) class for details.
+See the
+[`pkg_deps`](https://r-lib.github.io/pkgdepends/reference/pkg_deps.html)
+class for details.
 
 ## Package downloads
 
@@ -137,7 +138,9 @@ pdl$resolve()
 pdl$download()
 ```
 
-See the [`pkg_download_proposal`](TODO) class for details.
+See the
+[`pkg_download_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html)
+class for details.
 
 ## Package installation
 
@@ -156,31 +159,44 @@ pdi$install()
 
 ## Dependency resolution
 
-[`pkg_deps`](TODO), [`pkg_download_proposal`](TODO) and
-[`pkg_installation_proposal`](TODO) all resolve their dependencies
-recursively, to obtain information about all packages needed for the
-specified [package references](TODO). See [“Dependency
-resolution”](TODO) for details.
+[`pkg_deps`](https://r-lib.github.io/pkgdepends/reference/pkg_deps.html),
+[`pkg_download_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html)
+and
+[`pkg_installation_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_installation_proposal.html)
+all resolve their dependencies recursively, to obtain information about
+all packages needed for the specified [package
+references](https://r-lib.github.io/pkgdepends/reference/pkg_refs.html).
+See [“Dependency
+resolution”](https://r-lib.github.io/pkgdepends/reference/pkg_resolution.html)
+for details.
 
 ## The dependency solver
 
 The dependency solver takes the resolution information, and works out
 the exact versions of each package that must be installed, such that
 version and other requirements are satisfied. See [“The dependency
-solver”](TODO) for details.
+solver”](https://r-lib.github.io/pkgdepends/reference/pkg_solution.html)
+for details.
 
 ## Installation plans
 
-[`pkg_installation_proposal`](TODO) can create installation plans, and
-then also install them. It is also possible to import installation plans
-that were created by other tools. See [“Installation plans”](TODO) for
-details.
+[`pkg_installation_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_installation_proposal.html)
+can create installation plans, and then also install them. It is also
+possible to import installation plans that were created by other tools.
+See [“Installation
+plans”](https://r-lib.github.io/pkgdepends/reference/install_plans.html)
+for details.
 
 ## Configuration
 
-The details of [`pkg_deps`](TODO), [`pkg_download_proposal`](TODO) and
-[`pkg_installation_proposal`](TODO) can be tuned with a list of
-configuration options. See [“Configuration”](TODO) for details.
+The details of
+[`pkg_deps`](https://r-lib.github.io/pkgdepends/reference/pkg_deps.html),
+[`pkg_download_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html)
+and
+[`pkg_installation_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_installation_proposal.html)
+can be tuned with a list of configuration options. See
+[“Configuration”](https://r-lib.github.io/pkgdepends/reference/pkg_config.html)
+for details.
 
 # Related
 

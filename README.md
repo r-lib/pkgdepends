@@ -7,7 +7,8 @@
 
 <!-- badges: start -->
 
-![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
+[![lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R build
 status](https://github.com/r-lib/pkgdepends/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/pkgdepends/actions)
 [![CRAN RStudio mirror
@@ -70,33 +71,61 @@ See [“Package references”](TODO) for details.
 Dependencies of the development version of the cli package:
 
 ``` r
-pd <- new_pkg_deps("r-lib/cli")
+pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
 ```
 
-    #> cli (1.9.9.9000)
-    #> ├─assertthat (0.2.1)
-    #> ├─crayon (1.3.4)
-    #> ├─glue (1.3.1)
-    #> ├─progress (1.2.2)
-    #> │ ├─hms (0.5.1)
-    #> │ │ ├─pkgconfig (2.0.3)
-    #> │ │ ├─rlang (0.4.0)
-    #> │ │ └─vctrs (0.2.0)
-    #> │ │   ├─backports (1.1.5)
-    #> │ │   ├─ellipsis (0.3.0)
-    #> │ │   │ └─rlang (0.4.0)
-    #> │ │   ├─digest (0.6.21)
-    #> │ │   ├─glue (1.3.1)
-    #> │ │   ├─rlang (0.4.0)
-    #> │ │   └─zeallot (0.1.0)
-    #> │ ├─prettyunits (1.0.2)
-    #> │ │ ├─magrittr (1.5)
-    #> │ │ └─assertthat (0.2.1)
-    #> │ ├─R6 (2.4.0)
-    #> │ └─crayon (1.3.4)
-    #> └─fansi (0.4.0)
+    #> r-lib/pkgcache 1.1.1.9000 [new][bld][cmp][dl] (unknown size)
+    #> +-assertthat 0.2.1 [new][dl] (52.47 kB)
+    #> +-callr 3.5.1 [new]
+    #> | +-processx 3.4.5 [new][dl] (unknown size)
+    #> | | +-ps 1.4.0 [new]
+    #> | | \-R6 2.5.0 [new]
+    #> | \-R6
+    #> +-cli 2.2.0 [new]
+    #> | +-assertthat
+    #> | +-crayon 1.3.4 [new][dl] (748.25 kB)
+    #> | +-glue 1.4.2 [new]
+    #> | \-fansi 0.4.1 [new][dl] (210.40 kB)
+    #> +-curl 4.3 [new][dl] (741.06 kB)
+    #> +-digest 0.6.27 [new]
+    #> +-filelock 1.0.2 [new][dl] (26.67 kB)
+    #> +-glue
+    #> +-prettyunits 1.1.1 [new][dl] (34.79 kB)
+    #> +-R6
+    #> +-processx
+    #> +-rappdirs 0.3.1 [new][dl] (145.56 kB)
+    #> +-rlang 0.4.9 [new]
+    #> +-tibble 3.0.4 [new]
+    #> | +-cli
+    #> | +-crayon
+    #> | +-ellipsis 0.3.1 [new][dl] (33.48 kB)
+    #> | | \-rlang
+    #> | +-fansi
+    #> | +-lifecycle 0.2.0 [new][dl] (91.64 kB)
+    #> | | +-glue
+    #> | | \-rlang
+    #> | +-magrittr 2.0.1 [new]
+    #> | +-pillar 1.4.7 [new]
+    #> | | +-cli
+    #> | | +-crayon
+    #> | | +-ellipsis
+    #> | | +-fansi
+    #> | | +-lifecycle
+    #> | | +-rlang
+    #> | | +-utf8 1.1.4 [new][dl] (195.28 kB)
+    #> | | \-vctrs 0.3.5 [new]
+    #> | |   +-ellipsis
+    #> | |   +-digest
+    #> | |   +-glue
+    #> | |   \-rlang
+    #> | +-pkgconfig 2.0.3 [new][dl] (17.63 kB)
+    #> | +-rlang
+    #> | \-vctrs
+    #> \-uuid 0.1-4 [new][dl] (27.75 kB)
+    #> 
+    #> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 
 See the [`pkg_deps`](TODO) class for details.
 
@@ -126,13 +155,6 @@ pdi$solve()
 pdi$download()
 pdi$install()
 ```
-
-    #> Your system is ready to build packages!
-    #> Your system is ready to build packages!
-
-    #> Installed: 17
-    #> Build time:  2.8s
-    #> Intall time: 1.6s
 
 ## Dependency resolution
 
@@ -172,4 +194,4 @@ configuration options. See [“Configuration”](TODO) for details.
 
 # License
 
-MIT © RStudio
+MIT (c) RStudio

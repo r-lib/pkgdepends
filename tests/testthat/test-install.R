@@ -11,7 +11,7 @@ describe("install_packages", {
     libpath <- test_temp_dir()
     
     expect_snapshot({
-      plan <- make_install_plan(paste0("local::", pkg), lib = libpath)
+      plan <- make_install_plan(paste0("local::", pkg, "?nocache"), lib = libpath)
       install_package_plan(plan, lib = libpath)
     })
 

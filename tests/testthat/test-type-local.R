@@ -137,7 +137,7 @@ test_that("download_remote error", {
 
   path <- get_fixture("foobar_1.0.0.tar.gz")
   file.copy(path, tmp2)
-  ref <- paste0("local::", path2 <- file.path(tmp2, basename(path)))
+  ref <- paste0("local::", path2 <- file.path(tmp2, basename(path)), "?nocache")
   r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
   expect_snapshot(r$resolve())

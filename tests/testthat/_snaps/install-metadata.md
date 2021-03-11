@@ -1,9 +1,9 @@
 # install_package_plan metadata
 
     Code
-      plan <- make_install_plan(paste0("local::", pkg), lib = libpath)
+      plan <- make_install_plan(paste0("local::", pkg, "?nocache"), lib = libpath)
     Message <cliMessage>
-      i No downloads are needed, 1 pkg is cached
+      i Getting 1 pkg with unknown size
       v Got foo 0.0.0.9000 (source)
     Code
       plan$metadata[[1]] <- c(Foo = "Bar", Foobar = "baz")

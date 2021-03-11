@@ -18,7 +18,7 @@
     Code
       r$download_resolution()
     Message <cliMessage>
-      i No downloads are needed, 1 pkg is cached
+      i Getting 1 pkg with unknown size
       x Failed to download foobar 1.0.0 (source)
     Output
       # A tibble: 1 x 34

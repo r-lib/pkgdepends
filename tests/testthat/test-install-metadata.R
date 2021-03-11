@@ -30,7 +30,7 @@ test_that("install_package_plan metadata", {
 
   expect_snapshot({
     plan <- make_install_plan(
-      paste0("local::", pkg), lib = libpath)
+      paste0("local::", pkg, "?nocache"), lib = libpath)
     plan$metadata[[1]] <- c("Foo" = "Bar", "Foobar" = "baz")
     plan$vignettes <- FALSE
     install_package_plan(plan, lib = libpath, num_workers = 1)

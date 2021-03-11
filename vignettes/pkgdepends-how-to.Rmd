@@ -1,14 +1,9 @@
 ---
 title: "pkgdepends HOWTO"
 output:
-  rmarkdown::html_vignette:
-    keep_md: true
+  rmarkdown::html_document:
     toc: true
     toc_depth: 2
-vignette: >
-  %\VignetteIndexEntry{pkgdepends how tos}
-  %\VignetteEngine{pkgdepends::lazyrmd}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE, cache = FALSE}

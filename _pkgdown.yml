@@ -5,3 +5,63 @@ authors:
 
 development:
   mode: auto
+
+navbar:
+  type: default
+  left:
+  - text: How-to
+    href: articles/pkgdepends-how-to.html
+  - text: Reference
+    href: reference/index.html
+  - text: News
+    href: news/index.html  
+
+reference:
+
+- title: Configuration
+  contents:
+  - pkg_config
+  
+- title: Package names and references
+  contents:
+  - pkg_refs
+  - parse_pkg_ref
+  - parse_pkg_refs
+  - pkg_name_check
+  - pkg_rx
+  
+- title: Package dependencies
+  contents:
+  - pkg_resolution
+  - pkg_solution
+  - new_pkg_deps
+  - pkg_deps
+
+- title: Package downloads
+  contents:
+  - pkg_downloads
+  - new_pkg_download_proposal
+  - pkg_download_proposal
+
+- title: Package installation
+  contents:
+  - install_plans
+  - install_binary
+  - install_package_plan
+  - new_pkg_installation_plan
+  - new_pkg_installation_proposal
+
+- title: Package libraries
+  contents:
+  - lib_status
+  
+- title: Utility functions
+  contents:
+  - as_pkg_dependencies
+  - current_r_platform
+  - default_platforms
+  - is_valid_package_name
+  - pkg_dep_types
+  - pkg_dep_types_hard
+  - pkg_dep_types_soft
+  

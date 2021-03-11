@@ -42,11 +42,7 @@
 <meta property="og:title" content="Check if an R package name is available. — pkg_name_check" />
 <meta property="og:description" content="Additionally, look up the candidate name in a number of
 dictionaries, to make sure that it does not have a negative
-meaning.
-
-" />
-
-
+meaning." />
 
 
 
@@ -62,15 +58,9 @@ meaning.
 
 
 
-  
-
-  
-
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -91,22 +81,13 @@ meaning.
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/pkgdepends-how-to.html">pkgdepends HOWTO</a>
-    </li>
-  </ul>
+  <a href="../articles/pkgdepends-how-to.html">How-to</a>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -138,8 +119,6 @@ meaning.
     <p>Additionally, look up the candidate name in a number of
 dictionaries, to make sure that it does not have a negative
 meaning.</p>
-<p><link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"></p>
-<p><script src="../doc/assets/rd.js"></script></p>
     </div>
 
     <pre class="usage"><span class='fu'>pkg_name_check</span><span class='op'>(</span><span class='va'>name</span>, dictionaries <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
@@ -168,31 +147,31 @@ is often offensive.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     
-<h3 class='hasAnchor' id='valid-package-name-check'><a class='anchor' href='#valid-package-name-check'></a>Valid package name check</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Valid package name check</h3>
 
 
 <p>Check the validity of <code>name</code> as a package name. See 'Writing R
 Extensions' for the allowed package names. Also checked against a list
 of names that are known to cause problems.</p>
 
-<h3 class='hasAnchor' id='cran-checks'><a class='anchor' href='#cran-checks'></a>CRAN checks</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>CRAN checks</h3>
 
 
 <p>Check <code>name</code> against the names of all past and current packages on
 CRAN, including base and recommended packages.</p>
 
-<h3 class='hasAnchor' id='bioconductor-checks'><a class='anchor' href='#bioconductor-checks'></a>Bioconductor checks</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Bioconductor checks</h3>
 
 
 <p>Check <code>name</code> against all past and current Bioconductor packages.</p>
 
-<h3 class='hasAnchor' id='profanity-check'><a class='anchor' href='#profanity-check'></a>Profanity check</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Profanity check</h3>
 
 
 <p>Check <code>name</code> with <a href='https://www.purgomalum.com/service/containsprofanity'>https://www.purgomalum.com/service/containsprofanity</a>
 to make sure it is not a profanity.</p>
 
-<h3 class='hasAnchor' id='dictionaries'><a class='anchor' href='#dictionaries'></a>Dictionaries</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Dictionaries</h3>
 
 
 <p>See the <code>dictionaries</code> argument.</p>
@@ -222,7 +201,7 @@ to make sure it is not a profanity.</p>
 #&gt; </span><span style='color: #555555;'>│</span><span> …                                                                            </span><span style='color: #555555;'>│</span><span>
 #&gt; </span><span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span><span>
 #&gt; </span><span style='color: #555555;'>┌──────────────────────────────────────────────────────────────────────────────┐</span><span>
-#&gt; </span><span style='color: #555555;'>│</span><span> Sentiment: 😐</span><span style='color: #555555;'> (0)</span><span>                                                            </span><span style='color: #555555;'>│</span><span>
+#&gt; </span><span style='color: #555555;'>│</span><span> Sentiment: :|</span><span style='color: #555555;'> (0)</span><span>                                                            </span><span style='color: #555555;'>│</span><span>
 #&gt; </span><span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -235,11 +214,11 @@ to make sure it is not a profanity.</p>
 
       <footer>
       <div class="copyright">
-  <p><p>Developed by <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a>.</p></p>
+  <p>Developed by <a href='https://github.com/gaborcsardi'>Gábor Csárdi</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9000.</p></p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
@@ -247,8 +226,6 @@ to make sure it is not a profanity.</p>
 
   
 
-
-  
 
   </body>
 </html>

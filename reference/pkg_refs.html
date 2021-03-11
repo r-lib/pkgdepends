@@ -42,11 +42,7 @@
 <meta property="og:title" content="Package references — pkg_refs" />
 <meta property="og:description" content="A package reference (ref) specifies a location from which an R package
 can be obtained from. The full syntax of a reference is type::ref, but
-type can be often omitted, the common ref types have shortcuts.
-
-" />
-
-
+type can be often omitted, the common ref types have shortcuts." />
 
 
 
@@ -62,15 +58,9 @@ type can be often omitted, the common ref types have shortcuts.
 
 
 
-  
-
-  
-
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -91,22 +81,13 @@ type can be often omitted, the common ref types have shortcuts.
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/pkgdepends-how-to.html">pkgdepends HOWTO</a>
-    </li>
-  </ul>
+  <a href="../articles/pkgdepends-how-to.html">How-to</a>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -138,8 +119,6 @@ type can be often omitted, the common ref types have shortcuts.
     <p>A package reference (ref) specifies a location from which an R package
 can be obtained from. The full syntax of a reference is <code>type::ref</code>, but
 <code>type</code> can be often omitted, the common ref types have shortcuts.</p>
-<p><link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"></p>
-<p><script src="../doc/assets/rd.js"></script></p>
     </div>
 
 
@@ -147,7 +126,7 @@ can be obtained from. The full syntax of a reference is <code>type::ref</code>, 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     
-<h3 class='hasAnchor' id='introduction'><a class='anchor' href='#introduction'></a>Introduction</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Introduction</h3>
 
 
 <p>The currently supported reference types are:</p><ul>
@@ -172,7 +151,7 @@ prefix), then <code>github</code> is used;</p></li>
 </ul>
 
 
-<h3 class='hasAnchor' id='parameters'><a class='anchor' href='#parameters'></a>Parameters</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Parameters</h3>
 
 
 <p>Package refs may have optional parameters, added after a question mark.
@@ -194,7 +173,7 @@ re-install for package installations. It is supported by the <code>bioc::</code>
 * <code>nocache</code> will ignore the package cache. It will always download the
 package file, and it will not add the downloaded (and built) file to the
 package cache. It is supported by the <code>bioc::</code>, <code>cran::</code>, <code>github::</code>,
-<code>standard::</code> and <code>url::</code> remote types.</p><h4 class='hasAnchor' id='cran-packages-'><a class='anchor' href='#cran-packages-'></a>CRAN packages:</h4>
+<code>standard::</code> and <code>url::</code> remote types.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>CRAN packages:</h4>
 
 
 <p>A package from CRAN. Full syntax:</p><pre>[cran::]&lt;package&gt;[@[&gt;=]&lt;version&gt; | current | last]
@@ -215,7 +194,7 @@ forecast@current
 <p>Note: pkgdepends currently parses the version specification part
 (everything after <code><a href='https://rdrr.io/r/base/slotOp.html'>@</a></code>), but does not use it.</p>
 
-<h4 class='hasAnchor' id='bioconductor-packages-'><a class='anchor' href='#bioconductor-packages-'></a>Bioconductor packages:</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Bioconductor packages:</h4>
 
 
 <p>A package from Bioconductor. The syntax is the same as for CRAN
@@ -223,7 +202,7 @@ packages, except of the prefix of course:</p><pre>[bioc::]&lt;package&gt;[@[&gt;
 </pre>
 
 
-<h4 class='hasAnchor' id='standard-packages-'><a class='anchor' href='#standard-packages-'></a>Standard packages:</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Standard packages:</h4>
 
 
 <p>These are packages either from CRAN or Bioconductor, the full syntax is
@@ -231,7 +210,7 @@ the same as for CRAN packages, except for the prefix:</p><pre>[standard::]&lt;pa
 </pre>
 
 
-<h4 class='hasAnchor' id='github-packages-'><a class='anchor' href='#github-packages-'></a>GitHub packages:</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>GitHub packages:</h4>
 
 
 <p>Packages from a GitHub repository. Full syntax:</p><pre>[&lt;package&gt;=][github::]&lt;username&gt;/&lt;repository&gt;[/&lt;subdir&gt;][&lt;detail&gt;]
@@ -279,7 +258,7 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 <p>A GitHub remote string can also be used instead of an URL, for example:
 <code>git@github.com:r-lib/pkgdepends.git</code></p>
 
-<h4 class='hasAnchor' id='local-packages-'><a class='anchor' href='#local-packages-'></a>Local packages:</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Local packages:</h4>
 
 
 <p>A path that refers to a package file built with <code>R CMD build</code>, or a
@@ -301,7 +280,7 @@ local::.
 </pre>
 
 
-<h4 class='hasAnchor' id='urls-'><a class='anchor' href='#urls-'></a>URLs:</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>URLs:</h4>
 
 
 <p>You can use <code>url::</code> to refer to URLs that hold R package archives
@@ -318,7 +297,7 @@ url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 </pre>
 
 
-<h4 class='hasAnchor' id='installed-packages-'><a class='anchor' href='#installed-packages-'></a>Installed packages:</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Installed packages:</h4>
 
 
 <p>This is usually used internally, but can also be used directly. Full
@@ -333,7 +312,7 @@ syntax:</p><pre>installed::&lt;path&gt;/&lt;package&gt;
 </pre>
 
 
-<h4 class='hasAnchor' id='package-dependencies-'><a class='anchor' href='#package-dependencies-'></a>Package dependencies:</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package dependencies:</h4>
 
 
 <p>Usually used internally, it specifies the dependencies of a local
@@ -362,11 +341,11 @@ deps::.
 
       <footer>
       <div class="copyright">
-  <p><p>Developed by <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a>.</p></p>
+  <p>Developed by <a href='https://github.com/gaborcsardi'>Gábor Csárdi</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9000.</p></p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
@@ -374,8 +353,6 @@ deps::.
 
   
 
-
-  
 
   </body>
 </html>

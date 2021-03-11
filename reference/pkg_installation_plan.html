@@ -42,11 +42,7 @@
 <meta property="og:title" content="R6 class for installation from a lock file — new_pkg_installation_plan" />
 <meta property="og:description" content="An installation plan is similar to an installation proposal
 (i.e. pkg_installation_proposal), but it already contains the solved
-dependencies, complete with download URLs.
-
-" />
-
-
+dependencies, complete with download URLs." />
 
 
 
@@ -62,15 +58,9 @@ dependencies, complete with download URLs.
 
 
 
-  
-
-  
-
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -91,22 +81,13 @@ dependencies, complete with download URLs.
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/pkgdepends-how-to.html">pkgdepends HOWTO</a>
-    </li>
-  </ul>
+  <a href="../articles/pkgdepends-how-to.html">How-to</a>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -138,8 +119,6 @@ dependencies, complete with download URLs.
     <p>An installation plan is similar to an installation proposal
 (i.e. <a href='new_pkg_installation_proposal.html'>pkg_installation_proposal</a>), but it already contains the solved
 dependencies, complete with download URLs.</p>
-<p><link rel="stylesheet" type="text/css" href="../doc/assets/extra.css"></p>
-<p><script src="../doc/assets/rd.js"></script></p>
     </div>
 
     <pre class="usage"><span class='fu'>new_pkg_installation_plan</span><span class='op'>(</span>lockfile <span class='op'>=</span> <span class='st'>"pkg.lock"</span>, config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -176,7 +155,7 @@ them.</p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
-<h3 class='hasAnchor' id='public-methods'><a class='anchor' href='#public-methods'></a>Public methods</h3>
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
 <li><p><a href='#method-new'><code>pkg_installation_plan$new()</code></a></p></li>
@@ -209,36 +188,12 @@ them.</p>
 </details>
 
 <hr>
-<a id="method-new"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>new()</code></h3>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Create a new <code>pkg_installation_plan</code> object. Consider using
 <code>new_pkg_installation_plan()</code> instead of calling the constructor
 directly.</p>
 <p>The returned object can be used to download and install
-packages, according to the plan.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
-  lockfile <span class='op'>=</span> <span class='st'>"pkg.lock"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
-  remote_types <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre><p></div></p>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>lockfile</code></dt><dd><p>Path to the lock file to use.</p></dd>
-
-<dt><code>config</code></dt><dd><p>Configuration options, a named list. See
-<a href='pkg_config.html'>'Configuration'</a>. It needs to include the package
-library to install to, in <code>library</code>.</p></dd>
-
-<dt><code>remote_types</code></dt><dd><p>Custom remote ref types, this is for advanced
-use, and experimental currently.</p></dd>
-
-</dl><p></div></p>
-<h3 class='hasAnchor' id='list-new-'><a class='anchor' href='#list-new-'></a>Method <code>new()</code></h3>
-<p>Create a new <code>pkg_installation_plan</code> object. Consider using
-<code>new_pkg_installation_plan()</code> instead of calling the constructor
-directly.</p>
-<p>The returned object can be used to download and install
-packages, according to the plan.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+packages, according to the plan.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
   lockfile <span class='op'>=</span> <span class='st'>"pkg.lock"</span>,
   config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
@@ -258,55 +213,34 @@ use, and experimental currently.</p></dd>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-resolve"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>resolve()</code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<h3 class='hasAnchor' id='list-resolve-'><a class='anchor' href='#list-resolve-'></a>Method <code>resolve()</code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<a id="method-resolve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>resolve()</code></h3>
+<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-async_resolve"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>async_resolve()</code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>async_resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<h3 class='hasAnchor' id='list-async-resolve-'><a class='anchor' href='#list-async-resolve-'></a>Method <code>async_resolve()</code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<a id="method-async_resolve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>async_resolve()</code></h3>
+<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>async_resolve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-get_solve_policy"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>get_solve_policy()</code></h3>
+<a id="method-get_solve_policy"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_solve_policy()</code></h3>
 <p>Installation plans are already solved, and this method will return
-<code>NA_character_</code>, always.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<h3 class='hasAnchor' id='list-get-solve-policy-'><a class='anchor' href='#list-get-solve-policy-'></a>Method <code>get_solve_policy()</code></h3>
-<p>Installation plans are already solved, and this method will return
-<code>NA_character_</code>, always.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<code>NA_character_</code>, always.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-set_solve_policy"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>set_solve_policy()</code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<h3 class='hasAnchor' id='list-set-solve-policy-'><a class='anchor' href='#list-set-solve-policy-'></a>Method <code>set_solve_policy()</code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<a id="method-set_solve_policy"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>set_solve_policy()</code></h3>
+<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-solve"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<h3 class='hasAnchor' id='list-solve-'><a class='anchor' href='#list-solve-'></a>Method <code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code></h3>
-<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<a id="method-solve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code></h3>
+<p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-format"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>
-<p>Format a <code>pkg_installation_plan</code> object, typically for printing.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<a id="method-format"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>
+<p>Format a <code>pkg_installation_plan</code> object, typically for printing.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>format</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -314,31 +248,11 @@ use, and experimental currently.</p></dd>
 <dt><code>...</code></dt><dd><p>not used currently.</p></dd>
 
 </dl><p></div></p>
-<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
-<p>A character vector, each element should be a line in the printout.</p>
-<h3 class='hasAnchor' id='list-format-'><a class='anchor' href='#list-format-'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>
-<p>Format a <code>pkg_installation_plan</code> object, typically for printing.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>format</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>...</code></dt><dd><p>not used currently.</p></dd>
-
-</dl><p></div></p>
-<h4 class='hasAnchor' id='returns'><a class='anchor' href='#returns'></a>Returns</h4>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>A character vector, each element should be a line in the printout.</p>
 <p><hr>
-<a id="method-clone"></a></p><h3 class='hasAnchor' id='method-'><a class='anchor' href='#method-'></a>Method <code>clone()</code></h3>
-<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
-
-</dl><p></div></p>
-<h3 class='hasAnchor' id='list-clone-'><a class='anchor' href='#list-clone-'></a>Method <code>clone()</code></h3>
-<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='usage'><a class='anchor' href='#usage'></a>Usage</h4>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -360,11 +274,11 @@ use, and experimental currently.</p></dd>
 
       <footer>
       <div class="copyright">
-  <p><p>Developed by <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a>.</p></p>
+  <p>Developed by <a href='https://github.com/gaborcsardi'>Gábor Csárdi</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9000.</p></p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
@@ -372,8 +286,6 @@ use, and experimental currently.</p></dd>
 
   
 
-
-  
 
   </body>
 </html>

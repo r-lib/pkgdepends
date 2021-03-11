@@ -140,9 +140,9 @@ test_that("download_remote error", {
   ref <- paste0("local::", path2 <- file.path(tmp2, basename(path)), "?nocache")
   r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_snapshot(r$resolve())
+  r$resolve()
   unlink(path2)
-  expect_snapshot(r$download_resolution())
+  expect_snapshot(invisible(r$download_resolution()))
   dl <- r$get_resolution_download()
 
   expect_false(file.exists(dl$fulltarget))

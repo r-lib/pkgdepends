@@ -22,7 +22,7 @@
       inst2$solve()
       inst2$download()
     Message <cliMessage>
-      i No downloads are needed, 1 pkg is cached
+      i Getting 1 pkg with unknown size
       v Got pkgdependstest 1.0.0 (source)
     Code
       inst2$install()

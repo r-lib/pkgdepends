@@ -147,7 +147,7 @@ test_that("download_remote error", {
 
   expect_false(file.exists(dl$fulltarget))
   expect_s3_class(dl, "pkgplan_downloads")
-  expect_true(all(dl$ref == ref))
+  expect_true(all(dl$ref == sub("?nocache", "", ref, fixed = TRUE)))
   expect_true(all(dl$type == "local"))
   expect_true(all(dl$direct))
   expect_true(all(dl$status == "OK"))

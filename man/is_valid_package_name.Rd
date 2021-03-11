@@ -16,10 +16,6 @@ is invalid. See examples below.
 }
 \description{
 Check whether a package name is valid
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \examples{
 is_valid_package_name("pak")

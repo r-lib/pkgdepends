@@ -21,10 +21,6 @@ new_pkg_installation_plan(lockfile = "pkg.lock", config = list(), ...)
 An installation plan is similar to an installation proposal
 (i.e. \link{pkg_installation_proposal}), but it already contains the solved
 dependencies, complete with download URLs.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 Typically you create a \code{pkg_installation_plan} object with

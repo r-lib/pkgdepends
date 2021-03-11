@@ -12,10 +12,6 @@ A named list of strings.
 \description{
 If you use these in R, make sure you specify \code{perl = TRUE}, see
 \code{\link[base:grep]{base::grep()}}.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 Currently included:

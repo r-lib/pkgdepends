@@ -6,10 +6,6 @@
 \title{Dependency resolution}
 \description{
 Collect information about dependencies of R packages, recursively.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \code{\link{pkg_deps}}, \code{\link{pkg_download_proposal}} and \code{\link{pkg_installation_proposal}}

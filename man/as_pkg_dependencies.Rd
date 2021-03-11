@@ -16,10 +16,6 @@ packages.
 }
 \description{
 Shorthands for dependency specifications
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 Supports concise ways of specifying which types of dependencies of

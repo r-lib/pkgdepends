@@ -37,8 +37,4 @@ The parsed reference always has class \verb{remote_ref_<type>} and
 }
 \description{
 See \link{pkg_refs} for more about supported package references.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }

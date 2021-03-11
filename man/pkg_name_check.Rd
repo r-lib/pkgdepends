@@ -23,10 +23,6 @@ is often offensive.}
 Additionally, look up the candidate name in a number of
 dictionaries, to make sure that it does not have a negative
 meaning.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \subsection{Valid package name check}{

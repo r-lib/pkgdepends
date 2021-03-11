@@ -1,15 +1,5 @@
 
-#' Install an R binary package
-#'
-#' Uncompress an R binary package into a package library.
-#'
-#' @param filename filename of built binary package to install
-#' @param lib library to install packages into
-#' @param metadata Named character vector of metadata entries to be added
-#'   to the \code{DESCRIPTION} after installation.
-#' @param quiet Whether to suppress console output.
 #' @importFrom filelock lock unlock
-#' @export
 
 install_binary <- function(filename, lib = .libPaths()[[1L]],
                            metadata = NULL, quiet = FALSE) {

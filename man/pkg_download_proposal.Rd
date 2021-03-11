@@ -16,10 +16,6 @@ new_pkg_download_proposal(refs, ...)
 }
 \description{
 Download packages with their dependencies, from various sources.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \code{new_pkg_download_proposal()} creates a new object from the
@@ -42,12 +38,6 @@ Typical workflow to download a set of packages:
 }
 }
 \examples{
-pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
-pdl
-pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
-pdl$get_refs()
-pdl <- new_pkg_download_proposal("pak")
-pdl$get_config()
 \dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
@@ -80,6 +70,27 @@ pdl
 pdl$download()
 pdl
 \dontshow{\}) # examplesIf}
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$new`
+## ------------------------------------------------
+
+pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+pdl
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$get_refs`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
+pdl$get_refs()
+
+## ------------------------------------------------
+## Method `pkg_download_proposal$get_config`
+## ------------------------------------------------
+
+pdl <- new_pkg_download_proposal("pak")
+pdl$get_config()
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -202,16 +213,6 @@ included, either directly or indirectly. See
 \subsection{Returns}{
 The \code{pkg_download_proposal} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("pak")
-pdl$resolve()
-pdl$get_resolution()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
@@ -241,16 +242,6 @@ called after \href{#method-resolve}{\code{resolve()}} has completed.
 A \link{pkg_resolution_result} object, which is also a tibble. See
 \link[=pkg_resolution]{'Dependency resolution'} for its columns.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
-pdl$resolve()
-pdl$get_resolution()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-download"></a>}}
@@ -265,17 +256,6 @@ pkgcache package by default, to avoid downloads if possible.
 \subsection{Returns}{
 The \code{pkg_download_proposal} object, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
-pdl$resolve()
-pdl$download()
-pdl$get_downloads()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_download"></a>}}
@@ -304,17 +284,6 @@ Returns the summary of the package downloads.
 A \link{pkg_download_result} object, which is a list. See
 \link{pkg_download_result} for details.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("pkgload")
-pdl$resolve()
-pdl$download()
-pdl$get_downloads()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_download_error"></a>}}
@@ -379,21 +348,6 @@ See the example below.
 \subsection{Returns}{
 The \code{pkg_download_proposal} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
-pdl
-
-pdl$resolve()
-pdl
-
-pdl$download()
-pdl
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

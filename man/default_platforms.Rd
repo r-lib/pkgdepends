@@ -21,10 +21,6 @@ work on the current system. It is a subset of the possible
 \code{current_r_platform()} detects the current platform.
 \code{default_platforms()} prints the default package types that are used
 on the current platform. See also \link[=pkg_config]{'Configuration'}.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \examples{
 current_r_platform()

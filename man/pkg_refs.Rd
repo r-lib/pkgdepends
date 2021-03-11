@@ -7,10 +7,6 @@
 A package reference (ref) specifies a location from which an R package
 can be obtained from. The full syntax of a reference is \code{type::ref}, but
 \code{type} can be often omitted, the common ref types have shortcuts.
-
-\if{html}{\out{<link rel="stylesheet" type="text/css" href="../doc/assets/extra.css">}}
-
-\if{html}{\out{<script src="../doc/assets/rd.js"></script>}}
 }
 \details{
 \subsection{Introduction}{

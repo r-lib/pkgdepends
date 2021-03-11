@@ -35,7 +35,7 @@ test_that("install_binary works for simultaneous installs", {
 
   processes <- replicate(num, simplify = FALSE,
     callr::r_bg(args = list(pkg, libpath),
-      function(pkg, libpath) pkgdepends::install_binary(pkg, lib = libpath))
+      function(pkg, libpath) asNamespace("pkgdepends")$install_binary(pkg, lib = libpath))
   )
 
   w <- lapply(processes, function(x) x$wait(5000))

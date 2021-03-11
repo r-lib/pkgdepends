@@ -46,7 +46,6 @@ reference:
 - title: Package installation
   contents:
   - install_plans
-  - install_binary
   - install_package_plan
   - new_pkg_installation_plan
   - new_pkg_installation_proposal

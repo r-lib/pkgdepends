@@ -36,55 +36,6 @@ result of the dependency solver.
 }
 }
 \examples{
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pd <- new_pkg_deps("pak")
-pd$resolve()
-pd$get_resolution()
-\dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pd <- new_pkg_deps("r-lib/pkgdepends")
-pd$resolve()
-pd$get_resolution()
-\dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pd <- new_pkg_deps("r-lib/pkgdepends")
-pd$resolve()
-pd$solve()
-pd$get_solution()
-\dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pd <- new_pkg_deps("pkgload")
-pd$resolve()
-pd$solve()
-pd$get_solution()
-\dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# This is an error, because the packages conflict:
-pd <- new_pkg_deps(
-  c("r-lib/pak", "cran::pak"),
-  config = list(library = tempfile())
-)
-pd$resolve()
-pd$solve()
-pd
-# This fails:
-# pd$stop_for_solution_error()
-\dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pd <- new_pkg_deps("pkgload")
-pd$solve()
-pd$draw()
-\dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pd <- new_pkg_deps("r-lib/pkgdepends")
-pd
-
-pd$resolve()
-pd
-
-pd$solve()
-pd
-\dontshow{\}) # examplesIf}
 
 ## ------------------------------------------------
 ## Method `pkg_deps$new`
@@ -108,6 +59,26 @@ pd <- new_pkg_deps("pak")
 pd$get_config()
 
 ## ------------------------------------------------
+## Method `pkg_deps$resolve`
+## ------------------------------------------------
+
+\dontrun{
+pd <- new_pkg_deps("pak")
+pd$resolve()
+pd$get_resolution()
+}
+
+## ------------------------------------------------
+## Method `pkg_deps$get_resolution`
+## ------------------------------------------------
+
+\dontrun{
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$get_resolution()
+}
+
+## ------------------------------------------------
 ## Method `pkg_deps$get_solve_policy`
 ## ------------------------------------------------
 
@@ -124,6 +95,70 @@ pdi <- new_pkg_deps("r-lib/pkgdepends")
 pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
+
+## ------------------------------------------------
+## Method `pkg_deps$solve`
+## ------------------------------------------------
+
+\dontrun{
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$solve()
+pd$get_solution()
+}
+
+## ------------------------------------------------
+## Method `pkg_deps$get_solution`
+## ------------------------------------------------
+
+\dontrun{
+pd <- new_pkg_deps("pkgload")
+pd$resolve()
+pd$solve()
+pd$get_solution()
+}
+
+## ------------------------------------------------
+## Method `pkg_deps$stop_for_solution_error`
+## ------------------------------------------------
+
+\dontrun{
+# This is an error, because the packages conflict:
+pd <- new_pkg_deps(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pd$resolve()
+pd$solve()
+pd
+# This fails:
+# pd$stop_for_solution_error()
+}
+
+## ------------------------------------------------
+## Method `pkg_deps$draw`
+## ------------------------------------------------
+
+\dontrun{
+pd <- new_pkg_deps("pkgload")
+pd$solve()
+pd$draw()
+}
+
+## ------------------------------------------------
+## Method `pkg_deps$print`
+## ------------------------------------------------
+
+\dontrun{
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd
+
+pd$resolve()
+pd
+
+pd$solve()
+pd
+}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -256,6 +291,18 @@ either directly or indirectly. See
 \subsection{Returns}{
 The \code{pkg_deps} object itself, invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+pd <- new_pkg_deps("pak")
+pd$resolve()
+pd$get_resolution()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
@@ -285,6 +332,18 @@ called after \href{#method-resolve}{\code{resolve()}} has completed.
 A \link{pkg_resolution_result} object, which is also a tibble. See
 \link[=pkg_resolution]{'Dependency resolution'} for its columns.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$get_resolution()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solve_policy"></a>}}
@@ -362,6 +421,19 @@ hasn't been called yet.
 \subsection{Returns}{
 The \code{pkg_deps} object itself, invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$solve()
+pd$get_solution()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solution"></a>}}
@@ -376,6 +448,19 @@ Returns the solution of the package dependencies.
 A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+pd <- new_pkg_deps("pkgload")
+pd$resolve()
+pd$solve()
+pd$get_solution()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
@@ -385,6 +470,25 @@ Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_deps$stop_for_solution_error()}\if{html}{\out{</div>}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+# This is an error, because the packages conflict:
+pd <- new_pkg_deps(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pd$resolve()
+pd$solve()
+pd
+# This fails:
+# pd$stop_for_solution_error()
+}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -402,6 +506,18 @@ screen.
 \subsection{Returns}{
 A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+pd <- new_pkg_deps("pkgload")
+pd$solve()
+pd$draw()
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
@@ -452,6 +568,23 @@ See the example below.
 \subsection{Returns}{
 The \code{pkg_deps} object itself, invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+pd <- new_pkg_deps("r-lib/pkgdepends")
+pd
+
+pd$resolve()
+pd
+
+pd$solve()
+pd
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

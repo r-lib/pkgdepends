@@ -45,7 +45,8 @@ new_pkg_installation_proposal <- function(refs, config = list(), ...) {
 #'   ['Package references'][pkg_refs] for the syntax.
 #'
 #' @export
-#' @examplesIf pkgdepends:::is_online()
+#' @examples
+#' \dontrun{
 #' pdi <- new_pkg_installation_proposal(
 #'   "pak",
 #'   config = list(library = tempfile())
@@ -60,6 +61,7 @@ new_pkg_installation_proposal <- function(refs, config = list(), ...) {
 #'
 #' pdi$download()
 #' pdi
+#' }
 
 pkg_installation_proposal <- R6::R6Class(
   "pkg_installation_proposal",
@@ -147,7 +149,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_installation_proposal` object, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -155,6 +158,7 @@ pkg_installation_proposal <- R6::R6Class(
     #'
     #' pdi$resolve()
     #' pdi$get_resolution()
+    #' }
 
     resolve = function() {
       private$plan$resolve()
@@ -178,13 +182,15 @@ pkg_installation_proposal <- R6::R6Class(
     #' A [pkg_resolution_result] object, which is also a tibble. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
     #' )
     #' pdi$resolve()
     #' pdi$get_resolution()
+    #' }
 
     get_resolution = function() private$plan$get_resolution(),
 
@@ -242,7 +248,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_installation_proposal` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -250,6 +257,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$resolve()
     #' pdi$solve()
     #' pdi$get_solution()
+    #' }
 
     solve = function() {
       private$plan$solve(policy = private$policy)
@@ -263,7 +271,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' A [pkg_solution_result] object, which is a list. See
     #' [pkg_solution_result] for details.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -271,6 +280,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$resolve()
     #' pdi$solve()
     #' pdi$get_solution()
+    #' }
 
     get_solution = function() private$plan$get_solution(),
 
@@ -283,7 +293,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' A [pkg_solution_result] object, which is a list. See
     #' [pkg_solution_result] for details.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "r-lib/pkgdepends",
     #'   config = list(library = tempfile())
@@ -292,6 +303,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$solve()
     #' pdi$get_solution()
     #' pdi$show_solution()
+    #' }
 
     show_solution = function(key = FALSE) private$plan$show_solution(key),
 
@@ -299,7 +311,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' Error if the dependency solver failed to find a consistent set of
     #' packages that can be installed together.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' # This is an error, because the packages conflict:
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
@@ -310,6 +323,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi
     #' # This fails:
     #' # pdi$stop_for_solution_error()
+    #' }
 
     stop_for_solution_error = function() {
       private$plan$stop_for_solve_error()
@@ -351,7 +365,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' A `tree` object from the cli package, see [cli::tree()].
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -359,6 +374,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$resolve()
     #' pdi$solve()
     #' pdi$draw()
+    #' }
 
     draw = function() private$plan$draw_solution_tree(),
 
@@ -370,7 +386,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_installation_proposal` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
     #'   config = list(library = tempfile())
@@ -379,6 +396,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$solve()
     #' pdi$download()
     #' pdi$get_downloads()
+    #' }
 
     download = function() invisible(private$plan$download_solution()),
 
@@ -398,7 +416,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' A [pkg_download_result] object, which is a list. See
     #' [pkg_download_result] for details.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   c("r-lib/pak", "cran::pak"),
     #'   config = list(library = tempfile())
@@ -407,6 +426,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$solve()
     #' pdi$download()
     #' pdi$get_downloads()
+    #' }
 
     get_downloads = function() private$plan$get_solution_download(),
 
@@ -439,7 +459,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' An installation plan, see ['Installation plans'][install_plans] for
     #' the format.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -448,6 +469,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' pdi$solve()
     #' pdi$download()
     #' pdi$get_install_plan()
+    #' }
 
     get_install_plan = function() private$plan$get_install_plan(),
 
@@ -509,7 +531,8 @@ pkg_installation_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_installation_proposal` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdi <- new_pkg_installation_proposal(
     #'   "pak",
     #'   config = list(library = tempfile())
@@ -524,6 +547,7 @@ pkg_installation_proposal <- R6::R6Class(
     #'
     #' pdi$download()
     #' pdi
+    #' }
 
     print = function(...) cat(self$format(...), sep = "\n")
   ),

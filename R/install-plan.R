@@ -33,7 +33,8 @@
 #' @seealso [pkg_installation_proposal] to create install plans,
 #' [install_package_plan()] to install plans from any source.
 #'
-#' @examplesIf pkgdepends:::is_online()
+#' @examples
+#' \dontrun{
 #' pdi <- new_pkg_installation_proposal(
 #'   "pak",
 #'   config = list(library = tempfile())
@@ -42,6 +43,7 @@
 #' pdi$solve()
 #' pdi$download()
 #' pdi$get_install_plan()
+#' }
 #'
 #' @name install_plans
 NULL

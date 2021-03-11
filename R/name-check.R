@@ -41,8 +41,10 @@
 #'   If `NULL` (by default), the Urban Dictionary is omitted, as it
 #'   is often offensive.
 #' @export
-#' @examplesIf pkgdepends:::is_online()
+#' @examples
+#' \dontrun{
 #' pkg_name_check("cli")
+#' }
 
 pkg_name_check <- function(name, dictionaries = NULL) {
   synchronise(async_pkg_name_check(name, dictionaries))

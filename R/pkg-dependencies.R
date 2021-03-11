@@ -116,10 +116,12 @@ pkg_deps <- R6::R6Class(
     #'@return
     #' The `pkg_deps` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pd <- new_pkg_deps("pak")
     #' pd$resolve()
     #' pd$get_resolution()
+    #' }
 
     resolve = function() {
       private$plan$resolve()
@@ -143,10 +145,12 @@ pkg_deps <- R6::R6Class(
     #' A [pkg_resolution_result] object, which is also a tibble. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$get_resolution()
+    #' }
 
     get_resolution = function() private$plan$get_resolution(),
 
@@ -200,11 +204,13 @@ pkg_deps <- R6::R6Class(
     #' @return
     #' The `pkg_deps` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd$resolve()
     #' pd$solve()
     #' pd$get_solution()
+    #' }
 
     solve = function() {
       private$plan$solve(policy = private$policy)
@@ -217,11 +223,13 @@ pkg_deps <- R6::R6Class(
     #' A [pkg_solution_result] object, which is a list. See
     #' [pkg_solution_result] for details.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pd <- new_pkg_deps("pkgload")
     #' pd$resolve()
     #' pd$solve()
     #' pd$get_solution()
+    #' }
 
     get_solution = function() private$plan$get_solution(),
 
@@ -229,7 +237,8 @@ pkg_deps <- R6::R6Class(
     #' Error if the dependency solver failed to find a consistent set of
     #' packages that can be installed together.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' # This is an error, because the packages conflict:
     #' pd <- new_pkg_deps(
     #'   c("r-lib/pak", "cran::pak"),
@@ -240,6 +249,7 @@ pkg_deps <- R6::R6Class(
     #' pd
     #' # This fails:
     #' # pd$stop_for_solution_error()
+    #' }
 
     stop_for_solution_error = function() {
       private$plan$stop_for_solve_error()
@@ -253,10 +263,12 @@ pkg_deps <- R6::R6Class(
     #' @return
     #' A `tree` object from the cli package, see [cli::tree()].
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pd <- new_pkg_deps("pkgload")
     #' pd$solve()
     #' pd$draw()
+    #' }
 
     draw = function() private$plan$draw_solution_tree(),
 
@@ -312,7 +324,8 @@ pkg_deps <- R6::R6Class(
     #' @return
     #' The `pkg_deps` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pd <- new_pkg_deps("r-lib/pkgdepends")
     #' pd
     #'
@@ -321,6 +334,7 @@ pkg_deps <- R6::R6Class(
     #'
     #' pd$solve()
     #' pd
+    #' }
 
     print = function(...) {
       cat(self$format(...), sep = "\n")

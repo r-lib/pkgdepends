@@ -105,10 +105,12 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_download_proposal` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdl <- new_pkg_download_proposal("pak")
     #' pdl$resolve()
     #' pdl$get_resolution()
+    #' }
 
     resolve = function() {
       private$plan$resolve()
@@ -132,10 +134,12 @@ pkg_download_proposal <- R6::R6Class(
     #' A [pkg_resolution_result] object, which is also a tibble. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl$resolve()
     #' pdl$get_resolution()
+    #' }
 
     get_resolution = function() private$plan$get_resolution(),
 
@@ -146,11 +150,13 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_download_proposal` object, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl$resolve()
     #' pdl$download()
     #' pdl$get_downloads()
+    #' }
 
     download = function() {
       private$plan$download_resolution()
@@ -173,11 +179,13 @@ pkg_download_proposal <- R6::R6Class(
     #' A [pkg_download_result] object, which is a list. See
     #' [pkg_download_result] for details.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdl <- new_pkg_download_proposal("pkgload")
     #' pdl$resolve()
     #' pdl$download()
     #' pdl$get_downloads()
+    #' }
 
     get_downloads = function() private$plan$get_resolution_download(),
 
@@ -241,7 +249,8 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_download_proposal` object itself, invisibly.
     #'
-    #' @examplesIf pkgdepends:::is_online()
+    #' @examples
+    #' \dontrun{
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl
     #'
@@ -250,6 +259,7 @@ pkg_download_proposal <- R6::R6Class(
     #'
     #' pdl$download()
     #' pdl
+    #' }
 
     print = function(...) cat(self$format(...), sep = "\n")
   ),

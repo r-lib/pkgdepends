@@ -202,10 +202,15 @@ type_github_builtin_token <- function() {
 
 type_github_get_headers <- function() {
   headers <- c("Accept" = "application/vnd.github.v3+json")
-  token <- tryCatch(gitcreds_get()$password, error = function(e) NA_character_)
-  if (is.na(token)) token <- Sys.getenv("CI_GITHUB_TOKEN", NA_character_)
+
+  token <- NA_character_
+  if (Sys.getenv("CI", "") != "") {
+    token <- Sys.getenv("CI_GITHUB_TOKEN", NA_character_)
+  }
+  if (is.na(token)) token <- tryCatch(gitcreds_get()$password, error = function(e) NA_character_)
   if (is.na(token)) token <- type_github_builtin_token()
   headers <- c(headers, c("Authorization" = paste("token", token)))
+
   headers <- c(headers, c("User-Agent" = "r-lib/pak"))
   headers
 }

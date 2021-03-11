@@ -246,6 +246,14 @@ either directly or indirectly. See
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>\dontrun{
+pd &lt;- new_pkg_deps("pak")
+pd$resolve()
+pd$get_resolution()
+}
+</pre><p></div></p>
+
 <p><hr>
 <a id="method-async_resolve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>async_resolve()</code></h3>
 <p>The same as <a href='#method-resolve'><code>resolve()</code></a>, but asynchronous.
@@ -263,6 +271,14 @@ called after <a href='#method-resolve'><code>resolve()</code></a> has completed.
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>A <a href='pkg_resolution.html'>pkg_resolution_result</a> object, which is also a tibble. See
 <a href='pkg_resolution.html'>'Dependency resolution'</a> for its columns.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>\dontrun{
+pd &lt;- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$get_resolution()
+}
+</pre><p></div></p>
+
 <p><hr>
 <a id="method-get_solve_policy"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_solve_policy()</code></h3>
 <p>Returns the current policy of the dependency solver.
@@ -312,6 +328,15 @@ hasn't been called yet.</p><h4 class='hasAnchor' id='arguments'><a class='anchor
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>\dontrun{
+pd &lt;- new_pkg_deps("r-lib/pkgdepends")
+pd$resolve()
+pd$solve()
+pd$get_solution()
+}
+</pre><p></div></p>
+
 <p><hr>
 <a id="method-get_solution"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_solution()</code></h3>
 <p>Returns the solution of the package dependencies.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
@@ -320,11 +345,35 @@ hasn't been called yet.</p><h4 class='hasAnchor' id='arguments'><a class='anchor
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>A <a href='pkg_solution.html'>pkg_solution_result</a> object, which is a list. See
 <a href='pkg_solution.html'>pkg_solution_result</a> for details.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>\dontrun{
+pd &lt;- new_pkg_deps("pkgload")
+pd$resolve()
+pd$solve()
+pd$get_solution()
+}
+</pre><p></div></p>
+
 <p><hr>
 <a id="method-stop_for_solution_error"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>stop_for_solution_error()</code></h3>
 <p>Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>stop_for_solution_error</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>\dontrun{
+# This is an error, because the packages conflict:
+pd &lt;- new_pkg_deps(
+  c("r-lib/pak", "cran::pak"),
+  config = list(library = tempfile())
+)
+pd$resolve()
+pd$solve()
+pd
+# This fails:
+# pd$stop_for_solution_error()
+}
+</pre><p></div></p>
 
 <p><hr>
 <a id="method-draw"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>draw()</code></h3>
@@ -335,6 +384,14 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>A <code>tree</code> object from the cli package, see <code><a href='https://rdrr.io/pkg/cli/man/tree.html'>cli::tree()</a></code>.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>\dontrun{
+pd &lt;- new_pkg_deps("pkgload")
+pd$solve()
+pd$draw()
+}
+</pre><p></div></p>
+
 <p><hr>
 <a id="method-format"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>
 <p>Format a <code>pkg_deps</code> object, typically for printing.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
@@ -368,6 +425,19 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre>\dontrun{
+pd &lt;- new_pkg_deps("r-lib/pkgdepends")
+pd
+
+pd$resolve()
+pd
+
+pd$solve()
+pd
+}
+</pre><p></div></p>
+
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
@@ -382,211 +452,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 84 x 29</span><span>
-#&gt;    ref    type  direct directpkg status package version license needscompilation
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>           
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> R6     stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> asser… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> base6… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … TRUE            
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> callr  stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> cli    stan… FALSE  FALSE     OK     cli     2.3.1   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> cliapp stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> curl   stan… FALSE  FALSE     OK     curl    4.3     MIT + … TRUE            
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> desc   stan… FALSE  FALSE     OK     desc    1.3.0   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> digest stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… TRUE            
-#&gt; </span><span style='color: #949494;'># … with 74 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;chr&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 67 x 29</span><span>
-#&gt;    ref    type  direct directpkg status package version license needscompilation
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>           
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> r-lib… gith… TRUE   TRUE      OK     pkgdep… 0.0.0.… MIT + … TRUE            
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> R6     stan… FALSE  FALSE     OK     R6      2.5.0   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> asser… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> callr  stan… FALSE  FALSE     OK     callr   3.5.1   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> cli    stan… FALSE  FALSE     OK     cli     2.3.1   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> curl   stan… FALSE  FALSE     OK     curl    4.3     MIT + … TRUE            
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> desc   stan… FALSE  FALSE     OK     desc    1.3.0   MIT + … FALSE           
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> digest stan… FALSE  FALSE     OK     digest  0.6.27  GPL (&gt;… TRUE            
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> ellip… stan… FALSE  FALSE     OK     ellips… 0.3.1   GPL-3   TRUE            
-#&gt; </span><span style='color: #949494;'># … with 57 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;glue&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span><span></div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;pkg_solution&gt;
-#&gt; + result: OK
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; + constraints (143):
-#&gt;   - select pkgdepends exactly once
-#&gt;   - select R6 at most once
-#&gt;   - select assertthat at most once
-#&gt;   - select callr at most once
-#&gt;   - select cli at most once
-#&gt;   - select crayon at most once
-#&gt;   - select curl at most once
-#&gt;   - select desc at most once
-#&gt;   - select digest at most once
-#&gt;   - select ellipsis at most once
-#&gt;   ...
-#&gt; + solution:
-#&gt;   - assertthat
-#&gt;   - callr
-#&gt;   - cli
-#&gt;   - crayon
-#&gt;   - curl
-#&gt;   - desc
-#&gt;   - digest
-#&gt;   - ellipsis
-#&gt;   - fansi
-#&gt;   - filelock
-#&gt;   - glue
-#&gt;   - jsonlite
-#&gt;   - lifecycle
-#&gt;   - lpSolve
-#&gt;   - magrittr
-#&gt;   - pillar
-#&gt;   - pkgbuild
-#&gt;   - pkgcache
-#&gt;   - pkgconfig
-#&gt;   - prettyunits
-#&gt;   - processx
-#&gt;   - ps
-#&gt;   - r-lib/pkgdepends
-#&gt;   - R6
-#&gt;   - rappdirs
-#&gt;   - rematch2
-#&gt;   - rlang
-#&gt;   - rprojroot
-#&gt;   - tibble
-#&gt;   - utf8
-#&gt;   - uuid
-#&gt;   - vctrs
-#&gt;   - withr
-#&gt;   - zip</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;pkg_solution&gt;
-#&gt; + result: OK
-#&gt; + refs:
-#&gt;   - pkgload
-#&gt; + constraints (57):
-#&gt;   - select pkgload exactly once
-#&gt;   - select R6 at most once
-#&gt;   - select assertthat at most once
-#&gt;   - select callr at most once
-#&gt;   - select cli at most once
-#&gt;   - select crayon at most once
-#&gt;   - select desc at most once
-#&gt;   - select glue at most once
-#&gt;   - select pkgbuild at most once
-#&gt;   - select prettyunits at most once
-#&gt;   ...
-#&gt; + solution:
-#&gt;   - assertthat
-#&gt;   - callr
-#&gt;   - cli
-#&gt;   - crayon
-#&gt;   - desc
-#&gt;   - glue
-#&gt;   - pkgbuild
-#&gt;   - pkgload
-#&gt;   - prettyunits
-#&gt;   - processx
-#&gt;   - ps
-#&gt;   - R6
-#&gt;   - rlang
-#&gt;   - rprojroot
-#&gt;   - rstudioapi
-#&gt;   - withr</div><div class='input'><span class='co'># This is an error, because the packages conflict:</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pak
-#&gt;   - cran::pak
-#&gt; + has resolution (+41 dependencies)
-#&gt; + has solution
-#&gt; x has solution errors
-#&gt; (use `$get_resolution()` to see resolution results)
-#&gt; (use `$show_solution()` to see the dependencies
-#&gt; (use `$get_solution()` to see the full solution results)</div><div class='input'><span class='co'># This fails:</span>
-<span class='co'># pd$stop_for_solution_error()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #00BBBB;font-weight: bold;font-style: italic;'>pkgload </span><span style='color: #555555;font-weight: bold;font-style: italic;'>1.2.0</span><span> </span><span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; ├─cli </span><span style='color: #555555;'>2.3.1</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ ├─assertthat </span><span style='color: #555555;'>0.2.1</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ └─glue </span><span style='color: #555555;'>1.4.2</span><span> </span><span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; ├─crayon </span><span style='color: #555555;'>1.4.1</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; ├─desc </span><span style='color: #555555;'>1.3.0</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ ├─R6 </span><span style='color: #555555;'>2.5.0</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ ├─crayon
-#&gt; │ └─rprojroot </span><span style='color: #555555;'>2.0.2</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; ├─pkgbuild </span><span style='color: #555555;'>1.2.0</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ ├─callr </span><span style='color: #555555;'>3.5.1</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ │ ├─processx </span><span style='color: #555555;'>3.4.5</span><span> </span><span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ │ │ ├─ps </span><span style='color: #555555;'>1.6.0</span><span> </span><span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ │ │ └─R6
-#&gt; │ │ └─R6
-#&gt; │ ├─cli
-#&gt; │ ├─crayon
-#&gt; │ ├─desc
-#&gt; │ ├─prettyunits </span><span style='color: #555555;'>1.1.1</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; │ ├─R6
-#&gt; │ ├─rprojroot
-#&gt; │ └─withr </span><span style='color: #555555;'>2.4.1</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; ├─rlang </span><span style='color: #555555;'>0.4.10</span><span> </span><span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; ├─rprojroot
-#&gt; ├─rstudioapi </span><span style='color: #555555;'>0.13</span><span> </span><span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span><span>
-#&gt; └─withr
-#&gt; 
-#&gt; Key:  </span><span style='color: #00BB00;'>[new]</span><span> new | </span><span style='color: #00BB00;'>[dl]</span><span> download | </span><span style='color: #00BB00;'>[bld]</span><span> build | </span><span style='color: #00BB00;'>[cmp]</span><span> compile</div><div class='input'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; (use `$resolve()` to resolve dependencies)
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; + has resolution (+33 dependencies)
-#&gt; (use `$get_resolution()` to see resolution results)
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; + has resolution (+33 dependencies)
-#&gt; + has solution
-#&gt; (use `$get_resolution()` to see resolution results)
-#&gt; (use `$show_solution()` to see the dependencies
-#&gt; (use `$get_solution()` to see the full solution results)
-#&gt; (use `$draw()` to draw the dependency tree)</div><div class='input'>
+    <pre class="examples"><div class='input'>
 <span class='co'>## ------------------------------------------------</span>
 <span class='co'>## Method `pkg_deps$new`</span>
 <span class='co'>## ------------------------------------------------</span>
@@ -612,16 +478,36 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; + config:
-#&gt;   - library: /tmp/RtmppCoNUs/file3bfe47b3296d
-#&gt;   - cache_dir: /tmp/RtmppCoNUs/file3bfe7fa80de
+#&gt;   - library: /tmp/RtmpZGNj7O/file36a318c2ee90
+#&gt;   - cache_dir: /tmp/RtmpZGNj7O/file36a3321ea2d6
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /tmp/RtmppCoNUs/file3bfe41496fba
+#&gt;   - metadata_cache_dir: /tmp/RtmpZGNj7O/file36a36eaa679e
 #&gt;   - platforms: source
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
 #&gt;   - r-versions: 4.0.4
 #&gt;   - build-vignettes: FALSE
 #&gt;   - metadata-update-after: 24 hours</div><div class='input'>
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `pkg_deps$resolve`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `pkg_deps$get_resolution`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+
 <span class='co'>## ------------------------------------------------</span>
 <span class='co'>## Method `pkg_deps$get_solve_policy`</span>
 <span class='co'>## ------------------------------------------------</span>
@@ -639,7 +525,71 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
 <span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "upgrade"</div></span></pre>
+</div><div class='output co'>#&gt; [1] "upgrade"</div><div class='input'>
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `pkg_deps$solve`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `pkg_deps$get_solution`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `pkg_deps$stop_for_solution_error`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># This is an error, because the packages conflict:</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
+  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span>
+<span class='co'># This fails:</span>
+<span class='co'># pd$stop_for_solution_error()</span>
+<span class='op'>}</span>
+
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `pkg_deps$draw`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `pkg_deps$print`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
+<span class='va'>pd</span>
+
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span>
+
+<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>pd</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

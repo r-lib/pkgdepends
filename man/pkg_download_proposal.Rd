@@ -12,7 +12,7 @@ new_pkg_download_proposal(refs, ...)
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{...}{Additional arguments, passed to
-\href{$method-new}{\code{pkg_download_proposal$new()}}.}
+\href{#method-new}{\code{pkg_download_proposal$new()}}.}
 }
 \value{
 \code{new_pkg_download_proposal()} returns a new

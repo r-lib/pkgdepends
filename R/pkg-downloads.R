@@ -2,7 +2,7 @@
 #' @param refs Package names or references. See
 #'   ['Package references'][pkg_refs] for the syntax.
 #' @param ... Additional arguments, passed to
-#'   [`pkg_download_proposal$new()`]($method-new).
+#'   [`pkg_download_proposal$new()`](#method-new).
 #' @return `new_pkg_download_proposal()` returns a new
 #'   `pkg_download_proposal` object.
 #'

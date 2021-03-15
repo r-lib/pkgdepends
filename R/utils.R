@@ -43,20 +43,27 @@ str_trim <- function(x) {
 ## so we would need an R version specific vector here.
 ## Not an issue currently, might be in the future.
 
-#' @importFrom utils installed.packages
+## CRAN does not want me to call installed.packages at all, so let's
+## hardcode this for now.
 
 base_packages <- function() {
   if (is.null(pkgd_data$base_packages)) {
-    pkgd_data$base_packages <-
-      rownames(installed.packages(priority = "base"))
+    pkgd_data$base_packages <- c(
+      "base", "compiler", "datasets", "graphics", "grDevices", "grid",
+      "methods", "parallel", "splines", "stats", "stats4", "tcltk",
+      "tools", "utils"
+    )
   }
   pkgd_data$base_packages
 }
 
 recommended_packages <- function() {
   if (is.null(pkgd_data$recommended_packages)) {
-    pkgd_data$recommended_packages <-
-      rownames(installed.packages(.Library, priority = "recommended"))
+    pkgd_data$recommended_packages <- c(
+      "boot", "class", "cluster", "codetools", "foreign", "KernSmooth",
+      "lattice", "MASS", "Matrix", "mgcv", "nlme", "nnet", "rpart",
+      "spatial", "survival"
+    )
   }
   pkgd_data$recommended_packages
 }

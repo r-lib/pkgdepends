@@ -245,7 +245,7 @@ add_ref_params <- function(res, params) {
   res
 }
 
-known_query_params <- c("source", "reinstall", "nocache")
+known_query_params <- c("source", "reinstall", "nocache", "ignorefail", "omit")
 
 parse_query <- function(query) {
   query <- sub("^[?]", "", query)

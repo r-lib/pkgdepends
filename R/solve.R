@@ -209,7 +209,8 @@ pkgplan_i_lp_init <- function(pkgs, policy) {
   direct_packages <- unique(pkgs$package[pkgs$direct])
   indirect_packages <- setdiff(packages, direct_packages)
   num_direct <- length(direct_packages)
-
+  
+  
   structure(list(
     ## Number of package candidates
     num_candidates = num_candidates,

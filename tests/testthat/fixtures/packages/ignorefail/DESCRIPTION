@@ -9,6 +9,5 @@ LazyData: true
 VignetteBuilder: knitr
 Suggests:
   xxxyyy,
-  knitr,
-  rmarkdown
+  filelock
 Encoding: UTF-8

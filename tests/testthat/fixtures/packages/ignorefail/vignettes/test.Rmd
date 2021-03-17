@@ -1,0 +1,12 @@
+---
+title: "pkgdepends HOWTO"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pkgdepends test}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+print("Hello there!")
+```

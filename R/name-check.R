@@ -514,13 +514,19 @@ async_sentiment_get <- function(term) {
 async_sentiment_get_data <- function() {
   url <- Sys.getenv(
     "PKG_NAME_CHECK_SENTIMENT_URL",
-    "https://raw.githubusercontent.com/words/afinn-165/master/index.json"
+    "https://raw.githubusercontent.com/fnielsen/afinn/master/afinn/data/AFINN-en-165.txt"
   )
   http_get(url)$
     then(http_stop_for_status)$
-    catch(error = function(err) list(content = charToRaw("{}")))$
+    catch(error = function(err) list(content = raw()))$
     then(function(resp) {
-      pkgd_data$sentiment <- unlist(fromJSON(rawToChar(resp$content)))
+      chr <- rawToChar(resp$content)
+      lns <- strsplit(chr, "\n", fixed = TRUE)[[1]]
+      cls <- strsplit(lns, "\t", fixed = TRUE)
+      pkgd_data$sentiment <- structure(
+        as.integer(vapply(cls, "[[", character(1), 2)),
+        names = vapply(cls, "[[", character(1), 1)
+      )
     })
 }
 

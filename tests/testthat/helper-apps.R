@@ -49,8 +49,8 @@ new_check_app <- function() {
   })
 
   app$get("/sentiment", function(req, res) {
-    json <- list(abuse = -3, irony = -1, xo = 3, xoxoxo = 4)
-    res$send_json(json, auto_unbox = TRUE)
+    txt <- "abuse\t-3\nirony\t-1\nxo\t3\nxoxoxo\t4\n"
+    res$send(txt)
   })
 
   app$get("/bioc/a", function(req, res) {

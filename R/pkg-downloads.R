@@ -60,9 +60,11 @@ pkg_download_proposal <- R6::R6Class(
     #' @param remote_types Custom remote ref types, this is for advanced
     #'   use, and experimental currently.
     #'
-    #' @examples
+    #' ## Examples
+    #' ```r
     #' pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
     #' pdl
+    #' ```
 
     initialize = function(refs, config = list(), remote_types = NULL) {
       private$plan <- pkg_plan$new(refs, config, library = NULL, remote_types)
@@ -77,7 +79,8 @@ pkg_download_proposal <- R6::R6Class(
     #' A character vector of package refs that were used to create the
     #' `pkg_download_proposal` object.
     #'
-    #' @examples
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method get_refs()
     #' pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
     #' pdl$get_refs()
 
@@ -91,7 +94,8 @@ pkg_download_proposal <- R6::R6Class(
     #' Named list. See ['Configuration'][pkg_config] for the configuration
     #' options.
     #'
-    #' @examples
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method get_config()
     #' pdl <- new_pkg_download_proposal("pak")
     #' pdl$get_config()
 
@@ -107,12 +111,11 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_download_proposal` object itself, invisibly.
     #'
-    #' @examples
-    #' \dontrun{
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method resolve()
     #' pdl <- new_pkg_download_proposal("pak")
     #' pdl$resolve()
     #' pdl$get_resolution()
-    #' }
 
     resolve = function() {
       private$plan$resolve()
@@ -136,12 +139,11 @@ pkg_download_proposal <- R6::R6Class(
     #' A [pkg_resolution_result] object, which is also a tibble. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
-    #' @examples
-    #' \dontrun{
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method get_resolution()
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl$resolve()
     #' pdl$get_resolution()
-    #' }
 
     get_resolution = function() private$plan$get_resolution(),
 
@@ -152,13 +154,12 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_download_proposal` object, invisibly.
     #'
-    #' @examples
-    #' \dontrun{
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method download()
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl$resolve()
     #' pdl$download()
     #' pdl$get_downloads()
-    #' }
 
     download = function() {
       private$plan$download_resolution()
@@ -181,13 +182,12 @@ pkg_download_proposal <- R6::R6Class(
     #' A [pkg_download_result] object, which is a list. See
     #' [pkg_download_result] for details.
     #'
-    #' @examples
-    #' \dontrun{
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method get_downloads()
     #' pdl <- new_pkg_download_proposal("pkgload")
     #' pdl$resolve()
     #' pdl$download()
     #' pdl$get_downloads()
-    #' }
 
     get_downloads = function() private$plan$get_resolution_download(),
 
@@ -251,8 +251,8 @@ pkg_download_proposal <- R6::R6Class(
     #' @return
     #' The `pkg_download_proposal` object itself, invisibly.
     #'
-    #' @examples
-    #' \dontrun{
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method print()
     #' pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
     #' pdl
     #'
@@ -261,7 +261,6 @@ pkg_download_proposal <- R6::R6Class(
     #'
     #' pdl$download()
     #' pdl
-    #' }
 
     print = function(...) cat(self$format(...), sep = "\n")
   ),

@@ -43,10 +43,8 @@
 #' @return `pkg_name_check` object with a custom print method.
 #'
 #' @export
-#' @examples
-#' \dontrun{
+#' @examplesIf pkgdepends:::is_online()
 #' pkg_name_check("cli")
-#' }
 
 pkg_name_check <- function(name, dictionaries = NULL) {
   synchronise(async_pkg_name_check(name, dictionaries))

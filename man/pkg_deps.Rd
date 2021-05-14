@@ -39,93 +39,63 @@ result of the dependency solver.
 }
 }
 \examples{
-
-## ------------------------------------------------
-## Method `pkg_deps$new`
-## ------------------------------------------------
-
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method initialize()
 pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
-
-## ------------------------------------------------
-## Method `pkg_deps$get_refs`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method get_refs()
 pd <- new_pkg_deps(c("pak", "jsonlite"))
 pd$get_refs()
-
-## ------------------------------------------------
-## Method `pkg_deps$get_config`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method get_config()
 pd <- new_pkg_deps("pak")
 pd$get_config()
-
-## ------------------------------------------------
-## Method `pkg_deps$resolve`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method resolve()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 pd$get_resolution()
-}
-
-## ------------------------------------------------
-## Method `pkg_deps$get_resolution`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method get_resolution()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
-}
-
-## ------------------------------------------------
-## Method `pkg_deps$get_solve_policy`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method get_solve_policy()
 pdi <- new_pkg_deps("r-lib/pkgdepends")
 pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
-
-## ------------------------------------------------
-## Method `pkg_deps$set_solve_policy`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method set_solve_policy()
 pdi <- new_pkg_deps("r-lib/pkgdepends")
 pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
-
-## ------------------------------------------------
-## Method `pkg_deps$solve`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method solve()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
 pd$get_solution()
-}
-
-## ------------------------------------------------
-## Method `pkg_deps$get_solution`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method get_solution()
 pd <- new_pkg_deps("pkgload")
 pd$resolve()
 pd$solve()
 pd$get_solution()
-}
-
-## ------------------------------------------------
-## Method `pkg_deps$stop_for_solution_error`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method stop_for_solution_error()
 # This is an error, because the packages conflict:
 pd <- new_pkg_deps(
   c("r-lib/pak", "cran::pak"),
@@ -136,23 +106,15 @@ pd$solve()
 pd
 # This fails:
 # pd$stop_for_solution_error()
-}
-
-## ------------------------------------------------
-## Method `pkg_deps$draw`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method draw()
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-}
-
-## ------------------------------------------------
-## Method `pkg_deps$print`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method print()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd
 
@@ -161,7 +123,7 @@ pd
 
 pd$solve()
 pd
-}
+\dontshow{\}) # examplesIf}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -221,15 +183,6 @@ use, and experimental currently.}
 \subsection{Returns}{
 A new \code{pkg_deps} object.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pd <- pkg_deps$new("r-lib/pkgdepends")
-pd
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_refs"></a>}}
@@ -244,15 +197,6 @@ The package refs that were used to create the \code{pkg_deps} object.
 A character vector of package refs that were used to create the
 \code{pkg_deps} object.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pd <- new_pkg_deps(c("pak", "jsonlite"))
-pd$get_refs()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_config"></a>}}
@@ -268,15 +212,6 @@ Configuration options for the \code{pkg_deps} object. See
 Named list. See \link[=pkg_config]{'Configuration'} for the configuration
 options.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pd <- new_pkg_deps("pak")
-pd$get_config()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-resolve"></a>}}
@@ -294,18 +229,6 @@ either directly or indirectly. See
 \subsection{Returns}{
 The \code{pkg_deps} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pd <- new_pkg_deps("pak")
-pd$resolve()
-pd$get_resolution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
@@ -335,18 +258,6 @@ called after \href{#method-resolve}{\code{resolve()}} has completed.
 A \link{pkg_resolution_result} object, which is also a tibble. See
 \link[=pkg_resolution]{'Dependency resolution'} for its columns.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pd <- new_pkg_deps("r-lib/pkgdepends")
-pd$resolve()
-pd$get_resolution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solve_policy"></a>}}
@@ -361,17 +272,6 @@ See \link[=pkg_solution]{'The dependency solver'} for details.
 \subsection{Returns}{
 A character vector of length one.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_deps("r-lib/pkgdepends")
-pdi$get_solve_policy()
-pdi$set_solve_policy("upgrade")
-pdi$get_solve_policy()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set_solve_policy"></a>}}
@@ -392,17 +292,6 @@ See \link[=pkg_solution]{'The dependency solver'} for details.
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_deps("r-lib/pkgdepends")
-pdi$get_solve_policy()
-pdi$set_solve_policy("upgrade")
-pdi$get_solve_policy()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-solve"></a>}}
@@ -424,19 +313,6 @@ hasn't been called yet.
 \subsection{Returns}{
 The \code{pkg_deps} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pd <- new_pkg_deps("r-lib/pkgdepends")
-pd$resolve()
-pd$solve()
-pd$get_solution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solution"></a>}}
@@ -451,19 +327,6 @@ Returns the solution of the package dependencies.
 A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pd <- new_pkg_deps("pkgload")
-pd$resolve()
-pd$solve()
-pd$get_solution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
@@ -473,25 +336,6 @@ Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_deps$stop_for_solution_error()}\if{html}{\out{</div>}}
-}
-
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-# This is an error, because the packages conflict:
-pd <- new_pkg_deps(
-  c("r-lib/pak", "cran::pak"),
-  config = list(library = tempfile())
-)
-pd$resolve()
-pd$solve()
-pd
-# This fails:
-# pd$stop_for_solution_error()
-}
-}
-\if{html}{\out{</div>}}
-
 }
 
 }
@@ -509,18 +353,6 @@ screen.
 \subsection{Returns}{
 A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pd <- new_pkg_deps("pkgload")
-pd$solve()
-pd$draw()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
@@ -571,23 +403,6 @@ See the example below.
 \subsection{Returns}{
 The \code{pkg_deps} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pd <- new_pkg_deps("r-lib/pkgdepends")
-pd
-
-pd$resolve()
-pd
-
-pd$solve()
-pd
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

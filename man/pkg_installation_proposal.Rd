@@ -48,6 +48,7 @@ Typical workflow to install a set of packages:
 }
 }
 \examples{
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "pak",
@@ -64,37 +65,25 @@ pdi
 pdi$download()
 pdi
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$new`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
 pdi
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$get_refs`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
 pdi$get_refs()
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$get_config`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
 pdi$get_config()
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$resolve`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "pak",
@@ -104,11 +93,8 @@ pdi <- new_pkg_installation_proposal(
 pdi$resolve()
 pdi$get_resolution()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$get_resolution`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
@@ -117,11 +103,8 @@ pdi <- new_pkg_installation_proposal(
 pdi$resolve()
 pdi$get_resolution()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$get_solve_policy`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -129,11 +112,8 @@ pdi <- new_pkg_installation_proposal(
 pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$set_solve_policy`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -141,11 +121,8 @@ pdi <- new_pkg_installation_proposal(
 pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$solve`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
@@ -155,11 +132,8 @@ pdi$resolve()
 pdi$solve()
 pdi$get_solution()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$get_solution`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
@@ -169,11 +143,8 @@ pdi$resolve()
 pdi$solve()
 pdi$get_solution()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$show_solution`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
@@ -184,11 +155,8 @@ pdi$solve()
 pdi$get_solution()
 pdi$show_solution()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$stop_for_solution_error`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 # This is an error, because the packages conflict:
 pdi <- new_pkg_installation_proposal(
@@ -201,11 +169,8 @@ pdi
 # This fails:
 # pdi$stop_for_solution_error()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$draw`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "pak",
@@ -215,11 +180,8 @@ pdi$resolve()
 pdi$solve()
 pdi$draw()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$download`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
@@ -230,11 +192,8 @@ pdi$solve()
 pdi$download()
 pdi$get_downloads()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$get_downloads`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
@@ -245,11 +204,8 @@ pdi$solve()
 pdi$download()
 pdi$get_downloads()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$get_install_plan`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 pdi <- new_pkg_installation_proposal(
   "pak",
@@ -260,12 +216,9 @@ pdi$solve()
 pdi$download()
 pdi$get_install_plan()
 }
-
-## ------------------------------------------------
-## Method `pkg_installation_proposal$print`
-## ------------------------------------------------
-
-\dontrun{
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Method print
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
@@ -280,7 +233,7 @@ pdi
 
 pdi$download()
 pdi
-}
+\dontshow{\}) # examplesIf}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -347,17 +300,6 @@ use, and experimental currently.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile()))
-pdi
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_refs"></a>}}
@@ -373,15 +315,6 @@ The package refs that were used to create the
 A character vector of package refs that were used to create the
 \code{pkg_installation_proposal} object.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
-pdi$get_refs()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_config"></a>}}
@@ -397,18 +330,6 @@ Configuration options for the \code{pkg_installation_proposal} object. See
 Named list. See \link[=pkg_config]{'Configuration'} for the configuration
 options.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
-pdi$get_config()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-resolve"></a>}}
@@ -426,22 +347,6 @@ included, either directly or indirectly. See
 \subsection{Returns}{
 The \code{pkg_installation_proposal} object, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
-
-pdi$resolve()
-pdi$get_resolution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_resolve"></a>}}
@@ -471,21 +376,6 @@ called after \href{#method-resolve}{\code{resolve()}} has completed.
 A \link{pkg_resolution_result} object, which is also a tibble. See
 \link[=pkg_resolution]{'Dependency resolution'} for its columns.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$get_resolution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solve_policy"></a>}}
@@ -500,20 +390,6 @@ See \link[=pkg_solution]{'The dependency solver'} for details.
 \subsection{Returns}{
 A character vector of length one.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile())
-)
-pdi$get_solve_policy()
-pdi$set_solve_policy("upgrade")
-pdi$get_solve_policy()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set_solve_policy"></a>}}
@@ -534,20 +410,6 @@ See \link[=pkg_solution]{'The dependency solver'} for details.
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{pdi <- new_pkg_installation_proposal(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile())
-)
-pdi$get_solve_policy()
-pdi$set_solve_policy("upgrade")
-pdi$get_solve_policy()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-solve"></a>}}
@@ -566,22 +428,6 @@ most once. See \link[=pkg_solution]{'The dependency solver'} for details.
 \subsection{Returns}{
 The \code{pkg_installation_proposal} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$get_solution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_solution"></a>}}
@@ -596,22 +442,6 @@ Returns the solution of the package dependencies.
 A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$get_solution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-show_solution"></a>}}
@@ -633,23 +463,6 @@ Show the solution on the screen.
 A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "r-lib/pkgdepends",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$get_solution()
-pdi$show_solution()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
@@ -659,25 +472,6 @@ Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$stop_for_solution_error()}\if{html}{\out{</div>}}
-}
-
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-# This is an error, because the packages conflict:
-pdi <- new_pkg_installation_proposal(
-  c("r-lib/pak", "cran::pak"),
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi
-# This fails:
-# pdi$stop_for_solution_error()
-}
-}
-\if{html}{\out{</div>}}
-
 }
 
 }
@@ -733,22 +527,6 @@ screen.
 \subsection{Returns}{
 A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$draw()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-download"></a>}}
@@ -764,23 +542,6 @@ if possible.
 \subsection{Returns}{
 The \code{pkg_installation_proposal} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  c("r-lib/pak", "cran::pak"),
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$download()
-pdi$get_downloads()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-async_download"></a>}}
@@ -809,23 +570,6 @@ Returns the summary of the package downloads.
 A \link{pkg_download_result} object, which is a list. See
 \link{pkg_download_result} for details.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  c("r-lib/pak", "cran::pak"),
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$download()
-pdi$get_downloads()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop_for_download_error"></a>}}
@@ -865,23 +609,6 @@ Create an installation plan for the downloaded packages.
 An installation plan, see \link[=install_plans]{'Installation plans'} for
 the format.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
-pdi$resolve()
-pdi$solve()
-pdi$download()
-pdi$get_install_plan()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
@@ -935,29 +662,6 @@ See the example below.
 \subsection{Returns}{
 The \code{pkg_installation_proposal} object itself, invisibly.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
-  "pak",
-  config = list(library = tempfile())
-)
-pdi
-
-pdi$resolve()
-pdi
-
-pdi$solve()
-pdi
-
-pdi$download()
-pdi
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

@@ -1,6 +1,7 @@
 
 describe("verify_extracted_package", {
 
+  skip_on_cran()
   tmp <- tempfile()
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
   run <- function(pkgfile) {

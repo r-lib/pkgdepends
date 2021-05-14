@@ -1,6 +1,7 @@
 
 test_that("can package a tree", {
 
+  skip_on_cran()
   local_cli_config()
 
   dir.create(tmp <- tempfile())
@@ -27,6 +28,7 @@ test_that("can package a tree", {
 
 test_that("can package a compressed tree", {
 
+  skip_on_cran()
   local_cli_config()
 
   dir.create(tmp <- tempfile())

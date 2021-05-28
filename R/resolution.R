@@ -578,7 +578,7 @@ get_standard_metadata <- function(tab) {
         RemotePkgRef = tab$ref[i],
         RemoteRef = tab$ref[i],
         RemoteRepos = tab$mirror[i],
-        RemotePkgType = tab$platform[i],
+        RemotePkgPlatform = tab$platform[i],
         RemoteSha = tab$version[i])
   }
   meta

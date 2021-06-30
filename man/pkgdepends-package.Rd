@@ -30,12 +30,12 @@ dependencies.
 }
 
 \section{Install}{
-Once on CRAN, install the package with:\if{html}{\out{<div class="r">}}\preformatted{install.packages("pkgdepends")
+Once on CRAN, install the package with:\if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("pkgdepends")
 }\if{html}{\out{</div>}}
 }
 
 \section{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{library(pkgdepends)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(pkgdepends)
 }\if{html}{\out{</div>}}
 \subsection{Package references}{
 
@@ -53,7 +53,7 @@ See \link[=pkg_refs]{“Package references”} for details.
 
 \subsection{Package dependencies}{
 
-Dependencies of the development version of the cli package:\if{html}{\out{<div class="r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
+Dependencies of the development version of the cli package:\if{html}{\out{<div class="sourceCode r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
 }\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.1.1.9000 [new][bld][cmp][dl] (unknown size)
@@ -113,7 +113,7 @@ See the \code{\link{pkg_deps}} class for details.
 
 \subsection{Package downloads}{
 
-Downloading all dependencies of a package:\if{html}{\out{<div class="r">}}\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
+Downloading all dependencies of a package:\if{html}{\out{<div class="sourceCode r">}}\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
 pdl$resolve()
 pdl$download()
 }\if{html}{\out{</div>}}
@@ -124,7 +124,7 @@ details.
 
 \subsection{Package installation}{
 
-Installing or updating a set of package:\if{html}{\out{<div class="r">}}\preformatted{lib <- tempfile()
+Installing or updating a set of package:\if{html}{\out{<div class="sourceCode r">}}\preformatted{lib <- tempfile()
 pdi <- new_pkg_installation_proposal(
   "r-lib/cli",
   config = list(library = lib)

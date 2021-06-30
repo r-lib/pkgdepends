@@ -134,7 +134,7 @@ package files.
 
 \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.
-\subsection{Examples}{\if{html}{\out{<div class="r">}}\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+\subsection{Examples}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
 pdl
 }\if{html}{\out{</div>}}
 }}

@@ -1,8 +1,8 @@
 
 # pkgdepends development version
 
-* Fix an incompatibility between pak and remotes, which caused remotes
-  failing to update packages installed by pak (#301).
+* remotes can now update packages installed by pak. In the past this
+  sometimes did not work (#301).
 
 # pkgdepends 0.1.1
 

@@ -1,7 +1,7 @@
-# pkgdepends 0.1.2
-
 
 # pkgdepends development version
+
+# pkgdepends 0.1.2
 
 * remotes can now update packages installed by pak. In the past this
   sometimes did not work (#301).

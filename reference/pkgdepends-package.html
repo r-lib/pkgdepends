@@ -74,7 +74,7 @@ package manager, see pak." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pkgdepends</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -145,11 +145,11 @@ dependencies.</p></li>
 
     <h2 class="hasAnchor" id="install"><a class="anchor" href="#install"></a>Install</h2>
 
-    <p>Once on CRAN, install the package with:<div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='st'>"pkgdepends"</span><span class='op'>)</span>
+    <p>Once on CRAN, install the package with:<div class="sourceCode r"></p><pre><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='st'>"pkgdepends"</span><span class='op'>)</span>
 </pre><p></div></p>
     <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
 
-    <p><div class="r"></p><pre><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/r-lib/pkgdepends#readme'>pkgdepends</a></span><span class='op'>)</span>
+    <p><div class="sourceCode r"></p><pre><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/r-lib/pkgdepends#readme'>pkgdepends</a></span><span class='op'>)</span>
 </pre><p></div></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package references</h3>
 
 
@@ -167,7 +167,7 @@ local::~/works/shiny
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package dependencies</h3>
 
 
-<p>Dependencies of the development version of the cli package:<div class="r"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_deps.html'>new_pkg_deps</a></span><span class='op'>(</span><span class='st'>"r-lib/pkgcache"</span><span class='op'>)</span>
+<p>Dependencies of the development version of the cli package:<div class="sourceCode r"></p><pre><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_deps.html'>new_pkg_deps</a></span><span class='op'>(</span><span class='st'>"r-lib/pkgcache"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p><pre><span class='co'>#&gt; r-lib/pkgcache 1.1.1.9000 [new][bld][cmp][dl] (unknown size)</span>
@@ -227,7 +227,7 @@ local::~/works/shiny
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package downloads</h3>
 
 
-<p>Downloading all dependencies of a package:<div class="r"></p><pre><span class='va'>pdl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_download_proposal.html'>new_pkg_download_proposal</a></span><span class='op'>(</span><span class='st'>"r-lib/cli"</span><span class='op'>)</span>
+<p>Downloading all dependencies of a package:<div class="sourceCode r"></p><pre><span class='va'>pdl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_download_proposal.html'>new_pkg_download_proposal</a></span><span class='op'>(</span><span class='st'>"r-lib/cli"</span><span class='op'>)</span>
 <span class='va'>pdl</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pdl</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
 </pre><p></div></p>
@@ -237,7 +237,7 @@ details.</p>
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Package installation</h3>
 
 
-<p>Installing or updating a set of package:<div class="r"></p><pre><span class='va'>lib</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
+<p>Installing or updating a set of package:<div class="sourceCode r"></p><pre><span class='va'>lib</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_pkg_installation_proposal.html'>new_pkg_installation_proposal</a></span><span class='op'>(</span>
   <span class='st'>"r-lib/cli"</span>,
   config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='va'>lib</span><span class='op'>)</span>

@@ -62,7 +62,7 @@ gitcreds_set <<- function(url = "https://github.com") {
     gitcreds_set_new(url)
   }
 
-  msg("-> Removing credetials from cache...")
+  msg("-> Removing credentials from cache...")
   gitcreds_delete_cache(gitcreds_cache_envvar(url))
 
   msg("-> Done.")
@@ -175,7 +175,7 @@ gitcreds_delete <<- function(url = "https://github.com") {
   msg("-> Removing current credentials...")
   gitcreds_reject(current)
 
-  msg("-> Removing credetials from cache...")
+  msg("-> Removing credentials from cache...")
   gitcreds_delete_cache(gitcreds_cache_envvar(url))
 
   msg("-> Done.")

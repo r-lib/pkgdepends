@@ -197,18 +197,6 @@ test_that("omit_cols", {
   expect_identical(omit_cols(df, c("a", "b", "c")), df[, c(), drop = FALSE])
 })
 
-test_that("get_all_package_dirs", {
-  res <- get_all_package_dirs(
-    unique(c(current_r_platform(), "source")), current_r_version())
-
-  expect_s3_class(res, "tbl_df")
-  expect_equal(
-    colnames(res),
-    c("platform", "rversion", "contriburl", "prefix"))
-  expect_gte(nrow(res), 1)
-  expect_true(all(sapply(res, is.character)))
-})
-
 test_that("same_sha", {
   expect_true(same_sha("badcafe", "b"))
   expect_true(same_sha("b", "badcafe"))

@@ -165,46 +165,6 @@ omit_cols <- function(df, omit) {
   }
 }
 
-get_all_package_dirs <- function(platforms, rversions) {
-  minors <- unique(get_minor_r_version(rversions))
-  res <- lapply(platforms, function(pl) {
-    if (pl == "source") {
-      cbind("source", "*", "src/contrib")
-
-    } else if (pl == "windows") {
-      cbind("windows", minors, paste0("bin/windows/contrib/", minors))
-
-    } else if (pl == "macos") {
-      res1 <- lapply(minors, function(v) {
-        if (package_version(v) <= "2.15") {
-          cbind("macos", v, paste0("bin/macosx/leopard/contrib/", v))
-        } else if (package_version(v) == "3.0") {
-          cbind("macos", v, paste0("bin/macosx/contrib/", v))
-        } else if (package_version(v) <= "3.2") {
-          cbind("macos", v, paste0(c("bin/macosx/contrib/",
-                                     "bin/macosx/mavericks/contrib/"), v))
-        } else if (package_version(v) == "3.3") {
-          cbind("macos", v, paste0("bin/macosx/mavericks/contrib/", v))
-        } else {
-          cbind("macos", v, paste0("bin/macosx/el-capitan/contrib/", v))
-        }
-      })
-      do.call(rbind, res1)
-    }
-  })
-
-  mat <- do.call(rbind, res)
-  colnames(mat) <- c("platform", "rversion", "contriburl")
-  res <- as_tibble(mat)
-  res$prefix <- paste0(
-    "/",
-    ifelse(res$rversion == "*", "*", paste0("R-", res$rversion)),
-    "/", res$platform, "/"
-  )
-
-  res
-}
-
 same_sha <- function(s1, s2) {
   assert_that(is_string(s1), is_string(s2))
   len <- min(nchar(s1), nchar(s2))

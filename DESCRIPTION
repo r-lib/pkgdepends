@@ -28,7 +28,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild (>= 1.0.2),
-    pkgcache (>= 1.2.0),
+    pkgcache (>= 1.2.2.9000),
     prettyunits (>= 1.1.1),
     processx (>= 3.4.2),
     ps,
@@ -55,6 +55,7 @@ Suggests:
     spelling,
     testthat,
     webfakes
+Remotes: r-lib/pkgcache@feature/platforms
 Config/testthat/edition: 3
 Config/Needs/website:
     pkgdown

@@ -25,8 +25,7 @@ temporary directory within the R session temporary directory, see
 directory within the R session temporary directory, see
 \code{\link[base:tempfile]{base::tempdir()}}.
 \item \code{platforms}: Character vector of platforms to \emph{download} or \emph{install}
-for. Possible platforms are \code{windows}, \code{macos} and \code{source}. Defaults
-to the current platform, \emph{and} \code{source}.
+for. See \code{\link[=default_platforms]{default_platforms()}} for possible platform names.
 \item \code{cran-mirror}: CRAN mirror to use. Defaults to the \code{repos} option
 (see \code{\link[base:options]{base::options()}}), if that's not set then
 \verb{https://cran.rstudio.com}.

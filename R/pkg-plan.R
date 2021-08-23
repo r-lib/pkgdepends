@@ -259,8 +259,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
 #'   directory within the R session temporary directory, see
 #'   [base::tempdir()].
 #' * `platforms`: Character vector of platforms to _download_ or _install_
-#'   for. Possible platforms are `windows`, `macos` and `source`. Defaults
-#'   to the current platform, _and_ `source`.
+#'   for. See [default_platforms()] for possible platform names.
 #' * `cran-mirror`: CRAN mirror to use. Defaults to the `repos` option
 #'   (see [base::options()]), if that's not set then
 #'   `https://cran.rstudio.com`.

@@ -49,26 +49,26 @@ type_installed_rx <- function() {
 
 make_installed_cache <- function(library, packages = NULL, priority = NULL) {
   pkgs <- packages %||% list.files(library, pattern = "^[a-zA-Z]")
-  meta <- drop_nulls(lapply_with_names(pkgs, function(pkg) {
-    tryCatch(
-      suppressWarnings(
-        readRDS(file.path(library, pkg, "Meta", "package.rds"))
-      ),
-      error = function(e) NULL)
-  }))
+  meta <- drop_nulls(lapply_with_names(pkgs, function(pkg) tryCatch({
+    md <- suppressWarnings(
+      readRDS(file.path(library, pkg, "Meta", "package.rds"))
+    )
+    names(md$DESCRIPTION) <- tolower(names(md$DESCRIPTION))
+    md
+  }, error = function(e) NULL)))
 
   all_fields <- unique(unlist(lapply(
     meta, function(x) names(x$DESCRIPTION))))
-  fields <- unique(c(
+  fields <- tolower(unique(c(
     "Package", "Title", "Version", "Depends", "Suggests", "Imports",
     "LinkingTo", "Enhances", "Built", "MD5sum", "NeedsCompilation",
     "Platform", "License", "Priority", "Repository", "biocViews",
     grep("^Remote", all_fields, value = TRUE),
     grep("^Config/Needs/", all_fields, value = TRUE)
-  ))
+  )))
 
   ret <- matrix(NA_character_, nrow = length(meta), ncol = length(fields))
-  colnames(ret) <- tolower(fields)
+  colnames(ret) <- fields
   for (i in seq_along(meta)) ret[i,] <- meta[[i]]$DESCRIPTION[fields]
 
   if (!is.null(priority)) {
@@ -87,8 +87,21 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
   pkgs$type <- rep("installed", nrow(pkgs))
   pkgs$status <- rep("OK", nrow(pkgs))
   pkgs$rversion <- unname(vcapply(meta, function(x) as.character(x$Built$R)))
+
+  # On Windows, we need to check the Archs field
   pkgs$platform <- unname(vcapply(meta, function(x) x$Built$Platform))
+  winbin <- pkgs$platform != "" &
+    vlapply(meta, function(x) x$Built$OStype == "windows")
+  if (any(winbin)) {
+    archs <- gsub(" ", "", vcapply(meta[winbin], "[[", "Archs"))
+    pkgs$platform[winbin] <- ifelse(
+      is.na(archs) | archs %in% c("i386,x64", "x64,i386"),
+      "i386+x86_64-w64-mingw32",
+      pkgs$platform[winbin]
+    )
+  }
   pkgs$platform[pkgs$platform == ""] <- "*"
+
   pkgs$sources <- replicate(nrow(pkgs), character(), simplify = FALSE)
   pkgs$needscompilation <- ifelse(
     is.na(pkgs$needscompilation), NA,

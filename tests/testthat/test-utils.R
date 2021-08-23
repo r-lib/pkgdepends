@@ -11,25 +11,6 @@ test_that("%|z|%", {
   for (b in bad) expect_identical(b %|z|% FALSE, b)
 })
 
-test_that("current_r_platform", {
-  mockery::stub(current_r_platform, "get_platform",
-                list(pkgType = "mac.binary"))
-  expect_equal(current_r_platform(), "macos")
-
-  mockery::stub(current_r_platform, "get_platform",
-                list(pkgType = "win.binary"))
-  expect_equal(current_r_platform(), "windows")
-
-  mockery::stub(current_r_platform, "get_platform", list(pkgType = "source"))
-  expect_equal(current_r_platform(), "source")
-
-  mockery::stub(current_r_platform, "get_platform", list(pkgType = "foobar"))
-  expect_equal(current_r_platform(), "source")
-
-  mockery::stub(current_r_platform, "get_platform", list(pkgType = NULL))
-  expect_equal(current_r_platform(), "source")
-})
-
 test_that("default_cran_mirror", {
   m1 <- withr::with_options(
     list(repos = c(CRAN = "@CRAN@")),

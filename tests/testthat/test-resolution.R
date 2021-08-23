@@ -230,7 +230,7 @@ test_that("explicit cran", {
   expect_true(all(vlapply(res$deps, is_tibble)))
   expect_true("imports" %in% unlist(lapply(res$deps, "[[", "type")))
   expect_true("suggests" %in% unlist(lapply(res$deps, "[[", "type")))
-  expect_true(all(res$platform %in% c("source", "macos") |
+  expect_true(all(grepl("source|darwin", res$platform) |
                   viapply(res$sources, length) == 1))
   expect_true(all(vlapply(res$remote, inherits, what = "remote_ref")))
   expect_true(all(vlapply(res$error, identical, list())))
@@ -268,7 +268,7 @@ test_that("standard", {
   expect_true(all(vlapply(res$deps, is_tibble)))
   expect_true("imports" %in% unlist(lapply(res$deps, "[[", "type")))
   expect_true("suggests" %in% unlist(lapply(res$deps, "[[", "type")))
-  expect_true(all(res$platform %in% c("source", "macos") |
+  expect_true(all(grepl("source|darwin", res$platform) |
                   viapply(res$sources, length) == 1))
   expect_true(all(vlapply(res$remote, inherits, what = "remote_ref")))
   expect_true(all(vlapply(res$error, identical, list())))

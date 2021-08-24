@@ -19,3 +19,4 @@
 ^.*cache$
 ^vignettes$
 ^\.github$
+^dev-lib$

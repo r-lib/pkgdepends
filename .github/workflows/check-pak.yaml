@@ -76,6 +76,7 @@ jobs:
         run: |
           pak::local_install_dev_deps(upgrade = TRUE)
           pak::pkg_install("rcmdcheck")
+          pak::pkg_install(c("svglite", "rmarkdown"))
         shell: Rscript {0}
 
       - name: Session info

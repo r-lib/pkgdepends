@@ -16,21 +16,3 @@
       v Installed pkgdependstest 1.0.0 (local)
       v Summary:   1 new
 
----
-
-    Code
-      inst2$solve()
-      inst2$download()
-    Message <cliMessage>
-      i Getting 1 pkg with unknown size
-      v Got pkgdependstest 1.0.0 (source)
-    Code
-      inst2$install()
-    Message <cliMessage>
-      i Packaging pkgdependstest 1.0.0
-      v Packaged pkgdependstest 1.0.0
-      i Building pkgdependstest 1.0.0
-      v Built pkgdependstest 1.0.0
-      v Installed pkgdependstest 1.0.0 (local)
-      v Summary:   1 new
-

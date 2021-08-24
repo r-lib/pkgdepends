@@ -584,6 +584,18 @@ stop_task_package_build <- function(state, worker) {
   } else {
     alert("danger", "Failed to create source package {.pkg {pkg}} \\
            {.version {version}}")
+    if (!identical(worker$stdout, "")) {
+      cli::cli_h1("Standard output")
+      cli::cli_verbatim(worker$stdout)
+    } else {
+      alert("info", "Standard output is empty")
+    }
+    if (!identical(worker$stderr, "")) {
+      cli::cli_h1("Standard error")
+      cli::cli_verbatim(worker$stdout)
+    } else {
+      alert("info", "Standard error is empty")
+    }
   }
   update_progress_bar(state, 1L)
 

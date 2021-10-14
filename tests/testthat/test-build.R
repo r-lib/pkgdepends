@@ -33,7 +33,7 @@ test_that("vignettes can be turned on and off", {
     config = list(`build-vignettes` = TRUE, library = tmplib)
   )
 
-  expect_snapshot(error = TRUE, {
+  expect_snapshot({
     inst2$solve()
     inst2$download()
     inst2$install()

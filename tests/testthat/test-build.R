@@ -31,9 +31,11 @@ test_that("vignettes can be turned on and off", {
     config = list(`build-vignettes` = TRUE, library = tmplib)
   )
 
-  inst2$solve()
-  inst2$download()
-  inst2$install()
+  expect_snapshot({
+    inst2$solve()
+    inst2$download()
+    inst2$install()
+  })
 
   expect_true("doc" %in% dir(file.path(tmplib, "pkgdependstest")))
 })

@@ -634,7 +634,7 @@ highlight_version <- function(old, new) {
 
 #' Highlight package list
 #'
-#' @param sol Sultion data, data frame, with at least these columns:
+#' @param sol Solution data, data frame, with at least these columns:
 #' `type`, `package`, `old_version`, `version`, `lib_status`,
 #' `cache_status`, `platform`, `needscompilation`. Just what
 #' `$get_solution()$data` returns, basically.

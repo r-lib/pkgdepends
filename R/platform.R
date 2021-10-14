@@ -1,8 +1,4 @@
 
-get_platform <- function() {
-  .Platform
-}
-
 #' @details
 #' `current_r_platform()` detects the platform of the current R version.
 #'

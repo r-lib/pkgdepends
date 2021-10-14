@@ -55,7 +55,7 @@ Suggests:
     spelling,
     testthat,
     webfakes
-Remotes: r-lib/pkgcache@feature/platforms
+Remotes: r-lib/pkgcache
 Config/testthat/edition: 3
 Config/Needs/website:
     pkgdown

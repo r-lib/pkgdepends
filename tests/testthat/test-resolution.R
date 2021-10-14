@@ -222,7 +222,11 @@ test_that("explicit cran", {
   expect_true(all(grepl(".", res$version, fixed = TRUE)))
   expect_true(all(res$platform == "source" | ! res$needscompilation))
   expect_true(all(is.na(res$built) | res$platform != "source"))
-  expect_true(all(res$platform %in% default_platforms()))
+  good_platforms <- c(
+    default_platforms(),
+    if (is_windows()) "i386+x86_64-w64-mingw32"
+  )
+  expect_true(all(res$platform %in% good_platforms))
   expect_true(all(res$rversion %in%
                   c(get_minor_r_version(current_r_version()), "*")))
   expect_true(is_character(res$repodir))
@@ -260,7 +264,11 @@ test_that("standard", {
   expect_true(all(grepl(".", res$version, fixed = TRUE)))
   expect_true(all(res$platform == "source" | ! res$needscompilation))
   expect_true(all(is.na(res$built) | res$platform != "source"))
-  expect_true(all(res$platform %in% default_platforms()))
+  good_platforms <- c(
+    default_platforms(),
+    if (is_windows()) "i386+x86_64-w64-mingw32"
+  )
+  expect_true(all(res$platform %in% good_platforms))
   expect_true(all(res$rversion %in%
                   c(get_minor_r_version(current_r_version()), "*")))
   expect_true(is_character(res$repodir))

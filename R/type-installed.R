@@ -85,7 +85,7 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
   pkgs$platform <- built$Platform
   winbin <- pkgs$platform != "" & built$OStype == "windows"
   if (any(winbin)) {
-    archs <- gsub(" ", "", inst$archs)
+    archs <- gsub(" ", "", inst$archs[winbin])
     pkgs$platform[winbin] <- ifelse(
       is.na(archs) | archs %in% c("i386,x64", "x64,i386"),
       "i386+x86_64-w64-mingw32",

@@ -50,6 +50,7 @@ Suggests:
     mockery,
     pingr (>= 2.0.0),
     rlang,
+    rmarkdown,
     rstudioapi,
     spelling,
     testthat,

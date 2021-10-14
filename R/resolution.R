@@ -381,7 +381,7 @@ res__set_result_df <- function(self, private, row_idx, value) {
 
 res__set_result_list <- function(self, private, row_idx, value) {
   # already done?
-  if (value$ref %in% self$result$ref) return()
+  if (all(value$ref %in% self$result$ref)) return()
   # direct version already on the TODO list?
   if (value$ref %in% private$state$ref &&
       !value$direct &&

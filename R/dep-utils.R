@@ -112,24 +112,6 @@ parse_all_deps <- function(deps) {
   res[, c("ref", setdiff(names(res), "ref"))]
 }
 
-get_cran_extension <- function(platform) {
-  if (platform == "source") {
-    return(".tar.gz")
-  } else if (platform %in% c("windows", "i386+x86_64-mingw32",
-                             "x86_64-w64-mingw32", "i386-w64-mingw32")) {
-    return(".zip")
-  } else if (platform == "macos") {
-    return(".tgz")
-  }
-
-  dtl <- parse_platform(platform)
-  if (!is.na(dtl$os) && grepl("^darwin", dtl$os)) {
-    return(".tgz")
-  } else {
-    paste0("_R_", platform, ".tar.gz")
-  }
-}
-
 resolve_ref_deps <- function(deps, remotes, extra) {
   deps <- deps_from_desc(deps, last = FALSE)
 

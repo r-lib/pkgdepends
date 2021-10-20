@@ -140,8 +140,21 @@ temporary directory within the R session temporary directory, see
 directory within the R session temporary directory, see
 <code><a href='https://rdrr.io/r/base/tempfile.html'>base::tempdir()</a></code>.</p></li>
 <li><p><code>platforms</code>: Character vector of platforms to <em>download</em> or <em>install</em>
-for. Possible platforms are <code>windows</code>, <code>macos</code> and <code>source</code>. Defaults
-to the current platform, <em>and</em> <code>source</code>.</p></li>
+for. See <code><a href='current_r_platform.html'>default_platforms()</a></code> for possible platform names.</p></li>
+<li><p><code>windows-archs</code>: Character scalar specifying which architectures
+to download/install for on Windows. Its possible values are:</p><ul>
+<li><p><code>"prefer-x64"</code>: Generally prefer x64 binaries. If the current R
+session is <code>x64</code>, then we download/install x64 packages.
+(These packages might still be multi-architecture binaries!)
+If the current R session is <code>i386</code>, then we download/install
+packages for both architectures. This might mean compiling
+packages from source if the binary packages are for <code>x64</code> only,
+like the CRAN Windows binaries for R 4.2.x currently.</p></li>
+<li><p><code>"both"</code>: Always download/install packages for both <code>i386</code> and
+<code>x64</code> architectures. This might need compilation from source
+if the available binaries are for <code>x64</code> only, like the CRAN
+Windows binaries for R 4.2.x currently.</p></li>
+</ul></li>
 <li><p><code>cran-mirror</code>: CRAN mirror to use. Defaults to the <code>repos</code> option
 (see <code><a href='https://rdrr.io/r/base/options.html'>base::options()</a></code>), if that's not set then
 <code>https://cran.rstudio.com</code>.</p></li>

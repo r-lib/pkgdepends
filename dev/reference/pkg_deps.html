@@ -370,11 +370,12 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; + config:
-#&gt;   - library: /tmp/RtmpcLDlzK/file37337597d9af
-#&gt;   - cache_dir: /tmp/RtmpcLDlzK/file3733e58cc29
+#&gt;   - library: /tmp/RtmpkWsJ6I/file36e4705c82f
+#&gt;   - cache_dir: /tmp/RtmpkWsJ6I/file36e452c63dc0
 #&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /tmp/RtmpcLDlzK/file3733135b6ca3
-#&gt;   - platforms: source
+#&gt;   - metadata_cache_dir: /tmp/RtmpkWsJ6I/file36e4692a9bd0
+#&gt;   - platforms: x86_64-pc-linux-gnu-ubuntu-20.04, source
+#&gt;   - windows-archs: both
 #&gt;   - cran-mirror: https://cloud.r-project.org
 #&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
 #&gt;   - r-versions: 4.1.1
@@ -384,18 +385,18 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Updated metadata database: 3.17 MB in 7 files.</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Updating metadata database</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Updating metadata database ... done</span></div><div class='output co'>#&gt; </div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 84 × 29</span>
-#&gt;    ref        type     direct directpkg status package version license needscompilation
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           
-#&gt; <span style='color: #BCBCBC;'> 1</span> R6         standard FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 2</span> assertthat standard FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; <span style='color: #BCBCBC;'> 3</span> base64enc  standard FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 4</span> callr      standard FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 5</span> cli        standard FALSE  FALSE     OK     cli     3.0.1   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 6</span> cliapp     standard FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 7</span> crayon     standard FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 8</span> curl       standard FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 9</span> desc       standard FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'>10</span> digest     standard FALSE  FALSE     OK     digest  0.6.28  GPL (&gt;… TRUE            
+#&gt;    ref    type  direct directpkg status package version license needscompilation
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           
+#&gt; <span style='color: #BCBCBC;'> 1</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 2</span> asser… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
+#&gt; <span style='color: #BCBCBC;'> 3</span> base6… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … TRUE            
+#&gt; <span style='color: #BCBCBC;'> 4</span> callr  stan… FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 5</span> cli    stan… FALSE  FALSE     OK     cli     3.0.1   MIT + … TRUE            
+#&gt; <span style='color: #BCBCBC;'> 6</span> cliapp stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 7</span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 8</span> curl   stan… FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            
+#&gt; <span style='color: #BCBCBC;'> 9</span> desc   stan… FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'>10</span> digest stan… FALSE  FALSE     OK     digest  0.6.28  GPL (&gt;… TRUE            
 #&gt; <span style='color: #949494;'># … with 74 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span>
 #&gt; <span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span>
 #&gt; <span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;chr&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span>
@@ -404,20 +405,20 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 67 × 29</span>
-#&gt;    ref              type  direct directpkg status package version license needscompilation
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>            <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           
-#&gt; <span style='color: #BCBCBC;'> 1</span> r-lib/pkgdepends gith… TRUE   TRUE      OK     pkgdep… 0.1.2.… MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 2</span> R6               stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 3</span> assertthat       stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; <span style='color: #BCBCBC;'> 4</span> callr            stan… FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 5</span> cli              stan… FALSE  FALSE     OK     cli     3.0.1   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 6</span> crayon           stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 7</span> curl             stan… FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 8</span> desc             stan… FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 9</span> digest           stan… FALSE  FALSE     OK     digest  0.6.28  GPL (&gt;… TRUE            
-#&gt; <span style='color: #BCBCBC;'>10</span> ellipsis         stan… FALSE  FALSE     OK     ellips… 0.3.2   MIT + … TRUE            
-#&gt; <span style='color: #949494;'># … with 57 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 66 × 29</span>
+#&gt;    ref    type  direct directpkg status package version license needscompilation
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           
+#&gt; <span style='color: #BCBCBC;'> 1</span> r-lib… gith… TRUE   TRUE      OK     pkgdep… 0.1.2.… MIT + … TRUE            
+#&gt; <span style='color: #BCBCBC;'> 2</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 3</span> callr  stan… FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 4</span> cli    stan… FALSE  FALSE     OK     cli     3.0.1   MIT + … TRUE            
+#&gt; <span style='color: #BCBCBC;'> 5</span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 6</span> curl   stan… FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            
+#&gt; <span style='color: #BCBCBC;'> 7</span> desc   stan… FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           
+#&gt; <span style='color: #BCBCBC;'> 8</span> ellip… stan… FALSE  FALSE     OK     ellips… 0.3.2   MIT + … TRUE            
+#&gt; <span style='color: #BCBCBC;'> 9</span> fansi  stan… FALSE  FALSE     OK     fansi   0.5.0   GPL (&gt;… TRUE            
+#&gt; <span style='color: #BCBCBC;'>10</span> filel… stan… FALSE  FALSE     OK     filelo… 1.0.2   MIT + … TRUE            
+#&gt; <span style='color: #949494;'># … with 56 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span>
 #&gt; <span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span>
 #&gt; <span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;glue&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span>
 #&gt; <span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span>
@@ -440,17 +441,17 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; + result: OK
 #&gt; + refs:
 #&gt;   - r-lib/pkgdepends
-#&gt; + constraints (141):
+#&gt; + constraints (140):
 #&gt;   - select pkgdepends exactly once
 #&gt;   - select R6 at most once
-#&gt;   - select assertthat at most once
 #&gt;   - select callr at most once
 #&gt;   - select cli at most once
 #&gt;   - select crayon at most once
 #&gt;   - select curl at most once
 #&gt;   - select desc at most once
-#&gt;   - select digest at most once
 #&gt;   - select ellipsis at most once
+#&gt;   - select fansi at most once
+#&gt;   - select filelock at most once
 #&gt;   ...
 #&gt; + solution:
 #&gt;   - assertthat
@@ -470,11 +471,11 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt;   - magrittr
 #&gt;   - pillar
 #&gt;   - pkgbuild
-#&gt;   - pkgcache
 #&gt;   - pkgconfig
 #&gt;   - prettyunits
 #&gt;   - processx
 #&gt;   - ps
+#&gt;   - r-lib/pkgcache
 #&gt;   - r-lib/pkgdepends
 #&gt;   - R6
 #&gt;   - rappdirs
@@ -549,7 +550,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 #&gt; │ ├─R6 <span style='color: #555555;'>2.5.1</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
 #&gt; │ ├─crayon
 #&gt; │ └─rprojroot <span style='color: #555555;'>2.0.2</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; ├─rlang <span style='color: #555555;'>0.4.11</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span>
+#&gt; ├─rlang <span style='color: #555555;'>0.4.12</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span>
 #&gt; ├─rprojroot
 #&gt; ├─rstudioapi <span style='color: #555555;'>0.13</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
 #&gt; └─withr <span style='color: #555555;'>2.4.2</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>

@@ -11,25 +11,6 @@ test_that("%|z|%", {
   for (b in bad) expect_identical(b %|z|% FALSE, b)
 })
 
-test_that("current_r_platform", {
-  mockery::stub(current_r_platform, "get_platform",
-                list(pkgType = "mac.binary"))
-  expect_equal(current_r_platform(), "macos")
-
-  mockery::stub(current_r_platform, "get_platform",
-                list(pkgType = "win.binary"))
-  expect_equal(current_r_platform(), "windows")
-
-  mockery::stub(current_r_platform, "get_platform", list(pkgType = "source"))
-  expect_equal(current_r_platform(), "source")
-
-  mockery::stub(current_r_platform, "get_platform", list(pkgType = "foobar"))
-  expect_equal(current_r_platform(), "source")
-
-  mockery::stub(current_r_platform, "get_platform", list(pkgType = NULL))
-  expect_equal(current_r_platform(), "source")
-})
-
 test_that("default_cran_mirror", {
   m1 <- withr::with_options(
     list(repos = c(CRAN = "@CRAN@")),
@@ -195,18 +176,6 @@ test_that("omit_cols", {
   expect_identical(omit_cols(df, "a"), df[, 2:3])
   expect_identical(omit_cols(df, c("a", "b")), df[, 3, drop = FALSE])
   expect_identical(omit_cols(df, c("a", "b", "c")), df[, c(), drop = FALSE])
-})
-
-test_that("get_all_package_dirs", {
-  res <- get_all_package_dirs(
-    unique(c(current_r_platform(), "source")), current_r_version())
-
-  expect_s3_class(res, "tbl_df")
-  expect_equal(
-    colnames(res),
-    c("platform", "rversion", "contriburl", "prefix"))
-  expect_gte(nrow(res), 1)
-  expect_true(all(sapply(res, is.character)))
 })
 
 test_that("same_sha", {

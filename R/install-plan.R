@@ -347,7 +347,7 @@ get_rtools_path <- function() {
 }
 
 make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
-                               needscompilation, binary) {
+                               needscompilation, binary, cmd_args) {
 
   # For windows, we need ensure the zip.exe bundled with the zip package is on the PATH
   if (is_windows()) {
@@ -372,7 +372,7 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
     pkgbuild_process$new(
       path, tmp_dir, binary = binary, vignettes = vignettes,
       needs_compilation = needscompilation, compile_attributes = FALSE,
-      args = c("--no-lock", if (binary) glue("--library={tmplib}"))
+      args = c("--no-lock", cmd_args, if (binary) glue("--library={tmplib}"))
     )
   )
 }
@@ -451,7 +451,8 @@ start_task_package_build <- function(state, task) {
 
   task$args$phase <- "build"
   px <- make_build_process(tree_dir, pkg, create_temp_dir(), lib, vignettes,
-                           needscompilation, binary = FALSE)
+                           needscompilation, binary = FALSE,
+                           cmd_args = NULL)
   worker <- list(id = get_worker_id(), task = task, process = px,
                  stdout = character(), stderr = character())
   state$workers <- c(
@@ -475,8 +476,14 @@ start_task_build <- function(state, task) {
   version <- state$plan$version[pkgidx]
   alert("info", "Building {.pkg {pkg}} {.version {version}}")
 
+  if ("install_args" %in% names(state$plan)) {
+    cmd_args <- state$plan$install_args[pkgidx]
+    if (identical(cmd_args, "")) cmd_args <- NULL
+  } else {
+    cmd_args <- NULL
+  }
   px <- make_build_process(path, pkg, tmp_dir, lib, vignettes, needscompilation,
-                           binary = TRUE)
+                           binary = TRUE, cmd_args = cmd_args)
   worker <- list(id = get_worker_id(), task = task, process = px,
                  stdout = character(), stderr = character())
   state$workers <- c(
@@ -584,6 +591,18 @@ stop_task_package_build <- function(state, worker) {
   } else {
     alert("danger", "Failed to create source package {.pkg {pkg}} \\
            {.version {version}}")
+    if (!identical(worker$stdout, "")) {
+      cli::cli_h1("Standard output")
+      cli::cli_verbatim(worker$stdout)
+    } else {
+      alert("info", "Standard output is empty")
+    }
+    if (!identical(worker$stderr, "")) {
+      cli::cli_h1("Standard error")
+      cli::cli_verbatim(worker$stdout)
+    } else {
+      alert("info", "Standard error is empty")
+    }
   }
   update_progress_bar(state, 1L)
 

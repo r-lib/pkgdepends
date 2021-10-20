@@ -81,8 +81,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_download_res(self, private, res, which, on_progress),
     subset_resolution = function(which)
       pkgplan__subset_resolution(self, private, which),
-    create_lp_problem = function(pkgs, policy, rversion)
-      pkgplan__create_lp_problem(self, private, pkgs, policy, rversion),
+    create_lp_problem = function(pkgs, policy)
+      pkgplan__create_lp_problem(self, private, pkgs, policy),
     solve_lp_problem = function(problem)
       pkgplan__solve_lp_problem(self, private, problem),
 
@@ -259,8 +259,22 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
 #'   directory within the R session temporary directory, see
 #'   [base::tempdir()].
 #' * `platforms`: Character vector of platforms to _download_ or _install_
-#'   for. Possible platforms are `windows`, `macos` and `source`. Defaults
-#'   to the current platform, _and_ `source`.
+#'   for. See [default_platforms()] for possible platform names.
+#' * `windows-archs`: Character scalar specifying which architectures
+#'   to download/install for on Windows. Its possible values are:
+#'   - `"prefer-x64"`: Generally prefer x64 binaries. If the current R
+#'     session is `x64`, then we download/install x64 packages.
+#'     (These packages might still be multi-architecture binaries!)
+#'     If the current R session is `i386`, then we download/install
+#'     packages for both architectures. This might mean compiling
+#'     packages from source if the binary packages are for `x64` only,
+#'     like the CRAN Windows binaries for R 4.2.x currently.
+#'     `"prefer"` is the default from R 4.2.0.
+#'   - `"both"`: Always download/install packages for both `i386` and
+#'     `x64` architectures. This might need compilation from source
+#'     if the available binaries are for `x64` only, like the CRAN
+#'     Windows binaries for R 4.2.x currently. `"both"` is the default
+#'     before R 4.2.0.
 #' * `cran-mirror`: CRAN mirror to use. Defaults to the `repos` option
 #'   (see [base::options()]), if that's not set then
 #'   `https://cran.rstudio.com`.
@@ -287,6 +301,7 @@ pkgplan_default_config <- function() {
     "package_cache_dir"  = NULL,
     "metadata_cache_dir" = tempfile(),
     "platforms"          = default_platforms(),
+    "windows-archs"      = default_windows_archs(),
     "cran-mirror"        = default_cran_mirror(),
     "dependencies"       = pkg_dep_types_hard(),
     "r-versions"         = current_r_version(),
@@ -311,6 +326,7 @@ format.pkg_config <- function(x, ...) {
     paste0("  - package_cache_dir: ", x$package_cache_dir %||% "<default>"),
     paste0("  - metadata_cache_dir: ", x$metadata_cache_dir),
     paste0("  - platforms: ", paste(x$platforms, collapse = ", ")),
+    paste0("  - windows-archs: ", x$`windows-archs`),
     paste0("  - cran-mirror: ", x$`cran-mirror`),
     paste0("  - dependencies: ", format_dependencies(x$dependencies)),
     paste0("  - r-versions: ", paste(x$`r-versions`, collapse = ", ")),
@@ -336,6 +352,7 @@ is_valid_config <- function(x) {
       package_cache_dir  = assert_that(is_path(x[[n]])),
       metadata_cache_dir = assert_that(is_path(x[[n]])),
       platforms          = assert_that(is_platform_list(x[[n]])),
+      "windows-archs"    = assert_that(x[[n]] %in% windows_archs()),
       "cran-mirror"      = assert_that(is_string(x[[n]])),
       dependencies       = assert_that(is_dependencies(x[[n]])),
       "r-versions"       = assert_that(is_r_version_list(x[[n]])),
@@ -344,6 +361,12 @@ is_valid_config <- function(x) {
     )
   }
   TRUE
+}
+
+windows_archs <- function() c("prefer-x64", "both")
+
+default_windows_archs <- function() {
+  if (getRversion() < "4.2.0") "both" else "prefer-x64"
 }
 
 on_failure(is_valid_config) <- function(call, env) {

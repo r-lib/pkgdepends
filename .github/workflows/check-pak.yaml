@@ -27,6 +27,7 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest,   r: 'release'}
+          - {os: windows-latest, r: 'devel' }
           - {os: windows-latest, r: 'release'}
           - {os: windows-latest, r: '4.0'}
           - {os: windows-latest, r: '3.6'}
@@ -76,6 +77,7 @@ jobs:
         run: |
           pak::local_install_dev_deps(upgrade = TRUE)
           pak::pkg_install("rcmdcheck")
+          pak::pkg_install(c("svglite", "rmarkdown"))
         shell: Rscript {0}
 
       - name: Session info

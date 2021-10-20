@@ -112,16 +112,6 @@ parse_all_deps <- function(deps) {
   res[, c("ref", setdiff(names(res), "ref"))]
 }
 
-get_cran_extension <- function(platform) {
-  switch(
-    platform,
-    "source" = ".tar.gz",
-    "macos" = ".tgz",
-    "windows" = ".zip",
-    stop("Unknown platform: ", sQuote(platform))
-  )
-}
-
 resolve_ref_deps <- function(deps, remotes, extra) {
   deps <- deps_from_desc(deps, last = FALSE)
 

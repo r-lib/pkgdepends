@@ -7,6 +7,7 @@ test_that("build_package", {
 })
 
 test_that("vignettes can be turned on and off", {
+  skip_on_cran()
   skip_if_offline()
   local_cli_config()
   dir.create(tmplib <- tempfile())
@@ -31,7 +32,8 @@ test_that("vignettes can be turned on and off", {
     paste0("local::", pkgdir, "?nocache"),
     config = list(`build-vignettes` = TRUE, library = tmplib)
   )
-  expect_snapshot(error = TRUE, {
+
+  expect_snapshot({
     inst2$solve()
     inst2$download()
     inst2$install()

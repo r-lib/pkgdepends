@@ -381,7 +381,7 @@ res__set_result_df <- function(self, private, row_idx, value) {
 
 res__set_result_list <- function(self, private, row_idx, value) {
   # already done?
-  if (value$ref %in% self$result$ref) return()
+  if (all(value$ref %in% self$result$ref)) return()
   # direct version already on the TODO list?
   if (value$ref %in% private$state$ref &&
       !value$direct &&
@@ -464,10 +464,21 @@ resolve_from_description <- function(path, sources, remote, direct,
     error = function(e) "*"
   )
 
-  platform <- tryCatch(
-    dsc$get_built()$Platform %|z|% "source",
-    error = function(e) "source"
-  )
+  platform <- if (dsc$has_fields("Built")) {
+    built <- dsc$get_built()
+    archs <- gsub(" ", "", dsc$get("Archs"))
+    if (built$OStype == "windows") {
+      if (is.na(archs) || archs == "i386,x64" || archs == "x64,i386") {
+        "i386+x86_64-w64-mingw32"
+      } else {
+        built$Platform
+      }
+    } else {
+      built$Platform
+    }
+  } else {
+    "source"
+  }
 
   nc <- dsc$get_field("NeedsCompilation", NA)
   if  (!is.na(nc)) nc <- tolower(nc) %in% c("true", "yes")

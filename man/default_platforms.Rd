@@ -3,24 +3,68 @@
 \name{current_r_platform}
 \alias{current_r_platform}
 \alias{default_platforms}
-\title{The current R platform for packages}
+\title{R platforms}
 \usage{
 current_r_platform()
 
 default_platforms()
 }
 \value{
-\code{current_r_platform()} returns a string:
-\code{source}, \code{macos} or \code{windows}.
+current_r_platform()` returns a string, the name of the current
+platform.
 
-\code{default_platforms()} return a character vector of package types that
-work on the current system. It is a subset of the possible
-\code{current_r_platform()} return values.
+\code{default_platforms()} returns a character vector of platform names.
 }
 \description{
-\code{current_r_platform()} detects the current platform.
-\code{default_platforms()} prints the default package types that are used
-on the current platform. See also \link[=pkg_config]{'Configuration'}.
+\code{default_platfoms()} returns the default platforms for the current R
+session. These typically consist of the detected platform of the current
+R session, and \code{"source"}, for source packages.
+}
+\details{
+\code{current_r_platform()} detects the platform of the current R version.
+
+By default pkgdepends works with source packages and binary packages for
+the current platform. You can change this, see
+\link[=pkg_config]{'Configuration'}.
+
+The following platform names can be configured and returned by
+\code{current_r_platform()} and \code{default_platforms()}:
+\itemize{
+\item \code{"source"} for source packages,
+\item A platform string like \code{R.version$platform}, but on Linux the name
+and version of the distribution are also included. Examples:
+\itemize{
+\item \code{x86_64-apple-darwin17.0}: macOS High Sierra.
+\item \code{aarch64-apple-darwin20}: macOS Big Sur on arm64.
+\item \code{x86_64-w64-mingw32}: 64 bit Windows.
+\item \code{i386-w64-mingw32}: 32 bit Windows.
+\item \code{i386+x86_64-w64-mingw32}: 64 bit + 32 bit Windows.
+\item \code{i386-pc-solaris2.10}: 32 bit Solaris. (Some broken 64 Solaris
+builds might have the same platform string, unfortunately.)
+\item \code{x86_64-pc-linux-gnu-debian-10}: Debian Linux 10 on x86_64.
+\item \verb{x86_64-pc-linux-musl-alpine-3.14.1}: Alpine Linux.
+\item \code{x86_64-pc-linux-gnu-unknown}: Unknown Linux Distribution on x86_64.
+\item \code{s390x-ibm-linux-gnu-ubuntu-20.04}: Ubuntu Linux 20.04 on S390x.
+\item \code{amd64-portbld-freebsd12.1}: FreeBSD 12.1 on x86_64.
+}
+}
+
+In addition, the following platform names can be used to configure
+pkgdepends:
+\itemize{
+\item \code{"macos"} for macOS binaries that are appropriate for the R versions
+pkgdepends is working with (defaulting to the version of the current
+session), as defined by CRAN binaries. E.g. on R 3.5.0 macOS binaries
+are built for macOS El Capitan.
+\item \code{"windows"} for Windows binaries for the default CRAN architecture.
+This is currently Windows Vista for all supported R versions, but it
+might change in the future. The actual binary packages in the
+repository might support both 32 bit and 64 builds, or only one of
+them. In practice 32-bit only packages are very rare. CRAN builds
+before and including R 4.1 have both architectures, from R 4.2 they
+are 64 bit only. \code{"windows"} is an alias to \code{i386+x86_64-w64-mingw32}
+currently.
+}
 }
 \examples{
 current_r_platform()

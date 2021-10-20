@@ -1,7 +1,8 @@
 
 test_that("pkgplan_i_create_lp_init", {
   pkgs <- read_fixture("resolution-simple.rds")
-  lp <- pkgplan_i_lp_init(pkgs, policy = "lazy")
+  config <- pkgplan_default_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, policy = "lazy")
   expect_equal(lp$num_candidates, 2)
   expect_equal(lp$num_direct, 1)
   expect_equal(lp$total, 3)
@@ -16,7 +17,8 @@ test_that("pkgplan_i_create_lp_init", {
 
 test_that("pkgplan_i_lp_objectives lazy policy", {
   pkgs <- read_fixture("resolution-simple.rds")
-  lp0 <- pkgplan_i_lp_init(pkgs, policy = "lazy")
+  config <- pkgplan_default_config()
+  lp0 <- pkgplan_i_lp_init(pkgs, config, policy = "lazy")
   lp <- pkgplan_i_lp_objectives(lp0)
   expect_equal(lp0[setdiff(names(lp0), "obj")], lp[setdiff(names(lp), "obj")])
   expect_true(lp$obj[which(pkgs$platform != "source")] <
@@ -30,7 +32,8 @@ test_that("pkgplan_i_lp_objectives upgrade policy", {
 
 test_that("pkgplan_i_lp_no_multiples", {
   pkgs <- read_fixture("resolution-progress.rds")
-  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  config <- pkgplan_default_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_no_multiples(lp)
   expect_equal(
     vcapply(lp$conds, "[[", "type"),
@@ -54,7 +57,8 @@ test_that("pkgplan_i_lp_no_multiples", {
 
 test_that("pkgplan_i_lp_satisfy_direct", {
   pkgs <- read_fixture("resolution-gh-vs-cran.rds")
-  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  config <- pkgplan_default_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_satisfy_direct(lp)
   expect_equal(
     vcapply(lp$conds, "[[", "type"),
@@ -82,7 +86,8 @@ test_that("pkgplan_i_lp_prefer_binaries", {
 
 test_that("pkgplan_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
-  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  config <- pkgplan_default_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_dependencies(lp)
   expect_equal(length(lp$conds), 32)
   expect_equal(
@@ -93,7 +98,8 @@ test_that("pkgplan_i_lp_dependencies", {
 
 test_that("pkgplan_i_lp_rversion", {
   pkgs <- read_fixture("resolution-progress.rds")
-  lp <- pkgplan_i_lp_init(pkgs, "lazy")
+  config <- pkgplan_default_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_rversion(lp, "3.1.3")
   fmt <- format(lp)
   expect_true(any(grepl("`rlang` needs a newer R version", fmt, fixed = TRUE)))

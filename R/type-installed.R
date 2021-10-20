@@ -48,36 +48,28 @@ type_installed_rx <- function() {
 }
 
 make_installed_cache <- function(library, packages = NULL, priority = NULL) {
-  pkgs <- packages %||% list.files(library, pattern = "^[a-zA-Z]")
-  meta <- drop_nulls(lapply_with_names(pkgs, function(pkg) {
-    tryCatch(
-      suppressWarnings(
-        readRDS(file.path(library, pkg, "Meta", "package.rds"))
-      ),
-      error = function(e) NULL)
-  }))
+  inst <- pkgcache::parse_installed(
+    library = library,
+    priority = priority,
+    lowercase = TRUE,
+    reencode = FALSE
+  )
 
-  all_fields <- unique(unlist(lapply(
-    meta, function(x) names(x$DESCRIPTION))))
-  fields <- unique(c(
+  all_fields <- names(inst)
+  fields <- tolower(unique(c(
     "Package", "Title", "Version", "Depends", "Suggests", "Imports",
     "LinkingTo", "Enhances", "Built", "MD5sum", "NeedsCompilation",
     "Platform", "License", "Priority", "Repository", "biocViews",
     grep("^Remote", all_fields, value = TRUE),
     grep("^Config/Needs/", all_fields, value = TRUE)
-  ))
+  )))
 
-  ret <- matrix(NA_character_, nrow = length(meta), ncol = length(fields))
-  colnames(ret) <- tolower(fields)
-  for (i in seq_along(meta)) ret[i,] <- meta[[i]]$DESCRIPTION[fields]
-
-  if (!is.null(priority)) {
-    keep <- ret[, "priority"] %in% priority
-    ret <- ret[keep, , drop = FALSE]
-    meta <- meta[keep]
+  miss <- setdiff(fields, names(inst))
+  for (nm in miss) {
+    inst[[nm]] <- NA_character_
   }
 
-  pkgs <- as_tibble(ret)
+  pkgs <- inst[, names(inst) %in% fields]
 
   if (nrow(pkgs) == 0) {
     pkgs$ref <- character()
@@ -86,9 +78,22 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
   }
   pkgs$type <- rep("installed", nrow(pkgs))
   pkgs$status <- rep("OK", nrow(pkgs))
-  pkgs$rversion <- unname(vcapply(meta, function(x) as.character(x$Built$R)))
-  pkgs$platform <- unname(vcapply(meta, function(x) x$Built$Platform))
+  built <- parse_built(inst$built)
+  pkgs$rversion <- built$R
+
+  # On Windows, we need to check the Archs field
+  pkgs$platform <- built$Platform
+  winbin <- pkgs$platform != "" & built$OStype == "windows"
+  if (any(winbin)) {
+    archs <- gsub(" ", "", inst$archs[winbin])
+    pkgs$platform[winbin] <- ifelse(
+      is.na(archs) | archs %in% c("i386,x64", "x64,i386"),
+      "i386+x86_64-w64-mingw32",
+      pkgs$platform[winbin]
+    )
+  }
   pkgs$platform[pkgs$platform == ""] <- "*"
+
   pkgs$sources <- replicate(nrow(pkgs), character(), simplify = FALSE)
   pkgs$needscompilation <- ifelse(
     is.na(pkgs$needscompilation), NA,
@@ -224,4 +229,15 @@ get_installed_metadata <- function(tab) {
         RemoteSha = tab$version[i])
   }
   meta
+}
+
+parse_built <- function(x) {
+  xp <- strsplit(x, ";", fixed = TRUE)
+  data.frame(
+    stringsAsFactors = FALSE,
+    R        = trimws(vapply(xp, "[", character(1), 1)),
+    Platform = trimws(vapply(xp, "[", character(1), 2)),
+    Date     = trimws(vapply(xp, "[", character(1), 3)),
+    OStype   = trimws(vapply(xp, "[", character(1), 4))
+  )
 }

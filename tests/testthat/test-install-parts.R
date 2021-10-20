@@ -306,7 +306,7 @@ test_that("kill_all_processes that catch/ignore SIGINT", {
   skip_on_os("windows")
   if (Sys.which("bash") == "") skip("Needs 'bash'")
 
-  sh <- "trap '&>2 echo \"Hold on\"' INT
+  sh <- "trap '>&2 echo \"Hold on\"' INT
     for ((n=5; n; n--))
     do
       echo going

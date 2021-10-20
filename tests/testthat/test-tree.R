@@ -7,7 +7,7 @@ test_that("draw_solution_tree", {
   dir.create(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
 
-  r <- pkg_plan$new(c("pkgconfig", "igraph"), library = lib)
+  r <- pkg_plan$new(c("pkgconfig", "dplyr"), library = lib)
   r$resolve()
   r$solve()
 

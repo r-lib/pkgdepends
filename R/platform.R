@@ -77,9 +77,9 @@ default_platforms <- function() unique(c(current_r_platform(), "source"))
 
 platform_is_ok <- function(cand, exp, exp_archs = NULL) {
   if (cand %in% c("*", "source") && "source" %in% exp) return(TRUE)
-  if (cand == "i386+x86_64-w64-mingw32") {
-    # This is a multi-arch binary, that is OK
-    TRUE
+  if (cand %in% c("i386+x86_64-w64-mingw32", "x86_64+i386-w64-mingw32")) {
+    # This is a multi-arch binary, that is OK, if binaries are allowed
+    any(c("x86_64-w64-mingw32", "i386-w64-mingw32") %in% exp)
 
   } else if (cand == "x86_64-w64-mingw32") {
     # This is an x64 only binary. If we are on x64 and we "prefer-x64"

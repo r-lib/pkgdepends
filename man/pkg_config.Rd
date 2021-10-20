@@ -26,6 +26,21 @@ directory within the R session temporary directory, see
 \code{\link[base:tempfile]{base::tempdir()}}.
 \item \code{platforms}: Character vector of platforms to \emph{download} or \emph{install}
 for. See \code{\link[=default_platforms]{default_platforms()}} for possible platform names.
+\item \code{windows-archs}: Character scalar specifying which architectures
+to download/install for on Windows. Its possible values are:
+\itemize{
+\item \code{"prefer-x64"}: Generally prefer x64 binaries. If the current R
+session is \code{x64}, then we download/install x64 packages.
+(These packages might still be multi-architecture binaries!)
+If the current R session is \code{i386}, then we download/install
+packages for both architectures. This might mean compiling
+packages from source if the binary packages are for \code{x64} only,
+like the CRAN Windows binaries for R 4.2.x currently.
+\item \code{"both"}: Always download/install packages for both \code{i386} and
+\code{x64} architectures. This might need compilation from source
+if the available binaries are for \code{x64} only, like the CRAN
+Windows binaries for R 4.2.x currently.
+}
 \item \code{cran-mirror}: CRAN mirror to use. Defaults to the \code{repos} option
 (see \code{\link[base:options]{base::options()}}), if that's not set then
 \verb{https://cran.rstudio.com}.

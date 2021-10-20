@@ -66,3 +66,33 @@ current_r_platform <- function() {
 #' default_platforms()
 
 default_platforms <- function() unique(c(current_r_platform(), "source"))
+
+# Is `cand` an OK platform for `exp`? This is pretty straightforward,
+# except for windows.
+
+# TODO: need to do something special for Linux binaries?
+#   E.g. RSPM probably sets the platform in `Built` to something
+#   different than our detection.
+
+platform_is_ok <- function(cand, exp, exp_archs = NULL) {
+  if (cand %in% c("*", "source") && "source" %in% exp) return(TRUE)
+  if (cand == "i386+x86_64-w64-mingw32") {
+    # This is a multi-arch binary, that is OK
+    TRUE
+
+  } else if (cand == "x86_64-w64-mingw32") {
+    # This is an x64 only binary. If we are on x64 and we "prefer-x64"
+    # then it is OK. Otherwise we would prefer a multi-arch binary or
+    # a source package.
+    "x86_64-w64-mingw32" %in% exp && exp_archs == "prefer-x64"
+
+  } else if (cand == "i386-w64-mingw32") {
+    # This is an i386 only binary. This is not OK currently.
+    # (We do not allow an i386-only installation.)
+    FALSE
+
+  } else {
+    # Otherwise it is just a match
+    cand %in% exp
+  }
+}

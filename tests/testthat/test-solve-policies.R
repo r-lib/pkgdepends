@@ -4,8 +4,9 @@ test_that("newer version preferred", {
     `aa` = list(version = "1-0-1", platform = "source", direct = TRUE),
     `installed::/tmp/aa` = list(version = "1.2.0", type = "cran")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = pkgplan_default_config(),
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(FALSE, TRUE, FALSE))
@@ -14,8 +15,9 @@ test_that("newer version preferred", {
     `aa` = list(version = "1-0-1", platform = "source", direct = TRUE),
     `installed::/tmp/aa` = list(version = "1.0.0", type = "bioc")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = pkgplan_default_config(),
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(TRUE, FALSE, FALSE))
@@ -27,8 +29,9 @@ test_that("if newer fails, older is used", {
     `cran::aa` = list(version = "1-0-1", status = "FAILED"),
     `installed::/tmp/aa` = list(version = "1.0.0", type = "cran")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = pkgplan_default_config(),
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(FALSE, FALSE, TRUE, FALSE))
@@ -41,8 +44,9 @@ test_that("newer version if preferred in the dependencies", {
     `aa` = list(version = "1-0-1", platform = "source"),
     `installed::/tmp/aa` = list(version = "1.0.0")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = pkgplan_default_config(),
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(TRUE, TRUE, FALSE, FALSE))
@@ -54,8 +58,13 @@ test_that("binaries are still preferred over source", {
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `installed::/tmp/aa` = list(version = "0.9.9")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  config <- utils::modifyList(
+    pkgplan_default_config(),
+    list(platforms = c("macos", "source"))
+  )
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = config,
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(TRUE, FALSE, FALSE, FALSE))
@@ -65,8 +74,9 @@ test_that("binaries are still preferred over source", {
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos"),
     `installed::/tmp/aa` = list(version = "0.9.9")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = config,
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(FALSE, TRUE, FALSE, FALSE))
@@ -81,8 +91,13 @@ test_that("installed is still preferred over binaries", {
       extra = list(list(repotype = "cran"))
     )
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  config <- utils::modifyList(
+    pkgplan_default_config(),
+    list(platforms = c("macos", "source"))
+  )
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = config,
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(FALSE, FALSE, TRUE, FALSE))
@@ -95,8 +110,8 @@ test_that("installed is still preferred over binaries", {
       extra = list(list(repotype = "cran"))
     )
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs, config = config,
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(FALSE, FALSE, TRUE, FALSE))
@@ -109,8 +124,9 @@ test_that("installed is still preferred over binaries", {
     `cran::aa` = list(version = "1.0.0", platform = "source"),
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = config,
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(TRUE, FALSE, FALSE, FALSE))
@@ -123,8 +139,9 @@ test_that("installed is still preferred over binaries", {
     ),
     `aa` = list(version = "1.0.0", direct = TRUE, platform = "macos")
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = config,
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(FALSE, TRUE, FALSE, FALSE))
@@ -140,8 +157,13 @@ test_that("unqualified is cran/bioc", {
       extra = list(list(repotype = "github"))
     )
   )
-  lp <- pkgplan_i_create_lp_problem(pkgs, policy = "upgrade",
-                                    rversion = getRversion())
+  config <- utils::modifyList(
+    pkgplan_default_config(),
+    list(platforms = c("macos", "source"))
+  )
+  lp <- pkgplan_i_create_lp_problem(pkgs,
+                                    config = config,
+                                    policy = "upgrade")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1000)
   expect_equal(as.logical(sol$solution), c(TRUE, FALSE, FALSE, FALSE))

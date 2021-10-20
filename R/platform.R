@@ -69,10 +69,11 @@ default_platforms <- function() unique(c(current_r_platform(), "source"))
 
 # Is `cand` an OK platform for `exp`? This is pretty straightforward,
 # except for windows.
-
-# TODO: need to do something special for Linux binaries?
-#   E.g. RSPM probably sets the platform in `Built` to something
-#   different than our detection.
+#
+# NOTE: RSPM delivers binaries as source packages, so we
+#       do not need to handle RSPM specially, source packages
+#       will be always accepted, unless the user explicitly
+#       opts out from them.
 
 platform_is_ok <- function(cand, exp, exp_archs = NULL) {
   if (cand %in% c("*", "source") && "source" %in% exp) return(TRUE)

@@ -30,10 +30,10 @@ config <- local({
   # Builtin environment variable decoders
   builtin_env_decode <- list(
     character = function(x, ...) {
-      strsplit(x, .Platform$path.sep, fixed = TRUE)[[1]]
+      strsplit(x, ";", fixed = TRUE)[[1]]
     },
     custom = function(x, name) {
-      stop("Don't know how to decode config value from `name`")
+      stop("Don't know how to decode config value from `", name, "`")
     },
     flag = function(x, name) {
       x <- tolower(x)
@@ -211,6 +211,23 @@ config <- local({
       name <- standard_name(name)
       if (!name %in% names(env$data)) stop("No such option: `", name, "`")
       lockBinding(name, env$data)
+    }
+
+    # --------------------------------------------------------------------
+
+    env$add_type <- function(type_name, check, env_decode) {
+      stopifnot(
+        is_string(type_name),
+        is.function(check),
+        is.function(env_decode)
+      )
+      if (type_name %in% env$types) {
+        stop("Type already exists: `", type_name, "`")
+      }
+      env$types <- c(env$types, type_name)
+      env$checks[[type_name]] <- check
+      env$env_decode[[type_name]] <- env_decode
+      invisible(env)
     }
 
     structure(env, class = c("config_v1", "config"))

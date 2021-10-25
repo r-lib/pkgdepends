@@ -20,7 +20,7 @@ reference:
 
 - title: Configuration
   contents:
-  - pkg_config
+  - pkgdepends-config
   
 - title: Package names and references
   contents:

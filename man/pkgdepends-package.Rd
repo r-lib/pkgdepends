@@ -161,7 +161,7 @@ The details of \code{\link{pkg_deps}},
 \code{\link{pkg_download_proposal}} and
 \code{\link{pkg_installation_proposal}} can be tuned
 with a list of configuration options. See
-\link[=pkg_config]{“Configuration”} for details.
+\link[=pkgdepends-config]{“Configuration”} for details.
 }
 }
 

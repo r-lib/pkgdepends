@@ -7,8 +7,31 @@ default_windows_archs <- function() {
 
 default_update_after <- function() as.difftime(24, units = "hours")
 
+env_decode_dependencies <- function(x, name) {
+  if (tolower(x) %in% c("yes", "true", "1", "on")) return(TRUE)
+  if (tolower(x) %in% c("no", "false", "0", "off")) return(FALSE)
+  if (tolower(x) == "na") return(NA)
+  strsplit(x, ";", fixed = TRUE)[[1]]
+}
+
+env_decode_difftime <- function(x, name) {
+  if (nchar(x) >= 2) {
+    unit <- substr(x, nchar(x), nchar(x))
+    unit <- c(s = "secs", m = "mins", h = "hours", d = "days")[unit]
+    qty <- suppressWarnings(as.numeric(substr(x, 1, nchar(x) - 1)))
+    if (!is.na(unit) && !is.na(qty)) {
+      return(as.difftime(qty, units = unit))
+    }
+  }
+  stop(
+    "Invalid time interval specification in `", name,
+    "` environment variable: `", x, "`"
+  )
+}
+
 #' pkgdepends configuration
-#' @name pkgdepends-config
+#' @name pkg_config
+#' @aliases pkgdepends-config
 #'
 #' @description
 #' Configuration entries for several pkgdepends classes. Not all classes
@@ -26,8 +49,7 @@ default_update_after <- function() as.difftime(24, units = "hours")
 #'   entry. E.g. `pkg.platforms`.
 #' * Environment variables. The name of the environment variable is the
 #'   `PKG_` prefix, plus the name of the pkgdepends configuration entry, in
-#'   uppercase. E.g. `PKG_PLATFORMS`. Some configuration entries cannot be
-#'   set via environment variables, as documented below.
+#'   uppercase. E.g. `PKG_PLATFORMS`.
 #' * Default values.
 #'
 #' Call `current_config()` to print the current configuration.
@@ -87,9 +109,12 @@ current_config <- function() {
 
   #' * `dependencies`: Dependencies to consider or download or install.
   #'   Defaults to the hard dependencies, see [pkg_dep_types_hard()].
-  #'   You cannot set this configuration entry via an environment variable
-  #'   currently.
-  conf$add("dependencies", "custom", pkg_dep_types_hard, is_dependencies)
+  #'   The following values are supported in the `PKG_DEPENDENCIES`
+  #'   environment variable: `"TRUE"`, `"FALSE"`, `"NA"`, or a
+  #'   semicolon separated list of dependency types. See
+  #'   [as_pkg_dependencies()] for details.
+  conf$add_type("dependencies", is_dependencies, env_decode_dependencies)
+  conf$add("dependencies", "dependencies", pkg_dep_types_hard)
 
   #' * `r_versions`: Character vector, R versions to download or install
   #'   packages for. It defaults to the current R version.
@@ -106,9 +131,12 @@ current_config <- function() {
   #' * `metadata_update_after`: A time interval as a [difftime] object.
   #'   pkgdepends will update the metadata cache if it is older than this.
   #'   The default is one day.
-  #'   You cannot set this configuration entry via an environment variable
-  #'   currently.
-  conf$add("metadata_update_after", "custom", default_update_after, is_difftime)
+  #'   The `PKG_METADATA_UPDATE_AFTER` environment variable may be set
+  #'   in seconds (`s` suffix), minutes (`m` suffix), hours (`h` suffix),
+  #'   or days (`d` suffix). E.g: `1d` means one day.
+  conf$add_type("difftime", is_difftime, env_decode_difftime)
+  conf$add("metadata_update_after", "difftime", default_update_after)
 
+  conf$lock()
   conf
 }

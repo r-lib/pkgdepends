@@ -33,7 +33,7 @@ dependencies are installed. See \code{\link[=pkg_dep_types_hard]{pkg_dep_types_h
 as the requested dependency types, for direct installations and
 dependent packages.
 \item If a character vector, then it is taken as the dependency types
-both for direct installations, and the hard dependencies are
+for direct installations, and the hard dependencies are
 used for the dependent packages.
 }
 

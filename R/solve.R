@@ -102,7 +102,7 @@ solve_dummy_obj <- 1000000000
 
 pkgplan_solve <- function(self, private, policy) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
-  if (is.null(private$config$library)) {
+  if (is.null(private$config$get("library"))) {
     stop("No package library specified, see 'library' in new()")
   }
   if (is.null(private$resolution)) self$resolve()
@@ -110,7 +110,7 @@ pkgplan_solve <- function(self, private, policy) {
 
   metadata <- list(solution_start = Sys.time())
   pkgs <- self$get_resolution()
-  rversion <- private$config$`r-versions`
+  rversion <- private$config$get("r_versions")
 
   prb <- private$create_lp_problem(pkgs, policy)
   sol <- private$solve_lp_problem(prb)
@@ -188,7 +188,7 @@ pkgplan_i_create_lp_problem <- function(pkgs, config, policy) {
   ## TODO: we could already rule out (standard) source and binary packages
   ## if an installed ref with the same version is present
 
-  rversion <- config$`r-versions`
+  rversion <- config$get("r_versions")
 
   lp <- pkgplan_i_lp_init(pkgs, config, policy)
   lp <- pkgplan_i_lp_objectives(lp)
@@ -294,8 +294,8 @@ pkgplan_i_lp_platforms <- function(lp) {
   badplatform <- function(wh) {
     ok <- platform_is_ok(
       lp$pkgs$platform[wh],
-      lp$config$platforms,
-      lp$config$`windows-archs`
+      lp$config$get("platforms"),
+      lp$config$get("windows_archs")
     )
     if (!ok) {
       lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
@@ -760,7 +760,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
   deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   installed <- ifelse(
     sol$type == "installed",
-    file.path(private$config$library, sol$package),
+    file.path(private$config$get("library"), sol$package),
     NA_character_)
 
   res <- self$get_resolution()
@@ -771,9 +771,9 @@ pkgplan_install_plan <- function(self, private, downloads) {
   had <- paste("Had", current_r_platform())
   binary = sol$platform != "source" | sol$download_status == had
   vignettes <- ! binary & ! sol$type %in% c("cran", "bioc", "standard") &
-    private$config$`build-vignettes`
+    private$config$get("build-vignettes")
 
-  sol$library <- private$config$library
+  sol$library <- private$config$get("library")
   sol$binary <- binary
   sol$direct <- direct
   sol$dependencies <- I(deps)
@@ -784,8 +784,8 @@ pkgplan_install_plan <- function(self, private, downloads) {
   # for x64
   nomulti <- sol$platform %in% c("*", "source") &
     sol$type != "installed" &
-    "x86_64-w64-mingw32" %in% private$config$platforms &
-    private$config$`windows-archs` == "prefer-x64"
+    "x86_64-w64-mingw32" %in% private$config$get("platforms") &
+    private$config$get("windows-archs") == "prefer-x64"
   sol$install_args <- ifelse(nomulti, "--no-multiarch", "")
 
   if (downloads) {

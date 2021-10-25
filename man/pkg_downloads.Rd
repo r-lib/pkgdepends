@@ -7,7 +7,7 @@
 \description{
 The \code{\link{pkg_download_proposal}} and \code{\link{pkg_installation_proposal}} classes
 both have download methods, to downloads package files into a
-configured directory (see \link[=pkg_config]{'Configuration'}).
+configured directory (see \link[=pkgdepends-config]{'Configuration'}).
 }
 \details{
 They return a \code{pkg_download_result} object, which is a data frame

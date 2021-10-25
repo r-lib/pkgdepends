@@ -2,7 +2,7 @@
 #' @param refs Package names or references. See
 #'   ['Package references'][pkg_refs] for the syntax.
 #' @param config Configuration options, a named list. See
-#'  ['Configuration'][pkg_config]. If it does not include `library`, then
+#'  ['Configuration'][pkgdepends-config]. If it does not include `library`, then
 #'  `.libPaths()[1]` is added as `library`.
 #' @param ... Additional arguments, passed to
 #'   [`pkg_installation_proposal$new()`](#method-new).
@@ -79,7 +79,7 @@ pkg_installation_proposal <- R6::R6Class(
     #' the package files.
     #'
     #' @param config Configuration options, a named list. See
-    #'   ['Configuration'][pkg_config]. It needs to include the package
+    #'   ['Configuration'][pkgdepends-config]. It needs to include the package
     #'   library to install to, in `library`.
     #' @param policy Solution policy. See ['The dependency
     #'   solver'][pkg_solution].
@@ -126,10 +126,10 @@ pkg_installation_proposal <- R6::R6Class(
 
     #' @description
     #' Configuration options for the `pkg_installation_proposal` object. See
-    #' ['Configuration'][pkg_config] for details.
+    #' ['Configuration'][pkgdepends-config] for details.
     #'
     #' @return
-    #' Named list. See ['Configuration'][pkg_config] for the configuration
+    #' Named list. See ['Configuration'][pkgdepends-config] for the configuration
     #' options.
     #'
     #' @examplesIf pkgdepends:::is_online()

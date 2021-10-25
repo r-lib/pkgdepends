@@ -130,7 +130,7 @@ package files.
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{\code{config}}{Configuration options, a named list. See
-\link[=pkg_config]{'Configuration'}.}
+\link[=pkgdepends-config]{'Configuration'}.}
 
 \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.
@@ -162,13 +162,13 @@ A character vector of package refs that were used to create the
 \if{latex}{\out{\hypertarget{method-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_download_proposal} object. See
-\link[=pkg_config]{'Configuration'} for details.
+\link[=pkgdepends-config]{'Configuration'} for details.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_config()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Named list. See \link[=pkg_config]{'Configuration'} for the configuration
+Named list. See \link[=pkgdepends-config]{'Configuration'} for the configuration
 options.
 }
 }

@@ -1,10 +1,7 @@
 
 test_that("binary preferred over source", {
   pkgs <- read_fixture("resolution-simple.rds")
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -13,10 +10,7 @@ test_that("binary preferred over source", {
 
 test_that("installed preferred over download", {
   pkgs <- read_fixture("resolution-installed.rds")
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, policy = "lazy", config = config)
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -32,10 +26,7 @@ test_that("dependency versions are honored", {
       deps = list(make_fake_deps(Imports = "pkgA (>= 2.0.0)")))
   )
 
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -44,10 +35,7 @@ test_that("dependency versions are honored", {
 
 test_that("conflict: different versions required for package", {
   pkgs <- read_fixture("resolution-gh-vs-cran.rds")
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -81,10 +69,7 @@ test_that("standard direct & github indirect is not OK", {
       deps = list(make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA"))),
     `user/pkgA` = list(extra = list(list(remotesha = "badcafe")))
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -99,10 +84,7 @@ test_that("conflict between direct and indirect ref", {
       deps = list(make_fake_deps(Imports = "pkgA", Remotes = "user/pkgA"))),
     `user/pkgA` = list(list(extra = list(sha = "badcafe")))
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_equal(sol$status, 0)
@@ -118,10 +100,7 @@ test_that("version conflict", {
       deps = list(make_fake_deps(Imports = "pkgA (>= 2.0.0), pkgC"))),
     `pkgC` = list()
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
 
@@ -139,10 +118,7 @@ test_that("resolution failure", {
   pkgs <- make_fake_resolution(
     `pkgA` = list(status = "FAILED", direct = TRUE)
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
 
@@ -189,10 +165,7 @@ test_that("failure in non-needed package is ignored", {
     `bb/bb` = list(),
     xx = list()
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1e4)
@@ -206,10 +179,7 @@ test_that("failure in dependency of a non-needed package is ignored", {
     bb = list(status = "FAILED"),
     `bb/bb` = list()
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
   expect_true(sol$objval < 1e4)
@@ -229,10 +199,7 @@ test_that("failure if package needs newer R version", {
     ),
     `pkgC` = list()
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
 
@@ -258,10 +225,7 @@ test_that("failure if dependency needs newer R version", {
     ),
     `pkgC` = list()
   )
-  config <- utils::modifyList(
-    pkgplan_default_config(),
-    list(platforms = c("macos", "source"))
-  )
+  config <- current_config()$set("platforms", c("macos", "source"))
   lp <- pkgplan_i_create_lp_problem(pkgs, config = config, policy = "lazy")
   sol <- pkgplan_i_solve_lp_problem(lp)
 

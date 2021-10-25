@@ -3,7 +3,7 @@
 #'
 #' The [`pkg_download_proposal`] and [`pkg_installation_proposal`] classes
 #' both have download methods, to downloads package files into a
-#' configured directory (see ['Configuration'][pkg_config]).
+#' configured directory (see ['Configuration'][pkgdepends-config]).
 #'
 #' They return a `pkg_download_result` object, which is a data frame
 #' (tibble), that adds extra columns to [`pkg_resolution_result`] (for
@@ -162,8 +162,8 @@ download_remote <- function(res, config, cache, which,
                             on_progress = NULL, remote_types = NULL) {
   remote_types <- c(default_remote_types(), remote_types)
   dl <- remote_types[[res$type]]$download %||% type_default_download
-  target <- file.path(config$cache_dir, res$target)
-  target_tree <- file.path(config$cache_dir, paste0(res$target, "-t"))
+  target <- file.path(config$get("cache_dir"), res$target)
+  target_tree <- file.path(config$get("cache_dir"), paste0(res$target, "-t"))
   mkdirp(dirname(target))
   async(dl)(res, target, target_tree, config,
     cache = cache, which = which, on_progress = on_progress)$

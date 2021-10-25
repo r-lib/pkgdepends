@@ -1,7 +1,7 @@
 
 #' @param lockfile Path to the lock file to use.
 #' @param config Configuration options, a named list. See
-#'  ['Configuration'][pkg_config]. If it does not include `library`, then
+#'  ['Configuration'][pkgdepends-config]. If it does not include `library`, then
 #'  `.libPaths()[1]` is added as `library`.
 #' @param ... Additional arguments, passed to
 #'   [`pkg_installation_plan$new()`](#method-new).
@@ -13,7 +13,7 @@
 
 new_pkg_installation_plan <- function(lockfile = "pkg.lock",
                                       config = list(), ...) {
-  config$library = config$library %||% .libPaths()[[1]]
+  config$library <- config$library %||% .libPaths()[[1]]
   pkg_installation_plan$new(lockfile, config = config, ...)
 }
 
@@ -46,8 +46,8 @@ pkg_installation_plan <- R6::R6Class(
     #' packages, according to the plan.
     #'
     #' @param lockfile Path to the lock file to use.
-    #' @param config Configuration options, a named list. See
-    #'   ['Configuration'][pkg_config]. It needs to include the package
+    #' @param config Configuration options. See
+    #'   ['Configuration'][pkgdepends-config]. It needs to include the package
     #'   library to install to, in `library`.
     #' @param remote_types Custom remote ref types, this is for advanced
     #'   use, and experimental currently.
@@ -57,12 +57,12 @@ pkg_installation_plan <- R6::R6Class(
       config = list(),
       remote_types = NULL
       ) {
-      assert_that(is_path(config$library))
-      private$library <- config$library
+      assert_that(is_path(config$get("library")))
+      private$library <- config$get("library")
       private$plan <- pkg_plan$new(
         lockfile = lockfile,
         config = config,
-        library = config$library,
+        library = config$get("library"),
         remote_types = remote_types
       )
     },

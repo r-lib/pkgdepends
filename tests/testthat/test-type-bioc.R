@@ -16,7 +16,7 @@ test_that("resolve_remote", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- pkgplan_default_config()
+  conf <- current_config()
   cache <- list(package = NULL,
                 metadata = pkgcache::get_cranlike_metadata_cache())
 
@@ -42,7 +42,7 @@ test_that("failed resolution", {
   skip_if_offline()
   skip_on_cran()
 
-  conf <- pkgplan_default_config()
+  conf <- current_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
   ref <- paste0("bioc::", basename(tempfile()))
@@ -74,7 +74,7 @@ test_that("download_remote", {
   dir.create(tmp2 <- tempfile())
   on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
 
-  conf <- pkgplan_default_config()
+  conf <- current_config()
   conf$platforms <- "macos"
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2

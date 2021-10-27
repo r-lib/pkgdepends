@@ -221,8 +221,7 @@ use, and experimental currently.</p></dd>
 <p><div class="r"></p><pre><span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>Named list. See <a href='pkg_config.html'>'Configuration'</a> for the configuration
-options.</p>
+<p>See <a href='pkg_config.html'>'Configuration'</a> for the configuration entries.</p>
 <p><hr>
 <a id="method-resolve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>resolve()</code></h3>
 <p>Resolve the dependencies of the specified package references. This
@@ -369,18 +368,52 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 </div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='co'># Method get_config()</span>
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; + config:
-#&gt;   - library: /tmp/RtmpkWsJ6I/file36e4705c82f
-#&gt;   - cache_dir: /tmp/RtmpkWsJ6I/file36e452c63dc0
-#&gt;   - package_cache_dir: &lt;default&gt;
-#&gt;   - metadata_cache_dir: /tmp/RtmpkWsJ6I/file36e4692a9bd0
-#&gt;   - platforms: x86_64-pc-linux-gnu-ubuntu-20.04, source
-#&gt;   - windows-archs: both
-#&gt;   - cran-mirror: https://cloud.r-project.org
-#&gt;   - dependencies: direct: Depends, Imports, LinkingTo, indirect: Depends, Imports, LinkingTo
-#&gt;   - r-versions: 4.1.1
-#&gt;   - build-vignettes: FALSE
-#&gt;   - metadata-update-after: 24 hours</div><div class='input'><span class='co'># Method resolve()</span>
+</div><div class='output co'>#&gt; # pkg config
+#&gt; ## build_vignettes
+#&gt; &lt;default&gt;
+#&gt; [1] FALSE
+#&gt; 
+#&gt; ## package_cache_dir
+#&gt; &lt;default&gt;
+#&gt; NULL
+#&gt; 
+#&gt; ## metadata_cache_dir
+#&gt; &lt;default&gt;
+#&gt; [1] "/tmp/RtmpfmvT2R/file2bca62132084"
+#&gt; 
+#&gt; ## dependencies
+#&gt; &lt;default&gt;
+#&gt; [1] "Depends"   "Imports"   "LinkingTo"
+#&gt; 
+#&gt; ## platforms
+#&gt; &lt;default&gt;
+#&gt; [1] "x86_64-pc-linux-gnu-ubuntu-20.04" "source"                          
+#&gt; 
+#&gt; ## library
+#&gt; &lt;set&gt;
+#&gt; [1] "/tmp/RtmpfmvT2R/file2bca3307ab10"
+#&gt; 
+#&gt; ## metadata_update_after
+#&gt; &lt;default&gt;
+#&gt; Time difference of 24 hours
+#&gt; 
+#&gt; ## windows_archs
+#&gt; &lt;default&gt;
+#&gt; [1] "both"
+#&gt; 
+#&gt; ## cran_mirror
+#&gt; &lt;default&gt;
+#&gt;                          CRAN 
+#&gt; "https://cloud.r-project.org" 
+#&gt; 
+#&gt; ## cache_dir
+#&gt; &lt;default&gt;
+#&gt; [1] "/tmp/RtmpfmvT2R/file2bca4e1cccff"
+#&gt; 
+#&gt; ## r_versions
+#&gt; &lt;default&gt;
+#&gt; [1] "4.1.1"
+#&gt; </div><div class='input'><span class='co'># Method resolve()</span>
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
 <span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Updated metadata database: 3.17 MB in 7 files.</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Updating metadata database</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Updating metadata database ... done</span></div><div class='output co'>#&gt; </div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>

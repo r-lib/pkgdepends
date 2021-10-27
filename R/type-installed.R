@@ -80,10 +80,17 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
   pkgs$status <- rep("OK", nrow(pkgs))
   built <- parse_built(inst$built)
   pkgs$rversion <- built$R
+  pkgs$platform <- built$Platform
+
+  # This is usually a broken installation, but 'Built' is also missing
+  # for the core translations package
+  pkgs$rversion[is.na(pkgs$rversion)] <- current_r_version()
+  pkgs$platform[is.na(pkgs$platform)] <- current_r_platform()
 
   # On Windows, we need to check the Archs field
-  pkgs$platform <- built$Platform
-  winbin <- pkgs$platform != "" & built$OStype == "windows"
+  winbin <- pkgs$platform != "" &
+    !is.na(built$OStype) &
+    built$OStype == "windows"
   if (any(winbin)) {
     archs <- gsub(" ", "", inst$archs[winbin])
     pkgs$platform[winbin] <- ifelse(

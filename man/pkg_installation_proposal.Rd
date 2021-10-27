@@ -12,7 +12,7 @@ new_pkg_installation_proposal(refs, config = list(), ...)
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{config}{Configuration options, a named list. See
-\link[=pkg_config]{'Configuration'}. If it does not include \code{library}, then
+\link[=pkgdepends-config]{'Configuration'}. If it does not include \code{library}, then
 \code{.libPaths()[1]} is added as \code{library}.}
 
 \item{...}{Additional arguments, passed to
@@ -290,7 +290,7 @@ the package files.
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{\code{config}}{Configuration options, a named list. See
-\link[=pkg_config]{'Configuration'}. It needs to include the package
+\link[=pkgdepends-config]{'Configuration'}. It needs to include the package
 library to install to, in \code{library}.}
 
 \item{\code{policy}}{Solution policy. See \link[=pkg_solution]{'The dependency solver'}.}
@@ -321,13 +321,13 @@ A character vector of package refs that were used to create the
 \if{latex}{\out{\hypertarget{method-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_installation_proposal} object. See
-\link[=pkg_config]{'Configuration'} for details.
+\link[=pkgdepends-config]{'Configuration'} for details.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_config()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Named list. See \link[=pkg_config]{'Configuration'} for the configuration
+Named list. See \link[=pkgdepends-config]{'Configuration'} for the configuration
 options.
 }
 }

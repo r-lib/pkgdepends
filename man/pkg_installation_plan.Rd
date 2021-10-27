@@ -11,7 +11,7 @@ new_pkg_installation_plan(lockfile = "pkg.lock", config = list(), ...)
 \item{lockfile}{Path to the lock file to use.}
 
 \item{config}{Configuration options, a named list. See
-\link[=pkg_config]{'Configuration'}. If it does not include \code{library}, then
+\link[=pkgdepends-config]{'Configuration'}. If it does not include \code{library}, then
 \code{.libPaths()[1]} is added as \code{library}.}
 
 \item{...}{Additional arguments, passed to
@@ -92,8 +92,8 @@ packages, according to the plan.
 \describe{
 \item{\code{lockfile}}{Path to the lock file to use.}
 
-\item{\code{config}}{Configuration options, a named list. See
-\link[=pkg_config]{'Configuration'}. It needs to include the package
+\item{\code{config}}{Configuration options. See
+\link[=pkgdepends-config]{'Configuration'}. It needs to include the package
 library to install to, in \code{library}.}
 
 \item{\code{remote_types}}{Custom remote ref types, this is for advanced

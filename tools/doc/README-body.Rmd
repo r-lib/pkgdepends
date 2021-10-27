@@ -154,7 +154,7 @@ import installation plans that were created by other tools. See
 The details of [`pkg_deps`][pkg_deps],
 [`pkg_download_proposal`][pkg_download_proposal] and
 [`pkg_installation_proposal`][pkg_installation_proposal] can be tuned with
-a list of configuration options. See ["Configuration"][pkg_config] for
+a list of configuration options. See ["Configuration"][pkgdepends-config] for
 details.
 
 # Related

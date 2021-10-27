@@ -49,9 +49,6 @@ on_failure(is_path_or_null) <- function(call, env) {
   paste0(deparse(call$x), " must be a path or NULL")
 }
 
-## is_valid_config is in remotes.R, as the configuration parameters
-## are there
-
 all_named <- function(x) {
   length(names(x)) == length(x) && all(names(x) != "")
 }

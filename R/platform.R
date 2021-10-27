@@ -4,7 +4,7 @@
 #'
 #' By default pkgdepends works with source packages and binary packages for
 #' the current platform. You can change this, see
-#' ['Configuration'][pkg_config].
+#' ['Configuration'][pkgdepends-config].
 #'
 #' The following platform names can be configured and returned by
 #' `current_r_platform()` and `default_platforms()`:

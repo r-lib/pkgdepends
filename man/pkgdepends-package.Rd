@@ -56,54 +56,49 @@ See \link[=pkg_refs]{“Package references”} for details.
 Dependencies of the development version of the cli package:\if{html}{\out{<div class="sourceCode r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
-}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.1.1.9000 [new][bld][cmp][dl] (unknown size)
-#> +-assertthat 0.2.1 [new][dl] (52.47 kB)
-#> +-callr 3.5.1 [new]
-#> | +-processx 3.4.4 [new]
-#> | | +-ps 1.4.0 [new]
-#> | | \-R6 2.5.0 [new]
+}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.2.2.9000 [new][bld][cmp][dl] (unknown size)
+#> +-assertthat 0.2.1 [new][dl] (52.72 kB)
+#> +-callr 3.7.0 [new][dl] (438.14 kB)
+#> | +-processx 3.5.2 [new][dl] (296.19 kB)
+#> | | +-ps 1.6.0 [new][dl] (285.82 kB)
+#> | | \-R6 2.5.1 [new]
 #> | \-R6
-#> +-cli 2.1.0 [new]
-#> | +-assertthat
-#> | +-crayon 1.3.4 [new][dl] (748.25 kB)
-#> | +-glue 1.4.2 [new]
-#> | \-fansi 0.4.1 [new][dl] (210.40 kB)
-#> +-curl 4.3 [new][dl] (741.06 kB)
-#> +-digest 0.6.27 [new]
-#> +-filelock 1.0.2 [new][dl] (26.67 kB)
+#> +-cli 3.0.1 [new]
+#> | \-glue 1.4.2 [new][dl] (139.16 kB)
+#> +-curl 4.3.2 [new][dl] (861.98 kB)
+#> +-digest 0.6.28 [new]
+#> +-filelock 1.0.2 [new][dl] (26.72 kB)
 #> +-glue
-#> +-prettyunits 1.1.1 [new][dl] (34.79 kB)
+#> +-jsonlite 1.7.2 [new][dl] (492.02 kB)
+#> +-prettyunits 1.1.1 [new][dl] (34.71 kB)
 #> +-R6
 #> +-processx
-#> +-rappdirs 0.3.1 [new][dl] (145.56 kB)
-#> +-rlang 0.4.8 [new]
-#> +-tibble 3.0.4 [new]
-#> | +-cli
-#> | +-crayon
-#> | +-ellipsis 0.3.1 [new][dl] (33.48 kB)
+#> +-rappdirs 0.3.3 [new][dl] (45.54 kB)
+#> +-rlang 0.4.12 [new][dl] (1.33 MB)
+#> +-tibble 3.1.5 [new]
+#> | +-ellipsis 0.3.2 [new][dl] (36.44 kB)
 #> | | \-rlang
-#> | +-fansi
-#> | +-lifecycle 0.2.0 [new][dl] (91.64 kB)
+#> | +-fansi 0.5.0 [new][dl] (237.78 kB)
+#> | +-lifecycle 1.0.1 [new]
 #> | | +-glue
 #> | | \-rlang
-#> | +-magrittr 2.0.1 [new][dl] (unknown size)
-#> | +-pillar 1.4.6 [new]
+#> | +-magrittr 2.0.1 [new][dl] (224.79 kB)
+#> | +-pillar 1.6.4 [new][dl] (1.03 MB)
 #> | | +-cli
-#> | | +-crayon
+#> | | +-crayon 1.4.1 [new][dl] (139.48 kB)
 #> | | +-ellipsis
 #> | | +-fansi
 #> | | +-lifecycle
 #> | | +-rlang
-#> | | +-utf8 1.1.4 [new][dl] (195.28 kB)
-#> | | \-vctrs 0.3.5 [new][dl] (unknown size)
+#> | | +-utf8 1.2.2 [new]
+#> | | \-vctrs 0.3.8 [new][dl] (1.41 MB)
 #> | |   +-ellipsis
-#> | |   +-digest
 #> | |   +-glue
 #> | |   \-rlang
-#> | +-pkgconfig 2.0.3 [new][dl] (17.63 kB)
+#> | +-pkgconfig 2.0.3 [new][dl] (17.80 kB)
 #> | +-rlang
 #> | \-vctrs
-#> \-uuid 0.1-4 [new][dl] (27.75 kB)
+#> \-uuid 0.1-4 [new][dl] (27.79 kB)
 #> 
 #> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 }
@@ -166,7 +161,7 @@ The details of \code{\link{pkg_deps}},
 \code{\link{pkg_download_proposal}} and
 \code{\link{pkg_installation_proposal}} can be tuned
 with a list of configuration options. See
-\link[=pkg_config]{“Configuration”} for details.
+\link[=pkgdepends-config]{“Configuration”} for details.
 }
 }
 

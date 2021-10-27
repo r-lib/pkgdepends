@@ -114,9 +114,9 @@ type_url_rx <- function() {
 type_url_tempdir <- function(remote, config) {
   base <- basename(remote$url)
   filename <- paste0(substr(remote$hash, 1, 7), "-", basename(remote$url))
-  archive <- file.path(config$cache_dir, filename)
-  extract <- file.path(config$cache_dir, paste0(filename, "-t"))
-  ok <- file.path(config$cache_dir, paste0(filename, "-ok"))
+  archive <- file.path(config$get("cache_dir"), filename)
+  extract <- file.path(config$get("cache_dir"), paste0(filename, "-t"))
+  ok <- file.path(config$get("cache_dir"), paste0(filename, "-ok"))
   list(
     archive = archive,
     extract = extract,

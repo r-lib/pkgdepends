@@ -1,7 +1,7 @@
 
 test_that("pkgplan_i_create_lp_init", {
   pkgs <- read_fixture("resolution-simple.rds")
-  config <- pkgplan_default_config()
+  config <- current_config()
   lp <- pkgplan_i_lp_init(pkgs, config, policy = "lazy")
   expect_equal(lp$num_candidates, 2)
   expect_equal(lp$num_direct, 1)
@@ -17,7 +17,7 @@ test_that("pkgplan_i_create_lp_init", {
 
 test_that("pkgplan_i_lp_objectives lazy policy", {
   pkgs <- read_fixture("resolution-simple.rds")
-  config <- pkgplan_default_config()
+  config <- current_config()
   lp0 <- pkgplan_i_lp_init(pkgs, config, policy = "lazy")
   lp <- pkgplan_i_lp_objectives(lp0)
   expect_equal(lp0[setdiff(names(lp0), "obj")], lp[setdiff(names(lp), "obj")])
@@ -32,7 +32,7 @@ test_that("pkgplan_i_lp_objectives upgrade policy", {
 
 test_that("pkgplan_i_lp_no_multiples", {
   pkgs <- read_fixture("resolution-progress.rds")
-  config <- pkgplan_default_config()
+  config <- current_config()
   lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_no_multiples(lp)
   expect_equal(
@@ -57,7 +57,7 @@ test_that("pkgplan_i_lp_no_multiples", {
 
 test_that("pkgplan_i_lp_satisfy_direct", {
   pkgs <- read_fixture("resolution-gh-vs-cran.rds")
-  config <- pkgplan_default_config()
+  config <- current_config()
   lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_satisfy_direct(lp)
   expect_equal(
@@ -86,7 +86,7 @@ test_that("pkgplan_i_lp_prefer_binaries", {
 
 test_that("pkgplan_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
-  config <- pkgplan_default_config()
+  config <- current_config()
   lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_dependencies(lp)
   expect_equal(length(lp$conds), 32)
@@ -98,7 +98,7 @@ test_that("pkgplan_i_lp_dependencies", {
 
 test_that("pkgplan_i_lp_rversion", {
   pkgs <- read_fixture("resolution-progress.rds")
-  config <- pkgplan_default_config()
+  config <- current_config()
   lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_rversion(lp, "3.1.3")
   fmt <- format(lp)

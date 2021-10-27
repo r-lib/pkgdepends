@@ -25,7 +25,7 @@ R session, and \code{"source"}, for source packages.
 
 By default pkgdepends works with source packages and binary packages for
 the current platform. You can change this, see
-\link[=pkg_config]{'Configuration'}.
+\link[=pkgdepends-config]{'Configuration'}.
 
 The following platform names can be configured and returned by
 \code{current_r_platform()} and \code{default_platforms()}:

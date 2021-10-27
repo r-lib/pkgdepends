@@ -118,7 +118,9 @@ pkgplan_async_resolve <- function(self, private) {
   private$dirty <- TRUE
   private$resolution <- new_resolution(
     config = private$config, cache = private$cache,
-    library = private$config$library, remote_types = private$remote_types)
+    library = private$config$get("library"),
+    remote_types = private$remote_types
+  )
 
   private$resolution$push(direct = TRUE, .list = private$remotes)
 
@@ -195,7 +197,7 @@ res_init <- function(self, private, config, cache, library,
   private$library <- library
   private$remote_types <- remote_types %||% default_remote_types()
   private$metadata <- list(resolution_start = Sys.time())
-  private$dependencies <- as_pkg_dependencies(config$dependencies)
+  private$dependencies <- as_pkg_dependencies(config$get("dependencies"))
   private$bar <- private$create_progress_bar()
 
   self$result <- res_make_empty_df()

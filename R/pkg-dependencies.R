@@ -51,7 +51,7 @@ pkg_deps <- R6::R6Class(
     #' @param refs Package names or references. See
     #'   ['Package references'][pkg_refs] for the syntax.
     #' @param config Configuration options, a named list. See
-    #'   ['Configuration'][pkg_config].
+    #'   ['Configuration'][pkgdepends-config].
     #' @param policy Solution policy. See ['The dependency
     #'   solver'][pkg_solution].
     #' @param remote_types Custom remote ref types, this is for advanced
@@ -97,11 +97,10 @@ pkg_deps <- R6::R6Class(
 
     #' @description
     #' Configuration options for the `pkg_deps` object. See
-    #' ['Configuration'][pkg_config] for details.
+    #' ['Configuration'][pkgdepends-config] for details.
     #'
     #' @return
-    #' Named list. See ['Configuration'][pkg_config] for the configuration
-    #' options.
+    #' See ['Configuration'][pkgdepends-config] for the configuration entries.
     #'
     #' @examplesIf pkgdepends:::is_online()
     #' # Method get_config()

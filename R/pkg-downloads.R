@@ -56,7 +56,7 @@ pkg_download_proposal <- R6::R6Class(
     #' @param refs Package names or references. See
     #'   ['Package references'][pkg_refs] for the syntax.
     #' @param config Configuration options, a named list. See
-    #'   ['Configuration'][pkg_config].
+    #'   ['Configuration'][pkgdepends-config].
     #' @param remote_types Custom remote ref types, this is for advanced
     #'   use, and experimental currently.
     #'
@@ -88,10 +88,10 @@ pkg_download_proposal <- R6::R6Class(
 
     #' @description
     #' Configuration options for the `pkg_download_proposal` object. See
-    #' ['Configuration'][pkg_config] for details.
+    #' ['Configuration'][pkgdepends-config] for details.
     #'
     #' @return
-    #' Named list. See ['Configuration'][pkg_config] for the configuration
+    #' Named list. See ['Configuration'][pkgdepends-config] for the configuration
     #' options.
     #'
     #' @examplesIf pkgdepends:::is_online()

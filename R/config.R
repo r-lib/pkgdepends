@@ -118,7 +118,8 @@ config <- local({
 
     env$add <- function(name, type = env$types, default = NULL,
                         check = type[1], env_decode = type[1]) {
-      type <- match.arg(type)
+      # Need to explicitly add `env$types` on R 3.4.x
+      type <- match.arg(type, env$types)
       stopifnot(
         is_string(name),
         is_string(check) || is.function(check) || is.null(check),

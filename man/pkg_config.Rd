@@ -9,9 +9,7 @@
 current_config()
 }
 \description{
-Configuration entries for several pkgdepends classes. Not all classes
-use all entries. E.g. a \code{\link{pkg_download_proposal}} is not concerned about
-package libraries, so it'll ignore the \code{library} configuration entry.
+Configuration entries for several pkgdepends classes.
 }
 \details{
 pkgdepends configuration is set from several source. They are, in the
@@ -27,6 +25,10 @@ entry. E.g. \code{pkg.platforms}.
 uppercase. E.g. \code{PKG_PLATFORMS}.
 \item Default values.
 }
+
+Not all classes use all entries. E.g. a \code{\link{pkg_download_proposal}} is not
+concerned about package libraries, so it'll ignore the \code{library}
+configuration entry.
 
 Call \code{current_config()} to print the current configuration.
 }

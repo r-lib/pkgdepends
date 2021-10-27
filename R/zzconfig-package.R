@@ -34,9 +34,7 @@ env_decode_difftime <- function(x, name) {
 #' @aliases pkgdepends-config
 #'
 #' @description
-#' Configuration entries for several pkgdepends classes. Not all classes
-#' use all entries. E.g. a [`pkg_download_proposal`] is not concerned about
-#' package libraries, so it'll ignore the `library` configuration entry.
+#' Configuration entries for several pkgdepends classes.
 #'
 #' @export
 #' @details
@@ -51,6 +49,10 @@ env_decode_difftime <- function(x, name) {
 #'   `PKG_` prefix, plus the name of the pkgdepends configuration entry, in
 #'   uppercase. E.g. `PKG_PLATFORMS`.
 #' * Default values.
+#'
+#' Not all classes use all entries. E.g. a [`pkg_download_proposal`] is not
+#' concerned about package libraries, so it'll ignore the `library`
+#' configuration entry.
 #'
 #' Call `current_config()` to print the current configuration.
 #'

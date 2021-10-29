@@ -166,7 +166,16 @@ omit_cols <- function(df, omit) {
 }
 
 same_sha <- function(s1, s2) {
-  assert_that(is_string(s1), is_string(s2))
+  assert_that(
+    is.character(s1), length(s1) == 1,
+    is.character(s2), length(s2) == 1
+  )
+  if (is.na(s1) || is.na(s2)) return(FALSE)
+  assert_that(
+    is_string(s1),
+    is_string(s2)
+  )
+
   len <- min(nchar(s1), nchar(s2))
   substr(s1, 1, len) == substr(s2, 1, len)
 }

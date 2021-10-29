@@ -60,8 +60,8 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
     "Package", "Title", "Version", "Depends", "Suggests", "Imports",
     "LinkingTo", "Enhances", "Built", "MD5sum", "NeedsCompilation",
     "Platform", "License", "Priority", "Repository", "biocViews",
-    grep("^Remote", all_fields, value = TRUE),
-    grep("^Config/Needs/", all_fields, value = TRUE)
+    grep("^remote", all_fields, value = TRUE),
+    grep("^config/needs/", all_fields, value = TRUE)
   )))
 
   miss <- setdiff(fields, names(inst))

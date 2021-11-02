@@ -181,31 +181,32 @@ to make sure it is not a profanity.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>pkg_name_check</span><span class='op'>(</span><span class='st'>"cli"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #BBBB00;'>╔══════════════════════════════════════════════════════════════════════════════╗</span>
-#&gt; <span style='color: #BBBB00;'>║</span>                                  <span style='color: #BBBB00;'>–*–</span> <span style='color: #0000BB; font-weight: bold;'>cli</span> <span style='color: #BBBB00;'>–*–</span>                                 <span style='color: #BBBB00;'>║</span>
-#&gt; <span style='color: #BBBB00;'>╚══════════════════════════════════════════════════════════════════════════════╝</span>
-#&gt; <span style='color: #555555;'>┌──────────────────────────────────────────────────────────────────────────────┐</span>
-#&gt; <span style='color: #555555;'>│</span> <span style='color: #00BB00;'>✔</span>  valid name      <span style='color: #BB0000;'>✖</span>  CRAN            <span style='color: #00BB00;'>✔</span>  Bioconductor    <span style='color: #00BB00;'>✔</span>  not a profanity  <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span>
-#&gt; <span style='color: #555555;'>┌ </span><span style='color: #00BB00;'>Wikipedia</span><span style='color: #555555;'> ───────────────────────────────────────────────────────────────────┐</span>
-#&gt; <span style='color: #555555;'>│</span> <span style='text-decoration: underline;'>CLI</span> (from Cli) CLI may refer to multiple articles, see link.                 <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>└─────────────────────────────────────────── </span><span style='color: #0000BB;'>https://en.wikipedia.org/wiki/CLI</span><span style='color: #555555;'> ┘</span>
-#&gt; <span style='color: #555555;'>┌ </span><span style='color: #00BB00;'>Wiktionary</span><span style='color: #555555;'> ──────────────────────────────────────────────────────────────────┐</span>
-#&gt; <span style='color: #555555;'>│</span> <span style='text-decoration: underline;'>cli</span> No English definition found                                              <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>└────────────────────────────────────────────────────────────────────────────  ┘</span>
-#&gt; <span style='color: #555555;'>┌ </span><span style='color: #00BB00;'>Acroynms (from Acromine)</span><span style='color: #555555;'> ────────────────────────────────────────────────────┐</span>
-#&gt; <span style='color: #555555;'>│</span> 1. critical limb ischemia (228)                                              <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>│</span> 2. lithium clearance (63)                                                    <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>│</span> 3. critical leg ischaemia (43)                                               <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>│</span> 4. clindamycin (21)                                                          <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>│</span> 5. clomipramine (14)                                                         <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>│</span> 6. central lymphatic irradiation (10)                                        <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>│</span> …                                                                            <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span>
-#&gt; <span style='color: #555555;'>┌──────────────────────────────────────────────────────────────────────────────┐</span>
-#&gt; <span style='color: #555555;'>│</span> Sentiment: :|<span style='color: #555555;'> (0)</span>                                                            <span style='color: #555555;'>│</span>
-#&gt; <span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span></div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>pkg_name_check</span><span class='op'>(</span><span class='st'>"cli"</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BBBB00;'>╔══════════════════════════════════════════════════════════════════════════════╗</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BBBB00;'>║</span>                                  <span style='color: #BBBB00;'>–*–</span> <span style='color: #0000BB; font-weight: bold;'>cli</span> <span style='color: #BBBB00;'>–*–</span>                                 <span style='color: #BBBB00;'>║</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BBBB00;'>╚══════════════════════════════════════════════════════════════════════════════╝</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>┌──────────────────────────────────────────────────────────────────────────────┐</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> <span style='color: #00BB00;'>✔</span>  valid name      <span style='color: #BB0000;'>✖</span>  CRAN            <span style='color: #00BB00;'>✔</span>  Bioconductor    <span style='color: #00BB00;'>✔</span>  not a profanity  <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>┌ </span><span style='color: #00BB00;'>Wikipedia</span><span style='color: #555555;'> ───────────────────────────────────────────────────────────────────┐</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> <span style='text-decoration: underline;'>CLI</span> (from Cli) CLI may refer to multiple articles, see link.                 <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>└─────────────────────────────────────────── </span><span style='color: #0000BB;'>https://en.wikipedia.org/wiki/CLI</span><span style='color: #555555;'> ┘</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>┌ </span><span style='color: #00BB00;'>Wiktionary</span><span style='color: #555555;'> ──────────────────────────────────────────────────────────────────┐</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> <span style='text-decoration: underline;'>cli</span> No English definition found                                              <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>└────────────────────────────────────────────────────────────────────────────  ┘</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>┌ </span><span style='color: #00BB00;'>Acroynms (from Acromine)</span><span style='color: #555555;'> ────────────────────────────────────────────────────┐</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> 1. critical limb ischemia (228)                                              <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> 2. lithium clearance (63)                                                    <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> 3. critical leg ischaemia (43)                                               <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> 4. clindamycin (21)                                                          <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> 5. clomipramine (14)                                                         <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> 6. central lymphatic irradiation (10)                                        <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> …                                                                            <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>┌──────────────────────────────────────────────────────────────────────────────┐</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>│</span> Sentiment: :|<span style='color: #555555;'> (0)</span>                                                            <span style='color: #555555;'>│</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #555555;'>└──────────────────────────────────────────────────────────────────────────────┘</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

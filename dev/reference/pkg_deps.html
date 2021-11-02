@@ -355,266 +355,288 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Method initialize()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; (use `$resolve()` to resolve dependencies)
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'><span class='co'># Method get_refs()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "pak"      "jsonlite"</div><div class='input'><span class='co'># Method get_config()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; # pkg config
-#&gt; ## build_vignettes
-#&gt; &lt;default&gt;
-#&gt; [1] FALSE
-#&gt; 
-#&gt; ## package_cache_dir
-#&gt; &lt;default&gt;
-#&gt; NULL
-#&gt; 
-#&gt; ## metadata_cache_dir
-#&gt; &lt;default&gt;
-#&gt; [1] "/tmp/RtmpBSV8f5/file2b8b3ef30d69"
-#&gt; 
-#&gt; ## dependencies
-#&gt; &lt;default&gt;
-#&gt; [1] "Depends"   "Imports"   "LinkingTo"
-#&gt; 
-#&gt; ## platforms
-#&gt; &lt;default&gt;
-#&gt; [1] "x86_64-pc-linux-gnu-ubuntu-20.04" "source"                          
-#&gt; 
-#&gt; ## library
-#&gt; &lt;set&gt;
-#&gt; [1] "/tmp/RtmpBSV8f5/file2b8b76e867ba"
-#&gt; 
-#&gt; ## metadata_update_after
-#&gt; &lt;default&gt;
-#&gt; Time difference of 24 hours
-#&gt; 
-#&gt; ## windows_archs
-#&gt; &lt;default&gt;
-#&gt; [1] "both"
-#&gt; 
-#&gt; ## cran_mirror
-#&gt; &lt;default&gt;
-#&gt;                          CRAN 
-#&gt; "https://cloud.r-project.org" 
-#&gt; 
-#&gt; ## cache_dir
-#&gt; &lt;default&gt;
-#&gt; [1] "/tmp/RtmpBSV8f5/file2b8b47fbfdec"
-#&gt; 
-#&gt; ## r_versions
-#&gt; &lt;default&gt;
-#&gt; [1] "4.1.1"
-#&gt; </div><div class='input'><span class='co'># Method resolve()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Updated metadata database: 3.17 MB in 7 files.</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Updating metadata database</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Updating metadata database ... done</span></div><div class='output co'>#&gt; </div><div class='input'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 84 × 29</span>
-#&gt;    ref    type  direct directpkg status package version license needscompilation
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           
-#&gt; <span style='color: #BCBCBC;'> 1</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 2</span> asser… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           
-#&gt; <span style='color: #BCBCBC;'> 3</span> base6… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 4</span> callr  stan… FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 5</span> cli    stan… FALSE  FALSE     OK     cli     3.0.1   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 6</span> cliapp stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 7</span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 8</span> curl   stan… FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 9</span> desc   stan… FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'>10</span> digest stan… FALSE  FALSE     OK     digest  0.6.28  GPL (&gt;… TRUE            
-#&gt; <span style='color: #949494;'># … with 74 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;chr&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span>
-#&gt; <span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span></div><div class='input'><span class='co'># Method get_resolution()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 66 × 29</span>
-#&gt;    ref    type  direct directpkg status package version license needscompilation
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           
-#&gt; <span style='color: #BCBCBC;'> 1</span> r-lib… gith… TRUE   TRUE      OK     pkgdep… 0.1.2.… MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 2</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 3</span> callr  stan… FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 4</span> cli    stan… FALSE  FALSE     OK     cli     3.0.1   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 5</span> crayon stan… FALSE  FALSE     OK     crayon  1.4.1   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 6</span> curl   stan… FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 7</span> desc   stan… FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           
-#&gt; <span style='color: #BCBCBC;'> 8</span> ellip… stan… FALSE  FALSE     OK     ellips… 0.3.2   MIT + … TRUE            
-#&gt; <span style='color: #BCBCBC;'> 9</span> fansi  stan… FALSE  FALSE     OK     fansi   0.5.0   GPL (&gt;… TRUE            
-#&gt; <span style='color: #BCBCBC;'>10</span> filel… stan… FALSE  FALSE     OK     filelo… 1.0.2   MIT + … TRUE            
-#&gt; <span style='color: #949494;'># … with 56 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;glue&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span>
-#&gt; <span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span></div><div class='input'><span class='co'># Method get_solve_policy()</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "upgrade"</div><div class='input'><span class='co'># Method set_solve_policy()</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "upgrade"</div><div class='input'><span class='co'># Method solve()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;pkg_solution&gt;
-#&gt; + result: OK
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; + constraints (140):
-#&gt;   - select pkgdepends exactly once
-#&gt;   - select R6 at most once
-#&gt;   - select callr at most once
-#&gt;   - select cli at most once
-#&gt;   - select crayon at most once
-#&gt;   - select curl at most once
-#&gt;   - select desc at most once
-#&gt;   - select ellipsis at most once
-#&gt;   - select fansi at most once
-#&gt;   - select filelock at most once
-#&gt;   ...
-#&gt; + solution:
-#&gt;   - assertthat
-#&gt;   - callr
-#&gt;   - cli
-#&gt;   - crayon
-#&gt;   - curl
-#&gt;   - desc
-#&gt;   - digest
-#&gt;   - ellipsis
-#&gt;   - fansi
-#&gt;   - filelock
-#&gt;   - glue
-#&gt;   - jsonlite
-#&gt;   - lifecycle
-#&gt;   - lpSolve
-#&gt;   - magrittr
-#&gt;   - pillar
-#&gt;   - pkgbuild
-#&gt;   - pkgconfig
-#&gt;   - prettyunits
-#&gt;   - processx
-#&gt;   - ps
-#&gt;   - r-lib/pkgcache
-#&gt;   - r-lib/pkgdepends
-#&gt;   - R6
-#&gt;   - rappdirs
-#&gt;   - rematch2
-#&gt;   - rlang
-#&gt;   - rprojroot
-#&gt;   - tibble
-#&gt;   - utf8
-#&gt;   - uuid
-#&gt;   - vctrs
-#&gt;   - withr
-#&gt;   - zip</div><div class='input'><span class='co'># Method get_solution()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;pkg_solution&gt;
-#&gt; + result: OK
-#&gt; + refs:
-#&gt;   - pkgload
-#&gt; + constraints (31):
-#&gt;   - select pkgload exactly once
-#&gt;   - select R6 at most once
-#&gt;   - select cli at most once
-#&gt;   - select crayon at most once
-#&gt;   - select desc at most once
-#&gt;   - select glue at most once
-#&gt;   - select rlang at most once
-#&gt;   - select rprojroot at most once
-#&gt;   - select rstudioapi at most once
-#&gt;   - select withr at most once
-#&gt;   ...
-#&gt; + solution:
-#&gt;   - cli
-#&gt;   - crayon
-#&gt;   - desc
-#&gt;   - glue
-#&gt;   - pkgload
-#&gt;   - R6
-#&gt;   - rlang
-#&gt;   - rprojroot
-#&gt;   - rstudioapi
-#&gt;   - withr</div><div class='input'><span class='co'># Method stop_for_solution_error()</span>
-<span class='co'># This is an error, because the packages conflict:</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pak
-#&gt;   - cran::pak
-#&gt; + has resolution (+41 dependencies)
-#&gt; + has solution
-#&gt; x has solution errors
-#&gt; (use `$get_resolution()` to see resolution results)
-#&gt; (use `$show_solution()` to see the dependencies
-#&gt; (use `$get_solution()` to see the full solution results)</div><div class='input'><span class='co'># This fails:</span>
-<span class='co'># pd$stop_for_solution_error()</span>
-<span class='co'># Method draw()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #00BBBB; font-weight: bold; font-style: italic;'>pkgload </span><span style='color: #555555; font-weight: bold; font-style: italic;'>1.2.3</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; ├─cli <span style='color: #555555;'>3.0.1</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; │ └─glue <span style='color: #555555;'>1.4.2</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; ├─crayon <span style='color: #555555;'>1.4.1</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; ├─desc <span style='color: #555555;'>1.4.0</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; │ ├─R6 <span style='color: #555555;'>2.5.1</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; │ ├─crayon
-#&gt; │ └─rprojroot <span style='color: #555555;'>2.0.2</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; ├─rlang <span style='color: #555555;'>0.4.12</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; ├─rprojroot
-#&gt; ├─rstudioapi <span style='color: #555555;'>0.13</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; └─withr <span style='color: #555555;'>2.4.2</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span>
-#&gt; 
-#&gt; Key:  <span style='color: #00BB00;'>[new]</span> new | <span style='color: #00BB00;'>[dl]</span> download | <span style='color: #00BB00;'>[bld]</span> build | <span style='color: #00BB00;'>[cmp]</span> compile</div><div class='input'><span class='co'># Method print()</span>
-<span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; (use `$resolve()` to resolve dependencies)
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; + has resolution (+33 dependencies)
-#&gt; (use `$get_resolution()` to see resolution results)
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
-<span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd</span>
-</div><div class='output co'>#&gt; &lt;pkg_dependencies&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; + has resolution (+33 dependencies)
-#&gt; + has solution
-#&gt; (use `$get_resolution()` to see resolution results)
-#&gt; (use `$show_solution()` to see the dependencies
-#&gt; (use `$get_solution()` to see the full solution results)
-#&gt; (use `$draw()` to draw the dependency tree)</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Method initialize()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='va'>pkg_deps</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_dependencies&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgdepends</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$resolve()` to resolve dependencies)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$solve()` to solve dependencies)</span>
+<span class='r-in'><span class='co'># Method get_refs()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pak"</span>, <span class='st'>"jsonlite"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "pak"      "jsonlite"</span>
+<span class='r-in'><span class='co'># Method get_config()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> # pkg config</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## build_vignettes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] FALSE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## package_cache_dir</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## metadata_cache_dir</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpMPvtlB/file35702c748f93"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## dependencies</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Depends"   "Imports"   "LinkingTo"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## platforms</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "x86_64-pc-linux-gnu-ubuntu-20.04" "source"                          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## library</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;set&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpMPvtlB/file357044a093ef"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## metadata_update_after</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Time difference of 24 hours</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## windows_archs</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "both"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## cran_mirror</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                          CRAN </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "https://cloud.r-project.org" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## cache_dir</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpMPvtlB/file3570b74775b"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## r_versions</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "4.1.2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='co'># Method resolve()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Updated metadata database: 3.18 MB in 7 files.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Updating metadata database</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Updating metadata database ... done</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 84 × 29</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    ref    type  direct directpkg status package version license needscompilation</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 1</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 2</span> asser… stan… FALSE  FALSE     OK     assert… 0.2.1   GPL-3   FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 3</span> base6… stan… FALSE  FALSE     OK     base64… 0.1-3   GPL-2 … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 4</span> callr  stan… FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 5</span> cli    stan… FALSE  FALSE     OK     cli     3.1.0   MIT + … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 6</span> cliapp stan… FALSE  FALSE     OK     cliapp  0.1.1   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 7</span> crayon stan… FALSE  FALSE     OK     crayon  1.4.2   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 8</span> curl   stan… FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 9</span> desc   stan… FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>10</span> digest stan… FALSE  FALSE     OK     digest  0.6.28  GPL (&gt;… TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># … with 74 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;chr&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span></span>
+<span class='r-in'><span class='co'># Method get_resolution()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 66 × 29</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    ref    type  direct directpkg status package version license needscompilation</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 1</span> r-lib… gith… TRUE   TRUE      OK     pkgdep… 0.1.2.… MIT + … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 2</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 3</span> callr  stan… FALSE  FALSE     OK     callr   3.7.0   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 4</span> cli    stan… FALSE  FALSE     OK     cli     3.1.0   MIT + … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 5</span> crayon stan… FALSE  FALSE     OK     crayon  1.4.2   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 6</span> curl   stan… FALSE  FALSE     OK     curl    4.3.2   MIT + … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 7</span> desc   stan… FALSE  FALSE     OK     desc    1.4.0   MIT + … FALSE           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 8</span> ellip… stan… FALSE  FALSE     OK     ellips… 0.3.2   MIT + … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 9</span> fansi  stan… FALSE  FALSE     OK     fansi   0.5.0   GPL (&gt;… TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>10</span> filel… stan… FALSE  FALSE     OK     filelo… 1.0.2   MIT + … TRUE            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># … with 56 more rows, and 20 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   sha256 &lt;chr&gt;, filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;glue&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   sources &lt;list&gt;, remote &lt;list&gt;, error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;,</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'>#   dep_types &lt;list&gt;, params &lt;list&gt;, cache_status &lt;chr&gt;</span></span>
+<span class='r-in'><span class='co'># Method get_solve_policy()</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "lazy"</span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "upgrade"</span>
+<span class='r-in'><span class='co'># Method set_solve_policy()</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "lazy"</span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "upgrade"</span>
+<span class='r-in'><span class='co'># Method solve()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_solution&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + result: OK</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgdepends</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + constraints (139):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select pkgdepends exactly once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select R6 at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select callr at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select cli at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select crayon at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select curl at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select desc at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select ellipsis at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select fansi at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select filelock at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + solution:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - assertthat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - callr</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - cli</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - crayon</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - curl</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - desc</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - digest</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - ellipsis</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - fansi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - filelock</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - glue</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - jsonlite</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - lifecycle</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - lpSolve</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - magrittr</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pillar</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pkgbuild</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pkgconfig</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - prettyunits</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - processx</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - ps</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgcache</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgdepends</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - R6</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - rappdirs</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - rematch2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - rlang</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - rprojroot</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - tibble</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - utf8</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - uuid</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - vctrs</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - withr</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - zip</span>
+<span class='r-in'><span class='co'># Method get_solution()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_solution&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + result: OK</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pkgload</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + constraints (31):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select pkgload exactly once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select R6 at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select cli at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select crayon at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select desc at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select glue at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select rlang at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select rprojroot at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select rstudioapi at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - select withr at most once</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + solution:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - cli</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - crayon</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - desc</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - glue</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pkgload</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - R6</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - rlang</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - rprojroot</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - rstudioapi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - withr</span>
+<span class='r-in'><span class='co'># Method stop_for_solution_error()</span></span>
+<span class='r-in'><span class='co'># This is an error, because the packages conflict:</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_dependencies&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pak</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - cran::pak</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has resolution (+41 dependencies)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has solution</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x has solution errors</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_resolution()` to see resolution results)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$show_solution()` to see the dependencies</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_solution()` to see the full solution results)</span>
+<span class='r-in'><span class='co'># This fails:</span></span>
+<span class='r-in'><span class='co'># pd$stop_for_solution_error()</span></span>
+<span class='r-in'><span class='co'># Method draw()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pkgload"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB; font-weight: bold; font-style: italic;'>pkgload </span><span style='color: #555555; font-weight: bold; font-style: italic;'>1.2.3</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ├─cli <span style='color: #555555;'>3.1.0</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> │ └─glue <span style='color: #555555;'>1.4.2</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ├─crayon <span style='color: #555555;'>1.4.2</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ├─desc <span style='color: #555555;'>1.4.0</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> │ ├─R6 <span style='color: #555555;'>2.5.1</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> │ ├─crayon</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> │ └─rprojroot <span style='color: #555555;'>2.0.2</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ├─rlang <span style='color: #555555;'>0.4.12</span> <span style='color: #00BB00;'>[new][bld][cmp][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ├─rprojroot</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ├─rstudioapi <span style='color: #555555;'>0.13</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> └─withr <span style='color: #555555;'>2.4.2</span> <span style='color: #00BB00;'>[new][bld][dl] </span><span style='color: #555555;'>(unknown size)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Key:  <span style='color: #00BB00;'>[new]</span> new | <span style='color: #00BB00;'>[dl]</span> download | <span style='color: #00BB00;'>[bld]</span> build | <span style='color: #00BB00;'>[cmp]</span> compile</span>
+<span class='r-in'><span class='co'># Method print()</span></span>
+<span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_dependencies&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgdepends</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$resolve()` to resolve dependencies)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$solve()` to solve dependencies)</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_dependencies&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgdepends</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has resolution (+33 dependencies)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_resolution()` to see resolution results)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$solve()` to solve dependencies)</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pd</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_dependencies&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgdepends</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has resolution (+33 dependencies)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has solution</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_resolution()` to see resolution results)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$show_solution()` to see the dependencies</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_solution()` to see the full solution results)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$draw()` to draw the dependency tree)</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

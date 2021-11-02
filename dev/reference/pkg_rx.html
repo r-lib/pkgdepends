@@ -143,40 +143,41 @@ base::grep()." />
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>pkg_rx</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $pkg_name
-#&gt; [1] "[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9]"
-#&gt; 
-#&gt; $type_cran
-#&gt; [1] "^(?:cran::)?(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])(?:@(?:(?:(?&lt;atleast&gt;&gt;=)?(?&lt;version&gt;[0-9]+[-\\.][0-9]+(?:[-\\.][0-9]+)*|current|last))))?$"
-#&gt; 
-#&gt; $type_bioc
-#&gt; [1] "^(?:bioc::)?(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])(?:@(?:(?:(?&lt;atleast&gt;&gt;=)?(?&lt;version&gt;[0-9]+[-\\.][0-9]+(?:[-\\.][0-9]+)*|current|last))))?$"
-#&gt; 
-#&gt; $type_standard
-#&gt; [1] "^(?:standard::)?(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])(?:@(?:(?:(?&lt;atleast&gt;&gt;=)?(?&lt;version&gt;[0-9]+[-\\.][0-9]+(?:[-\\.][0-9]+)*|current|last))))?$"
-#&gt; 
-#&gt; $type_github
-#&gt; [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+)(?:/(?&lt;subdir&gt;(?:[^@#]*[^@#/])/?))?(?:(?:(?:@(?&lt;commitish&gt;[^*].*)))|(?:(?:#(?&lt;pull&gt;[0-9]+)))|(?:(?:@(?&lt;release&gt;[*]release))))?$"
-#&gt; 
-#&gt; $type_local
-#&gt; [1] "^(?|local::(?&lt;path&gt;.*)|(?&lt;path&gt;(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*))$"
-#&gt; 
-#&gt; $type_deps
-#&gt; [1] "^(?:deps::)(?&lt;path&gt;.*)$"
-#&gt; 
-#&gt; $type_installed
-#&gt; [1] "^(?:installed::)?(?&lt;library&gt;.*)/(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])$"
-#&gt; 
-#&gt; $github_username
-#&gt; [1] "(?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))"
-#&gt; 
-#&gt; $github_repo
-#&gt; [1] "(?&lt;repo&gt;[^/@#]+)"
-#&gt; 
-#&gt; $github_url
-#&gt; [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?:(?:https?://)|(?:ssh://(?:[^@]+@)?)?)(?:[^/:]+)[/:](?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+?)(?&lt;subdir&gt;)(?:[.]git)?(?:/(?:(?:(?:tree|commit|releases/tag)/(?&lt;commitish&gt;.+$))|(?:pull/(?&lt;pull&gt;.+$))|(?:releases/)(?&lt;release&gt;.+$)))?$"
-#&gt; </div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>pkg_rx</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $pkg_name</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9]"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type_cran</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?:cran::)?(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])(?:@(?:(?:(?&lt;atleast&gt;&gt;=)?(?&lt;version&gt;[0-9]+[-\\.][0-9]+(?:[-\\.][0-9]+)*|current|last))))?$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type_bioc</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?:bioc::)?(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])(?:@(?:(?:(?&lt;atleast&gt;&gt;=)?(?&lt;version&gt;[0-9]+[-\\.][0-9]+(?:[-\\.][0-9]+)*|current|last))))?$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type_standard</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?:standard::)?(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])(?:@(?:(?:(?&lt;atleast&gt;&gt;=)?(?&lt;version&gt;[0-9]+[-\\.][0-9]+(?:[-\\.][0-9]+)*|current|last))))?$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type_github</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+)(?:/(?&lt;subdir&gt;(?:[^@#]*[^@#/])/?))?(?:(?:(?:@(?&lt;commitish&gt;[^*].*)))|(?:(?:#(?&lt;pull&gt;[0-9]+)))|(?:(?:@(?&lt;release&gt;[*]release))))?$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type_local</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?|local::(?&lt;path&gt;.*)|(?&lt;path&gt;(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*))$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type_deps</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?:deps::)(?&lt;path&gt;.*)$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type_installed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?:installed::)?(?&lt;library&gt;.*)/(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $github_username</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "(?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $github_repo</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "(?&lt;repo&gt;[^/@#]+)"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $github_url</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?:(?:https?://)|(?:ssh://(?:[^@]+@)?)?)(?:[^/:]+)[/:](?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+?)(?&lt;subdir&gt;)(?:[.]git)?(?:/(?:(?:(?:tree|commit|releases/tag)/(?&lt;commitish&gt;.+$))|(?:pull/(?&lt;pull&gt;.+$))|(?:releases/)(?&lt;release&gt;.+$)))?$"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

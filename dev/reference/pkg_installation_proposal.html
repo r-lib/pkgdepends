@@ -467,237 +467,296 @@ the format.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"pak"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span>
-
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span>
-
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span>
-
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span>
-<span class='op'>}</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"r-lib/pkgdepends"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpBSV8f5/file2b8b55dd9c0d</span></span></div><div class='input'><span class='va'>pdi</span>
-</div><div class='output co'>#&gt; &lt;pkg_installation_proposal&gt;
-#&gt; + refs:
-#&gt;   - r-lib/pkgdepends
-#&gt; + solution policy: lazy
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "r-lib/pkgdepends"</div><div class='input'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"pak"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpBSV8f5/file2b8b63fd280d</span></span></div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; # pkg config
-#&gt; ## build_vignettes
-#&gt; &lt;default&gt;
-#&gt; [1] FALSE
-#&gt; 
-#&gt; ## package_cache_dir
-#&gt; &lt;default&gt;
-#&gt; NULL
-#&gt; 
-#&gt; ## metadata_cache_dir
-#&gt; &lt;default&gt;
-#&gt; [1] "/tmp/RtmpBSV8f5/file2b8b5088bb0f"
-#&gt; 
-#&gt; ## dependencies
-#&gt; &lt;default&gt;
-#&gt; [1] "Depends"   "Imports"   "LinkingTo"
-#&gt; 
-#&gt; ## platforms
-#&gt; &lt;default&gt;
-#&gt; [1] "x86_64-pc-linux-gnu-ubuntu-20.04" "source"                          
-#&gt; 
-#&gt; ## library
-#&gt; &lt;set&gt;
-#&gt; [1] "/tmp/RtmpBSV8f5/file2b8b63fd280d"
-#&gt; 
-#&gt; ## metadata_update_after
-#&gt; &lt;default&gt;
-#&gt; Time difference of 24 hours
-#&gt; 
-#&gt; ## windows_archs
-#&gt; &lt;default&gt;
-#&gt; [1] "both"
-#&gt; 
-#&gt; ## cran_mirror
-#&gt; &lt;default&gt;
-#&gt;                          CRAN 
-#&gt; "https://cloud.r-project.org" 
-#&gt; 
-#&gt; ## cache_dir
-#&gt; &lt;default&gt;
-#&gt; [1] "/tmp/RtmpBSV8f5/file2b8b35d9ce33"
-#&gt; 
-#&gt; ## r_versions
-#&gt; &lt;default&gt;
-#&gt; [1] "4.1.1"
-#&gt; </div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"pak"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"r-lib/pkgdepends"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"r-lib/pkgdepends"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpBSV8f5/file2b8b21a614af</span></span></div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "upgrade"</div><div class='input'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"r-lib/pkgdepends"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpBSV8f5/file2b8b5807993</span></span></div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "lazy"</div><div class='input'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "upgrade"</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"r-lib/pkgdepends"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"r-lib/pkgdepends"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"r-lib/pkgdepends"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>show_solution</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># This is an error, because the packages conflict:</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span>
-<span class='co'># This fails:</span>
-<span class='co'># pdi$stop_for_solution_error()</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"pak"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_downloads</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_downloads</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"pak"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_install_plan</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='co'># Method print</span>
-<span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span>
-  <span class='st'>"pak"</span>,
-  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpBSV8f5/file2b8b11b3ad7a</span></span></div><div class='input'><span class='va'>pdi</span>
-</div><div class='output co'>#&gt; &lt;pkg_installation_proposal&gt;
-#&gt; + refs:
-#&gt;   - pak
-#&gt; + solution policy: lazy
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span>
-</div><div class='output co'>#&gt; &lt;pkg_installation_proposal&gt;
-#&gt; + refs:
-#&gt;   - pak
-#&gt; + solution policy: lazy
-#&gt; (use `$solve()` to solve dependencies)</div><div class='input'>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pdi</span>
-</div><div class='output co'>#&gt; &lt;pkg_installation_proposal&gt;
-#&gt; + refs:
-#&gt;   - pak
-#&gt; + solution policy: lazy
-#&gt; + has solution
-#&gt; (use `$download()` to download packages)
-#&gt; (use `$show_solution()` to see the packages to install
-#&gt; (use `$get_solution()` to see the full solution results)
-#&gt; (use `$draw()` to draw the dependency tree)
-#&gt; (use `$create_lockfile()` to write a lock file)</div><div class='input'>
-<span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Getting 42 pkgs with unknown sizes</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>R6</span> 2.5.1 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>assertthat</span> 0.2.1 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>callr</span> 3.7.0 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>cli</span> 3.0.1 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>crayon</span> 1.4.1 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>curl</span> 4.3.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>desc</span> 1.4.0 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>digest</span> 0.6.28 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>ellipsis</span> 0.3.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>fansi</span> 0.5.0 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>filelock</span> 1.0.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>glue</span> 1.4.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>jsonlite</span> 1.7.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>lifecycle</span> 1.0.1 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>lpSolve</span> 5.6.15 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>magrittr</span> 2.0.1 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>pillar</span> 1.6.4 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>pkgbuild</span> 1.2.0 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>pkgconfig</span> 2.0.3 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>prettyunits</span> 1.1.1 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>processx</span> 3.5.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>ps</span> 1.6.0 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rappdirs</span> 0.3.3 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rematch2</span> 2.1.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rlang</span> 0.4.12 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rprojroot</span> 2.0.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>tibble</span> 3.1.5 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>utf8</span> 1.2.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>uuid</span> 0.1-4 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>vctrs</span> 0.3.8 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>withr</span> 2.4.2 (source) is the latest build</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>hms</span> 1.1.1 (source) (97.36 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>stringi</span> 1.7.5 (source) (3.15 MB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>prettycode</span> 1.1.0 (source) (242.29 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>base64enc</span> 0.1-3 (source) (38.95 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>stringr</span> 1.4.0 (source) (204.52 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>pak</span> 0.1.2.1 (source) (403.65 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>cliapp</span> 0.1.1 (source) (233.41 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>xml2</span> 1.3.2 (source) (617.91 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>pkgcache</span> 1.2.2 (source) (655.38 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>progress</span> 1.2.2 (source) (83.00 kB)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>selectr</span> 0.4-2 (source) (488.96 kB)</span></div><div class='input'><span class='va'>pdi</span>
-</div><div class='output co'>#&gt; &lt;pkg_installation_proposal&gt;
-#&gt; + refs:
-#&gt;   - pak
-#&gt; + solution policy: lazy
-#&gt; + has solution
-#&gt; + has downloads
-#&gt; (use `$show_solution()` to see the packages to install
-#&gt; (use `$get_solution()` to see the full solution results)
-#&gt; (use `$draw()` to draw the dependency tree)
-#&gt; (use `$create_lockfile()` to write a lock file)
-#&gt; (use `$get_downloads()` to get download data)
-#&gt; (use `$get_install_plan()` to get the installation plan)
-#&gt; (use `$install()` to install the packages)</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"pak"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"r-lib/pkgdepends"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpMPvtlB/file35706af312b2</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_installation_proposal&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - r-lib/pkgdepends</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + solution policy: lazy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$solve()` to solve dependencies)</span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span><span class='st'>"r-lib/pkgdepends"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_refs</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "r-lib/pkgdepends"</span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"pak"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpMPvtlB/file35702b6cf0ad</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> # pkg config</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## build_vignettes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] FALSE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## package_cache_dir</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## metadata_cache_dir</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpMPvtlB/file35705cd905ef"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## dependencies</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Depends"   "Imports"   "LinkingTo"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## platforms</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "x86_64-pc-linux-gnu-ubuntu-20.04" "source"                          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## library</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;set&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpMPvtlB/file35702b6cf0ad"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## metadata_update_after</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Time difference of 24 hours</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## windows_archs</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "both"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## cran_mirror</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                          CRAN </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> "https://cloud.r-project.org" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## cache_dir</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpMPvtlB/file35708120443"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## r_versions</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "4.1.2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"pak"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"r-lib/pkgdepends"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_resolution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"r-lib/pkgdepends"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpMPvtlB/file35702323871a</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "lazy"</span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "upgrade"</span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"r-lib/pkgdepends"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpMPvtlB/file35706f21db5f</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "lazy"</span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>set_solve_policy</span><span class='op'>(</span><span class='st'>"upgrade"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solve_policy</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "upgrade"</span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"r-lib/pkgdepends"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"r-lib/pkgdepends"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"r-lib/pkgdepends"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_solution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>show_solution</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># This is an error, because the packages conflict:</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-in'><span class='co'># This fails:</span></span>
+<span class='r-in'><span class='co'># pdi$stop_for_solution_error()</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"pak"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>draw</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_downloads</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"r-lib/pak"</span>, <span class='st'>"cran::pak"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_downloads</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"pak"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>get_install_plan</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='co'># Method print</span></span>
+<span class='r-in'><span class='va'>pdi</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_installation_proposal</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='st'>"pak"</span>,</span>
+<span class='r-in'>  config <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>library <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Creating library directory: <span style='color: #0000BB;'>/tmp/RtmpMPvtlB/file357047637d5f</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_installation_proposal&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pak</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + solution policy: lazy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$solve()` to solve dependencies)</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>resolve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_installation_proposal&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pak</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + solution policy: lazy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$solve()` to solve dependencies)</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_installation_proposal&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pak</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + solution policy: lazy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has solution</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$download()` to download packages)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$show_solution()` to see the packages to install</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_solution()` to see the full solution results)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$draw()` to draw the dependency tree)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$create_lockfile()` to write a lock file)</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>pdi</span><span class='op'>$</span><span class='fu'>download</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Getting 42 pkgs with unknown sizes</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>R6</span> 2.5.1 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>assertthat</span> 0.2.1 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>callr</span> 3.7.0 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>cli</span> 3.1.0 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>crayon</span> 1.4.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>curl</span> 4.3.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>desc</span> 1.4.0 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>digest</span> 0.6.28 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>ellipsis</span> 0.3.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>fansi</span> 0.5.0 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>filelock</span> 1.0.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>glue</span> 1.4.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>jsonlite</span> 1.7.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>lifecycle</span> 1.0.1 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>lpSolve</span> 5.6.15 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>magrittr</span> 2.0.1 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>pillar</span> 1.6.4 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>pkgbuild</span> 1.2.0 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>pkgconfig</span> 2.0.3 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>prettyunits</span> 1.1.1 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>processx</span> 3.5.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>ps</span> 1.6.0 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rappdirs</span> 0.3.3 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rematch2</span> 2.1.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rlang</span> 0.4.12 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>rprojroot</span> 2.0.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>tibble</span> 3.1.5 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>utf8</span> 1.2.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>uuid</span> 1.0-2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>vctrs</span> 0.3.8 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Cached copy of <span style='color: #0000BB;'>withr</span> 2.4.2 (source) is the latest build</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>base64enc</span> 0.1-3 (source) (38.95 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>cliapp</span> 0.1.1 (source) (233.41 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>progress</span> 1.2.2 (source) (83.00 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>stringr</span> 1.4.0 (source) (204.52 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>prettycode</span> 1.1.0 (source) (242.29 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>stringi</span> 1.7.5 (source) (3.15 MB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>pkgcache</span> 1.2.2 (source) (655.38 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>pak</span> 0.1.2.1 (source) (403.65 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>selectr</span> 0.4-2 (source) (488.96 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>hms</span> 1.1.1 (source) (97.36 kB)</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Got <span style='color: #0000BB;'>xml2</span> 1.3.2 (source) (617.91 kB)</span>
+<span class='r-in'><span class='va'>pdi</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;pkg_installation_proposal&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + refs:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - pak</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + solution policy: lazy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has solution</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> + has downloads</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$show_solution()` to see the packages to install</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_solution()` to see the full solution results)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$draw()` to draw the dependency tree)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$create_lockfile()` to write a lock file)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_downloads()` to get download data)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$get_install_plan()` to get the installation plan)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> (use `$install()` to install the packages)</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

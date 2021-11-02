@@ -157,7 +157,7 @@ prefix), then <code>github</code> is used;</p></li>
 <p>Package refs may have optional parameters, added after a question mark.
 Different parameters are separated by an ampersand (<code>&amp;</code>) character.
 Parameters might be binary, or have a string value, assigned with an
-equal sign (<code><a href='https://rdrr.io/r/base/assignOps.html'>=</a></code>). If no value is assigned, then we assume the <code>true</code>
+equal sign (<code>=</code>). If no value is assigned, then we assume the <code>true</code>
 value. For example these two package refs are the same:</p><pre><span class='fu'>cran</span><span class='fu'>::</span><span class='va'>testthat</span><span class='op'>?</span><span class='va'>source</span><span class='op'>&amp;</span><span class='va'>nocache</span>
 <span class='fu'>cran</span><span class='fu'>::</span><span class='va'>testthat</span><span class='op'>?</span><span class='va'>source</span><span class='op'>=</span><span class='va'>true</span><span class='op'>&amp;</span><span class='va'>nocache</span><span class='op'>=</span><span class='va'>true</span>
 </pre>
@@ -192,7 +192,7 @@ forecast@current
 </pre>
 
 <p>Note: pkgdepends currently parses the version specification part
-(everything after <code><a href='https://rdrr.io/r/base/slotOp.html'>@</a></code>), but does not use it.</p>
+(everything after <code>@</code>), but does not use it.</p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Bioconductor packages:</h4>
 
@@ -266,7 +266,7 @@ directory that contains a package. Full syntax:</p><pre>local::&lt;path&gt;
 </pre>
 
 <p>For brevity, you can omit the <code>local::</code> prefix, if you specify an
-absolute path, a path from the user’s home directory, starting with <code><a href='https://rdrr.io/r/base/tilde.html'>~</a></code>,
+absolute path, a path from the user’s home directory, starting with <code>~</code>,
 or a relative path starting with <code>./</code> or <code>.\</code>.</p>
 <p>A single dot (<code>"."</code>) is considered to be a local package in the current
 working directory.</p>

@@ -42,7 +42,7 @@ pkg_plan <- R6::R6Class(
       pkgplan_show_solution(self, private, key),
     get_install_plan = function()
       pkgplan_install_plan(self, private, downloads = TRUE),
-    export_install_plan = function(plan_file = "pkg.lock", version = 1)
+    export_install_plan = function(plan_file = "pkg.lock", version = 2)
       pkgplan_export_install_plan(self, private, plan_file, version),
     draw_solution_tree = function(pkgs = NULL, annotate = TRUE)
       pkgplan_draw_solution_tree(self, private, pkgs, annotate),
@@ -163,7 +163,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     is_path_or_null(library)
   )
 
-  private$config <- current_config$update(config)
+  private$config <- current_config()$update(config)
   private$config$set("library", library)
   private$remote_types <- remote_types %||% default_remote_types()
 
@@ -205,8 +205,9 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     lib_status       = "new",
     old_version      = NA_character_,
     new_version      = version,
-    extra            = list(list())
-
+    extra            = list(list()),
+    install_args     = lapply(pkgs, function(x) unlist(x$install_args) %||% character()),
+    repotype         = vcapply(pkgs, function(x) x$repotype %||% NA_character_)
   )
 
   private$refs <- refs[soldata$direct]

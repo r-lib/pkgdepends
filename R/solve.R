@@ -811,7 +811,7 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     "dependencies", "vignettes", "needscompilation", "metadata",
     "sources", "target", "platform", "rversion", "built",
     "directpkg", "license", "sha256", "filesize", "dep_types",
-    "params", "install_args"
+    "params", "install_args", "repotype"
   ))
 
   packages <- pkgs[, cols]

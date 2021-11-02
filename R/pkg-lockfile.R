@@ -57,12 +57,12 @@ pkg_installation_plan <- R6::R6Class(
       config = list(),
       remote_types = NULL
       ) {
-      assert_that(is_path(config$get("library")))
-      private$library <- config$get("library")
+      assert_that(is_path(config$library))
+      private$library <- config$library
       private$plan <- pkg_plan$new(
         lockfile = lockfile,
         config = config,
-        library = config$get("library"),
+        library = config$library,
         remote_types = remote_types
       )
     },

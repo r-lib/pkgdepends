@@ -747,17 +747,23 @@ pkgplan_install_plan <- function(self, private, downloads) {
   }
   if (inherits(sol, "pkgplan_solve_error")) return(sol)
 
-  hard_deps <- pkg_dep_types_hard()
-  deps <- lapply(
-    seq_len(nrow(sol)),
-    function(i) {
-      x <- sol$deps[[i]]
-      if (sol$platform[[i]] != "source") {
-        x <- x[tolower(x$type) != "linkingto", ]
-      }
-      x$package[tolower(x$type) %in% tolower(hard_deps)]
-    })
-  deps <- lapply(deps, setdiff, y = c("R", base_packages()))
+  # If it is coming from an install plan, then there is no 'deps' column,
+  # but the dependencies column is already set.
+  has_deps <- "deps" %in% names(sol)
+  if (has_deps) {
+    hard_deps <- pkg_dep_types_hard()
+    deps <- lapply(
+      seq_len(nrow(sol)),
+      function(i) {
+        x <- sol$deps[[i]]
+        if (sol$platform[[i]] != "source") {
+          x <- x[tolower(x$type) != "linkingto", ]
+        }
+        x$package[tolower(x$type) %in% tolower(hard_deps)]
+      })
+    deps <- lapply(deps, setdiff, y = c("R", base_packages()))
+  }
+
   installed <- ifelse(
     sol$type == "installed",
     file.path(private$config$get("library"), sol$package),
@@ -779,7 +785,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
   sol$library <- private$config$get("library")
   sol$binary <- binary
   sol$direct <- direct
-  sol$dependencies <- I(deps)
+  if (has_deps) sol$dependencies <- I(deps)
   sol$installed <- installed
   sol$vignettes <- vignettes
 

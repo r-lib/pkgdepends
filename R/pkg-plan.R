@@ -207,7 +207,8 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     new_version      = version,
     extra            = list(list()),
     install_args     = lapply(pkgs, function(x) unlist(x$install_args) %||% character()),
-    repotype         = vcapply(pkgs, function(x) x$repotype %||% NA_character_)
+    repotype         = vcapply(pkgs, function(x) x$repotype %||% NA_character_),
+    params           = lapply(pkgs, function(x) unlist(x$params))
   )
 
   private$refs <- refs[soldata$direct]

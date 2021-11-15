@@ -231,9 +231,13 @@ add_attr <- function(x, attr, value) {
   x
 }
 
-detect_download_cache_dir <- function() {
-  tempfile()
-}
+detect_download_cache_dir <- local({
+  dir <- NULL
+  function() {
+    if (is.null(dir)) dir <<- tempfile()
+    dir
+  }
+})
 
 rbind_expand <- function(..., .list = list()) {
   data <- c(list(...), .list)

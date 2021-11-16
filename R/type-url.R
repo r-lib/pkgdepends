@@ -99,6 +99,13 @@ satisfy_remote_url <- function(resolution, candidate, config, ...) {
   structure(FALSE, reason = "Repo type mismatch")
 }
 
+installedok_remote_url <- function(installed, solution, config, ...) {
+  identical(installed$package, solution$package) &&
+    identical(installed$version, solution$version) &&
+    identical(installed[["remotetype"]], "url") &&
+    identical(installed[["remoteetag"]], solution$metadata[[1]][["RemoteEtag"]])
+}
+
 # -----------------------------------------------------------------------
 # Internal functions
 

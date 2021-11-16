@@ -99,3 +99,25 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
 
   TRUE
 }
+
+installedok_remote_standard <- function(installed, solution, config, ...) {
+  if (solution$repotype == "cran") {
+    installedok_remote_cran(installed, solution, config, ...)
+
+  } else if (solution$repotype == "bioc") {
+    installedok_remote_bioc(installed, solution, config, ...)
+
+  } else if (solution$platform != "source") {
+    # the repo must match
+    identical(installed$package, solution$package) &&
+      identical(installed$version, solution$version) &&
+      identical(installed[["platform"]], solution[["platform"]]) &&
+      identical(instaled$remoterepos, solution$metadata[[1]][["RemoteRepos"]])
+
+  } else {
+    # source package from unknown repo
+    identical(installed$package, solution$package) &&
+      identical(installed$version, solution$version) &&
+      identical(instaled$remoterepos, solution$metadata[[1]][["RemoteRepos"]])
+  }
+}

@@ -44,6 +44,7 @@ them.
 \item \href{#method-get_solve_policy}{\code{pkg_installation_plan$get_solve_policy()}}
 \item \href{#method-set_solve_policy}{\code{pkg_installation_plan$set_solve_policy()}}
 \item \href{#method-solve}{\code{pkg_installation_plan$solve()}}
+\item \href{#method-update}{\code{pkg_installation_plan$update()}}
 \item \href{#method-format}{\code{pkg_installation_plan$format()}}
 \item \href{#method-clone}{\code{pkg_installation_plan$clone()}}
 }
@@ -150,6 +151,27 @@ This function is implemented for installation plans, and will error.
 This function is implemented for installation plans, and will error.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$solve()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update"></a>}}
+\if{latex}{\out{\hypertarget{method-update}{}}}
+\subsection{Method \code{update()}}{
+Update the plan to the current state of the library. If the library
+has not changed since the plan was created, then it does nothing.
+If new packages have been installed, then it might not be necessary
+to download and install all packages in the plan.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$update()}\if{html}{\out{</div>}}
+}
+
+\subsection{Details}{
+This operation is different than creating a new proposal with the
+updated library, because it uses the the packages and package
+versions of the original plan. E.g. if the library has a newer
+version of a package, then \verb{$update()} will downgrade it to the
+version in the plan.
 }
 
 }

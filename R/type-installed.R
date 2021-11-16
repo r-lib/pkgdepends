@@ -34,6 +34,11 @@ satisfy_remote_installed <- function(resolution, candidate,
   TRUE
 }
 
+installedok_remote_installed <- function(installed, solution, config, ...) {
+  # Keep the plan, we were already using the installed package
+  FALSE
+}
+
 ## ----------------------------------------------------------------------
 ## Internal functions
 

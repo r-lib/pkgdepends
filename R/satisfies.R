@@ -7,3 +7,11 @@ satisfies_remote <- function(resolution, candidate, config,
 
   sat(resolution, candidate, config, ...)
 }
+
+installedok_remote <- function(installed, solution, config,
+                               remote_types = NULL, ...) {
+  remote_types <- c(default_remote_types(), remote_types)
+  ok <- remote_types[[solution$type]]$installedok
+  if (is.null(ok)) return(FALSE)
+  ok(installed, solution, config, ...)
+}

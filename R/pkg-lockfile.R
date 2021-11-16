@@ -94,6 +94,21 @@ pkg_installation_plan <- R6::R6Class(
     solve = function() stop("Cannot solve an installation plan"),
 
     #' @description
+    #' Update the plan to the current state of the library. If the library
+    #' has not changed since the plan was created, then it does nothing.
+    #' If new packages have been installed, then it might not be necessary
+    #' to download and install all packages in the plan.
+    #'
+    #' @details
+    #' This operation is different than creating a new proposal with the
+    #' updated library, because it uses the the packages and package
+    #' versions of the original plan. E.g. if the library has a newer
+    #' version of a package, then `$update()` will downgrade it to the
+    #' version in the plan.
+
+    update = function() pkg_lockfile_update(self, private),
+
+    #' @description
     #' Format a `pkg_installation_plan` object, typically for printing.
     #'
     #' @param ... not used currently.
@@ -119,7 +134,8 @@ pkg_installation_plan <- R6::R6Class(
         "(use `$draw()` to draw the dependency tree)",
         "(use `$get_downloads()` to get download data)",
         "(use `$get_install_plan()` to get the installation plan)",
-        "(use `$install()` to install the packages)"
+        "(use `$install()` to install the packages)",
+        "(use `$update()` to update the plan for an updated library)"
       )
     }
 
@@ -130,3 +146,8 @@ pkg_installation_plan <- R6::R6Class(
     library = NULL
   )
 )
+
+pkg_lockfile_update <- function(self, private) {
+  private$plan$update()
+  invisible(self)
+}

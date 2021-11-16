@@ -88,6 +88,24 @@ satisfy_remote_bioc <- function(resolution, candidate,
   TRUE
 }
 
+installedok_remote_bioc <- function(installed, solution, config, ...) {
+  if (solution$platform != "source") {
+    # Binary packages are simple. We need to match `$build` to make sure
+    # that we are installing the same build.
+    identical(installed$package, solution$package) &&
+      identical(installed$version, solution$version) &&
+      identical(installed[["platform"]], solution[["platform"]]) &&
+      identical(installed[["built"]], solution[["built"]])
+
+  } else {
+    # Source packages are different, because only the installed one has a
+    # 'Built' field.
+    identical(installed$package, solution$package) &&
+      identical(installed$version, solution$version) &&
+      identical(installed[["repotype"]], "bioc")
+  }
+}
+
 ## ----------------------------------------------------------------------
 ## Internal functions
 

@@ -48,3 +48,8 @@ satisfy_remote_local <- function(resolution, candidate, config, ...) {
   ## TODO: we can probably do better than this
   FALSE
 }
+
+installedok_remote_local <- function(installed, solution, config, ...) {
+  ## TODO: we can probably do better than this
+  FALSE
+}

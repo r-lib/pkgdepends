@@ -58,6 +58,8 @@ pkg_plan <- R6::R6Class(
     stop_for_resolution_download_error = function()
       pkgplan_stop_for_resolution_download_error(self, private),
 
+    update = function() pkgplan_update(self, private),
+
     print = function(...)
       pkgplan_print(self, private, ...)
   ),
@@ -278,4 +280,35 @@ pkgplan_print <- function(self, private, ...) {
   }
 
   invisible(self)
+}
+
+pkgplan_update <- function(self, private) {
+  libstat <- make_installed_cache(private$config$get("library"))$pkgs
+  for (i in seq_len(nrow(private$solution$result$data))) {
+    pkg <- private$solution$result$data$package[i]
+    if (! pkg %in% libstat$package) {
+      next
+    }
+
+    installed <- libstat[match(pkg, libstat$package), ]
+    solution <- private$solution$result$data[i, ]
+
+    par <- solution$params[[1]]
+    if (is_true_param(par, "reinstall") || is_true_param(par, "nocache")) {
+      next
+    }
+
+    if (!installedok_remote(installed, solution)) {
+      next
+    }
+
+    private$solution$result$data$ref[i] <- installed$ref
+    private$solution$result$data$type[i] <- "installed"
+    private$solution$result$data$sources[[i]] <- character()
+    private$solution$result$data$remote[[i]] <- parse_pkg_ref(installed$ref)
+    private$solution$result$data$cache_status[i] <- NA
+    private$solution$result$data$lib_status[i] <- "current"
+    private$solution$result$data$old_version <- installed$version
+    private$solution$result$data$new_version <- NA
+  }
 }

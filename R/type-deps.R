@@ -67,6 +67,10 @@ satisfy_remote_deps <- function(resolution, candidate, config, ...) {
   FALSE
 }
 
+installedok_remote_deps <- function(installed, solution, config, ...) {
+  FALSE
+}
+
 ## ----------------------------------------------------------------------
 ## Internal functions
 

@@ -95,7 +95,8 @@ installedok_remote_cran <- function(installed, solution, config, ...) {
     # that we are installing the same build.
     identical(installed$package, solution$package) &&
       identical(installed$version, solution$version) &&
-      identical(installed[["platform"]], solution[["platform"]]) &&
+      (identical(installed[["platform"]], solution[["platform"]]) ||
+       identical(installed[["platform"]], "*")) &&
       identical(installed[["built"]], solution[["built"]])
 
   } else {

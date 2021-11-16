@@ -308,7 +308,7 @@ pkgplan_update <- function(self, private) {
     private$solution$result$data$remote[[i]] <- parse_pkg_ref(installed$ref)
     private$solution$result$data$cache_status[i] <- NA
     private$solution$result$data$lib_status[i] <- "current"
-    private$solution$result$data$old_version <- installed$version
-    private$solution$result$data$new_version <- NA
+    private$solution$result$data$old_version[[i]] <- installed$version
+    private$solution$result$data$new_version[[i]] <- NA
   }
 }

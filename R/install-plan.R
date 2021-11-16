@@ -789,7 +789,7 @@ create_install_result <-  function(state) {
 #' @importFrom prettyunits pretty_sec
 
 print.pkginstall_result <- function(x, ...) {
-  newly <- sum(x$lib_status == "new")
+  newly <- sum(x$lib_status == "new" & x$type != "deps")
   upd   <- sum(x$lib_status == "update")
   noupd <- sum(x$lib_status == "no-update")
   curr  <- sum(x$lib_status == "current")

@@ -203,10 +203,12 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
       bar$what$status[idx] <- "had"
       bar$what$current[idx] <- 0L
       bar$what$need[idx] <- 0L
-      if (identical(data$cache_status, "miss")) cli_alert_success(c(
-        "Cached copy of {.pkg {data$package}} ",
-        "{.version {data$version}} ({data$platform}) is the latest build"
-      ))
+      if (identical(data$cache_status, "miss") && data$type != "deps") {
+        cli_alert_success(c(
+          "Cached copy of {.pkg {data$package}} ",
+          "{.version {data$version}} ({data$platform}) is the latest build"
+        ))
+      }
     } else if (data$download_status == "Failed") {
       cli_alert_danger(c(
         "Failed to download {.pkg {data$package}} ",

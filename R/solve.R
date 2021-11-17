@@ -825,7 +825,13 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     packages$params,
     function(x) lapply(as.list(x), unbox)
   )
-  plan <- list(lockfile_version = unbox(version), packages = packages)
+  plan <- list(
+    lockfile_version = unbox(version),
+    os = unbox(utils::sessionInfo()$running),
+    r_version = unbox(R.Version()$version.string),
+    platform = unbox(R.Version()$platform),
+    packages = packages
+  )
   txt <- as_json_lite_plan(plan)
   writeLines(txt, plan_file)
 }

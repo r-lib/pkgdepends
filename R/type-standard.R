@@ -113,12 +113,12 @@ installedok_remote_standard <- function(installed, solution, config, ...) {
       identical(installed$version, solution$version) &&
       (identical(installed[["platform"]], solution[["platform"]]) ||
        identical(installed[["platform"]], "*")) &&
-      identical(instaled$remoterepos, solution$metadata[[1]][["RemoteRepos"]])
+      identical(installed$remoterepos, solution$metadata[[1]][["RemoteRepos"]])
 
   } else {
     # source package from unknown repo
     identical(installed$package, solution$package) &&
       identical(installed$version, solution$version) &&
-      identical(instaled$remoterepos, solution$metadata[[1]][["RemoteRepos"]])
+      identical(installed$remoterepos, solution$metadata[[1]][["RemoteRepos"]])
   }
 }

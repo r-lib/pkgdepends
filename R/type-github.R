@@ -186,7 +186,7 @@ satisfy_remote_github <- function(resolution, candidate,
 installedok_remote_github <- function(installed, solution, config, ...) {
   identical(installed$package, solution$package) &&
     identical(installed$version, solution$version) &&
-    identical(idenstalled[["remotesha"]], solution$metadata[[1]][["RemoteSha"]])
+    identical(installed[["remotesha"]], solution$metadata[[1]][["RemoteSha"]])
 }
 
 ## ----------------------------------------------------------------------

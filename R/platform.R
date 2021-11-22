@@ -77,6 +77,13 @@ default_platforms <- function() unique(c(current_r_platform(), "source"))
 
 platform_is_ok <- function(cand, exp, exp_archs = NULL) {
   if (cand %in% c("*", "source") && "source" %in% exp) return(TRUE)
+
+  # This is an installed linux package, probably, prefix is OK, e.g.
+  # cand = x86_64-pc-linux-gnu vs exp = x86_64-pc-linux-gnu-ubuntu-18.04
+  if (grepl("-linux-", cand) && any(substr(exp, 1, nchar(cand)) == cand)) {
+    return(TRUE)
+  }
+
   if (cand %in% c("i386+x86_64-w64-mingw32", "x86_64+i386-w64-mingw32")) {
     # This is a multi-arch binary, that is OK, if binaries are allowed
     any(c("x86_64-w64-mingw32", "i386-w64-mingw32") %in% exp)

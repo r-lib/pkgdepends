@@ -29,6 +29,31 @@ env_decode_difftime <- function(x, name) {
   )
 }
 
+default_sysreqs <- function() {
+  Sys.getenv("CI") != "" && Sys.info()[["sysname"]] == "Linux"
+}
+
+default_sysreqs_sudo <- function() {
+  if (.Platform$OS.type != "unix") {
+    FALSE
+  } else {
+    euid <- get_euid()
+    is.na(euid) || euid != 0
+  }
+}
+
+default_sysreqs_verbose <- function() {
+  Sys.getenv("CI") != ""
+}
+
+default_sysreqs_rspm_url <- function() {
+  Sys.getenv("RSPM_ROOT", "https://packagemanager.rstudio.com")
+}
+
+default_sysreqs_rspm_repo_id <- function() {
+  Sys.getenv("RSPM_REPO_ID", "1")
+}
+
 #' pkgdepends configuration
 #' @name pkg_config
 #' @aliases pkgdepends-config
@@ -138,6 +163,35 @@ current_config <- function() {
   #'   or days (`d` suffix). E.g: `1d` means one day.
   conf$add_type("difftime", is_difftime, env_decode_difftime)
   conf$add("metadata_update_after", "difftime", default_update_after)
+
+  #' * `sysreqs`: Whether to look up and install system requirements.
+  #'   By default this is `TRUE` if the `CI` environment variable is set
+  #'   and the operating system is Linux. This will change as new platforms
+  #'   gain system requirements support.
+  conf$add("sysreqs", "flag", default_sysreqs)
+
+  #' * `sysreqs_sudo`: Whether to use `sudo` to install system requirements,
+  #'   on Unix. By default it is `TRUE` on Linux if the effective user id
+  #'   of the current process is not the `root` user.
+  conf$add("sysreqs_sudo", "flag", default_sysreqs_sudo)
+
+  #' * `sysreqs_verbose`: Whether to echo the output of system requirements
+  #'   installation. Defaults to `TRUE` if the `CI` environment variable is
+  #'   set.
+  conf$add("sysreqs_verbose", "flag", default_sysreqs_verbose)
+
+  #' * `sysreqs_rspm_url`: Root URL of RStudio Package Manager for system
+  #'   requirements lookup. By default the `RSPM_ROOT` environment variable
+  #'   is used, if set. If not set, it defaults to
+  #'   `https://packagemanager.rstudio.com`.
+  conf$add("sysreqs_rspm_url", "string", default_sysreqs_rspm_url)
+
+  #' * `sysreqs_rspm_repo_id`: RStudio Package Manager repository id to use
+  #'   for CRAN system requirements lookup. Defaults to the `RSPM_REPO_ID`
+  #'   environment variable, if set. If not set, then it defaults to `1`.
+  conf$add("sysreqs_rspm_repo_id", "string", default_sysreqs_rspm_repo_id)
+
+  conf$add("sysreqs_dry_run", "flag", FALSE)
 
   conf$lock()
   conf

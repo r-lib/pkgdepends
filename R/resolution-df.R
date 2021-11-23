@@ -32,7 +32,8 @@ res_make_empty_df <- local({
         metadata = list(),              # named character of entries
         extra    = list(),              # any extra data (e.g. GitHub sha)
         dep_types= list(),
-        params   = list()
+        params   = list(),
+        sysreqs  = character()
       )
     }
     data
@@ -68,7 +69,8 @@ res_df_defaults <- local({
         mirror   = NA_character_,
         extra    = list(list()),
         dep_types= list(list()),
-        params   = list(character())
+        params   = list(character()),
+        sysreqs  = NA_character_
       )
     }
     data

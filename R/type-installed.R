@@ -212,7 +212,7 @@ resolve_installed  <- function(cache, remotes, direct, dependencies) {
   cols <- c(
     "ref", "type", "status", "package", "version", "license",
     "needscompilation", "priority", "md5sum", "platform", "rversion",
-    "sources", "built", "deps", "repotype")
+    "sources", "built", "deps", "repotype", "sysreqs")
   res <- pkgs[pkgs$package %in% packages, cols]
   repotype <- pkgs$repotype[pkgs$package %in% packages]
 

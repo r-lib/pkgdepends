@@ -407,7 +407,8 @@ type_github_make_resolution <- function(data) {
     unknown_deps = unknown,
     extra = list(list(remotesha = sha)),
     metadata = meta,
-    params = data$remote$params
+    params = data$remote$params,
+    sysreqs = data$desc$get_field("SystemRequirements", "")
   )
 }
 

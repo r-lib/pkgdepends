@@ -172,7 +172,8 @@ test_that("installed refs are also resolved", {
       priority = NA_character_, md5sum = NA_character_,
       platform = "source", rversion = "*", sources = list(NULL, NULL),
       built = NA_character_, deps = list(NULL, NULL),
-      repotype = NA_character_)
+      repotype = NA_character_,
+      sysreqs = NA_character_)
   )
 
   do <- function() {

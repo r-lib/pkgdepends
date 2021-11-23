@@ -76,6 +76,9 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
 
   pkgs <- inst[, names(inst) %in% fields]
 
+  # Called `sysreqs` in pkgcache, so we call it the same here
+  pkgs$sysreqs <- inst[["systemrequirements"]] %||% rep(NA_character_, nrow(pkgs))
+
   if (nrow(pkgs) == 0) {
     pkgs$ref <- character()
   } else {

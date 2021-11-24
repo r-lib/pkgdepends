@@ -92,8 +92,10 @@ in seconds (\code{s} suffix), minutes (\code{m} suffix), hours (\code{h} suffix)
 or days (\code{d} suffix). E.g: \verb{1d} means one day.
 \item \code{sysreqs}: Whether to look up and install system requirements.
 By default this is \code{TRUE} if the \code{CI} environment variable is set
-and the operating system is Linux. This will change as new platforms
-gain system requirements support.
+and the operating system is a supported Linux distribution:
+CentOS, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
+Enterprise. The default will change as new platforms gain system
+requirements support.
 \item \code{sysreqs_rspm_repo_id}: RStudio Package Manager repository id to use
 for CRAN system requirements lookup. Defaults to the \code{RSPM_REPO_ID}
 environment variable, if set. If not set, then it defaults to \code{1}.

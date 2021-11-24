@@ -455,6 +455,20 @@ pkg_installation_proposal <- R6::R6Class(
                            cache = cache)
     },
 
+    #' @description
+    #' Install system requirements. It does nothing if sysreqs are turned
+    #' off. It errors if we could not look up the sysreqs.
+
+    install_sysreqs = function() {
+      srq <- self$get_solution()$sysreqs
+      if (is.null(srq)) return(invisible())
+      if (!is.null(srq$error)) {
+        stop("sysreqs error: ", conditionMessage(srq$error))
+      }
+      config <- get_private(private$plan)$config
+      sysreqs_install(srq$result %||% srq, config)
+    },
+
     #' Create an installation plan for the downloaded packages.
     #'
     #' @return
@@ -494,6 +508,8 @@ pkg_installation_proposal <- R6::R6Class(
       sol <- if (has_sol) private$plan$get_solution()
       sol_err <- has_sol && sol$status != "OK"
 
+      has_sys <- has_sol && !is.null(sol$sysreqs)
+
       c("<pkg_installation_proposal>",
         "+ refs:", paste0("  - ", refs),
         paste0("+ solution policy: ", private$policy),
@@ -510,6 +526,7 @@ pkg_installation_proposal <- R6::R6Class(
         if (has_sol) "(use `$create_lockfile()` to write a lock file)",
         if (has_dls) "(use `$get_downloads()` to get download data)",
         if (has_dls) "(use `$get_install_plan()` to get the installation plan)",
+        if (has_sys) "(use `$install_sysreqs()` to install system packages)",
         if (has_dls) "(use `$install()` to install the packages)"
       )
     },

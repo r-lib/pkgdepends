@@ -45,18 +45,18 @@ sysreqs_resolve_process <- function(sysreqs, os, os_release, resp) {
   data <- jsonlite::fromJSON(cnt, simplifyVector = FALSE)
   if (!is.null(data$error)) stop(data$error)
 
-  pre_install <- unique(unlist(c(
+  pre_install <- unique(as.character(unlist(c(
     data[["pre_install"]],
     lapply(data[["dependencies"]], `[[`, "pre_install")
-  )))
-  install_scripts <- unique(unlist(c(
+  ))))
+  install_scripts <- unique(as.character(unlist(c(
     data[["install_scripts"]],
     lapply(data[["dependencies"]], `[[`, "install_scripts")
-  )))
-  post_install <- unique(unlist(c(
+  ))))
+  post_install <- unique(as.character(unlist(c(
     data[["post_install"]],
     lapply(data[["dependencies"]], `[[`, "post_install")
-  )))
+  ))))
 
   list(
     os = os,
@@ -69,10 +69,15 @@ sysreqs_resolve_process <- function(sysreqs, os, os_release, resp) {
   )
 }
 
-sysreqs_resolve_make_data <- function(sysreqs) {
+sysreqs_canonise_query <- function(sysreqs) {
   sysreqs <- str_trim(sysreqs)
   sysreqs <- sort(unique(sysreqs[!is.na(sysreqs) & sysreqs != ""]))
   sysreqs <- gsub("\n", "\n ", sysreqs)
+  sysreqs
+}
+
+sysreqs_resolve_make_data <- function(sysreqs) {
+  sysreqs <- sysreqs_canonise_query(sysreqs)
   paste(collapse = "\n", c(
     "Package: pkgdependssysreqs",
     "Version: 1.0.0",
@@ -105,7 +110,10 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
   if (dry_run) cmds <- paste("echo", cmds)
 
   if (verbose) {
-    callback <- function(x, ...) cli::cli_verbatim(sub("[\r\n]+$", "", x))
+    callback <- function(x, ...) {
+      x <- str_trim(x)
+      if (nchar(x)) cli::cli_verbatim(x)
+    }
   } else {
     callback <- function(x, ...) invisible()
   }

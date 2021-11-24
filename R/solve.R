@@ -140,6 +140,16 @@ pkgplan_solve <- function(self, private, policy) {
     res$failures <- describe_solution_error(pkgs, res)
   }
 
+  if (private$config$get("sysreqs")) {
+    res$sysreqs <- tryCatch(
+      list(
+        result = sysreqs_resolve(res$data$sysreqs, config = private$config),
+        error = NULL
+      ),
+      error = function(err) list(result = NULL, error = err)
+    )
+  }
+
   private$solution$result <- res
   self$get_solution()
 }
@@ -154,6 +164,11 @@ pkgplan_stop_for_solve_error <- function(self, private) {
   if (sol$status != "OK") {
     msg <- paste(format(sol$failures), collapse = "\n")
     stop("Cannot install packages:\n", msg, call. = FALSE)
+  }
+
+  # sysreqs error?
+  if (!is.null(sol$sysreqs$error)) {
+    stop("sysreqs lookup error: ", conditionMessage(sol$sysreqs$error))
   }
 }
 
@@ -743,6 +758,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
   sol <- if (downloads) {
     self$get_solution_download()
   } else {
+    self$stop_for_solve_error()
     self$get_solution()$data
   }
   if (inherits(sol, "pkgplan_solve_error")) return(sol)
@@ -825,6 +841,7 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     packages$params,
     function(x) lapply(as.list(x), unbox)
   )
+
   plan <- list(
     lockfile_version = unbox(version),
     os = unbox(utils::sessionInfo()$running),
@@ -832,6 +849,16 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     platform = unbox(R.Version()$platform),
     packages = packages
   )
+
+  sysreqs <- self$get_solution()$sysreqs$result
+  if (!is.null(sysreqs)) {
+    sysreqs$os <- unbox(sysreqs$os)
+    sysreqs$os_release <- unbox(sysreqs$os_release)
+    sysreqs$url <- unbox(sysreqs$url)
+    sysreqs$total <- NULL
+    plan$sysreqs <- sysreqs
+  }
+
   txt <- as_json_lite_plan(plan)
   writeLines(txt, plan_file)
 }

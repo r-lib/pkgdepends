@@ -123,19 +123,22 @@ pkg_installation_plan <- R6::R6Class(
       dls <- if (has_dls) private$plan$get_solution_download()
       dls_err <- has_dls && any(dls$status == "Failed")
 
+      has_sys <- !is.null(private$plan$get_solution()$sysreqs)
+
       c("<pkg_installation_plan>",
         "+ refs:", paste0("  - ", refs),
         "+ has solution",
         if (has_dls) "+ has downloads",
         if (dls_err) "x has download errors",
-        if (!has_dls) "(use `$download()` to download packages)",
+        "(use `$update()` to update the plan for an updated library)",
         "(use `$show_solution()` to see the packages to install",
         "(use `$get_solution()` to see the full solution results)",
         "(use `$draw()` to draw the dependency tree)",
-        "(use `$get_downloads()` to get download data)",
-        "(use `$get_install_plan()` to get the installation plan)",
-        "(use `$install()` to install the packages)",
-        "(use `$update()` to update the plan for an updated library)"
+        if (!has_dls) "(use `$download()` to download packages)",
+        if (has_dls) "(use `$get_downloads()` to get download data)",
+        if (has_dls) "(use `$get_install_plan()` to get the installation plan)",
+        if (has_sys) "(use `$install_sysreqs()` to install system requirements)",
+        if (has_dls) "(use `$install()` to install the packages)"
       )
     }
 

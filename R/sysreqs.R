@@ -1,5 +1,11 @@
 
-sysreqs_resolve <- function(sysreqs, os, os_release, config = NULL) {
+sysreqs_resolve <- function(sysreqs, os = NULL, os_release = NULL,
+                            config = NULL) {
+  if (is.null(os) || is.null(os_release)) {
+    lnx <- detect_linux()
+    os <- os %||% lnx$distribution
+    os_release <- os_release %||% lnx$release
+  }
   config <- config %||% current_config()
   synchronise(sysreqs_async_resolve(sysreqs, os, os_release, config))
 }
@@ -115,4 +121,12 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
   })
 
   invisible(output)
+}
+
+detect_linux <- function() {
+  plt <- pkgcache::current_r_platform_data()
+  list(
+    distribution = plt[["distribution"]] %||% "unknown",
+    release = plt[["release"]] %||% "unknown"
+  )
 }

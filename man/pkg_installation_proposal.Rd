@@ -257,6 +257,7 @@ pdi
 \item \href{#method-get_downloads}{\code{pkg_installation_proposal$get_downloads()}}
 \item \href{#method-stop_for_download_error}{\code{pkg_installation_proposal$stop_for_download_error()}}
 \item \href{#method-install}{\code{pkg_installation_proposal$install()}}
+\item \href{#method-install_sysreqs}{\code{pkg_installation_proposal$install_sysreqs()}}
 \item \href{#method-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
 \item \href{#method-format}{\code{pkg_installation_proposal$format()}}
 \item \href{#method-print}{\code{pkg_installation_proposal$print()}}
@@ -594,8 +595,18 @@ Install the downloaded packages. It calls \code{\link[=install_package_plan]{ins
 
 \subsection{Returns}{
 The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
-Create an installation plan for the downloaded packages.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-install_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-install_sysreqs}{}}}
+\subsection{Method \code{install_sysreqs()}}{
+Install system requirements.
+Create an installation plan for the downloaded packages.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$install_sysreqs()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_install_plan"></a>}}

@@ -489,3 +489,14 @@ safe_md5sum <- function(path) {
     }
   )
 }
+
+# TODO: rewrite this in C in ps
+
+get_euid <- function() {
+  euid <- tryCatch(
+    as.integer(processx::run("id", "-u")$stdout),
+    error = function(e) NA_integer_
+  )
+  if (length(euid) != 1 || is.na(euid)) euid <- NA_integer_
+  euid
+}

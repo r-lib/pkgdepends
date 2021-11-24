@@ -28,7 +28,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild (>= 1.0.2),
-    pkgcache (>= 1.2.2.9000),
+    pkgcache (>= 1.2.2.9001),
     prettyunits (>= 1.1.1),
     processx (>= 3.4.2),
     ps,

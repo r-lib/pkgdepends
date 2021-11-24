@@ -231,7 +231,8 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
         status = "OK",
         data = soldata,
         problem = list(pkgs = soldata),
-        solution = NULL
+        solution = NULL,
+        sysreqs = raw$sysreqs
       )
     )
   )

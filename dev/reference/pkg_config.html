@@ -198,6 +198,25 @@ The default is one day.
 The <code>PKG_METADATA_UPDATE_AFTER</code> environment variable may be set
 in seconds (<code>s</code> suffix), minutes (<code>m</code> suffix), hours (<code>h</code> suffix),
 or days (<code>d</code> suffix). E.g: <code>1d</code> means one day.</p></li>
+<li><p><code>sysreqs</code>: Whether to look up and install system requirements.
+By default this is <code>TRUE</code> if the <code>CI</code> environment variable is set
+and the operating system is a supported Linux distribution:
+CentOS, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
+Enterprise. The default will change as new platforms gain system
+requirements support.</p></li>
+<li><p><code>sysreqs_rspm_repo_id</code>: RStudio Package Manager repository id to use
+for CRAN system requirements lookup. Defaults to the <code>RSPM_REPO_ID</code>
+environment variable, if set. If not set, then it defaults to <code>1</code>.</p></li>
+<li><p><code>sysreqs_rspm_url</code>: Root URL of RStudio Package Manager for system
+requirements lookup. By default the <code>RSPM_ROOT</code> environment variable
+is used, if set. If not set, it defaults to
+<code>https://packagemanager.rstudio.com</code>.</p></li>
+<li><p><code>sysreqs_sudo</code>: Whether to use <code>sudo</code> to install system requirements,
+on Unix. By default it is <code>TRUE</code> on Linux if the effective user id
+of the current process is not the <code>root</code> user.</p></li>
+<li><p><code>sysreqs_verbose</code>: Whether to echo the output of system requirements
+installation. Defaults to <code>TRUE</code> if the <code>CI</code> environment variable is
+set.</p></li>
 </ul>
 
 

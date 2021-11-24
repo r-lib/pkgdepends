@@ -371,6 +371,10 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='r-in'><span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>new_pkg_deps</span><span class='op'>(</span><span class='st'>"pak"</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>pd</span><span class='op'>$</span><span class='fu'>get_config</span><span class='op'>(</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> # pkg config</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## sysreqs_sudo</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] TRUE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## build_vignettes</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] FALSE</span>
@@ -379,13 +383,29 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## sysreqs_rspm_repo_id</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "1"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## sysreqs_dry_run</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] FALSE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## metadata_cache_dir</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpFGQxl8/file30b63b9f3f72"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/Rtmp5BF0SO/file33a44a345731"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## dependencies</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Depends"   "Imports"   "LinkingTo"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## sysreqs_rspm_url</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "https://packagemanager.rstudio.com"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## sysreqs</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] TRUE</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## platforms</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
@@ -393,7 +413,7 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## library</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;set&gt;</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpFGQxl8/file30b6c585f40"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/Rtmp5BF0SO/file33a472bd2ffb"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## metadata_update_after</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
@@ -410,7 +430,11 @@ screen.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argumen
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## cache_dir</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpFGQxl8/file30b6518313b9"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/Rtmp5BF0SO/file33a4528c216"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ## sysreqs_verbose</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] TRUE</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ## r_versions</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;default&gt;</span>

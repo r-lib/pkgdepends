@@ -169,6 +169,18 @@ current_config <- function() {
   #'   and the operating system is Linux. This will change as new platforms
   #'   gain system requirements support.
   conf$add("sysreqs", "flag", default_sysreqs)
+  conf$add("sysreqs_dry_run", "flag", FALSE)
+
+  #' * `sysreqs_rspm_repo_id`: RStudio Package Manager repository id to use
+  #'   for CRAN system requirements lookup. Defaults to the `RSPM_REPO_ID`
+  #'   environment variable, if set. If not set, then it defaults to `1`.
+  conf$add("sysreqs_rspm_repo_id", "string", default_sysreqs_rspm_repo_id)
+
+  #' * `sysreqs_rspm_url`: Root URL of RStudio Package Manager for system
+  #'   requirements lookup. By default the `RSPM_ROOT` environment variable
+  #'   is used, if set. If not set, it defaults to
+  #'   `https://packagemanager.rstudio.com`.
+  conf$add("sysreqs_rspm_url", "string", default_sysreqs_rspm_url)
 
   #' * `sysreqs_sudo`: Whether to use `sudo` to install system requirements,
   #'   on Unix. By default it is `TRUE` on Linux if the effective user id
@@ -179,19 +191,6 @@ current_config <- function() {
   #'   installation. Defaults to `TRUE` if the `CI` environment variable is
   #'   set.
   conf$add("sysreqs_verbose", "flag", default_sysreqs_verbose)
-
-  #' * `sysreqs_rspm_url`: Root URL of RStudio Package Manager for system
-  #'   requirements lookup. By default the `RSPM_ROOT` environment variable
-  #'   is used, if set. If not set, it defaults to
-  #'   `https://packagemanager.rstudio.com`.
-  conf$add("sysreqs_rspm_url", "string", default_sysreqs_rspm_url)
-
-  #' * `sysreqs_rspm_repo_id`: RStudio Package Manager repository id to use
-  #'   for CRAN system requirements lookup. Defaults to the `RSPM_REPO_ID`
-  #'   environment variable, if set. If not set, then it defaults to `1`.
-  conf$add("sysreqs_rspm_repo_id", "string", default_sysreqs_rspm_repo_id)
-
-  conf$add("sysreqs_dry_run", "flag", FALSE)
 
   conf$lock()
   conf

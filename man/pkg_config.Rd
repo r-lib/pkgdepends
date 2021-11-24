@@ -90,6 +90,23 @@ The default is one day.
 The \code{PKG_METADATA_UPDATE_AFTER} environment variable may be set
 in seconds (\code{s} suffix), minutes (\code{m} suffix), hours (\code{h} suffix),
 or days (\code{d} suffix). E.g: \verb{1d} means one day.
+\item \code{sysreqs}: Whether to look up and install system requirements.
+By default this is \code{TRUE} if the \code{CI} environment variable is set
+and the operating system is Linux. This will change as new platforms
+gain system requirements support.
+\item \code{sysreqs_rspm_repo_id}: RStudio Package Manager repository id to use
+for CRAN system requirements lookup. Defaults to the \code{RSPM_REPO_ID}
+environment variable, if set. If not set, then it defaults to \code{1}.
+\item \code{sysreqs_rspm_url}: Root URL of RStudio Package Manager for system
+requirements lookup. By default the \code{RSPM_ROOT} environment variable
+is used, if set. If not set, it defaults to
+\verb{https://packagemanager.rstudio.com}.
+\item \code{sysreqs_sudo}: Whether to use \code{sudo} to install system requirements,
+on Unix. By default it is \code{TRUE} on Linux if the effective user id
+of the current process is not the \code{root} user.
+\item \code{sysreqs_verbose}: Whether to echo the output of system requirements
+installation. Defaults to \code{TRUE} if the \code{CI} environment variable is
+set.
 }
 }
 

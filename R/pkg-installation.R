@@ -457,7 +457,8 @@ pkg_installation_proposal <- R6::R6Class(
 
     #' @description
     #' Install system requirements. It does nothing if system requirements
-    #' are turned off. It errors if we could not look up the sysreqs.
+    #' are turned off. It errors if we could not look up the system
+    #' requirements.
 
     install_sysreqs = function() {
       srq <- self$get_solution()$sysreqs

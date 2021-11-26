@@ -230,7 +230,7 @@ parse_pkg_ref <- function(ref, remote_types = NULL, ...) {
 parse_ref_params <- function(refs) {
   list(
     refs = sub("[?].*$", "", refs),
-    params = lapply(sub("^[^?]*(\\?|$)", "", refs), parse_query)
+    params = lapply(refs, parse_query)
   )
 }
 
@@ -245,9 +245,10 @@ add_ref_params <- function(res, params) {
   res
 }
 
-known_query_params <- c("source", "reinstall", "nocache")
+known_query_params <- c("nocache", "reinstall", "source")
 
-parse_query <- function(query) {
+parse_query <- function(ref) {
+  query <- sub("^[^?]*(\\?|$)", "", ref)
   query <- sub("^[?]", "", query)
   query <- chartr("+", " ", query)
   argstr <- strsplit(query, "&", fixed = TRUE)[[1]]
@@ -258,7 +259,10 @@ parse_query <- function(query) {
   })
 
   if (length(bad <- unique(setdiff(keys, known_query_params)))) {
-    cli_alert_warning("Unknown package parameter{?s}: {.val {bad}}.")
+    cli_alert_warning(c(
+      "Unknown package{cli::qty(bad)} parameter{?s}: ",
+      "{.val {bad}} in {.val {ref}}."
+    ))
   }
 
   structure(vals, names = keys)

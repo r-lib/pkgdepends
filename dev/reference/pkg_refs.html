@@ -138,6 +138,8 @@ can be obtained from. The full syntax of a reference is <code>type::ref</code>, 
 <li><p><code>url</code>: An URL to a package archive.</p></li>
 <li><p><code>installed</code> An installed package.</p></li>
 <li><p><code>deps</code> The dependencies of a local package file or directory.</p></li>
+<li><p><code>any</code> A special reference type that accepts a package from any
+source. See below.</p></li>
 </ul>
 
 <p>If a ref does not explicitly specify a type, then the following rules
@@ -326,6 +328,27 @@ deps::/foo/bar/pkg
 deps::.
 </pre>
 
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a><code>any::</code> packages</h4>
+
+
+<p>Sometimes you need to install additional packages, but you don’t mind
+where they are installed from. Here is an example. You want to install
+cli from GitHub, from <code>r-lib/cli</code>. You also want to install glue, and
+you don’t mind which version of glue is installed, as long as it is
+compatible with the requested cli version. If cli specifies the
+development version of glue, then that is fine. If cli is fine with the
+CRAN version of glue, that’s OK, too. If a future version of cli does
+not depend on glue, you still want glue installed, from CRAN. The
+<code>any::</code> reference type does exactly this.</p>
+<p>In our example you might write<div class="sourceCode r"></p><pre><span class='fu'>pak</span><span class='fu'>::</span><span class='fu'><a href='http://pak.r-lib.org/reference/pkg_install.html'>pkg_install</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"glue"</span>, <span class='st'>"r-lib/cli"</span><span class='op'>)</span><span class='op'>)</span>
+</pre><p></div></p>
+<p>first, but this will fail if <code>rlib/cli</code> requests (say) <code>tidyverse/glue</code>,
+because in <code>pkg_install()</code> <code>"glue"</code> is interpreted as
+<code>"standard::glue"</code>, creating a conflict with <code>tidyverse/glue</code>. On the
+other hand<div class="sourceCode r"></p><pre><span class='fu'>pak</span><span class='fu'>::</span><span class='fu'><a href='http://pak.r-lib.org/reference/pkg_install.html'>pkg_install</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"any::glue"</span>, <span class='st'>"r-lib/cli"</span><span class='op'>)</span><span class='op'>)</span>
+</pre><p></div></p>
+<p>works, independently of which glue version is requested by cli.</p>
 
 
 

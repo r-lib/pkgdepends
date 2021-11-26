@@ -21,6 +21,8 @@ The currently supported reference types are:
 \item \code{url}: An URL to a package archive.
 \item \code{installed} An installed package.
 \item \code{deps} The dependencies of a local package file or directory.
+\item \code{any} A special reference type that accepts a package from any
+source. See below.
 }
 
 If a ref does not explicitly specify a type, then the following rules
@@ -210,6 +212,30 @@ Examples:\preformatted{deps::/foo/bar/package_1.0.0.tar.gz
 deps::/foo/bar/pkg
 deps::.
 }
+}
+
+\subsection{\verb{any::} packages}{
+
+Sometimes you need to install additional packages, but you don’t mind
+where they are installed from. Here is an example. You want to install
+cli from GitHub, from \code{r-lib/cli}. You also want to install glue, and
+you don’t mind which version of glue is installed, as long as it is
+compatible with the requested cli version. If cli specifies the
+development version of glue, then that is fine. If cli is fine with the
+CRAN version of glue, that’s OK, too. If a future version of cli does
+not depend on glue, you still want glue installed, from CRAN. The
+\verb{any::} reference type does exactly this.
+
+In our example you might write\if{html}{\out{<div class="sourceCode r">}}\preformatted{pak::pkg_install(c("glue", "r-lib/cli"))
+}\if{html}{\out{</div>}}
+
+first, but this will fail if \code{rlib/cli} requests (say) \code{tidyverse/glue},
+because in \code{pkg_install()} \code{"glue"} is interpreted as
+\code{"standard::glue"}, creating a conflict with \code{tidyverse/glue}. On the
+other hand\if{html}{\out{<div class="sourceCode r">}}\preformatted{pak::pkg_install(c("any::glue", "r-lib/cli"))
+}\if{html}{\out{</div>}}
+
+works, independently of which glue version is requested by cli.
 }
 
 }

@@ -426,20 +426,25 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     remote, direct = direct, config = config, cache = cache,
     dependencies = dependencies
   )$
-    then(function(value) {
-      # remote is either direct or indirect dependency, depending on
-      # 'direct', and the rest are all indirect
-      if (NROW(value)) {
-        value[["dep_types"]] <- list(dependencies[[2]])
-        if (!is.null(remote$package)) {
-          value$dep_types[value$package == remote$package] <-
-            list(dependencies[[2 - direct]])
+  then(function(value) {
+      # if 'dep_types' was already added by the resolution of the remote
+      # type (like any::) then we just keep that. Otherwise calculate from
+      # 'dependencies'
+      if (is.null(value[["dep_types"]])) {
+        # remote is either direct or indirect dependency, depending on
+        # 'direct', and the rest are all indirect
+        if (NROW(value)) {
+          value[["dep_types"]] <- list(dependencies[[2]])
+          if (!is.null(remote$package)) {
+            value$dep_types[value$package == remote$package] <-
+              list(dependencies[[2 - direct]])
+          } else {
+            value$dep_types[value$ref == remote$ref] <-
+              list(dependencies[[2 - direct]])
+          }
         } else {
-          value$dep_types[value$ref == remote$ref] <-
-            list(dependencies[[2 - direct]])
+          value[["dep_types"]] <- list()
         }
-      } else {
-        value[["dep_types"]] <- list()
       }
       list(value = value, id = id)
   })$
@@ -606,7 +611,7 @@ make_failed_resolution <- function(refs, type, direct) {
   tibble(
     ref = refs,
     type = type,
-    package = refs,
+    package = sub("^[a-z]+::", "", refs),
     version = NA_character_,
     sources = replicate(length(refs), NA_character_, simplify = FALSE),
     direct = direct,

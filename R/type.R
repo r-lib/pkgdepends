@@ -48,7 +48,13 @@ default_remote_types <- function() {
       resolve = resolve_remote_url,
       download = download_remote_url,
       satisfy = satisfy_remote_url,
-      installedok = installedok_remote_url)
+      installedok = installedok_remote_url),
+    any = list(
+      parse = parse_remote_any,
+      resolve = resolve_remote_any,
+      download = download_remote_any,
+      satisfy = satisfy_remote_any,
+      installedok = installedok_remote_any)
   )
 
   modifyList(default, as.list(getOption("pkg.remote_types")))

@@ -4,7 +4,7 @@
 * pkgdepends now has Much better platform support, including arm64 packages
   on macOS, and single-arch and multi-arch binary packages on Windows.
 
-* Better configurarion via environment variables and options, see
+* Better configuration via environment variables and options, see
   `?"pkgdepends-config"` for details.
 
 * Many improvements for lock files, i.e. the `$create_lockfile()` method

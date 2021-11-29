@@ -1,5 +1,5 @@
 
-# pkgdepends development version
+# pkgdepends 0.2.0
 
 * pkgdepends now has Much better platform support, including arm64 packages
   on macOS, and single-arch and multi-arch binary packages on Windows.

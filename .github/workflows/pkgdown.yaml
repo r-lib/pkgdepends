@@ -23,10 +23,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@pak2
         with:
-          extra-packages: any::pkgdown
+          extra-packages: any::pkgdown, local::.
           needs: website
 
-      - name: "Set environmental variables"
+      - name: "Set environment variables"
         run: |
           cat(paste0("R_USER_CACHE_DIR=", Sys.getenv("GITHUB_WORKSPACE"), "/.github/cache\n"), file = Sys.getenv("GITHUB_ENV"), append = TRUE)
         shell: Rscript {0}

@@ -21,20 +21,20 @@ package manager, see [pak](https://github.com/r-lib/pak).
 
 # Features
 
-  - Look up package dependencies recursively.
-  - Visualize package dependencies.
-  - Download packages and their dependencies.
-  - Install downloaded packages.
-  - Includes a dependency solver to find a consistent set of
+-   Look up package dependencies recursively.
+-   Visualize package dependencies.
+-   Download packages and their dependencies.
+-   Install downloaded packages.
+-   Includes a dependency solver to find a consistent set of
     dependencies.
-  - Supports CRAN and Bioconductor packages automatically.
-  - Supports packages on GitHub.
-  - Supports local package file and trees.
-  - Supports the `Remotes` entry in the `DESCRIPTION` file.
-  - Caches metadata and downloaded packages via
+-   Supports CRAN and Bioconductor packages automatically.
+-   Supports packages on GitHub.
+-   Supports local package file and trees.
+-   Supports the `Remotes` entry in the `DESCRIPTION` file.
+-   Caches metadata and downloaded packages via
     [pkgcache](https://github.com/r-lib/pkgcache)
-  - Performs all downloads and HTTP queries concurrently.
-  - Builds and installs packages in parallel.
+-   Performs all downloads and HTTP queries concurrently.
+-   Builds and installs packages in parallel.
 
 # Install
 
@@ -76,51 +76,49 @@ pd$solve()
 pd$draw()
 ```
 
-    #> r-lib/pkgcache 1.2.0.9000 [new][bld][cmp]
-    #> +-assertthat 0.2.1 [new][dl] (55.06 kB)
-    #> +-callr 3.5.1 [new][dl] (389.12 kB)
-    #> | +-processx 3.4.5 [new][dl] (489.62 kB)
-    #> | | +-ps 1.6.0 [new]
-    #> | | \-R6 2.5.0 [new][dl] (84.13 kB)
+    #> r-lib/pkgcache 1.3.0.9000 [new][bld][cmp][dl] (unknown size)
+    #> +-assertthat 0.2.1 [new][dl] (52.27 kB)
+    #> +-callr 3.7.0 [new][dl] (437.95 kB)
+    #> | +-processx 3.5.2 [new][dl] (299.05 kB)
+    #> | | +-ps 1.6.0 [new][dl] (286.34 kB)
+    #> | | \-R6 2.5.1 [new][dl] (82.58 kB)
     #> | \-R6
-    #> +-cli 2.3.1 [new]
-    #> | +-assertthat
-    #> | \-glue 1.4.2 [new][dl] (154.15 kB)
-    #> +-curl 4.3 [new][dl] (4.13 MB)
-    #> +-digest 0.6.27 [new][dl] (276.00 kB)
-    #> +-filelock 1.0.2 [new][dl] (39.80 kB)
+    #> +-cli 3.1.0 [new]
+    #> | \-glue 1.5.0 [new]
+    #> +-curl 4.3.2 [new][dl] (880.06 kB)
+    #> +-digest 0.6.28 [new][dl] (292.25 kB)
+    #> +-filelock 1.0.2 [new][dl] (29.14 kB)
     #> +-glue
-    #> +-jsonlite 1.7.2 [new][dl] (541.92 kB)
-    #> +-prettyunits 1.1.1 [new][dl] (37.53 kB)
+    #> +-jsonlite 1.7.2 [new][dl] (509.74 kB)
+    #> +-prettyunits 1.1.1 [new][dl] (34.73 kB)
     #> +-R6
     #> +-processx
-    #> +-rappdirs 0.3.3 [new][dl] (58.65 kB)
-    #> +-rlang 0.4.10 [new]
-    #> +-tibble 3.1.0 [new]
-    #> | +-ellipsis 0.3.1 [new][dl] (46.11 kB)
+    #> +-rappdirs 0.3.3 [new][dl] (46.69 kB)
+    #> +-rlang 0.4.12 [new][dl] (1.36 MB)
+    #> +-tibble 3.1.6 [new]
+    #> | +-ellipsis 0.3.2 [new][dl] (38.58 kB)
     #> | | \-rlang
-    #> | +-fansi 0.4.2 [new]
-    #> | +-lifecycle 1.0.0 [new]
+    #> | +-fansi 0.5.0 [new][dl] (251.70 kB)
+    #> | +-lifecycle 1.0.1 [new]
     #> | | +-glue
     #> | | \-rlang
-    #> | +-magrittr 2.0.1 [new][dl] (235.86 kB)
-    #> | +-pillar 1.5.1 [new][dl] (962.38 kB)
+    #> | +-magrittr 2.0.1 [new][dl] (226.63 kB)
+    #> | +-pillar 1.6.4 [new][dl] (1.03 MB)
     #> | | +-cli
-    #> | | +-crayon 1.4.1 [new]
+    #> | | +-crayon 1.4.2 [new][dl] (155.29 kB)
     #> | | +-ellipsis
     #> | | +-fansi
     #> | | +-lifecycle
     #> | | +-rlang
-    #> | | +-utf8 1.1.4 [new][dl] (215.33 kB)
-    #> | | \-vctrs 0.3.6 [new]
+    #> | | +-utf8 1.2.2 [new][dl] (210.68 kB)
+    #> | | \-vctrs 0.3.8 [new][dl] (1.45 MB)
     #> | |   +-ellipsis
-    #> | |   +-digest
     #> | |   +-glue
     #> | |   \-rlang
-    #> | +-pkgconfig 2.0.3 [new][dl] (22.27 kB)
+    #> | +-pkgconfig 2.0.3 [new][dl] (17.81 kB)
     #> | +-rlang
     #> | \-vctrs
-    #> \-uuid 0.1-4 [new][dl] (33.61 kB)
+    #> \-uuid 1.0-3 [new][dl] (48.79 kB)
     #> 
     #> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 
@@ -200,10 +198,10 @@ for details.
 
 # Related
 
-  - [pak](https://github.com/r-lib/pak) – R package manager
-  - [pkgcache](https://github.com/r-lib/pkgcache) – Metadata and package
+-   [pak](https://github.com/r-lib/pak) – R package manager
+-   [pkgcache](https://github.com/r-lib/pkgcache) – Metadata and package
     cache
-  - [devtools](https://github.com/r-lib/devtools) – Tools for R package
+-   [devtools](https://github.com/r-lib/devtools) – Tools for R package
     developers
 
 # License

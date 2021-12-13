@@ -492,6 +492,13 @@ pkgplan_i_lp_dependencies <- function(lp) {
   ruled_out <- lp$ruled_out
   base <- base_packages()
   ignored <- vlapply(pkgs$params, is_true_param, "ignore")
+  ignore_rver <- vcapply(pkgs$params, get_param_value, "ignore-before-r")
+  if (any(!is.na(ignore_rver))) {
+    ignore_rver[is.na(ignore_rver)] <- "0.0.0"
+    current <- min(lp$config$get("r_versions"))
+    ignored2 <- ignore_rver > current
+    ignored <- ignored | ignored2
+  }
   soft_deps <- pkg_dep_types_soft()
 
   ## 4. Package dependencies must be satisfied

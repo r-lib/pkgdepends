@@ -256,7 +256,8 @@ add_ref_params <- function(res, params) {
   res
 }
 
-known_query_params <- c("ignore", "nocache", "reinstall", "source")
+known_query_params <- c("ignore", "ignore-before-r", "nocache",
+                        "reinstall", "source")
 
 parse_query <- function(ref) {
   query <- sub("^[^?]*(\\?|$)", "", ref)
@@ -282,4 +283,8 @@ parse_query <- function(ref) {
 is_true_param <- function(params, which) {
   which %in% names(params) &&
     tolower(params[[which]]) %in% c("", "true", "yes", "y", "on", "1")
+}
+
+get_param_value <- function(params, which) {
+  if (which %in% names(params)) params[[which]] else NA_character_
 }

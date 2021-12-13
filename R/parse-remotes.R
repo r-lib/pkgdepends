@@ -159,6 +159,7 @@ get_remote_types <- function(refs) {
   types[types == "" & grepl(github_rx(), refs, perl = TRUE)] <- "github"
   types[types == "" & grepl(github_url_rx(), refs, perl = TRUE)] <- "github"
   types[types == "" & grepl(local_rx(), refs, perl = TRUE)] <- "local"
+  types[types == "" & grepl(param_rx(), refs, perl = TRUE)] <- "param"
 
   if (any(bad <- types == "")) {
     stop("Can't parse remotes: ", paste(refs[bad], collapse = ", "))
@@ -227,10 +228,20 @@ parse_pkg_ref <- function(ref, remote_types = NULL, ...) {
   parse_pkg_refs(ref, remote_types = remote_types, ...)[[1]]
 }
 
+# TODO: allow omitting the package name: `?nocache` and then it applies
+# to every package
+
+param_rx <- function() {
+  paste0(
+    "(?:(?<package>", package_name_rx(), ")=)",
+    "$"
+  )
+}
+
 parse_ref_params <- function(refs) {
   list(
     refs = sub("[?].*$", "", refs),
-    params = lapply(sub("^[^?]*(\\?|$)", "", refs), parse_query)
+    params = lapply(refs, parse_query)
   )
 }
 
@@ -245,9 +256,11 @@ add_ref_params <- function(res, params) {
   res
 }
 
-known_query_params <- c("source", "reinstall", "nocache")
+known_query_params <- c("ignore", "ignore-before-r", "nocache",
+                        "reinstall", "source")
 
-parse_query <- function(query) {
+parse_query <- function(ref) {
+  query <- sub("^[^?]*(\\?|$)", "", ref)
   query <- sub("^[?]", "", query)
   query <- chartr("+", " ", query)
   argstr <- strsplit(query, "&", fixed = TRUE)[[1]]
@@ -258,7 +271,10 @@ parse_query <- function(query) {
   })
 
   if (length(bad <- unique(setdiff(keys, known_query_params)))) {
-    cli_alert_warning("Unknown package parameter{?s}: {.val {bad}}.")
+    cli_alert_warning(c(
+      "Unknown package{cli::qty(bad)} parameter{?s}: ",
+      "{.val {bad}} in {.val {ref}}."
+    ))
   }
 
   structure(vals, names = keys)
@@ -267,4 +283,8 @@ parse_query <- function(query) {
 is_true_param <- function(params, which) {
   which %in% names(params) &&
     tolower(params[[which]]) %in% c("", "true", "yes", "y", "on", "1")
+}
+
+get_param_value <- function(params, which) {
+  if (which %in% names(params)) params[[which]] else NA_character_
 }

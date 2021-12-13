@@ -47,18 +47,38 @@ value. For example these two package refs are the same:\preformatted{cran::testt
 cran::testthat?source=true&nocache=true
 }
 
-Currently supported parameters: * \code{source} is a binary parameter. If
-specified, then a source R package is requested from a CRAN-like
-repository. For package installations \code{source} always triggers a
-re-install. In other words, \code{source} implies the \code{reinstall} parameter.
-This parameter is supported for \verb{bioc::}, \verb{cran::} and \verb{standard::}
-remote types, and it is ignore for others. * \code{reinstall} requests a
-re-install for package installations. It is supported by the \verb{bioc::},
-\verb{cran::}, \verb{github::}, \verb{local::}, \verb{standard::}, and \verb{url::} remote types.
-* \code{nocache} will ignore the package cache. It will always download the
-package file, and it will not add the downloaded (and built) file to the
-package cache. It is supported by the \verb{bioc::}, \verb{cran::}, \verb{github::},
-\verb{standard::} and \verb{url::} remote types.
+Some parameters given in a special form allow configuring downstream
+dependencies:\preformatted{packagename=?parameter
+}
+
+can be given at the command line and refers to a (potential) downstream
+package.
+
+Currently supported parameters:
+\itemize{
+\item \code{ignore} is a binary parameter. If specified the package is ignored.
+This usually makes sense in the \code{packagename=?ignore} form, to
+ignore a downstream soft dependency. If all versions of a hard
+dependency are ignored that will lead to a solution error.
+\item \code{ignore-before-r} is a version number parameter. The package will be
+ignored on R versions that are older than the specified one. E.g.
+\verb{Matrix=?ignore-before-r=4.1.2} will ignore the Matrix package on R
+versions that are older than 4.1.2. This parameter really only makes
+sense in the \code{packgename=?ignore} form.
+\item \code{source} is a binary parameter. If specified, then a source R
+package is requested from a CRAN-like repository. For package
+installations \code{source} always triggers a re-install. In other words,
+\code{source} implies the \code{reinstall} parameter. This parameter is
+supported for \verb{bioc::}, \verb{cran::} and \verb{standard::} remote types, and
+it is ignore for others.
+\item \code{reinstall} requests a re-install for package installations. It is
+supported by the \verb{bioc::}, \verb{cran::}, \verb{github::}, \verb{local::},
+\verb{standard::}, and \verb{url::} remote types.
+\item \code{nocache} will ignore the package cache. It will always download the
+package file, and it will not add the downloaded (and built) file to
+the package cache. It is supported by the \verb{bioc::}, \verb{cran::},
+\verb{github::}, \verb{standard::} and \verb{url::} remote types.
+}
 \subsection{CRAN packages:}{
 
 A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]

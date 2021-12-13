@@ -167,6 +167,7 @@ resolution <- R6::R6Class(
     library = NULL,
     deferred = NULL,
     state = NULL,
+    params = NULL,
     dependencies = NULL,
     metadata = NULL,
     bar = NULL,
@@ -269,7 +270,18 @@ res_init <- function(self, private, config, cache, library,
 }
 
 res_push <- function(self, private, ..., direct, .list = .list) {
+  self; private
   new <- c(list(...), .list)
+
+  ## Set (new) parameters
+  new_types <- vcapply(new, "[[", "type")
+  params <- new[new_types == "param"]
+  new <- new[new_types != "param"]
+
+  if (length(params)) {
+    private$params <- c(private$params, params)
+    update_params(self, private, private$params)
+  }
 
   ## Drop the ones already resolving up front
   new_refs <- vcapply(new, "[[", "ref")
@@ -396,6 +408,7 @@ res__try_finish <- function(self, private, resolve) {
   if (length(private$delayed)) return(private$resolve_delayed(resolve))
   if (all(! is.na(private$state$status))) {
     "!DEBUG resolution finished"
+    update_params(self, private, private$params)
     private$metadata$resolution_end <- Sys.time()
     self$result$cache_status <-
       calculate_cache_status(self$result, private$cache)
@@ -454,6 +467,33 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     })
 
   list(dx = dx, id = id)
+}
+
+update_params <- function(self, private, params) {
+  for (par in params) {
+    if (par$package == "" && length(self$result$params)) {
+      self$result$params <- lapply(self$result$params, function(p) {
+        p[names(par$params)] <- par$params
+        p
+      })
+      self$result$remote <- lapply(self$result$remote, function(rem) {
+        if (is.list(rem)) rem$params[names(par$params)] <- par$params
+        rem
+      })
+    } else {
+      sel <- self$result$package == par$package
+      if (any(sel)) {
+        self$result$params[sel] <- lapply(self$result$params[sel], function(p) {
+          p[names(par$params)] <- par$params
+          p
+        })
+        self$result$remote[sel] <- lapply(self$result$remote[sel], function(rem) {
+          if (is.list(rem)) rem$params[names(par$params)] <- par$params
+          rem
+        })
+      }
+    }
+  }
 }
 
 resolve_from_description <- function(path, sources, remote, direct,

@@ -208,6 +208,7 @@ pkgplan_i_create_lp_problem <- function(pkgs, config, policy) {
   lp <- pkgplan_i_lp_init(pkgs, config, policy)
   lp <- pkgplan_i_lp_objectives(lp)
   lp <- pkgplan_i_lp_failures(lp)
+  lp <- pkgplan_i_lp_ignore(lp)
   lp <- pkgplan_i_lp_platforms(lp)
   lp <- pkgplan_i_lp_no_multiples(lp)
   lp <- pkgplan_i_lp_rversion(lp, rversion)
@@ -300,6 +301,17 @@ pkgplan_i_lp_failures <- function(lp) {
     lp$ruled_out <<- c(lp$ruled_out, wh)
   }
   lapply(seq_len(lp$num_candidates), failedconds)
+
+  lp
+}
+
+pkgplan_i_lp_ignore <- function(lp) {
+  ignored <- which(vlapply(lp$pkgs$params, is_true_param, "ignore"))
+  for (wh in ignored) {
+    lp <- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
+                                type = "ignored-by-user")
+  }
+  lp$ruled_out <- c(lp$ruled_out, ignored)
 
   lp
 }
@@ -479,6 +491,15 @@ pkgplan_i_lp_dependencies <- function(lp) {
   num_candidates <- lp$num_candidates
   ruled_out <- lp$ruled_out
   base <- base_packages()
+  ignored <- vlapply(pkgs$params, is_true_param, "ignore")
+  ignore_rver <- vcapply(pkgs$params, get_param_value, "ignore-before-r")
+  if (any(!is.na(ignore_rver))) {
+    ignore_rver[is.na(ignore_rver)] <- "0.0.0"
+    current <- min(lp$config$get("r_versions"))
+    ignored2 <- ignore_rver > current
+    ignored <- ignored | ignored2
+  }
+  soft_deps <- pkg_dep_types_soft()
 
   ## 4. Package dependencies must be satisfied
   depconds <- function(wh) {
@@ -496,9 +517,17 @@ pkgplan_i_lp_dependencies <- function(lp) {
       depver <- deps$version[i]
       depop  <- deps$op[i]
       deppkg <- deps$package[i]
-      ## See which candidate satisfies this ref
+      deptyp <- deps$type[i]
+
+      # candidates
       res <- pkgs[match(depref, pkgs$ref), ]
       cand <- which(pkgs$package == deppkg)
+
+      # if all candidates are ignored and the package is a soft
+      # dependency, then nothing to do
+      if (all(ignored[cand]) && deptyp %in% soft_deps) next
+
+      # good candidates
       good_cand <- Filter(
         x = cand,
         function(c) {
@@ -555,6 +584,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "ok-resolution") {
     ref <- x$pkgs$ref[cond$vars]
     glue("`{ref}` resolution failed")
+
+  } else if (cond$type == "ignored-by-user") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` explicitly ignored by user")
 
   } else if (cond$type == "matching-platform") {
     ref <- x$pkgs$ref[cond$vars]

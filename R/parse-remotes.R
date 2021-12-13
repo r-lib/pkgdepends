@@ -159,6 +159,7 @@ get_remote_types <- function(refs) {
   types[types == "" & grepl(github_rx(), refs, perl = TRUE)] <- "github"
   types[types == "" & grepl(github_url_rx(), refs, perl = TRUE)] <- "github"
   types[types == "" & grepl(local_rx(), refs, perl = TRUE)] <- "local"
+  types[types == "" & grepl(param_rx(), refs, perl = TRUE)] <- "param"
 
   if (any(bad <- types == "")) {
     stop("Can't parse remotes: ", paste(refs[bad], collapse = ", "))
@@ -227,6 +228,16 @@ parse_pkg_ref <- function(ref, remote_types = NULL, ...) {
   parse_pkg_refs(ref, remote_types = remote_types, ...)[[1]]
 }
 
+# TODO: allow omitting the package name: `?nocache` and then it applies
+# to every package
+
+param_rx <- function() {
+  paste0(
+    "(?:(?<package>", package_name_rx(), ")=)",
+    "$"
+  )
+}
+
 parse_ref_params <- function(refs) {
   list(
     refs = sub("[?].*$", "", refs),
@@ -245,7 +256,7 @@ add_ref_params <- function(res, params) {
   res
 }
 
-known_query_params <- c("nocache", "reinstall", "source")
+known_query_params <- c("ignore", "nocache", "reinstall", "source")
 
 parse_query <- function(ref) {
   query <- sub("^[^?]*(\\?|$)", "", ref)

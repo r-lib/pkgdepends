@@ -44,5 +44,7 @@ satisfy_remote_any <- function(resolution, candidate, config, ...) {
 }
 
 installedok_remote_any <- function(installed, solution, config, ...) {
-  TRUE
+  # We still need the one we planned for, because the other one might
+  # have different dependencies.
+  installedok_remote_cran(installed, solution, config, ...)
 }

@@ -155,7 +155,9 @@ test_that("download_remote error", {
   expect_true(all(dl$download_status == "Failed"))
 })
 
-test_that("satisfy", {
-  ## Always FALSE, independently of arguments
-  expect_false(satisfy_remote_local())
-})
+# remove this test for now
+#
+# test_that("satisfy", {
+#   ## Always FALSE, independently of arguments
+#   expect_false(satisfy_remote_local())
+# })

@@ -83,7 +83,7 @@
 <p>Package Dependency Resolution, Downloads and Installation</p>
 </blockquote>
 <!-- badges: start -->
-<p><a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="lifecycle: experimental"></a> <a href="https://github.com/r-lib/pkgdepends/actions"><img src="https://github.com/r-lib/pkgdepends/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://codecov.io/github/r-lib/pkgdepends?branch=master"><img src="https://img.shields.io/codecov/c/github/r-lib/pkgdepends/master.svg" alt="Coverage Status"></a> <!-- badges: end --></p>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="lifecycle: experimental"></a> <a href="https://github.com/r-lib/pkgdepends/actions"><img src="https://github.com/r-lib/pkgdepends/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://codecov.io/github/r-lib/pkgdepends?branch=main"><img src="https://img.shields.io/codecov/c/github/r-lib/pkgdepends/main.svg" alt="Coverage Status"></a> <!-- badges: end --></p>
 <p>pkgdepends is a toolkit for package dependencies, downloads and installations, to be used in other packages. If you are looking for a package manager, see <a href="https://github.com/r-lib/pak">pak</a>.</p>
 </div>
 <div id="features" class="section level1">
@@ -121,12 +121,12 @@
 <h2 class="hasAnchor">
 <a href="#package-references" class="anchor"></a>Package references</h2>
 <p>A package reference (ref) specifies a location from which an R package can be obtained from. Examples:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>devtools</span>
-<span id="cb3-2"><a href="#cb3-2"></a>cran<span class="op">::</span>devtools</span>
-<span id="cb3-3"><a href="#cb3-3"></a>bioc<span class="op">::</span>Biobase</span>
-<span id="cb3-4"><a href="#cb3-4"></a>r<span class="op">-</span>lib<span class="op">/</span>pkgdepends</span>
-<span id="cb3-5"><a href="#cb3-5"></a>https<span class="op">:</span><span class="er">//</span>github.com<span class="op">/</span>r<span class="op">-</span>lib<span class="op">/</span>pkgdepends</span>
-<span id="cb3-6"><a href="#cb3-6"></a>local<span class="op">::</span><span class="er">~/</span>works<span class="op">/</span>shiny</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>devtools</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cran<span class="sc">::</span>devtools</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>bioc<span class="sc">::</span>Biobase</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>local<span class="sc">::</span><span class="er">~/</span>works<span class="sc">/</span>shiny</span></code></pre></div>
 <p>See <a href="https://r-lib.github.io/pkgdepends/reference/pkg_refs.html">“Package references”</a> for details.</p>
 </div>
 <div id="package-dependencies" class="section level2">
@@ -137,51 +137,51 @@
 <code class="sourceCode R"><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/pkgcache"</span><span class="op">)</span>
 <span class="va">pd</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span>
 <span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">#&gt; r-lib/pkgcache 1.3.0.9000 [new][bld][cmp][dl] (unknown size)</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="co">#&gt; +-assertthat 0.2.1 [new][dl] (52.27 kB)</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="co">#&gt; +-callr 3.7.0 [new][dl] (437.95 kB)</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt; | +-processx 3.5.2 [new][dl] (299.05 kB)</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; | | +-ps 1.6.0 [new][dl] (286.34 kB)</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; | | \-R6 2.5.1 [new][dl] (82.58 kB)</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; | \-R6</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt; +-cli 3.1.0 [new]</span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; | \-glue 1.5.0 [new]</span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; +-curl 4.3.2 [new][dl] (880.06 kB)</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt; +-digest 0.6.28 [new][dl] (292.25 kB)</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt; +-filelock 1.0.2 [new][dl] (29.14 kB)</span></span>
-<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt; +-glue</span></span>
-<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt; +-jsonlite 1.7.2 [new][dl] (509.74 kB)</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt; +-prettyunits 1.1.1 [new][dl] (34.73 kB)</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; +-R6</span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; +-processx</span></span>
-<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt; +-rappdirs 0.3.3 [new][dl] (46.69 kB)</span></span>
-<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; +-rlang 0.4.12 [new][dl] (1.36 MB)</span></span>
-<span id="cb5-20"><a href="#cb5-20"></a><span class="co">#&gt; +-tibble 3.1.6 [new]</span></span>
-<span id="cb5-21"><a href="#cb5-21"></a><span class="co">#&gt; | +-ellipsis 0.3.2 [new][dl] (38.58 kB)</span></span>
-<span id="cb5-22"><a href="#cb5-22"></a><span class="co">#&gt; | | \-rlang</span></span>
-<span id="cb5-23"><a href="#cb5-23"></a><span class="co">#&gt; | +-fansi 0.5.0 [new][dl] (251.70 kB)</span></span>
-<span id="cb5-24"><a href="#cb5-24"></a><span class="co">#&gt; | +-lifecycle 1.0.1 [new]</span></span>
-<span id="cb5-25"><a href="#cb5-25"></a><span class="co">#&gt; | | +-glue</span></span>
-<span id="cb5-26"><a href="#cb5-26"></a><span class="co">#&gt; | | \-rlang</span></span>
-<span id="cb5-27"><a href="#cb5-27"></a><span class="co">#&gt; | +-magrittr 2.0.1 [new][dl] (226.63 kB)</span></span>
-<span id="cb5-28"><a href="#cb5-28"></a><span class="co">#&gt; | +-pillar 1.6.4 [new][dl] (1.03 MB)</span></span>
-<span id="cb5-29"><a href="#cb5-29"></a><span class="co">#&gt; | | +-cli</span></span>
-<span id="cb5-30"><a href="#cb5-30"></a><span class="co">#&gt; | | +-crayon 1.4.2 [new][dl] (155.29 kB)</span></span>
-<span id="cb5-31"><a href="#cb5-31"></a><span class="co">#&gt; | | +-ellipsis</span></span>
-<span id="cb5-32"><a href="#cb5-32"></a><span class="co">#&gt; | | +-fansi</span></span>
-<span id="cb5-33"><a href="#cb5-33"></a><span class="co">#&gt; | | +-lifecycle</span></span>
-<span id="cb5-34"><a href="#cb5-34"></a><span class="co">#&gt; | | +-rlang</span></span>
-<span id="cb5-35"><a href="#cb5-35"></a><span class="co">#&gt; | | +-utf8 1.2.2 [new][dl] (210.68 kB)</span></span>
-<span id="cb5-36"><a href="#cb5-36"></a><span class="co">#&gt; | | \-vctrs 0.3.8 [new][dl] (1.45 MB)</span></span>
-<span id="cb5-37"><a href="#cb5-37"></a><span class="co">#&gt; | |   +-ellipsis</span></span>
-<span id="cb5-38"><a href="#cb5-38"></a><span class="co">#&gt; | |   +-glue</span></span>
-<span id="cb5-39"><a href="#cb5-39"></a><span class="co">#&gt; | |   \-rlang</span></span>
-<span id="cb5-40"><a href="#cb5-40"></a><span class="co">#&gt; | +-pkgconfig 2.0.3 [new][dl] (17.81 kB)</span></span>
-<span id="cb5-41"><a href="#cb5-41"></a><span class="co">#&gt; | +-rlang</span></span>
-<span id="cb5-42"><a href="#cb5-42"></a><span class="co">#&gt; | \-vctrs</span></span>
-<span id="cb5-43"><a href="#cb5-43"></a><span class="co">#&gt; \-uuid 1.0-3 [new][dl] (48.79 kB)</span></span>
-<span id="cb5-44"><a href="#cb5-44"></a><span class="co">#&gt; </span></span>
-<span id="cb5-45"><a href="#cb5-45"></a><span class="co">#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; r-lib/pkgcache 1.3.0.9000 [new][bld][cmp][dl] (unknown size)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-assertthat 0.2.1 [new][dl] (52.27 kB)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-callr 3.7.0 [new][dl] (437.95 kB)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-processx 3.5.2 [new][dl] (299.05 kB)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-ps 1.6.0 [new][dl] (286.34 kB)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-R6 2.5.1 [new][dl] (82.58 kB)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | \-R6</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-cli 3.1.0 [new]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | \-glue 1.5.0 [new]</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-curl 4.3.2 [new][dl] (880.06 kB)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-digest 0.6.28 [new][dl] (292.25 kB)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-filelock 1.0.2 [new][dl] (29.14 kB)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-glue</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-jsonlite 1.7.2 [new][dl] (509.74 kB)</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-prettyunits 1.1.1 [new][dl] (34.73 kB)</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-R6</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-processx</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-rappdirs 0.3.3 [new][dl] (46.69 kB)</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-rlang 0.4.12 [new][dl] (1.36 MB)</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-tibble 3.1.6 [new]</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-ellipsis 0.3.2 [new][dl] (38.58 kB)</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-rlang</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-fansi 0.5.0 [new][dl] (251.70 kB)</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-lifecycle 1.0.1 [new]</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-glue</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-rlang</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-magrittr 2.0.1 [new][dl] (226.63 kB)</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-pillar 1.6.4 [new][dl] (1.03 MB)</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-cli</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-crayon 1.4.2 [new][dl] (155.29 kB)</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-ellipsis</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-fansi</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-lifecycle</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-rlang</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-utf8 1.2.2 [new][dl] (210.68 kB)</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-vctrs 0.3.8 [new][dl] (1.45 MB)</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | |   +-ellipsis</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | |   +-glue</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | |   \-rlang</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-pkgconfig 2.0.3 [new][dl] (17.81 kB)</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-rlang</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | \-vctrs</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; \-uuid 1.0-3 [new][dl] (48.79 kB)</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span></span></code></pre></div>
 <p>See the <a href="https://r-lib.github.io/pkgdepends/reference/pkg_deps.html"><code>pkg_deps</code></a> class for details.</p>
 </div>
 <div id="package-downloads" class="section level2">

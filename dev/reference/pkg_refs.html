@@ -164,18 +164,37 @@ value. For example these two package refs are the same:</p><pre><span class='fu'
 <span class='fu'>cran</span><span class='fu'>::</span><span class='va'>testthat</span><span class='op'>?</span><span class='va'>source</span><span class='op'>=</span><span class='va'>true</span><span class='op'>&amp;</span><span class='va'>nocache</span><span class='op'>=</span><span class='va'>true</span>
 </pre>
 
-<p>Currently supported parameters: * <code>source</code> is a binary parameter. If
-specified, then a source R package is requested from a CRAN-like
-repository. For package installations <code>source</code> always triggers a
-re-install. In other words, <code>source</code> implies the <code>reinstall</code> parameter.
-This parameter is supported for <code>bioc::</code>, <code>cran::</code> and <code>standard::</code>
-remote types, and it is ignore for others. * <code>reinstall</code> requests a
-re-install for package installations. It is supported by the <code>bioc::</code>,
-<code>cran::</code>, <code>github::</code>, <code>local::</code>, <code>standard::</code>, and <code>url::</code> remote types.
-* <code>nocache</code> will ignore the package cache. It will always download the
-package file, and it will not add the downloaded (and built) file to the
-package cache. It is supported by the <code>bioc::</code>, <code>cran::</code>, <code>github::</code>,
-<code>standard::</code> and <code>url::</code> remote types.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>CRAN packages:</h4>
+<p>Some parameters given in a special form allow configuring downstream
+dependencies:</p><pre><span class='va'>packagename</span><span class='op'>=</span><span class='op'>?</span><span class='va'>parameter</span>
+</pre>
+
+<p>can be given at the command line and refers to a (potential) downstream
+package.</p>
+<p>Currently supported parameters:</p><ul>
+<li><p><code>ignore</code> is a binary parameter. If specified the package is ignored.
+This usually makes sense in the <code>packagename=?ignore</code> form, to
+ignore a downstream soft dependency. If all versions of a hard
+dependency are ignored that will lead to a solution error.</p></li>
+<li><p><code>ignore-before-r</code> is a version number parameter. The package will be
+ignored on R versions that are older than the specified one. E.g.
+<code>Matrix=?ignore-before-r=4.1.2</code> will ignore the Matrix package on R
+versions that are older than 4.1.2. This parameter really only makes
+sense in the <code>packgename=?ignore</code> form.</p></li>
+<li><p><code>source</code> is a binary parameter. If specified, then a source R
+package is requested from a CRAN-like repository. For package
+installations <code>source</code> always triggers a re-install. In other words,
+<code>source</code> implies the <code>reinstall</code> parameter. This parameter is
+supported for <code>bioc::</code>, <code>cran::</code> and <code>standard::</code> remote types, and
+it is ignore for others.</p></li>
+<li><p><code>reinstall</code> requests a re-install for package installations. It is
+supported by the <code>bioc::</code>, <code>cran::</code>, <code>github::</code>, <code>local::</code>,
+<code>standard::</code>, and <code>url::</code> remote types.</p></li>
+<li><p><code>nocache</code> will ignore the package cache. It will always download the
+package file, and it will not add the downloaded (and built) file to
+the package cache. It is supported by the <code>bioc::</code>, <code>cran::</code>,
+<code>github::</code>, <code>standard::</code> and <code>url::</code> remote types.</p></li>
+</ul>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>CRAN packages:</h4>
 
 
 <p>A package from CRAN. Full syntax:</p><pre>[cran::]&lt;package&gt;[@[&gt;=]&lt;version&gt; | current | last]

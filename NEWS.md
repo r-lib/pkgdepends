@@ -1,6 +1,9 @@
 
 # pkgdepends development version
 
+* Make system dependency installation more robust
+  (https://github.com/r-lib/pak/issues/347).
+
 # pkgdepends 0.2.0
 
 * pkgdepends now has Much better platform support, including arm64 packages

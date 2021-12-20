@@ -106,7 +106,6 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
   # TODO: fix 'R' commands (e.g. `R CMD javareconf`) to call the current
   # version of R and not the one on the PATH
 
-  if (sudo) cmds <- paste("sudo", cmds)
   if (dry_run) cmds <- paste("echo", cmds)
 
   if (verbose) {
@@ -119,10 +118,18 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
   }
 
   output <- lapply(cmds, function(cmd) {
-    cli::cli_alert_info("Executing {.code {cmd}}")
+    if (sudo) {
+      sh <- "sudo"
+      cmdline <- c("sh", "-c", cmd)
+    } else {
+      sh <- "sh"
+      cmdline <- c("-c", cmd)
+    }
+    fullcmd <- paste(c(sh, cmdline), collapse = " ")
+    cli::cli_alert_info("Executing {.code {fullcmd}}")
     processx::run(
-      "sh",
-      c("-c", cmd),
+      sh,
+      cmdline,
       stdout_callback = callback,
       stderr_to_stdout = TRUE
     )

@@ -892,7 +892,9 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     plan$sysreqs <- sysreqs
   }
 
+  cli::cli_alert_info("Converting lockfile to JSON")
   txt <- as_json_lite_plan(plan)
+  cli::cli_alert_info("Writing out lockfile")
   writeLines(txt, plan_file)
 }
 

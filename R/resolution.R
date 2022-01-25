@@ -596,6 +596,8 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
         "rversion", "repodir", "target", "deps", "sources", "mirror",
         "filesize", "sha256", "sysreqs")
 
+      cols <- intersect(names(data), cols)
+
       res <- data[cols]
       res$built <- data[["built"]] %||% rep(NA_character_, nrow(res))
       idx <- match(res$package, packages)

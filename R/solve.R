@@ -900,7 +900,7 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
 
 #' @importFrom jsonlite unbox toJSON
 
-as_json_lite_plan <- function(liteplan, pretty = as.logical(Sys.getenv("PKG_PRETTY_JSON", "FALSE")), ...) {
+as_json_lite_plan <- function(liteplan, pretty = as.logical(Sys.getenv("PKG_PRETTY_JSON", "TRUE")), ...) {
   tolist1 <- function(x) lapply(x, function(v) lapply(as.list(v), unbox))
   liteplan$packages$metadata <- tolist1(liteplan$packages$metadata)
   toJSON(liteplan, pretty = pretty, ...)

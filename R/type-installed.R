@@ -71,7 +71,7 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
 
   miss <- setdiff(fields, names(inst))
   for (nm in miss) {
-    inst[[nm]] <- NA_character_
+    inst[[nm]] <- if (nrow(inst)) NA_character_ else character()
   }
 
   pkgs <- inst[, names(inst) %in% fields]

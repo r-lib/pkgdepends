@@ -204,7 +204,7 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
     download_one_of(
       resolution$sources[[1]], target, on_progress = on_progress
     )$
-      then(~ "Got")
+      then(function() "Got")
 
   } else if (resolution$platform == "source") {
     ## If it is a source package, then the package name, version number
@@ -214,7 +214,7 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
       platform = resolution$platform, on_progress = on_progress)$
-    then(~ attr(., "action"))
+    then(function(.) attr(., "action"))
 
   } else {
     ## If not a source package, then we try to update it, in case there is
@@ -223,7 +223,7 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
       platform = resolution$platform, on_progress = on_progress)$
-    then(~ attr(., "action"))
+    then(function(.) attr(., "action"))
   }
 }
 
@@ -238,7 +238,7 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
     download_one_of(
       resolution$sources[[1]], target, on_progress = on_progress
     )$
-      then(~ "Got")
+      then(function() "Got")
 
   } else  if (! "sha256" %in% names(resolution) || is.na(resolution$sha256)) {
     ## If we don't know the hash of the CRAN package, then just download
@@ -248,7 +248,7 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
       platform = resolution$platform, on_progress = on_progress)$
-    then(~ attr(., "action"))
+    then(function(.) attr(., "action"))
 
   } else {
     ## There is a sha hash in the metadata, so we can search for that
@@ -258,7 +258,7 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
       package = resolution$package, version = resolution$version,
       platform = resolution$platform, sha256 = resolution$sha256,
       on_progress = on_progress)$
-    then(~ attr(., "action"))
+    then(function(.) attr(., "action"))
   }
 }
 

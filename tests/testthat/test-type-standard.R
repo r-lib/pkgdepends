@@ -12,7 +12,7 @@ test_that("resolve_remote", {
     resolve_remote_cran(parse_pkg_ref("crayon"), TRUE, conf, cache,
                         dependencies = FALSE))
 
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true(all(res$ref == "crayon"))
   expect_true(all(res$type == "standard"))
   expect_true(all(res$direct))
@@ -28,7 +28,7 @@ test_that("resolve_remote", {
     resolve_remote_cran(parse_pkg_ref("Biobase"), TRUE, conf, cache,
                         dependencies = FALSE))
 
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true(all(res$ref == "Biobase"))
   expect_true(all(res$type == "standard"))
   expect_true(all(res$direct))

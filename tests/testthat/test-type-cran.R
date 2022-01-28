@@ -13,7 +13,7 @@ test_that("resolve_remote", {
                           dependencies = FALSE))
   )
 
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true(all(res$ref == "cran::crayon"))
   expect_true(all(res$type == "cran"))
   expect_true(all(res$direct))
@@ -37,7 +37,7 @@ test_that("resolve_remote, multiple", {
   res <- synchronise(
     resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
 
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true(all(res$ref %in% c("cran::crayon",  "cran::glue")))
   expect_true(all(res$type == "cran"))
   expect_true(all(res$direct))
@@ -107,7 +107,7 @@ test_that("resolve current version", {
   res <- synchronise(do("cran::crayon@current"))
   res2 <- synchronise(do("cran::crayon"))
 
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true(all(res$type == "cran"))
   expect_true(all(res$direct))
   expect_true(all(res$status == "OK"))

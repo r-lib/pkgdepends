@@ -25,7 +25,7 @@ test_that("resolve_remote", {
                         cache, dependencies = FALSE)
   )
 
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true(all(res$ref == "bioc::Biobase"))
   expect_true(all(res$type == "bioc"))
   expect_true(all(res$direct))

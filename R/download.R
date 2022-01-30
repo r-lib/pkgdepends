@@ -5,8 +5,8 @@
 #' both have download methods, to downloads package files into a
 #' configured directory (see ['Configuration'][pkgdepends-config]).
 #'
-#' They return a `pkg_download_result` object, which is a data frame
-#' (tibble), that adds extra columns to [`pkg_resolution_result`] (for
+#' They return a `pkg_download_result` object, which is a data frame,
+#' that adds extra columns to [`pkg_resolution_result`] (for
 #' [`pkg_download_proposal`]) or [`pkg_solution_result`]
 #' (for [`pkg_installation_proposal`]):
 #'

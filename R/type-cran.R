@@ -2,10 +2,8 @@
 ## ------------------------------------------------------------------------
 ## API
 
-#' @importFrom rematch2 re_match
 #' @importFrom stats na.omit
 #' @importFrom desc desc_get_deps
-#' @importFrom tibble as_tibble tibble
 
 parse_remote_cran <- function(specs, ...) {
 

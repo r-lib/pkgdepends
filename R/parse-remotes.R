@@ -142,8 +142,6 @@ local_rx <- function() {
   )
 }
 
-#' @importFrom rematch2 re_match
-
 type_default_parse <- function(refs, ...) {
   m <- re_match(refs, remote_type_rx())
   lapply_rows(m, function(x)

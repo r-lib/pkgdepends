@@ -12,7 +12,7 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
   sol <- sol[order(sol$package), ]
   pkgs <- pkgs %||% sol$package[sol$directpkg]
 
-  data <- sol[, "package"]
+  data <- sol[, "package", drop = FALSE]
 
   if ("dependencies" %in% names(sol)) {
     data$deps <- sol$dependencies

@@ -32,14 +32,13 @@ Imports:
     prettyunits (>= 1.1.1),
     processx (>= 3.4.2),
     ps,
-    rematch2,
     rprojroot,
     R6,
     stats,
-    tibble,
     utils,
     withr (>= 2.1.1),
     zip (>= 2.1.0)
+Remotes: r-lib/pkgcache
 Suggests:
     asciicast,
     debugme,
@@ -53,6 +52,7 @@ Suggests:
     rstudioapi,
     spelling,
     testthat,
+    tibble,
     webfakes
 Config/testthat/edition: 3
 Config/Needs/website:

@@ -21,13 +21,10 @@ pkg_dep_types_soft <- function() c("Suggests", "Enhances")
 
 pkg_dep_types <- function() c(pkg_dep_types_hard(), pkg_dep_types_soft())
 
-#' @importFrom tibble tibble
-#' @importFrom rematch2 re_match
-
 fast_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
   cols <- intersect(colnames(pkgs), pkg_dep_types())
-  ## as.character is for empty tibbles, e.g. from empty BioC repos
+  ## as.character is for empty data frame, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))
   if (length(nna)) {
@@ -48,13 +45,15 @@ fast_parse_deps <- function(pkgs) {
     parsed <- parsed[order(parsed$idx), ]
 
   } else {
-    parsed <- tibble(upstream = character(),
-                     idx = integer(),
-                     ref = character(),
-                     type = character(),
-                     package = character(),
-                     version = character(),
-                     op = character())
+    parsed <- data_frame(
+      upstream = character(),
+      idx = integer(),
+      ref = character(),
+      type = character(),
+      package = character(),
+      version = character(),
+      op = character()
+    )
   }
 
   parsed
@@ -68,8 +67,8 @@ fast_select_deps <- function(deps, which, dependencies) {
 }
 
 make_null_deps <- function() {
-  tibble(ref = character(), type = character(), package = character(),
-         op = character(), version = character())
+  data_frame(ref = character(), type = character(), package = character(),
+             op = character(), version = character())
 }
 
 parse_deps <- function(deps, type) {
@@ -98,8 +97,10 @@ deps_from_desc <- function(deps, last) {
   deps$version[is.na(deps$version)] <- ""
   deps$ref <- paste0(deps$package, if (last) "@last")
   base <- base_packages()
-  res <- as_tibble(deps[!deps$package %in% base,
-                        c("ref", "type", "package", "op", "version")])
+  res <- as_data_frame(deps[
+    !deps$package %in% base,
+    c("ref", "type", "package", "op", "version")
+  ])
   rownames(res) <- NULL
   res
 }

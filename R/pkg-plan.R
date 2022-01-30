@@ -182,7 +182,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
 
   pkgs <- raw$packages
   refs <- vcapply(pkgs, "[[", "ref")
-  soldata <- tibble(
+  soldata <- data_frame(
     ref              = refs,
     type             = vcapply(pkgs, "[[", "type"),
     direct           = vlapply(pkgs, "[[", "direct"),

@@ -37,7 +37,7 @@
 #'
 #' ## The result
 #'
-#' The result of the resolution is a data frame (tibble) with lots of
+#' The result of the resolution is a data frame with lots of
 #' information about the packages and their dependencies. The columns that
 #' are not documented here may be removed or changed, because they are
 #' either used internally or experimental.
@@ -48,7 +48,7 @@
 #'   It is `NA` for `installed::` package refs.
 #' * `dep_types`: Character vector of dependency types that were
 #'   considered for this package. (This is a list column.)
-#' * `deps`: Dependencies of the package, in a data frame (tibble). See
+#' * `deps`: Dependencies of the package, in a data frame. See
 #'   'Package dependency tables' below.
 #' * `direct`: Whether this package (ref, really) was directly specified,
 #'   or added as a dependency.
@@ -203,7 +203,7 @@ res_init <- function(self, private, config, cache, library,
 
   self$result <- res_make_empty_df()
 
-  private$state <- tibble(
+  private$state <- data_frame(
     ref = character(),
     remote = list(),
     status = character(),
@@ -317,8 +317,8 @@ res_push <- function(self, private, ..., direct, .list = .list) {
 
     private$state <- rbind(
       private$state,
-      tibble(ref = n$ref, remote = list(n), status = NA_character_,
-             direct = direct, async_id = dx$id, started_at = Sys.time())
+      data_frame(ref = n$ref, remote = list(n), status = NA_character_,
+                 direct = direct, async_id = dx$id, started_at = Sys.time())
     )
 
     dx$dx$then(private$deferred)
@@ -348,9 +348,9 @@ res__resolve_delayed <- function(self, private, resolve) {
 
       private$state <- rbind(
         private$state,
-        tibble(ref = vcapply(n2, "[[", "ref"), remote = n2,
-               status = NA_character_, direct = FALSE,
-               async_id = dx$id, started_at = Sys.time())
+        data_frame(ref = vcapply(n2, "[[", "ref"), remote = n2,
+                   status = NA_character_, direct = FALSE,
+                   async_id = dx$id, started_at = Sys.time())
       )
       dx$dx$then(private$deferred)
     }
@@ -650,7 +650,7 @@ make_failed_resolution <- function(refs, type, direct) {
   err <- structure(
     list(message = paste0("Can't find package called ", rstr, ".")),
     class = c("error", "condition"))
-  tibble(
+  data_frame(
     ref = refs,
     type = type,
     package = sub("^[a-z]+::", "", refs),

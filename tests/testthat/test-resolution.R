@@ -28,7 +28,7 @@ test_that("resolving with a list", {
   expect_identical(res$sources, list(c("src1", "src2"), c("src1", "src2")))
 })
 
-test_that("resolving with a tibble", {
+test_that("resolving with a tbl", {
   conf <- current_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
@@ -39,7 +39,7 @@ test_that("resolving with a tibble", {
   }
 
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
-    tibble::tibble(ref = remote$ref, type = c("type1", "type2"),
+    data_frame(ref = remote$ref, type = c("type1", "type2"),
            package = c("pkg1", "pkg2"), version = c("ver1", "ver2"),
            sources = list(c("s11", "s12"), c("s21", "s22")),
            direct = direct)
@@ -91,7 +91,7 @@ test_that("unknown deps are pushed in the queue", {
   expect_identical(res$sources, list(c("src1", "src2"), c("src1", "src2")))
 })
 
-test_that("unknown deps, tibble", {
+test_that("unknown deps, tble", {
   conf <- current_config()
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   do <- function() {
@@ -101,7 +101,7 @@ test_that("unknown deps, tibble", {
   }
 
   foo_resolve <- function(remote, direct, config, cache, dependencies) {
-    tibble::tibble(ref = remote$ref, type = c("type1", "type2"),
+    data_frame(ref = remote$ref, type = c("type1", "type2"),
            package = c("pkg1", "pkg2"), version = c("ver1", "ver2"),
            sources = list(c("s11", "s12"), c("s21", "s22")),
            unknown_deps = "foo::bar2", direct = direct,
@@ -163,7 +163,7 @@ test_that("installed refs are also resolved", {
   mkdirp(file.path(lib, "bar2"))
   cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
   cache$installed  <- list(
-    pkgs = tibble(
+    pkgs = data_frame(
       ref = paste0("installed::", lib, c("/bar", "/bar2")),
       type = "installed",
       status = "OK",
@@ -213,7 +213,7 @@ test_that("explicit cran", {
   }
 
   res <- synchronise(do("cran::dplyr"))
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true("cran::dplyr" %in% res$ref)
   expect_true(all(grep("::", res$ref, value = TRUE) == "cran::dplyr"))
   expect_equal(res$type, ifelse(res$ref == "cran::dplyr", "cran", "standard"))
@@ -232,7 +232,7 @@ test_that("explicit cran", {
                   c(get_minor_r_version(current_r_version()), "*")))
   expect_true(is_character(res$repodir))
   expect_true(is_character(res$target))
-  expect_true(all(vlapply(res$deps, is_tibble)))
+  expect_true(all(vlapply(res$deps, inherits, what = "tbl")))
   expect_true("imports" %in% unlist(lapply(res$deps, "[[", "type")))
   expect_true("suggests" %in% unlist(lapply(res$deps, "[[", "type")))
   expect_true(all(grepl("source|darwin", res$platform) |
@@ -255,7 +255,7 @@ test_that("standard", {
   }
 
   res <- synchronise(do("dplyr"))
-  expect_true(is_tibble(res))
+  expect_true(inherits(res, "tbl"))
   expect_true("dplyr" %in% res$ref)
   expect_true(! any(grepl("::", res$ref)))
   expect_equal(res$type, ifelse(res$ref == "cran::dplyr", "cran", "standard"))
@@ -274,7 +274,7 @@ test_that("standard", {
                   c(get_minor_r_version(current_r_version()), "*")))
   expect_true(is_character(res$repodir))
   expect_true(is_character(res$target))
-  expect_true(all(vlapply(res$deps, is_tibble)))
+  expect_true(all(vlapply(res$deps, inherits, what = "tbl")))
   expect_true("imports" %in% unlist(lapply(res$deps, "[[", "type")))
   expect_true("suggests" %in% unlist(lapply(res$deps, "[[", "type")))
   expect_true(all(grepl("source|darwin", res$platform) |

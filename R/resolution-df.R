@@ -3,7 +3,7 @@ res_make_empty_df <- local({
   data <- NULL
   function() {
     if (is.null(data)) {
-      data <<- tibble(
+      data <<- data_frame(
         ref      = character(),
         type     = character(),
         direct   = logical(),
@@ -117,25 +117,24 @@ res_check_entries <- function(ent) {
 }
 
 #' @noRd
-#' @param df Resolution data frame (tibble, really).
+#' @param df Resolution data frame.
 #' @param entries List of entries to add.
-#' @importFrom tibble is_tibble
 
 res_add_df_entries <- function(df, entries) {
-  if (!is_tibble(entries)) entries <- res_one_row_tibble(entries)
+  if (!is.data.frame(entries)) entries <- res_one_row_df(entries)
   entries <- res_add_defaults(entries)
-  ret <- as_tibble(rbind(df, entries))[names(df)]
+  ret <- as_data_frame(rbind(df, entries))[names(df)]
   direct <- ret$package[ret$direct]
   ret$directpkg <- ret$package %in% direct
   ret
 }
 
-res_one_row_tibble <- function(l) {
+res_one_row_df <- function(l) {
   assert_that(is.list(l) && all_named(l))
   samp <- res_make_empty_df()[names(l)]
   bad <- vlapply(samp, is.list) & !vlapply(l, is.list)
   l[bad] <- lapply(l[bad], list)
-  as_tibble(l)
+  as_data_frame(l)
 }
 
 res_add_defaults <- function(df) {

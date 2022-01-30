@@ -140,7 +140,7 @@ merge_installed_caches <- function(c1, c2) {
 #'
 #' @param library Path to library.
 #' @param packages If not `NULL`, then only these packages are shown.
-#' @return Data frame (tibble) the contains data about the packages
+#' @return Data frame that contains data about the packages
 #'   installed in the library.
 #'
 #' @export
@@ -153,15 +153,12 @@ lib_status <- function(library = .libPaths()[1], packages = NULL) {
   st[, setdiff(colnames(st), rm), drop = FALSE]
 }
 
-#' @importFrom tibble tibble
-#' @importFrom rematch2 re_match
-
 # TODO: parse Remotes and Config/Needs/* fields
 
 packages_parse_deps <- function(pkgs) {
   no_pkgs <- nrow(pkgs)
   cols <- intersect(colnames(pkgs), tolower(pkg_dep_types()))
-  ## as.character is for empty tibbles, e.g. from empty BioC repos
+  ## as.character is for empty data frames, e.g. from empty BioC repos
   deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
   nna <- which(!is.na(deps))
   if (length(nna)) {
@@ -181,7 +178,7 @@ packages_parse_deps <- function(pkgs) {
     parsed <- parsed[order(parsed$idx), ]
 
   } else {
-    parsed <- tibble(upstream = character(),
+    parsed <- data_frame(upstream = character(),
                      idx = integer(),
                      ref = character(),
                      type = character(),
@@ -225,8 +222,8 @@ resolve_installed  <- function(cache, remotes, direct, dependencies) {
   res$params[!is.na(idx)] <- params[na.omit(idx)]
 
   extracols <- c("repotype", grep("^remote", names(pkgs), value = TRUE))
-  extra <- pkgs[pkgs$package %in% packages, extracols]
-  res$extra <- lapply(seq_len(nrow(res)), function(i) extra[i,])
+  extra <- pkgs[pkgs$package %in% packages, extracols, drop = FALSE]
+  res$extra <- lapply(seq_len(nrow(res)), function(i) extra[i,,drop = FALSE])
 
   attr(res, "unknown_deps") <-
     setdiff(unique(unlist(lapply(res$deps, "[[", "package"))), "R")

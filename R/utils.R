@@ -245,13 +245,13 @@ rbind_expand <- function(..., .list = list()) {
   for (i in seq_along(data)) {
     miss_cols <- setdiff(cols, colnames(data[[i]]))
     if (length(miss_cols)) {
-      na_df <- as_tibble(structure(
+      na_df <- as_data_frame(structure(
         replicate(
           length(miss_cols),
           if (nrow(data[[i]])) NA else logical(),
           simplify = FALSE),
         names = miss_cols))
-      data[[i]] <- as_tibble(cbind(data[[i]], na_df))
+      data[[i]] <- as_data_frame(cbind(data[[i]], na_df))
     }
   }
 

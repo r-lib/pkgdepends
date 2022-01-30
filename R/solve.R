@@ -128,7 +128,7 @@ pkgplan_solve <- function(self, private, policy) {
   )
 
   lib_status <- calculate_lib_status(res$data, pkgs)
-  res$data <- tibble::as_tibble(cbind(res$data, lib_status))
+  res$data <- as_data_frame(cbind(res$data, lib_status))
   res$data$cache_status <-
     calculate_cache_status(res$data, private$cache)
 
@@ -938,7 +938,7 @@ calculate_lib_status <- function(sol, res) {
   })
   status[status == "current" & !is.na(new_version)] <- "no-update"
 
-  tibble::tibble(
+  data_frame(
     lib_status = status,
     old_version = lib_ver,
     new_version = new_version

@@ -11,8 +11,6 @@ parse_remote_deps <- function(specs, config, ...) {
   )
 }
 
-#' @importFrom tibble as_tibble
-
 resolve_remote_deps <- function(remote, direct, config, cache,
                                      dependencies, ...) {
 
@@ -30,7 +28,7 @@ resolve_remote_deps <- function(remote, direct, config, cache,
   #   and the local version is more recent. (This is typically the case
   #   while working on a package, and also on the CI.)
 
-  # Workaround to be able to put this in a tibble
+  # Workaround to be able to put this in a data frame
   ret$metadata <- list(ret$metadata)
 
   # Need to pass this to te new result
@@ -49,8 +47,8 @@ resolve_remote_deps <- function(remote, direct, config, cache,
   ret$package <- paste0(ret$package, "-deps")
   ret$sources <- list(character())
 
-  # rbind.data.frame is not good with the list columns, use tibble instead
-  ret2 <- rbind(as_tibble(ret), as_tibble(local))
+  # rbind.data.frame is not good with the list columns, TODO
+  ret2 <- rbind(as_data_frame(ret), as_data_frame(local))
   attr(ret2, "unknown_deps") <- unknown
 
   ret2

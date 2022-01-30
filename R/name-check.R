@@ -285,7 +285,7 @@ wikipedia_get_process <- function(
 
   url <- paste0(base_url, gsub(" ", "_", rterms))
 
-  tibble(
+  data_frame(
     term = terms,
     normalized = unname(nterms),
     redirected = unname(rterms),
@@ -434,7 +434,7 @@ async_acromine_get_query <- function(term) {
 acromine_get_process <- function(term, resp) {
   obj <- jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
   if (length(obj) == 0) obj <- list(list())
-  tbl <- tibble(
+  tbl <- data_frame(
     term = term,
     short_form = obj[[1]]$sf %||% character(),
     long_form = vcapply(obj[[1]]$lfs, "[[", "lf"),
@@ -593,7 +593,7 @@ urban_get_process <- function(term, resp) {
     rawToChar(resp$content),
     simplifyVector = FALSE
     )$list
-  tbl <- tibble(
+  tbl <- data_frame(
     definition = vcapply(obj, "[[", "definition"),
     permalink = vcapply(obj, "[[", "permalink"),
     thumbs_up = viapply(obj, "[[", "thumbs_up"),

@@ -1,8 +1,7 @@
 
 test_that("resolve_ref_deps", {
 
-  deps <- data.frame(
-    stringsAsFactors = FALSE,
+  deps <- data_frame(
     type = c(rep("Suggests", 4), rep("Imports", 5)),
     package = c("covr", "jsonlite", "testthat", "assertthat", "curl", "R6",
       "rlang", "uuid", "bar"),
@@ -12,7 +11,7 @@ test_that("resolve_ref_deps", {
 
   obj <- resolve_ref_deps(deps, remotes, NULL)
 
-  exp <- tibble::tibble(
+  exp <- data_frame(
     ref = c("covr", "jsonlite", "testthat", "assertthat",
             "jeroen/curl", "R6", "rlang", "uuid", "foo/bar"),
     type = c(rep("Suggests", 4), rep("Imports", 5)),

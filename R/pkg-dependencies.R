@@ -144,7 +144,7 @@ pkg_deps <- R6::R6Class(
     #' called after [`resolve()`](#method-resolve) has completed.
     #'
     #' @return
-    #' A [pkg_resolution_result] object, which is also a tibble. See
+    #' A [pkg_resolution_result] object, which is also a data frame. See
     #' ['Dependency resolution'][pkg_resolution] for its columns.
     #'
     #' @examplesIf pkgdepends:::is_online()

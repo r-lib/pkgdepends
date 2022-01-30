@@ -88,7 +88,7 @@ test_that("github regexes", {
   for (c in username) {
     rx <- paste0("^", github_username_rx(), "$")
     expect_equal(
-      rematch2::re_match(c[[1]], rx)$username,
+      re_match(c[[1]], rx)$username,
       c[[2]]
     )
   }
@@ -102,7 +102,7 @@ test_that("github regexes", {
   )
   for (c in commitish) {
     expect_equal(
-      rematch2::re_match(c[[1]], github_commitish_rx())$commitish,
+      re_match(c[[1]], github_commitish_rx())$commitish,
       c[[2]]
     )
   }
@@ -119,7 +119,7 @@ test_that("github regexes", {
   )
   for (c in pull) {
     expect_equal(
-      rematch2::re_match(c[[1]], github_pull_rx())$pull,
+      re_match(c[[1]], github_pull_rx())$pull,
       c[[2]]
     )
   }
@@ -133,7 +133,7 @@ test_that("github regexes", {
   )
   for (c in release) {
     expect_equal(
-      rematch2::re_match(c[[1]], github_release_rx())$release,
+      re_match(c[[1]], github_release_rx())$release,
       c[[2]]
     )
   }
@@ -146,7 +146,7 @@ test_that("github regexes", {
   )
   for (c in detail) {
     expect_equal(
-      unlist(rematch2::re_match(
+      unlist(re_match(
         c[[1]],
         github_detail_rx())[, c("commitish", "pull", "release")]),
       structure(c[[2]], names = c("commitish", "pull", "release"))
@@ -161,7 +161,7 @@ test_that("github url regexes", {
     list("https://github.com/u/re.po.git", c(username = "u", repo = "re.po"))
   )
   for (c in cases) {
-    m <- rematch2::re_match(c[[1]], github_url_rx())
+    m <- re_match(c[[1]], github_url_rx())
     for (n in names(c[[2]])) expect_equal(c[[2]][[n]], m[[n]])
   }
 })

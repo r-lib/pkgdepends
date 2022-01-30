@@ -1,7 +1,7 @@
 
 test_that("res_make_empty_df", {
   df <- res_make_empty_df()
-  expect_true(tibble::is_tibble(df))
+  expect_true(inherits(df, "tbl"))
   expect_equal(nrow(df), 0L)
 })
 
@@ -47,7 +47,7 @@ test_that("res_add_df_entries", {
   expect_identical(names(df), names(empty))
   expect_equal(nrow(df), 1)
 
-  good2 <- tibble(
+  good2 <- data_frame(
     ref = "package",
     type = "standard",
     package = "package",
@@ -60,7 +60,7 @@ test_that("res_add_df_entries", {
   df2 <- res_add_df_entries(empty, good2)
   expect_identical(df2, df)
 
-  good3 <- tibble(
+  good3 <- data_frame(
     ref = c("package1", "package2"),
     type = c("standard", "cran"),
     package = c("package1", "package2"),

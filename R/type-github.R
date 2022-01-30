@@ -2,7 +2,6 @@
 ### -----------------------------------------------------------------------
 ### API
 
-#' @importFrom rematch2 re_match
 #' @importFrom jsonlite fromJSON
 #' @importFrom desc desc
 #' @importFrom glue glue

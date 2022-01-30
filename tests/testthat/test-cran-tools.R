@@ -8,7 +8,7 @@ test_that("parse_deps", {
 
   expect_equal(
     parse_deps("", "Imports"),
-    list(tibble::tibble(
+    list(data_frame(
       type = character(), package = character(), op = character(),
       version = character()
     ))
@@ -16,7 +16,7 @@ test_that("parse_deps", {
 
   expect_equal(
     parse_deps("foobar", "Imports"),
-    list(tibble::tibble(
+    list(data_frame(
       type = "Imports",
       package = "foobar",
       op = "",
@@ -26,7 +26,7 @@ test_that("parse_deps", {
 
   expect_equal(
     parse_deps("foobar (>= 1.0-5)", "Imports"),
-    list(tibble::tibble(
+    list(data_frame(
       type = "Imports",
       package = "foobar",
       op = ">=",
@@ -36,7 +36,7 @@ test_that("parse_deps", {
 
   expect_equal(
     parse_deps("foobar\n (>=\n 1.0-5), foobar2", "Imports"),
-    list(tibble::tibble(
+    list(data_frame(
       type = rep("Imports", 2),
       package = c("foobar", "foobar2"),
       op = c(">=", ""),

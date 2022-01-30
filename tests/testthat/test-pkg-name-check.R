@@ -173,7 +173,7 @@ test_that("async_wiktionary_get", {
   )
   ans <- sy(async_wiktionary_get("foobar"))
   expect_s3_class(ans, "pkg_name_check_wiktionary")
-  expect_s3_class(ans, "tbl_df")
+  expect_s3_class(ans, "tbl")
   expect_snapshot(print(ans))
 })
 
@@ -191,7 +191,7 @@ test_that("wiktionary_get_process", {
   })
   ans <- wiktionary_get_process("foobar", resp)
   expect_s3_class(ans, "pkg_name_check_wiktionary")
-  expect_s3_class(ans, "tbl_df")
+  expect_s3_class(ans, "tbl")
   expect_match(ans$text, "== English ==")
 })
 
@@ -225,7 +225,7 @@ test_that("async_acromine_get", {
   )
   ans <- sy(async_acromine_get("fbi"))
   expect_s3_class(ans, "pkg_name_check_acromine")
-  expect_s3_class(ans, "tbl_df")
+  expect_s3_class(ans, "tbl")
   expect_true("Federal Bureau of Investigation" %in% ans$long_form)
 })
 
@@ -246,12 +246,12 @@ test_that("acromine_get_process", {
   })
   ans <- acromine_get_process("fbi", resp)
   expect_s3_class(ans, "pkg_name_check_acromine")
-  expect_s3_class(ans, "tbl_df")
+  expect_s3_class(ans, "tbl")
   expect_true("Federal Bureau of Investigation" %in% ans$long_form)
 
   ans2 <- acromine_get_process("notanacronym", resp2)
   expect_s3_class(ans2, "pkg_name_check_acromine")
-  expect_s3_class(ans2, "tbl_df")
+  expect_s3_class(ans2, "tbl")
   expect_equal(nrow(ans2), 0L)
 })
 
@@ -379,7 +379,7 @@ test_that("async_urban_get", {
   })
   ans <- sy(async_urban_get("tool"))
   expect_s3_class(ans, "pkg_name_check_urban")
-  expect_s3_class(ans, "tbl_df")
+  expect_s3_class(ans, "tbl")
   expect_snapshot(ans)
 })
 
@@ -399,7 +399,7 @@ test_that("urban_get_process", {
   })
   ans <- urban_get_process("tool", resp)
   expect_s3_class(ans, "pkg_name_check_urban")
-  expect_s3_class(ans, "tbl_df")
+  expect_s3_class(ans, "tbl")
   expect_snapshot(ans)
 })
 

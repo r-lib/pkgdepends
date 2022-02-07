@@ -141,8 +141,12 @@ type_url_download_and_extract <- function(remote, cache, config, tmpd,
       then(function(dl) { attr(dl, "action") <- "Got"; dl })
 
   } else {
-    cache$package$async_update_or_add(tmpd$archive, remote$url,
-                                      path = tmpd$cachepath)
+    cache$package$async_update_or_add(
+      tmpd$archive,
+      remote$url,
+      path = tmpd$cachepath,
+      http_headers = default_download_headers(remote$url)
+    )
   }$then(function(dl) {
     tmpd$status <<- attr(dl, "action")
     tmpd$etag <<- if (is.na(dl$etag)) substr(dl$sha256, 1, 16) else dl$etag

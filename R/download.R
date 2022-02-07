@@ -213,7 +213,8 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
     cache$package$async_copy_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
-      platform = resolution$platform, on_progress = on_progress)$
+      platform = resolution$platform, on_progress = on_progress,
+      http_headers = default_download_headers(resolution$sources[[1]]))$
     then(function(.) attr(., "action"))
 
   } else {
@@ -222,7 +223,8 @@ download_ping_if_not_source <- function(resolution, target, config, cache,
     cache$package$async_update_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
-      platform = resolution$platform, on_progress = on_progress)$
+      platform = resolution$platform, on_progress = on_progress,
+      http_headers = default_download_headers(resolution$sources[[1]]))$
     then(function(.) attr(., "action"))
   }
 }
@@ -247,7 +249,8 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
     cache$package$async_copy_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
-      platform = resolution$platform, on_progress = on_progress)$
+      platform = resolution$platform, on_progress = on_progress,
+      http_headers = default_download_headers(resolution$sources[[1]]))$
     then(function(.) attr(., "action"))
 
   } else {
@@ -257,7 +260,8 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
       platform = resolution$platform, sha256 = resolution$sha256,
-      on_progress = on_progress)$
+      on_progress = on_progress,
+      http_headers = default_download_headers(resolution$sources[[1]]))$
     then(function(.) attr(., "action"))
   }
 }
@@ -283,4 +287,10 @@ type_default_download <- function(resolution, target, config, cache,
                                   on_progress) {
   ## TODO
   stop("Not implemented yet")
+}
+
+default_download_headers <- function(url) {
+  if (any(grepl("^https://ghcr.io", url))) {
+    c("Authorization" = "Bearer QQ==")
+  }
 }

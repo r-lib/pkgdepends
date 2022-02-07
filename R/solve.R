@@ -367,12 +367,27 @@ pkgplan_i_lp_rversion <- function(lp, rversion) {
   depconds <- function(wh) {
     if (pkgs$status[wh] != "OK") return()
     deps <- pkgs$deps[[wh]]
-    deps <- deps[! deps$ref %in% base, ]
-    if (! "R" %in% deps$ref) return()
-    needrver <- deps$version[deps$ref == "R"]
-    if (any(rversion < needrver)) {
+    deps <- deps[deps$ref == "R", , drop = FALSE]
+    if (nrow(deps) == 0) return()
+    type <- NA
+    for (idx in seq_len(nrow(deps))) {
+      need <- deps$version[idx]
+      needrver <- paste0(deps$op[[idx]], " ", need)
+      switch(
+        deps$op[[idx]],
+        "<"  = if (! rversion <  need) type <- "new-rversion",
+        "<=" = if (! rversion <= need) type <- "new-rversion",
+        "==" = if (! rversion == need) type <- "different-rversion",
+        ">=" = if (! rversion >= need) type <- "old-rversion",
+        ">"  = if (! rversion >  need) type <- "old-rversion",
+        warning(paste0("Ignoring R version requirement: ", needrver))
+      )
+      # Enough to have one to rule out
+      if (!is.na(type)) break
+    }
+    if (!is.na(type)) {
       lp <<- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
-                                   type = "bad-rversion", note = needrver)
+                                   type = type, note = needrver)
       lp$ruled_out <<- c(lp$ruled_out, wh)
     }
   }
@@ -594,9 +609,17 @@ format_cond <- function(x, cond) {
     plat <- x$pkgs$platform[cond$vars]
     glue("Platform `{plat}` does not match for `{ref}`")
 
-  } else if (cond$type == "bad-rversion") {
+  } else if (cond$type == "old-rversion") {
     ref <- x$pkgs$ref[cond$vars]
-    glue("`{ref}` needs a newer R version")
+    glue("`{ref}` needs a newer R version: {cond$note}")
+
+  } else if (cond$type == "new-rversion") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` needs an older R version: {cond$note}")
+
+  } else if (cond$type == "different-rversion") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` needs a different R version: {cond$note}")
 
   } else if (cond$type == "direct-update") {
     ref <- x$pkgs$ref[cond$vars]
@@ -980,7 +1003,8 @@ describe_solution_error <- function(pkgs, solution) {
   ## 7. otherwise YES
 
   FAILS <- c("failed-res", "satisfy-direct", "conflict", "dep-failed",
-             "bad-rversion", "matching-platform")
+             "old-rversion", "new-rvresion", "different-rversion",
+             "matching-platform")
 
   state <- rep("maybe-good", num)
   note <- replicate(num, NULL)
@@ -1004,12 +1028,12 @@ describe_solution_error <- function(pkgs, solution) {
     }
   }
 
-  ## Candidates that need a newer R version
-  for (w in which(typ == "bad-rversion")) {
+  ## Candidates that need a newer/older/different R version
+  for (w in which(typ %in% c("old-rversion", "new-rversion", "different-rversion"))) {
     sv <- var[[w]]
     if (state[sv] != "maybe-good") next
     needs <- cnd[[w]]$note
-    state[sv] <- "bad-rversion"
+    state[sv] <- typ[[w]]
     note[[sv]] <- c(note[[sv]], glue("Needs R {needs}"))
   }
 

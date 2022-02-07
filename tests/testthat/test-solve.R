@@ -206,7 +206,7 @@ test_that("failure if package needs newer R version", {
   solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
   dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failure_type, c("bad-rversion"))
+  expect_equal(dsc$failure_type, c("old-rversion"))
 
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)
@@ -232,7 +232,7 @@ test_that("failure if dependency needs newer R version", {
   solution <- list(status = "FAILED", data = NULL, problem = lp,
                    solution = sol)
   dsc <- describe_solution_error(pkgs, solution)
-  expect_equal(dsc$failure_type, c("bad-rversion", "dep-failed"))
+  expect_equal(dsc$failure_type, c("old-rversion", "dep-failed"))
 
   expect_equal(sol$status, 0)
   expect_true(sol$objval >= solve_dummy_obj - 1L)

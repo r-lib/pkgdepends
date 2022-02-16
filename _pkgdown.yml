@@ -64,3 +64,6 @@ reference:
   - pkg_dep_types_hard
   - pkg_dep_types_soft
   
+- title: internal
+  contents:
+  - pkgdepends-package

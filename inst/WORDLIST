@@ -3,6 +3,7 @@ CentOS
 El
 HOWTO
 ILP
+JSON
 RStudio
 RedHat
 SHA
@@ -18,3 +19,4 @@ pak
 pkgcache
 pkgdown
 tibble
+tibbles

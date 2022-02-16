@@ -74,7 +74,7 @@ dependencies, complete with download URLs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pkgdepends</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -168,6 +168,7 @@ them.</p>
 <li><p><a href='#method-get_solve_policy'><code>pkg_installation_plan$get_solve_policy()</code></a></p></li>
 <li><p><a href='#method-set_solve_policy'><code>pkg_installation_plan$set_solve_policy()</code></a></p></li>
 <li><p><a href='#method-solve'><code>pkg_installation_plan$solve()</code></a></p></li>
+<li><p><a href='#method-update'><code>pkg_installation_plan$update()</code></a></p></li>
 <li><p><a href='#method-format'><code>pkg_installation_plan$format()</code></a></p></li>
 <li><p><a href='#method-clone'><code>pkg_installation_plan$clone()</code></a></p></li>
 </ul>
@@ -184,6 +185,7 @@ them.</p>
 <li><p><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_resolution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-get_resolution'><code>pkgdepends::pkg_installation_proposal$get_resolution()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-get_solution'><code>pkgdepends::pkg_installation_proposal$get_solution()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-install'><code>pkgdepends::pkg_installation_proposal$install()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-install_sysreqs'><code>pkgdepends::pkg_installation_proposal$install_sysreqs()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="print"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-print'><code>pkgdepends::pkg_installation_proposal$print()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-show_solution'><code>pkgdepends::pkg_installation_proposal$show_solution()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_download_error"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-stop_for_download_error'><code>pkgdepends::pkg_installation_proposal$stop_for_download_error()</code></a></span></p></li>
@@ -208,7 +210,7 @@ packages, according to the plan.</p><h4 class='hasAnchor' id='arguments'><a clas
 <p><div class="arguments"></p><dl>
 <dt><code>lockfile</code></dt><dd><p>Path to the lock file to use.</p></dd>
 
-<dt><code>config</code></dt><dd><p>Configuration options, a named list. See
+<dt><code>config</code></dt><dd><p>Configuration options. See
 <a href='pkg_config.html'>'Configuration'</a>. It needs to include the package
 library to install to, in <code>library</code>.</p></dd>
 
@@ -241,6 +243,21 @@ use, and experimental currently.</p></dd>
 <a id="method-solve"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/solve.html'>solve()</a></code></h3>
 <p>This function is implemented for installation plans, and will error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>solve</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<p><hr>
+<a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
+<p>Update the plan to the current state of the library. If the library
+has not changed since the plan was created, then it does nothing.
+If new packages have been installed, then it might not be necessary
+to download and install all packages in the plan.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>pkg_installation_plan</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Details</h4>
+<p>This operation is different than creating a new proposal with the
+updated library, because it uses the the packages and package
+versions of the original plan. E.g. if the library has a newer
+version of a package, then <code>$update()</code> will downgrade it to the
+version in the plan.</p>
 
 <p><hr>
 <a id="method-format"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/format.html'>format()</a></code></h3>

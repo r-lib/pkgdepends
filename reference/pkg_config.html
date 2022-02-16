@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Configuration — pkg_config • pkgdepends</title>
+<title>pkgdepends configuration — pkg_config • pkgdepends</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Configuration — pkg_config" />
-<meta property="og:description" content="Configuration options for several pkgdepends classes. Not all classes
-use all of these options. E.g. a pkg_download_proposal is not concerned
-about package libraries, so it'll ignore the library option." />
+<meta property="og:title" content="pkgdepends configuration — pkg_config" />
+<meta property="og:description" content="Configuration entries for several pkgdepends classes." />
 
 
 
@@ -74,7 +72,7 @@ about package libraries, so it'll ignore the library option." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pkgdepends</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -110,25 +108,45 @@ about package libraries, so it'll ignore the library option." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Configuration</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-lib/pkgdepends/blob/master/R/pkg-plan.R'><code>R/pkg-plan.R</code></a></small>
+    <h1>pkgdepends configuration</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-lib/pkgdepends/blob/master/R/pkgdepends-config.R'><code>R/pkgdepends-config.R</code></a></small>
     <div class="hidden name"><code>pkg_config.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Configuration options for several pkgdepends classes. Not all classes
-use all of these options. E.g. a <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> is not concerned
-about package libraries, so it'll ignore the <code>library</code> option.</p>
+    <p>Configuration entries for several pkgdepends classes.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>current_config</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Options:</p><ul>
+    <p>pkgdepends configuration is set from several source. They are, in the
+order of preference:</p><ul>
+<li><p>Function arguments, e.g. the <code>config</code> argument of
+<code><a href='new_pkg_installation_proposal.html'>new_pkg_installation_proposal()</a></code>.</p></li>
+<li><p>Global options, set via <code><a href='https://rdrr.io/r/base/options.html'>options()</a></code>. The name of the global option
+is the <code>pkg.</code> prefix plus the name of the pkgdepends configuration
+entry. E.g. <code>pkg.platforms</code>.</p></li>
+<li><p>Environment variables. The name of the environment variable is the
+<code>PKG_</code> prefix, plus the name of the pkgdepends configuration entry, in
+uppercase. E.g. <code>PKG_PLATFORMS</code>.</p></li>
+<li><p>Default values.</p></li>
+</ul>
+
+<p>Not all classes use all entries. E.g. a <code><a href='new_pkg_download_proposal.html'>pkg_download_proposal</a></code> is not
+concerned about package libraries, so it'll ignore the <code>library</code>
+configuration entry.</p>
+<p>Call <code>current_config()</code> to print the current configuration.</p>
+    <h2 class="hasAnchor" id="configuration-entries"><a class="anchor" href="#configuration-entries"></a>Configuration entries</h2>
+
+    
+<ul>
 <li><p><code>library</code>: package library to use for checking already installed
-packages when considering dependencies in <a href='new_pkg_deps.html'>dependency lookup</a>
-or <a href='new_pkg_installation_proposal.html'>package installation</a>. Defaults to the
+packages when considering dependencies in
+<a href='new_pkg_deps.html'>dependency lookup</a> or
+<a href='new_pkg_installation_proposal.html'>package installation</a>. Defaults to the
 first path in <code><a href='https://rdrr.io/r/base/libPaths.html'>.libPaths()</a></code>.</p></li>
 <li><p><code>cache_dir</code>: directory to download the packages to. Defaults to a
 temporary directory within the R session temporary directory, see
@@ -140,24 +158,65 @@ temporary directory within the R session temporary directory, see
 directory within the R session temporary directory, see
 <code><a href='https://rdrr.io/r/base/tempfile.html'>base::tempdir()</a></code>.</p></li>
 <li><p><code>platforms</code>: Character vector of platforms to <em>download</em> or <em>install</em>
-for. Possible platforms are <code>windows</code>, <code>macos</code> and <code>source</code>. Defaults
-to the current platform, <em>and</em> <code>source</code>.</p></li>
-<li><p><code>cran-mirror</code>: CRAN mirror to use. Defaults to the <code>repos</code> option
+for. See <code><a href='current_r_platform.html'>default_platforms()</a></code> for possible platform names.</p></li>
+<li><p><code>windows_archs</code>: Character scalar specifying which architectures
+to download/install for on Windows. Its possible values are:</p><ul>
+<li><p><code>"prefer-x64"</code>: Generally prefer x64 binaries. If the current R
+session is <code>x64</code>, then we download/install x64 packages.
+(These packages might still be multi-architecture binaries!)
+If the current R session is <code>i386</code>, then we download/install
+packages for both architectures. This might mean compiling
+packages from source if the binary packages are for <code>x64</code> only,
+like the CRAN Windows binaries for R 4.2.x currently.
+<code>"prefer"</code> is the default from R 4.2.0.</p></li>
+<li><p><code>"both"</code>: Always download/install packages for both <code>i386</code> and
+<code>x64</code> architectures. This might need compilation from source
+if the available binaries are for <code>x64</code> only, like the CRAN
+Windows binaries for R 4.2.x currently. <code>"both"</code> is the default
+before R 4.2.0.</p></li>
+</ul></li>
+<li><p><code>cran_mirror</code>: CRAN mirror to use. Defaults to the <code>repos</code> option
 (see <code><a href='https://rdrr.io/r/base/options.html'>base::options()</a></code>), if that's not set then
 <code>https://cran.rstudio.com</code>.</p></li>
 <li><p><code>dependencies</code>: Dependencies to consider or download or install.
-Defaults to the hard dependencies, see <code><a href='pkg_dep_types_hard.html'>pkg_dep_types_hard()</a></code>.</p></li>
-<li><p><code>r-versions</code>: Character vector, R versions to download or install
+Defaults to the hard dependencies, see <code><a href='pkg_dep_types_hard.html'>pkg_dep_types_hard()</a></code>.
+The following values are supported in the <code>PKG_DEPENDENCIES</code>
+environment variable: <code>"TRUE"</code>, <code>"FALSE"</code>, <code>"NA"</code>, or a
+semicolon separated list of dependency types. See
+<code><a href='as_pkg_dependencies.html'>as_pkg_dependencies()</a></code> for details.</p></li>
+<li><p><code>r_versions</code>: Character vector, R versions to download or install
 packages for. It defaults to the current R version.</p></li>
-<li><p><code>build-vignettes</code>: Whether to build vignettes for package trees.
+<li><p><code>build_vignettes</code>: Whether to build vignettes for package trees.
 This is only used if the package is obtained from a package tree,
-and not from a source (or binary) package archive. By default vignettes
-are not built in this case. If you set this to <code>TRUE</code>, then you need
-to make sure that the vignette builder packages are available, as
-these are not installed by default currently.</p></li>
-<li><p><code>metadata-update-after</code>: A time interval as a <a href='https://rdrr.io/r/base/difftime.html'>difftime</a> object.
+and not from a source (or binary) package archive. By default
+vignettes are not built in this case. If you set this to <code>TRUE</code>,
+then you need to make sure that the vignette builder packages are
+available, as these are not installed by default currently.</p></li>
+<li><p><code>metadata_update_after</code>: A time interval as a <a href='https://rdrr.io/r/base/difftime.html'>difftime</a> object.
 pkgdepends will update the metadata cache if it is older than this.
-The default is one day.</p></li>
+The default is one day.
+The <code>PKG_METADATA_UPDATE_AFTER</code> environment variable may be set
+in seconds (<code>s</code> suffix), minutes (<code>m</code> suffix), hours (<code>h</code> suffix),
+or days (<code>d</code> suffix). E.g: <code>1d</code> means one day.</p></li>
+<li><p><code>sysreqs</code>: Whether to look up and install system requirements.
+By default this is <code>TRUE</code> if the <code>CI</code> environment variable is set
+and the operating system is a supported Linux distribution:
+CentOS, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
+Enterprise. The default will change as new platforms gain system
+requirements support.</p></li>
+<li><p><code>sysreqs_rspm_repo_id</code>: RStudio Package Manager repository id to use
+for CRAN system requirements lookup. Defaults to the <code>RSPM_REPO_ID</code>
+environment variable, if set. If not set, then it defaults to <code>1</code>.</p></li>
+<li><p><code>sysreqs_rspm_url</code>: Root URL of RStudio Package Manager for system
+requirements lookup. By default the <code>RSPM_ROOT</code> environment variable
+is used, if set. If not set, it defaults to
+<code>https://packagemanager.rstudio.com</code>.</p></li>
+<li><p><code>sysreqs_sudo</code>: Whether to use <code>sudo</code> to install system requirements,
+on Unix. By default it is <code>TRUE</code> on Linux if the effective user id
+of the current process is not the <code>root</code> user.</p></li>
+<li><p><code>sysreqs_verbose</code>: Whether to echo the output of system requirements
+installation. Defaults to <code>TRUE</code> if the <code>CI</code> environment variable is
+set.</p></li>
 </ul>
 
 

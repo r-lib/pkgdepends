@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pkgdepends</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -111,10 +111,42 @@
       <small>Source: <a href='https://github.com/r-lib/pkgdepends/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="pkgdepends-030" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.0">
+<a href="#pkgdepends-030" class="anchor"></a>pkgdepends 0.3.0<small> Unreleased </small>
+</h1>
+<ul>
+<li><p>New <code>?ignore-before-r</code> parameter to ignore optional dependencies that need a newer R version (<a href='https://github.com/r-lib/pkgdepends/issues/243'>#243</a>).</p></li>
+<li><p>New <code>?ignore</code> parameter to ignore an optional dependency.</p></li>
+<li><p>Allow specifying downstream package parameters with the <code>package=?param</code> syntax.</p></li>
+<li><p>The <code>$update()</code> operation now works better for <code>any::</code> refs, and we always install the version we planned for.</p></li>
+<li><p>System requirement installation is now more robust and works for Unix shell expressions (<a href='https://github.com/r-lib/pkgdepends/issues/347'>#347</a>).</p></li>
+<li><p>Make system dependency installation more robust (<a href="https://github.com/r-lib/pak/issues/347" class="uri">https://github.com/r-lib/pak/issues/347</a>).</p></li>
+<li><p>CRAN-like resolution is more robust now if a repository is missing the usual metadata.</p></li>
+<li><p>The lock file is pretty JSON now.</p></li>
+<li><p>pkgdepends now does not return tibbles, but simple data frames. They are still printed concisely as long as the pillar package is loaded.</p></li>
+<li><p>pkgdepends now handles all version requirement types properly: ‘&lt;’, ‘&lt;=’, <code>==</code>, <code>&gt;=</code>, <code>&gt;</code>.</p></li>
+</ul>
+</div>
+    <div id="pkgdepends-020" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#pkgdepends-020" class="anchor"></a>pkgdepends 0.2.0<small> 2021-11-29 </small>
+</h1>
+<ul>
+<li><p>pkgdepends now has Much better platform support, including arm64 packages on macOS, and single-arch and multi-arch binary packages on Windows.</p></li>
+<li><p>Better configuration via environment variables and options, see <code><a href="../reference/pkg_config.html">?"pkgdepends-config"</a></code> for details.</p></li>
+<li><p>Many improvements for lock files, i.e. the <code>$create_lockfile()</code> method of <code>pkg_installation_proposal</code>.</p></li>
+<li><p>System requirements support. This is currently active on Linux, if the <code>CI</code> environment variable is set to <code>true</code>. You can set the <code>PKG_SYSREQS</code> environment variable to <code>true</code> to turn it on in other situations. See <code><a href="../reference/pkg_config.html">?"pkgdepends-config"</a></code>.</p></li>
+<li><p>The new <code>any::</code> reference type can be used to install a package from any source. See <code><a href="../reference/pkg_refs.html">?pkg_refs</a></code> for more about this.</p></li>
+</ul>
+</div>
     <div id="pkgdepends-012" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.2">
-<a href="#pkgdepends-012" class="anchor"></a>pkgdepends 0.1.2<small> Unreleased </small>
+<a href="#pkgdepends-012" class="anchor"></a>pkgdepends 0.1.2<small> 2021-06-30 </small>
 </h1>
+<ul>
+<li>remotes can now update packages installed by pak. In the past this sometimes did not work (<a href='https://github.com/r-lib/pkgdepends/issues/301'>#301</a>).</li>
+</ul>
 </div>
     <div id="pkgdepends-011" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.1">

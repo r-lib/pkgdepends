@@ -1,8 +1,33 @@
 
 # pkgdepends development version
 
+* New `?ignore-before-r` parameter to ignore optional dependencies that
+  need a newer R version (#243).
+
+* New `?ignore` parameter to ignore an optional dependency.
+
+* Allow specifying downstream package parameters with the `package=?param`
+  syntax.
+
+* The `$update()` operation now works better for `any::` refs, and we
+  always install the version we planned for.
+
+* System requirement installation is now more robust and works for
+  Unix shell expressions (#347).
+
 * Make system dependency installation more robust
   (https://github.com/r-lib/pak/issues/347).
+
+* CRAN-like resolution is more robust now if a repository is missing
+  the usual metadata.
+
+* The lock file is pretty JSON now.
+
+* pkgdepends now does not return tibbles, but simple data frames.
+  They are still printed concisely as long as the pillar package is loaded.
+
+* pkgdepends now handles all version requirement types properly:
+  '<', '<=', `==`, `>=`, `>`.
 
 # pkgdepends 0.2.0
 

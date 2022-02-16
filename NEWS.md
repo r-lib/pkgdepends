@@ -1,5 +1,5 @@
 
-# pkgdepends development version
+# pkgdepends 0.3.0
 
 * New `?ignore-before-r` parameter to ignore optional dependencies that
   need a newer R version (#243).

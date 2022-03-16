@@ -216,6 +216,7 @@ pkgplan_i_create_lp_problem <- function(pkgs, config, policy) {
   lp <- pkgplan_i_lp_latest_direct(lp)
   lp <- pkgplan_i_lp_prefer_installed(lp)
   lp <- pkgplan_i_lp_prefer_binaries(lp)
+  lp <- pkgplan_i_lp_prefer_new_binaries(lp)
   lp <- pkgplan_i_lp_dependencies(lp)
 
   lp
@@ -485,8 +486,18 @@ pkgplan_i_lp_prefer_binaries <- function(lp) {
     selected <- setdiff(same[pkgs$platform[same] != "source"], lp$ruled_out)[1]
     ## No binary package, maybe there is RSPM. This is temporary,
     ## until we get proper RSPM support.
+    ## It would be better to merge the download URLs in this case.
     if (is.na(selected)) {
       selected <- setdiff(same[grepl("__linux__", pkgs$mirror[same])], lp$ruled_out)[1]
+    }
+    ## Same on Windows, to work around
+    ## https://github.com/r-lib/pkgdepends/issues/276
+    ## It would be better to merge the download URLs in this case.
+    if (is.na(selected)) {
+       selected <- setdiff(
+         same[grepl("^https://packagemanager[.]rstudio[.]com", pkgs$mirror[same])],
+         lp$ruled_out
+       )[1]
     }
     if (is.na(selected)) next
     ruledout <- setdiff(same, selected)
@@ -497,6 +508,34 @@ pkgplan_i_lp_prefer_binaries <- function(lp) {
     }
   }
 
+  lp
+}
+
+pkgplan_i_lp_prefer_new_binaries <- function(lp) {
+  # We rule out older binaries if there is a new one available
+  # This is not always correct, but otherwise the solver will be slow.
+  # https://github.com/r-lib/pkgdepends/issues/276
+  # I tried adding a penalty to older versions, but that did not work.
+  pkgs <- lp$pkgs
+  whpp <- pkgs$status == "OK" & !is.na(pkgs$version)
+  pn <- unique(pkgs$package[whpp])
+  ruled_out <- integer()
+  for (p in pn) {
+    whp <-  which(
+      whpp & pkgs$package == p &
+        pkgs$platform != "source" &
+        pkgs$type %in% c("cran", "bioc", "standard")
+    )
+    v <- package_version(pkgs$version[whp])
+    ruled_out <- c(ruled_out, whp[v != max(v)])
+  }
+
+  for (r in ruled_out) {
+    lp <- pkgplan_i_lp_add_cond(lp, r, op = "==", rhs = 0,
+      type = "prefer-new-binary")
+  }
+
+  lp$ruled_out <- unique(c(lp$ruled_out, ruled_out))
   lp
 }
 
@@ -632,6 +671,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "prefer-binary")  {
     ref <- x$pkgs$ref[cond$vars]
     glue("binary is preferred for `{ref}`")
+
+  } else if (cond$type == "prefer-new-binary")  {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("newer binary is preferred for `{ref}`")
 
   } else if (cond$type == "source-requested") {
     ref <- x$pkgs$ref[cond$vars]

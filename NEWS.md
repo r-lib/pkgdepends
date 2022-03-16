@@ -1,6 +1,10 @@
 
 # pkgdepends development version
 
+* The dependency solver now uses better heuristics and does not
+  (effectively) freeze if multiple repositories have multiple versions of
+  the same packages (e.g. RSPM and CRAN) (#277).
+
 # pkgdepends 0.3.0
 
 * New `?ignore-before-r` parameter to ignore optional dependencies that

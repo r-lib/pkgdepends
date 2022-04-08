@@ -207,6 +207,13 @@ for details.
 -   [devtools](https://github.com/r-lib/devtools) – Tools for R package
     developers
 
+## Code of Conduct
+
+Please note that the pkgdepends project is released with a [Contributor
+Code of
+Conduct](https://https://r-lib.github.io/pkgdepends/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
+
 # License
 
 MIT (c) RStudio

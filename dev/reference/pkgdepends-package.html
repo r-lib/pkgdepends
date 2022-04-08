@@ -105,51 +105,51 @@ local::~/works/shiny
 
 <p>Dependencies of the development version of the cli package:</p><div class="sourceCode r"><pre><code><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/pkgcache"</span><span class="op">)</span>
 <span class="va">pd</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span>
-<span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode"><pre><code><span class="co">#&gt; r-lib/pkgcache 1.2.2.9000 [new][bld][cmp][dl] (unknown size)</span>
-<span class="co">#&gt; +-assertthat 0.2.1 [new][dl] (52.72 kB)</span>
-<span class="co">#&gt; +-callr 3.7.0 [new][dl] (438.14 kB)</span>
-<span class="co">#&gt; | +-processx 3.5.2 [new][dl] (296.19 kB)</span>
-<span class="co">#&gt; | | +-ps 1.6.0 [new][dl] (285.82 kB)</span>
+<span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode"><pre><code><span class="co">#&gt; r-lib/pkgcache 1.2.2.9000 [new][bld][cmp]</span>
+<span class="co">#&gt; +-assertthat 0.2.1 [new]</span>
+<span class="co">#&gt; +-callr 3.7.0 [new]</span>
+<span class="co">#&gt; | +-processx 3.5.2 [new]</span>
+<span class="co">#&gt; | | +-ps 1.6.0 [new]</span>
 <span class="co">#&gt; | | \-R6 2.5.1 [new]</span>
 <span class="co">#&gt; | \-R6</span>
-<span class="co">#&gt; +-cli 3.0.1 [new]</span>
-<span class="co">#&gt; | \-glue 1.4.2 [new][dl] (139.16 kB)</span>
-<span class="co">#&gt; +-curl 4.3.2 [new][dl] (861.98 kB)</span>
+<span class="co">#&gt; +-cli 3.1.0 [new]</span>
+<span class="co">#&gt; | \-glue 1.5.0 [new]</span>
+<span class="co">#&gt; +-curl 4.3.2 [new]</span>
 <span class="co">#&gt; +-digest 0.6.28 [new]</span>
-<span class="co">#&gt; +-filelock 1.0.2 [new][dl] (26.72 kB)</span>
+<span class="co">#&gt; +-filelock 1.0.2 [new]</span>
 <span class="co">#&gt; +-glue</span>
-<span class="co">#&gt; +-jsonlite 1.7.2 [new][dl] (492.02 kB)</span>
-<span class="co">#&gt; +-prettyunits 1.1.1 [new][dl] (34.71 kB)</span>
+<span class="co">#&gt; +-jsonlite 1.7.2 [new]</span>
+<span class="co">#&gt; +-prettyunits 1.1.1 [new]</span>
 <span class="co">#&gt; +-R6</span>
 <span class="co">#&gt; +-processx</span>
-<span class="co">#&gt; +-rappdirs 0.3.3 [new][dl] (45.54 kB)</span>
-<span class="co">#&gt; +-rlang 0.4.12 [new][dl] (1.33 MB)</span>
-<span class="co">#&gt; +-tibble 3.1.5 [new]</span>
-<span class="co">#&gt; | +-ellipsis 0.3.2 [new][dl] (36.44 kB)</span>
+<span class="co">#&gt; +-rappdirs 0.3.3 [new]</span>
+<span class="co">#&gt; +-rlang 0.4.12 [new]</span>
+<span class="co">#&gt; +-tibble 3.1.6 [new]</span>
+<span class="co">#&gt; | +-ellipsis 0.3.2 [new]</span>
 <span class="co">#&gt; | | \-rlang</span>
-<span class="co">#&gt; | +-fansi 0.5.0 [new][dl] (237.78 kB)</span>
+<span class="co">#&gt; | +-fansi 0.5.0 [new]</span>
 <span class="co">#&gt; | +-lifecycle 1.0.1 [new]</span>
 <span class="co">#&gt; | | +-glue</span>
 <span class="co">#&gt; | | \-rlang</span>
-<span class="co">#&gt; | +-magrittr 2.0.1 [new][dl] (224.79 kB)</span>
-<span class="co">#&gt; | +-pillar 1.6.4 [new][dl] (1.03 MB)</span>
+<span class="co">#&gt; | +-magrittr 2.0.1 [new]</span>
+<span class="co">#&gt; | +-pillar 1.6.4 [new]</span>
 <span class="co">#&gt; | | +-cli</span>
-<span class="co">#&gt; | | +-crayon 1.4.1 [new][dl] (139.48 kB)</span>
+<span class="co">#&gt; | | +-crayon 1.4.2 [new]</span>
 <span class="co">#&gt; | | +-ellipsis</span>
 <span class="co">#&gt; | | +-fansi</span>
 <span class="co">#&gt; | | +-lifecycle</span>
 <span class="co">#&gt; | | +-rlang</span>
 <span class="co">#&gt; | | +-utf8 1.2.2 [new]</span>
-<span class="co">#&gt; | | \-vctrs 0.3.8 [new][dl] (1.41 MB)</span>
+<span class="co">#&gt; | | \-vctrs 0.3.8 [new]</span>
 <span class="co">#&gt; | |   +-ellipsis</span>
 <span class="co">#&gt; | |   +-glue</span>
 <span class="co">#&gt; | |   \-rlang</span>
-<span class="co">#&gt; | +-pkgconfig 2.0.3 [new][dl] (17.80 kB)</span>
+<span class="co">#&gt; | +-pkgconfig 2.0.3 [new]</span>
 <span class="co">#&gt; | +-rlang</span>
 <span class="co">#&gt; | \-vctrs</span>
-<span class="co">#&gt; \-uuid 0.1-4 [new][dl] (27.79 kB)</span>
+<span class="co">#&gt; \-uuid 1.0-3 [new]</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span></code></pre></div>
+<span class="co">#&gt; Key:  [new] new | [bld] build | [cmp] compile</span></code></pre></div>
 
 <p>See the <code><a href="pkg_deps.html">pkg_deps</a></code> class for details.</p>
 </div>
@@ -230,7 +230,15 @@ with a list of configuration options. See
 cache</p></li>
 <li><p><a href="https://github.com/r-lib/devtools" class="external-link">devtools</a> – Tools for R package
 developers</p></li>
-</ul></div>
+</ul><div class="section">
+<h3 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a></h3>
+
+
+<p>Please note that the pkgdepends project is released with a <a href="https://r-lib.github.io/pkgdepends/dev/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>.
+By contributing to this project, you agree to abide by its terms.</p>
+</div>
+
+    </div>
     <div class="section level2">
     <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a></h2>
     <p>MIT (c) RStudio</p>
@@ -241,6 +249,11 @@ developers</p></li>
 <li><p>Report bugs at <a href="https://github.com/r-lib/pkgdepends/issues" class="external-link">https://github.com/r-lib/pkgdepends/issues</a></p></li>
 </ul></div>
     </div>
+    <div class="section level2">
+    <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
+    <p><strong>Maintainer</strong>: Gábor Csárdi <a href="mailto:csardi.gabor@gmail.com">csardi.gabor@gmail.com</a></p>
+<p>Other contributors:</p><ul><li><p>RStudio [copyright holder, funder]</p></li>
+</ul></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

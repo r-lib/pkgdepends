@@ -45,7 +45,7 @@ dependencies that are specified in one of the \code{Depends}, \code{Includes},
 
 \subsection{The result}{
 
-The result of the resolution is a data frame (tibble) with lots of
+The result of the resolution is a data frame with lots of
 information about the packages and their dependencies. The columns that
 are not documented here may be removed or changed, because they are
 either used internally or experimental.
@@ -56,7 +56,7 @@ packages, for which this information is available.
 It is \code{NA} for \verb{installed::} package refs.
 \item \code{dep_types}: Character vector of dependency types that were
 considered for this package. (This is a list column.)
-\item \code{deps}: Dependencies of the package, in a data frame (tibble). See
+\item \code{deps}: Dependencies of the package, in a data frame. See
 'Package dependency tables' below.
 \item \code{direct}: Whether this package (ref, really) was directly specified,
 or added as a dependency.

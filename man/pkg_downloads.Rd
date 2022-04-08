@@ -10,8 +10,8 @@ both have download methods, to downloads package files into a
 configured directory (see \link[=pkgdepends-config]{'Configuration'}).
 }
 \details{
-They return a \code{pkg_download_result} object, which is a data frame
-(tibble), that adds extra columns to \code{\link{pkg_resolution_result}} (for
+They return a \code{pkg_download_result} object, which is a data frame,
+that adds extra columns to \code{\link{pkg_resolution_result}} (for
 \code{\link{pkg_download_proposal}}) or \code{\link{pkg_solution_result}}
 (for \code{\link{pkg_installation_proposal}}):
 \itemize{

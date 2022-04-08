@@ -214,7 +214,7 @@ called after \href{#method-resolve}{\code{resolve()}} has completed.
 }
 
 \subsection{Returns}{
-A \link{pkg_resolution_result} object, which is also a tibble. See
+A \link{pkg_resolution_result} object, which is also a data frame. See
 \link[=pkg_resolution]{'Dependency resolution'} for its columns.
 }
 }

@@ -1,8 +1,10 @@
 Package: pkgdepends
 Title: Package Dependency Resolution and Downloads
 Version: 0.3.0.9000
-Author: Gábor Csárdi
-Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
+Authors@R: c(
+    person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
+    person("RStudio", role = c("cph", "fnd"))
+  )
 Description: Find recursive dependencies of 'R' packages from various
     sources. Solve the dependencies to obtain a consistent set of packages
     to install. Download packages, and install them. It supports packages

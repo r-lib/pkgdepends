@@ -181,5 +181,5 @@ MIT (c) RStudio
 [pkg_installation_proposal]: https://r-lib.github.io/pkgdepends/reference/pkg_installation_proposal.html
 [pkg_solution]: https://r-lib.github.io/pkgdepends/reference/pkg_solution.html
 [pkg_resolution]: https://r-lib.github.io/pkgdepends/reference/pkg_resolution.html
-[pkg_config]: https://r-lib.github.io/pkgdepends/reference/pkg_config.html
 [install_plans]: https://r-lib.github.io/pkgdepends/reference/install_plans.html
+[pkgdepends-config]: https://r-lib.github.io/pkgdepends/reference/pkg_config.html

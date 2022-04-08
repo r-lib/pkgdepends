@@ -13,6 +13,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://github.com/r-lib/pkgdepends/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/pkgdepends/actions)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/r-lib/pkgdepends/main.svg)](https://codecov.io/github/r-lib/pkgdepends?branch=main)
+[![Codecov test
+coverage](https://codecov.io/gh/r-lib/pkgdepends/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/pkgdepends?branch=main)
+[![R-CMD-check](https://github.com/r-lib/pkgdepends/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/pkgdepends/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 pkgdepends is a toolkit for package dependencies, downloads and

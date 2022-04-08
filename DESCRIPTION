@@ -37,6 +37,7 @@ Imports:
     zip (>= 2.1.0)
 Suggests:
     asciicast,
+    covr,
     debugme,
     digest,
     fansi,

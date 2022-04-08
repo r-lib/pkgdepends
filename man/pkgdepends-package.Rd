@@ -173,6 +173,11 @@ cache
 \item \href{https://github.com/r-lib/devtools}{devtools} – Tools for R package
 developers
 }
+\subsection{Code of Conduct}{
+
+Please note that the pkgdepends project is released with a \href{https://r-lib.github.io/pkgdepends/dev/CODE_OF_CONDUCT.html}{Contributor Code of Conduct}.
+By contributing to this project, you agree to abide by its terms.
+}
 }
 
 \section{License}{

@@ -211,7 +211,7 @@ for details.
 
 Please note that the pkgdepends project is released with a [Contributor
 Code of
-Conduct](https://https://r-lib.github.io/pkgdepends/CODE_OF_CONDUCT.html).
+Conduct](https://r-lib.github.io/pkgdepends/dev/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
 
 # License

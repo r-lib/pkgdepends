@@ -62,7 +62,8 @@ Config/Needs/dev:
     rmarkdown,
     svglite
 Config/Needs/website:
-    pkgdown
+    pkgdown,
+    tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

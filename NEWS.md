@@ -1,5 +1,5 @@
 
-# pkgdepends development version
+# pkgdepends 0.3.1
 
 * The dependency solver now uses better heuristics and does not
   (effectively) freeze if multiple repositories have multiple versions of

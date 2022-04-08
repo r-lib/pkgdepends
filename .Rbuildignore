@@ -21,3 +21,4 @@
 ^\.github$
 ^dev-lib$
 ^revdep$
+^codecov\.yml$

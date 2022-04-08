@@ -14,6 +14,9 @@ name: pkgdown
 jobs:
   pkgdown:
     runs-on: ubuntu-latest
+    # Only restrict concurrency for non-PR jobs
+    concurrency:
+      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CI_GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}
@@ -28,7 +31,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: r-lib/pkgdown@v1.6.1, local::.
+          extra-packages: any::pkgdown, local::.
           needs: website
 
       - name: "Set environment variables"
@@ -36,14 +39,14 @@ jobs:
           cat(paste0("R_USER_CACHE_DIR=", Sys.getenv("GITHUB_WORKSPACE"), "/.github/cache\n"), file = Sys.getenv("GITHUB_ENV"), append = TRUE)
         shell: Rscript {0}
 
-      - name: Deploy package
-        if: github.event_name != 'pull_request'
-        run: |
-          git config --local user.name "$GITHUB_ACTOR"
-          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
+      - name: Build site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        shell: Rscript {0}
 
-      - name: Build site without deploying
-        if: github.event_name == 'pull_request'
-        run: |
-          Rscript -e 'pkgdown::build_site(preview = FALSE, install = FALSE)'
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          clean: false
+          branch: gh-pages
+          folder: docs

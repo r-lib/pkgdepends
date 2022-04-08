@@ -1,6 +1,6 @@
 Package: pkgdepends
 Title: Package Dependency Resolution and Downloads
-Version: 0.3.1
+Version: 0.3.1.9000
 Authors@R: c(
     person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
     person("RStudio", role = c("cph", "fnd"))

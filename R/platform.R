@@ -40,7 +40,7 @@
 #'   currently.
 #'
 #' @return
-#' current_r_platform()` returns a string, the name of the current
+#' `current_r_platform()` returns a string, the name of the current
 #' platform.
 #'
 #' @export

@@ -228,7 +228,7 @@ type_github_get_data <- function(rem) {
   }
 
   dx$then(function(data) {
-    rethrow(
+    chain_error(
       dsc <- desc(text = data$desc),
       new_github_baddesc_error(rem, call)
     )

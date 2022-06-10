@@ -44,7 +44,7 @@
     Message <cliMessage>
       x Failed to install R6 2.2.2
     Error <package_install_error>
-      Failed to install binary package 'R6'.
+      ! Failed to install binary package 'R6'.
 
 # handle_event, install process finished
 
@@ -71,5 +71,5 @@
     Message <cliMessage>
       x Failed to install R6 2.2.2
     Error <package_install_error>
-      Failed to install binary package 'R6'.
+      ! Failed to install binary package 'R6'.
 

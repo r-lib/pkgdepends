@@ -1047,7 +1047,7 @@ describe_solution_error <- function(pkgs, solution) {
 
   FAILS <- c("failed-res", "satisfy-direct", "conflict", "dep-failed",
              "old-rversion", "new-rvresion", "different-rversion",
-             "matching-platform")
+             "matching-platform", "ignored-by-user", "binary-preferred")
 
   state <- rep("maybe-good", num)
   note <- replicate(num, NULL)
@@ -1058,10 +1058,21 @@ describe_solution_error <- function(pkgs, solution) {
   ok_pkgs <- unique(pkgs$package[sol_pkg == 1])
   state[pkgs$package %in% ok_pkgs] <- "installed"
 
-  ## Candidates that failed resolution
   cnd <- solution$problem$conds
   typ <- vcapply(cnd, "[[", "type")
   var <- lapply(cnd, "[[", "vars")
+
+  ## Ignored by user
+  ign_vars <- unlist(var[typ == "ignored-by-user"])
+  ign_vars <- intersect(ign_vars, which(state == "maybe-good"))
+  state[ign_vars] <- "ignored-by-user"
+
+  ## Ruled out in favor of a binary package
+  bin_vars <- unlist(var[typ %in% c("prefer-binary", "prefer-new-binary")])
+  bin_vars <- intersect(bin_vars, which(state == "maybe-good"))
+  state[bin_vars] <- "binary-preferred"
+
+  ## Candidates that failed resolution
   fres_vars <- unlist(var[typ == "ok-resolution"])
   fres_vars <- intersect(fres_vars, which(state == "maybe-good"))
   state[fres_vars] <- "failed-res"
@@ -1170,6 +1181,7 @@ format.pkg_solution_failures <- function(x, ...) {
 
   do <- function(i) {
     if (done[i]) return()
+    if (fails$failure_type[i] == "binary-preferred") return()
     done[i] <<- TRUE
     msgs <- unique(fails$failure_message[[i]])
 

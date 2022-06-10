@@ -62,13 +62,18 @@
     <dl><dt>refs</dt>
 <dd><p>Package names or references. See
 <a href="pkg_refs.html">'Package references'</a> for the syntax.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments, passed to
 <a href="#method-new"><code>pkg_download_proposal$new()</code></a>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>new_pkg_download_proposal()</code> returns a new
+    
+
+<p><code>new_pkg_download_proposal()</code> returns a new
 <code>pkg_download_proposal</code> object.</p>
     </div>
     <div class="section level2">
@@ -363,7 +368,7 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_cache_dir</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmplFXSCE/file2d1f1f876cf2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpRanBeP/file27a844790412"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## dependencies</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
@@ -400,7 +405,7 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## cache_dir</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmplFXSCE/file2d1f2cd25a09"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpRanBeP/file27a844870a87"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_verbose</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
@@ -455,46 +460,45 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-in"><span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Getting 38 pkgs (8.02 MB) and 1 pkg with unknown size</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">crayon</span> 1.5.1 (source) (40.18 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">callr</span> 3.7.0 (source) (74.52 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">filelock</span> 1.0.2 (source) (12.38 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgbuild</span> 1.3.1 (source) (31.94 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.0.1 (source) (223.94 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">withr</span> 2.5.0 (source) (102.09 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">R6</span> 2.5.1 (source) (82.48 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">callr</span> 3.7.0 (source) (90.90 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">crayon</span> 1.5.1 (source) (156.29 kB)</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot rename file '/tmp/RtmplFXSCE/file2d1f2cd25a09/src/contrib/glue_1.6.2.tar.gz.tmp.1' to '/tmp/RtmplFXSCE/file2d1f2cd25a09/src/contrib/glue_1.6.2.tar.gz', reason 'No such file or directory'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">desc</span> 1.4.1 (source) (80.75 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">filelock</span> 1.0.2 (source) (32.55 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">processx</span> 3.5.3 (source) (142.00 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">desc</span> 1.4.1 (source) (80.75 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.3.0 (source) (728.65 kB)</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot rename file '/tmp/RtmplFXSCE/file2d1f2cd25a09/src/contrib/withr_2.5.0.tar.gz.tmp.1' to '/tmp/RtmplFXSCE/file2d1f2cd25a09/src/contrib/withr_2.5.0.tar.gz', reason 'No such file or directory'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">callr</span> 3.7.0 (source) (432.28 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">glue</span> 1.6.2 (source) (263.69 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">glue</span> 1.6.2 (source) (263.69 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rprojroot</span> 2.0.3 (source) (59.94 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">prettyunits</span> 1.1.1 (source) (4.03 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">prettyunits</span> 1.1.1 (source) (4.03 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">withr</span> 2.5.0 (source) (327.54 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">withr</span> 2.5.0 (source) (327.54 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">zip</span> 2.2.0 (source) (114.39 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rappdirs</span> 0.3.3 (source) (47.59 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.0.1 (source) (483.13 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 4.3.2 (source) (1.38 MB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.7.0 (source) (174.61 kB)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot rename file '/tmp/RtmpRanBeP/file27a844870a87/src/contrib/desc_1.4.1.tar.gz.tmp.1' to '/tmp/RtmpRanBeP/file27a844870a87/src/contrib/desc_1.4.1.tar.gz', reason 'No such file or directory'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.7.0 (source) (125.45 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">desc</span> 1.4.1 (source) (400.03 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">desc</span> 1.4.1 (source) (400.03 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">callr</span> 3.7.0 (source) (415.90 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgbuild</span> 1.3.1 (source) (31.94 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">glue</span> 1.6.2 (source) (157.19 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.3.0 (source) (1.04 MB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">processx</span> 3.5.3 (source) (427.64 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rappdirs</span> 0.3.3 (source) (12.29 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">R6</span> 2.5.1 (source) (63.42 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgbuild</span> 1.3.1 (source) (143.52 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.7.0 (source) (326.73 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">prettyunits</span> 1.1.1 (source) (10.37 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rprojroot</span> 2.0.3 (source) (100.99 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">filelock</span> 1.0.2 (source) (32.55 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 4.3.2 (source) (136.11 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">prettyunits</span> 1.1.1 (source) (10.37 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">glue</span> 1.6.2 (source) (106.51 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 4.3.2 (source) (136.11 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">filelock</span> 1.0.2 (source) (32.55 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rprojroot</span> 2.0.3 (source) (59.94 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.15 (source) (647.27 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">processx</span> 3.6.0 (source) (148.34 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.7.0 (source) (375.88 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">withr</span> 2.5.0 (source) (225.45 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">zip</span> 2.2.0 (source) (114.39 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">jsonlite</span> 1.8.0 (source) (1.33 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.3.0 (source) (633.02 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rappdirs</span> 0.3.3 (source) (47.59 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgbuild</span> 1.3.1 (source) (143.52 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.0.1 (source) (791.05 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">zip</span> 2.2.0 (source) (637.03 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.0.1 (source) (531.86 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">jsonlite</span> 1.8.0 (source) (2.04 MB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 4.3.2 (source) (319.02 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">jsonlite</span> 1.8.0 (source) (165.93 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.15 (source) (882.13 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.15 (source) (819.61 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.3.0 (source) (944.27 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgdepends</span> 0.3.1.9000 (source) (383.04 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.15 (source) (1.05 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgdepends</span> 0.3.1.9000 (source) (383.15 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">jsonlite</span> 1.8.0 (source) (876.95 kB)</span>
 <span class="r-in"><span class="va">pdl</span><span class="op">$</span><span class="fu">get_downloads</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 39 × 35</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ref              type   direct directpkg status package version license</span>
@@ -520,21 +524,17 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-in"><span class="va">pdl</span> <span class="op">&lt;-</span> <span class="fu">new_pkg_download_proposal</span><span class="op">(</span><span class="st">"pkgload"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">pdl</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Getting 14 pkgs (3.37 MB), 6 (327.08 kB) cached</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Getting 10 pkgs (2.95 MB), 10 (744.28 kB) cached</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">cli</span> 3.3.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">desc</span> 1.4.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">glue</span> 1.6.2 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">withr</span> 2.5.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">cli</span> 3.3.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">desc</span> 1.4.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">glue</span> 1.6.2 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">withr</span> 2.5.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgload</span> 1.2.4 (source) (62.83 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rstudioapi</span> 0.13 (source) (110.47 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rlang</span> 1.0.2 (source) (785.57 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgload</span> 1.2.4 (source) (149.93 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rstudioapi</span> 0.13 (source) (273.75 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rlang</span> 1.0.2 (source) (1.84 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rlang</span> 1.0.2 (source) (1.07 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgload</span> 1.2.4 (source) (149.93 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rlang</span> 1.0.2 (source) (1.55 MB)</span>
 <span class="r-in"><span class="va">pdl</span><span class="op">$</span><span class="fu">get_downloads</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 20 × 35</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ref        type     direct directpkg status package    version license </span>
@@ -584,28 +584,22 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$get_resolution()` to see resolution results)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Getting 20 pkgs (6.91 MB) and 1 pkg with unknown size, 18 (1.10 MB) cached</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Getting 14 pkgs (6.21 MB) and 1 pkg with unknown size, 24 (1.81 MB) cached</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgdepends</span> 0.3.1.9000 (source) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">callr</span> 3.7.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">cli</span> 3.3.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">curl</span> 4.3.2 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">desc</span> 1.4.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">glue</span> 1.6.2 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">jsonlite</span> 1.8.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">lpSolve</span> 5.6.15 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgcache</span> 2.0.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">prettyunits</span> 1.1.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">ps</span> 1.7.0 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">withr</span> 2.5.0 (source) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">processx</span> 3.5.3 (source) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">callr</span> 3.7.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">cli</span> 3.3.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">curl</span> 4.3.2 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">desc</span> 1.4.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">glue</span> 1.6.2 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">jsonlite</span> 1.8.0 (source) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">lpSolve</span> 5.6.15 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgcache</span> 2.0.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">prettyunits</span> 1.1.1 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">ps</span> 1.7.0 (source) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">withr</span> 2.5.0 (source) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">processx</span> 3.6.0 (source) is the latest build</span>
 <span class="r-in"><span class="va">pdl</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;pkg_download_proposal&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + refs:</span>
@@ -627,7 +621,7 @@ includes:</p><ul><li><p>The package refs.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>

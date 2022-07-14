@@ -410,13 +410,6 @@ is_interactive <- function() {
   }
 }
 
-has_asciicast_support <- function() {
- tryCatch({
-   asNamespace("asciicast")$is_recording_supported() &&
-     asNamespace("asciicast")$is_svg_supported()
- }, error = function(e) FALSE)
-}
-
 try_silently <- function(expr) {
   try(expr, silent = TRUE)
 }

@@ -39,7 +39,6 @@ Imports:
     withr (>= 2.1.1),
     zip (>= 2.1.0)
 Suggests:
-    asciicast,
     covr,
     debugme,
     digest,
@@ -62,6 +61,7 @@ Config/Needs/dev:
     rmarkdown,
     svglite
 Config/Needs/website:
+    r-lib/asciicast,
     pkgdown (>= 2.0.2),
     tidyverse/tidytemplate
 Config/testthat/edition: 3

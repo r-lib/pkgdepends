@@ -113,20 +113,6 @@ test_that("make_dl_status", {
 
 })
 
-test_that("write_bin_atomic", {
-  ## temp file is cleaned up
-  write_bin_atomic(raw(10), tmp <- tempfile())
-  expect_false(file.exists(paste0(tmp, ".tmp")))
-  ## otherwise we would need a stress test with multiple processes...
-})
-
-test_that("save_rds_atomic", {
-  ## temp file is cleaned up
-  save_rds_atomic(1:10, tmp <- tempfile())
-  expect_false(file.exists(paste0(tmp, ".tmp")))
-  ## otherwise we would need a stress test with multiple processes...
-})
-
 test_that("comma_wrap", {
   expect_equal(
     withr::with_options(

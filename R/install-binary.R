@@ -46,30 +46,40 @@ install_extracted_binary <- function(filename, lib_cache, pkg_cache, lib,
 
   installed_path <- file.path(lib, pkg_name)
   if (file.exists(installed_path)) {
-    # First move the existing library (which still works even if a process has
-    # the DLL open), then try to delete it, which may fail if another process
-    # has the file open. Some points:
-    # - the <lib_cache> / <pkg_name> directory might exist with the leftovers
-    #   of a previous installation, typically because the DLL file was/is
-    #   locked, so we could not delete it after the move.
-    # - so we create a random path component to avoid interference
-    # - we also unlink() the whole package-specific cache directory,
-    #   to avoid accumulating junk there. This is safe, well, if we are
-    #   locking, which is strongly suggested.
-    move_to <- file.path(lib_cache, pkg_name, basename(tempfile()))
-    unlink(dirname(move_to), recursive = TRUE, force = TRUE)
-    dir.create(dirname(move_to), showWarnings = FALSE, recursive = TRUE)
-    ret <- file.rename(installed_path, move_to)
-    if (!ret) {
-      throw(new_fs_error(
-        "Failed to move installed package at {installed_path}",
-        package = pkg_name))
-    }
-    ret <- unlink(move_to, recursive = TRUE, force = TRUE)
-    if (ret != 0) {
-      throw(new_fs_warning(
-        "Failed to remove installed package at {move_to}",
-        package = pkg_name))
+    if (is_windows()) {
+      # First move the existing library (which still works even if a process has
+      # the DLL open), then try to delete it, which may fail if another process
+      # has the file open. Some points:
+      # - the <lib_cache> / <pkg_name> directory might exist with the leftovers
+      #   of a previous installation, typically because the DLL file was/is
+      #   locked, so we could not delete it after the move.
+      # - so we create a random path component to avoid interference
+      # - we also unlink() the whole package-specific cache directory,
+      #   to avoid accumulating junk there. This is safe, well, if we are
+      #   locking, which is strongly suggested.
+      move_to <- file.path(lib_cache, pkg_name, basename(tempfile()))
+      unlink(dirname(move_to), recursive = TRUE, force = TRUE)
+      dir.create(dirname(move_to), showWarnings = FALSE, recursive = TRUE)
+      ret <- file.rename(installed_path, move_to)
+      if (!ret) {
+        throw(new_fs_error(
+          "Failed to move installed package at {installed_path}",
+          package = pkg_name))
+      }
+      ret <- unlink(move_to, recursive = TRUE, force = TRUE)
+      if (ret != 0) {
+        throw(new_fs_warning(
+          "Failed to remove installed package at {move_to}",
+          package = pkg_name))
+      }
+    } else {
+      # On Unix we are fine with just deleting the old package
+      ret <- unlink(installed_path, recursive = TRUE, force = TRUE)
+      if (ret != 0) {
+        throw(new_fs_warning(
+          "Failed to remove installed package at {installed_path}",
+          package = pkg_name))
+      }
     }
   }
   ret <- file.rename(pkg$path, installed_path)

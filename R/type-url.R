@@ -9,6 +9,10 @@ parse_remote_url <- function(specs, config, ...) {
   parsed_specs <- parsed_specs[, cn]
   parsed_specs$type <- "url"
   parsed_specs$hash <- vcapply(specs, function(x) digest::digest(x))
+
+  # Special case downloads from GH
+  parsed_gh_specs <- re_match(specs, type_github_download_url_rx())
+  parsed_specs$package <- parsed_gh_specs$repo
   lapply(
     seq_len(nrow(parsed_specs)),
     function(i) as.list(parsed_specs[i,])
@@ -96,6 +100,12 @@ satisfy_remote_url <- function(resolution, candidate, config, ...) {
     }
   }
 
+  ## 3. same url is good
+  if (candidate$type == "url") {
+    if (resolution$ref == candidate$ref) return(TRUE)
+    return(structure(FALSE, reason = "URL mismatch"))
+  }
+
   structure(FALSE, reason = "Repo type mismatch")
 }
 
@@ -115,6 +125,21 @@ type_url_rx <- function() {
     "(?:url::)",
     "(?<url>.*)",
     "$"
+  )
+}
+
+# E.g. url::https://github.com/r-lib/tidyselect/archive/main.tar.gz
+
+type_github_download_url_rx <- function() {
+  paste0(
+    "^",
+    "(?:url::)",
+    "https://github.com/",
+    github_username_rx(), "/",
+    github_repo_rx(),
+    "/archive/",
+    "(?<branch>[^/.]+)",
+    "[.]tar[.]gz$"
   )
 }
 

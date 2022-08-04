@@ -120,17 +120,29 @@ resolve_ref_deps <- function(deps, remotes, extra) {
     str_trim(strsplit(x, "\\s*,\\s*", perl = TRUE)[[1]])
   }
 
+  check_names <- function(x) {
+    nms <- vcapply(x, function(e) e$package %||% NA_character_)
+    bad <- is.na(nms)
+    if (any(bad)) {
+      stop(
+        "Cannot determine package name for remote(s): ",
+        paste(vcapply(x, "[[", "ref")[bad], collapse = ", ")
+      )
+    }
+    nms
+  }
+
   if (!is.na(remotes)) {
     remotes <- str_trim(na.omit(remotes))
     remotes <- parse(remotes)
-    remotes_packages <- vcapply(parse_pkg_refs(remotes), "[[", "package")
+    remotes_packages <- check_names(parse_pkg_refs(remotes))
     keep <- which(remotes_packages %in% deps$package)
     deps$ref[match(remotes_packages[keep], deps$package)] <- remotes[keep]
   }
 
   if (length(extra) > 0) {
     xdeps <- parse_all_deps(extra)
-    xdeps$package <- vcapply(parse_pkg_refs(xdeps$package), "[[", "package")
+    xdeps$package <- check_names(parse_pkg_refs(xdeps$package))
     deps <- rbind(deps, xdeps)
   }
 

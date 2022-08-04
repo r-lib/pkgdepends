@@ -363,6 +363,17 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
     )
   }
 
+  # We also allow an extra subdirectory, e.g. in .tar.gz files downloaded
+  # from GHA
+  if (!file.exists(file.path(path, "DESCRIPTION")) &&
+      length(subdir <- dir(path)) == 1) {
+    path <- file.path(path, subdir)
+  }
+  if (!file.exists(file.path(path, "DESCRIPTION")) &&
+      length(subdir <- dir(path)) == 1) {
+    path <- file.path(path, subdir)
+  }
+
   warn_for_long_paths(path, pkg)
 
   ## with_libpath() is needed for newer callr, which forces the current

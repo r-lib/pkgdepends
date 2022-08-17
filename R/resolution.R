@@ -624,7 +624,11 @@ resolve_from_metadata <- function(remotes, direct, config, cache,
         failed <- make_failed_resolution(
           bad, ifelse(!is.na(idx), types[idx], "standard"),
           direct & bad %in% refs)
-        res <- rbind_expand(res, res_add_defaults(failed))
+        failed <- res_add_defaults(failed)
+        ## This is added later, we don't want to add it here, because
+        ## it messes up the dep_types of the successful resolutions
+        failed <- failed[names(failed) != "dep_types"]
+        res <- rbind_expand(res, failed)
       }
 
       res

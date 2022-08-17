@@ -553,7 +553,7 @@ pkgplan_i_lp_dependencies <- function(lp) {
     ignored2 <- ignore_rver > current
     ignored <- ignored | ignored2
   }
-  soft_deps <- pkg_dep_types_soft()
+  soft_deps <- tolower(pkg_dep_types_soft())
 
   ## 4. Package dependencies must be satisfied
   depconds <- function(wh) {
@@ -571,7 +571,7 @@ pkgplan_i_lp_dependencies <- function(lp) {
       depver <- deps$version[i]
       depop  <- deps$op[i]
       deppkg <- deps$package[i]
-      deptyp <- deps$type[i]
+      deptyp <- tolower(deps$type[i])
 
       # candidates
       res <- pkgs[match(depref, pkgs$ref), ]

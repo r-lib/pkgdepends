@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   out.width = "100%",
   cache = TRUE,
-  eval = asNamespace("asciicast")$is_recording_supported()
+  eval = TRUE
 )
 ```
 

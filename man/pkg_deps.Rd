@@ -128,26 +128,26 @@ pd
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{pkg_deps$new()}}
-\item \href{#method-get_refs}{\code{pkg_deps$get_refs()}}
-\item \href{#method-get_config}{\code{pkg_deps$get_config()}}
-\item \href{#method-resolve}{\code{pkg_deps$resolve()}}
-\item \href{#method-async_resolve}{\code{pkg_deps$async_resolve()}}
-\item \href{#method-get_resolution}{\code{pkg_deps$get_resolution()}}
-\item \href{#method-get_solve_policy}{\code{pkg_deps$get_solve_policy()}}
-\item \href{#method-set_solve_policy}{\code{pkg_deps$set_solve_policy()}}
-\item \href{#method-solve}{\code{pkg_deps$solve()}}
-\item \href{#method-get_solution}{\code{pkg_deps$get_solution()}}
-\item \href{#method-stop_for_solution_error}{\code{pkg_deps$stop_for_solution_error()}}
-\item \href{#method-draw}{\code{pkg_deps$draw()}}
-\item \href{#method-format}{\code{pkg_deps$format()}}
-\item \href{#method-print}{\code{pkg_deps$print()}}
-\item \href{#method-clone}{\code{pkg_deps$clone()}}
+\item \href{#method-pkg_deps-new}{\code{pkg_deps$new()}}
+\item \href{#method-pkg_deps-get_refs}{\code{pkg_deps$get_refs()}}
+\item \href{#method-pkg_deps-get_config}{\code{pkg_deps$get_config()}}
+\item \href{#method-pkg_deps-resolve}{\code{pkg_deps$resolve()}}
+\item \href{#method-pkg_deps-async_resolve}{\code{pkg_deps$async_resolve()}}
+\item \href{#method-pkg_deps-get_resolution}{\code{pkg_deps$get_resolution()}}
+\item \href{#method-pkg_deps-get_solve_policy}{\code{pkg_deps$get_solve_policy()}}
+\item \href{#method-pkg_deps-set_solve_policy}{\code{pkg_deps$set_solve_policy()}}
+\item \href{#method-pkg_deps-solve}{\code{pkg_deps$solve()}}
+\item \href{#method-pkg_deps-get_solution}{\code{pkg_deps$get_solution()}}
+\item \href{#method-pkg_deps-stop_for_solution_error}{\code{pkg_deps$stop_for_solution_error()}}
+\item \href{#method-pkg_deps-draw}{\code{pkg_deps$draw()}}
+\item \href{#method-pkg_deps-format}{\code{pkg_deps$format()}}
+\item \href{#method-pkg_deps-print}{\code{pkg_deps$print()}}
+\item \href{#method-pkg_deps-clone}{\code{pkg_deps$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-pkg_deps-new"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{pkg_deps} object. Consider using \code{new_pkg_deps()}
 instead of calling the constructor directly.
@@ -185,8 +185,8 @@ A new \code{pkg_deps} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_refs"></a>}}
-\if{latex}{\out{\hypertarget{method-get_refs}{}}}
+\if{html}{\out{<a id="method-pkg_deps-get_refs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-get_refs}{}}}
 \subsection{Method \code{get_refs()}}{
 The package refs that were used to create the \code{pkg_deps} object.
 \subsection{Usage}{
@@ -199,8 +199,8 @@ A character vector of package refs that were used to create the
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_config"></a>}}
-\if{latex}{\out{\hypertarget{method-get_config}{}}}
+\if{html}{\out{<a id="method-pkg_deps-get_config"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_deps} object. See
 \link[=pkgdepends-config]{'Configuration'} for details.
@@ -213,8 +213,8 @@ See \link[=pkgdepends-config]{'Configuration'} for the configuration entries.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-resolve"></a>}}
-\if{latex}{\out{\hypertarget{method-resolve}{}}}
+\if{html}{\out{<a id="method-pkg_deps-resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-resolve}{}}}
 \subsection{Method \code{resolve()}}{
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
@@ -230,8 +230,8 @@ The \code{pkg_deps} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-async_resolve"></a>}}
-\if{latex}{\out{\hypertarget{method-async_resolve}{}}}
+\if{html}{\out{<a id="method-pkg_deps-async_resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-async_resolve}{}}}
 \subsection{Method \code{async_resolve()}}{
 The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
 This method is for advanced use.
@@ -244,8 +244,8 @@ A deferred value.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_resolution"></a>}}
-\if{latex}{\out{\hypertarget{method-get_resolution}{}}}
+\if{html}{\out{<a id="method-pkg_deps-get_resolution"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-get_resolution}{}}}
 \subsection{Method \code{get_resolution()}}{
 Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
@@ -259,8 +259,8 @@ A \link{pkg_resolution_result} object, which is also a data frame. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_solve_policy"></a>}}
-\if{latex}{\out{\hypertarget{method-get_solve_policy}{}}}
+\if{html}{\out{<a id="method-pkg_deps-get_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-get_solve_policy}{}}}
 \subsection{Method \code{get_solve_policy()}}{
 Returns the current policy of the dependency solver.
 See \link[=pkg_solution]{'The dependency solver'} for details.
@@ -273,8 +273,8 @@ A character vector of length one.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_solve_policy"></a>}}
-\if{latex}{\out{\hypertarget{method-set_solve_policy}{}}}
+\if{html}{\out{<a id="method-pkg_deps-set_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-set_solve_policy}{}}}
 \subsection{Method \code{set_solve_policy()}}{
 Set the current policy of the dependency solver.
 If the object already contains a solution and the new policy is
@@ -293,8 +293,8 @@ See \link[=pkg_solution]{'The dependency solver'} for details.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-solve"></a>}}
-\if{latex}{\out{\hypertarget{method-solve}{}}}
+\if{html}{\out{<a id="method-pkg_deps-solve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-solve}{}}}
 \subsection{Method \code{solve()}}{
 Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that can be installed together to
@@ -314,8 +314,8 @@ The \code{pkg_deps} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_solution"></a>}}
-\if{latex}{\out{\hypertarget{method-get_solution}{}}}
+\if{html}{\out{<a id="method-pkg_deps-get_solution"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-get_solution}{}}}
 \subsection{Method \code{get_solution()}}{
 Returns the solution of the package dependencies.
 \subsection{Usage}{
@@ -328,8 +328,8 @@ A \link{pkg_solution_result} object, which is a list. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
-\if{latex}{\out{\hypertarget{method-stop_for_solution_error}{}}}
+\if{html}{\out{<a id="method-pkg_deps-stop_for_solution_error"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-stop_for_solution_error}{}}}
 \subsection{Method \code{stop_for_solution_error()}}{
 Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
@@ -339,8 +339,8 @@ packages that can be installed together.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-draw"></a>}}
-\if{latex}{\out{\hypertarget{method-draw}{}}}
+\if{html}{\out{<a id="method-pkg_deps-draw"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-draw}{}}}
 \subsection{Method \code{draw()}}{
 Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the dependency tree to the
@@ -354,8 +354,8 @@ A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-format"></a>}}
-\if{latex}{\out{\hypertarget{method-format}{}}}
+\if{html}{\out{<a id="method-pkg_deps-format"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-format}{}}}
 \subsection{Method \code{format()}}{
 Format a \code{pkg_deps} object, typically for printing.
 \subsection{Usage}{
@@ -374,8 +374,8 @@ A character vector, each element should be a line in the printout.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-pkg_deps-print"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-print}{}}}
 \subsection{Method \code{print()}}{
 Prints a \code{pkg_deps} object to the screen. The printout includes:
 \itemize{
@@ -404,8 +404,8 @@ The \code{pkg_deps} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-pkg_deps-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

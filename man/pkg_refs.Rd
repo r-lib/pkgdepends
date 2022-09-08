@@ -43,13 +43,17 @@ Package refs may have optional parameters, added after a question mark.
 Different parameters are separated by an ampersand (\code{&}) character.
 Parameters might be binary, or have a string value, assigned with an
 equal sign (\code{=}). If no value is assigned, then we assume the \code{true}
-value. For example these two package refs are the same:\preformatted{cran::testthat?source&nocache
+value. For example these two package refs are the same:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{cran::testthat?source&nocache
 cran::testthat?source=true&nocache=true
-}
+}\if{html}{\out{</div>}}
 
 Some parameters given in a special form allow configuring downstream
-dependencies:\preformatted{packagename=?parameter
-}
+dependencies:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{packagename=?parameter
+}\if{html}{\out{</div>}}
 
 can be given at the command line and refers to a (potential) downstream
 package.
@@ -81,20 +85,24 @@ the package cache. It is supported by the \verb{bioc::}, \verb{cran::},
 }
 \subsection{CRAN packages:}{
 
-A package from CRAN. Full syntax:\preformatted{[cran::]<package>[@[>=]<version> | current | last]
-}
+A package from CRAN. Full syntax:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[cran::]<package>[@[>=]<version> | current | last]
+}\if{html}{\out{</div>}}
 \itemize{
 \item \verb{<package>} is a valid package name.
 \item \verb{<version>} is a version or a version requirement.
 }
 
-Examples:\preformatted{forecast
+Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{forecast
 forecast@8.8
 forecast@>=8.8
 cran::forecast
 forecast@last
 forecast@current
-}
+}\if{html}{\out{</div>}}
 
 Note: pkgdepends currently parses the version specification part
 (everything after \code{@}), but does not use it.
@@ -103,21 +111,27 @@ Note: pkgdepends currently parses the version specification part
 \subsection{Bioconductor packages:}{
 
 A package from Bioconductor. The syntax is the same as for CRAN
-packages, except of the prefix of course:\preformatted{[bioc::]<package>[@[>=]<version> | current | last]
-}
+packages, except of the prefix of course:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[bioc::]<package>[@[>=]<version> | current | last]
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Standard packages:}{
 
 These are packages either from CRAN or Bioconductor, the full syntax is
-the same as for CRAN packages, except for the prefix:\preformatted{[standard::]<package>[@[>=]<version> | current | last]
-}
+the same as for CRAN packages, except for the prefix:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[standard::]<package>[@[>=]<version> | current | last]
+}\if{html}{\out{</div>}}
 }
 
 \subsection{GitHub packages:}{
 
-Packages from a GitHub repository. Full syntax:\preformatted{[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
-}
+Packages from a GitHub repository. Full syntax:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
+}\if{html}{\out{</div>}}
 \itemize{
 \item \verb{<package>} is the name of the package. If this is missing, then the
 name of the repository is used.
@@ -138,16 +152,20 @@ subdirectory in the repository.
 If \verb{<detail>} is missing, then the latest commit of the \emph{default} branch
 is used.
 
-Examples:\preformatted{r-lib/crayon
+Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{r-lib/crayon
 github::r-lib/crayon
 r-lib/crayon@84be6207
 r-lib/crayon@branch
 r-lib/crayon#41
 r-lib/crayon@release
-}
+}\if{html}{\out{</div>}}
 
 For convenience GitHub HTTP URLs can also be used to specify a package
-from GitHub. Examples:\preformatted{https://github.com/r-lib/withr
+from GitHub. Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{https://github.com/r-lib/withr
 # A branch:
 https://github.com/r-lib/withr/tree/ghactions
 # A tag:
@@ -158,7 +176,7 @@ https://github.com/r-lib/withr/commit/8fbcb548e316
 https://github.com/r-lib/withr/pull/76
 # A release:
 https://github.com/r-lib/withr/releases/tag/v2.1.0
-}
+}\if{html}{\out{</div>}}
 
 A GitHub remote string can also be used instead of an URL, for example:
 \code{git@github.com:r-lib/pkgdepends.git}
@@ -167,8 +185,10 @@ A GitHub remote string can also be used instead of an URL, for example:
 \subsection{Local packages:}{
 
 A path that refers to a package file built with \verb{R CMD build}, or a
-directory that contains a package. Full syntax:\preformatted{local::<path>
-}
+directory that contains a package. Full syntax:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{local::<path>
+}\if{html}{\out{</div>}}
 
 For brevity, you can omit the \verb{local::} prefix, if you specify an
 absolute path, a path from the user’s home directory, starting with \code{~},
@@ -177,14 +197,16 @@ or a relative path starting with \verb{./} or \verb{.\\}.
 A single dot (\code{"."}) is considered to be a local package in the current
 working directory.
 
-Examples:\preformatted{local::/foo/bar/package_1.0.0.tar.gz
+Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{local::/foo/bar/package_1.0.0.tar.gz
 local::/foo/bar/pkg
 local::.
 /absolute/path/package_1.0.0.tar.gz
 ~/path/from/home
 ./relative/path
 .
-}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{URLs:}{
@@ -201,23 +223,29 @@ download the package file to resolve its dependencies. When this
 happens, it puts the package file in the cache, so no further downloads
 are needed when installing the package later.
 
-Examples:\preformatted{url::https://cloud.r-project.org/src/contrib/Archive/cli/cli_1.0.0.tar.gz
+Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{url::https://cloud.r-project.org/src/contrib/Archive/cli/cli_1.0.0.tar.gz
 url::https://github.com/tidyverse/stringr/archive/HEAD.zip
-}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Installed packages:}{
 
 This is usually used internally, but can also be used directly. Full
-syntax:\preformatted{installed::<path>/<package>
-}
+syntax:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{installed::<path>/<package>
+}\if{html}{\out{</div>}}
 \itemize{
 \item \verb{<path>} is the library the package is installed to.
 \item \verb{<package>} is the package name.
 }
 
-Example:\preformatted{installed::~/R/3.6/crayon
-}
+Example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{installed::~/R/3.6/crayon
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Package dependencies:}{
@@ -225,13 +253,17 @@ Example:\preformatted{installed::~/R/3.6/crayon
 Usually used internally, it specifies the dependencies of a local
 package. It can be used to download or install the dependencies of a
 package, without downloading or installing the package itself. Full
-syntax:\preformatted{deps::<path>
-}
+syntax:
 
-Examples:\preformatted{deps::/foo/bar/package_1.0.0.tar.gz
+\if{html}{\out{<div class="sourceCode">}}\preformatted{deps::<path>
+}\if{html}{\out{</div>}}
+
+Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{deps::/foo/bar/package_1.0.0.tar.gz
 deps::/foo/bar/pkg
 deps::.
-}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{\verb{any::} packages}{
@@ -246,13 +278,17 @@ CRAN version of glue, that’s OK, too. If a future version of cli does
 not depend on glue, you still want glue installed, from CRAN. The
 \verb{any::} reference type does exactly this.
 
-In our example you might write\if{html}{\out{<div class="sourceCode r">}}\preformatted{pak::pkg_install(c("glue", "r-lib/cli"))
+In our example you might write
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pak::pkg_install(c("glue", "r-lib/cli"))
 }\if{html}{\out{</div>}}
 
 first, but this will fail if \code{rlib/cli} requests (say) \code{tidyverse/glue},
 because in \code{pkg_install()} \code{"glue"} is interpreted as
 \code{"standard::glue"}, creating a conflict with \code{tidyverse/glue}. On the
-other hand\if{html}{\out{<div class="sourceCode r">}}\preformatted{pak::pkg_install(c("any::glue", "r-lib/cli"))
+other hand
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pak::pkg_install(c("any::glue", "r-lib/cli"))
 }\if{html}{\out{</div>}}
 
 works, independently of which glue version is requested by cli.

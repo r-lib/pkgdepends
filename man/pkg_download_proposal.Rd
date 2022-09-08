@@ -93,24 +93,24 @@ pdl
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{pkg_download_proposal$new()}}
-\item \href{#method-get_refs}{\code{pkg_download_proposal$get_refs()}}
-\item \href{#method-get_config}{\code{pkg_download_proposal$get_config()}}
-\item \href{#method-resolve}{\code{pkg_download_proposal$resolve()}}
-\item \href{#method-async_resolve}{\code{pkg_download_proposal$async_resolve()}}
-\item \href{#method-get_resolution}{\code{pkg_download_proposal$get_resolution()}}
-\item \href{#method-download}{\code{pkg_download_proposal$download()}}
-\item \href{#method-async_download}{\code{pkg_download_proposal$async_download()}}
-\item \href{#method-get_downloads}{\code{pkg_download_proposal$get_downloads()}}
-\item \href{#method-stop_for_download_error}{\code{pkg_download_proposal$stop_for_download_error()}}
-\item \href{#method-format}{\code{pkg_download_proposal$format()}}
-\item \href{#method-print}{\code{pkg_download_proposal$print()}}
-\item \href{#method-clone}{\code{pkg_download_proposal$clone()}}
+\item \href{#method-pkg_download_proposal-new}{\code{pkg_download_proposal$new()}}
+\item \href{#method-pkg_download_proposal-get_refs}{\code{pkg_download_proposal$get_refs()}}
+\item \href{#method-pkg_download_proposal-get_config}{\code{pkg_download_proposal$get_config()}}
+\item \href{#method-pkg_download_proposal-resolve}{\code{pkg_download_proposal$resolve()}}
+\item \href{#method-pkg_download_proposal-async_resolve}{\code{pkg_download_proposal$async_resolve()}}
+\item \href{#method-pkg_download_proposal-get_resolution}{\code{pkg_download_proposal$get_resolution()}}
+\item \href{#method-pkg_download_proposal-download}{\code{pkg_download_proposal$download()}}
+\item \href{#method-pkg_download_proposal-async_download}{\code{pkg_download_proposal$async_download()}}
+\item \href{#method-pkg_download_proposal-get_downloads}{\code{pkg_download_proposal$get_downloads()}}
+\item \href{#method-pkg_download_proposal-stop_for_download_error}{\code{pkg_download_proposal$stop_for_download_error()}}
+\item \href{#method-pkg_download_proposal-format}{\code{pkg_download_proposal$format()}}
+\item \href{#method-pkg_download_proposal-print}{\code{pkg_download_proposal$print()}}
+\item \href{#method-pkg_download_proposal-clone}{\code{pkg_download_proposal$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-new"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{pkg_download_proposal} object. Consider using
 \code{new_pkg_download_proposal()} instead of calling the constructor
@@ -134,7 +134,9 @@ package files.
 
 \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.
-\subsection{Examples}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
+\subsection{Examples}{
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pdl <- pkg_download_proposal$new("r-lib/pkgdepends")
 pdl
 }\if{html}{\out{</div>}}
 }}
@@ -143,8 +145,8 @@ pdl
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_refs"></a>}}
-\if{latex}{\out{\hypertarget{method-get_refs}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-get_refs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_refs}{}}}
 \subsection{Method \code{get_refs()}}{
 The package refs that were used to create the
 \code{pkg_download_proposal} object.
@@ -158,8 +160,8 @@ A character vector of package refs that were used to create the
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_config"></a>}}
-\if{latex}{\out{\hypertarget{method-get_config}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-get_config"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_download_proposal} object. See
 \link[=pkgdepends-config]{'Configuration'} for details.
@@ -173,8 +175,8 @@ options.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-resolve"></a>}}
-\if{latex}{\out{\hypertarget{method-resolve}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-resolve}{}}}
 \subsection{Method \code{resolve()}}{
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
@@ -190,8 +192,8 @@ The \code{pkg_download_proposal} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-async_resolve"></a>}}
-\if{latex}{\out{\hypertarget{method-async_resolve}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-async_resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-async_resolve}{}}}
 \subsection{Method \code{async_resolve()}}{
 The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
 This method is for advanced use.
@@ -204,8 +206,8 @@ A deferred value.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_resolution"></a>}}
-\if{latex}{\out{\hypertarget{method-get_resolution}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-get_resolution"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_resolution}{}}}
 \subsection{Method \code{get_resolution()}}{
 Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
@@ -219,8 +221,8 @@ A \link{pkg_resolution_result} object, which is also a data frame. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-download"></a>}}
-\if{latex}{\out{\hypertarget{method-download}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-download"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-download}{}}}
 \subsection{Method \code{download()}}{
 Download all resolved packages. It uses the package cache in the
 pkgcache package by default, to avoid downloads if possible.
@@ -233,8 +235,8 @@ The \code{pkg_download_proposal} object, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-async_download"></a>}}
-\if{latex}{\out{\hypertarget{method-async_download}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-async_download"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-async_download}{}}}
 \subsection{Method \code{async_download()}}{
 The same as \href{#method-download}{\code{download()}}, but asynchronous.
 This method is for advanced use.
@@ -247,8 +249,8 @@ A deferred value.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_downloads"></a>}}
-\if{latex}{\out{\hypertarget{method-get_downloads}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-get_downloads"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_downloads}{}}}
 \subsection{Method \code{get_downloads()}}{
 Returns the summary of the package downloads.
 \subsection{Usage}{
@@ -261,8 +263,8 @@ A \link{pkg_download_result} object, which is a list. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop_for_download_error"></a>}}
-\if{latex}{\out{\hypertarget{method-stop_for_download_error}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-stop_for_download_error"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-stop_for_download_error}{}}}
 \subsection{Method \code{stop_for_download_error()}}{
 Throw and error if the some of the downloads have failed for the
 most recent
@@ -273,8 +275,8 @@ most recent
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-format"></a>}}
-\if{latex}{\out{\hypertarget{method-format}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-format"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-format}{}}}
 \subsection{Method \code{format()}}{
 Format a \code{pkg_download_proposal} object, typically for printing.
 \subsection{Usage}{
@@ -294,8 +296,8 @@ A character vector, each element should be a line in the printout.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-print"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-print}{}}}
 \subsection{Method \code{print()}}{
 Prints a \code{pkg_download_proposal} object to the screen. The printout
 includes:
@@ -325,8 +327,8 @@ The \code{pkg_download_proposal} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-pkg_download_proposal-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

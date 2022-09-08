@@ -30,7 +30,9 @@ dependencies.
 }
 
 \section{Install}{
-Once on CRAN, install the package with:\if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("pkgdepends")
+Once on CRAN, install the package with:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("pkgdepends")
 }\if{html}{\out{</div>}}
 }
 
@@ -40,23 +42,29 @@ Once on CRAN, install the package with:\if{html}{\out{<div class="sourceCode r">
 \subsection{Package references}{
 
 A package reference (ref) specifies a location from which an R package
-can be obtained from. Examples:\preformatted{devtools
+can be obtained from. Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{devtools
 cran::devtools
 bioc::Biobase
 r-lib/pkgdepends
 https://github.com/r-lib/pkgdepends
 local::~/works/shiny
-}
+}\if{html}{\out{</div>}}
 
 See \link[=pkg_refs]{“Package references”} for details.
 }
 
 \subsection{Package dependencies}{
 
-Dependencies of the development version of the cli package:\if{html}{\out{<div class="sourceCode r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
+Dependencies of the development version of the cli package:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
-}\if{html}{\out{</div>}}\preformatted{#> r-lib/pkgcache 1.2.2.9000 [new][bld][cmp]
+}\if{html}{\out{</div>}}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{#> r-lib/pkgcache 1.2.2.9000 [new][bld][cmp]
 #> +-assertthat 0.2.1 [new]
 #> +-callr 3.7.0 [new]
 #> | +-processx 3.5.2 [new]
@@ -101,14 +109,16 @@ pd$draw()
 #> \-uuid 1.0-3 [new]
 #> 
 #> Key:  [new] new | [bld] build | [cmp] compile
-}
+}\if{html}{\out{</div>}}
 
 See the \code{\link{pkg_deps}} class for details.
 }
 
 \subsection{Package downloads}{
 
-Downloading all dependencies of a package:\if{html}{\out{<div class="sourceCode r">}}\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
+Downloading all dependencies of a package:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
 pdl$resolve()
 pdl$download()
 }\if{html}{\out{</div>}}
@@ -119,7 +129,9 @@ details.
 
 \subsection{Package installation}{
 
-Installing or updating a set of package:\if{html}{\out{<div class="sourceCode r">}}\preformatted{lib <- tempfile()
+Installing or updating a set of package:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{lib <- tempfile()
 pdi <- new_pkg_installation_proposal(
   "r-lib/cli",
   config = list(library = lib)

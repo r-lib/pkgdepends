@@ -10,7 +10,7 @@ current_r_platform()
 default_platforms()
 }
 \value{
-current_r_platform()` returns a string, the name of the current
+\code{current_r_platform()} returns a string, the name of the current
 platform.
 
 \code{default_platforms()} returns a character vector of platform names.

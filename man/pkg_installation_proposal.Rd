@@ -238,35 +238,35 @@ pdi
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{pkg_installation_proposal$new()}}
-\item \href{#method-get_refs}{\code{pkg_installation_proposal$get_refs()}}
-\item \href{#method-get_config}{\code{pkg_installation_proposal$get_config()}}
-\item \href{#method-resolve}{\code{pkg_installation_proposal$resolve()}}
-\item \href{#method-async_resolve}{\code{pkg_installation_proposal$async_resolve()}}
-\item \href{#method-get_resolution}{\code{pkg_installation_proposal$get_resolution()}}
-\item \href{#method-get_solve_policy}{\code{pkg_installation_proposal$get_solve_policy()}}
-\item \href{#method-set_solve_policy}{\code{pkg_installation_proposal$set_solve_policy()}}
-\item \href{#method-solve}{\code{pkg_installation_proposal$solve()}}
-\item \href{#method-get_solution}{\code{pkg_installation_proposal$get_solution()}}
-\item \href{#method-show_solution}{\code{pkg_installation_proposal$show_solution()}}
-\item \href{#method-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
-\item \href{#method-create_lockfile}{\code{pkg_installation_proposal$create_lockfile()}}
-\item \href{#method-draw}{\code{pkg_installation_proposal$draw()}}
-\item \href{#method-download}{\code{pkg_installation_proposal$download()}}
-\item \href{#method-async_download}{\code{pkg_installation_proposal$async_download()}}
-\item \href{#method-get_downloads}{\code{pkg_installation_proposal$get_downloads()}}
-\item \href{#method-stop_for_download_error}{\code{pkg_installation_proposal$stop_for_download_error()}}
-\item \href{#method-install}{\code{pkg_installation_proposal$install()}}
-\item \href{#method-install_sysreqs}{\code{pkg_installation_proposal$install_sysreqs()}}
-\item \href{#method-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
-\item \href{#method-format}{\code{pkg_installation_proposal$format()}}
-\item \href{#method-print}{\code{pkg_installation_proposal$print()}}
-\item \href{#method-clone}{\code{pkg_installation_proposal$clone()}}
+\item \href{#method-pkg_installation_proposal-new}{\code{pkg_installation_proposal$new()}}
+\item \href{#method-pkg_installation_proposal-get_refs}{\code{pkg_installation_proposal$get_refs()}}
+\item \href{#method-pkg_installation_proposal-get_config}{\code{pkg_installation_proposal$get_config()}}
+\item \href{#method-pkg_installation_proposal-resolve}{\code{pkg_installation_proposal$resolve()}}
+\item \href{#method-pkg_installation_proposal-async_resolve}{\code{pkg_installation_proposal$async_resolve()}}
+\item \href{#method-pkg_installation_proposal-get_resolution}{\code{pkg_installation_proposal$get_resolution()}}
+\item \href{#method-pkg_installation_proposal-get_solve_policy}{\code{pkg_installation_proposal$get_solve_policy()}}
+\item \href{#method-pkg_installation_proposal-set_solve_policy}{\code{pkg_installation_proposal$set_solve_policy()}}
+\item \href{#method-pkg_installation_proposal-solve}{\code{pkg_installation_proposal$solve()}}
+\item \href{#method-pkg_installation_proposal-get_solution}{\code{pkg_installation_proposal$get_solution()}}
+\item \href{#method-pkg_installation_proposal-show_solution}{\code{pkg_installation_proposal$show_solution()}}
+\item \href{#method-pkg_installation_proposal-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
+\item \href{#method-pkg_installation_proposal-create_lockfile}{\code{pkg_installation_proposal$create_lockfile()}}
+\item \href{#method-pkg_installation_proposal-draw}{\code{pkg_installation_proposal$draw()}}
+\item \href{#method-pkg_installation_proposal-download}{\code{pkg_installation_proposal$download()}}
+\item \href{#method-pkg_installation_proposal-async_download}{\code{pkg_installation_proposal$async_download()}}
+\item \href{#method-pkg_installation_proposal-get_downloads}{\code{pkg_installation_proposal$get_downloads()}}
+\item \href{#method-pkg_installation_proposal-stop_for_download_error}{\code{pkg_installation_proposal$stop_for_download_error()}}
+\item \href{#method-pkg_installation_proposal-install}{\code{pkg_installation_proposal$install()}}
+\item \href{#method-pkg_installation_proposal-install_sysreqs}{\code{pkg_installation_proposal$install_sysreqs()}}
+\item \href{#method-pkg_installation_proposal-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
+\item \href{#method-pkg_installation_proposal-format}{\code{pkg_installation_proposal$format()}}
+\item \href{#method-pkg_installation_proposal-print}{\code{pkg_installation_proposal$print()}}
+\item \href{#method-pkg_installation_proposal-clone}{\code{pkg_installation_proposal$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-new"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{pkg_installation_proposal} object. Consider using
 \code{new_pkg_installation_proposal()} instead of calling the constructor
@@ -303,8 +303,8 @@ use, and experimental currently.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_refs"></a>}}
-\if{latex}{\out{\hypertarget{method-get_refs}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_refs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_refs}{}}}
 \subsection{Method \code{get_refs()}}{
 The package refs that were used to create the
 \code{pkg_installation_proposal} object.
@@ -318,8 +318,8 @@ A character vector of package refs that were used to create the
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_config"></a>}}
-\if{latex}{\out{\hypertarget{method-get_config}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_config"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_config}{}}}
 \subsection{Method \code{get_config()}}{
 Configuration options for the \code{pkg_installation_proposal} object. See
 \link[=pkgdepends-config]{'Configuration'} for details.
@@ -333,8 +333,8 @@ options.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-resolve"></a>}}
-\if{latex}{\out{\hypertarget{method-resolve}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-resolve}{}}}
 \subsection{Method \code{resolve()}}{
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
@@ -350,8 +350,8 @@ The \code{pkg_installation_proposal} object, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-async_resolve"></a>}}
-\if{latex}{\out{\hypertarget{method-async_resolve}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-async_resolve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-async_resolve}{}}}
 \subsection{Method \code{async_resolve()}}{
 The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous. This
 method is for advanced use.
@@ -364,8 +364,8 @@ A deferred value.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_resolution"></a>}}
-\if{latex}{\out{\hypertarget{method-get_resolution}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_resolution"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_resolution}{}}}
 \subsection{Method \code{get_resolution()}}{
 Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
@@ -379,8 +379,8 @@ A \link{pkg_resolution_result} object, which is also a data frame. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_solve_policy"></a>}}
-\if{latex}{\out{\hypertarget{method-get_solve_policy}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_solve_policy}{}}}
 \subsection{Method \code{get_solve_policy()}}{
 Returns the current policy of the dependency solver.
 See \link[=pkg_solution]{'The dependency solver'} for details.
@@ -393,8 +393,8 @@ A character vector of length one.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_solve_policy"></a>}}
-\if{latex}{\out{\hypertarget{method-set_solve_policy}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-set_solve_policy"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-set_solve_policy}{}}}
 \subsection{Method \code{set_solve_policy()}}{
 Set the current policy of the dependency solver.
 If the object already contains a solution and the new policy is
@@ -413,8 +413,8 @@ See \link[=pkg_solution]{'The dependency solver'} for details.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-solve"></a>}}
-\if{latex}{\out{\hypertarget{method-solve}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-solve"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-solve}{}}}
 \subsection{Method \code{solve()}}{
 Solve the package dependencies. Out of the resolved dependencies,
 it works out a set of packages, that can be installed together to
@@ -431,8 +431,8 @@ The \code{pkg_installation_proposal} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_solution"></a>}}
-\if{latex}{\out{\hypertarget{method-get_solution}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_solution"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_solution}{}}}
 \subsection{Method \code{get_solution()}}{
 Returns the solution of the package dependencies.
 \subsection{Usage}{
@@ -445,8 +445,8 @@ A \link{pkg_solution_result} object, which is a list. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-show_solution"></a>}}
-\if{latex}{\out{\hypertarget{method-show_solution}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-show_solution"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-show_solution}{}}}
 \subsection{Method \code{show_solution()}}{
 Show the solution on the screen.
 \subsection{Usage}{
@@ -466,8 +466,8 @@ A \link{pkg_solution_result} object, which is a list. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop_for_solution_error"></a>}}
-\if{latex}{\out{\hypertarget{method-stop_for_solution_error}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-stop_for_solution_error"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-stop_for_solution_error}{}}}
 \subsection{Method \code{stop_for_solution_error()}}{
 Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
@@ -477,8 +477,8 @@ packages that can be installed together.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-create_lockfile"></a>}}
-\if{latex}{\out{\hypertarget{method-create_lockfile}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-create_lockfile"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-create_lockfile}{}}}
 \subsection{Method \code{create_lockfile()}}{
 Create a lock file that contains the information to perform
 the installation later, possibly in another R session.
@@ -515,8 +515,8 @@ for caching systems.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-draw"></a>}}
-\if{latex}{\out{\hypertarget{method-draw}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-draw"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-draw}{}}}
 \subsection{Method \code{draw()}}{
 Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the dependency tree to the
@@ -530,8 +530,8 @@ A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-download"></a>}}
-\if{latex}{\out{\hypertarget{method-download}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-download"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-download}{}}}
 \subsection{Method \code{download()}}{
 Download all packages that are part of the solution. It uses the
 package cache in the pkgcache package by default, to avoid downloads
@@ -545,8 +545,8 @@ The \code{pkg_installation_proposal} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-async_download"></a>}}
-\if{latex}{\out{\hypertarget{method-async_download}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-async_download"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-async_download}{}}}
 \subsection{Method \code{async_download()}}{
 The same as \href{#method-download}{\code{download()}}, but asynchronous.
 This method is for advanced use.
@@ -559,8 +559,8 @@ A deferred value.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_downloads"></a>}}
-\if{latex}{\out{\hypertarget{method-get_downloads}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_downloads"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_downloads}{}}}
 \subsection{Method \code{get_downloads()}}{
 Returns the summary of the package downloads.
 \subsection{Usage}{
@@ -573,8 +573,8 @@ A \link{pkg_download_result} object, which is a list. See
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop_for_download_error"></a>}}
-\if{latex}{\out{\hypertarget{method-stop_for_download_error}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-stop_for_download_error"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-stop_for_download_error}{}}}
 \subsection{Method \code{stop_for_download_error()}}{
 Throw and error if the some of the downloads have failed for the
 most recent
@@ -585,8 +585,8 @@ most recent
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-install"></a>}}
-\if{latex}{\out{\hypertarget{method-install}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-install"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-install}{}}}
 \subsection{Method \code{install()}}{
 Install the downloaded packages. It calls \code{\link[=install_package_plan]{install_package_plan()}}.
 \subsection{Usage}{
@@ -598,8 +598,8 @@ The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-install_sysreqs"></a>}}
-\if{latex}{\out{\hypertarget{method-install_sysreqs}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-install_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-install_sysreqs}{}}}
 \subsection{Method \code{install_sysreqs()}}{
 Install system requirements. It does nothing if system requirements
 are turned off. It errors if we could not look up the system
@@ -611,8 +611,8 @@ Create an installation plan for the downloaded packages.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_install_plan"></a>}}
-\if{latex}{\out{\hypertarget{method-get_install_plan}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_install_plan"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_install_plan}{}}}
 \subsection{Method \code{get_install_plan()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_install_plan()}\if{html}{\out{</div>}}
@@ -624,8 +624,8 @@ the format.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-format"></a>}}
-\if{latex}{\out{\hypertarget{method-format}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-format"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-format}{}}}
 \subsection{Method \code{format()}}{
 Format a \code{pkg_installation_proposal} object, typically for printing.
 \subsection{Usage}{
@@ -644,8 +644,8 @@ A character vector, each element should be a line in the printout.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-print"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-print}{}}}
 \subsection{Method \code{print()}}{
 Prints a \code{pkg_installation_proposal} object to the screen.
 
@@ -677,8 +677,8 @@ The \code{pkg_installation_proposal} object itself, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

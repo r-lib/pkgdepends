@@ -96,22 +96,22 @@ result of the dependency solver.</p></li>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>pkg_deps$new()</code></a></p></li>
-<li><p><a href="#method-get_refs"><code>pkg_deps$get_refs()</code></a></p></li>
-<li><p><a href="#method-get_config"><code>pkg_deps$get_config()</code></a></p></li>
-<li><p><a href="#method-resolve"><code>pkg_deps$resolve()</code></a></p></li>
-<li><p><a href="#method-async_resolve"><code>pkg_deps$async_resolve()</code></a></p></li>
-<li><p><a href="#method-get_resolution"><code>pkg_deps$get_resolution()</code></a></p></li>
-<li><p><a href="#method-get_solve_policy"><code>pkg_deps$get_solve_policy()</code></a></p></li>
-<li><p><a href="#method-set_solve_policy"><code>pkg_deps$set_solve_policy()</code></a></p></li>
-<li><p><a href="#method-solve"><code>pkg_deps$solve()</code></a></p></li>
-<li><p><a href="#method-get_solution"><code>pkg_deps$get_solution()</code></a></p></li>
-<li><p><a href="#method-stop_for_solution_error"><code>pkg_deps$stop_for_solution_error()</code></a></p></li>
-<li><p><a href="#method-draw"><code>pkg_deps$draw()</code></a></p></li>
-<li><p><a href="#method-format"><code>pkg_deps$format()</code></a></p></li>
-<li><p><a href="#method-print"><code>pkg_deps$print()</code></a></p></li>
-<li><p><a href="#method-clone"><code>pkg_deps$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-pkg_deps-new"><code>pkg_deps$new()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-get_refs"><code>pkg_deps$get_refs()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-get_config"><code>pkg_deps$get_config()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-resolve"><code>pkg_deps$resolve()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-async_resolve"><code>pkg_deps$async_resolve()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-get_resolution"><code>pkg_deps$get_resolution()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-get_solve_policy"><code>pkg_deps$get_solve_policy()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-set_solve_policy"><code>pkg_deps$set_solve_policy()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-solve"><code>pkg_deps$solve()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-get_solution"><code>pkg_deps$get_solution()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-stop_for_solution_error"><code>pkg_deps$stop_for_solution_error()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-draw"><code>pkg_deps$draw()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-format"><code>pkg_deps$format()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-print"><code>pkg_deps$print()</code></a></p></li>
+<li><p><a href="#method-pkg_deps-clone"><code>pkg_deps$clone()</code></a></p></li>
+</ul></div><p></p><hr><a id="method-pkg_deps-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new <code>pkg_deps</code> object. Consider using <code>new_pkg_deps()</code>
 instead of calling the constructor directly.</p>
@@ -155,7 +155,7 @@ use, and experimental currently.</p></dd>
 <p>A new <code>pkg_deps</code> object.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_refs"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-get_refs"></a><div class="section">
 <h3 id="method-get-refs-">Method <code>get_refs()</code><a class="anchor" aria-label="anchor" href="#method-get-refs-"></a></h3>
 <p>The package refs that were used to create the <code>pkg_deps</code> object.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
@@ -168,7 +168,7 @@ use, and experimental currently.</p></dd>
 <code>pkg_deps</code> object.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_config"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-get_config"></a><div class="section">
 <h3 id="method-get-config-">Method <code>get_config()</code><a class="anchor" aria-label="anchor" href="#method-get-config-"></a></h3>
 <p>Configuration options for the <code>pkg_deps</code> object. See
 <a href="pkg_config.html">'Configuration'</a> for details.</p><div class="section">
@@ -181,7 +181,7 @@ use, and experimental currently.</p></dd>
 <p>See <a href="pkg_config.html">'Configuration'</a> for the configuration entries.</p>
 </div>
 
-</div><p></p><hr><a id="method-resolve"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-resolve"></a><div class="section">
 <h3 id="method-resolve-">Method <code>resolve()</code><a class="anchor" aria-label="anchor" href="#method-resolve-"></a></h3>
 <p>Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
@@ -197,7 +197,7 @@ either directly or indirectly. See
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
 </div>
 
-</div><p></p><hr><a id="method-async_resolve"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-async_resolve"></a><div class="section">
 <h3 id="method-async-resolve-">Method <code>async_resolve()</code><a class="anchor" aria-label="anchor" href="#method-async-resolve-"></a></h3>
 <p>The same as <a href="#method-resolve"><code>resolve()</code></a>, but asynchronous.
 This method is for advanced use.</p><div class="section">
@@ -210,7 +210,7 @@ This method is for advanced use.</p><div class="section">
 <p>A deferred value.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_resolution"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-get_resolution"></a><div class="section">
 <h3 id="method-get-resolution-">Method <code>get_resolution()</code><a class="anchor" aria-label="anchor" href="#method-get-resolution-"></a></h3>
 <p>Query the result of the dependency resolution. This method can be
 called after <a href="#method-resolve"><code>resolve()</code></a> has completed.</p><div class="section">
@@ -224,7 +224,7 @@ called after <a href="#method-resolve"><code>resolve()</code></a> has completed.
 <a href="pkg_resolution.html">'Dependency resolution'</a> for its columns.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_solve_policy"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-get_solve_policy"></a><div class="section">
 <h3 id="method-get-solve-policy-">Method <code>get_solve_policy()</code><a class="anchor" aria-label="anchor" href="#method-get-solve-policy-"></a></h3>
 <p>Returns the current policy of the dependency solver.
 See <a href="pkg_solution.html">'The dependency solver'</a> for details.</p><div class="section">
@@ -237,7 +237,7 @@ See <a href="pkg_solution.html">'The dependency solver'</a> for details.</p><div
 <p>A character vector of length one.</p>
 </div>
 
-</div><p></p><hr><a id="method-set_solve_policy"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-set_solve_policy"></a><div class="section">
 <h3 id="method-set-solve-policy-">Method <code>set_solve_policy()</code><a class="anchor" aria-label="anchor" href="#method-set-solve-policy-"></a></h3>
 <p>Set the current policy of the dependency solver.
 If the object already contains a solution and the new policy is
@@ -256,7 +256,7 @@ See <a href="pkg_solution.html">'The dependency solver'</a> for details.</p><div
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-solve"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-solve"></a><div class="section">
 <h3 id="method-solve-">Method <code><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve()</a></code><a class="anchor" aria-label="anchor" href="#method-solve-"></a></h3>
 <p>Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that can be installed together to
@@ -275,7 +275,7 @@ hasn't been called yet.</p><div class="section">
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_solution"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-get_solution"></a><div class="section">
 <h3 id="method-get-solution-">Method <code>get_solution()</code><a class="anchor" aria-label="anchor" href="#method-get-solution-"></a></h3>
 <p>Returns the solution of the package dependencies.</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
@@ -288,7 +288,7 @@ hasn't been called yet.</p><div class="section">
 <a href="pkg_solution.html">pkg_solution_result</a> for details.</p>
 </div>
 
-</div><p></p><hr><a id="method-stop_for_solution_error"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-stop_for_solution_error"></a><div class="section">
 <h3 id="method-stop-for-solution-error-">Method <code>stop_for_solution_error()</code><a class="anchor" aria-label="anchor" href="#method-stop-for-solution-error-"></a></h3>
 <p>Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.</p><div class="section">
@@ -297,7 +297,7 @@ packages that can be installed together.</p><div class="section">
 </div>
 
 
-</div><p></p><hr><a id="method-draw"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-draw"></a><div class="section">
 <h3 id="method-draw-">Method <code>draw()</code><a class="anchor" aria-label="anchor" href="#method-draw-"></a></h3>
 <p>Draw a tree of package dependencies. It returns a <code>tree</code> object, see
 <code><a href="https://cli.r-lib.org/reference/tree.html" class="external-link">cli::tree()</a></code>. Printing this object prints the dependency tree to the
@@ -311,7 +311,7 @@ screen.</p><div class="section">
 <p>A <code>tree</code> object from the cli package, see <code><a href="https://cli.r-lib.org/reference/tree.html" class="external-link">cli::tree()</a></code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-format"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-format"></a><div class="section">
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
 <p>Format a <code>pkg_deps</code> object, typically for printing.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
@@ -331,7 +331,7 @@ screen.</p><div class="section">
 <p>A character vector, each element should be a line in the printout.</p>
 </div>
 
-</div><p></p><hr><a id="method-print"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Prints a <code>pkg_deps</code> object to the screen. The printout includes:</p><ul><li><p>The package refs.</p></li>
 <li><p>Whether the object has the resolved dependencies.</p></li>
@@ -357,7 +357,7 @@ screen.</p><div class="section">
 <p>The <code>pkg_deps</code> object itself, invisibly.</p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-pkg_deps-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
@@ -417,7 +417,7 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_cache_dir</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp8w4KPZ/file2cad13a52328"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmprTpkV7/file320e1f8b8b93"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## dependencies</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
@@ -437,7 +437,7 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## library</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;set&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp8w4KPZ/file2cad6e24fea"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmprTpkV7/file320e971cf56"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_update_after</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
@@ -454,7 +454,7 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## cache_dir</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp8w4KPZ/file2cad4da3ff3b"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmprTpkV7/file320efbb8a50"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_verbose</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
@@ -468,7 +468,7 @@ screen.</p><div class="section">
 <span class="r-in"><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu">new_pkg_deps</span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pd</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Updated metadata database: 3.28 MB in 7 files.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Updated metadata database: 3.30 MB in 7 files.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Updating metadata database</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Updating metadata database ... done</span>
@@ -486,7 +486,6 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   metadata &lt;list&gt;, extra &lt;list&gt;, dep_types &lt;list&gt;, params &lt;list&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sysreqs &lt;chr&gt;, cache_status &lt;chr&gt;, and abbreviated variable name</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ¹​needscompilation</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ Use `colnames()` to see all variable names</span></span>
 <span class="r-in"><span><span class="co"># Method get_resolution()</span></span></span>
 <span class="r-in"><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu">new_pkg_deps</span><span class="op">(</span><span class="st">"r-lib/pkgdepends"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pd</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -496,7 +495,7 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> r-lib/pkgd… gith… TRUE   TRUE    OK     pkgdep… 0.3.1.… MIT + … TRUE   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> R6          stan… FALSE  FALSE   OK     R6      2.5.1   MIT + … FALSE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> callr       stan… FALSE  FALSE   OK     callr   3.7.1   MIT + … FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> callr       stan… FALSE  FALSE   OK     callr   3.7.2   MIT + … FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> cli         stan… FALSE  FALSE   OK     cli     3.3.0   MIT + … TRUE   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> crayon      stan… FALSE  FALSE   OK     crayon  1.5.1   MIT + … FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> curl        stan… FALSE  FALSE   OK     curl    4.3.2   MIT + … TRUE   </span>
@@ -511,7 +510,6 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   error &lt;list&gt;, metadata &lt;list&gt;, extra &lt;list&gt;, dep_types &lt;list&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   params &lt;list&gt;, sysreqs &lt;chr&gt;, cache_status &lt;chr&gt;, and abbreviated</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   variable names ¹​directpkg, ²​needscompilation</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names</span></span>
 <span class="r-in"><span><span class="co"># Method get_solve_policy()</span></span></span>
 <span class="r-in"><span><span class="va">pdi</span> <span class="op">&lt;-</span> <span class="fu">new_pkg_deps</span><span class="op">(</span><span class="st">"r-lib/pkgdepends"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pdi</span><span class="op">$</span><span class="fu">get_solve_policy</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -535,7 +533,7 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span> + result: OK</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + refs:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - r-lib/pkgdepends</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> + constraints (83):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + constraints (91):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - select pkgdepends exactly once</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - select R6 at most once</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - select callr at most once</span>
@@ -577,7 +575,7 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span> + result: OK</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + refs:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - pkgload</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> + constraints (32):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + constraints (31):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - select pkgload exactly once</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - select R6 at most once</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - select cli at most once</span>
@@ -635,7 +633,7 @@ screen.</p><div class="section">
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "│ └─rprojroot \033[90m2.0.3\033[39m \033[32m[new][bld][dl] \033[39m\033[90m(59.94 kB)\033[39m"                                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "├─fs \033[90m1.5.2\033[39m \033[32m[new][bld][cmp][dl] \033[39m\033[90m(793.63 kB)\033[39m"                                           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [10] "├─glue"                                                                                                                               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "├─rlang \033[90m1.0.4\033[39m \033[32m[new][bld][cmp][dl] \033[39m\033[90m(740.97 kB)\033[39m"                                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "├─rlang \033[90m1.0.5\033[39m \033[32m[new][bld][cmp][dl] \033[39m\033[90m(741.68 kB)\033[39m"                                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [12] "├─rprojroot"                                                                                                                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] "└─withr \033[90m2.5.0\033[39m \033[32m[new][bld][dl] \033[39m\033[90m(102.09 kB)\033[39m"                                             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [14] ""                                                                                                                                     </span>

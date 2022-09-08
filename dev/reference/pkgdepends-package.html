@@ -79,7 +79,8 @@ dependencies.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a></h2>
-    <p>Once on CRAN, install the package with:</p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pkgdepends"</span><span class="op">)</span></span></code></pre><p></p></div>
+    <p>Once on CRAN, install the package with:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pkgdepends"</span><span class="op">)</span></span></code></pre><p></p></div>
     </div>
     <div class="section level2">
     <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h2>
@@ -88,14 +89,13 @@ dependencies.</p></li>
 
 
 <p>A package reference (ref) specifies a location from which an R package
-can be obtained from. Examples:</p><div class="sourceCode"><pre><code>devtools
-cran::devtools
-bioc::Biobase
-r-lib/pkgdepends
-https://github.com/r-lib/pkgdepends
-local::~/works/shiny
-</code></pre></div>
-
+can be obtained from. Examples:</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>devtools</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>cran<span class="sc">::</span>devtools</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>bioc<span class="sc">::</span>Biobase</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>local<span class="sc">::</span><span class="er">~/</span>works<span class="sc">/</span>shiny</span></code></pre><p></p></div>
 <p>See <a href="pkg_refs.html">“Package references”</a> for details.</p>
 </div>
 
@@ -103,54 +103,55 @@ local::~/works/shiny
 <h3 id="package-dependencies">Package dependencies<a class="anchor" aria-label="anchor" href="#package-dependencies"></a></h3>
 
 
-<p>Dependencies of the development version of the cli package:</p><div class="sourceCode r"><pre><code><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/pkgcache"</span><span class="op">)</span></span>
+<p>Dependencies of the development version of the cli package:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/pkgcache"</span><span class="op">)</span></span>
 <span><span class="va">pd</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div><div class="sourceCode"><pre><code><span><span class="co">#&gt; r-lib/pkgcache 1.2.2.9000 [new][bld][cmp]</span></span>
-<span><span class="co">#&gt; +-assertthat 0.2.1 [new]</span></span>
-<span><span class="co">#&gt; +-callr 3.7.0 [new]</span></span>
-<span><span class="co">#&gt; | +-processx 3.5.2 [new]</span></span>
-<span><span class="co">#&gt; | | +-ps 1.6.0 [new]</span></span>
-<span><span class="co">#&gt; | | \-R6 2.5.1 [new]</span></span>
-<span><span class="co">#&gt; | \-R6</span></span>
-<span><span class="co">#&gt; +-cli 3.1.0 [new]</span></span>
-<span><span class="co">#&gt; | \-glue 1.5.0 [new]</span></span>
-<span><span class="co">#&gt; +-curl 4.3.2 [new]</span></span>
-<span><span class="co">#&gt; +-digest 0.6.28 [new]</span></span>
-<span><span class="co">#&gt; +-filelock 1.0.2 [new]</span></span>
-<span><span class="co">#&gt; +-glue</span></span>
-<span><span class="co">#&gt; +-jsonlite 1.7.2 [new]</span></span>
-<span><span class="co">#&gt; +-prettyunits 1.1.1 [new]</span></span>
-<span><span class="co">#&gt; +-R6</span></span>
-<span><span class="co">#&gt; +-processx</span></span>
-<span><span class="co">#&gt; +-rappdirs 0.3.3 [new]</span></span>
-<span><span class="co">#&gt; +-rlang 0.4.12 [new]</span></span>
-<span><span class="co">#&gt; +-tibble 3.1.6 [new]</span></span>
-<span><span class="co">#&gt; | +-ellipsis 0.3.2 [new]</span></span>
-<span><span class="co">#&gt; | | \-rlang</span></span>
-<span><span class="co">#&gt; | +-fansi 0.5.0 [new]</span></span>
-<span><span class="co">#&gt; | +-lifecycle 1.0.1 [new]</span></span>
-<span><span class="co">#&gt; | | +-glue</span></span>
-<span><span class="co">#&gt; | | \-rlang</span></span>
-<span><span class="co">#&gt; | +-magrittr 2.0.1 [new]</span></span>
-<span><span class="co">#&gt; | +-pillar 1.6.4 [new]</span></span>
-<span><span class="co">#&gt; | | +-cli</span></span>
-<span><span class="co">#&gt; | | +-crayon 1.4.2 [new]</span></span>
-<span><span class="co">#&gt; | | +-ellipsis</span></span>
-<span><span class="co">#&gt; | | +-fansi</span></span>
-<span><span class="co">#&gt; | | +-lifecycle</span></span>
-<span><span class="co">#&gt; | | +-rlang</span></span>
-<span><span class="co">#&gt; | | +-utf8 1.2.2 [new]</span></span>
-<span><span class="co">#&gt; | | \-vctrs 0.3.8 [new]</span></span>
-<span><span class="co">#&gt; | |   +-ellipsis</span></span>
-<span><span class="co">#&gt; | |   +-glue</span></span>
-<span><span class="co">#&gt; | |   \-rlang</span></span>
-<span><span class="co">#&gt; | +-pkgconfig 2.0.3 [new]</span></span>
-<span><span class="co">#&gt; | +-rlang</span></span>
-<span><span class="co">#&gt; | \-vctrs</span></span>
-<span><span class="co">#&gt; \-uuid 1.0-3 [new]</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Key:  [new] new | [bld] build | [cmp] compile</span></span></code></pre></div>
-
+<span><span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; r-lib/pkgcache 1.2.2.9000 [new][bld][cmp]</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-assertthat 0.2.1 [new]</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-callr 3.7.0 [new]</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-processx 3.5.2 [new]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-ps 1.6.0 [new]</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-R6 2.5.1 [new]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | \-R6</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-cli 3.1.0 [new]</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | \-glue 1.5.0 [new]</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-curl 4.3.2 [new]</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-digest 0.6.28 [new]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-filelock 1.0.2 [new]</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-glue</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-jsonlite 1.7.2 [new]</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-prettyunits 1.1.1 [new]</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-R6</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-processx</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-rappdirs 0.3.3 [new]</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-rlang 0.4.12 [new]</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-tibble 3.1.6 [new]</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-ellipsis 0.3.2 [new]</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-rlang</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-fansi 0.5.0 [new]</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-lifecycle 1.0.1 [new]</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-glue</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-rlang</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-magrittr 2.0.1 [new]</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-pillar 1.6.4 [new]</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-cli</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-crayon 1.4.2 [new]</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-ellipsis</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-fansi</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-lifecycle</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-rlang</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-utf8 1.2.2 [new]</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-vctrs 0.3.8 [new]</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | |   +-ellipsis</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | |   +-glue</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | |   \-rlang</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-pkgconfig 2.0.3 [new]</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-rlang</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | \-vctrs</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; \-uuid 1.0-3 [new]</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Key:  [new] new | [bld] build | [cmp] compile</span></span></code></pre><p></p></div>
 <p>See the <code><a href="pkg_deps.html">pkg_deps</a></code> class for details.</p>
 </div>
 
@@ -158,7 +159,8 @@ local::~/works/shiny
 <h3 id="package-downloads">Package downloads<a class="anchor" aria-label="anchor" href="#package-downloads"></a></h3>
 
 
-<p>Downloading all dependencies of a package:</p><div class="sourceCode r"><pre><code><span><span class="va">pdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_download_proposal.html">new_pkg_download_proposal</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span></span>
+<p>Downloading all dependencies of a package:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">pdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_download_proposal.html">new_pkg_download_proposal</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span></span>
 <span><span class="va">pdl</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
 <p>See the <code><a href="pkg_download_proposal.html">pkg_download_proposal</a></code> class for
@@ -169,7 +171,8 @@ details.</p>
 <h3 id="package-installation">Package installation<a class="anchor" aria-label="anchor" href="#package-installation"></a></h3>
 
 
-<p>Installing or updating a set of package:</p><div class="sourceCode r"><pre><code><span><span class="va">lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
+<p>Installing or updating a set of package:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_installation_proposal.html">new_pkg_installation_proposal</a></span><span class="op">(</span></span>
 <span>  <span class="st">"r-lib/cli"</span>,</span>
 <span>  config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="va">lib</span><span class="op">)</span></span>

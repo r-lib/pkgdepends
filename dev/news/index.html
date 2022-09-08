@@ -49,8 +49,15 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="pkgdepends-development-version">pkgdepends (development version)<a class="anchor" aria-label="anchor" href="#pkgdepends-development-version"></a></h2>
-<p>No changes yet.</p>
-</div>
+<ul><li><p>The <code>?ignore</code> parameter works correctly now.</p></li>
+<li><p>dependency resolution now does not fail if a package is not found.</p></li>
+<li><p>pkgdepends can now install <code>url::</code> remotes from GitHub.</p></li>
+<li><p>pkgdepends now does not fail when the package of a <code>.tar.gz</code> GitHub snapshot is in a subdirectory, or in a subdirectory of a subdirectory.</p></li>
+<li><p>pkgdepends now errors early if it cannot deduce the name of the package from a <code>Remotes</code> or <code>Config/Needs/*</code> entry.</p></li>
+<li><p>Solver failures now include details in some cases where previously they did not.</p></li>
+<li><p>pkgdepends can now update packages in Docker containers where the old version was installed in the different Docker later (<a href="https://github.com/r-lib/pak/issues/251" class="external-link uri">https://github.com/r-lib/pak/issues/251</a>)</p></li>
+<li><p>pkgdepends errors are now user friendlier and better formatted.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="pkgdepends-031">pkgdepends 0.3.1<a class="anchor" aria-label="anchor" href="#pkgdepends-031"></a></h2><p class="text-muted">CRAN release: 2022-04-08</p>
 <ul><li>The dependency solver now uses better heuristics and does not (effectively) freeze if multiple repositories have multiple versions of the same packages (e.g. RSPM and CRAN) (<a href="https://github.com/r-lib/pkgdepends/issues/277" class="external-link">#277</a>).</li></ul></div>

@@ -1,7 +1,26 @@
 
 # pkgdepends (development version)
 
-No changes yet.
+* The `?ignore` parameter works correctly now.
+
+* dependency resolution now does not fail if a package is not found.
+
+* pkgdepends can now install `url::` remotes from GitHub.
+
+* pkgdepends now does not fail when the package of a `.tar.gz` GitHub
+  snapshot is in a subdirectory, or in a subdirectory of a subdirectory.
+
+* pkgdepends now errors early if it cannot deduce the name of the package
+  from a `Remotes` or `Config/Needs/*` entry.
+
+* Solver failures now include details in some cases where previously they
+  did not.
+
+* pkgdepends can now update packages in Docker containers where the
+  old version was installed in the different Docker later
+  (https://github.com/r-lib/pak/issues/251)
+
+* pkgdepends errors are now user friendlier and better formatted.
 
 # pkgdepends 0.3.1
 

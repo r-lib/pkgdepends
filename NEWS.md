@@ -1,5 +1,4 @@
-
-# pkgdepends (development version)
+# pkgdepends 0.3.2
 
 * The `?ignore` parameter works correctly now.
 

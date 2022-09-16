@@ -1,4 +1,33 @@
 
+# -------------------------------------------------------------------------
+# Dummy CRAN app
+
+pkgs <- dcf("
+  Package: pkg1
+  Version: 1.0.0
+
+  Package: pkg1
+  Version: 0.9.0
+
+  Package: pkg2
+  Version: 1.0.0
+  Depends: pkg1
+
+  Package: pkg3
+  Version: 1.0.0
+  Depends: pkg2
+
+  Package: pkg4
+  Version: 1.0.0
+")
+cran <- webfakes::local_app_process(
+  cran_app(pkgs),
+  opts = webfakes::server_opts(num_threads = 3)
+)
+
+# -------------------------------------------------------------------------
+# Name check app
+
 new_check_app <- function() {
   `%||%` <- function(l, r) if (is.null(l)) r else l
 

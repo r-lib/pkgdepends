@@ -149,7 +149,9 @@ pkgplan_init <- function(self, private, refs, config, library,
       platforms = private$config$get("platforms"),
       r_version = private$config$get("r_versions"),
       cran_mirror = private$config$get("cran_mirror"),
-      update_after = private$config$get("metadata_update_after")),
+      update_after = private$config$get("metadata_update_after"),
+      bioc = private$config$get("use_bioconductor")
+    ),
     package = pkgcache::package_cache$new(private$config$get("package_cache_dir")),
     installed = installed
   )

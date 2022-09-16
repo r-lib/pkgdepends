@@ -53,6 +53,9 @@ Suggests:
     testthat,
     tibble,
     webfakes
+Remotes:
+    r-lib/pkgcache,
+    r-lib/webfakes
 Config/Needs/coverage:
     covr,
     rmarkdown,

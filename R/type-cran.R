@@ -25,13 +25,13 @@ resolve_remote_cran <- function(remote, direct, config, cache,
   versions <- if ("type" %in% names(remote)) {
     remote$version
   } else  {
-    vcapply(remote, "[[", "version")
+    vcapply(remote, "[[", "version")                                        # nocov
   }
 
   if (all(versions %in% c("", "current"))) {
     type_cran_resolve_current(remote, direct, config, cache, dependencies)
   } else {
-    type_cran_resolve_version(remote, direct, config, cache, dependencies)
+    type_cran_resolve_version(remote, direct, config, cache, dependencies) # nocov
   }
 }
 
@@ -89,7 +89,7 @@ satisfy_remote_cran <- function(resolution, candidate, config, ...) {
 installedok_remote_cran <- function(installed, solution, config, ...) {
 
   if (solution$platform != "source") {
-    # Binary packages are simple. We need to match `$build` to make sure
+    # Binary packages are simple. We need to match `$built` to make sure
     # that we are installing the same build.
     identical(installed$package, solution$package) &&
       identical(installed$version, solution$version) &&

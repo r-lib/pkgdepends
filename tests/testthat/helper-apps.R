@@ -2,12 +2,31 @@
 # -------------------------------------------------------------------------
 # Dummy CRAN app
 
-pkgs <- dcf("
+cran_app <- function(...) {
+  asNamespace("pkgcache")$cran_app(...)
+}
+
+bioc_app <- function(...) {
+  asNamespace("pkgcache")$bioc_app(...)
+}
+
+dcf <- function(...) {
+  asNamespace("pkgcache")$dcf(...)
+}
+
+fix_port <- function(...) {
+  asNamespace("pkgcache")$fix_port(...)
+}
+
+cran_app_pkgs <- dcf("
   Package: pkg1
   Version: 1.0.0
 
   Package: pkg1
   Version: 0.9.0
+
+  Package: pkg1
+  Version: 0.8.0
 
   Package: pkg2
   Version: 1.0.0
@@ -17,13 +36,34 @@ pkgs <- dcf("
   Version: 1.0.0
   Depends: pkg2
 
-  Package: pkg4
-  Version: 1.0.0
+  Package: pkg3
+  Version: 0.9.9
 ")
-cran <- webfakes::local_app_process(
-  cran_app(pkgs),
+
+fake_cran <- webfakes::local_app_process(
+  cran_app(cran_app_pkgs),
   opts = webfakes::server_opts(num_threads = 3)
 )
+
+fake_bioc <- webfakes::local_app_process(
+  bioc_app(),
+  opts = webfakes::server_opts(num_threads = 3)
+)
+
+setup_fake_apps <- function(.local_envir = parent.frame()) {
+  withr::local_options(
+    repos = c(CRAN = fake_cran$url()),
+    pkg.cran_metadata_url = fake_cran$url(),
+    .local_envir = .local_envir
+  )
+  withr::local_envvar(
+    R_PKG_CRAN_METADATA_URL = fake_cran$url(),
+    R_BIOC_CONFIG_URL = paste0(fake_bioc$url(), "/config.yaml"),
+    R_BIOC_VERSION = NA_character_,
+    R_BIOC_MIRROR = fake_bioc$url(),
+    .local_envir = .local_envir
+  )
+}
 
 # -------------------------------------------------------------------------
 # Name check app

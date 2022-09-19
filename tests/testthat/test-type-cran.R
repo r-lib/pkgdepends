@@ -1,10 +1,6 @@
 
 test_that("resolve_remote", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg1")
   suppressMessages(prop$resolve())
@@ -16,11 +12,7 @@ test_that("resolve_remote", {
 })
 
 test_that("resolve_remote, multiple", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal(c("cran::pkg3", "pkg1"))
   suppressMessages(prop$resolve())
@@ -32,11 +24,7 @@ test_that("resolve_remote, multiple", {
 })
 
 test_that("dependencies", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg3")
   suppressMessages(prop$resolve())
@@ -48,11 +36,7 @@ test_that("dependencies", {
 })
 
 test_that("failed resolution", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("cran::xxyyzzqwertyqwerty")
   suppressMessages(prop$resolve())
@@ -64,11 +48,7 @@ test_that("failed resolution", {
 })
 
 test_that("failed resolution, multiple", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal(c("cran::pkg1", "cran::xxyyzzqwertyqwerty"))
   suppressMessages(prop$resolve())
@@ -80,11 +60,7 @@ test_that("failed resolution, multiple", {
 })
 
 test_that("resolve current version", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("cran::pkg1@current")
   suppressMessages(prop$resolve())
@@ -96,11 +72,7 @@ test_that("resolve current version", {
 })
 
 test_that("resolve an old version", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg1@0.9.0")
   suppressMessages(prop$resolve())
@@ -120,11 +92,7 @@ test_that("resolve an old version", {
 })
 
 test_that("resolve a version range", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg1@>=0.9.0")
   suppressMessages(prop$resolve())
@@ -136,11 +104,7 @@ test_that("resolve a version range", {
 })
 
 test_that("download_remote", {
-  withr::local_options(
-    repos = c(CRAN = cran$url()),
-    pkg.cran_metadata_url = cran$url(),
-    pkg.use_bioconductor = FALSE
-  )
+  setup_fake_apps()
 
   # this the cache for getOption(repos)
   pkgcache::pkg_cache_delete_files()

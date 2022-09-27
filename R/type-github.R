@@ -4,7 +4,6 @@
 
 #' @importFrom jsonlite fromJSON
 #' @importFrom desc desc
-#' @importFrom glue glue
 
 parse_remote_github <- function(specs, config, ...) {
 
@@ -242,20 +241,19 @@ type_github_get_data_ref <- function(rem) {
   ref <- rem$commitish %|z|% "HEAD"
   subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
 
-  query <- glue("{
-    repository(owner: \"<user>\", name: \"<repo>\") {
-      description: object(expression: \"<ref>:<subdir>DESCRIPTION\") {
+  query <- sprintf("{
+    repository(owner: \"%s\", name: \"%s\") {
+      description: object(expression: \"%s:%sDESCRIPTION\") {
         ... on Blob {
           isBinary
           text
         }
       }
-      sha: object(expression: \"<ref>\") {
+      sha: object(expression: \"%s\") {
         oid
       }
     }
-  }",
-  .open = "<", .close = ">")
+  }", user, repo, ref, subdir, ref)
 
   github_query(query)$
     then(function(resp) {
@@ -294,14 +292,13 @@ type_github_get_data_pull <- function(rem) {
   subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
 
   # Get the sha first, seemingly there is no good way to do this in one go
-  query1 <- glue("{
-    repository(owner: \"<user>\", name:\"<repo>\") {
-      pullRequest(number: <pull>) {
+  query1 <- sprintf("{
+    repository(owner: \"%s\", name:\"%s\") {
+      pullRequest(number: %s) {
         headRefOid
       }
     }
-  }",
-  .open = "<", .close = ">")
+  }", user, repo, pull)
 
   github_query(query1)$
     then(function(resp) {
@@ -309,17 +306,16 @@ type_github_get_data_pull <- function(rem) {
     })$
     then(function(obj) {
       ref <<- obj[[c("data", "repository", "pullRequest", "headRefOid")]]
-      query2 <- glue("{
-        repository(owner: \"<user>\", name:\"<repo>\") {
-          object(expression: \"<ref>:<subdir>DESCRIPTION\") {
+      query2 <- sprintf("{
+        repository(owner: \"%s\", name:\"%s\") {
+          object(expression: \"%s:%sDESCRIPTION\") {
             ... on Blob {
               isBinary
               text
             }
           }
         }
-      }",
-      .open = "<", .close = ">")
+      }", user, repo, ref, subdir)
       github_query(query2)
     })$
     then(function(resp) {
@@ -398,9 +394,11 @@ type_github_make_resolution <- function(data) {
     package = package,
     version = version,
     license = data$desc$get_field("License", NA_character_),
-    sources = glue(
-      "https://api.github.com/repos/{username}/{repo}/zipball/{sha}"),
-    target = glue("src/contrib/{package}_{version}_{sha7}.tar.gz"),
+    sources = sprintf(
+      "https://api.github.com/repos/%s/%s/zipball/%s",
+      username, repo, sha),
+    target = sprintf("src/contrib/%s_%s_%s.tar.gz",
+                     package, version, sha7),
     remote = list(data$remote),
     deps = list(deps),
     unknown_deps = unknown,
@@ -500,7 +498,8 @@ new_github_nouser_error <- function(rem, obj, call. = NULL) {
 
 new_github_norepo_error <- function(rem, obj, call. = NULL) {
   new_github_error(
-    glue("Can't find GitHub repo {rem$username}/{rem$repo}."),
+    sprintf("Can't find GitHub repo %s/%s.",
+            rem$username, rem$repo),
     call. = call.
   )
 }
@@ -508,8 +507,9 @@ new_github_norepo_error <- function(rem, obj, call. = NULL) {
 
 new_github_no_package_error <- function(rem, call. = NULL) {
   subdir <- rem$subdir %&z&% paste0(" in directory '", rem$subdir, "'")
-  msg <- glue(
-    "Can't find R package in GitHub repo {rem$username}/{rem$repo}{subdir}"
+  msg <- sprintf(
+    "Can't find R package in GitHub repo %s/%s%s",
+    rem$username, rem$repo, subdir
   )
   new_github_error(msg, call. = call.)
 }
@@ -527,8 +527,9 @@ new_github_badpat_error <- function(call. = NULL) {
 
 new_github_baddesc_error <- function(rem, call. = NULL) {
   subdir <- rem$subdir %&z&% paste0(", in directory `", rem$subdir, "`")
-  msg <- glue(
-    "Can't parse DESCRIPTION file in GitHub repo {rem$username}/{rem$repo}`{subdir}"
+  msg <- sprintf(
+    "Can't parse DESCRIPTION file in GitHub repo %s/%s%s",
+    rem$username, rem$repo, subdir
   )
   new_github_error(msg, call. = call.)
 }
@@ -536,7 +537,10 @@ new_github_baddesc_error <- function(rem, call. = NULL) {
 # No such PR
 
 new_github_nopr_error <- function(rem, obj, call. = NULL) {
-  msg <- glue("Can't find PR #{rem$pull} in GitHub repo {rem$username}/{rem$repo}")
+  msg <- sprintf(
+    "Can't find PR #%s in GitHub repo %s/%s",
+    rem$pull, rem$username, rem$repo
+  )
   new_github_error(msg, call. = call.)
 }
 
@@ -544,7 +548,10 @@ new_github_nopr_error <- function(rem, obj, call. = NULL) {
 
 new_github_noref_error <- function(rem, call. = NULL) {
   ref <- rem$commitish %|z|% "HEAD"
-  msg <- glue("Can't find reference @{ref} in GitHub repo {rem$username}/{rem$repo}.")
+  msg <- sprintf(
+    "Can't find reference @%s in GitHub repo %s/%s.",
+    ref, rem$username, rem$repo
+  )
   new_github_error(msg, call. = call.)
 }
 

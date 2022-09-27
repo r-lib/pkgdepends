@@ -92,7 +92,7 @@ test_that("pkgplan_i_lp_dependencies", {
   expect_equal(length(lp$conds), 32)
   expect_equal(
     digest::digest(lp$conds[[3]]),
-    "6d6d331b28d58465cf1df058d40041ec"
+    "18da1c5d8f082ab1017f256270e06eb1"
   )
 })
 
@@ -109,27 +109,27 @@ test_that("pkgplan_i_lp_rversion", {
 test_that("highlight_version", {
   local_colors()
   b <- cli::style_bold
-  g <- function(x, .envir = parent.frame()) {
-    unname(vcapply(x, glue::glue, .envir = .envir))
-  }
 
   cases <- list(
     list(
       c("2.3.4",      "2.3.4",      "2.3.4",        "2.3.4"),
       c("2.3.5",      "2.3.2",      "2.4.0",        "3.0.0"),
-      c("2.3.{b(5)}", "2.3.{b(2)}", "2.{b('4.0')}", "{b('3.0.0')}")
+      c(sprintf("2.3.%s", b(5)),
+        sprintf("2.3.%s", b(2)),
+        sprintf("2.%s", b('4.0')),
+        b('3.0.0'))
     ),
     list(character(), character(), character()),
     list("1.0.0", "1.0.0", "1.0.0"),
     list(
       c("1.0.0", "1.0.0"),
       c("2.0.0", "1.0.0"),
-      c("{b('2.0.0')}", "1.0.0")
+      c(b('2.0.0'), "1.0.0")
     ),
     list("1.0.0.9000", "1.0.0", "1.0.0")
   )
 
   for (case in cases) {
-    expect_equal(highlight_version(case[[1]], case[[2]]), g(case[[3]]))
+    expect_equal(highlight_version(case[[1]], case[[2]]), case[[3]])
   }
 })

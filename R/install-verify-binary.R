@@ -26,7 +26,7 @@ verify_extracted_package <- function(filename, parent_path) {
   if (!all(has_files)) {
     miss <- rel_package_files[! has_files]
     throw(new_input_error(
-      "{filename} is not a valid binary, it does not contain {miss*}.",
+      "{filename} is not a valid binary, it does not contain {miss}.",
       package = pkg_name))
   }
 

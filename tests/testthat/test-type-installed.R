@@ -30,7 +30,7 @@ test_that("resolve", {
          version = as.character(packageVersion("testthat")))
   )
 
-  expect_true("crayon" %in% attr(res, "unknown_deps"))
+  expect_true("cli" %in% attr(res, "unknown_deps"))
 
   expect_false(is.null(res$extra[[1]]$repotype))
 })

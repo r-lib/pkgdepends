@@ -2,8 +2,6 @@
 ## ------------------------------------------------------------------------
 ## API
 
-#' @importFrom glue glue_data
-
 parse_remote_bioc <- function(specs, config, ...) {
 
   ## BioC is the same as CRAN, except for cran:: -> bioc::
@@ -133,15 +131,15 @@ type_bioc_matching_bioc_version <- function(r_version) {
 type_bioc_get_bioc_repos <- function(r_version) {
   bv <- type_bioc_matching_bioc_version(r_version)
   tmpl <- c(
-    BioCsoft  = "https://bioconductor.org/packages/{bv}/bioc",
-    BioCann   = "https://bioconductor.org/packages/{bv}/data/annotation",
-    BioCexp   = "https://bioconductor.org/packages/{bv}/data/experiment",
+    BioCsoft  = "https://bioconductor.org/packages/%s/bioc",
+    BioCann   = "https://bioconductor.org/packages/%s/data/annotation",
+    BioCexp   = "https://bioconductor.org/packages/%s/data/experiment",
     BioCextra = if (package_version(bv) <= 3.5) {
-                  "https://bioconductor.org/packages/{bv}/extra"
+                  "https://bioconductor.org/packages/%s/extra"
                 }
   )
   list(
-    repos = vcapply(tmpl, glue_data, .x = list(bv = bv)),
+    repos = vcapply(tmpl, sprintf, bv),
     version = bv
   )
 }

@@ -383,7 +383,7 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
     pkgbuild_process$new(
       path, tmp_dir, binary = binary, vignettes = vignettes,
       needs_compilation = needscompilation, compile_attributes = FALSE,
-      args = c("--no-lock", cmd_args, if (binary) glue("--library={tmplib}"))
+      args = c("--no-lock", cmd_args, if (binary) sprintf("--library=%s", tmplib))
     )
   )
 }
@@ -781,7 +781,7 @@ stop_task_install <- function(state, worker) {
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (!success) {
-    throw(new_pkg_install_error("Failed to install binary package {pkg}."))
+    throw(new_pkg_install_error("Failed to install binary package {.pkg {pkg}}."))
   }
 
   ## Need to remove from the dependency list

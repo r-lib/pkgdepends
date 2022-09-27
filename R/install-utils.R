@@ -1,27 +1,7 @@
 
-#' @importFrom glue single_quote glue_collapse
-collapse_quote_transformer <- function(code, envir) {
-  collapse_re <- "[*]$"
-  quote_re <- "^[|]"
-  should_collapse <- grepl(collapse_re, code)
-  should_quote <- !grepl(quote_re, code)
-  code <- sub(collapse_re, "",
-    sub(quote_re, "", code))
-  res <- eval(parse(text = code, keep.source = FALSE), envir = envir)
-  if (should_quote) {
-    res <- single_quote(res)
-  }
-  if (should_collapse) {
-    res <- glue_collapse(res, sep = ", ", last = " and ")
-  }
-  res
-}
-
-#' @importFrom glue glue
-
 new_cnd_msg <- function(msg, .envir) {
   msg <- paste(msg, collapse = "")
-  glue(msg, .envir = .envir, .transformer = collapse_quote_transformer)
+  cli::format_inline(msg, .envir = .envir)
 }
 
 new_pkg_packaging_error <- function(msg, data) {
@@ -140,7 +120,7 @@ lock_cache <- function(cache, pkg_name, lock = TRUE) {
   use_lock <- !identical(lock, FALSE)
   my_lock <- NULL
   if (use_lock) {
-    lockfile <- file.path(cache, glue("{pkg_name}.lock"))
+    lockfile <- file.path(cache, paste0(pkg_name, ".lock"))
     # TODO: timeout and fail?
     my_lock <- lock(lockfile)
   }

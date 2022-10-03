@@ -172,7 +172,7 @@ satisfy_remote_github <- function(resolution, candidate,
   }
 
   ## 3. other refs are also good, as long as they have the same sha
-  sha1 <- candidate$extra[[1]][["remotesha"]] %||% NA_character_
+  sha1 <- (if (is.list(candidate$extra[[1]]))candidate$extra[[1]][["remotesha"]]) %||% NA_character_
   sha2 <- resolution$extra[[1]][["remotesha"]] %||% NA_character_
   ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)
   if (!ok) {

@@ -66,6 +66,44 @@ setup_fake_apps <- function(.local_envir = parent.frame()) {
 }
 
 # -------------------------------------------------------------------------
+# GH app
+
+gh_app_repos <- dcf("
+  user: r-lib
+  repo: pak
+  package: pak
+
+  user: r-lib
+  repo: pak
+  ref: v0.1.2
+  package: pak
+
+  user: r-lib
+  repo: pak
+  ref: e65de1e9630dbfcaf1044718b742bf806486b107
+  package: pak
+
+  user: wesm
+  repo: feather
+  subdir: R
+  package: feather
+  ref: ec40c1eae1ac83b86fc41bb2f5cd916152d19015
+")
+
+fake_gh <- webfakes::local_app_process(
+  gh_app(gh_app_repos),
+  opts = webfakes::server_opts(num_threads = 3)
+)
+
+setup_fake_gh_app <- function(.local_envir = parent.frame()) {
+  withr::local_envvar(
+    .local_envir = .local_envir,
+    R_PKG_GITHUB_API_URL = fake_gh$url()
+  )
+}
+
+
+# -------------------------------------------------------------------------
 # Name check app
 
 new_check_app <- function() {

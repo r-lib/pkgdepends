@@ -206,7 +206,10 @@ type_github_builtin_token <- function() {
 }
 
 type_github_get_headers <- function() {
-  headers <- c("Accept" = "application/vnd.github.v3+json")
+  headers <- c(
+    "Accept" = "application/vnd.github.v3+json",
+    "Content-Type" = "application/json; charset=utf-8"
+  )
 
   token <- NA_character_
   if (Sys.getenv("CI", "") != "") {
@@ -359,6 +362,9 @@ type_github_make_resolution <- function(data) {
     data$desc$get(extra_config_fields(data$desc$fields()))
   )
 
+  url <- Sys.getenv("R_PKG_GITHUB_API_URL", "https://api.github.com")
+  proto <- sub(":.*$", "", url)
+  host <- sub("^[^:]*://", "", url)
   sha <- data$sha
   sha7 <- substr(sha, 1, 7)
   username <- data$remote$username
@@ -375,7 +381,7 @@ type_github_make_resolution <- function(data) {
 
   meta <- c(
     RemoteType = "github",
-    RemoteHost = "api.github.com",
+    RemoteHost =  host,
     RemoteRepo = repo,
     RemoteUsername = username,
     RemotePkgRef = data$remote$ref,
@@ -399,7 +405,7 @@ type_github_make_resolution <- function(data) {
     version = version,
     license = data$desc$get_field("License", NA_character_),
     sources = glue(
-      "https://api.github.com/repos/{username}/{repo}/zipball/{sha}"),
+      "{proto}://{host}/repos/{username}/{repo}/zipball/{sha}"),
     target = glue("src/contrib/{package}_{version}_{sha7}.tar.gz"),
     remote = list(data$remote),
     deps = list(deps),
@@ -411,7 +417,11 @@ type_github_make_resolution <- function(data) {
   )
 }
 
-github_query <- function(query, url = "https://api.github.com/graphql",
+github_query <- function(query,
+                         url = paste0(
+                           Sys.getenv("R_PKG_GITHUB_API_URL",
+                                      "https://api.github.com"),
+                           "/graphql"),
                          headers = character(), ...) {
 
   query; url; headers; list(...)

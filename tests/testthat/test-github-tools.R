@@ -1,6 +1,6 @@
 
 test_that("type_github_get_data, sha, description", {
-  skip_if_offline()
+  setup_fake_gh_app()
 
   is_sha <- function(x) {
     is.character(x) && length(x) == 1 && !is.na(x) &&
@@ -12,9 +12,9 @@ test_that("type_github_get_data, sha, description", {
     "r-lib/pak@HEAD",
     "r-lib/pak@v0.1.2",
     "r-lib/pak@e65de1e9630d",
-    "r-lib/pak@e65de1e9630dbfcaf1044718b742bf806486b107",
-    "r-lib/pak#90",
-    "wesm/feather/R@ec40c1eae1ac83b86fc41bb2f5cd916152d19015"
+    "r-lib/pak@e65de1e9630dbfcaf1044718b742bf806486b107"
+#    "r-lib/pak#90", TODO
+#    "wesm/feather/R@ec40c1eae1ac83b86fc41bb2f5cd916152d19015" # TODO
   )
 
   synchronise(async_map(cases, function(c) {

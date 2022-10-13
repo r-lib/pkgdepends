@@ -1,7 +1,7 @@
 
 describe("install_packages", {
 
-  skip_if_offline()
+  setup_fake_apps()
   local_cli_config()
 
   it("works with source packages", {

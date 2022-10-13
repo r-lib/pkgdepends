@@ -4,7 +4,6 @@
 
 #' @importFrom jsonlite fromJSON
 #' @importFrom desc desc
-#' @importFrom glue glue
 
 parse_remote_github <- function(specs, config, ...) {
 
@@ -77,7 +76,7 @@ download_remote_github <- function(resolution, target, target_tree,
       .list = c(if (need_vignettes) c(vignettes = TRUE)))
 
     if (nrow(hit)) {
-      return(paste("Had", ptfm))
+      return(paste("Had", ptfm)) # TODO: untested currently
     }
   }
 
@@ -342,11 +341,13 @@ check_github_response_pull1 <- function(resp, obj, rem, call.) {
 }
 
 check_github_response_pull2 <- function(resp, obj, rem, call.) {
+  # No full coverage here, because unless something goes super wrong,
+  # these cases almost never happen.
   if (!is.null(obj$errors)) {
-    throw(new_github_query_error(rem, resp, obj, call.))
+    throw(new_github_query_error(rem, resp, obj, call.))            # nocov
   }
   if (isTRUE(obj[[c("data", "repository", "object", "isBinary")]])) {
-    throw(new_github_baddesc_error(rem, call.))
+    throw(new_github_baddesc_error(rem, call.))                     # nocov
   }
   if (is.null(obj[[c("data", "repository", "object")]])) {
     throw(new_github_no_package_error(rem, call.))
@@ -404,9 +405,9 @@ type_github_make_resolution <- function(data) {
     package = package,
     version = version,
     license = data$desc$get_field("License", NA_character_),
-    sources = glue(
-      "{proto}://{host}/repos/{username}/{repo}/zipball/{sha}"),
-    target = glue("src/contrib/{package}_{version}_{sha7}.tar.gz"),
+    sources = unclass(glue(
+      "{proto}://{host}/repos/{username}/{repo}/zipball/{sha}")),
+    target = unclass(glue("src/contrib/{package}_{version}_{sha7}.tar.gz")),
     remote = list(data$remote),
     deps = list(deps),
     unknown_deps = unknown,
@@ -479,9 +480,10 @@ new_github_query_error <- function(rem, response, obj, call. = NULL) {
   if ("RATE_LIMITED" %in% vcapply(obj$errors, "[[", "type")) {
     return(new_github_ratelimited_error(response, obj, call. = NULL))
 
+    # we don't actually get this response currently
   } else if (grepl("Could not resolve to a User",
                    vcapply(obj$errors, "[[", "message"))) {
-    return(new_github_nouser_error(rem, obj, call. = call.))
+    return(new_github_nouser_error(rem, obj, call. = call.))        # nocov
 
   } else if (grepl("Could not resolve to a Repository",
                    vcapply(obj$errors, "[[", "message"))) {
@@ -492,18 +494,18 @@ new_github_query_error <- function(rem, response, obj, call. = NULL) {
   }
 
   # Otherwise some generic code
-  ghmsgs <- sub("\\.?$", ".", vcapply(obj$errors, "[[", "message"))
-  msg <- paste0("GitHub error: ", paste0(ghmsgs, collapse = ", "))
-  new_github_error(msg, call. = call.)
+  ghmsgs <- sub("\\.?$", ".", vcapply(obj$errors, "[[", "message")) # nocov
+  msg <- paste0("GitHub error: ", paste0(ghmsgs, collapse = ", "))  # nocov
+  new_github_error(msg, call. = call.)                              # nocov
 }
 
 # No such user/org
 
-new_github_nouser_error <- function(rem, obj, call. = NULL) {
-  new_github_error(
-    "Can't find GitHub user {rem$username}.",
-    call. = call.
-  )
+new_github_nouser_error <- function(rem, obj, call. = NULL) {       # nocov
+  new_github_error(                                                 # nocov
+    "Can't find GitHub user {rem$username}.",                       # nocov
+    call. = call.                                                   # nocov
+  )                                                                 # nocov
 }
 
 # No such repo

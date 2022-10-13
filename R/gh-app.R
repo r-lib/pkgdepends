@@ -1,44 +1,8 @@
 
+# nocov start
+
 str_starts_with <- function(x, pre) {
   substring(x, 1, nchar(pre)) == pre
-}
-
-match_graphql_query <- function(q) {
-  re_ref <- paste0(
-    "owner: \"(?<user>[^\"]+)\"", "(?s:.)*",
-    "name: \"(?<repo>[^\"]+)\"", "(?s:.)*",
-    "description: object[(]expression: \"(?<subdir>[^\"]+)\"", "(?s:.)*",
-    "sha: object[(]expression: \"(?<ref>[^\"]+)\""
-  )
-
-  re_pull_1 <- paste0(
-    "owner: \"(?<user>[^\"]+)\"", "(?s:.)*",
-    "name: \"(?<repo>[^\"]+)\"", "(?s:.)*",
-    "number: (?<pull>[0-9]+)[)]"
-  )
-
-  re_pull_2 <- paste0(
-    "owner: \"(?<user>[^\"]+)\"", "(?s:.)*",
-    "name: \"(?<repo>[^\"]+)\"", "(?s:.)*",
-    "description: object[(]expression: \"(?<subdir>[^\"]+)\""
-  )
-
-  mch <- re_match(q, re_ref)
-  if (!is.na(mch$.match)) {
-    mch$subdir <- sub("^[^:]+:(.*)/?DESCRIPTION$", "\\1", mch$subdir)
-    return(c(mch, query = "ref"))
-  }
-
-  mch <- re_match(q, re_pull_1)
-  if (!is.na(mch$.match)) return(c(mch, query = "pull-1"))
-
-  mch <- re_match(q, re_pull_2)
-  if (!is.na(mch$.match)) {
-    mch$subdir <- sub("^[^:]+:(.*)/?DESCRIPTION$", "\\1", mch$subdir)
-    return(c(mch, query = "pull-2"))
-  }
-
-  stop("Unknown graphql query")
 }
 
 gr_response_headers_graphql <- function(upd = NULL) {
@@ -66,61 +30,66 @@ gr_response_headers_graphql <- function(upd = NULL) {
   )
 }
 
-gh_complete_repos <- function(repos) {
-  if (!"package" %in% names(repos)) repos$package <- repos$repo
-  repos$package[is.na(repos$package)] <- repos$repo[is.na(repos$package)]
-
-  if (!"ref" %in% names(repos)) repos$ref <- rep("HEAD", nrow(repos))
-  repos$ref[is.na(repos$ref)] <- "HEAD"
-
-  if (!"subdir" %in% names(repos)) repos$subdir <- rep("", nrow(repos))
-  repos$subdir[is.na(repos$subdir)] <- ""
-
-  if (!"version" %in% names(repos)) repos$version <- rep("1.0.0", nrow(repos))
-  repos$version[is.na(repos$version)] <- "1.0.0"
-
-  if (!"sha" %in% names(repos)) repos$sha <- rep(NA_character_, nrow(repos))
-  for (i in seq_len(nrow(repos))) {
-    if (!is.na(repos$sha[i])) next
-    nc <- nchar(repos$ref[i])
-    # complete hash
-    if (grepl("^[0-9a-fA-F]*$", repos$ref[i]) && nc == 64) {
-      repos$sha[i] <- repos$ref[i]
-      next
-    }
-
-    # incomplete hash
-    if (grepl("^[0-9a-fA-F]*$", repos$ref[i]) && nc < 64) {
-      repos$sha[i] <- repos$ref[i]
+make_dummy_zip <- function(commit) {
+  mkdirp(tmp <- tempfile())
+  withr::local_dir(tmp)
+  root <- paste0(commit$repo, "-", commit$branch)
+  mkdirp(root)
+  setwd(root)
+  for (i in seq_along(commit$files)) {
+    nm <- names(commit$files)[[i]]
+    ct <- commit$files[[i]]
+    mkdirp(dirname(nm))
+    if (is.raw(ct)) {
+      writeBin(ct, nm)
     } else {
-      repos$sha[i] <- ""
+      writeLines(ct, nm)
     }
-    need <- 64 - nchar(repos$sha[i])
-    repos$sha[i] <- paste0(
-      repos$sha[i],
-      paste(sample(c(0:9, letters[1:6]), need, replace = TRUE), collapse = "")
-    )
   }
+  setwd(tmp)
+  zip::zip(paste0(root, ".zip"), root)
+  file.path(tmp, paste0(root, ".zip"))
+}
 
+re_gh_auth <- function() {
+  paste0(
+    "^token (gh[pousr]_[A-Za-z0-9_]{36,251}|",
+    "[[:xdigit:]]{40})$"
+  )
+}
+
+process_repos <- function(repos) {
+  for (i in seq_along(repos$users)) {
+    u <- names(repos$users)[i]
+    repos$users[[i]]$user <- u
+    for (j in seq_along(repos$users[[i]]$repos)) {
+      r <- names(repos$users[[i]]$repos)[j]
+      repos$users[[i]]$repos[[j]]$user <- u
+      for (k in seq_along(repos$users[[i]]$repos[[j]]$commits)) {
+        repos$users[[i]]$repos[[j]]$commits[[k]]$user <- u
+        repos$users[[i]]$repos[[j]]$commits[[k]]$repo <- r
+      }
+    }
+  }
   repos
 }
 
-make_dummy_zip <- function(repos, user, repo, sha) {
-  package <- repos$package
-  mkdirp(tmp <- tempfile())
-  withr::local_dir(tmp)
-  mkdirp(package)
-  file.create(file.path(package, "NAMESPACE"))
-  cols <- setdiff(
-    names(repos)[!is.na(repos)],
-    c("user", "repo", "package", "ref", "subdir", "version", "sha")
-  )
-  desc <- as.data.frame(repos[cols])
-  desc$Package <- desc[["Package"]] %||% repos$package
-  desc$Version <- desc[["Version"]] %||% repos$version
-  write.dcf(desc, file.path(package, "DESCRIPTION"))
-  zip::zip(paste0(package, ".zip"), package)
-  file.path(tmp, paste0(package, ".zip"))
+gh_fmt_desc <- function(dsc) {
+  if (is.null(dsc)) {
+    return(NA)
+
+  } else if (is.raw(dsc)) {
+    list(
+      isBinary = TRUE,
+      text = NA
+    )
+
+  } else {
+    list(
+      isBinary = FALSE,
+      text = dsc
+    )
+  }
 }
 
 gh_app <- function(repos = NULL, log = interactive(), options = list()) {
@@ -152,94 +121,249 @@ gh_app <- function(repos = NULL, log = interactive(), options = list()) {
     "next"
   })
 
-  repos <- gh_complete_repos(repos)
-
-  app$locals$repos <- repos
+  app$locals$repos <- process_repos(repos)
   app$locals$data <- list()
 
-  pkg_match <- function(psd) {
-    which(
-      app$locals$repos$user   == psd$user &
-      app$locals$repos$repo   == psd$repo &
-      (app$locals$repos$ref   == psd$ref  |
-       str_starts_with(app$locals$repos$sha, psd$ref)) &
-      app$locals$repos$subdir == psd$subdir
-    )[1]
-  }
-
-  pkg_match_sha <- function(psd) {
-    which(
-      app$locals$repos$user   == psd$user &
-      app$locals$repos$repo   == psd$repo &
-      app$locals$repos$sha    == psd$sha
-    )[1]
-  }
-
-  pkg_is_known <- function(psd) {
-    !is.na(pkg_match(psd))
-  }
-
-  pkg_description <- function(psd) {
-    data <- app$locals$repos[pkg_match(psd),]
-    paste0(c(
-      paste0("Package: ", data$package),
-      paste0("Version: ", data$version)
-    ), "\n", collapse = "")
-  }
-
-  pkg_sha <- function(psd) {
-    app$locals$repos$sha[pkg_match(psd)]
-  }
-
-  app$post("/graphql", function(req, res) {
-    psd <- match_graphql_query(req$json$query)
-
-    add_gh_headers <- function() {
-      headers <- gr_response_headers_graphql()
-      for (i in seq_along(headers)) {
-        res$set_header(names(headers)[i], headers[i])
-      }
-    }
-
-    if (psd$query == "ref") {
-      if (!pkg_is_known(psd)) {
-        res$send_status(404)
-        return()
-      }
-      add_gh_headers()
-      res$send_json(auto_unbox = TRUE,
-        list(data = list(repository = list(
-              description = list(
-                isBinary = FALSE,
-                text = pkg_description(psd)
-              ),
-              sha = list(oid = pkg_sha(psd))
-        ))
-      ))
-
-    } else if (psd$query == "pull-1") {
-      add_gh_headers()
-
-    } else if (psd$query == "pull-2") {
-      add_gh_headers()
-
+  app$use(function(req, res) {
+    auth <- req$get_header("Authorization")
+    if (is.null(auth)) return("next")
+    if (!grepl(re_gh_auth(), auth)) {
+      res$set_status(401)
+      res$send_json(
+        auto_unbox = TRUE,
+        list(
+          message = "Bad credentials",
+          documentation_url = "https://docs.github.com/graphql"
+        )
+      )
+    } else {
+      req$.token <- sub("^token ", "", auth)
+      "next"
     }
   })
 
-  app$get("/repos/:user/:repo/zipball/:sha", function(req, res) {
-    wch <- pkg_match_sha(list(
-      user = req$params$user,
-      repo = req$params$repo,
-      sha = req$params$sha
-    ))
+  app$post("/404/graphql", function(req, res) {
+    res$send_status(404)
+  })
 
-    if (is.na(wch)) {
-      res$send_status(404)
-    } else {
-      z <- make_dummy_zip(app$locals$repos[wch,])
-      res$send_file(z, root = "/")
+  app$post("/graphql", function(req, res) {
+    re_ref <- paste0(
+      "owner:[ ]*\"(?<user>[^\"]+)\"", "(?s:.)*",
+      "name:[ ]*\"(?<repo>[^\"]+)\"", "(?s:.)*",
+      "description:[ ]*object[(]expression:[ ]*\"[^:]+:(?<path>[^\"]+)\"", "(?s:.)*",
+      "sha:[ ]*object[(]expression:[ ]*\"(?<ref>[^\"]+)\""
+    )
+
+    psd <- re_match(req$json$query, re_ref)
+    if (is.na(psd$.match)) return("next")
+
+    if (!psd$user %in% names(app$locals$repos$users)) {
+      send_user_not_found(res, psd)
+      return()
     }
+    if (!psd$repo %in% names(app$locals$repos$users[[psd$user]]$repos)) {
+      send_repo_not_found(res, psd)
+      return()
+    }
+
+    commits <- app$locals$repos$users[[psd$user]]$repos[[psd$repo]]$commits
+    for (cmt in commits) {
+      if ((!is.null(cmt$tag) && cmt$tag == psd$ref) ||
+          (!is.null(cmt$branch) && cmt$branch == psd$ref) ||
+          str_starts_with(cmt$sha, psd$ref)) {
+        add_gh_headers(res)
+        dsc <- cmt$files[[psd$path]]
+        if (!is.null(cmt$token) &&
+            (is.null(req$.token) || req$.token != cmt$token)) {
+          send_repo_not_found(res, psd)
+          return()
+        }
+        res$send_json(
+          auto_unbox = TRUE,
+          list(data = list(repository = list(
+            description = gh_fmt_desc(dsc),
+            sha = list(oid = cmt$sha)
+          )))
+        )
+        return()
+      }
+    }
+
+    res$set_status(200)
+    res$send_json(auto_unbox = TRUE,
+      list(data = list(repository = list(
+        description = NA,
+        sha = NA
+      )))
+    )
+  })
+
+  app$post("/graphql", function(req, res) {
+    re_pull_1 <- paste0(
+      "owner:[ ]*\"(?<user>[^\"]+)\"", "(?s:.)*",
+      "name:[ ]*\"(?<repo>[^\"]+)\"", "(?s:.)*",
+      "number:[ ]*(?<pull>[0-9]+)[)]"
+    )
+
+    psd <- re_match(req$json$query, re_pull_1)
+    if (is.na(psd$.match)) return("next")
+
+    if (!psd$user %in% names(app$locals$repos$users)) {
+      send_user_not_found(res, psd)
+      return()
+    }
+    if (!psd$repo %in% names(app$locals$repos$users[[psd$user]]$repos)) {
+      send_repo_not_found(res, psd)
+      return()
+    }
+
+    commits <- app$locals$repos$users[[psd$user]]$repos[[psd$repo]]$commits
+    for (cmt in commits) {
+      if (!is.null(cmt$pull) && cmt$pull == psd$pull) {
+        add_gh_headers(res)
+        res$send_json(
+          auto_unbox = TRUE,
+          list(data = list(repository = list(pullRequest = list(
+            headRefOid = cmt$sha
+          ))))
+        )
+        return()
+      }
+    }
+
+    send_pull_not_found(res, psd)
+  })
+
+  app$post("/graphql", function(req, res) {
+    re_pull_2 <- paste0(
+      "owner:[ ]*\"(?<user>[^\"]+)\"", "(?s:.)*",
+      "name:[ ]*\"(?<repo>[^\"]+)\"", "(?s:.)*",
+      "object[(]expression:[ ]*\"(?<sha>[^:]+):(?<path>.*)\""
+    )
+
+    psd <- re_match(req$json$query, re_pull_2)
+    if (is.na(psd$.match)) return("next")
+
+    if (!psd$user %in% names(app$locals$repos$users)) {
+      send_user_not_found(res, psd)
+      return()
+    }
+    if (!psd$repo %in% names(app$locals$repos$users[[psd$user]]$repos)) {
+      send_repo_not_found(res, psd)
+      return()
+    }
+
+    commits <- app$locals$repos$users[[psd$user]]$repos[[psd$repo]]$commits
+    for (cmt in commits) {
+      if (cmt$sha == psd$sha) {
+        add_gh_headers(res)
+        dsc <- cmt$files[[psd$path]]
+        res$send_json(
+          auto_unbox = TRUE,
+          list(data = list(repository = list(
+            object = gh_fmt_desc(dsc)
+          )))
+        )
+        return()
+      }
+    }
+
+    send_sha_not_found(res, psd)
+  })
+
+  app$get("/repos/:user/:repo/zipball/:sha", function(req, res) {
+    if (!req$params$user %in% names(app$locals$repos$users)) {
+      send_user_not_found(res, req$params)
+      return()
+    }
+    if (!req$params$repo %in% names(app$locals$repos$users[[req$params$user]]$repos)) {
+      send_repo_not_found(res, req$params)
+      return()
+    }
+
+    commits <- app$locals$repos$users[[req$params$user]]$repos[[req$params$repo]]$commits
+    shas <- vapply(commits, "[[", "", "sha")
+    if (!req$params$sha %in% shas) {
+      send_sha_not_found(res, req$params)
+      return()
+    }
+
+    cmt <- commits[[which(shas == req$params$sha)]]
+    z <- make_dummy_zip(cmt)
+    res$send_file(z, root = "/")
   })
 
   app
 }
+
+add_gh_headers <- function(res) {
+  headers <- gr_response_headers_graphql()
+  for (i in seq_along(headers)) {
+    res$set_header(names(headers)[i], headers[i])
+  }
+}
+
+send_user_not_found <- function(res, psd) {
+  res$set_status(200)
+  res$send_json(auto_unbox = TRUE,
+    list(
+      data = list(repository = NA),
+      errors = list(
+        list(
+          type = "NOT_FOUND",
+          path = list("repository"),
+          locations = list(
+            list(
+              line = 2,
+              column = 3
+            )
+          ),
+          message = sprintf(
+            "Could not resolve to a Repository with the name '%s'.",
+            paste0(psd$user, "/", psd$repo)
+          )
+        )
+      )
+    )
+  )
+}
+
+send_repo_not_found <- function(res, psd) {
+  send_user_not_found(res, psd)
+}
+
+send_ref_not_found <- function(res, psd) {
+  res$send_status(404)
+}
+
+send_pull_not_found <- function(res, psd) {
+  res$set_status(200)
+  res$send_json(auto_unbox = TRUE,
+    list(
+      data = list(repository = list(pullRequest = NA)),
+      errors = list(
+        list(
+          type = "NOT_FOUND",
+          path = list("repository", "pullRequest"),
+          locations = list(
+            list(
+              line = 3L,
+              column = 5L
+            )
+          ),
+          message = sprintf(
+            "Could not resolve to a PullRequest with the number of %s.",
+            psd$pull
+          )
+        )
+      )
+    )
+  )
+}
+
+send_sha_not_found <- function(res, psd) {
+  # TODO
+  res$send_status(404)
+}
+
+# nocov end

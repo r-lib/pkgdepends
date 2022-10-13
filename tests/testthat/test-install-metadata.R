@@ -21,8 +21,7 @@ test_that("install_binary metadata", {
 })
 
 test_that("install_package_plan metadata", {
-
-  skip_if_offline()
+  setup_fake_apps()
   local_cli_config()
 
   pkg <- source_test_package("foo")

@@ -298,13 +298,19 @@ hash <- function(obj) {
   tools::md5sum(tmp)[[1]]
 }
 
+# `reset` is useful for testing
 once_per_session <- local({
   seen <- character()
-  function(expr) {
-    h <- hash(substitute(expr))
-    if (! h %in% seen) {
-      seen <<- c(seen, h)
-      expr
+  function(expr, reset = FALSE) {
+    if (reset) {
+      seen <<- character()
+      return(invisible())
+    } else {
+      h <- hash(substitute(expr))
+      if (! h %in% seen) {
+        seen <<- c(seen, h)
+        expr
+      }
     }
   }
 })

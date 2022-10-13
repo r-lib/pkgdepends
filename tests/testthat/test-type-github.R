@@ -1,11 +1,72 @@
 
+test_that("parse_pkg_refs, github", {
+
+  cases <- list(
+    list("user/repo"),
+    list("github::user/repo"),
+    list("pkg=user/repo", package = "pkg"),
+    list("pkg=github::user/repo", package = "pkg"),
+    list("user/repo/subdir", subdir = "subdir"),
+    list("user/repo@badcafe", commitish = "badcafe"),
+    list("user/repo#123", pull = "123"),
+    list("user/repo@*release", release = "*release"),
+    list("github::user/repo/subdir", subdir = "subdir"),
+    list("github::user/repo@badcafe", commitish = "badcafe"),
+    list("github::user/repo#123", pull = "123"),
+    list("github::user/repo@*release", release = "*release"),
+    list("pkg=user/repo/subdir", package = "pkg", subdir = "subdir"),
+    list("pkg=user/repo@badcafe", package = "pkg", commitish = "badcafe"),
+    list("pkg=user/repo#123", package = "pkg", pull = "123"),
+    list("pkg=user/repo@*release", package = "pkg", release = "*release"),
+
+    # github url cases
+    list("git@github.com:user/repo.git"),
+    list("git@github.ubc.ca:user/repo.git"),
+    list("https://github.com/user/repo"),
+    list("https://github.ubc.ca/user/repo"),
+    list("https://github.com/user/repo/tree/i-am-a-branch", commitish = "i-am-a-branch"),
+    list("https://github.com/user/repo/commit/1234567", commitish = "1234567"),
+    list("https://github.com/user/repo/pull/108", pull = "108"),
+    list("https://github.com/user/repo/releases/tag/1.0.0", commitish = "1.0.0"),
+    list("https://github.com/user/repo/releases/latest", release = "latest"),
+    list("https://github.com/user/repo/releases/latest", release = "latest"),
+    list("https://github.com/foo/bar", username = "foo", repo = "bar"),
+    list("git@github.com:foo/bar.git", username = "foo", repo = "bar"),
+
+    # Username and repo can have hyphens in them
+    list("git@github.com:foo-bar/baz-qux.git", username = "foo-bar", repo = "baz-qux")
+  )
+
+  for (case in cases) {
+    expect_equal_named_lists(
+      p <- parse_pkg_refs(case[[1]])[[1]],
+      utils::modifyList(
+        list(package = case$repo %||% "repo", username = "user",
+             repo = "repo", subdir = "", commitish = "", pull = "",
+             release = "", ref = case[[1]], type = "github",
+             params = character()),
+        case[-1]
+      )
+    )
+    expect_s3_class(p, c("remote_ref_github", "remote_ref"))
+  }
+})
+
+test_that("github url regexes", {
+  cases <- list(
+    list("https://github.com/u/repo.git", c(username = "u", repo = "repo")),
+    list("https://github.com/u/re.po", c(username = "u", repo = "re.po")),
+    list("https://github.com/u/re.po.git", c(username = "u", repo = "re.po"))
+  )
+  for (c in cases) {
+    m <- re_match(c[[1]], github_url_rx())
+    for (n in names(c[[2]])) expect_equal(c[[2]][[n]], m[[n]])
+  }
+})
+
 test_that("resolve_remote", {
-
-  skip_if_offline()
-  skip_on_cran()
-
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  setup_fake_apps()
+  setup_fake_gh_app()
 
   refs <- c(
     "gaborcsardi/secret",
@@ -16,86 +77,51 @@ test_that("resolve_remote", {
     "crayon=github::r-lib/crayon",
     "wesm/feather/R",
     "r-lib/crayon@b5221ab0246050",
-    "r-lib/crayon#61",
-    "r-lib/testthat@*release",
+    "r-lib/crayon#79",
+    # TODO: fix "r-lib/testthat@*release",
     "r-lib/pkgconfig#7"
   )
 
-  r <- pkg_plan$new(
-    refs, config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(suppressMessages(r$resolve()), NA)
-  res <- r$get_resolution()
+  # set library to avoid installed packages
+  suppressMessages(plan <- new_pkg_installation_proposal(
+    refs,
+    config = list(library = tempfile())
+  ))
+  suppressMessages(plan$resolve())
 
-  expect_s3_class(res, "pkg_resolution_result")
-  expect_equal(sort(res$ref), sort(refs))
-  expect_true(all(res$type == "github"))
-  expect_true(all(res$direct))
-  expect_true(all(res$status == "OK"))
+  res <- plan$get_resolution()
+  res <- res[order(res$ref), ]
 
-  ord <- match(refs, vcapply(res$metadata, "[[", "RemotePkgRef"))
+  res[["sources"]] <- sub("^http://127.0.0.1:[0-9]+/", "", unlist(res$sources))
+  expect_snapshot(res[, c("ref", "sources")])
 
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteType") == "github"))
-  expect_equal(vcapply(res$metadata, "[[", "RemotePkgRef")[ord], refs)
-  expect_equal(
-    vcapply(res$metadata, "[[", "RemoteSha")[ord][8],
-    "b5221ab0246050dc687dc8b9964d5c44c947b265")
-  expect_equal(
-    vcapply(res$metadata, "[[", "RemoteUsername")[ord],
-    c("gaborcsardi", "gaborcsardi", rep("r-lib", 4), "wesm", rep("r-lib", 4)))
-  expect_equal(
-    vcapply(res$metadata, "[[", "RemoteRepo")[ord],
-    c("secret", "secret", rep("crayon", 4), "feather", "crayon",
-      "crayon", "testthat", "pkgconfig"))
-  expect_equal(
-    vcapply(res$metadata, "[", "RemoteSubdir")[ord],
-    c(NA, NA, NA, NA, NA, NA, "R", NA, NA, NA, NA))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteHost") == "api.github.com"))
-  expect_equal(
-    vcapply(res$metadata, "[[", "RemoteSha")[ord][11],
-    "6c61f82a5c793c250a28f02a7ef14ae52eb83336")
-
-  expect_equal(vcapply(res$metadata, "[[", "GithubRepo"),
-               vcapply(res$metadata, "[[", "RemoteRepo"))
-  expect_equal(vcapply(res$metadata, "[[", "GithubUsername"),
-               vcapply(res$metadata, "[[", "RemoteUsername"))
-  expect_equal(vcapply(res$metadata, "[", "GithubRef"),
-               vcapply(res$metadata, "[", "RemoteRef"))
-  expect_equal(vcapply(res$metadata, "[[", "GithubSHA1"),
-               vcapply(res$metadata, "[[", "RemoteSha"))
-  expect_equal(vcapply(res$metadata, "[", "GithubSubdir"),
-               vcapply(res$metadata, "[", "RemoteSubdir"))
+  expect_snapshot(
+    res$metadata,
+    transform = transform_local_port
+  )
 })
 
 test_that("failed resolution", {
-
-  skip_if_offline()
-  skip_on_cran()
-
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  setup_fake_gh_app()
 
   nonrepo <- paste0(basename(tempfile()), "/", basename(tempfile()))
-  r <- pkg_plan$new(
-    nonrepo, config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(r$resolve(), NA)
+  r <- pkg_plan$new(nonrepo)
+  suppressMessages(r$resolve())
   res <- r$get_resolution()
 
   expect_true(all(res$status == "FAILED"))
 
   ## Existing repo, no R package there
 
-  r <- pkg_plan$new(
-    "github::r-lib/crayon/R", config = list(cache_dir = tmp))
-  expect_error(r$resolve(), NA)
+  r <- pkg_plan$new("github::r-lib/crayon/R")
+  suppressMessages(r$resolve())
   res <- r$get_resolution()
 
   expect_true(all(res$status == "FAILED"))
 })
 
 test_that("download_remote", {
-
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_gh_app()
 
   old_cache <- Sys.getenv("R_PKG_CACHE_DIR")
   on.exit(Sys.setenv(R_PKG_CACHE_DIR = old_cache))
@@ -105,7 +131,7 @@ test_that("download_remote", {
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
-  sha <- "b5221ab0246050dc687dc8b9964d5c44c947b265"
+  sha <- "b5221ab024605019800ddea474f7a0981a4d53f719f5af2b1af627b34e0760b2"
   ref <- paste0("github::r-lib/crayon@", sha)
   r <- pkg_plan$new(
     ref, config = list(dependencies = FALSE, cache_dir = tmp))
@@ -237,4 +263,69 @@ test_that("satisfies_remote", {
     package = "crayon"
   ))
   expect_true(ans <- satisfy_remote_github(res, ok3))
+})
+
+test_that("satisfies_remote 2", {
+  ## installed is not OK, if reinstall is requested
+  res <- make_fake_resolution(`github::r-lib/crayon?reinstall` = list(
+    extra = list(list(remotesha = "badcafe")),
+    package = "crayon",
+    version = "1.0.0",
+    params = c(reinstall = "")
+  ))
+  bad1 <- make_fake_resolution(`installed::foo` = list(
+    extra =  list(list(remotesha = "badcafe")),
+    package = "crayon",
+    version = "1.0.0"))
+  expect_false(ans <- satisfy_remote_github(res, bad1))
+})
+
+test_that("satisfies_remote 3", {
+  # other refs are OK, as long as the sha matches
+  ## installed is not OK, if reinstall is requested
+  res <- make_fake_resolution(`github::r-lib/crayon` = list(
+    extra = list(list(remotesha = "badcafe")),
+    package = "crayon",
+    version = "1.0.0",
+    params = c(reinstall = "")
+  ))
+
+  ok1 <- make_fake_resolution(`url::foo` = list(
+    extra =  list(list(remotesha = "badcafe")),
+    package = "crayon",
+    version = "1.0.0"))
+  expect_true(ans <- satisfy_remote_github(res, ok1))
+
+  bad1 <- make_fake_resolution(`url::foo` = list(
+    extra =  list(list(remotesha = "baddddd")),
+    package = "crayon",
+    version = "1.0.0"))
+  expect_false(ans <- satisfy_remote_github(res, bad1))
+})
+
+test_that("installedok", {
+  expect_true(installedok_remote_github(
+    list(
+      package = "foo",
+      version = "1.2.3",
+      remotesha = "badcafe"
+    ),
+    list(
+      package = "foo",
+      version = "1.2.3",
+      metadata = list(list(RemoteSha = "badcafe"))
+    )
+  ))
+
+  expect_false(installedok_remote_github(
+    list(
+      package = "foo",
+      version = "1.2.3",
+      remotesha = "badcafe"
+    ),
+    list(
+      package = "foo",
+      version = "1.2.3"
+    )
+  ))
 })

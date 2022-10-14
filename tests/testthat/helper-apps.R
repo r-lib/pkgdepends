@@ -398,3 +398,7 @@ transform_local_port <- function(x) {
 transform_bioc_version <- function(x) {
   sub("3[.][0-9]+/bioc", "<bioc-version>/bioc", x)
 }
+
+transform_test_path <- function(x) {
+  sub(normalizePath(testthat::test_path()), "<test-path>", x, fixed = TRUE)
+}

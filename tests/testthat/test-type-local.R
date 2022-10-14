@@ -10,9 +10,7 @@ test_that("parse_remote", {
 })
 
 test_that("resolve_remote", {
-
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_apps()
 
   conf <- current_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
@@ -20,44 +18,36 @@ test_that("resolve_remote", {
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
-  res <- synchronise(
-    resolve_remote_local(parse_pkg_ref(ref), TRUE, conf,
-                         cache, dependencies = FALSE)
-  )
+  res <- synchronise(resolve_remote_local(
+    parse_pkg_ref(ref),
+    TRUE, conf,
+    cache,
+    dependencies = FALSE
+  ))
 
-  expect_true(is.list(res))
-  expect_true(res$ref == ref)
-  expect_true(res$type == "local")
-  expect_true(res$direct)
-  expect_true(res$status == "OK")
-  expect_true(res$package == "foobar")
-  expect_true(res$version == "1.0.0")
-  expect_equal(res$unknown_deps, character(0))
-  expect_equal(res$sources[[1]], paste0("file://", normalizePath(path)))
-  expect_equal(res$metadata[["RemoteType"]], "local")
-  expect_equal(res$metadata[["RemotePkgRef"]], ref)
+  expect_snapshot(
+    res,
+    transform = transform_test_path
+  )
 
   ## Relative path?
   fix_dir <- fixture_dir()
   ref2 <- paste0("local::", "foobar_1.0.0.tar.gz")
   withr::with_dir(
     fix_dir,
-    res <- synchronise(
-      resolve_remote_local(parse_pkg_ref(ref2), TRUE, conf,
-                         cache, dependencies = FALSE)
-    )
+    res <- synchronise(resolve_remote_local(
+      parse_pkg_ref(ref2),
+      TRUE,
+      conf,
+      cache,
+      dependencies = FALSE
+    ))
   )
 
-  expect_true(is.list(res))
-  expect_true(res$ref == ref2)
-  expect_true(res$type == "local")
-  expect_true(res$direct)
-  expect_true(res$status == "OK")
-  expect_true(res$package == "foobar")
-  expect_true(res$version == "1.0.0")
-  expect_equal(res$sources[[1]], paste0("file://", normalizePath(path)))
-  expect_equal(res$metadata[["RemoteType"]], "local")
-  expect_equal(res$metadata[["RemotePkgRef"]], ref2)
+  expect_snapshot(
+    res,
+    transform = transform_test_path
+  )
 })
 
 test_that("resolution error", {
@@ -76,8 +66,7 @@ test_that("resolution error", {
 })
 
 test_that("download_remote", {
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_apps()
 
   dir.create(tmp <- tempfile())
   dir.create(tmp2 <- tempfile())
@@ -89,14 +78,15 @@ test_that("download_remote", {
   conf$package_cache_dir <- tmp2
   cache <- list(
     package = pkgcache::package_cache$new(conf$package_cache_dir),
-    metadata = pkgcache::get_cranlike_metadata_cache())
+    metadata = pkgcache::get_cranlike_metadata_cache()
+  )
 
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
 
   rem <- pkg_plan$new(ref)
-  rem$resolve()
+  suppressMessages(rem$resolve())
   res <- rem$get_resolution()
 
   target <- file.path(conf$cache_dir, res$target[1])
@@ -127,8 +117,7 @@ test_that("download_remote", {
 })
 
 test_that("download_remote error", {
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_apps()
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)

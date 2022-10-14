@@ -90,9 +90,10 @@ test_that("download_remote", {
   res <- rem$get_resolution()
 
   target <- file.path(conf$cache_dir, res$target[1])
+  tree <- paste0(target, "-tree")
   mkdirp(dirname(target))
   download <- function(res) {
-    download_remote_local(res, target, conf, cache, on_progress = NULL)
+    download_remote_local(res, target, tree, conf, cache, on_progress = NULL)
   }
   dl1 <- synchronise(download(res[1,]))
   expect_equal(dl1, "Got")
@@ -109,11 +110,50 @@ test_that("download_remote", {
   })
 
   target <- file.path(conf$cache_dir, res$target[1])
+  tree <- paste0(target, "-tree")
   mkdirp(dirname(target))
-  dl1 <- download_remote_local(res, target, conf, cache, on_progress = NULL)
+  dl1 <- download_remote_local(res, target, tree, conf, cache, on_progress = NULL)
 
   expect_equal(dl1, "Got")
   expect_true(file.exists(target))
+})
+
+test_that("download_remote directory", {
+  setup_fake_apps()
+
+  dir.create(tmp <- tempfile())
+  dir.create(tmp2 <- tempfile())
+  dir.create(tmp3 <- tempfile())
+  on.exit(unlink(c(tmp, tmp2, tmp3), recursive = TRUE), add = TRUE)
+
+  conf <- current_config()
+  conf$platforms <- "source"
+  conf$cache_dir <- tmp
+  conf$package_cache_dir <- tmp2
+  cache <- list(
+    package = pkgcache::package_cache$new(conf$package_cache_dir),
+    metadata = pkgcache::get_cranlike_metadata_cache()
+  )
+
+  path <- get_fixture("foobar_1.0.0.tar.gz")
+  untar(path, exdir = tmp3)
+  path <- file.path(tmp3, "foobar")
+  ref <- paste0("local::", path)
+
+  rem <- pkg_plan$new(ref)
+  suppressMessages(rem$resolve())
+  res <- rem$get_resolution()
+
+  target <- file.path(conf$cache_dir, res$target[1])
+  tree <- paste0(target, "-tree")
+  mkdirp(dirname(target))
+  download <- function(res) {
+    download_remote_local(res, target, tree, conf, cache, on_progress = NULL)
+  }
+  dl1 <- synchronise(download(res[1,]))
+  expect_equal(dl1, "Got")
+  expect_true(file.exists(tree))
+  expect_true(is.dir(tree))
 })
 
 test_that("download_remote error", {
@@ -147,4 +187,9 @@ test_that("download_remote error", {
 test_that("satisfy", {
   ## Always FALSE, independently of arguments
   expect_false(satisfy_remote_local())
+})
+
+test_that("installedok", {
+  ## Always FALSE, independently of arguments
+  expect_false(installedok_remote_local())
 })

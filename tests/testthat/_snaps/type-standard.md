@@ -117,11 +117,11 @@
       [1] "src/contrib/Biobase_1.2.3.tar.gz"
       
       $mirror
-      [1] "http://127.0.0.1:<port>//packages/3.15/bioc"
+      [1] "http://127.0.0.1:<port>//packages/<bioc-version>/bioc"
       
       $sources
       $sources[[1]]
-      [1] "http://127.0.0.1:<port>//packages/3.15/bioc/src/contrib/Biobase_1.2.3.tar.gz"
+      [1] "http://127.0.0.1:<port>//packages/<bioc-version>/bioc/src/contrib/Biobase_1.2.3.tar.gz"
       
       
       $sysreqs
@@ -166,7 +166,7 @@
                                          RemoteRef 
                                          "Biobase" 
                                        RemoteRepos 
-      "http://127.0.0.1:<port>//packages/3.15/bioc" 
+      "http://127.0.0.1:<port>//packages/<bioc-version>/bioc" 
                                  RemotePkgPlatform 
                                           "source" 
                                          RemoteSha 

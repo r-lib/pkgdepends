@@ -40,7 +40,7 @@ test_that("resolve_remote", {
 
   expect_snapshot(
     as.list(res[, intersect(names(res), cols)]),
-    transform = transform_local_port
+    transform = function(x) transform_local_port(transform_bioc_version(x))
   )
 
   # Proper error for non-existing package ---------------------------------

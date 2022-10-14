@@ -394,3 +394,7 @@ transform_no_srcref <- function(x) {
 transform_local_port <- function(x) {
   sub("127\\.0\\.0\\.1:[0-9]+", "127.0.0.1:<port>", x)
 }
+
+transform_bioc_version <- function(x) {
+  sub("3[.][0-9]+/bioc", "<bioc-version>/bioc", x)
+}

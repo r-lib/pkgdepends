@@ -41,8 +41,8 @@
       
       $sources
       $sources[[1]]
-      [1] "http://127.0.0.1:<port>//src/contrib/crayon_1.0.0.tar.gz"        
-      [2] "http://127.0.0.1:<port>//src/contrib/Archive/crayon_1.0.0.tar.gz"
+      [1] "http://127.0.0.1:<port>//src/contrib/crayon_1.0.0.tar.gz"               
+      [2] "http://127.0.0.1:<port>//src/contrib/Archive/crayon/crayon_1.0.0.tar.gz"
       
       
       $sysreqs

@@ -20,7 +20,7 @@
         <list>     <list>    <list>    <chr>   <chr>       
       1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: ; ref: pkg1; type: standard; params: 
       + error:
@@ -62,9 +62,9 @@
       2 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
       3 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg2; atleast: ; version: ; ref: pkg2; type: standard; params: 
       <remote_ref_cran/remote_ref/list> package: pkg3; atleast: ; version: ; ref: cran::pkg3; type: cran; params: 
@@ -114,9 +114,9 @@
       2 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
       3 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: ; ref: pkg1; type: standard; params: 
       <remote_ref_standard/remote_ref/list> package: pkg2; atleast: ; version: ; ref: pkg2; type: standard; params: 
@@ -200,7 +200,7 @@
       1 <NA>    miss        
       2 <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       NA
       + remote:
       <remote_ref_cran/remote_ref/list> package: pkg1; atleast: ; version: ; ref: cran::pkg1; type: cran; params: 
@@ -237,7 +237,7 @@
         <list>     <list>    <list>    <chr>   <chr>       
       1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_cran/remote_ref/list> package: pkg1; atleast: ; version: current; ref: cran::pkg1@current; type: cran; params: 
       + error:

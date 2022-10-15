@@ -53,7 +53,7 @@ download_remote_url <- function(resolution, target, target_tree, config,
         res_etag <- resolution$metadata[[1]][["RemoteEtag"]]
         new_etag <- newres$metadata[["RemoteEtag"]]
         if (res_etag != new_etag) {
-          warning("Package file at `", remote$url, "` has changed")
+          warning("Package file at `", remote$url, "` has changed") # nocov
         }
       })
   } else {
@@ -66,12 +66,12 @@ download_remote_url <- function(resolution, target, target_tree, config,
       if (packaged == "TRUE") {
         mkdirp(dirname(target))
         if (!file.copy(tmpd$archive, target, overwrite = TRUE)) {
-          stop("Failed to copy package downloaded from `", remote$url, "`")
+          stop("Failed to copy package downloaded from `", remote$url, "`") # nocov
         }
       } else {
         mkdirp(target_tree)
         if (!file.copy(tmpd$extract, target_tree, recursive = TRUE)) {
-          stop("Failed to copy package downloaded from `", remote$url, "`")
+          stop("Failed to copy package downloaded from `", remote$url, "`") # nocov
         }
       }
     })$
@@ -161,10 +161,10 @@ type_url_download_and_extract <- function(remote, cache, config, tmpd,
                                           nocache) {
   id <- NULL
   tmpd <- tmpd
-  if (nocache) {
-    download_one_of(remote$url, tmpd$cachepath)$
+  async_constant(if (nocache) {
+    mkdirp(dirname(tmpd$archive))
+    download_one_of(remote$url, tmpd$archive)$
       then(function(dl) { attr(dl, "action") <- "Got"; dl })
-
   } else {
     cache$package$async_update_or_add(
       tmpd$archive,
@@ -172,7 +172,7 @@ type_url_download_and_extract <- function(remote, cache, config, tmpd,
       path = tmpd$cachepath,
       http_headers = default_download_headers(remote$url)
     )
-  }$then(function(dl) {
+  })$then(function(dl) {
     tmpd$status <<- attr(dl, "action")
     tmpd$etag <<- if (is.na(dl$etag)) substr(dl$sha256, 1, 16) else dl$etag
     tmpd$id <<- digest::digest(tmpd$etag)

@@ -450,7 +450,7 @@ check_app <- webfakes::new_app_process(
 )
 
 transform_no_srcref <- function(x) {
-  sub("[ ]*at [-a-z]+.R:[0-9]+:[0-9]+:", ":", x)
+  sub("[ ]*at [-a-zA-Z0-9]+[.]R:[0-9]+:[0-9]+:", ":", x)
 }
 
 transform_local_port <- function(x) {

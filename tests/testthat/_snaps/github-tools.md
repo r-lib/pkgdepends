@@ -125,7 +125,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
     Error <async_rejected>
       ! Bad GitHub credentials, make sure that your GitHub token is valid.
-      Caused by error in `stop(http_error(resp))` at aaa-async.R:2752:3:
+      Caused by error in `stop(http_error(resp))`:
       ! Unauthorized (HTTP 401).
 
 ---
@@ -134,7 +134,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
     Error <async_rejected>
       ! Bad GitHub credentials, make sure that your GitHub token is valid.
-      Caused by error in `stop(http_error(resp))` at aaa-async.R:2752:3:
+      Caused by error in `stop(http_error(resp))`:
       ! Unauthorized (HTTP 401).
 
 # github_query, no internet
@@ -203,7 +203,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("foo/bar")))
     Error <async_rejected>
       ! GitHub HTTP error
-      Caused by error in `stop(http_error(resp))` at aaa-async.R:2752:3:
+      Caused by error in `stop(http_error(resp))`:
       ! Not Found (HTTP 404).
 
 # no such PR error

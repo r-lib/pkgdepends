@@ -61,16 +61,16 @@ test_that("github_query, invalid PAT", {
     CI_GITHUB_TOKEN = "invalid"
   ))
 
-  expect_snapshot(error = TRUE,
+  expect_snapshot(error = TRUE, transform = transform_no_srcref,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
   )
-  expect_snapshot(error = TRUE,
+  expect_snapshot(error = TRUE, transform = transform_no_srcref,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
   )
 })
 
 test_that("github_query, no internet", {
-  withr::local_envvar(R_PKG_GITHUB_API_URL = "http://0.42.42.42")
+  withr::local_envvar(R_PKG_GITHUB_API_URL = "https://127.0.0.1:80")
   expect_snapshot(
     error = TRUE,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak")))
@@ -152,6 +152,7 @@ test_that("http error", {
 
   expect_snapshot(
     error = TRUE,
+    transform = transform_no_srcref,
     synchronise(type_github_get_data(parse_pkg_ref("foo/bar")))
   )
 })

@@ -1,5 +1,6 @@
 
 test_that("resolve_remote", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg1")
@@ -12,6 +13,7 @@ test_that("resolve_remote", {
 })
 
 test_that("resolve_remote, multiple", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal(c("cran::pkg3", "pkg1"))
@@ -24,6 +26,7 @@ test_that("resolve_remote, multiple", {
 })
 
 test_that("dependencies", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg3")
@@ -36,6 +39,7 @@ test_that("dependencies", {
 })
 
 test_that("failed resolution", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("cran::xxyyzzqwertyqwerty")
@@ -48,6 +52,7 @@ test_that("failed resolution", {
 })
 
 test_that("failed resolution, multiple", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal(c("cran::pkg1", "cran::xxyyzzqwertyqwerty"))
@@ -60,6 +65,7 @@ test_that("failed resolution, multiple", {
 })
 
 test_that("resolve current version", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("cran::pkg1@current")
@@ -72,6 +78,7 @@ test_that("resolve current version", {
 })
 
 test_that("resolve an old version", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg1@0.9.0")
@@ -92,6 +99,7 @@ test_that("resolve an old version", {
 })
 
 test_that("resolve a version range", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   prop <- new_pkg_installation_proposal("pkg1@>=0.9.0")
@@ -104,6 +112,7 @@ test_that("resolve a version range", {
 })
 
 test_that("download_remote", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   # this the cache for getOption(repos)

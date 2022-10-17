@@ -105,6 +105,6 @@ cli::test_that_cli("draw_solution_tree", {
 
   expect_snapshot(
     r$draw_solution_tree(),
-    transform = function(x) sub("[(][0-9]+ B[)]", "(<size>)", x)
+    transform = transform_bytes
   )
 })

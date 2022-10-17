@@ -41,6 +41,25 @@ cran_app_pkgs <- dcf("
 
   Package: crayon
   Version: 1.0.0
+
+  Package: needspak
+  Imports: pak
+
+  Package: pak
+
+  Package: futurama
+  Depends: R (>= 3000.0)
+
+  Package: needsfuturama
+  Imports: futurama
+
+  Package: dplyr
+  Imports: tibble
+  Suggests: testthat
+
+  Package: tibble
+
+  Package: testthat
 ")
 
 fake_cran <- webfakes::local_app_process(
@@ -61,17 +80,53 @@ fake_bioc <- webfakes::local_app_process(
   opts = webfakes::server_opts(num_threads = 3)
 )
 
-setup_fake_apps <- function(.local_envir = parent.frame()) {
+setup_fake_apps <- function(
+  cran_app = NULL,
+  bioc_app = NULL,
+  cran_repo = NULL,
+  bioc_repo = NULL,
+  cran_options = NULL,
+  bioc_options = NULL,
+  .local_envir = parent.frame()) {
+
+  cran_app <- if (!is.null(cran_app)) {
+                cran_app
+              } else if (!is.null(cran_repo)) {
+                app <- webfakes::local_app_process(
+                  cran_app(cran_repo, options = as.list(cran_options)),
+                  opts = webfakes::server_opts(num_threads = 3),
+                  .local_envir = .local_envir
+                )
+                assign(".cran_app", app, envir = .local_envir)
+                app
+              } else {
+                fake_cran
+              }
+
+  bioc_app <- if (!is.null(bioc_app)) {
+                bioc_app
+              } else if (!is.null(bioc_repo)) {
+                app <- webfakes::local_app_process(
+                  bioc_app(bioc_repo, options = as.list(bioc_options)),
+                  opts = webfakes::server_opts(num_threads = 3),
+                  .local_envir = .local_envir
+                )
+                assign(".bioc_app", app, envir = .local_envir)
+                app
+              } else {
+                fake_bioc
+              }
+
   withr::local_options(
-    repos = c(CRAN = fake_cran$url()),
-    pkg.cran_metadata_url = fake_cran$url(),
+    repos = c(CRAN = cran_app$url()),
+    pkg.cran_metadata_url = cran_app$url(),
     .local_envir = .local_envir
   )
   withr::local_envvar(
-    R_PKG_CRAN_METADATA_URL = fake_cran$url(),
-    R_BIOC_CONFIG_URL = paste0(fake_bioc$url(), "/config.yaml"),
+    R_PKG_CRAN_METADATA_URL = cran_app$url(),
+    R_BIOC_CONFIG_URL = paste0(bioc_app$url(), "/config.yaml"),
     R_BIOC_VERSION = NA_character_,
-    R_BIOC_MIRROR = fake_bioc$url(),
+    R_BIOC_MIRROR = bioc_app$url(),
     .local_envir = .local_envir
   )
 }
@@ -81,6 +136,13 @@ setup_fake_apps <- function(.local_envir = parent.frame()) {
 
 gh_app_desc <- function(pkg) {
   sprintf("Package: %s\nVersion: 1.0.0\n", pkg)
+}
+
+random_sha <- function() {
+  paste(
+    sample(c(0:9, letters[1:6]), 64, replace = TRUE),
+    collapse = ""
+  )
 }
 
 gh_app_repos <- list(
@@ -401,4 +463,8 @@ transform_bioc_version <- function(x) {
 
 transform_test_path <- function(x) {
   sub(normalizePath(testthat::test_path()), "<test-path>", x, fixed = TRUE)
+}
+
+transform_bytes <- function(x) {
+  sub("[(][0-9]+ B[)]", "(<size>)", x)
 }

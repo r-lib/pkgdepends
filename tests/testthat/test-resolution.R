@@ -202,7 +202,7 @@ test_that("installed refs are also resolved", {
 })
 
 test_that("explicit cran", {
-  skip_on_cran()
+  setup_fake_apps()
   conf <- current_config()
   cache <- list(package = pkgcache::package_cache$new(),
                 metadata = pkgcache::get_cranlike_metadata_cache())
@@ -212,7 +212,7 @@ test_that("explicit cran", {
     res$when_complete()
   }
 
-  res <- synchronise(do("cran::dplyr"))
+  res <- suppressMessages(synchronise(do("cran::dplyr")))
   expect_true(inherits(res, "tbl"))
   expect_true("cran::dplyr" %in% res$ref)
   expect_true(all(grep("::", res$ref, value = TRUE) == "cran::dplyr"))
@@ -243,7 +243,7 @@ test_that("explicit cran", {
 })
 
 test_that("standard", {
-  skip_on_cran()
+  setup_fake_apps()
   conf <- current_config()
   cache <- list(
     package = pkgcache::package_cache$new(),

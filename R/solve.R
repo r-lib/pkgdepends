@@ -606,7 +606,8 @@ pkgplan_i_lp_dependencies <- function(lp) {
       txt <- glue("{pkgs$ref[wh]} depends on {depref}: \\
                    {collapse(report, sep = ', ')}")
       note <- list(wh = wh, ref = depref, cand = cand,
-                   good_cand = good_cand, txt = txt)
+                   good_cand = good_cand, txt = txt, depop = depop,
+                   depver = depver)
 
       lp <<- pkgplan_i_lp_add_cond(
         lp, c(wh, good_cand), "<=", rhs = 0,
@@ -1138,6 +1139,11 @@ describe_solution_error <- function(pkgs, solution) {
     state[dep_up[x]] <- "dep-failed"
     note[[ dep_up[x] ]] <-
       c(note[[ dep_up[x] ]], glue("Can't install dependency {pkg}"))
+    depop <- cnd[type_dep][[x]]$note$depop %||% ""
+    depver <- cnd[type_dep][[x]]$note$depver %||% ""
+    if (nzchar(depver)) {
+      note[[ dep_up[x] ]] <- paste0(note[[ dep_up[x] ]], " (", depop, " ", depver, ")")
+    }
     downstream[[ dep_up[x] ]] <- c(downstream[[ dep_up[x] ]], pkg)
   }
 
@@ -1152,6 +1158,11 @@ describe_solution_error <- function(pkgs, solution) {
       state[ dep_up[x] ] <- "dep-failed"
       note[[ dep_up[x] ]] <- c(
         note[[ dep_up[x] ]], glue("Can't install dependency {pkg}"))
+      depop <- cnd[type_dep][[x]]$note$depop %||% ""
+      depver <- cnd[type_dep][[x]]$note$depver %||% ""
+      if (nzchar(depver)) {
+        note[[ dep_up[x] ]] <- paste0(note[[ dep_up[x] ]], " (", depop, " ", depver, ")")
+      }
       downstream[[ dep_up[x] ]] <- c(downstream[[ dep_up[x] ]], pkg)
     }
     new <- dep_up[which_new]

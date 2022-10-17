@@ -25,6 +25,7 @@ test_that("resolve_remote", {
     dependencies = FALSE
   ))
 
+  res$metadata <- as.list(res$metadata)
   expect_snapshot(
     res,
     transform = transform_test_path
@@ -44,6 +45,7 @@ test_that("resolve_remote", {
     ))
   )
 
+  res$metadata <- as.list(res$metadata)
   expect_snapshot(
     res,
     transform = transform_test_path

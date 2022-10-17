@@ -4,7 +4,7 @@
       res
     Output
       $ref
-      [1] "local::<test-path>/fixtures/foobar_1.0.0.tar.gz"
+      [1] "local::fixtures/foobar_1.0.0.tar.gz"
       
       $type
       [1] "local"
@@ -48,15 +48,15 @@
       
       
       $sources
-      [1] "file://<test-path>/fixtures/foobar_1.0.0.tar.gz"
+      [1] "file://fixtures/foobar_1.0.0.tar.gz"
       
       $remote
       $remote[[1]]
       $path
-      [1] "<test-path>/fixtures/foobar_1.0.0.tar.gz"
+      [1] "fixtures/foobar_1.0.0.tar.gz"
       
       $ref
-      [1] "local::<test-path>/fixtures/foobar_1.0.0.tar.gz"
+      [1] "local::fixtures/foobar_1.0.0.tar.gz"
       
       $type
       [1] "local"
@@ -93,10 +93,12 @@
       
       
       $metadata
-                                                                                  RemotePkgRef 
-      "local::<test-path>/fixtures/foobar_1.0.0.tar.gz" 
-                                                                                    RemoteType 
-                                                                                       "local" 
+      $metadata$RemotePkgRef
+      [1] "local::fixtures/foobar_1.0.0.tar.gz"
+      
+      $metadata$RemoteType
+      [1] "local"
+      
       
       $params
       $params[[1]]
@@ -157,7 +159,7 @@
       
       
       $sources
-      [1] "file://<test-path>/fixtures/foobar_1.0.0.tar.gz"
+      [1] "file://fixtures/foobar_1.0.0.tar.gz"
       
       $remote
       $remote[[1]]
@@ -202,8 +204,12 @@
       
       
       $metadata
-                      RemotePkgRef                   RemoteType 
-      "local::foobar_1.0.0.tar.gz"                      "local" 
+      $metadata$RemotePkgRef
+      [1] "local::foobar_1.0.0.tar.gz"
+      
+      $metadata$RemoteType
+      [1] "local"
+      
       
       $params
       $params[[1]]

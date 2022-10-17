@@ -462,7 +462,10 @@ transform_bioc_version <- function(x) {
 }
 
 transform_test_path <- function(x) {
-  sub(normalizePath(testthat::test_path()), "<test-path>", x, fixed = TRUE)
+  tp <- normalizePath(testthat::test_path())
+  tp2 <- paste0(tp, "/")
+  x <- sub(tp2, "", x, fixed = TRUE)
+  sub(tp, "", x, fixed = TRUE)
 }
 
 transform_bytes <- function(x) {

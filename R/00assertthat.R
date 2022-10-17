@@ -1,4 +1,6 @@
 
+# nocov start
+
 assert_that <- function(..., env = parent.frame(), msg = NULL) {
   res <- see_if(..., env = env, msg = msg)
   if (res) return(TRUE)
@@ -352,3 +354,5 @@ validate_that <- function(..., env = parent.frame(), msg = NULL) {
   if (res) return(TRUE)
   return(attr(res, "msg"))
 }
+
+# nocov end

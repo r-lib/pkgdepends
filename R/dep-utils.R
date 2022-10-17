@@ -21,51 +21,6 @@ pkg_dep_types_soft <- function() c("Suggests", "Enhances")
 
 pkg_dep_types <- function() c(pkg_dep_types_hard(), pkg_dep_types_soft())
 
-fast_parse_deps <- function(pkgs) {
-  no_pkgs <- nrow(pkgs)
-  cols <- intersect(colnames(pkgs), pkg_dep_types())
-  ## as.character is for empty data frame, e.g. from empty BioC repos
-  deps <- as.character(unlist(pkgs[, cols], use.names = FALSE))
-  nna <- which(!is.na(deps))
-  if (length(nna)) {
-    not_na_deps <- deps[nna]
-    sp <- strsplit(not_na_deps, ",", fixed = TRUE)
-    ll <- sapply(sp, length, USE.NAMES = FALSE)
-    sp <- unlist(sp, use.names = FALSE)
-    parsed <- re_match(sp,
-      paste0("^\\s*(?<package>[^(\\s]+)\\s*",
-             "(?:\\((?<op>[^0-9\\s]+)\\s*(?<version>[^)\\s]+)\\))?\\s*$"))
-    parsed$idx <- rep(rep(seq_len(no_pkgs), length(cols))[nna], ll)
-    parsed$type <- rep(rep(cols, each = no_pkgs)[nna], ll)
-    parsed$ref <- parsed$package
-    parsed$upstream <- pkgs$Package[parsed$idx]
-    parsed <- parsed[, c("upstream", "idx", "ref", "type", "package",
-                         "op", "version")]
-    parsed <- parsed[! parsed$package %in% base_packages(), ]
-    parsed <- parsed[order(parsed$idx), ]
-
-  } else {
-    parsed <- data_frame(
-      upstream = character(),
-      idx = integer(),
-      ref = character(),
-      type = character(),
-      package = character(),
-      version = character(),
-      op = character()
-    )
-  }
-
-  parsed
-}
-
-fast_select_deps <- function(deps, which, dependencies) {
-  res <- deps[deps$idx == which, ]
-  res <- res[res$type %in% dependencies,
-             c("ref", "type", "package", "op", "version")]
-  res[! res$package %in% base_packages(), ]
-}
-
 make_null_deps <- function() {
   data_frame(ref = character(), type = character(), package = character(),
              op = character(), version = character())

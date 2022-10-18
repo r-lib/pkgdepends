@@ -1,13 +1,13 @@
 
 test_that("make_start_state", {
-  plan <- readRDS("fixtures/sample_plan.rds")
+  plan <- readRDS(test_path("fixtures/sample_plan.rds"))
   state <- make_start_state(plan, list(foo = "bar"))
 
   expect_equal(names(state), c("plan", "workers", "config"))
   xcols <- c(
     "build_done", "build_time", "build_error", "build_stdout",
-    "build_stderr", "install_done", "install_time", "install_error",
-    "install_stdout", "install_stderr")
+    "install_done", "install_time", "install_error",
+    "install_stdout")
   expect_true(all(xcols %in% colnames(state$plan)))
   eq_cols <- setdiff(colnames(plan), "deps_left")
   expect_identical(
@@ -17,7 +17,7 @@ test_that("make_start_state", {
 })
 
 test_that("are_we_done", {
-  plan <- readRDS("fixtures/sample_plan.rds")
+  plan <- readRDS(test_path("fixtures/sample_plan.rds"))
   state <- make_start_state(plan, list(foo = "bar"))
   expect_false(are_we_done(state))
 
@@ -36,8 +36,8 @@ test_that("poll_workers", {
   skip_on_os("windows")
 
   ## These might fail, but that does not matter much here
-  p1 <- processx::process$new("true", stdout = "|")
-  p2 <- processx::process$new("true", stdout = "|")
+  p1 <- processx::process$new("true", stdout = "|", stderr = "2>&1")
+  p2 <- processx::process$new("true", stdout = "|", stderr = "2>&1")
 
   state <- list(workers = list(list(process = p1)))
   expect_equal(poll_workers(state), TRUE)
@@ -58,7 +58,7 @@ test_that("poll_workers", {
 test_that("handle_event, process still running", {
   ## If just output, but the process is still running, then collect
   ## stdout and stderr
-  plan <- readRDS("fixtures/sample_plan.rds")
+  plan <- readRDS(test_path("fixtures/sample_plan.rds"))
   state <- make_start_state(plan, list(num_workers = 2))
 
   mockery::stub(
@@ -90,7 +90,7 @@ test_that("handle_event, process still running", {
 
 test_that("handle_event, build process finished", {
   local_cli_config()
-  plan <- readRDS("fixtures/sample_plan.rds")
+  plan <- readRDS(test_path("fixtures/sample_plan.rds"))
   state <- make_start_state(plan, list(foo = "bar"))
   state$plan$build_done[1] <- FALSE
 
@@ -113,8 +113,7 @@ test_that("handle_event, build process finished", {
 
   expect_false(proc$is_alive())
   expect_false(state$plan$build_error[[1]])
-  expect_equal(state$plan$build_stdout[[1]], c("out 1", "out 2"))
-  expect_equal(state$plan$build_stderr[[1]], c("err 1", "err 2"))
+  expect_equal(state$plan$build_stdout[[1]], c("out 1", "err 1", "out 2", "err 2"))
   expect_identical(state$plan$worker_id[[1]], NA_character_)
   expect_equal(length(state$workers), 0)
 })
@@ -166,8 +165,7 @@ test_that("handle_event, install process finished", {
 
   expect_false(proc$is_alive())
   expect_false(state$plan$install_error[[1]])
-  expect_equal(state$plan$install_stdout[[1]], c("out 1", "out 2"))
-  expect_equal(state$plan$install_stderr[[1]], c("err 1", "err 2"))
+  expect_equal(state$plan$install_stdout[[1]], c("out 1", "err 1", "out 2", "err 2"))
   expect_identical(state$plan$worker_id[[1]], NA_character_)
   expect_equal(length(state$workers), 0)
 })

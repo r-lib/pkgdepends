@@ -4,9 +4,8 @@ test_that("can package a tree", {
   skip_on_cran()
   local_cli_config()
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  file.copy(test_path("foo"), tmp, recursive = TRUE)
+  tmp <- withr::local_tempdir()
+  file.copy(test_path("fixtures", "foo"), tmp, recursive = TRUE)
 
   dir.create(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
@@ -31,10 +30,9 @@ test_that("can package a compressed tree", {
   skip_on_cran()
   local_cli_config()
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  tmp <- withr::local_tempdir()
   pkgzip <- file.path(tmp, "foo-t.zip")
-  zip::zipr(pkgzip, test_path("foo"))
+  zip::zipr(pkgzip, test_path("fixtures", "foo"))
 
   dir.create(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)

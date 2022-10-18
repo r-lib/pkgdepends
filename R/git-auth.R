@@ -1,4 +1,6 @@
 
+# nocov start
+
 gitcreds_get <- NULL
 gitcreds_set <- NULL
 gitcreds_delete <- NULL
@@ -812,3 +814,5 @@ read_file <- function(path, ...) {
 
 environment()
 })
+
+# nocov end

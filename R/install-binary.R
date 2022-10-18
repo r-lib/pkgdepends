@@ -11,22 +11,19 @@ install_binary <- function(filename, lib = .libPaths()[[1L]],
     is.null(quiet) || is_flag(quiet))
 
   stdout <- ""
-  stderr <- ""
 
   px <- make_install_process(filename, lib = lib, metadata = metadata)
 
   repeat {
     px$poll_io(100)
     stdout <- paste0(stdout, px$read_output())
-    stderr <- paste0(stderr, px$read_error())
-    if (!px$is_alive() &&
-        !px$is_incomplete_output() && !px$is_incomplete_error()) {
+    if (!px$is_alive() && !px$is_incomplete_output()) {
       break
     }
   }
 
   if (px$get_exit_status() != 0) {
-    stop("Package installation failed\n", stderr)
+    stop("Package installation failed\n", stdout)
   }
 
   cli_alert_success(paste0("Installed ", filename))

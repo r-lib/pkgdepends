@@ -17,9 +17,34 @@ parse_remote_local <- function(specs, config, ...) {
 resolve_remote_local <- function(remote, direct, config, cache,
                                  dependencies, ...) {
 
+  # prepare a default resolution
   sources <- paste0("file://", normalizePath(remote$path, mustWork = FALSE))
-  resolve_from_description(remote$path, sources, remote, direct,
+  res <- resolve_from_description(remote$path, sources, remote, direct,
                            config, cache, dependencies[[2 - direct]])
+
+  # save the source as the remote url
+  res$metadata[["RemoteUrl"]] <- sources[[1]]
+
+  # collect the list of local package files
+  pkg_files <- list.files(
+    remote$path[[1]], 
+    full.names = TRUE, 
+    recursive = TRUE,
+    # this will exclude hidden files, but maybe
+    # some package rely on them? 
+    all.files = FALSE
+  )
+
+  # save the md5sum
+  # TODO: make one sum out of it?
+  # TODO: use sha256 and digest?
+  if (length(pkg_files) > 0) {
+    md5sum <- paste0(tools::md5sum(pkg_files), collapse = ".")
+    res$extra[[1]][["remotemd5sum"]] <- md5sum
+    res$metadata[["RemoteMD5Sum"]] <- md5sum
+  }
+
+  res
 }
 
 download_remote_local <- function(resolution, target, target_tree, config,
@@ -45,7 +70,36 @@ download_remote_local <- function(resolution, target, target_tree, config,
 }
 
 satisfy_remote_local <- function(resolution, candidate, config, ...) {
-  ## TODO: we can probably do better than this
+  ## 1. package name must match
+  if (resolution$package != candidate$package) {
+    return(structure(FALSE, reason = "Package names differ"))
+  }
+
+  ## 2. installed from the same identical local source is good
+  if (candidate$type == "installed") {
+    want_reinst <- is_true_param(resolution$params[[1]], "reinstall")
+    if (want_reinst) {
+      return(structure(FALSE, reason = "Re-install requested"))
+    }
+    # check if the file path matches
+    candidate_url <- candidate$extra[[1]][["remoteurl"]] %||% NA_character_
+    local_url <- resolution$sources[[1]]
+    if (!identical(candidate_url, local_url)) {
+      return(structure(FALSE, reason = "Installed package path mismatch"))
+    }
+
+    # check if the md5sum maches
+    candidate_md5 <- candidate$extra[[1]][["remotemd5sum"]] %||% NA_character_
+    local_md5 <- resolution$extra[[1]][["remotemd5sum"]] %||% NA_character_
+    if (!identical(candidate_md5, local_md5)) {
+      return(structure(FALSE, reason = "Installed package md5sum mismatch"))
+    } 
+
+    # it's good!
+    return(TRUE)
+  }
+
+  ## 3. no other candidate works
   FALSE
 }
 

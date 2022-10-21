@@ -290,7 +290,7 @@ select_next_task <- function(state) {
 
   ## Detect internal error
   if (!all(state$plan$install_done) && all(is.na(state$plan$worker_id))) {
-    stop("Internal error, no task running and cannot select new task")
+    stop("Internal pkgdepends error, no task running and cannot select new task")
   }
 
   ## Looks like nothing else to do
@@ -327,6 +327,9 @@ get_worker_id <- (function() {
   }
 })()
 
+# TODO: test this on Windows
+# nocov start
+
 get_rtools_path <- function() {
   if (!is.null(pkgd_data$rtools_path)) return(pkgd_data$rtools_path)
   pkgd_data$rtools_path <- pkgbuild::without_cache({
@@ -337,10 +340,14 @@ get_rtools_path <- function() {
   pkgd_data$rtools_path
 }
 
+# nocov end
+
 make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
                                needscompilation, binary, cmd_args) {
 
   # For windows, we need ensure the zip.exe bundled with the zip package is on the PATH
+  # TODO: test this on Windows
+  # nocov start
   if (is_windows()) {
     zip_tool_path <- asNamespace("zip")$get_tool("zip")
     rtools <- get_rtools_path()
@@ -353,6 +360,7 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
       )
     )
   }
+  # nocov end
 
   # We also allow an extra subdirectory, e.g. in .tar.gz files downloaded
   # from GHA
@@ -379,8 +387,11 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
   )
 }
 
+# TODO: test this, if possible
+# nocov start
+
 warn_for_long_paths <- function(path, pkg) {
-  if (.Platform$OS.type != "windows") return()
+  if (!is_windows()) return()
   pkg_paths <- dir(path, recursive = TRUE, full.names = TRUE)
   # No files here for R CMD INSTALL --build, path is a file there
   max_len <- max(c(0, nchar(pkg_paths)))
@@ -395,6 +406,8 @@ warn_for_long_paths <- function(path, pkg) {
     wrap = TRUE
   )
 }
+
+# nocov end
 
 start_task_package <- function(state, task) {
   pkgidx <- task$args$pkgidx
@@ -595,7 +608,7 @@ stop_task_package_build <- function(state, worker) {
       cli::cli_h1("Standard output")
       cli::cli_verbatim(worker$stdout)
     } else {
-      alert("info", "Standard output is empty")
+      alert("info", "Standard output is empty")                     # nocov
     }
   }
   update_progress_bar(state, 1L)
@@ -703,15 +716,6 @@ stop_task_build <- function(state, worker) {
 }
 
 installed_note <- function(pkg) {
-
-  standard_note <- function() {
-    if (pkg$type %in% c("cran", "standard")) {
-      ""
-    } else {
-      paste0("(", pkg$type, ")")
-    }
-  }
-
   github_note <- function() {
     meta <- pkg$metadata[[1]]
     paste0("(github::", meta[["RemoteUsername"]], "/", meta[["RemoteRepo"]],
@@ -721,8 +725,8 @@ installed_note <- function(pkg) {
   switch(
     pkg$type,
     cran = "",
-    bioc = "(BioC)",
-    standard = standard_note(),
+    bioc = "(Bioconductor)",
+    standard = "",
     local = "(local)",
     github = github_note()
   )

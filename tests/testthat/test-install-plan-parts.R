@@ -332,3 +332,103 @@ test_that("kill_all_processes that catch/ignore SIGINT", {
 
   px$kill()
 })
+
+test_that("deadlock detection", {
+  plan <- data_frame(
+    package = c("p1", "p2", "p3"),
+    type = "cran",
+    binary = FALSE,
+    dependencies = list("p2", "p3", "p1"),
+    file = NA_character_,
+    needscompilation = FALSE
+  )
+
+  expect_snapshot(
+    error = TRUE,
+    install_package_plan(plan, lib = tempfile())
+  )
+})
+
+test_that("make_build_process", {
+  tmp <- withr::local_tempdir()
+  mkdirp(file.path(tmp, "subdir"))
+  file.copy(
+    test_path("fixtures", "foo"),
+    file.path(tmp, "subdir"),
+    recursive = TRUE
+  )
+
+  p <- make_build_process(
+    tmp,
+    "foo",
+    tempdir(),
+    .libPaths(),
+    vignettes = FALSE,
+    needscompilation = TRUE,
+    binary = FALSE,
+    cmd_args = character()
+  )
+
+  p$wait(5000)
+  p$kill()
+  blt <- p$get_built_file()
+  expect_equal(basename(blt), "foo_0.0.0.9000.tar.gz")
+  expect_true(file.exists(blt))
+
+  p <- make_build_process(
+    file.path(tmp, "subdir"),
+    "foo", tempdir(),
+    .libPaths(),
+    vignettes = FALSE,
+    needscompilation = TRUE,
+    binary = FALSE,
+    cmd_args = character()
+  )
+
+  p$wait(5000)
+  p$kill()
+  blt <- p$get_built_file()
+  expect_equal(basename(blt), "foo_0.0.0.9000.tar.gz")
+  expect_true(file.exists(blt))
+})
+
+test_that("install_args are passed", {
+  withr::local_envvar(PKG_OMIT_TIMES = "true")
+
+  pkg <- source_test_package("foo")
+  plan <- data_frame(
+    type = "local",
+    binary = FALSE,
+    dependencies = list(character()),
+    file = pkg,
+    needscompilation = TRUE,
+    package = "foo",
+    install_args = "--no-inst"
+  )
+
+  lib <- withr::local_tempdir()
+  expect_snapshot(install_package_plan(plan, lib = lib))
+
+  expect_false(file.exists(file.path(lib, "foo", "installed-file")))
+})
+
+test_that("built package is added to the cache", {
+
+})
+
+test_that("installed_note", {
+  expect_snapshot({
+    installed_note(list(type = "cran"))
+    installed_note(list(type = "bioc"))
+    installed_note(list(type = "standard"))
+    installed_note(list(type = "local"))
+    installed_note(list(
+      type = "github",
+      metadata = list(list(
+        RemoteUsername = "r-lib",
+        RemoteRepo = "pak",
+        RemoteSha = "5a4da54df42528545af8a64e83112be21273907c6dfa0f31a0982ca88db6527d"
+      ))
+    ))
+  })
+})

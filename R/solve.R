@@ -214,6 +214,7 @@ pkgplan_i_create_lp_problem <- function(pkgs, config, policy) {
   lp <- pkgplan_i_lp_rversion(lp, rversion)
   lp <- pkgplan_i_lp_satisfy_direct(lp)
   lp <- pkgplan_i_lp_latest_direct(lp)
+  lp <- pkgplan_i_lp_latest_within_repo(lp)
   lp <- pkgplan_i_lp_prefer_installed(lp)
   lp <- pkgplan_i_lp_prefer_binaries(lp)
   lp <- pkgplan_i_lp_prefer_new_binaries(lp)
@@ -446,6 +447,35 @@ pkgplan_i_lp_latest_direct <- function(lp) {
   lp
 }
 
+# CRAN's repo sometimes relies on selecting the latest version of
+# a package, if multiple versions are available. (This is after considering
+# R version requirements.) So we need to do the same, within repo.
+# Otherwise pak/pkgdepends would select the first candidate, and while that
+# always (?) OK for CRAN, the order is not the same in RSPM, apparently.
+
+pkgplan_i_lp_latest_within_repo <- function(lp) {
+  nbr <- seq_len(nrow(lp$pkgs))
+  oid <- ifelse(nbr %in% lp$ruled_out, nbr, 0)
+  key <- paste0(
+    oid, "/", lp$pkgs$mirror, "/", lp$pkgs$repodir, "/",
+    lp$pkgs$platform, "/", lp$pkgs$ref
+  )
+  dups <- unique(key[duplicated(key)])
+  for (dupkey in dups) {
+    cand <- which (key == dupkey)
+    vers <- package_version(lp$pkgs$version[cand])
+    bad <- vers < max(vers)
+    for (wh in cand[bad]) {
+      lp <- pkgplan_i_lp_add_cond(
+        lp, wh, op = "==", rhs = 0, type = "choose-latest"
+      )
+    }
+    lp$ruled_out <- c(lp$ruled_out, cand[bad])
+  }
+
+  lp
+}
+
 pkgplan_i_lp_prefer_installed <- function(lp) {
   pkgs <- lp$pkgs
   inst <- which(
@@ -663,6 +693,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "direct-update") {
     ref <- x$pkgs$ref[cond$vars]
     glue("`{ref}` is direct, needs latest version")
+
+  } else if (cond$type == "choose-latest") {
+    ref <- x$pkgs$ref[cond$vars]
+    glue("`{ref}` has a newer version of the same platform")
 
   } else if (cond$type == "prefer-installed") {
     ref <- x$pkgs$ref[cond$vars]

@@ -73,7 +73,7 @@ changes.</p>
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
     <p><code>config</code> is a list of functions with a closure. You can use it two ways.</p>
 <p>For <em>one</em> set of configuration values in a package, include this in
-.onLoad()`:</p>
+<code>.onLoad()</code>:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/config.html">config</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"prefix"</span><span class="op">)</span></span>
 <span><span class="va">conf</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="st">"myenrry"</span>, <span class="st">"string"</span>, <span class="st">"default-value"</span><span class="op">)</span></span>
 <span><span class="va">...</span></span>
@@ -98,7 +98,7 @@ new set of configuration values.</p>
 
 
 <p>A single configurable entity. A config entry has a name. This name is
-always standarized by replacing dashes with underscores.</p>
+always standardized by replacing dashes with underscores.</p>
 <p>A config entry has a type: a string, a flag, or some
 user defined type. It can also have a default value. Examples:</p><ul><li><p>The URL of an API, which can be a string.</p></li>
 <li><p>Path to a directory to use for caching, either a string, or NULL
@@ -389,10 +389,10 @@ or <code>$update()</code>.</p><div class="section">
 </div>
 
 <div class="section">
-<h3 id="cond-update-update-the-values-of-configration-entries"><code>cond$update()</code>: update the values of configration entries<a class="anchor" aria-label="anchor" href="#cond-update-update-the-values-of-configration-entries"></a></h3>
+<h3 id="cond-update-update-the-values-of-configuration-entries"><code>cond$update()</code>: update the values of configuration entries<a class="anchor" aria-label="anchor" href="#cond-update-update-the-values-of-configuration-entries"></a></h3>
 
 
-<p>You can use this methof to set()<code>and/or</code>$unset()<code>multiple config entries.</code>NULL<code>values in</code>new` will unset the corresponding entry.</p><div class="section">
+<p>You can use this method to set()<code>and/or</code>$unset()<code>multiple config entries.</code>NULL<code>values in</code>new` will unset the corresponding entry.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 
 
@@ -544,7 +544,7 @@ an environment variable (i.e. string).</p></li>
 <h4 id="value-10">Value<a class="anchor" aria-label="anchor" href="#value-10"></a></h4>
 
 
-<p>THe configuration, invisibly.</p>
+<p>The configuration, invisibly.</p>
 </div>
 
 

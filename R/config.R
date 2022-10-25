@@ -13,7 +13,7 @@
 #' `config` is a list of functions with a closure. You can use it two ways.
 #'
 #' For _one_ set of configuration values in a package, include this in
-#' .onLoad()`:
+#' `.onLoad()`:
 #'
 #' ```r
 #' conf <- config$new("prefix")
@@ -46,7 +46,7 @@
 #' ## Config entry (or entry)
 #'
 #' A single configurable entity. A config entry has a name. This name is
-#' always standarized by replacing dashes with underscores.
+#' always standardized by replacing dashes with underscores.
 #'
 #' A config entry has a type: a string, a flag, or some
 #' user defined type. It can also have a default value. Examples:
@@ -437,9 +437,9 @@ config <- local({
     }
 
     # --------------------------------------------------------------------
-    #' ## `cond$update()`: update the values of configration entries
+    #' ## `cond$update()`: update the values of configuration entries
     #'
-    #' You can use this methof to set()` and/or `$unset()` multiple config
+    #' You can use this method to set()` and/or `$unset()` multiple config
     #' entries. `NULL` values in `new` will unset the corresponding entry.
     #'
     #' ### Usage
@@ -586,7 +586,7 @@ config <- local({
     #'
     #' ### Value
     #'
-    #' THe configuration, invisibly.
+    #' The configuration, invisibly.
 
     env$add_type <- function(type_name, check, env_decode) {
       stopifnot(

@@ -2,6 +2,7 @@ CMD
 Capitan
 CentOS
 Codecov
+Config
 El
 HOWTO
 ILP
@@ -13,6 +14,7 @@ Shorthands
 Sur
 cli
 cloneable
+config
 devtools
 funder
 lifecycle

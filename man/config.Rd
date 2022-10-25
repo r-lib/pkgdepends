@@ -8,7 +8,7 @@
 \code{config} is a list of functions with a closure. You can use it two ways.
 
 For \emph{one} set of configuration values in a package, include this in
-.onLoad()`:
+\code{.onLoad()}:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{conf <- config$new("prefix")
 conf$add("myenrry", "string", "default-value")
@@ -46,7 +46,7 @@ changes.
 \subsection{Config entry (or entry)}{
 
 A single configurable entity. A config entry has a name. This name is
-always standarized by replacing dashes with underscores.
+always standardized by replacing dashes with underscores.
 
 A config entry has a type: a string, a flag, or some
 user defined type. It can also have a default value. Examples:
@@ -295,9 +295,9 @@ The configuration, invisibly.
 
 }
 
-\subsection{\code{cond$update()}: update the values of configration entries}{
+\subsection{\code{cond$update()}: update the values of configuration entries}{
 
-You can use this methof to set()\code{and/or}$unset()\verb{multiple config entries.}NULL\verb{values in}new` will unset the corresponding entry.
+You can use this method to set()\code{and/or}$unset()\verb{multiple config entries.}NULL\verb{values in}new` will unset the corresponding entry.
 \subsection{Usage}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{conf$update(new)
@@ -421,7 +421,7 @@ an environment variable (i.e. string).
 
 \subsection{Value}{
 
-THe configuration, invisibly.
+The configuration, invisibly.
 }
 
 }

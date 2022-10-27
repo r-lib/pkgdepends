@@ -173,7 +173,7 @@ async_pnc_crandb <- function(name) {
 async_pnc_crandb_query <- function(name) {
   base <- Sys.getenv(
     "PKG_NAME_CHECK_CRANDB_URL",
-    "https://crandb.r-pkg.org:6984/cran/_design/app/_view/alllower"
+    "https://crandb.r-pkg.org:2053/cran/_design/app/_view/alllower"
   )
   url <- paste0(base, "?key=%22", tolower(name), "%22")
   http_get(url)

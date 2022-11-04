@@ -471,3 +471,8 @@ transform_test_path <- function(x) {
 transform_bytes <- function(x) {
   sub("[(][0-9]+ B[)]", "(<size>)", x)
 }
+
+transform_ext <- function(x) {
+  x <- sub("[.](zip|tgz)", ".zip/tgz", x)
+  x
+}

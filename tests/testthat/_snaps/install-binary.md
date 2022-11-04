@@ -3,22 +3,14 @@
     Code
       install_binary(pkg, lib = lib, quiet = TRUE)
     Message <cliMessage>
-      v Installed /.../foo_0.0.0.9000.tgz
+      v Installed /.../foo_0.0.0.9000.zip/tgz
 
 ---
 
     Code
       install_binary(pkg, lib = lib, quiet = TRUE)
     Message <cliMessage>
-      v Installed /.../foo_0.0.0.9000.tgz
-
-# install_binary corrupt file
-
-    Code
-      install_binary(pkg, lib = lib, quiet = TRUE)
-    Error <simpleError>
-      Package installation failed
-      tar: Error opening archive: truncated gzip input
+      v Installed /.../foo_0.0.0.9000.zip/tgz
 
 # install_extracted_binary, add_metadata
 

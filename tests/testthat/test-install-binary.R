@@ -6,7 +6,9 @@ test_that("install_binary", {
 
   expect_snapshot(
     install_binary(pkg, lib = lib, quiet = TRUE),
-    transform = function(x) sub(dirname(pkg), "/...", x, fixed = TRUE)
+    transform = function(x) {
+      transform_ext(sub(dirname(pkg), "/...", x, fixed = TRUE))
+    }
   )
 
   x <- callr::r(function(l) {
@@ -18,7 +20,9 @@ test_that("install_binary", {
   # overwrite installed package
   expect_snapshot(
     install_binary(pkg, lib = lib, quiet = TRUE),
-    transform = function(x) sub(dirname(pkg), "/...", x, fixed = TRUE)
+    transform = function(x) {
+      transform_ext(sub(dirname(pkg), "/...", x, fixed = TRUE))
+    }
   )
 })
 
@@ -61,9 +65,13 @@ test_that("install_binary corrupt file", {
   writeBin(head(bin, as.integer(length(bin)/2)), pkg)
 
   lib <- withr::local_tempdir()
-  expect_snapshot(
-    error = TRUE,
-    install_binary(pkg, lib = lib, quiet = TRUE)
+  err <- tryCatch(
+    install_binary(pkg, lib = lib, quiet = TRUE),
+    error = function(e) e
+  )
+  expect_true(
+    grepl("Error opening archive", err$message) ||
+    grepl("Cannot open zip file", err$message)
   )
 })
 

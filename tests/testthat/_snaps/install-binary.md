@@ -3,14 +3,14 @@
     Code
       install_binary(pkg, lib = lib, quiet = TRUE)
     Message <cliMessage>
-      v Installed /.../foo_0.0.0.9000.zip/tgz
+      v Installed /.../foo_0.0.0.9000.zip/.tgz/.tar.gz
 
 ---
 
     Code
       install_binary(pkg, lib = lib, quiet = TRUE)
     Message <cliMessage>
-      v Installed /.../foo_0.0.0.9000.zip/tgz
+      v Installed /.../foo_0.0.0.9000.zip/.tgz/.tar.gz
 
 # install_extracted_binary, add_metadata
 

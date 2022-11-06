@@ -473,6 +473,7 @@ transform_bytes <- function(x) {
 }
 
 transform_ext <- function(x) {
-  x <- sub("[.](zip|tgz)", ".zip/tgz", x)
+  x <- sub("[.](zip|tgz)", ".zip/tgz/.tar.gz", x)
+  x <- sub("_R_[-a-z0-9A-Z]+[.]tar[.]gz", ".zip/.tgz/.tar.gz", x)
   x
 }

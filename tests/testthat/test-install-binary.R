@@ -69,10 +69,10 @@ test_that("install_binary corrupt file", {
     install_binary(pkg, lib = lib, quiet = TRUE),
     error = function(e) e
   )
-  expect_true(
-    grepl("Error opening archive", err$message) ||
-    grepl("Cannot open zip file", err$message)
-  )
+
+  # It is fragile to test that error message, because different
+  # tar implementations have different messages.
+  expect_s3_class(err, "error")
 })
 
 test_that("install_binary errors", {

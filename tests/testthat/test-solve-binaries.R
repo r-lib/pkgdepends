@@ -28,6 +28,8 @@ test_that("binary preferred over source", {
 })
 
 test_that("but source is used if that version is required", {
+  # we still need this to have a Bioc repo
+  setup_fake_apps()
   repo1 <- dcf("
     Package: pkg
     Imports: pkg2 (>= 2.0.0)

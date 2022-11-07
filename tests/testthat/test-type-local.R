@@ -26,10 +26,9 @@ test_that("resolve_remote", {
   ))
 
   res$metadata <- as.list(res$metadata)
-  expect_snapshot(
-    res,
-    transform = transform_test_path
-  )
+  # seems really hard to remove the path
+  res$sources[[1]] <- basename(res$sources[[1]])
+  expect_snapshot(res)
 
   ## Relative path?
   fix_dir <- fixture_dir()
@@ -46,10 +45,9 @@ test_that("resolve_remote", {
   )
 
   res$metadata <- as.list(res$metadata)
-  expect_snapshot(
-    res,
-    transform = transform_test_path
-  )
+  # seems really hard to remove the path
+  res$sources[[1]] <- basename(res$sources[[1]])
+  expect_snapshot(res)
 })
 
 test_that("resolution error", {

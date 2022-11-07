@@ -461,13 +461,6 @@ transform_bioc_version <- function(x) {
   sub("3[.][0-9]+/bioc", "<bioc-version>/bioc", x)
 }
 
-transform_test_path <- function(x) {
-  tp <- normalizePath(testthat::test_path())
-  tp2 <- paste0(tp, "/")
-  x <- sub(tp2, "", x, fixed = TRUE)
-  sub(tp, "", x, fixed = TRUE)
-}
-
 transform_bytes <- function(x) {
   sub("[(][0-9]+ B[)]", "(<size>)", x)
 }

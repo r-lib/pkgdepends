@@ -48,7 +48,7 @@
       
       
       $sources
-      [1] "file://fixtures/foobar_1.0.0.tar.gz"
+      [1] "foobar_1.0.0.tar.gz"
       
       $remote
       $remote[[1]]
@@ -159,7 +159,7 @@
       
       
       $sources
-      [1] "file://fixtures/foobar_1.0.0.tar.gz"
+      [1] "foobar_1.0.0.tar.gz"
       
       $remote
       $remote[[1]]

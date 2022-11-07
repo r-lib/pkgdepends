@@ -220,7 +220,8 @@ handle_event <- function(state, evidx) {
 
   ## Read out stdout. If process is done, then read out all
   if (proc$is_alive()) {
-    while (proc$poll_io(0)[["output"]] == "ready") {
+    deadline <- Sys.time() + as.difftime(1, units = "secs")
+    while (Sys.time() < deadline && proc$poll_io(0)[["output"]] == "ready") {
       state$workers[[evidx]]$stdout <-
         c(state$workers[[evidx]]$stdout, out <- proc$read_output(n = 10000))
     }

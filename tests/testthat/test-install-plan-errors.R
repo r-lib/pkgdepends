@@ -63,7 +63,7 @@ test_that("build error", {
   # We can't match the whole output or even the error message, because
   # different compilers have different output. Nevertheless this should
   # appear in the output.
-  expect_match(res$stdout, "return R_NilValue")
+  expect_match(res$stdout, "(return R_NilValue|error: expected)")
 })
 
 test_that("packaging error", {

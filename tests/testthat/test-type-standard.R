@@ -40,7 +40,8 @@ test_that("resolve_remote", {
 
   expect_snapshot(
     as.list(res[, intersect(names(res), cols)]),
-    transform = function(x) transform_local_port(transform_bioc_version(x))
+    transform = function(x) transform_local_port(transform_bioc_version(x)),
+    variant = if (getRversion() < "3.6.0") "old-r" else "new-r"
   )
 
   # Proper error for non-existing package ---------------------------------

@@ -285,6 +285,7 @@ test_that("standard", {
 })
 
 test_that("dependencies are honoured", {
+  setup_fake_apps()
   conf <- current_config()
   cache <- list(
     package = pkgcache::package_cache$new(),
@@ -325,6 +326,7 @@ test_that("dependencies are honoured", {
 })
 
 test_that("error if cannot find package", {
+  setup_fake_apps()
   conf <- current_config()
   cache <- list(
     package = pkgcache::package_cache$new(),
@@ -336,7 +338,7 @@ test_that("error if cannot find package", {
   }
 
   bad <-  c("cran::thiscannotexistxxx", "neitherthisonexxx")
-  res <- synchronise(do(bad))
+  res <- suppressMessages(synchronise(do(bad)))
   expect_equal(res$ref, bad)
   expect_equal(res$type, c("cran", "standard"))
   expect_equal(res$direct, c(TRUE, TRUE))
@@ -344,6 +346,7 @@ test_that("error if cannot find package", {
 })
 
 test_that("dependency types", {
+  setup_fake_apps()
   conf <- current_config()
   conf$set("dependencies", TRUE)
   cache <- list(
@@ -355,7 +358,7 @@ test_that("dependency types", {
     res$when_complete()
   }
 
-  res <- synchronise(do("processx"))
+  res <- suppressMessages(synchronise(do("processx")))
   dt <- res$dep_types
   expect_equal(
     dt[res$package == "processx"],

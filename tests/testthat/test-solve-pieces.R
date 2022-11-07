@@ -92,7 +92,7 @@ test_that("pkgplan_i_lp_dependencies", {
   expect_equal(length(lp$conds), 32)
   expect_equal(
     digest::digest(lp$conds[[3]]),
-    "6d6d331b28d58465cf1df058d40041ec"
+    "e5ef8d21c1027969a7f4dab12f1561f1"
   )
 })
 

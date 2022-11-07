@@ -33,11 +33,13 @@ download_remote_local <- function(resolution, target, target_tree, config,
     unlink(target_tree, recursive = TRUE)
     mkdirp(target_tree)
     if (! file.copy(source_file, target_tree, recursive = TRUE)) {
-      stop("No local file found")
+      # deleted after the resolution?
+      stop("No local file found")                                   # nocov
     }
   } else {
     if (! file.copy(source_file, target, overwrite = TRUE)) {
-      stop("No local file found")
+      # deleted after the resolution?
+      stop("No local file found")                                   # nocov
     }
   }
 

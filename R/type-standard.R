@@ -22,13 +22,13 @@ resolve_remote_standard <- function(remote, direct, config,
   versions <- if ("type" %in% names(remote)) {
     remote$version
   } else  {
-    vcapply(remote, "[[", "version")
+    vcapply(remote, "[[", "version")                                 # nocov
   }
 
   if (all(versions %in% c("", "current"))) {
     resolve_from_metadata(remote, direct, config, cache, dependencies)
   } else {
-    type_cran_resolve_version(remote, direct, config, cache, dependencies)
+    type_cran_resolve_version(remote, direct, config, cache, dependencies) # nocov
   }
 }
 
@@ -101,10 +101,10 @@ satisfy_remote_standard <- function(resolution, candidate, config, ...) {
 }
 
 installedok_remote_standard <- function(installed, solution, config, ...) {
-  if (solution$repotype == "cran") {
+  if (identical(solution$repotype, "cran")) {
     installedok_remote_cran(installed, solution, config, ...)
 
-  } else if (solution$repotype == "bioc") {
+  } else if (identical(solution$repotype, "bioc")) {
     installedok_remote_bioc(installed, solution, config, ...)
 
   } else if (solution$platform != "source") {

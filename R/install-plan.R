@@ -168,17 +168,14 @@ make_start_state <- function(plan, config) {
     package_time = I(rep_list(nrow(plan), as.POSIXct(NA))),
     package_error = I(rep_list(nrow(plan), list())),
     package_stdout = I(rep_list(nrow(plan), character())),
-    package_stderr = I(rep_list(nrow(plan), character())),
     build_done = (plan$type %in% c("deps", "installed")) | plan$binary,
     build_time = I(rep_list(nrow(plan), as.POSIXct(NA))),
     build_error = I(rep_list(nrow(plan), list())),
     build_stdout = I(rep_list(nrow(plan), character())),
-    build_stderr = I(rep_list(nrow(plan), character())),
     install_done = plan$type %in% c("deps", "installed"),
     install_time = I(rep_list(nrow(plan), as.POSIXct(NA))),
     install_error = I(rep_list(nrow(plan), list())),
     install_stdout = I(rep_list(nrow(plan), character())),
-    install_stderr = I(rep_list(nrow(plan), character())),
     worker_id = NA_character_
   )
   plan <- cbind(plan, install_cols)
@@ -221,22 +218,20 @@ handle_events <- function(state, events) {
 handle_event <- function(state, evidx) {
   proc <- state$workers[[evidx]]$process
 
-  ## Read out stdout and stderr. If process is done, then read out all
+  ## Read out stdout. If process is done, then read out all
   if (proc$is_alive()) {
-    state$workers[[evidx]]$stdout <-
-      c(state$workers[[evidx]]$stdout, out <- proc$read_output(n = 10000))
-    state$workers[[evidx]]$stderr <-
-      c(state$workers[[evidx]]$stderr, err <- proc$read_error(n = 10000))
+    deadline <- Sys.time() + as.difftime(1, units = "secs")
+    while (Sys.time() < deadline && proc$poll_io(0)[["output"]] == "ready") {
+      state$workers[[evidx]]$stdout <-
+        c(state$workers[[evidx]]$stdout, out <- proc$read_output(n = 10000))
+    }
   } else {
     state$workers[[evidx]]$stdout <-
       c(state$workers[[evidx]]$stdout, out <- proc$read_all_output())
-    state$workers[[evidx]]$stderr <-
-      c(state$workers[[evidx]]$stderr, err <- proc$read_all_error())
   }
 
   ## If there is still output, then wait a bit more
-  if (proc$is_alive() ||
-      proc$is_incomplete_output() || proc$is_incomplete_error()) {
+  if (proc$is_alive() || proc$is_incomplete_output()) {
     return(state)
   }
 
@@ -247,9 +242,8 @@ handle_event <- function(state, evidx) {
   ## Post-process, this will throw on error
   if (is.function(proc$get_result)) proc$get_result()
 
-  ## Cut stdout and stderr to lines
+  ## Cut stdout to lines
   worker$stdout <- cut_into_lines(worker$stdout)
-  worker$stderr <- cut_into_lines(worker$stderr)
 
   ## Record what was done
   stop_task(state, worker)
@@ -299,7 +293,7 @@ select_next_task <- function(state) {
 
   ## Detect internal error
   if (!all(state$plan$install_done) && all(is.na(state$plan$worker_id))) {
-    stop("Internal error, no task running and cannot select new task")
+    stop("Internal pkgdepends error, no task running and cannot select new task")
   }
 
   ## Looks like nothing else to do
@@ -336,6 +330,9 @@ get_worker_id <- (function() {
   }
 })()
 
+# TODO: test this on Windows
+# nocov start
+
 get_rtools_path <- function() {
   if (!is.null(pkgd_data$rtools_path)) return(pkgd_data$rtools_path)
   pkgd_data$rtools_path <- pkgbuild::without_cache({
@@ -346,10 +343,14 @@ get_rtools_path <- function() {
   pkgd_data$rtools_path
 }
 
+# nocov end
+
 make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
                                needscompilation, binary, cmd_args) {
 
   # For windows, we need ensure the zip.exe bundled with the zip package is on the PATH
+  # TODO: test this on Windows
+  # nocov start
   if (is_windows()) {
     zip_tool_path <- asNamespace("zip")$get_tool("zip")
     rtools <- get_rtools_path()
@@ -362,6 +363,7 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
       )
     )
   }
+  # nocov end
 
   # We also allow an extra subdirectory, e.g. in .tar.gz files downloaded
   # from GHA
@@ -388,8 +390,11 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
   )
 }
 
+# TODO: test this, if possible
+# nocov start
+
 warn_for_long_paths <- function(path, pkg) {
-  if (.Platform$OS.type != "windows") return()
+  if (!is_windows()) return()
   pkg_paths <- dir(path, recursive = TRUE, full.names = TRUE)
   # No files here for R CMD INSTALL --build, path is a file there
   max_len <- max(c(0, nchar(pkg_paths)))
@@ -404,6 +409,8 @@ warn_for_long_paths <- function(path, pkg) {
     wrap = TRUE
   )
 }
+
+# nocov end
 
 start_task_package <- function(state, task) {
   pkgidx <- task$args$pkgidx
@@ -436,7 +443,7 @@ start_task_package_uncompress <- function(state, task) {
   task$args$phase <- "uncompress"
   px <- make_uncompress_process(path, task$args$tree_dir)
   worker <- list(id = get_worker_id(), task = task, process = px,
-                 stdout = character(), stderr = character())
+                 stdout = character())
   state$workers <- c(
     state$workers, structure(list(worker), names = worker$id))
   state$plan$worker_id[pkgidx] <- worker$id
@@ -465,7 +472,7 @@ start_task_package_build <- function(state, task) {
                            needscompilation, binary = FALSE,
                            cmd_args = NULL)
   worker <- list(id = get_worker_id(), task = task, process = px,
-                 stdout = character(), stderr = character())
+                 stdout = character())
   state$workers <- c(
     state$workers, structure(list(worker), names = worker$id))
   state$plan$worker_id[pkgidx] <- worker$id
@@ -496,7 +503,7 @@ start_task_build <- function(state, task) {
   px <- make_build_process(path, pkg, tmp_dir, lib, vignettes, needscompilation,
                            binary = TRUE, cmd_args = cmd_args)
   worker <- list(id = get_worker_id(), task = task, process = px,
-                 stdout = character(), stderr = character())
+                 stdout = character())
   state$workers <- c(
     state$workers, structure(list(worker), names = worker$id))
   state$plan$worker_id[pkgidx] <- worker$id
@@ -517,7 +524,7 @@ start_task_install <- function(state, task) {
   px <- make_install_process(filename, lib = lib, metadata = metadata)
   worker <- list(
     id = get_worker_id(), task = task, process = px,
-    stdout = character(), stderr = character())
+    stdout = character())
 
   state$workers <- c(
     state$workers, structure(list(worker), names = worker$id))
@@ -565,7 +572,6 @@ stop_task_package_uncompress <- function(state, worker) {
     state$plan$package_time[[pkgidx]] <- time
     state$plan$package_error[[pkgidx]] <- ! success
     state$plan$package_stdout[[pkgidx]] <- worker$stdout
-    state$plan$package_stderr[[pkgidx]] <- worker$stderr
     state$plan$worker_id[[pkgidx]] <- NA_character_
 
     throw(new_pkg_uncompress_error(
@@ -574,8 +580,7 @@ stop_task_package_uncompress <- function(state, worker) {
         package = pkg,
         version = version,
         time = time,
-        stdout = worker$stdout,
-        stderr = worker$stderr
+        stdout = worker$stdout
       )
     ))
   }
@@ -606,13 +611,7 @@ stop_task_package_build <- function(state, worker) {
       cli::cli_h1("Standard output")
       cli::cli_verbatim(worker$stdout)
     } else {
-      alert("info", "Standard output is empty")
-    }
-    if (!identical(worker$stderr, "")) {
-      cli::cli_h1("Standard error")
-      cli::cli_verbatim(worker$stdout)
-    } else {
-      alert("info", "Standard error is empty")
+      alert("info", "Standard output is empty")                     # nocov
     }
   }
   update_progress_bar(state, 1L)
@@ -621,7 +620,6 @@ stop_task_package_build <- function(state, worker) {
   state$plan$package_time[[pkgidx]] <- time
   state$plan$package_error[[pkgidx]] <- ! success
   state$plan$package_stdout[[pkgidx]] <- worker$stdout
-  state$plan$package_stderr[[pkgidx]] <- worker$stderr
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (!success) {
@@ -632,7 +630,6 @@ stop_task_package_build <- function(state, worker) {
         package = pkg,
         version = version,
         stdout = worker$stdout,
-        stderr = worker$stderr,
         time = time
       )
     ))
@@ -685,7 +682,6 @@ stop_task_build <- function(state, worker) {
   state$plan$build_time[[pkgidx]] <- time
   state$plan$build_error[[pkgidx]] <- ! success
   state$plan$build_stdout[[pkgidx]] <- worker$stdout
-  state$plan$build_stderr[[pkgidx]] <- worker$stderr
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (!success) {
@@ -695,7 +691,6 @@ stop_task_build <- function(state, worker) {
         package = pkg,
         version = version,
         stdout = worker$stdout,
-        stderr = worker$stderr,          # empty, but anyway...
         time = time
       )
     ))
@@ -724,15 +719,6 @@ stop_task_build <- function(state, worker) {
 }
 
 installed_note <- function(pkg) {
-
-  standard_note <- function() {
-    if (pkg$type %in% c("cran", "standard")) {
-      ""
-    } else {
-      paste0("(", pkg$type, ")")
-    }
-  }
-
   github_note <- function() {
     meta <- pkg$metadata[[1]]
     paste0("(github::", meta[["RemoteUsername"]], "/", meta[["RemoteRepo"]],
@@ -742,8 +728,8 @@ installed_note <- function(pkg) {
   switch(
     pkg$type,
     cran = "",
-    bioc = "(BioC)",
-    standard = standard_note(),
+    bioc = "(Bioconductor)",
+    standard = "",
     local = "(local)",
     github = github_note()
   )
@@ -777,7 +763,6 @@ stop_task_install <- function(state, worker) {
   state$plan$install_time[[pkgidx]] <- time
   state$plan$install_error[[pkgidx]] <- ! success
   state$plan$install_stdout[[pkgidx]] <- worker$stdout
-  state$plan$install_stderr[[pkgidx]] <- worker$stderr
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (!success) {

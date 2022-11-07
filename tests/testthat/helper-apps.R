@@ -1,4 +1,308 @@
 
+# -------------------------------------------------------------------------
+# Dummy CRAN app
+
+cran_app <- function(...) {
+  asNamespace("pkgcache")$cran_app(...)
+}
+
+bioc_app <- function(...) {
+  asNamespace("pkgcache")$bioc_app(...)
+}
+
+dcf <- function(...) {
+  asNamespace("pkgcache")$dcf(...)
+}
+
+fix_port <- function(...) {
+  asNamespace("pkgcache")$fix_port(...)
+}
+
+cran_app_pkgs <- dcf("
+  Package: pkg1
+  Version: 1.0.0
+
+  Package: pkg1
+  Version: 0.9.0
+
+  Package: pkg1
+  Version: 0.8.0
+
+  Package: pkg2
+  Version: 1.0.0
+  Depends: pkg1
+
+  Package: pkg3
+  Version: 1.0.0
+  Depends: pkg2
+
+  Package: pkg3
+  Version: 0.9.9
+
+  Package: crayon
+  Version: 1.0.0
+
+  Package: needspak
+  Imports: pak
+
+  Package: pak
+
+  Package: futurama
+  Depends: R (>= 3000.0)
+
+  Package: needsfuturama
+  Imports: futurama
+
+  Package: dplyr
+  Imports: tibble
+  Suggests: testthat
+
+  Package: tibble
+
+  Package: testthat
+")
+
+fake_cran <- webfakes::local_app_process(
+  cran_app(cran_app_pkgs),
+  opts = webfakes::server_opts(num_threads = 3)
+)
+
+bioc_app_pkgs <- dcf("
+  Package: Biobase
+  Version: 1.2.3
+  Depends: R (>= 2.10), BiocGenerics(>= 0.27.1), utils
+  Imports: methods
+  Suggests: tools, tkWidgets, ALL, RUnit, golubEsets
+")
+
+fake_bioc <- webfakes::local_app_process(
+  bioc_app(bioc_app_pkgs),
+  opts = webfakes::server_opts(num_threads = 3)
+)
+
+setup_fake_apps <- function(
+  cran_app = NULL,
+  bioc_app = NULL,
+  cran_repo = NULL,
+  bioc_repo = NULL,
+  cran_options = NULL,
+  bioc_options = NULL,
+  .local_envir = parent.frame()) {
+
+  cran_app <- if (!is.null(cran_app)) {
+                cran_app
+              } else if (!is.null(cran_repo)) {
+                app <- webfakes::local_app_process(
+                  cran_app(cran_repo, options = as.list(cran_options)),
+                  opts = webfakes::server_opts(num_threads = 3),
+                  .local_envir = .local_envir
+                )
+                assign(".cran_app", app, envir = .local_envir)
+                app
+              } else {
+                fake_cran
+              }
+
+  bioc_app <- if (!is.null(bioc_app)) {
+                bioc_app
+              } else if (!is.null(bioc_repo)) {
+                app <- webfakes::local_app_process(
+                  bioc_app(bioc_repo, options = as.list(bioc_options)),
+                  opts = webfakes::server_opts(num_threads = 3),
+                  .local_envir = .local_envir
+                )
+                assign(".bioc_app", app, envir = .local_envir)
+                app
+              } else {
+                fake_bioc
+              }
+
+  withr::local_options(
+    repos = c(CRAN = cran_app$url()),
+    pkg.cran_metadata_url = cran_app$url(),
+    .local_envir = .local_envir
+  )
+  withr::local_envvar(
+    R_PKG_CRAN_METADATA_URL = cran_app$url(),
+    R_BIOC_CONFIG_URL = paste0(bioc_app$url(), "/config.yaml"),
+    R_BIOC_VERSION = NA_character_,
+    R_BIOC_MIRROR = bioc_app$url(),
+    .local_envir = .local_envir
+  )
+}
+
+# -------------------------------------------------------------------------
+# GH app
+
+gh_app_desc <- function(pkg) {
+  sprintf("Package: %s\nVersion: 1.0.0\n", pkg)
+}
+
+random_sha <- function() {
+  paste(
+    sample(c(0:9, letters[1:6]), 64, replace = TRUE),
+    collapse = ""
+  )
+}
+
+gh_app_repos <- list(
+  users = list(
+    "r-lib" = list(
+      repos = list(
+        pak = list(
+          commits = list(
+            list(
+              sha = "111ef906acb58fe406370f7bc0a72cac55dbbb231ea687494c25742ca521255a",
+              branch = "main",
+              tag = "HEAD",
+              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+            ),
+            list(
+              sha = "a503fe843f11c279864f29d58137f8de319d115b239ce48ccc15406306019480",
+              branch = "main",
+              tag = "v0.1.2",
+              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+            ),
+            list(
+              sha = "e65de1e9630dbfcaf1044718b742bf806486b107239ce48ccc15406306019480",
+              branch = "main",
+              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+            ),
+            list(
+              sha = "b001d6ddeab1589ad367b62baabbeeb2af3b0ebac2e61d239df660c1d63e3232",
+              branch = "somebranch",
+              pull = 90,
+              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+            )
+          )
+        ),
+        bad = list(
+          commits = list(
+            list(
+              sha = "546d9eab84b002c35302dda3822560950c7528cfc9ef1b916cecd9dbef3cf6b6",
+              tag = "HEAD",
+              branch = "main",
+              files = list(
+                DESCRIPTION = "this is not\na good file\n",
+                "bin/DESCRIPTION" = charToRaw("\xf0\xb0\xa0")
+              )
+            ),
+            list(
+              sha = "546d9eab84b002c35302dda3822560950c7528cfc9ef1b916cecd9dbef3cf6b6",
+              pull = 100,
+              branch = "other",
+              files = list(DESCRIPTION = "this is not\na good file\n")
+            )
+          )
+        ),
+        crayon = list(
+          commits = list(
+            list(
+              sha = "bdd9a1bcf062396790c341cf1dba563eb0277f2ca0a6d524bc3da98a9a6f2975",
+              tag = "HEAD",
+              branch = "main",
+              files = list(DESCRIPTION = gh_app_desc("crayon"), NAMESPACE = "")
+            ),
+            list(
+              sha = "b5221ab024605019800ddea474f7a0981a4d53f719f5af2b1af627b34e0760b2",
+              branch = "b5221ab024605019800ddea474f7a0981a4d53f719f5af2b1af627b34e0760b2",
+              files = list(DESCRIPTION = gh_app_desc("crayon"), NAMESPACE = "")
+            ),
+            list(
+              sha = "9d93692f8f7c1d6b2308d0c4aa83cdc2d99ec1fd0097cede1d9aa1301247cb01",
+              branch = "pr61",
+              pull = 79,
+              files = list(DESCRIPTION = gh_app_desc("crayon"), NAMESPACE = "")
+            )
+          )
+        ),
+        pkgconfig = list(
+          commits = list(
+            list(
+              sha = "c9be9cde5e91ad771d1b5150781e6e8d32a7be0e9ab227bdf45cb41ad513004c",
+              branch = "pr7",
+              pull = 7,
+              files = list(DESCRIPTION = gh_app_desc("pkgconfig"), NAMESPACE = "")
+            )
+          )
+        )
+      )
+    ),
+
+    "wesm" = list(
+      repos = list(
+        "feather" = list(
+          commits = list(
+            list(
+              sha = "ec40c1eae1ac83b86fc41bb2f5cd916152d19015649c3d209f2c08115dd993b1",
+              tag = "HEAD",
+              branch = "main",
+              files = list("R/DESCRIPTION" = gh_app_desc("feather"), NAMESPACE = "")
+            )
+          )
+        )
+      )
+    ),
+
+    "gaborcsardi" = list(
+      repos = list(
+        "secret-test" = list(
+          commits = list(
+            list(
+              sha = "599cc5d745d2079eddf1ff582b83d381e885cd30f33bafebbe83e73d010cfa93",
+              tag = "HEAD",
+              branch = "main",
+              token = "b9984750bea6a170081ca98255c3b43fe5fb0978",
+              files = list("DESCRIPTION" = gh_app_desc("secret"), NAMESPACE = "")
+            )
+          )
+        ),
+        "secret" = list(
+          commits = list(
+            list(
+              sha = "7f9fb08e26015e05529cd4d7fc2a7edbd88c783d456ff83a96dcc58ace1d3ea5",
+              tag = "HEAD",
+              branch = "x",
+              files = list("DESCRIPTION" = gh_app_desc("secret"), NAMESPACE = "")
+            )
+          )
+        )
+      )
+    ),
+
+    "tidyverse" = list(
+      repos = list(
+        "tidyverse.org" = list(
+          commits = list(
+            list(
+              sha = "d998eab68c66d862c31a6091f9e71200b13bb44ea754e3371d098dcaa20e51a4",
+              tag = "HEAD",
+              branch = "main",
+              files = list("foo" = "bar")
+            )
+          )
+        )
+      )
+    )
+  )
+)
+
+fake_gh <- webfakes::local_app_process(
+  gh_app(gh_app_repos),
+  opts = webfakes::server_opts(num_threads = 3)
+)
+
+setup_fake_gh_app <- function(.local_envir = parent.frame()) {
+  withr::local_envvar(
+    .local_envir = .local_envir,
+    R_PKG_GITHUB_API_URL = fake_gh$url()
+  )
+}
+
+
+# -------------------------------------------------------------------------
+# Name check app
+
 new_check_app <- function() {
   `%||%` <- function(l, r) if (is.null(l)) r else l
 
@@ -144,3 +448,25 @@ check_app <- webfakes::new_app_process(
   new_check_app(),
   opts = webfakes::server_opts(num_threads = 4)
 )
+
+transform_no_srcref <- function(x) {
+  sub("[ ]*at [-a-zA-Z0-9]+[.]R:[0-9]+:[0-9]+:", ":", x)
+}
+
+transform_local_port <- function(x) {
+  sub("127\\.0\\.0\\.1:[0-9]+", "127.0.0.1:<port>", x)
+}
+
+transform_bioc_version <- function(x) {
+  sub("3[.][0-9]+/bioc", "<bioc-version>/bioc", x)
+}
+
+transform_bytes <- function(x) {
+  sub("[(][0-9]+ B[)]", "(<size>)", x)
+}
+
+transform_ext <- function(x) {
+  x <- sub("[.](zip|tgz)", ".zip/.tgz/.tar.gz", x)
+  x <- sub("_R_[-_a-z0-9A-Z]+[.]tar[.]gz", ".zip/.tgz/.tar.gz", x)
+  x
+}

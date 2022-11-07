@@ -7,8 +7,7 @@ test_that("build_package", {
 })
 
 test_that("vignettes can be turned on and off", {
-  skip_on_cran()
-  skip_if_offline()
+  setup_fake_apps()
   local_cli_config()
   dir.create(tmplib <- tempfile())
   on.exit(rimraf(tmplib), add = TRUE)

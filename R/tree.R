@@ -75,7 +75,7 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
     trees <- c(trees, key)
   }
 
-  class(trees) <- c("tree", "character")
+  class(trees) <- c("cli_tree", "tree", "character")
   trees
 }
 

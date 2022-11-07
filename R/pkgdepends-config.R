@@ -197,6 +197,10 @@ current_config <- function() {
   #'   set.
   conf$add("sysreqs_verbose", "flag", default_sysreqs_verbose)
 
+  #' * `use_bioconductor`: whether to automatically use the Bioconductor
+  #'   repositories. Defaults to `TRUE`.
+  conf$add("use_bioconductor", "flag", TRUE)
+
   conf$lock()
   conf
 }

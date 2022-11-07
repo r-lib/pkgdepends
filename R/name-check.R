@@ -144,7 +144,7 @@ async_cranlike_check <- function(name) {
 
   meta <- pkgcache::cranlike_metadata_cache$new(
     platforms = "source",
-    bioc = TRUE,
+    bioc = current_config()$get("use_bioconductor"),
     cran_mirror = "https://cran.r-project.org",
     repos = repos,
     update_after = as.difftime(5, units = "mins"))
@@ -778,7 +778,7 @@ function() {
     compress = "xz"
   )
 }
-#nocov end
+# nocov end
 
 pnc_bioc_old_annotation <- function() {
   readRDS(system.file("exdata", "biocpackages.rds", package = "pkgdepends"))

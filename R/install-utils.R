@@ -59,10 +59,6 @@ format.package_uncompress_error <- function(x, ...) {
     stdout <- last_stdout_lines(x$data$stdout, "", prefix = "O> ")[-(1:2)]
     out <- c(out, "", "Standard output:", stdout)
   }
-  if (!is.null(x$data$stderr)) {
-    stderr <- last_stdout_lines(x$data$stderr, "", prefix = "E> ")[-(1:2)]
-    out <- c(out, "", "Standard error:", stderr)
-  }
   out
 }
 

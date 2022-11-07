@@ -12,93 +12,98 @@ test_that("parse_remote", {
 })
 
 test_that("resolve_remote", {
-
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_apps()
 
   conf <- current_config()
   cache <- list(package = NULL,
                 metadata = pkgcache::get_cranlike_metadata_cache())
 
-  res <- synchronise(
-    resolve_remote_bioc(parse_pkg_refs("bioc::Biobase")[[1]], TRUE, conf,
-                        cache, dependencies = FALSE)
-  )
+  res <- suppressMessages(synchronise(resolve_remote_bioc(
+    parse_pkg_ref("bioc::Biobase"),
+    TRUE,
+    conf,
+    cache,
+    dependencies = FALSE
+  )))
 
-  expect_true(inherits(res, "tbl"))
-  expect_true(all(res$ref == "bioc::Biobase"))
-  expect_true(all(res$type == "bioc"))
-  expect_true(all(res$direct))
-  expect_true(all(res$status == "OK"))
-  expect_true(all(res$package == "Biobase"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "bioc"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemotePkgRef") == "bioc::Biobase"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
+  res$md5sum <- "<md5sum>"
+
+  expect_snapshot(
+    as.list(res),
+    transform = function(x) transform_local_port(transform_bioc_version(x)),
+    variant = if (getRversion() < "3.6.0") "old-r" else "new-r"
+  )
 })
 
 test_that("failed resolution", {
-
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_apps()
 
   conf <- current_config()
   cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
 
-  ref <- paste0("bioc::", basename(tempfile()))
-  res <- synchronise(
-    resolve_remote_bioc(parse_pkg_refs(ref)[[1]], TRUE, conf,
-                        cache, dependencies = FALSE)
-  )
+  res <- suppressMessages(synchronise(resolve_remote_bioc(
+    parse_pkg_ref("bioc::nosuchpackageinbiocforsure"),
+    TRUE,
+    conf,
+    cache,
+    dependencies = FALSE
+  )))
 
   expect_true(all(res$status == "FAILED"))
 
-  ## Existing package, non-existing version
-
-  skip("TODO")
-
-  r <- pkg_plan$new(
-    "bioc::Biobase@0.0", config = list(cache_dir = tmp))
-  expect_error(r$resolve(), NA)
-  res <- r$get_resolution()
-
-  expect_true(all(res$data$status == "FAILED"))
+  expect_snapshot(
+    as.list(res),
+    transform = function(x) transform_local_port(transform_bioc_version(x))
+  )
 })
 
 test_that("download_remote", {
-
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_apps()
 
   dir.create(tmp <- tempfile())
   dir.create(tmp2 <- tempfile())
   on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
 
   conf <- current_config()
-  conf$platforms <- "macos"
+  conf$platforms <- "source"
   conf$cache_dir <- tmp
   conf$package_cache_dir <- tmp2
   cache <- list(
     package = pkgcache::package_cache$new(conf$package_cache_dir),
-    metadata = pkgcache::get_cranlike_metadata_cache())
+    metadata = pkgcache::get_cranlike_metadata_cache()
+  )
 
-  res <- synchronise(
-    resolve_remote_bioc(parse_pkg_refs("bioc::Biobase")[[1]], TRUE, conf, cache,
-                        dependencies = FALSE))
+  res <- suppressMessages(synchronise(resolve_remote_bioc(
+    parse_pkg_ref("bioc::Biobase"),
+    TRUE,
+    conf,
+    cache,
+    dependencies = FALSE
+  )))
 
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-t")
-  dl <- synchronise(
-    download_remote_bioc(res[1,], target, tree, conf, cache,
-                         on_progress = NULL))
+  dl <- synchronise(download_remote_bioc(
+    res[1,],
+    target,
+    tree,
+    conf,
+    cache,
+    on_progress = NULL
+  ))
 
   expect_equal(dl, "Got")
   expect_true(file.exists(target))
 
   unlink(target)
-  dl2 <- synchronise(
-    download_remote_bioc(res[1,], target, tree, conf, cache,
-                         on_progress = NULL))
+  dl2 <- synchronise(download_remote_bioc(
+    res[1,],
+    target,
+    tree,
+    conf,
+    cache,
+    on_progress = NULL
+  ))
   expect_true(dl2 %in% c("Had", "Current"))
   expect_true(file.exists(target))
 })
@@ -161,4 +166,77 @@ test_that("satisfies_remote", {
     version = "2.0.0",
     extra = list(list(repotype = "bioc"))))
   expect_true(satisfy_remote_bioc(res, ok4))
+})
+
+test_that("satisfies_remote 2", {
+  res <- make_fake_resolution(`bioc::eisa@>=1.0.0` = list(direct = TRUE))
+
+  bad1 <- make_fake_resolution(`installed::foobar` = list(
+    package = "eisa",
+    version = "0.0.1",
+    extra = list(list(repotype = "bioc"))
+  ))
+  expect_false(satisfy_remote_bioc(res, bad1))
+
+  res2 <- make_fake_resolution(`bioc::eisa` = list())
+
+  ok1 <- make_fake_resolution(`installed::foobar` = list(
+    package = "eisa",
+    version = "0.0.1",
+    extra = list(list(repotype = "bioc"))
+  ))
+  expect_true(satisfy_remote_bioc(res2, ok1))
+})
+
+test_that("installedok", {
+  # Bioc binary
+  sol <- list(
+    repotype = "bioc",
+    package = "package",
+    version = "1.0.0",
+    platform = "aarch64-apple-darwin20",
+    built = "R 4.2.0; aarch64-apple-darwin20; 2022-10-08 08:37:45 UTC; unix"
+  )
+  expect_true(installedok_remote_standard(
+    list(
+      repotype = "cran",
+      package = "package",
+      version = "1.0.0",
+      platform = "aarch64-apple-darwin20",
+      built = "R 4.2.0; aarch64-apple-darwin20; 2022-10-08 08:37:45 UTC; unix"
+    ),
+    sol
+  ))
+  expect_false(installedok_remote_standard(
+    list(
+      package = "package",
+      version = "1.0.0",
+      platform = "aarch64-apple-darwin20",
+      built = "R 4.2.0; aarch64-apple-darwin20; 2022-11-08 08:37:45 UTC; unix"
+    ),
+    sol
+  ))
+
+  # Bioc source
+  sol <- list(
+    repotype = "bioc",
+    package = "package",
+    version = "1.0.0",
+    platform = "source"
+  )
+  expect_true(installedok_remote_standard(
+    list(
+      package = "package",
+      version = "1.0.0",
+      repotype = "bioc"
+    ),
+    sol
+  ))
+  expect_false(installedok_remote_standard(
+    list(
+      package = "package",
+      version = "1.0.0"
+    ),
+    sol
+  ))
 })

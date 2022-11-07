@@ -33,7 +33,7 @@ local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
 
 binary_test_package <- function(name) {
   mkdirp(tmp <- tempfile())
-  file.copy(test_path(name), tmp, recursive = TRUE)
+  file.copy(test_path("fixtures", name), tmp, recursive = TRUE)
   zip_path <- system.file(package = "zip", "bin", .Platform$r_arch)
   withr::with_path(
     zip_path,
@@ -43,7 +43,7 @@ binary_test_package <- function(name) {
 
 source_test_package <- function(name) {
   mkdirp(tmp <- tempfile())
-  file.copy(test_path(name), tmp, recursive = TRUE)
+  file.copy(test_path("fixtures", name), tmp, recursive = TRUE)
   pkgbuild::build(file.path(tmp, name), binary = FALSE, quiet = TRUE)
 }
 
@@ -78,8 +78,9 @@ make_dummy_worker_process <- function(n_iter = 10, sleep = 1, status = 0) {
         }
                                         # nocov end
       },
-      args = list(n_iter = n_iter, sleep = sleep, status = status)
-      ))
+      args = list(n_iter = n_iter, sleep = sleep, status = status),
+      stderr = "2>&1"
+    ))
   }
 }
 

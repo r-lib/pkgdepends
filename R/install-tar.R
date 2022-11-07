@@ -21,7 +21,7 @@
 
 make_untar_process <- function(tarfile, files = NULL, exdir = ".",
                                restore_times = TRUE, post_process = NULL,
-                               stdout = "|", stderr = "|", ...) {
+                               stdout = "|", stderr = "2>&1", ...) {
   internal <- need_internal_tar()
   if (internal) {
     r_untar_process$new(tarfile, files, exdir, restore_times,
@@ -106,7 +106,7 @@ external_untar_process <- R6::R6Class(
       restore_times = TRUE,
       tar = Sys.getenv("TAR", "tar"),
       stdout = "|",
-      stderr = "|",
+      stderr = "2>&1",
       post_process = NULL,
       ...) {
 
@@ -167,7 +167,7 @@ r_untar_process <- R6::R6Class(
 
     initialize = function(tarfile, files = NULL, exdir = ".",
                           restore_times = TRUE, post_process = NULL,
-                          stdout = "|", stderr = "|", ...) {
+                          stdout = "|", stderr = "2>&1", ...) {
       options <- list(
         tarfile = normalizePath(tarfile),
         files = files,
@@ -300,22 +300,23 @@ run_uncompress_process <- function(archive, exdir = ".", ...) {
     ))
   }
 
+  stdout <- tempfile()
   if (type == "zip") {
     external_process(
       make_unzip_process,
       zipfile = archive,
       exdir = exdir,
-      stdout = tempfile(),
-      stderr = tempfile()
-      )
+      stdout = stdout,
+      stderr = stdout
+    )
 
   } else {
     external_process(
       make_untar_process,
       tarfile = archive,
       exdir = exdir,
-      stdout = tempfile(),
-      stderr = tempfile()
+      stdout = stdout,
+      stderr = stdout
     )
   }
 }

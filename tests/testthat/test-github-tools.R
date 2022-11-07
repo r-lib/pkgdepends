@@ -1,70 +1,59 @@
 
 test_that("type_github_get_data, sha, description", {
-  skip_if_offline()
+  setup_fake_gh_app()
 
-  is_sha <- function(x) {
-    is.character(x) && length(x) == 1 && !is.na(x) &&
-      grepl("^[0-9a-f]+$", x)
-  }
-
-  cases <- c(
-    "r-lib/pak",
-    "r-lib/pak@HEAD",
-    "r-lib/pak@v0.1.2",
-    "r-lib/pak@e65de1e9630d",
-    "r-lib/pak@e65de1e9630dbfcaf1044718b742bf806486b107",
-    "r-lib/pak#90",
-    "wesm/feather/R@ec40c1eae1ac83b86fc41bb2f5cd916152d19015"
+  expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak")))
   )
-
-  synchronise(async_map(cases, function(c) {
-    rem <- parse_pkg_ref(c)
-    type_github_get_data(rem)$
-      then(function(data) {
-        expect_true(is_sha(data$sha), info = c)
-        expect_true(inherits(data$description, "description"))
-      })
-  }))
+  expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@HEAD")))
+  )
+  expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@v0.1.2")))
+  )
+  expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref(
+      "r-lib/pak@e65de1e9630d"
+    )))
+  )
+  expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref(
+      "r-lib/pak@e65de1e9630dbfcaf1044718b742bf806486b107"
+    )))
+  )
+  expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak#90")))
+  )
+  expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref(
+      "wesm/feather/R@ec40c1eae1ac83b86fc41bb2f5cd916152d19015"
+    )))
+  )
 })
 
 test_that("type_github_get_data, no such user", {
-  skip_if_offline()
-
-  rem <- parse_pkg_ref("r-lib-xxx-xxx/pak")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Can't find GitHub repo .*r-lib-xxx-xxx.*",
-    class = "github_error"
+  setup_fake_gh_app()
+  expect_snapshot(error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak")))
   )
-
-  rem <- parse_pkg_ref("r-lib-xxx-xxx/pak#90")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Can't find GitHub repo .*r-lib-xxx-xxx.*",
-    class = "github_error"
+  expect_snapshot(error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak#90")))
   )
 })
 
 test_that("type_github_get_data, no such repo", {
-  skip_if_offline()
-
-  rem <- parse_pkg_ref("r-lib/pak-xxx-xxx")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "GitHub repo .*pak-xxx-xxx.*",
-    class = "github_error"
+  setup_fake_gh_app()
+  expect_snapshot(error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
   )
-
-  rem <- parse_pkg_ref("r-lib/pak-xxx-xxx#90")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "GitHub repo .*pak-xxx-xxx.*",
-    class = "github_error"
+  expect_snapshot(error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
   )
 })
 
 test_that("github_query, invalid PAT", {
-  skip_if_offline()
+  setup_fake_gh_app()
+
   withr::local_envvar(c(
     GITHUB_PAT_GITHUB_COM = "invalid",
     GITHUB_TOKEN = "invalid",
@@ -72,24 +61,20 @@ test_that("github_query, invalid PAT", {
     CI_GITHUB_TOKEN = "invalid"
   ))
 
-  rem <- parse_pkg_ref("r-lib/pak-xxx-xxx")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Bad GitHub credentials, make sure that your GitHub token is valid",
-    class = "github_error"
+  expect_snapshot(error = TRUE, transform = transform_no_srcref,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
   )
-
-  rem <- parse_pkg_ref("r-lib/pak-xxx-xxx#90")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Bad GitHub credentials, make sure that your GitHub token is valid",
-    class = "github_error"
+  expect_snapshot(error = TRUE, transform = transform_no_srcref,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
   )
 })
 
 test_that("github_query, no internet", {
-  # TODO: we can test this with toxiproxy
-  expect_true(TRUE)
+  withr::local_envvar(R_PKG_GITHUB_API_URL = "https://127.0.0.1:80")
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak")))
+  )
 })
 
 test_that("github_query, rate limited", {
@@ -105,96 +90,117 @@ test_that("github_query, rate limited", {
 })
 
 test_that("github_query, access denied", {
-  skip_if_offline()
+  setup_fake_gh_app()
   withr::local_envvar(
     c(GITHUB_PAT_GITHUB_COM = NA_character_,
       GITHUB_TOKEN = NA_character_,
       GITHUB_PAT = NA_character_)
   )
 
-  rem <- parse_pkg_ref("gaborcsardi/secret-test")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "GitHub repo .*secret-test*",
-    class = "github_error"
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("gaborcsardi/secret-test")))
   )
 })
 
 test_that("cannot find R package on GitHub, no DESCRIPTION", {
-  skip_if_offline()
+  setup_fake_gh_app()
 
-  rem <- parse_pkg_ref("tidyverse/tidyverse.org")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Can't find R package in GitHub repo tidyverse/tidyverse.org",
-    class = "github_error"
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("tidyverse/tidyverse.org")))
   )
 
-  rem <- parse_pkg_ref("r-lib/crayon/R")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Can't find R package in GitHub repo r-lib/crayon in directory 'R'",
-    class = "github_error"
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/cranyon/R")))
   )
 
-  rem <- parse_pkg_ref("r-lib/crayon/R#79")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Can't find R package in GitHub repo r-lib/crayon in directory 'R'",
-    class = "github_error"
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/crayon/R#79")))
   )
 })
 
 test_that("cannot parse DESCRIPTION on GH", {
-  skip_if_offline()
+  setup_fake_gh_app()
 
-  ref <- "r-lib/pkgdepends/tests/testthat/fixtures/bad-desc@f5a84c34f5"
-  expect_error(
-    synchronise(type_github_get_data(parse_pkg_ref(ref))),
-    "Can't parse DESCRIPTION file in GitHub repo",
-    class = "github_error"
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@main"))),
+    transform = transform_no_srcref
   )
 
-  ref <- "r-lib/pkgdepends/tests/testthat/fixtures/bad-desc#144"
-  expect_error(
-    synchronise(type_github_get_data(parse_pkg_ref(ref))),
-    "Can't parse DESCRIPTION file in GitHub repo",
-    class = "github_error"
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad#100"))),
+    transform = transform_no_srcref
+  )
+
+  # binary description
+  expect_snapshot(
+    error = TRUE,
+    synchronize(type_github_get_data(parse_pkg_ref("r-lib/bad/bin@main"))),
+    transform = transform_no_srcref
   )
 })
 
 test_that("http error", {
-  # Do not send a real token to httpbin.org
-  withr::local_envvar(c(
-    GITHUB_PAT_GITHUB_COM = "foobar",
-    GITHUB_TOKEN = "foobar",
-    GITHUB_PAT = "foobar"
-  ))
-
-  err <- tryCatch(
-    synchronise(github_query("foobar", url = "https://httpbin.org/status/404")),
-    error = function(e) e
+  withr::local_envvar(
+    R_PKG_GITHUB_API_URL = paste0(fake_gh$url(), "/404")
   )
 
-  expect_match(err$message, "GitHub HTTP error", fixed = TRUE)
-  expect_match(err$parent$message, "Not Found (HTTP 404)", fixed = TRUE)
+  expect_snapshot(
+    error = TRUE,
+    transform = transform_no_srcref,
+    synchronise(type_github_get_data(parse_pkg_ref("foo/bar")))
+  )
 })
 
 test_that("no such PR error", {
-  rem <- parse_pkg_ref("r-lib/pak#89")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Can't find PR #89 in",
-    class = "github_error"
+  setup_fake_gh_app()
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak#89"))),
+    transform = transform_no_srcref
   )
 })
 
 test_that("no such ref error", {
-  rem <- parse_pkg_ref("r-lib/pak@bad-ref-no-no-no")
-  expect_error(
-    synchronise(type_github_get_data(rem)),
-    "Can't find reference @bad-ref-no-no-no in GitHub repo r-lib/pak",
-    fixed = TRUE,
-    class = "github_error"
+  setup_fake_gh_app()
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@bad-ref-no-no-no"))),
+    transform = transform_no_srcref
   )
+})
+
+test_that("builtin token messages once per session", {
+  once_per_session(reset = TRUE)
+  mockery::stub(type_github_builtin_token, "sample", "builtin-token")
+  expect_snapshot(type_github_builtin_token())
+  expect_snapshot(type_github_builtin_token())
+})
+
+test_that("CI specific token is picked up if set", {
+  withr::local_envvar(
+    "CI_GITHUB_TOKEN" = "ci-token",
+    "CI" = "true"
+  )
+  expect_snapshot(type_github_get_headers())
+})
+
+test_that("builtin token is used if no other token is available", {
+  withr::local_envvar(
+    "CI" = NA_character_,
+    GITHUB_PAT = NA_character_,
+    GITHUB_TOKEN = NA_character_,
+    GITHUB_PAT_GITHUB_COM = "FAIL"
+  )
+  mockery::stub(
+    type_github_get_headers,
+    "type_github_builtin_token",
+    "builtin-token"
+  )
+  expect_snapshot(type_github_get_headers())
 })

@@ -52,7 +52,10 @@ Suggests:
     spelling,
     testthat,
     tibble,
-    webfakes
+    webfakes (>= 1.1.5.9000)
+Remotes:
+    r-lib/pkgcache,
+    r-lib/webfakes
 Config/Needs/coverage:
     covr,
     rmarkdown,

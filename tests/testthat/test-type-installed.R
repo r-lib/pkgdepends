@@ -1,8 +1,6 @@
 
 test_that("resolve", {
-
-  skip_on_cran()
-  skip_if_offline()
+  setup_fake_apps()
 
   conf <- current_config()
 
@@ -36,8 +34,7 @@ test_that("resolve", {
 })
 
 test_that("download", {
-  skip_if_offline()
-  skip_on_cran()
+  setup_fake_apps()
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)

@@ -1,288 +1,154 @@
 
 test_that("resolve_remote", {
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  skip_if_offline()
-  skip_on_cran()
+  prop <- new_pkg_installation_proposal("pkg1")
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-  conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
-
-  suppressMessages(
-    res <- synchronise(
-      resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
-                          dependencies = FALSE))
-  )
-
-  expect_true(inherits(res, "tbl"))
-  expect_true(all(res$ref == "cran::crayon"))
-  expect_true(all(res$type == "cran"))
-  expect_true(all(res$direct))
-  expect_true(all(res$status == "OK"))
-  expect_true(all(res$package == "crayon"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteType")== "cran"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemotePkgRef") == "cran::crayon"))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteSha") == res$version))
-  expect_true(all(vcapply(res$metadata, "[[", "RemoteRepos") == res$mirror))
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 })
 
 test_that("resolve_remote, multiple", {
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  skip_if_offline()
-  skip_on_cran()
+  prop <- new_pkg_installation_proposal(c("cran::pkg3", "pkg1"))
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-  conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
+})
 
-  rem <- parse_pkg_refs(c("cran::crayon", "cran::glue"))
-  res <- synchronise(
-    resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
+test_that("dependencies", {
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  expect_true(inherits(res, "tbl"))
-  expect_true(all(res$ref %in% c("cran::crayon",  "cran::glue")))
-  expect_true(all(res$type == "cran"))
-  expect_true(all(res$direct))
-  expect_true(all(res$status == "OK"))
-  expect_true(all(res$package %in% c("crayon", "glue")))
+  prop <- new_pkg_installation_proposal("pkg3")
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
+
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 })
 
 test_that("failed resolution", {
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  skip_if_offline()
-  skip_on_cran()
+  prop <- new_pkg_installation_proposal("cran::xxyyzzqwertyqwerty")
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-  conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
-
-  nonpkg <- paste0("cran::", basename(tempfile()))
-  res <- synchronise(
-    resolve_remote_cran(parse_pkg_refs(nonpkg)[[1]], TRUE, conf, cache,
-                        dependencies = FALSE))
-
-  expect_true(all(res$status == "FAILED"))
-  expect_match(conditionMessage(res$error[[1]]), "Can't find package")
-
-  ## Existing package, non-existing version
-
-  skip("TODO")
-
-  r <- pkg_plan$new(
-    "cran::crayon@0.0", config = list(cache_dir = tmp))
-  expect_error(r$resolve(), NA)
-  res <- r$get_resolution()
-
-  expect_true(all(res$status == "FAILED"))
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 })
 
 test_that("failed resolution, multiple", {
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  skip_if_offline()
-  skip_on_cran()
+  prop <- new_pkg_installation_proposal(c("cran::pkg1", "cran::xxyyzzqwertyqwerty"))
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-  conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
-
-  nonpkg <- paste0("cran::", basename(tempfile()))
-  rem <- parse_pkg_refs(c(nonpkg, "cran::crayon"))
-  res <- synchronise(
-    resolve_remote_cran(rem, TRUE, conf, cache, dependencies = FALSE))
-
-  expect_true("FAILED" %in% res$status)
-  err <- res$error[res$ref != "cran::crayon"][[1]]
-  expect_match(conditionMessage(err), "Can't find package")
-
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 })
 
 test_that("resolve current version", {
-  skip_if_offline()
-  skip_on_cran()
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
+  prop <- new_pkg_installation_proposal("cran::pkg1@current")
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-  do <- function(ref) {
-    resolve_remote_cran(parse_pkg_refs(ref)[[1]], TRUE,
-                        conf, cache, dependencies = FALSE)
-  }
-
-  res <- synchronise(do("cran::crayon@current"))
-  res2 <- synchronise(do("cran::crayon"))
-
-  expect_true(inherits(res, "tbl"))
-  expect_true(all(res$type == "cran"))
-  expect_true(all(res$direct))
-  expect_true(all(res$status == "OK"))
-  expect_true(all(res$package == "crayon"))
-
-  expect_equal(res$version, res2$version)
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 })
 
 test_that("resolve an old version", {
-  skip_if_offline()
-  skip_on_cran()
-  skip("TODO")
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  prop <- new_pkg_installation_proposal("pkg1@0.9.0")
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-  r <- pkg_plan$new(
-    "cran::crayon@1.1.0",
-    config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(r$resolve(), NA)
-  res <- r$get_resolution()
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 
-  expect_s3_class(res, "pkg_resolution_result")
-  expect_true(all(res$data$ref == "cran::crayon@1.1.0"))
-  expect_true(all(res$data$type == "cran"))
-  expect_true(all(res$data$direct))
-  expect_true(all(res$data$status == "OK"))
-  expect_true(all(res$data$package == "crayon"))
-  expect_true(all(res$data$version == "1.1.0"))
-})
+  prop <- new_pkg_installation_proposal("pkg1@1.0.0")
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-test_that("resolve current version, specified via version number", {
-  skip_if_offline()
-  skip_on_cran()
-  skip("TODO")
-
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-
-  r <- pkg_plan$new(
-    "cran::crayon@current",
-    config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(r$resolve(), NA)
-  res <- r$get_resolution()
-
-  ver <- res$version[1]
-
-  ref <- paste0("cran::crayon@", ver)
-  r2 <- pkg_plan$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(r2$resolve(), NA)
-  res2 <- r2$get_resolution()
-
-  expect_true(all(res2$version == ver))
-  expect_true(all(res2$status == "OK"))
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 })
 
 test_that("resolve a version range", {
-  skip_if_offline()
-  skip_on_cran()
-  skip("TODO")
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  dir.create(tmp <- tempfile())
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  prop <- new_pkg_installation_proposal("pkg1@>=0.9.0")
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
 
-  r <- pkg_plan$new(
-    "cran::crayon@>=1.3.2",
-    config = list(dependencies = FALSE, cache_dir = tmp))
-  expect_error(r$resolve(), NA)
-  res <- r$get_resolution()
-
-  expect_s3_class(res, "pkg_resolution_result")
-  expect_true(all(res$ref == "cran::crayon@>=1.3.2"))
-  expect_true(all(res$type == "cran"))
-  expect_true(all(res$direct))
-  expect_true(all(res$status == "OK"))
-  expect_true(all(res$package == "crayon"))
-  expect_true(all(package_version(res$data$version) >= "1.3.2"))
+  expect_snapshot({
+    snapshot(res, extra = "all")
+  }, transform = fix_port)
 })
 
 test_that("download_remote", {
+  pkgcache::pkg_cache_delete_files()
+  setup_fake_apps()
 
-  skip_if_offline()
-  skip_on_cran()
+  # this the cache for getOption(repos)
+  pkgcache::pkg_cache_delete_files()
 
-  dir.create(tmp <- tempfile())
-  dir.create(tmp2 <- tempfile())
-  on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
+  conf <- list(library = lib <- tempfile())
+  prop <- suppressMessages(
+    new_pkg_installation_proposal("cran::pkg1", config = conf)
+  )
+  suppressMessages(prop$resolve())
+  suppressMessages(prop$solve())
+  dl <- suppressMessages(prop$download())
 
-  conf <- current_config()
-  conf$platforms <- "macos"
-  conf$cache_dir <- tmp
-  conf$package_cache_dir <- tmp2
-  cache <- list(
-    package = pkgcache::package_cache$new(conf$package_cache_dir),
-    metadata = pkgcache::get_cranlike_metadata_cache())
+  expect_true(file.exists(dl$fulltarget))
+  expect_false(file.exists(dl$fulltarget_tree))
+  expect_equal(dl$download_status, "Got")
+  expect_equal(dl$file_size, file.size(dl$fulltarget))
+  expect_equal(dl$download_error, list(NULL))
 
-  resolve <- function() {
-    resolve_remote_cran(parse_pkg_refs("cran::crayon")[[1]], TRUE, conf, cache,
-                        dependencies = FALSE)
-  }
-  res <- synchronise(resolve())
+  cache <- pkgcache::pkg_cache_summary()
+  expect_equal(cache$files, 1)
+  expect_equal(cache$size, dl$file_size)
 
-  target <- file.path(conf$cache_dir, res$target[1])
-  tree <- paste0(target, "-t")
-  download <- function(res) {
-    download_remote_cran(res, target, tree, conf, cache, on_progress = NULL)
-  }
-  dl1 <- synchronise(download(res[1,]))
-  expect_equal(dl1, "Got")
-  expect_true(file.exists(target))
+  # second time it will be cached
+  prop <- suppressMessages(
+    new_pkg_installation_proposal("cran::pkg1", config = conf)
+  )
+  suppressMessages(prop$resolve())
+  suppressMessages(prop$solve())
+  dl2 <- suppressMessages(prop$download())
 
-  unlink(target)
-  dl2 <- synchronise(download(res[1,]))
-  expect_true(dl2 %in% c("Had", "Current"))
-  expect_true(file.exists(target))
-})
+  expect_true(file.exists(dl2$fulltarget))
+  expect_false(file.exists(dl2$fulltarget_tree))
+  expect_equal(dl2$download_status, "Had")
+  expect_equal(dl2$file_size, file.size(dl2$fulltarget))
+  expect_equal(dl2$download_error, list(NULL))
 
-test_that("satisfies_remote", {
-
-  res <- make_fake_resolution(`cran::crayon@>=1.0.0` = list())
-
-  ## GitHub type is never good
-  bad1 <- make_fake_resolution(`github::r-lib/crayon` = list())
-  expect_false(ans <- satisfy_remote_cran(res, bad1))
-  expect_match(attr(ans, "reason"), "Type must be")
-
-  ## Missing DESCRIPTION for installed type
-  bad2 <- make_fake_resolution(`installed::foobar` = list())
-  expect_false(ans <- satisfy_remote_cran(res, bad2))
-  expect_match(attr(ans, "reason"), "not from CRAN")
-
-  ## installed, but not from CRAN
-  fake_desc <- desc::desc("!new")
-  fake_desc$set(Repository ="Not CRAN")
-  bad3 <- make_fake_resolution(`installed::foobar` = list(
-    extra = list(list(description = fake_desc))))
-  expect_false(ans <- satisfy_remote_cran(res, bad3))
-  expect_match(attr(ans, "reason"), "not from CRAN")
-
-  ## CRAN type, but package name does not match
-  bad4 <- make_fake_resolution(`cran::crayon2` = list())
-  expect_false(ans <- satisfy_remote_cran(res, bad4))
-  expect_match(attr(ans, "reason"), "names differ")
-
-  ## installed type, but package name does not match
-  bad5 <- make_fake_resolution(`installed::foobar` = list(
-    package = "crayon2",
-    extra = list(list(repotype = "cran"))))
-  expect_false(ans <- satisfy_remote_cran(res, bad5))
-  expect_match(attr(ans, "reason"), "names differ")
-
-  ## CRAN type, but version is not good enough
-  bad6 <- make_fake_resolution(`cran::crayon` = list(version = "0.0.1"))
-  expect_false(ans <- satisfy_remote_cran(res, bad6))
-  expect_match(attr(ans, "reason"), "Insufficient version")
-
-  ## Same version, CRAN
-  ok1 <- make_fake_resolution(`cran::crayon` = list())
-  expect_true(satisfy_remote_cran(res, ok1))
-
-  ## Newer version, CRAN
-  ok2 <- make_fake_resolution(`cran::crayon` = list(version = "2.0.0"))
-  expect_true(satisfy_remote_cran(res, ok2))
-
-  ## Same version, installed
-  ok3 <- make_fake_resolution(`installed::foobar` = list(
-    package = "crayon",
-    extra = list(list(repotype = "cran"))))
-  expect_true(satisfy_remote_cran(res, ok3))
-
-  ## Newer version, installed
-  ok4 <- make_fake_resolution(`installed::foobar` = list(
-    package = "crayon",
-    version = "2.0.0",
-    extra = list(list(repotype = "cran"))))
-  expect_true(satisfy_remote_cran(res, ok4))
+  pkgcache::pkg_cache_delete_files()
 })

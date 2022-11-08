@@ -2,6 +2,7 @@
 test_that("failure in non-needed package is ignored", {
   setup_fake_gh_app()
   setup_fake_apps()
+  pkgcache::pkg_cache_delete_files()
 
   lib <- withr::local_tempdir()
   p <- new_pkg_installation_proposal(

@@ -4,7 +4,7 @@
   files) (https://github.com/r-lib/pak/issues/423).
 
 * Better installation output, standard output and error are now
-  collected together (0669f0f8c51b726ca8852bef040e88eb07697adc).
+  collected together (https://github.com/r-lib/pkgdepends/commit/0669f0f8c).
 
 * The solver is now doing a better job when multiple versions of the
   same package are present in the same repository

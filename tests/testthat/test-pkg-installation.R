@@ -74,7 +74,8 @@ test_that("create_lockfile", {
 
   expect_snapshot(
     lock$packages,
-    transform = function(x) transform_local_port(transform_sha(x))
+    transform = function(x) transform_local_port(transform_sha(x)),
+    variant = .Platform$OS.type
   )
 })
 

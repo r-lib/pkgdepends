@@ -1,5 +1,18 @@
 # pkgdepends (development version)
 
+* The solver is now more robust for non-canonical input (e.g. `DESCRIPTION`
+  files) (https://github.com/r-lib/pak/issues/423).
+
+* Better installation output, standard output and error are now
+  collected together (0669f0f8c51b726ca8852bef040e88eb07697adc).
+
+* The solver is now doing a better job when multiple versions of the
+  same package are present in the same repository
+  (https://github.com/r-lib/actions/issues/559).
+
+* `pkg_name_check()` now works again, it needed a fix after changes at
+  https://crandb.r-pkg.org.
+
 # pkgdepends 0.3.2
 
 * The `?ignore` parameter works correctly now.

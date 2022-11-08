@@ -49,7 +49,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="pkgdepends-development-version">pkgdepends (development version)<a class="anchor" aria-label="anchor" href="#pkgdepends-development-version"></a></h2>
-</div>
+<ul><li><p>The solver is now more robust for non-canonical input (e.g. <code>DESCRIPTION</code> files) (<a href="https://github.com/r-lib/pak/issues/423" class="external-link uri">https://github.com/r-lib/pak/issues/423</a>).</p></li>
+<li><p>Better installation output, standard output and error are now collected together (<a href="https://github.com/r-lib/pkgdepends/commit/0669f0f8c" class="external-link uri">https://github.com/r-lib/pkgdepends/commit/0669f0f8c</a>).</p></li>
+<li><p>The solver is now doing a better job when multiple versions of the same package are present in the same repository (<a href="https://github.com/r-lib/actions/issues/559" class="external-link uri">https://github.com/r-lib/actions/issues/559</a>).</p></li>
+<li><p><code><a href="../reference/pkg_name_check.html">pkg_name_check()</a></code> now works again, it needed a fix after changes at <a href="https://crandb.r-pkg.org" class="external-link uri">https://crandb.r-pkg.org</a>.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.2" id="pkgdepends-032">pkgdepends 0.3.2<a class="anchor" aria-label="anchor" href="#pkgdepends-032"></a></h2><p class="text-muted">CRAN release: 2022-09-08</p>
 <ul><li><p>The <code>?ignore</code> parameter works correctly now.</p></li>

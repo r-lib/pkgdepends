@@ -72,10 +72,16 @@ test_that("create_lockfile", {
 
   lock$packages$filesize <- 100
 
+  # Newer windows adds a --no-multiarch install parameter, by default
+  vrt <- if (.Platform$OS.type == "windows" && getRversion() >= "4.2.0") {
+    "windows"
+  } else {
+    "unix"
+  }
   expect_snapshot(
     lock$packages,
     transform = function(x) transform_local_port(transform_sha(x)),
-    variant = .Platform$OS.type
+    variant = vrt
   )
 })
 

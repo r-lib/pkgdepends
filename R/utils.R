@@ -390,3 +390,7 @@ get_euid <- function() {
   if (length(euid) != 1 || is.na(euid)) euid <- NA_integer_
   euid
 }
+
+zip_list <- function(zipfile) {
+  utils::unzip(zipfile, list = TRUE, unzip = "internal")[,1]
+}

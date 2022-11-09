@@ -46,7 +46,7 @@ is_valid_package_name <- function(nm) {
   } else if (grepl("[.]$", nm)) {
     "It must not end with a dot."
   } else {
-    "Package name is invalid."
+    "Package name is invalid."                                      # nocov
   }
 
   structure(FALSE, reason = why)

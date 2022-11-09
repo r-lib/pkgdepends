@@ -12,8 +12,6 @@ is_valid_package <- function(file) {
   }
 }
 
-#' @importFrom utils unzip
-
 is_valid_package_zip <- function(file) {
   if (file.info(file)$size == 0) return(FALSE)
   tryCatch(

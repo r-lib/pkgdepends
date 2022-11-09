@@ -56,3 +56,7 @@ test_that("satisfy", {
   ## Always TRUE, independently of arguments
   expect_true(satisfy_remote_installed())
 })
+
+test_that("installedok_remote_installed", {
+  expect_false(installedok_remote_installed())
+})

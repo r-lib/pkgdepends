@@ -1,16 +1,9 @@
 
 fixture <- local({
 
-  hash <- function(code) {
-    tmp <- tempfile()
-    on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-    writeBin(charToRaw(code), tmp)
-    tools::md5sum(tmp)[[1]]
-  }
-
   get_test_data <- function(expr) {
     code <- enc2utf8(paste0(deparse(expr, backtick = TRUE), collapse = "\n"))
-    hash <- hash(code)
+    hash <- cli::hash_md5(code)
     snap <- getOption("testthat.snapshotter")
     list(
       root = testthat::test_path(),

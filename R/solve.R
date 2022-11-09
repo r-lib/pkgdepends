@@ -827,10 +827,10 @@ highlight_package_list <- function(sol) {
   ins <- sol$type != "installed" & sol$type != "deps"
   sol <- sol[ins, ]
 
-  pkg <- col_align(col_blue(sol$package))
-  old <- col_align(ifelse(is.na(sol$old_version), "", sol$old_version))
-  arr <- col_align(ifelse(is.na(sol$old_version), "", arrow))
-  new <- col_align(highlight_version(sol$old_version, sol$version))
+  pkg <- ansi_align_width(col_blue(sol$package))
+  old <- ansi_align_width(ifelse(is.na(sol$old_version), "", sol$old_version))
+  arr <- ansi_align_width(ifelse(is.na(sol$old_version), "", arrow))
+  new <- ansi_align_width(highlight_version(sol$old_version, sol$version))
 
   bld <- sol$lib_status %in% c("new", "update") & sol$platform == "source"
   cmp <- sol$lib_status %in% c("new", "update") &

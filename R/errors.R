@@ -1103,6 +1103,7 @@ err <- local({
       add_trace_back   = add_trace_back,
       process_call     = process_call,
       onload_hook      = onload_hook,
+      is_interactive   = is_interactive,
       format = list(
         advice        = format_advice,
         call          = format_call,

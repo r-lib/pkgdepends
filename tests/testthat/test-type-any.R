@@ -1,6 +1,7 @@
 
 test_that("parse_remote_any", {
   setup_fake_apps()
+  pkgcache::pkg_cache_delete_files()
   lib <- withr::local_tempdir()
 
   # create a lockfile first

@@ -4,7 +4,7 @@ test_that("make_bar", {
   lapply(
     seq(0, 1, by = 0.2),
     function(p) {
-      expect_equal(nchar(crayon::strip_style(make_bar(chars, p, 10))), 10)
+      expect_equal(nchar(cli::ansi_strip(make_bar(chars, p, 10))), 10)
     }
   )
 })
@@ -271,7 +271,7 @@ test_that("parts are calculated properly", {
   expect_equal(parts$percent, "  0%")
   expect_match(parts$rate, "^\\s+$")
   expect_equal(parts$msg, "Connecting...")
-  expect_match(crayon::strip_style(parts$line), "^[(][\\s\u00a0]+[)]$", perl = TRUE)
+  expect_match(cli::ansi_strip(parts$line), "^[(][\\s\u00a0]+[)]$", perl = TRUE)
   expect_equal(parts$eta, "??s ")
 })
 

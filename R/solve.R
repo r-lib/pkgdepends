@@ -878,7 +878,7 @@ pkgplan_show_solution <- function(self, private, key = FALSE) {
   hl2 <- na.omit(hl)
 
   if (length(hl2)) {
-    hl2 <- paste0(crayon::silver("+ "), hl2)
+    hl2 <- paste0(cli::col_silver("+ "), hl2)
     if (key && attr(hl, "key") != "") hl2 <- c(hl2, " ", attr(hl, "key"))
     out <- paste(hl2, collapse = "\n")
     cli::cli_verbatim(hl2)
@@ -1230,7 +1230,7 @@ format.pkg_solution_failures <- function(x, ...) {
     done[i] <<- TRUE
     msgs <- unique(fails$failure_message[[i]])
 
-    fail <- paste0("* ", crayon::bold(fails$ref[i]), ":")
+    fail <- paste0("* ", cli::style_bold(fails$ref[i]), ":")
     if (length(msgs) == 1) {
       fail <- paste0(fail, " ", msgs)
     } else {

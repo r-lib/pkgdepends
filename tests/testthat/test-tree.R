@@ -108,3 +108,123 @@ cli::test_that_cli("draw_solution_tree", {
     transform = transform_bytes
   )
 })
+
+test_that("tree from lockfile", {
+  setup_fake_apps()
+  lib <- withr::local_tempdir()
+
+  # create a lockfile first
+  plan <- suppressMessages(new_pkg_installation_proposal(
+    "pkg3",
+    config = list(library = lib)
+  ))
+  suppressMessages(plan$resolve())
+  plan$solve()
+  lockfile <- tempfile(fileext = ".lock")
+  on.exit(unlink(lockfile), add = TRUE)
+  plan$create_lockfile(lockfile)
+
+  plan <- pkgdepends::new_pkg_installation_plan(
+    lockfile,
+    config = list(library = lib)
+  )
+  expect_snapshot(plan$draw(), transform = transform_bytes)
+})
+
+test_that("update", {
+  setup_fake_apps()
+  lib <- withr::local_tempdir()
+
+  url <- paste0(
+    fake_cran$url(),
+    "/src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz"
+  )
+
+  config <- list(library = lib)
+  plan <- suppressMessages(new_pkg_installation_proposal(
+    paste0("url::", url),
+    config = config
+  ))
+  suppressMessages(plan$solve())
+  suppressMessages(plan$download())
+  suppressMessages(plan$install())
+
+  plan2 <- new_pkg_installation_proposal("pkg1", config = config)
+  plan2$solve()
+  expect_snapshot(plan2$draw(), transform = transform_bytes)
+
+  plan3 <- new_pkg_installation_proposal("any::pkg1", config = config)
+  plan3$solve()
+  expect_snapshot(plan3$draw(), transform = transform_bytes)
+})
+
+test_that("has_emoji", {
+  mockery::stub(has_emoji, "is_utf8_output", FALSE)
+  expect_false(has_emoji())
+
+  mockery::stub(has_emoji, "is_utf8_output", TRUE)
+  withr::local_options(pkg.emoji = TRUE)
+  expect_true(has_emoji())
+
+  withr::local_options(pkg.emoji = FALSE)
+  expect_false(has_emoji())
+
+  withr::local_options(pkg.emoji = NULL)
+  mockery::stub(has_emoji, "Sys.info", c(sysname = "Linux"))
+  expect_false(has_emoji())
+
+  mockery::stub(has_emoji, "Sys.info", c(sysname = "Darwin"))
+  expect_true(has_emoji())
+})
+
+test_that("emoji", {
+  mockery::stub(emoji, "has_emoji", TRUE)
+  mockery::stub(emoji, "emo_builder", "\U1F477")
+  expect_snapshot({
+    emoji("rocket")
+    emoji("sparkles")
+    emoji("hand")
+    emoji("dl")
+    emoji("builder")
+    emoji("wrench")
+    emoji("pkg")
+    emoji("pkgs")
+    emoji("foobar")
+  })
+})
+
+test_that("no emoji", {
+  mockery::stub(emoji, "has_emoji", FALSE)
+  mockery::stub(emoji, "emo_builder", "\U1F477")
+  expect_snapshot({
+    emoji("rocket")
+    emoji("sparkles")
+    emoji("hand")
+    emoji("dl")
+    emoji("builder")
+    emoji("wrench")
+    emoji("pkg")
+    emoji("pkgs")
+    emoji("foobar")
+  })
+})
+
+test_that("emo_builder", {
+  # make it deterministic
+  mockery::stub(
+    emo_builder,
+    "sample",
+    function(x, size, replace = FALSE, ...) {
+      rep_len(utils::tail(x, size), size)
+    }
+  )
+
+  mockery::stub(emo_builder, "rstudio_detect", list(type = "rstudio_terminal"))
+  expect_snapshot(emo_builder(5))
+
+  mockery::stub(emo_builder, "rstudio_detect", list(type = "rstudio_console"))
+  expect_snapshot(emo_builder(5))
+
+  mockery::stub(emo_builder, "rstudio_detect", list(type = "not_rstudio"))
+  expect_snapshot(emo_builder(5))
+})

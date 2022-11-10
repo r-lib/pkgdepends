@@ -168,7 +168,7 @@ emo_builder <- function(n = 1) {
     "\U1F477\U1F3FF\u200D\u2642\uFE0F"
   )
 
-  rstudio_type <- rstudio$detect()$type
+  rstudio_type <- rstudio_detect()$type
   if (rstudio_type == "rstudio_terminal") {
     ppl <- base
   } else if (rstudio_type == "rstudio_console") {

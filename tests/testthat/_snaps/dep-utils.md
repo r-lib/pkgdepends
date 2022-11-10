@@ -266,8 +266,8 @@
 
     Code
       resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes"), NULL)
-    Error <simpleError>
-      Cannot determine package name for remote(s): url::http://example.com
+    Error <rlib_error_3_0>
+      ! Cannot determine package name for remote(s): url::http://example.com
 
 # as_pkg_dependencies
 

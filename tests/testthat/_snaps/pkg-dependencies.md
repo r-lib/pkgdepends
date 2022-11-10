@@ -124,8 +124,8 @@
 
     Code
       deps$stop_for_solution_error()
-    Error <simpleError>
-      Cannot install packages:
+    Error <rlib_error_3_0>
+      ! Cannot install packages:
       * needsfuturama: Can't install dependency futurama
       * futurama: Needs R >= 3000.0
 

@@ -44,29 +44,29 @@
 
     Code
       env_decode_difftime("", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: ``
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `UPDATE` environment variable: ``
 
 ---
 
     Code
       env_decode_difftime("123", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: `123`
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `UPDATE` environment variable: `123`
 
 ---
 
     Code
       env_decode_difftime("1k", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: `1k`
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `UPDATE` environment variable: `1k`
 
 ---
 
     Code
       env_decode_difftime("k1k", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: `k1k`
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `UPDATE` environment variable: `k1k`
 
 # current_config
 

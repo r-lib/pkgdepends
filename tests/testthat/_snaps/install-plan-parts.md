@@ -77,8 +77,8 @@
 
     Code
       install_package_plan(plan, lib = tempfile())
-    Error <simpleError>
-      Internal pkgdepends error, no task running and cannot select new task
+    Error <rlib_error_3_0>
+      ! Internal pkgdepends error, no task running and cannot select new task
 
 # install_args are passed
 

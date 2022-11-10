@@ -290,7 +290,7 @@ err <- local({
     opts <- options(show.error.messages = FALSE)
     on.exit(options(opts), add = TRUE)
 
-    stop(cond)
+    base::stop(cond)
   }
 
   # -- rethrow with parent -----------------------------------------------

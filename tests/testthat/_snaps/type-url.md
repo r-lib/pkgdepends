@@ -119,6 +119,6 @@
 
     Code
       get_pkg_dir_from_archive_dir(tmp)
-    Error <simpleError>
-      Package archive should contain exactly one directory
+    Error <rlib_error_3_0>
+      ! Package archive should contain exactly one directory
 

@@ -98,6 +98,6 @@
 
     Code
       add_metadata(tmp, c(foo = "bar"))
-    Error <simpleError>
-      No DESCRIPTION found!
+    Error <rlib_error_3_0>
+      ! No DESCRIPTION found!
 

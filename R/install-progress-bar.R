@@ -27,7 +27,6 @@ create_progress_bar <- function(state) {
 }
 
 #' @importFrom cli cli_status_update
-#' @importFrom crayon col_nchar
 
 update_progress_bar <- function(state, tick = 0) {
   if (is.null(state$progress$status)) return()
@@ -51,15 +50,15 @@ update_progress_bar <- function(state, tick = 0) {
   v1 <- paste0(xbuilt, " | ", xinst, " | ")
   v2 <- paste0(xbar, " | ", v1)
   v3 <- paste0(v2, xmsg)
-  if (col_nchar(v3, type = "width") <= w) {
+  if (cli::ansi_nchar(v3, type = "width") <= w) {
     st <- v3
-  } else if (col_nchar(v2, type = "width") <= w) {
+  } else if (cli::ansi_nchar(v2, type = "width") <= w) {
     st <- v2
   } else {
     st <- v1
   }
 
-  if (state$progress$simple) st <- crayon::strip_style(st)
+  if (state$progress$simple) st <- cli::ansi_strip(st)
   cli_status_update(state$progress$status, st)
 }
 
@@ -78,7 +77,7 @@ make_install_bar <- function(p1, p2, width) {
   bar <- paste(
     c(chars$lpar, p1chars, p2chars, xchars, chars$rpar), collapse = "")
 
-  if (is_older_rstudio()) bar else crayon::green(bar)
+  if (is_older_rstudio()) bar else cli::col_green(bar)
 }
 
 make_progress_block <- function(state, sym, done, total, prog) {

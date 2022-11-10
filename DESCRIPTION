@@ -20,7 +20,6 @@ Depends: R (>= 3.4)
 Imports:
     callr (>= 3.3.1),
     cli (>= 3.4.0),
-    crayon,
     curl,
     desc (>= 1.2.0),
     filelock (>= 1.0.2),

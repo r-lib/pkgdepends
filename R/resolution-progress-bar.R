@@ -84,15 +84,15 @@ make_bar <- function(chars, p, width =  15) {
     c(chars$lpar, pchars, xchars, chars$rpar),
     collapse = "")
 
-  if (is_older_rstudio()) bar else crayon::green(bar)
+  if (is_older_rstudio()) bar else cli::col_green(bar)
 }
 
 make_progress_main <- function(deps, done, total) {
   if (is_older_rstudio()) {
     bggrey <- fgdark <- function(x) x
   } else {
-    bggrey <- crayon::make_style("grey", bg = TRUE)
-    fgdark <- crayon::black
+    bggrey <- cli::make_ansi_style("grey", bg = TRUE)
+    fgdark <- cli::col_black
   }
   paste0(
     "Found ",

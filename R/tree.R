@@ -1,6 +1,4 @@
 
-#' @importFrom crayon italic bold cyan silver bgRed white green
-#'   strip_style
 #' @importFrom cli tree symbol
 
 pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
@@ -27,14 +25,14 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
   data$deps <- lapply(data$deps, intersect, data$package)
 
   ann_version <- function() {
-    v <- silver(sol$version)
+    v <- cli::col_silver(sol$version)
     upd <- sol$lib_status == "update"
     if (any(upd)) {
-      v[upd] <- green(paste(sol$old_version[upd], "->", sol$version[upd]))
+      v[upd] <- cli::col_green(paste(sol$old_version[upd], "->", sol$version[upd]))
     }
     nupd <- sol$lib_status == "no-update"
     if (any(nupd)) {
-      v[nupd] <- green(paste(sol$version[nupd], "<", sol$new_version[nupd]))
+      v[nupd] <- cli::col_green(paste(sol$version[nupd], "<", sol$new_version[nupd]))
     }
     v
   }
@@ -46,7 +44,8 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
   )
   data$trimmed <- data$label
   data$label <- paste(data$label, ann_version())
-  data$label[sol$directpkg] <- italic(bold(cyan(data$label[sol$directpkg])))
+  data$label[sol$directpkg] <-
+    cli::style_italic(cli::style_bold(cli::col_cyan(data$label[sol$directpkg])))
 
   if (annotate) {
     builder <- emoji("builder")
@@ -64,12 +63,12 @@ pkgplan_draw_solution_tree <- function(self, private, pkgs, annotate) {
 
   if (annotate && any(unlist(ann))) {
     key <- paste0(
-      if (any(ann$new))     paste(" |", green(emoji("sparkles")), "new"),
-      if (any(ann$upd))     paste(" |", green(emoji("rocket")), "update"),
-      if (any(ann$noupd))   paste(" |", green(emoji("hand")), "outdated"),
-      if (any(ann$dl))      paste(" |", green(emoji("dl")), "download"),
-      if (any(ann$build))   paste(" |", green(builder), "build"),
-      if (any(ann$compile)) paste(" |", green(emoji("wrench")), "compile")
+      if (any(ann$new))     paste(" |", cli::col_green(emoji("sparkles")), "new"),
+      if (any(ann$upd))     paste(" |", cli::col_green(emoji("rocket")), "update"),
+      if (any(ann$noupd))   paste(" |", cli::col_green(emoji("hand")), "outdated"),
+      if (any(ann$dl))      paste(" |", cli::col_green(emoji("dl")), "download"),
+      if (any(ann$build))   paste(" |", cli::col_green(builder), "build"),
+      if (any(ann$compile)) paste(" |", cli::col_green(emoji("wrench")), "compile")
     )
     key <- paste0("Key: ", sub("^ [|]", "", key))
     trees <- c(trees, key)
@@ -104,11 +103,9 @@ get_tree_annotation <- function(sol) {
   ann
 }
 
-#' @importFrom crayon green
-
 annotate_tree <- function(sol, ann, builder = NULL) {
   builder <- builder %||% emoji("builder")
-  green(paste0(
+  cli::col_green(paste0(
     ifelse(ann$new, emoji("sparkles"), ""),
     ifelse(ann$upd, emoji("rocket"), ""),
     ifelse(ann$noupd, emoji("hand"), ""),
@@ -118,12 +115,11 @@ annotate_tree <- function(sol, ann, builder = NULL) {
   ))
 }
 
-#' @importFrom crayon silver
 #' @importFrom prettyunits pretty_bytes
 
 format_file_size <- function(x) {
   bts <- str_trim(pretty_bytes(x))
-  silver(
+  cli::col_silver(
     ifelse(is.na(x), "(unknown size)", paste0("(", bts, ")"))
   )
 }

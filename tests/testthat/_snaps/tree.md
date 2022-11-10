@@ -215,45 +215,6 @@
       
       Key:  [old] outdated
 
-# emoji
-
-    Code
-      emoji("rocket")
-    Output
-      [1] "🚀"
-    Code
-      emoji("sparkles")
-    Output
-      [1] "✨"
-    Code
-      emoji("hand")
-    Output
-      [1] "✋"
-    Code
-      emoji("dl")
-    Output
-      [1] " ⬇"
-    Code
-      emoji("builder")
-    Output
-      [1] "👷"
-    Code
-      emoji("wrench")
-    Output
-      [1] "🔧"
-    Code
-      emoji("pkg")
-    Output
-      [1] "📦"
-    Code
-      emoji("pkgs")
-    Output
-      [1] "📦"
-    Code
-      emoji("foobar")
-    Output
-      [1] ""
-
 # no emoji
 
     Code
@@ -288,6 +249,45 @@
       emoji("pkgs")
     Output
       [1] "pkgs"
+    Code
+      emoji("foobar")
+    Output
+      [1] ""
+
+# emoji
+
+    Code
+      emoji("rocket")
+    Output
+      [1] "🚀"
+    Code
+      emoji("sparkles")
+    Output
+      [1] "✨"
+    Code
+      emoji("hand")
+    Output
+      [1] "✋"
+    Code
+      emoji("dl")
+    Output
+      [1] " ⬇"
+    Code
+      emoji("builder")
+    Output
+      [1] "👷"
+    Code
+      emoji("wrench")
+    Output
+      [1] "🔧"
+    Code
+      emoji("pkg")
+    Output
+      [1] "📦"
+    Code
+      emoji("pkgs")
+    Output
+      [1] "📦"
     Code
       emoji("foobar")
     Output

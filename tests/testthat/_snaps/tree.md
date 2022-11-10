@@ -186,3 +186,131 @@
       
       Key:  [32m[new][39m new | [32m[dl][39m download | [32m[bld][39m build
 
+# tree from lockfile
+
+    Code
+      plan$draw()
+    Output
+      pkg3 1.0.0 [new][bld][dl] (<size>)
+      \-pkg2 1.0.0 [new][bld][dl] (<size>)
+        \-pkg1 1.0.0 [new][bld][dl] (<size>)
+      
+      Key:  [new] new | [dl] download | [bld] build
+
+# update
+
+    Code
+      plan2$draw()
+    Output
+      pkg1 0.9.0 -> 1.0.0 [upd][bld][dl] (<size>)
+      
+      Key:  [upd] update | [dl] download | [bld] build
+
+---
+
+    Code
+      plan3$draw()
+    Output
+      pkg1 0.9.0 < 1.0.0 [old]
+      
+      Key:  [old] outdated
+
+# no emoji
+
+    Code
+      emoji("rocket")
+    Output
+      [1] "[upd]"
+    Code
+      emoji("sparkles")
+    Output
+      [1] "[new]"
+    Code
+      emoji("hand")
+    Output
+      [1] "[old]"
+    Code
+      emoji("dl")
+    Output
+      [1] "[dl]"
+    Code
+      emoji("builder")
+    Output
+      [1] "[bld]"
+    Code
+      emoji("wrench")
+    Output
+      [1] "[cmp]"
+    Code
+      emoji("pkg")
+    Output
+      [1] "pkg"
+    Code
+      emoji("pkgs")
+    Output
+      [1] "pkgs"
+    Code
+      emoji("foobar")
+    Output
+      [1] ""
+
+# emoji
+
+    Code
+      emoji("rocket")
+    Output
+      [1] "🚀"
+    Code
+      emoji("sparkles")
+    Output
+      [1] "✨"
+    Code
+      emoji("hand")
+    Output
+      [1] "✋"
+    Code
+      emoji("dl")
+    Output
+      [1] " ⬇"
+    Code
+      emoji("builder")
+    Output
+      [1] "👷"
+    Code
+      emoji("wrench")
+    Output
+      [1] "🔧"
+    Code
+      emoji("pkg")
+    Output
+      [1] "📦"
+    Code
+      emoji("pkgs")
+    Output
+      [1] "📦"
+    Code
+      emoji("foobar")
+    Output
+      [1] ""
+
+# emo_builder
+
+    Code
+      emo_builder(5)
+    Output
+      [1] "👷" "👷" "👷" "👷" "👷"
+
+---
+
+    Code
+      emo_builder(5)
+    Output
+      [1] "👷🏻" "👷🏼" "👷🏽" "👷🏾" "👷🏿"
+
+---
+
+    Code
+      emo_builder(5)
+    Output
+      [1] "👷🏽‍♂️" "👷🏾‍♀️" "👷🏾‍♂️" "👷🏿‍♀️" "👷🏿‍♂️"
+

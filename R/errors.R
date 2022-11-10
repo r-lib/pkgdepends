@@ -1,4 +1,6 @@
 
+# nocov start
+
 # # Standalone file for better error handling ----------------------------
 #
 # If can allow package dependencies, then you are probably better off
@@ -1103,6 +1105,7 @@ err <- local({
       add_trace_back   = add_trace_back,
       process_call     = process_call,
       onload_hook      = onload_hook,
+      is_interactive   = is_interactive,
       format = list(
         advice        = format_advice,
         call          = format_call,
@@ -1127,3 +1130,5 @@ throw_error      <- err$throw_error
 chain_error      <- err$chain_error
 chain_call       <- err$chain_call
 chain_clean_call <- err$chain_clean_call
+
+# nocov end

@@ -1,4 +1,6 @@
 
+# nocov start
+
 #' @description
 #' pkgdepends is a toolkit for package dependencies, downloads and
 #' installations, to be used in other packages. If you are looking for a
@@ -12,3 +14,5 @@ fix_check <- function() {
   processx::process
   invisible()
 }
+
+# nocov end

@@ -97,25 +97,6 @@ res_df_must_have <- local({
   }
 })
 
-res_check_entries <- function(ent) {
-  ## Some columns are required
-  assert_that(is.data.frame(ent))
-
-  if (length(miss <- setdiff(res_df_must_have(), names(ent)))) {
-    stop("Entries missing from remote: ", format_items(miss))
-  }
-
-  ent_types <- vcapply(ent, class)
-  exp_types <- res_df_entry_types()[names(ent)]
-  if (any(bad <- ent_types != exp_types)) {
-    items <- paste0(names(ent)[bad], " (", ent_types[bad], ", expected ",
-                    exp_types[bad], ")")
-    stop("Wrong entry types: ", format_items(items))
-  }
-
-  invisible(ent)
-}
-
 #' @noRd
 #' @param df Resolution data frame.
 #' @param entries List of entries to add.

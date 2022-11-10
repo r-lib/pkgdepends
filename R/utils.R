@@ -3,8 +3,6 @@ pkgd_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
-`%&&%` <- function(l, r) if (!is.null(l)) r
-
 `%|z|%` <- function(l, r) if (is.null(l) || identical(l, "")) r else l
 
 `%&z&%` <- function(l, r) if (length(l) > 0 && l != "") r else ""
@@ -27,12 +25,6 @@ current_r_version <- function() {
 get_minor_r_version <- function(x) {
   x <- package_version(x)
   vapply(unclass(x), function(x) paste(x[1:2], collapse = "."), character(1))
-}
-
-read.dcf.gz <- function(x) {
-  con <- gzfile(x, open = "r")
-  on.exit(close(con))
-  read.dcf(con)
 }
 
 str_trim <- function(x) {
@@ -127,13 +119,6 @@ comma_wrap <- function(x, indent = 2, exdent = indent, sep = ", ") {
   paste(w, collapse = "\n")
 }
 
-make_error <- function(message, class = character(), call = NULL, ...) {
-  structure(
-    c(list(message = message, call = call), list(...)),
-    class = c(class, "error", "condition")
-  )
-}
-
 add_class <- function(x, cl) {
   class(x) <- c(cl, class(x))
   x
@@ -174,47 +159,8 @@ cat0 <- function(..., sep = "") {
   cat(..., sep = sep)
 }
 
-read_lines <- function(con, ...) {
-  if (is.character(con)) {
-    con <- file(con)
-    on.exit(close(con))
-  }
-  readLines(con, ...)
-}
-
-all_ok <- function(x) {
-  if (all(vcapply(x, "[[", "status") == "OK")) "OK" else "FAILED"
-}
-
-isFALSE <- function(x) {
-  identical(x, FALSE)
-}
-
-file.size <- function(x) {
-  file.info(x)$size
-}
-
-isFALSE <- function(x) {
-  identical(x, FALSE)
-}
-
-zip_lists <- function(...) {
-  mapply(list, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
-}
-
-zip_vecs <- function(...) {
-  mapply(c, ..., SIMPLIFY = FALSE, USE.NAMES = FALSE)
-}
-
 lapply_rows <-  function(df, fun, ...) {
   lapply(seq_len(nrow(df)), function(i) fun(df[i,], ...))
-}
-
-`%||%` <- function(l, r) if (is.null(l)) r else l
-
-add_attr <- function(x, attr, value) {
-  attr(x, attr) <- value
-  x
 }
 
 detect_download_cache_dir <- local({
@@ -289,15 +235,6 @@ is_online <- local({
   }
 })
 
-hash <- function(obj) {
-  tmp <- tempfile()
-  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  serialize(obj, con <- file(tmp, open = "wb"))
-  on.exit(try(close(con), silent = TRUE), add = TRUE)
-  close(con)
-  tools::md5sum(tmp)[[1]]
-}
-
 # `reset` is useful for testing
 once_per_session <- local({
   seen <- character()
@@ -306,7 +243,7 @@ once_per_session <- local({
       seen <<- character()
       return(invisible())
     } else {
-      h <- hash(substitute(expr))
+      h <- cli::hash_obj_md5(substitute(expr))
       if (! h %in% seen) {
         seen <<- c(seen, h)
         expr
@@ -315,16 +252,14 @@ once_per_session <- local({
   }
 })
 
+# nocov start
+
 synchronise <- synchronize <- sy <- function(...) {
   asNamespace("pkgcache")$synchronise(...)
 }
 
 async_constant <- function(...) {
   asNamespace("pkgcache")$async_constant(...)
-}
-
-async_map <- function(...) {
-  asNamespace("pkgcache")$async_map(...)
 }
 
 http_get <- function(...) {
@@ -363,10 +298,12 @@ external_process <- function(...) {
   asNamespace("pkgcache")$external_process(...)
 }
 
+# nocov end
+
 format_error_with_stdout <- function(x, ...) {
   msg <- conditionMessage(x)
   if (is.null(x$data$stdout)) {
-    paste0(msg, " output not available")
+    paste0(msg, " (output not available)")
   } else {
     out <- last_stdout_lines(x$data$stdout, "stdout + stderr", "OE> ")
     c(paste0(msg, out[1]), out[-1])
@@ -374,7 +311,7 @@ format_error_with_stdout <- function(x, ...) {
 }
 
 last_stdout_lines <- function(lines, std, prefix = "E> ") {
-  if (is_interactive()) {
+  if (err$is_interactive()) {
     pref <- paste0(
       ", ", std, if (length(lines) > 10) " (last 10 lines)", ":")
     out <- paste0(prefix, utils::tail(lines, 10))
@@ -385,26 +322,8 @@ last_stdout_lines <- function(lines, std, prefix = "E> ") {
   }
 }
 
-is_interactive <- function() {
-  opt <- getOption("rlib_interactive")
-  if (isTRUE(opt)) {
-    TRUE
-  } else if (identical(opt, FALSE)) {
-    FALSE
-  } else if (tolower(getOption("knitr.in.progress", "false")) == "true") {
-    FALSE
-  } else if (tolower(getOption("rstudio.notebook.executing", "false")) == "true") {
-    FALSE
-  } else if (identical(Sys.getenv("TESTTHAT"), "true")) {
-    FALSE
-  } else {
-    interactive()
-  }
-}
-
-try_silently <- function(expr) {
-  try(expr, silent = TRUE)
-}
+# I am a coward to test this :P
+# nocov start
 
 rimraf <- function(...) {
   x <- file.path(...)
@@ -412,23 +331,7 @@ rimraf <- function(...) {
   unlink(x, recursive = TRUE, force = TRUE)
 }
 
-strrep <- function(x, times) {
-  x <- as.character(x)
-  if (length(x) == 0L) return(x)
-  r <- .mapply(
-    function(x, times) {
-      if (is.na(x) || is.na(times)) return(NA_character_)
-      if (times <= 0L) return("")
-      paste0(replicate(times, x), collapse = "")
-    },
-    list(x = x, times = times),
-    MoreArgs = list()
-  )
-
-  res <- unlist(r, use.names = FALSE)
-  Encoding(res) <- Encoding(x)
-  res
-}
+# nocov end
 
 is_windows <- function() {
   identical(tolower(Sys.info()[["sysname"]]), "windows")
@@ -446,10 +349,10 @@ is_older_rstudio <- function() {
     rs$version <= "1.4.800"
 }
 
-col_align <- function(text, align = c("left", "center", "right")) {
+ansi_align_width <- function(text) {
   if (length(text) == 0) return(text)
-  width <- max(crayon::col_nchar(text, type = "width"))
-  crayon::col_align(text, align = align, width = width)
+  width <- max(cli::ansi_nchar(text, type = "width"))
+  cli::ansi_align(text, width = width)
 }
 
 get_id <- local({
@@ -461,6 +364,8 @@ get_id <- local({
 })
 
 # tools::md5sum has issues with UTF=8 file names on Windows, <= R 4.0
+# TODO: switch to cli::hash_md5_file, once released. I tested that it works
+# well on Windows non-ascii file names
 
 safe_md5sum <- function(path) {
   stopifnot(length(path) == 1)
@@ -485,3 +390,9 @@ get_euid <- function() {
   if (length(euid) != 1 || is.na(euid)) euid <- NA_integer_
   euid
 }
+
+zip_list <- function(zipfile) {
+  utils::unzip(zipfile, list = TRUE, unzip = "internal")[,1]
+}
+
+os_type <- function() .Platform$OS.type                             # nocov

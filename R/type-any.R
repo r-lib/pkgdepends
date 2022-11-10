@@ -19,7 +19,7 @@ resolve_remote_any <- function(remote, direct, config, cache,
       refs <- if ("type" %in% names(remote)) {
         remote$ref
       } else {
-        vcapply(remote, "[[", "ref")
+        vcapply(remote, "[[", "ref")                                 # nocov
       }
       res$direct[res$ref %in% refs] <- TRUE
       res$dep_types <- list(dependencies[[2]])
@@ -36,7 +36,7 @@ download_remote_any <- function(resolution, target, target_tree,
 satisfy_remote_any <- function(resolution, candidate, config, ...) {
   # package name must be the same
   if (resolution$package != candidate$package) {
-    return(structure(FALSE, reason = "Package names differ"))
+    return(structure(FALSE, reason = "Package names differ"))        # nocov
   }
 
   # otherwise we are good

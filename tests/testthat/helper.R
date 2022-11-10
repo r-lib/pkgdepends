@@ -142,3 +142,5 @@ local_cli_config <- function(unicode = FALSE, dynamic = FALSE,
     .local_envir = .local_envir
   )
 }
+
+pst <- function(...) suppressMessages(...)

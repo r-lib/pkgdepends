@@ -296,3 +296,5 @@ rstudio <- local({
     class = c("standalone_rstudio_detect", "standalone")
   )
 })
+
+rstudio_detect <- function(...)  rstudio$detect(...)

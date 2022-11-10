@@ -454,7 +454,7 @@ transform_no_srcref <- function(x) {
 }
 
 transform_local_port <- function(x) {
-  sub("127\\.0\\.0\\.1:[0-9]+", "127.0.0.1:<port>", x)
+  gsub("127\\.0\\.0\\.1:[0-9]+", "127.0.0.1:<port>", x)
 }
 
 transform_bioc_version <- function(x) {
@@ -469,4 +469,8 @@ transform_ext <- function(x) {
   x <- sub("[.](zip|tgz)", ".zip/.tgz/.tar.gz", x)
   x <- sub("_R_[-_a-z0-9A-Z]+[.]tar[.]gz", ".zip/.tgz/.tar.gz", x)
   x
+}
+
+transform_sha <- function(x) {
+  gsub("[a-fA-F0-9]{64}", "<sha>", x)
 }

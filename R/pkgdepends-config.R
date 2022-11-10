@@ -37,7 +37,7 @@ default_sysreqs <- function() {
 }
 
 default_sysreqs_sudo <- function() {
-  if (.Platform$OS.type != "unix") {
+  if (os_type() != "unix") {
     FALSE
   } else {
     euid <- get_euid()

@@ -394,3 +394,5 @@ get_euid <- function() {
 zip_list <- function(zipfile) {
   utils::unzip(zipfile, list = TRUE, unzip = "internal")[,1]
 }
+
+os_type <- function() .Platform$OS.type                             # nocov

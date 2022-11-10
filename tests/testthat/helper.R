@@ -101,28 +101,6 @@ capture_async_messages <- function(expr) {
   msg
 }
 
-# This is much more difficult than it should be, because of the
-# caching of the number of colors.
-
-local_colors <- function(.local_envir = parent.frame()) {
-  # We run this first, so this will run last by withr, to restore the
-  # original options.
-  withr::local_options(
-    list(crayon.enabled = TRUE, crayon.colors = 256L),
-    .local_envir = .local_envir
-  )
-
-  # This is to restore crayon's cache. This runs first on exit,
-  # before restoring the options.
-  oldsta <- crayon::has_color()
-  oldcol <- crayon::num_colors()
-  withr::defer(envir = .local_envir, {
-    # These will be reset by exit handler that was set up above.
-    options(crayon.enabled = oldsta, crayon.colors = oldcol)
-    crayon::num_colors(forget = TRUE)
-  })
-}
-
 # TODO: update this to cli.num_colors
 
 local_cli_config <- function(unicode = FALSE, dynamic = FALSE,

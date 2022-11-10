@@ -107,7 +107,6 @@ test_that("pkgplan_i_lp_rversion", {
 })
 
 test_that("highlight_version", {
-  local_colors()
   b <- cli::style_bold
   g <- function(x, .envir = parent.frame()) {
     unname(vcapply(x, glue::glue, .envir = .envir))

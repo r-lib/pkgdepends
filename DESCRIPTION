@@ -47,7 +47,6 @@ Suggests:
     htmlwidgets,
     mockery,
     pingr (>= 2.0.0),
-    R6,
     rmarkdown,
     rstudioapi,
     spelling,

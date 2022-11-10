@@ -133,6 +133,7 @@ test_that("tree from lockfile", {
 
 test_that("update", {
   setup_fake_apps()
+  pkgcache::pkg_cache_delete_files()
   lib <- withr::local_tempdir()
 
   url <- paste0(

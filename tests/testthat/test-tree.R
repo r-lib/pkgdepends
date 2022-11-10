@@ -178,22 +178,6 @@ test_that("has_emoji", {
   expect_true(has_emoji())
 })
 
-test_that("emoji", {
-  mockery::stub(emoji, "has_emoji", TRUE)
-  mockery::stub(emoji, "emo_builder", "\U1F477")
-  expect_snapshot({
-    emoji("rocket")
-    emoji("sparkles")
-    emoji("hand")
-    emoji("dl")
-    emoji("builder")
-    emoji("wrench")
-    emoji("pkg")
-    emoji("pkgs")
-    emoji("foobar")
-  })
-})
-
 test_that("no emoji", {
   mockery::stub(emoji, "has_emoji", FALSE)
   mockery::stub(emoji, "emo_builder", "\U1F477")
@@ -210,7 +194,28 @@ test_that("no emoji", {
   })
 })
 
+# The rest is for UTF-8 systems only
+
+test_that("emoji", {
+  if (! l10n_info()$"UTF-8") skip("Not UTF-8")
+  mockery::stub(emoji, "has_emoji", TRUE)
+  mockery::stub(emoji, "emo_builder", "\U1F477")
+  expect_snapshot({
+    emoji("rocket")
+    emoji("sparkles")
+    emoji("hand")
+    emoji("dl")
+    emoji("builder")
+    emoji("wrench")
+    emoji("pkg")
+    emoji("pkgs")
+    emoji("foobar")
+  })
+})
+
 test_that("emo_builder", {
+  if (! l10n_info()$"UTF-8") skip("Not UTF-8")
+
   # make it deterministic
   mockery::stub(
     emo_builder,

@@ -327,7 +327,14 @@ last_stdout_lines <- function(lines, std, prefix = "E> ") {
 
 rimraf <- function(...) {
   x <- file.path(...)
-  if ("~" %in% x) stop("Cowardly refusing to delete `~`")
+  if ("~" %in% x) {
+    throw(pkg_error(
+      "Cowardly refusing to delete {.path ~}.",
+      "i" = paste0("You have a file or directory named {.path ~} and ",
+                   "because of an R bug deleting that could delete your ",
+                   "whole home directory.")
+    ))
+  }
   unlink(x, recursive = TRUE, force = TRUE)
 }
 
@@ -396,3 +403,8 @@ zip_list <- function(zipfile) {
 }
 
 os_type <- function() .Platform$OS.type                             # nocov
+
+is.dir <- function(path) {
+  assert_that(is_string(path), file.exists(path))
+  file.info(path)$isdir
+}

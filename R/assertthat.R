@@ -82,8 +82,7 @@ get_message <- function(res, call, env = parent.frame()) {
   if (is.call(call) && !is.primitive(f)) call <- match.call(f, call)
   fname <- deparse(call[[1]])
 
-  fail <- base_fs[[fname]] %||% fail_default
-  fail(call, env)
+  base_fs[[fname]] %||% fail_default(call, env)
 }
 
 # The default failure message works in the same way as stopifnot, so you can
@@ -96,7 +95,7 @@ fail_default <- function(call, env) {
       call_string <- paste0(call_string[1L], "...")
   }
 
-  paste0(call_string, " is not TRUE")
+  paste0(call_string, " is not true")
 }
 
 has_attr <- function(x, which) {
@@ -114,24 +113,18 @@ base_fs <- new.env(parent = emptyenv())
 # nocov start
 
 logical_is_not <- function(failed) {
-  function(call, env) {
-    lhs <- paste(deparse(call[[2]]), collapse = "")
-    rhs <- paste(deparse(call[[3]]), collapse = "")
-    paste0(lhs, " not ", failed, " ", rhs)
-  }
+  paste0("{.arg {(.arg)}} must ", failed, " {.arg {(.arg2)}}.")
 }
 
-base_fs$"==" <- logical_is_not("equal to")
-base_fs$"<" <-  logical_is_not("less than")
-base_fs$">" <-  logical_is_not("greater than")
-base_fs$">=" <- logical_is_not("greater than or equal to")
-base_fs$"<=" <- logical_is_not("less than or equal to")
-base_fs$"!=" <- logical_is_not("not equal to")
+base_fs$"==" <- logical_is_not("equal")
+base_fs$"<" <-  logical_is_not("be less than")
+base_fs$">" <-  logical_is_not("be greater than")
+base_fs$">=" <- logical_is_not("be greater than or equal to")
+base_fs$"<=" <- logical_is_not("be less than or equal to")
+base_fs$"!=" <- logical_is_not("not be equal to")
 
 is_not <- function(thing) {
-  function(call, env) {
-    paste0(deparse(call[[2]]), " is not ", thing)
-  }
+  paste0("{.arg {(.arg)}} must be ", thing, ".")
 }
 
 # nocov end
@@ -155,7 +148,7 @@ base_fs$is.array <- is_not("an array")
 base_fs$is.data.frame <- is_not("a data frame")
 base_fs$is.list <- is_not("a list")
 base_fs$is.matrix <- is_not("a matrix")
-base_fs$is.null <- is_not("NULL")
+base_fs$is.null <- is_not("{.code NULL}")
 
 # Functions and environments
 base_fs$is.environment <- is_not("an environment")
@@ -171,49 +164,20 @@ base_fs$is.recursive <- is_not("a recursive object")
 base_fs$is.symbol <- is_not("a name")
 
 # Catch all
-base_fs$inherits <- function(call, env) {
-  class <- eval(call$what, env)
-  paste0(deparse(call$x), " does not inherit from class ", class)
-}
+base_fs$"&&" <-
+  "{.arg {(.arg)}} and {.arg {(.arg2)}} must both be true."
 
-base_fs$"&&" <- function(call, env) {
-  lhs <- eval(call[[2]], env)
-  if (!lhs) {
-    get_message(lhs, call[[2]], env)
-  } else {
-    rhs <- eval(call[[3]], env)
-    get_message(rhs, call[[3]], env)
-  }
-}
+base_fs$"||" <-
+  "One of {.arg {(.arg)}} and {.arg {(.arg2)}} must be true."
 
-base_fs$"||" <- function(call, env) {
-  lhs <- eval(call[[2]], env)
-  l_msg <- get_message(lhs, call[[2]], env)
+base_fs$any <-
+  "At least one of {.arg {(.arg)}} must be true."
 
-  rhs <- eval(call[[3]], env)
-  r_msg <- get_message(rhs, call[[3]], env)
+base_fs$all <-
+  "All of {.arg {(.arg)}} must be true."
 
-  paste0(l_msg, " or ", r_msg)
-}
+base_fs$file.exists <-
+  "Path {.arg {(.arg)}} must exist."
 
-base_fs$any <- function(call, env) {
-  paste0("No elements of ", deparse(call[[2]]), " are true")
-}
-
-base_fs$all <- function(call, env) {
-  res <- eval(call[[2]], env)
-  i <- which(!res)
-  if (length(i) > 10) i <- c(i[1:5], "...")
-
-  paste0("Elements ", paste(i, collapse = ", "), " of ",
-    deparse(call[[2]]), " are not true")
-}
-
-base_fs$file.exists <- function(call, env) {
-  path <- eval(call[[2]], env)
-  paste0("Path '", path, "' does not exist")
-}
-
-base_fs$identical <- function(call, env) {
-  paste0(deparse(call$x), " not identical to ", deparse(call$y))
-}
+base_fs$identical <-
+  "{.arg {(.arg)}} must be identical to {.arg {(.arg2)}}."

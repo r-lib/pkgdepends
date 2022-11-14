@@ -27,3 +27,7 @@ stop <- function(..., call. = TRUE, domain = NA) {
     throw(new_error(..., call. = call., domain = domain))
   }
 }
+
+stopifnot <- function(...) {
+  assert_that(..., env = parent.frame())
+}

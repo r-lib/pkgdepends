@@ -47,53 +47,128 @@ test_that("assertion returns invalid value", {
 })
 
 test_that("default messages", {
-  expect_snapshot(error = TRUE, assert_that(1 == 2))
-  expect_snapshot(error = TRUE, assert_that(2 < 1))
-  expect_snapshot(error = TRUE, assert_that(1 > 2))
-  expect_snapshot(error = TRUE, assert_that(1 >= 2))
-  expect_snapshot(error = TRUE, assert_that(2 <= 1))
-  expect_snapshot(error = TRUE, assert_that(1 != 1))
+  asciicast::expect_snapshot_r_process(
+    fn <- function(x) assert_that(x == 1),
+    fn(2),
 
-  expect_snapshot(error = TRUE, assert_that(is.atomic(mtcars)))
-  expect_snapshot(error = TRUE, assert_that(is.character(1:2)))
-  expect_snapshot(error = TRUE, assert_that(is.complex(1:5)))
-  expect_snapshot(error = TRUE, assert_that(is.double(letters)))
-  expect_snapshot(error = TRUE, assert_that(is.integer(letters)))
-  expect_snapshot(error = TRUE, assert_that(is.numeric(letters)))
-  expect_snapshot(error = TRUE, assert_that(is.raw(1:10)))
-  expect_snapshot(error = TRUE, assert_that(is.vector(mtcars)))
+    fn <- function(x) assert_that(x < 1),
+    fn(2),
 
-  expect_snapshot(error = TRUE, assert_that(is.factor(letters)))
-  expect_snapshot(error = TRUE, assert_that(is.ordered(factor(letters))))
+    fn <- function(x) assert_that(x > 2),
+    fn(1),
 
-  expect_snapshot(error = TRUE, assert_that(is.array(letters)))
-  expect_snapshot(error = TRUE, assert_that(is.data.frame(1:10)))
-  expect_snapshot(error = TRUE, assert_that(is.list("foobar")))
-  expect_snapshot(error = TRUE, assert_that(is.matrix(letters)))
-  expect_snapshot(error = TRUE, assert_that(is.null("not")))
+    fn <- function(x) assert_that(x >= 2),
+    fn(1),
 
-  expect_snapshot(error = TRUE, assert_that(is.environment(list())))
-  expect_snapshot(error = TRUE, assert_that(is.function("clearly noy")))
-  expect_snapshot(error = TRUE, assert_that(is.primitive(assert_that)))
+    fn <- function(x) assert_that(x <= 1),
+    fn(2),
 
-  expect_snapshot(error = TRUE, assert_that(is.call("not")))
-  expect_snapshot(error = TRUE, assert_that(is.expression(mtcars)))
-  expect_snapshot(error = TRUE, assert_that(is.name("not really")))
-  expect_snapshot(error = TRUE, assert_that(is.pairlist(1:10)))
-  expect_snapshot(error = TRUE, assert_that(is.recursive(1)))
-  expect_snapshot(error = TRUE, assert_that(is.symbol("almost")))
+    fn <- function(x) assert_that(x != 1),
+    fn(2)
+  )
 
-  expect_snapshot(error = TRUE, assert_that(inherits(letters, "myclass")))
+  asciicast::expect_snapshot_r_process(
+    fn <- function(x) assert_that(is.atomic(x)),
+    fn(mtcars),
 
-  expect_snapshot(error = TRUE, assert_that(TRUE && FALSE))
+    fn <- function(x) assert_that(is.character(x)),
+    fn(1:2),
 
-  expect_snapshot(error = TRUE, assert_that(FALSE || FALSE))
+    fn <- function(x) assert_that(is.complex(x)),
+    fn(1:5),
 
-  expect_snapshot(error = TRUE, assert_that(any(rep(FALSE, 10))))
-  expect_snapshot(error = TRUE, assert_that(all(c(FALSE, TRUE, TRUE))))
+    fn <- function(x) assert_that(is.double(x)),
+    fn(letters),
 
-  expect_snapshot(error = TRUE, assert_that(file.exists("/file7e0fe1739e0")))
-  expect_snapshot(error = TRUE, assert_that(identical(1, 1L)))  
+    fn <- function(x) assert_that(is.integer(x)),
+    fn(letters),
+
+    fn <- function(x) assert_that(is.numeric(x)),
+    fn(letters),
+
+    fn <- function(x) assert_that(is.raw(x)),
+    fn(1:10),
+
+    fn <- function(x) assert_that(is.vector(x)),
+    fn(mtcars)
+  )
+
+  asciicast::expect_snapshot_r_process(
+    fn <- function(x) assert_that(is.factor(x)),
+    fn(letters),
+
+    fn <- function(x) assert_that(is.ordered(x)),
+    fn(factor(letters)),
+
+    fn <- function(x) assert_that(is.array(x)),
+    fn(factor(letters)),
+
+    fn <- function(x) assert_that(is.ordered(x)),
+    fn(factor(letters)),
+
+    fn <- function(x) assert_that(is.array(x)),
+    fn(letters),
+
+    fn <- function(x) assert_that(is.data.frame(x)),
+    fn(1:10),
+
+    fn <- function(x) assert_that(is.list(x)),
+    fn("foobar"),
+
+    fn <- function(x) assert_that(is.matrix(x)),
+    fn(letters),
+
+    fn <- function(x) assert_that(is.null(x)),
+    fn("not"),
+
+    fn <- function(x) assert_that(is.environment(x)),
+    fn(list()),
+
+    fn <- function(x) assert_that(is.function(x)),
+    fn("clearly noy"),
+
+    fn <- function(x) assert_that(is.promitive(x)),
+    fn(asesrt_that),
+
+    fn <- function(x) assert_that(is.call(x)),
+    fn("not"),
+
+    fn <- function(x) assert_that(is.expression(x)),
+    fn(mtcars),
+
+    fn <- function(x) assert_that(is.name(x)),
+    fn("not really"),
+
+    fn <- function(x) assert_that(is.pairlist(x)),
+    fn(1:10),
+
+    fn <- function(x) assert_that(is.recursive(x)),
+    fn(1),
+
+    fn <- function(x) assert_that(is.symbol(x)),
+    fn("almost"),
+
+  )
+
+  asciicast::expect_snapshot_r_process(
+    fn <- function(x, y) assert_that(x && y),
+    fn(is.integer(1L), is.integer("a")),
+
+    fn <- function(x, y) assert_that(x || y),
+    fn(is.integer("b"), is.integer("a")),
+
+    fn <- function(x) assert_that(any(x)),
+    fn(rep(FALSE, 10)),
+
+    fn <- function(x) assert_that(all(x)),
+    fn(c(FALSE, TRUE, TRUE)),
+
+    fn <- function(x) assert_that(file.exists(x)),
+    fn("/file7e0fe1739e0"),
+
+    fn <- function(x, y) assert_that(identical(x, y)),
+    fn(1, 1L)
+  )
 })
 
 test_that("long call is truncated", {

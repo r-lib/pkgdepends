@@ -30,7 +30,7 @@
       Backtrace:
       [90m1. [39mglobal [36mfn[39m[33m([39m[34m1[39m[32m:[39m[34m2[39m[33m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
-      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), … at assertthat.R:18:5[39m
+      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), …[39m
       Execution halted
 
 ---
@@ -46,7 +46,7 @@
       Backtrace:
       [90m1. [39mglobal [36mfn[39m[33m([39m[36mc[39m[34m([39m[33m""[39m, [34mNA_character_)[39m[33m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
-      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), … at assertthat.R:18:5[39m
+      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), …[39m
       Execution halted
 
 ---
@@ -62,7 +62,7 @@
       Backtrace:
       [90m1. [39mglobal [36mfn[39m[33m([39m[36mrep[39m[34m(NA_character_[39m, [34m5)[39m[33m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
-      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), … at assertthat.R:18:5[39m
+      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), …[39m
       Execution halted
 
 # is_string errors

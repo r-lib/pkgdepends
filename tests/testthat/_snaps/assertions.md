@@ -260,3 +260,40 @@
       [33m![39m [1m[22m`x` must be a [34m<difftime>[39m object, but it is a number.
       [90mType .Last.error to see the more details.[39m
 
+# is_count errors
+
+    Code
+      fn(letters)
+    Error <assertError>
+      ! `x` must be a count, a non-negative integer scalar.
+      i It is a character vector.
+
+---
+
+    Code
+      fn(1:10)
+    Error <assertError>
+      ! `x` must be a count, a non-negative integer scalar.
+      i It is an integer vector.
+
+---
+
+    Code
+      fn(-1)
+    Error <assertError>
+      ! `x` must be at least 0.
+
+---
+
+    Code
+      fn(0, min = 1)
+    Error <assertError>
+      ! `x` must be at least 1.
+
+---
+
+    Code
+      fn(NA_integer_)
+    Error <assertError>
+      ! `x` must not be a missing value (`NA`).
+

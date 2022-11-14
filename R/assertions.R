@@ -206,3 +206,37 @@ is_difftime <- function(x) {
     env = environment()
   )
 }
+
+is_count <- function(x, min = 0L) {
+  if (is.numeric(x) && length(x) == 1 && !is.na(x) &&
+      as.integer(x) == x && x >= min) {
+    return(TRUE)
+  }
+  if (!is.numeric(x) || length(x) != 1 || (!is.na(x) && as.integer(x) != x)) {
+    structure(
+      FALSE,
+      msg = c(
+        if (min == 0) {
+          "{.arg {(.arg)}} must be a count, a non-negative integer scalar."
+        } else {
+          "{.arg {(.arg)}} must be a count, an integer scalar,
+           at least {min}."
+        },
+        i = "It is {.type {x}}."
+      ),
+      env = environment()
+    )
+  } else if (!is.na(x) && x < min) {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must be at least {min}.",
+      env = environment()
+    )
+  } else {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must not be a missing value ({.code NA}).",
+      env = environment()
+    )
+  }
+}

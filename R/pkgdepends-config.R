@@ -23,10 +23,14 @@ env_decode_difftime <- function(x, name) {
       return(as.difftime(qty, units = unit))
     }
   }
-  stop(
-    "Invalid time interval specification in `", name,
-    "` environment variable: `", x, "`"
-  )
+  throw(pkg_error(
+    "Invalid time interval specification in {.envvar {name}} environment
+     variable: {.str {x}}",
+    i = "It must have the form {.code <number><unit>}.",
+    i = "The unit must be a single letter: {.code s} (seconds),
+     {.code m} (minutes), {.code h} (hours) or {.code d} (days).",
+    i = "Examples: {.emph 60s}, {.emph 2h}, {.emph 1d}."
+  ))
 }
 
 default_sysreqs <- function() {

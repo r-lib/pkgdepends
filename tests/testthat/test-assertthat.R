@@ -116,3 +116,19 @@ test_that("has_attr", {
     assert_that(1L %has_attr% "foobar")
   )
 })
+
+test_that("custom message", {
+  fn <- function(name) {
+    assert_that(
+      is_string(name),
+      msg = c(
+        "{.arg {(.arg)}} must be a name (character scalar).",
+        i = "It is {.type {name}}."
+      )
+    )
+  }
+  expect_snapshot(
+    error = TRUE,
+    fn(1:10)
+  )
+})

@@ -14,6 +14,8 @@ assert_that <- function(..., env = parent.frame(), msg = NULL) {
     if (is.null(msg)) {
       msg <- get_message(res, assertion, env)
       evalenv <- attr(res, "env") %||% env
+    } else {
+      evalenv <- env
     }
     throw(assert_error(
       assertion,

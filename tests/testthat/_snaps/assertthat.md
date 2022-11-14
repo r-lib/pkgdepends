@@ -317,3 +317,11 @@
     Error <assertError>
       ! `1L` must have attribute `foobar`.
 
+# custom message
+
+    Code
+      fn(1:10)
+    Error <assertError>
+      ! `name` must be a name (character scalar).
+      i It is an integer vector.
+

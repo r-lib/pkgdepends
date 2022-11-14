@@ -219,3 +219,30 @@ test_that("is_difftime errors", {
     fn(1)
   )
 })
+
+test_that("is_count", {
+  pos <- list(0, 0L, 1, 1L, 10000, 10000L)
+  neg <- list(-1, 1.1, letters, integer(), 1:5, NA_integer_)
+
+  for (p in pos) expect_true(is_count(p), info = p)
+  for (n in neg) expect_false(is_count(n), info = n)
+
+  expect_true(is_count(-10, min = -10))
+  expect_true(is_count(-10, min = -100))
+  expect_true(is_count(10, min = 10))
+  expect_true(is_count(10, min = -100))
+
+  expect_false(is_count(-10, min = -9))
+  expect_false(is_count(-10, min = 0))
+  expect_false(is_count(10, min = 11))
+  expect_false(is_count(0, min = 1))
+})
+
+test_that("is_count errors", {
+  fn <- function(x, min = 0) assert_that(is_count(x, min = min))
+  expect_snapshot(error = TRUE, fn(letters))
+  expect_snapshot(error = TRUE, fn(1:10))
+  expect_snapshot(error = TRUE, fn(-1))
+  expect_snapshot(error = TRUE, fn(0, min = 1))
+  expect_snapshot(error = TRUE, fn(NA_integer_))
+})

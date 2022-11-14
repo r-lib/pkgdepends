@@ -131,7 +131,7 @@ config <- local({
     is.character(x) && length(x) == 1 && !is.na(x)
   }
 
-  is_string_or_null <- function(x) {
+  is_optional_string <- function(x) {
     is.null(x) || is_string(x)
   }
 
@@ -148,7 +148,7 @@ config <- local({
     custom = function(x) true(x),
     flag = function(x) is_flag(x),
     string = function(x) is_string(x),
-    string_or_null = function(x) is_string_or_null(x),
+    string_or_null = function(x) is_optional_string(x),
     count = function(x) is_count(x)
   )
 

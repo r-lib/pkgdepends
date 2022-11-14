@@ -11,7 +11,7 @@ is_character <- function(x) {
     structure(
       FALSE,
       msg = "{.arg {(.arg)}} must be a character vector without {.code NA},
-             but it has {sum(is.na(x))} {.code NA} values.",
+             but it has {sum(is.na(x))} {.code NA} value{?s}.",
       env = environment()
     )
   } else {
@@ -22,32 +22,48 @@ is_character <- function(x) {
 
 is_string <- function(x) {
   if (is.character(x) && length(x) == 1 && !is.na(x)) return(TRUE)
-  structure(
-    FALSE,
-    msg = "{.arg {(.arg)}} must be a string (character scalar),
+  if (is.character(x) && length(x) == 1 && is.na(x)) {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must not be {.code NA}.",
+      env = environment()
+    )
+  } else {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must be a string (character scalar),
            but it is {.type {x}}.",
-    env = environment()
-  )
+      env = environment()
+    )
+  }
 }
 
-is_string_or_null <- function(x) {
+is_optional_string <- function(x) {
   if (is.null(x) || is_string(x)) return(TRUE)
   structure(
     FALSE,
-    msg = "{.arg {(.arg)}} must be a string (character scalar) or
-           {.code NULL}, but it is {.type {x}}.",
+    msg = "{.arg {(.arg)}} must be a path (character scalar),
+           but it is {.type {x}}.",
     env = environment()
   )
 }
 
 is_flag <- function(x) {
   if (is.logical(x) && length(x) == 1 && !is.na(x)) return(TRUE)
-  structure(
-    FALSE,
-    msg = "{.arg {(.arg)}} must be a flag (logical scalar),
-           but it is {.type {x}}.",
-    env = environment()
-  )
+  if (is.logical(x) && length(x) == 1 && is.na(x)) {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must not be {.code NA}.",
+      env = environment()
+    )
+  } else {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must be a flag (logical scalar),
+             but it is {.type {x}}.",
+      env = environment()
+    )
+  }
 }
 
 ## To be refined
@@ -62,8 +78,8 @@ is_path <- function(x) {
   )
 }
 
-is_path_or_null <- function(x) {
-  if (is_string_or_null(x)) return(TRUE)
+is_optional_path <- function(x) {
+  if (is_optional_string(x)) return(TRUE)
   structure(
     FALSE,
     msg = "{.arg {(.arg)}} must be a path (character scalar) or {.code NULL},
@@ -121,7 +137,7 @@ is_platform_list <- function(x) {
       FALSE,
       msg = "{.arg ((.arg)}} must be a list of platforms, a character
              vector without missing values, but it has {sum(is.na(x))}
-             missing values.",
+             missing value{?s}.",
       env = environment()
     )
   } else {
@@ -185,7 +201,7 @@ is_difftime <- function(x) {
   if (inherits(x, "difftime")) return(TRUE)
   structure(
     FALSE,
-    msg = "{.arg {(.arg)}} must be a {.class difftime} obkect, but it is
+    msg = "{.arg {(.arg)}} must be a {.cls difftime} object, but it is
            {.type {x}}.",
     env = environment()
   )

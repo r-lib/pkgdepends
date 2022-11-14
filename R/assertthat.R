@@ -31,7 +31,8 @@ assert_error <- function(assertion, result, msg, .data = NULL, .class = NULL,
                          .envir = parent.frame(), call. = TRUE) {
 
   myenv <- new.env(parent = .envir)
-  myenv$.arg <- as.character(assertion[[2]])
+  myenv$.arg <- if (length(assertion) >= 2) deparse(assertion[[2]])
+  myenv$.arg2 <- if (length(assertion) >= 3) deparse(assertion[[3]])
   .hide_from_trace <- TRUE
   cnd <- new_error(
     call. = call.,
@@ -71,17 +72,15 @@ check_result <- function(x) {
 }
 
 get_message <- function(res, call, env = parent.frame()) {
-  stopifnot(is.call(call), length(call) >= 1)
-
   if (has_attr(res, "msg")) {
     return(attr(res, "msg"))
   }
 
   f <- eval(call[[1]], env)
-  if (!is.primitive(f)) call <- match.call(f, call)
+  if (is.call(call) && !is.primitive(f)) call <- match.call(f, call)
   fname <- deparse(call[[1]])
 
-  fail <- on_failure(f) %||% base_fs[[fname]] %||% fail_default
+  fail <- base_fs[[fname]] %||% fail_default
   fail(call, env)
 }
 
@@ -98,21 +97,19 @@ fail_default <- function(call, env) {
   paste0(call_string, " is not TRUE")
 }
 
-on_failure <- function(x) attr(x, "fail")
-
-"on_failure<-" <- function(x, value) {
-  stopifnot(is.function(x), identical(names(formals(value)), c("call", "env")))
-  attr(x, "fail") <- value
-  x
-}
-
-has_attr <- function(x, which) !is.null(attr(x, which, exact = TRUE))
-on_failure(has_attr) <- function(call, env) {
-  paste0(deparse(call$x), " does not have attribute ", eval(call$which, env))
+has_attr <- function(x, which) {
+  if (!is.null(attr(x, which, exact = TRUE))) return(TRUE)
+  structure(
+    FALSE,
+    msg = "{.arg {(.arg)}} must have attribute {.code {which}}.",
+    env = environment()
+  )
 }
 "%has_attr%" <- has_attr
 
 base_fs <- new.env(parent = emptyenv())
+
+# nocov start
 
 logical_is_not <- function(failed) {
   function(call, env) {
@@ -134,6 +131,8 @@ is_not <- function(thing) {
     paste0(deparse(call[[2]]), " is not ", thing)
   }
 }
+
+# nocov end
 
 # Vectors
 base_fs$is.atomic <- is_not("an atomic vector")
@@ -211,10 +210,6 @@ base_fs$all <- function(call, env) {
 base_fs$file.exists <- function(call, env) {
   path <- eval(call[[2]], env)
   paste0("Path '", path, "' does not exist")
-}
-
-base_fs$anyDuplicated <- function(call, env) {
-  paste0(call$x, " is not unique")
 }
 
 base_fs$identical <- function(call, env) {

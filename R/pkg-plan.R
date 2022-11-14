@@ -121,7 +121,7 @@ pkgplan_init <- function(self, private, refs, config, library,
   }
 
   assert_that(is_character(refs),
-              is_path_or_null(library))
+              is_optional_path(library))
 
   private$refs <- refs
   private$remotes <- parse_pkg_refs(refs)
@@ -164,7 +164,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
                                    library, remote_types) {
   assert_that(
     is_path(lockfile),
-    is_path_or_null(library)
+    is_optional_path(library)
   )
 
   private$config <- current_config()$update(config)

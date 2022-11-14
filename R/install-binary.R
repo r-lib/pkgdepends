@@ -4,11 +4,12 @@
 install_binary <- function(filename, lib = .libPaths()[[1L]],
                            metadata = NULL, quiet = FALSE) {
 
-  stopifnot(
-    is_string(filename), file.exists(filename),
+  assert_that(
+    is_existing_file(filename),
     is_string(lib),
     all_named(metadata),
-    is.null(quiet) || is_flag(quiet))
+    is.null(quiet) || is_flag(quiet)
+  )
 
   stdout <- ""
 

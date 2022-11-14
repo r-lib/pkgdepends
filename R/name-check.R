@@ -51,12 +51,9 @@ pkg_name_check <- function(name, dictionaries = NULL) {
 }
 
 async_pkg_name_check <- function(name, dictionaries = NULL) {
-  stopifnot(
-    is.character(name),
-    length(name) == 1,
-    !is.na(name),
-    is.null(dictionaries) || is.character(dictionaries),
-    !anyNA(dictionaries)
+  assert_that(
+    is_string(name),
+    is.null(dictionaries) || is_character(dictionaries)
   )
 
   default_dictionaries <- c(

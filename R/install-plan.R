@@ -80,7 +80,7 @@ install_package_plan <- function(plan, lib = .libPaths()[[1]],
   required_columns <- c(
     "type", "binary", "dependencies", "file", "needscompilation", "package"
   )
-  stopifnot(
+  assert_that(
     inherits(plan, "data.frame"),
     all(required_columns %in% colnames(plan)),
     is_string(lib),

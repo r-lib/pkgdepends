@@ -375,7 +375,7 @@ get_id <- local({
 # well on Windows non-ascii file names
 
 safe_md5sum <- function(path) {
-  stopifnot(length(path) == 1)
+  assert_that(is_path(path))
   tryCatch(
     tools::md5sum(path),
     error = function(err) {

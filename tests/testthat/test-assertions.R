@@ -19,18 +19,21 @@ test_that("is_character errors, noninteractive", {
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
+    options(cli.unicode = FALSE),
     fn(1:2),
     transform = transform_no_srcref
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
+    options(cli.unicode = FALSE),
     fn(c("", NA_character_)),
     transform = transform_no_srcref
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
+    options(cli.unicode = FALSE),
     fn(rep(NA_character_, 5)),
     transform = transform_no_srcref
   )
@@ -183,6 +186,7 @@ test_that("is_dependencies", {
 test_that("is_dependencies errors", {
   asciicast::expect_snapshot_r_process(
     fn <- function(x) assert_that(is_dependencies(x)),
+    options(cli.unicode = FALSE),
     fn(c("Depends", NA))
   )
 })

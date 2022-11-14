@@ -23,6 +23,7 @@
       r_process()
     Output
       > fn <- function(x) assert_that(is_character(x))
+      > options(cli.unicode = FALSE)
       > fn(1:2)
       [1m[33mError[39m[22m in `fn(1:2)`:
       [33m![39m [1m[22m`x` must be a character vector without `NA`, but it is an integer vector
@@ -30,7 +31,7 @@
       Backtrace:
       [90m1. [39mglobal [36mfn[39m[33m([39m[34m1[39m[32m:[39m[34m2[39m[33m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
-      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), …[39m
+      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), ...[39m
       Execution halted
 
 ---
@@ -39,6 +40,7 @@
       r_process()
     Output
       > fn <- function(x) assert_that(is_character(x))
+      > options(cli.unicode = FALSE)
       > fn(c("", NA_character_))
       [1m[33mError[39m[22m in `fn(c("", NA_character_))`:
       [33m![39m [1m[22m`x` must be a character vector without `NA`, but it has 1 `NA` value.
@@ -46,7 +48,7 @@
       Backtrace:
       [90m1. [39mglobal [36mfn[39m[33m([39m[36mc[39m[34m([39m[33m""[39m, [34mNA_character_)[39m[33m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
-      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), …[39m
+      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), ...[39m
       Execution halted
 
 ---
@@ -55,6 +57,7 @@
       r_process()
     Output
       > fn <- function(x) assert_that(is_character(x))
+      > options(cli.unicode = FALSE)
       > fn(rep(NA_character_, 5))
       [1m[33mError[39m[22m in `fn(rep(NA_character_, 5))`:
       [33m![39m [1m[22m`x` must be a character vector without `NA`, but it has 5 `NA` values.
@@ -62,7 +65,7 @@
       Backtrace:
       [90m1. [39mglobal [36mfn[39m[33m([39m[36mrep[39m[34m(NA_character_[39m, [34m5)[39m[33m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
-      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), …[39m
+      [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), ...[39m
       Execution halted
 
 # is_string errors
@@ -213,12 +216,13 @@
       r_process()
     Output
       > fn <- function(x) assert_that(is_dependencies(x))
+      > options(cli.unicode = FALSE)
       > fn(c("Depends", NA))
       [1m[33mError[39m[22m in `fn(c("Depends", NA))`:
       [33m![39m [1m[22m`x` must be one of the following: `NA`, `TRUE`, `FALSE`, a character
       vector of dependency types, a named list with entries `direct` and `indirect`,
       both character vectors of dependency types.
-      [36mℹ[39m valid dependency types are: [34m"Depends"[39m, [34m"Imports"[39m, [34m"LinkingTo"[39m, [34m"Suggests"[39m,
+      [36mi[39m valid dependency types are: [34m"Depends"[39m, [34m"Imports"[39m, [34m"LinkingTo"[39m, [34m"Suggests"[39m,
         [34m"Enhances"[39m, [34m"soft"[39m, [34m"hard"[39m, and [34m"all"[39m, and `config/needs/*` types
       [90mType .Last.error to see the more details.[39m
 

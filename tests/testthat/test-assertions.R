@@ -20,16 +20,19 @@ test_that("is_character errors, noninteractive", {
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
     fn(1:2),
+    transform = function(x) sub(" at line 1", "", x)
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
-    fn(c("", NA_character_))
+    fn(c("", NA_character_)),
+    transform = function(x) sub(" at line 1", "", x)
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
-    fn(rep(NA_character_, 5))
+    fn(rep(NA_character_, 5)),
+    transform = function(x) sub(" at line 1", "", x)
   )
 })
 

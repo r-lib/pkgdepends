@@ -201,6 +201,7 @@ test_that("is_r_version_list", {
 
 test_that("is_r_version_list errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_no_srcref,
     fn <- function(x) assert_that(is_r_version_list(x)),
     fn(1:10),
     fn(character()),

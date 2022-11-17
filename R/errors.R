@@ -208,10 +208,10 @@ err <- local({
       throw(new_error("Parent condition must be a condition object"))
     }
 
-    if (isTRUE(cond$call)) {
-      cond$call <- sys.call(-1) %||% sys.call()
-    } else if (identical(cond$call, FALSE)) {
-      cond$call <- NULL
+    if (isTRUE(cond[["call"]])) {
+      cond[["call"]] <- sys.call(-1) %||% sys.call()
+    } else if (identical(cond[["call"]], FALSE)) {
+      cond[["call"]] <- NULL
     }
 
     cond <- process_call(cond)
@@ -344,7 +344,7 @@ err <- local({
       error = function(e) {
         .hide_from_trace <- 0:1
         e$srcref <- srcref
-        e$call <- call
+        e[["call"]] <- call
         name <- native_name(.NAME)
         err <- new_error("Native call to `", name, "` failed", call. = call1)
         cerror <- if (inherits(e, "simpleError")) "c_error"
@@ -378,7 +378,7 @@ err <- local({
       error = function(e) {
         .hide_from_trace <- 0:1
         e$srcref <- srcref
-        e$call <- call
+        e[["call"]] <- call
         name <- native_name(.NAME)
         err <- new_error("Native call to `", name, "` failed", call. = call1)
         cerror <- if (inherits(e, "simpleError")) "c_error"
@@ -539,7 +539,7 @@ err <- local({
       srcref = srcrefs,
       pid = pids
     )
-    trace$call <- calls
+    trace[["call"]] <- calls
 
     class(trace) <- c("rlib_trace_3_0", "rlib_trace", "tbl", "data.frame")
     trace
@@ -758,7 +758,7 @@ err <- local({
 
   format_header_line_cli <- function(x, prefix = NULL) {
     p_error <- format_error_heading_cli(x, prefix)
-    p_call <- format_call_cli(x$call)
+    p_call <- format_call_cli(x[["call"]])
     p_srcref <- format_srcref_cli(conditionCall(x), x$srcref)
     paste0(p_error, p_call, p_srcref, if (!is.null(conditionCall(x))) ":")
   }
@@ -834,18 +834,18 @@ err <- local({
     srcref <- if ("srcref" %in% names(x)) {
       vapply(
         seq_len(nrow(x)),
-        function(i) format_srcref_cli(x$call[[i]], x$srcref[[i]]),
+        function(i) format_srcref_cli(x[["call"]][[i]], x$srcref[[i]]),
         character(1)
       )
     } else {
-      unname(vapply(x$call, format_srcref_cli, character(1)))
+      unname(vapply(x[["call"]], format_srcref_cli, character(1)))
     }
 
     lines <- paste0(
       cli::col_silver(format(x$num), ". "),
       ifelse (visible, "", "| "),
       scope,
-      vapply(x$call, format_trace_call_cli, character(1)),
+      vapply(x[["call"]], format_trace_call_cli, character(1)),
       srcref
     )
 
@@ -902,18 +902,18 @@ err <- local({
     srcref <- if ("srcref" %in% names(x)) {
       vapply(
         seq_len(nrow(x)),
-        function(i) format_srcref_plain(x$call[[i]], x$srcref[[i]]),
+        function(i) format_srcref_plain(x[["call"]][[i]], x$srcref[[i]]),
         character(1)
       )
     } else {
-      unname(vapply(x$call, format_srcref_plain, character(1)))
+      unname(vapply(x[["call"]], format_srcref_plain, character(1)))
     }
 
     lines <- paste0(
       paste0(format(x$num), ". "),
       ifelse (visible, "", "| "),
       scope,
-      vapply(x$call, format_trace_call_plain, character(1)),
+      vapply(x[["call"]], format_trace_call_plain, character(1)),
       srcref
     )
 
@@ -926,7 +926,7 @@ err <- local({
 
   format_header_line_plain <- function(x, prefix = NULL) {
     p_error <- format_error_heading_plain(x, prefix)
-    p_call <- format_call_plain(x$call)
+    p_call <- format_call_plain(x[["call"]])
     p_srcref <- format_srcref_plain(conditionCall(x), x$srcref)
     paste0(p_error, p_call, p_srcref, if (!is.null(conditionCall(x))) ":")
   }
@@ -993,14 +993,14 @@ err <- local({
 
   process_call <- function(cond) {
     cond[c("call", "srcref")] <- list(
-      call = if (is.null(cond$call)) {
+      call = if (is.null(cond[["call"]])) {
         NULL
-      } else if (is.character(cond$call)) {
-        cond$call
+      } else if (is.character(cond[["call"]])) {
+        cond[["call"]]
       } else {
-        deparse(cond$call, nlines = 2)
+        deparse(cond[["call"]], nlines = 2)
       },
-      srcref = get_srcref(cond$call, cond$srcref)
+      srcref = get_srcref(cond[["call"]], cond$srcref)
     )
     cond
   }

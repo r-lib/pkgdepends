@@ -464,7 +464,9 @@ pkg_installation_proposal <- R6::R6Class(
       srq <- self$get_solution()$sysreqs
       if (is.null(srq)) return(invisible())
       if (!is.null(srq$error)) {
-        stop("sysreqs error: ", conditionMessage(srq$error))
+        throw(new_error(
+          "Failed to look up system requirements."
+        ), parent = srq$error)
       }
       config <- get_private(private$plan)$config
       sysreqs_install(srq$result %||% srq, config)

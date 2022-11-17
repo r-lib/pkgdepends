@@ -476,3 +476,11 @@ transform_ext <- function(x) {
 transform_sha <- function(x) {
   gsub("[a-fA-F0-9]{64}", "<sha>", x)
 }
+
+transform_tempdir <- function(x) {
+  x <- sub(tempdir(), "<tempdir>", x)
+  x <- sub(normalizePath(tempdir()), "<tempdir>", x)
+  x <- sub(normalizePath(tempdir(), winslash = "/"), "<tempdir>", x)
+  x <- sub("[\\\\/]file[a-zA-Z0-9]+", "/<tempfile>", x)
+  x
+}

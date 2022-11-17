@@ -208,7 +208,8 @@ test_that("bad archive file (multiple directories)", {
   mkdirp("pkg2")
   expect_snapshot(
     error = TRUE,
-    get_pkg_dir_from_archive_dir(tmp)
+    get_pkg_dir_from_archive_dir(tmp),
+    transform = transform_tempdir
   )
 })
 

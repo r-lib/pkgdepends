@@ -27,19 +27,30 @@ download_remote_local <- function(resolution, target, target_tree, config,
 
   source_file <- sub("^file://",  "",  resolution$sources[[1]])
   isdir <- file.info(source_file)$isdir
-  if (is.na(isdir)) stop("Local file not found")
+  if (is.na(isdir)) {
+    throw(pkg_error(
+      "Could not find local package file/directory at
+       {.path {resolution$sources[[1]]}}"
+    ))
+  }
 
   if (isdir) {
     unlink(target_tree, recursive = TRUE)
     mkdirp(target_tree)
     if (! file.copy(source_file, target_tree, recursive = TRUE)) {
       # deleted after the resolution?
-      stop("No local file found")                                   # nocov
+      throw(pkg_error(                                        # nocov start
+        "Could not find local package file/directory at
+       {.path {resolution$sources[[1]]}}"
+      ))                                                      # nocov end
     }
   } else {
     if (! file.copy(source_file, target, overwrite = TRUE)) {
       # deleted after the resolution?
-      stop("No local file found")                                   # nocov
+      throw(pkg_error(                                        # nocov start
+        "Could not find local package file/directory at
+       {.path {resolution$sources[[1]]}}"
+      ))                                                      # nocov end
     }
   }
 

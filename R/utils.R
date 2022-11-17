@@ -1,4 +1,8 @@
 
+zwnj <- function() {
+  if (cli::is_utf8_output()) "\u200c" else ""
+}
+
 pkgd_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l

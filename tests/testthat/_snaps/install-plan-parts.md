@@ -78,7 +78,9 @@
     Code
       install_package_plan(plan, lib = tempfile())
     Error <rlib_error_3_0>
-      ! Internal pkgdepends error, no task running and cannot select new task
+      ! Cannot select new package installation task.
+      i 3 packages still waiting to install: p1, p2, and p3.
+      i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
 
 # install_args are passed
 

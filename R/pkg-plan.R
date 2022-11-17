@@ -179,7 +179,11 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
 
   raw <- fromJSON(readLines(lockfile), simplifyVector = FALSE)
   if (raw$lockfile_version != 1) {
-    stop("Unknown lockfile version: ", raw$lockfile_version)
+    throw(pkg_error(
+      "This version of {pak_or_pkgdepends()} (version {pakx_version()})
+       does not support lockfile version {raw$lockfile_version}.",
+      i = "This lockfile was probably created by a newer version."
+    ))
   }
 
   pkgs <- raw$packages

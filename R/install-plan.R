@@ -293,7 +293,12 @@ select_next_task <- function(state) {
 
   ## Detect internal error
   if (!all(state$plan$install_done) && all(is.na(state$plan$worker_id))) {
-    stop("Internal pkgdepends error, no task running and cannot select new task")
+    todo <- state$plan$package[!state$plan$install_done]
+    throw(pkg_error(
+      "Cannot select new package installation task.",
+      i = "{length(todo)} package{?s} still waiting to install: {.pkg {todo}}.",
+      i = msg_internal_error()
+    ))
   }
 
   ## Looks like nothing else to do
@@ -318,7 +323,10 @@ start_task <- function(state, task) {
     start_task_install(state, task)
 
   } else {
-    stop("Unknown task, internal error")
+    throw(pkg_error(
+      "Unknown task: {.val {task$name}}.",
+      i = msg_internal_error()
+    ))
   }
 }
 
@@ -544,7 +552,10 @@ stop_task <- function(state, worker) {
     stop_task_install(state, worker)
 
   } else {
-    stop("Unknown task, internal error")
+    throw(pkg_error(
+      "Unknown task: {.val {worker$task$name}}.",
+      i = msg_internal_error()
+    ))
   }
 }
 

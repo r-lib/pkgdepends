@@ -103,10 +103,19 @@ solve_dummy_obj <- 1000000000
 pkgplan_solve <- function(self, private, policy) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
   if (is.null(private$config$get("library"))) {
-    stop("No package library specified, see 'library' in new()")
+    throw(pkg_error(
+      "No package library specified for installation plan.",
+      i = "Maybe you need to specify {.code config = list(library = ...)}
+       in {.code pkg_installation_plan$new()} or another initializer?"
+    ))
   }
   if (is.null(private$resolution)) self$resolve()
-  if (private$dirty) stop("Need to resolve, remote list has changed")
+  if (private$dirty) {
+    throw(pkg_error(
+      "Package list has changed, you need to call the {.code $resolve()}
+       method again?"
+    ))
+  }
 
   metadata <- list(solution_start = Sys.time())
   pkgs <- self$get_resolution()
@@ -116,7 +125,11 @@ pkgplan_solve <- function(self, private, policy) {
   sol <- private$solve_lp_problem(prb)
 
   if (sol$status != 0) {
-    stop("Cannot solve installation, internal lpSolve error ", sol$status)
+    throw(pkg_error(
+      "Error in dependency solver, cannot solve installation.",
+      i = "Solver status: {sol$status}.",
+      i = msg_internal_error()
+    ))
   }
 
   selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
@@ -156,19 +169,27 @@ pkgplan_solve <- function(self, private, policy) {
 
 pkgplan_stop_for_solve_error <- function(self, private) {
   if (is.null(private$solution)) {
-    stop("No solution found, need to call $solve()")
+    throw(pkg_error(
+      "You need to call the {.code $solve()} method first."
+    ))
   }
 
   sol <- self$get_solution()
 
   if (sol$status != "OK") {
     msg <- paste(format(sol$failures), collapse = "\n")
-    stop("Cannot install packages:\n", msg, call. = FALSE)
+    throw(new_error(
+      "Could not solve package dependencies:\n",
+      msg,
+      call. = FALSE
+    ))
   }
 
   # sysreqs error?
   if (!is.null(sol$sysreqs$error)) {
-    stop("sysreqs lookup error: ", conditionMessage(sol$sysreqs$error))
+    throw(new_error(
+      "Could not look up system requirements."
+    ), parent = sol$sysreqs$error)
   }
 }
 
@@ -285,7 +306,10 @@ pkgplan_i_lp_objectives <- function(lp) {
     lp$obj <- lp$obj - min(lp$obj)
 
   } else {
-    stop("Unknown version selection policy")
+    throw(pkg_error(
+      "Unknown version selection policy: {.val {policy}}.",
+      i = "It has to be one of {.val lazy} or {.val upgrade}."
+    ))
   }
 
   lp$obj <- c(lp$obj, rep(solve_dummy_obj, lp$num_direct))
@@ -773,7 +797,9 @@ pkgplan_i_solve_lp_problem <- function(problem) {
 
 pkgplan_get_solution <- function(self, private) {
   if (is.null(private$solution)) {
-    stop("No solution found, need to call $solve()")
+    throw(pkg_error(
+      "You need to call the {.code $solve()} method first."
+    ))
   }
   private$solution$result
 }
@@ -788,7 +814,12 @@ pkgplan_get_solution <- function(self, private) {
 #' @importFrom cli style_bold
 
 highlight_version <- function(old, new) {
-  if (length(old) != length(new)) stop("`old` and `new` length must match")
+  if (length(old) != length(new)) {
+    throw(pkg_error(
+      "Lengtgs of `old` and `new` must match",
+      i = msg_internal_error()
+    ))
+  }
   if (length(new) == 0) return(new)
 
   wch <- !is.na(old) & old != new
@@ -1064,7 +1095,12 @@ describe_solution_error <- function(pkgs, solution) {
   )
 
   num <- nrow(pkgs)
-  if (!num) stop("No solution errors to describe")
+  if (!num) {
+    throw(pkg_error(
+      "No solution errors to describe",
+      i = msg_internal_error()
+    ))
+  }
   sol <- solution$solution$solution
   sol_pkg <- sol[1:num]
   sol_dum <- sol[(num+1):solution$problem$total]

@@ -146,10 +146,8 @@ test_that("error", {
 
   expect_equal(nrow(res), 2)
   expect_equal(res$ref, c("foo::bar", "foo::bar2"))
-  expect_s3_class(res$error[[1]], "error")
-  expect_s3_class(res$error[[2]], "error")
-  expect_equal(conditionMessage(res$error[[1]]), "! foobar")
-  expect_equal(conditionMessage(res$error[[2]]), "! foobar")
+  expect_snapshot(res$error[[1]])
+  expect_snapshot(res$error[[2]])
   expect_equal(res$status, c("FAILED", "FAILED"))
   expect_equal(res$type, c("foo", "foo"))
 })

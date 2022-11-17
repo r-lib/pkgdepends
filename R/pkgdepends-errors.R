@@ -31,3 +31,29 @@ stop <- function(..., call. = TRUE, domain = NA) {
 stopifnot <- function(...) {
   assert_that(..., env = parent.frame())
 }
+
+msg_internal_error <- function() {
+  "This is an internal error in {pak_or_pkgdepends()}, please report
+   an issue at {.url https://github.com/r-lib/{pak_or_pkgdepends()}/issues}."
+}
+
+msg_package_sources <- function() {
+  if (is_pak()) {
+    "See {.help pak::pak_package_sources} for the package sources
+     pak supports."
+  } else {
+    "See {.help pkgdepends::pkg_refs} for supported package sources."
+  }
+}
+
+is_pak <- function() {
+  Sys.getenv("R_PKG_PKG_WORKER") == "true"
+}
+
+pak_or_pkgdepends <- function() {
+  if (is_pak()) "pak" else "pkgdepends"
+}
+
+pakx_version <- function() {
+  if (is_pak()) utils::packageVersion("pak") else utils::packageVersion("pkgdepends")
+}

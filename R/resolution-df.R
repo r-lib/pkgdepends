@@ -120,7 +120,10 @@ res_one_row_df <- function(l) {
 
 res_add_defaults <- function(df) {
   if (length(bad <- setdiff(res_df_must_have(), names(df)))) {
-    stop("Entries missing from remote: ", format_items(bad))
+    throw(pkg_error(
+      "Entr{?y/ies} missing from package remote: {.val {bad}}",
+      i = msg_internal_error()
+    ))
   }
 
   all_types <- res_df_entry_types()
@@ -135,9 +138,15 @@ res_add_defaults <- function(df) {
   ent_types <- vcapply(df, typeof)
   exp_types <- all_types[names(df)]
   if (any(bad <- ent_types != exp_types)) {
-    items <- paste0(names(df)[bad], " (", ent_types[bad], ", expected ",
-                    exp_types[bad], ")")
-    stop("Wrong entry types: ", format_items(items))
+    items <- structure(
+      paste0(names(df)[bad], " (", ent_types[bad], ", expected ",
+             exp_types[bad], ")"),
+      names = rep("*", sum(bad))
+    )
+    throw(pkg_error(
+      "{sum(bad)} wrong entry type{?s} in package remotes:",
+      items
+    ))
   }
 
   df

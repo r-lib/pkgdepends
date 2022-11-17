@@ -34,7 +34,12 @@ NULL
 
 pkgplan_download_resolution <- function(self, private) {
   if (is.null(private$resolution)) self$resolve()
-  if (private$dirty) stop("Need to resolve, remote list has changed")
+  if (private$dirty) {
+    throw(pkg_error(
+      "Package list has changed, you need to call the {.code $resolve()}
+       method again?"
+    ))
+  }
   on.exit(private$done_progress_bar(), add = TRUE)
   on.exit(ansi_show_cursor(), add = TRUE)
   ansi_hide_cursor()
@@ -44,7 +49,12 @@ pkgplan_download_resolution <- function(self, private) {
 pkgplan_async_download_resolution <- function(self, private) {
   self ; private
   if (is.null(private$resolution)) self$resolve()
-  if (private$dirty) stop("Need to resolve, remote list has changed")
+  if (private$dirty) {
+    throw(pkg_error(
+      "Package list has changed, you need to call the {.code $resolve()}
+       method again?"
+    ))
+  }
 
   pkgplan_async_download_internal(self, private,
                                   private$resolution$result,
@@ -57,7 +67,12 @@ pkgplan_async_download_resolution <- function(self, private) {
 
 pkgplan_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
-  if (private$dirty) stop("Need to resolve, remote list has changed")
+  if (private$dirty) {
+    throw(pkg_error(
+      "Package list has changed, you need to call the {.code $resolve()}
+       method again?"
+    ))
+  }
   on.exit(private$done_progress_bar(), add = TRUE)
   on.exit(ansi_show_cursor(), add = TRUE)
   ansi_hide_cursor()
@@ -66,7 +81,12 @@ pkgplan_download_solution <- function(self, private) {
 
 pkgplan_async_download_solution <- function(self, private) {
   if (is.null(private$solution)) self$solve()
-  if (private$dirty) stop("Need to resolve, remote list has changed")
+  if (private$dirty) {
+    throw(pkg_error(
+      "Package list has changed, you need to call the {.code $resolve()}
+       method again?"
+    ))
+  }
 
   pkgplan_async_download_internal(self, private,
                                   private$solution$result$data,

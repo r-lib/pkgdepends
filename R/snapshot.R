@@ -18,7 +18,9 @@ print.snapshot <- function(x, ...) {
 
 snapshot.pkg_resolution_result <- function(x, width = Inf, extra = NULL,
                                            ...) {
-  if (! "pillar" %in% loadedNamespaces()) stop("Needs pillar loaded!")
+  if (! "pillar" %in% loadedNamespaces()) {
+    throw(pkg_error("Needs pillar loaded!"))
+  }
   if ("md5sum" %in% colnames(x)) {
     x$md5sum <- sub("^[0-9a-fA-F]{32}$", "<md5>", x$md5sum)
   }

@@ -155,7 +155,10 @@ test_that("github regexes", {
 })
 
 test_that("parse_pkg_refs error on unknown type", {
-  expect_error(parse_pkg_refs("my_package"), "parse remotes")
+  expect_snapshot(
+    error = TRUE,
+    parse_pkg_refs(c("notgood::pkg", "good", "my_package"))
+  )
 })
 
 test_that("custom remote types", {

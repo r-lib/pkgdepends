@@ -70,12 +70,16 @@ pkg_installation_plan <- R6::R6Class(
     #' @description
     #' This function is implemented for installation plans, and will error.
 
-    resolve = function() stop("Cannot resolve an installation plan"),
+    resolve = function() {
+      throw(pkg_error("Cannot resolve an installation plan, it is already resolved."))
+    },
 
     #' @description
     #' This function is implemented for installation plans, and will error.
 
-    async_resolve = function() stop("Cannot resolve an installation plan"),
+    async_resolve = function() {
+      throw(pkg_error("Cannot resolve an installation plan, it is already resolved."))
+    },
 
     #' @description
     #' Installation plans are already solved, and this method will return
@@ -86,12 +90,16 @@ pkg_installation_plan <- R6::R6Class(
     #' @description
     #' This function is implemented for installation plans, and will error.
 
-    set_solve_policy = function() stop("Cannot solve an installation plan"),
+    set_solve_policy = function() {
+      throw(pkg_error("Cannot solve an installation plan, it is already solved."))
+    },
 
     #' @description
     #' This function is implemented for installation plans, and will error.
 
-    solve = function() stop("Cannot solve an installation plan"),
+    solve = function() {
+      throw(pkg_error("Cannot solve an installation plan, it is already solved."))
+    },
 
     #' @description
     #' Update the plan to the current state of the library. If the library

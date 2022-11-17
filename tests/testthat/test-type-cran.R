@@ -87,7 +87,7 @@ test_that("resolve an old version", {
 
   expect_snapshot({
     snapshot(res, extra = "all")
-  }, transform = fix_port)
+  }, transform = function(x) transform_no_srcref(fix_port(x)))
 
   prop <- new_pkg_installation_proposal("pkg1@1.0.0")
   suppressMessages(prop$resolve())
@@ -95,7 +95,7 @@ test_that("resolve an old version", {
 
   expect_snapshot({
     snapshot(res, extra = "all")
-  }, transform = fix_port)
+  }, transform = function(x) transform_no_srcref(fix_port(x)))
 })
 
 test_that("resolve a version range", {
@@ -108,7 +108,7 @@ test_that("resolve a version range", {
 
   expect_snapshot({
     snapshot(res, extra = "all")
-  }, transform = fix_port)
+  }, transform = function(x) transform_no_srcref(fix_port(x)))
 })
 
 test_that("download_remote", {

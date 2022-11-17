@@ -132,12 +132,22 @@ pkgplan_async_resolve <- function(self, private) {
 }
 
 pkgplan_get_resolution <- function(self, private) {
-  if (is.null(private$resolution$result)) stop("No resolution yet")
+  if (is.null(private$resolution$result)) {
+    throw(pkg_error(
+      "No resolution yet.",
+      i = "You need to call {.code $resolve()} first."
+    ))
+  }
   private$resolution$result
 }
 
 pkgplan__subset_resolution <- function(self, private, which) {
-  if (is.null(private$resolution$result)) stop("No resolution yet")
+  if (is.null(private$resolution$result)) {
+    throw(pkg_error(
+      "No resolution yet.",
+      i = "You need to call {.code $resolve()} first."
+    ))
+  }
   res <- private$resolution$result[which, ]
   attr(res, "metadata")  <- attr(private$resolution$result, "metadata")
   res
@@ -427,11 +437,19 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
   remote_types <- c(default_remote_types(), remote_types)
 
   type <- remote$type %||% unique(vcapply(remote, "[[", "type"))
-  if (length(type) != 1) stop("Invalid remote or remote list, multiple types?")
+  if (length(type) != 1) {
+    throw(pkg_error(
+      "Invalid remote or remote list, multiple types: {.val {type}}.",
+      i = msg_internal_error()
+    ))
+  }
 
   resolve <- remote_types[[type]]$resolve
   if (is.null(resolve)) {
-    stop("Cannot resolve type", format_items(type))
+    throw(pkg_error(
+      "Don't know how to resolve remote type {.val {type}}.",
+      i = msg_internal_error()
+    ))
   }
 
   id <- get_id()
@@ -463,7 +481,11 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
   })$
     catch(error = function(err) {
       err$id <- id
-      stop(err)
+      err$call <- NULL
+      throw(pkg_error(
+        "{pak_or_pkgdepends()} resolution error for {.pkg {remote$ref}}.",
+        .data = list(id = id)
+      ), parent = err)
     })
 
   list(dx = dx, id = id)

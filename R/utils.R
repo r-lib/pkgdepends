@@ -1,4 +1,8 @@
 
+zwnj <- function() {
+  if (cli::is_utf8_output()) "\u200c" else ""
+}
+
 pkgd_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
@@ -327,7 +331,14 @@ last_stdout_lines <- function(lines, std, prefix = "E> ") {
 
 rimraf <- function(...) {
   x <- file.path(...)
-  if ("~" %in% x) stop("Cowardly refusing to delete `~`")
+  if ("~" %in% x) {
+    throw(pkg_error(
+      "Cowardly refusing to delete {.path ~}.",
+      "i" = paste0("You have a file or directory named {.path ~} and ",
+                   "because of an R bug deleting that could delete your ",
+                   "whole home directory.")
+    ))
+  }
   unlink(x, recursive = TRUE, force = TRUE)
 }
 
@@ -368,7 +379,7 @@ get_id <- local({
 # well on Windows non-ascii file names
 
 safe_md5sum <- function(path) {
-  stopifnot(length(path) == 1)
+  assert_that(is_path(path))
   tryCatch(
     tools::md5sum(path),
     error = function(err) {
@@ -396,3 +407,8 @@ zip_list <- function(zipfile) {
 }
 
 os_type <- function() .Platform$OS.type                             # nocov
+
+is.dir <- function(path) {
+  assert_that(is_string(path), file.exists(path))
+  file.info(path)$isdir
+}

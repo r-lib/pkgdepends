@@ -116,5 +116,9 @@ type_cran_resolve_current <- function(remote, direct, config, cache,
 
 type_cran_resolve_version <- function(remote, direct, config,
                                       crancache, dependencies) {
-  stop("Versioned CRAN packages are not implemented yet")
+  throw(pkg_error(
+    "Versioned CRAN packages are not implemented yet.",
+    i = "This feature is tracked at
+     {.url https://github.com/r-lib/pak/issues/122}."
+  ))
 }

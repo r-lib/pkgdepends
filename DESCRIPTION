@@ -38,6 +38,7 @@ Imports:
     withr (>= 2.1.1),
     zip (>= 2.1.0)
 Suggests:
+    asciicast (>= 2.2.0.9000),
     covr,
     debugme,
     digest,
@@ -53,6 +54,7 @@ Suggests:
     tibble,
     webfakes (>= 1.1.5.9000)
 Remotes:
+    r-lib/asciicast,
     r-lib/webfakes
 Config/Needs/coverage:
     covr,

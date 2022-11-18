@@ -219,7 +219,9 @@ get_untar_decompress_arg <- function(tarfile) {
     "gzip" = "-z",
     "bzip2" = "-j",
     "xz" = "-J",
-    "zip" = stop("Not a tar file, looks like a zip file"),
+    "zip" = throw(pkg_error(
+      "{.path {tarfile}} is not a tar file, it looks like a zip file"
+    )),
     "unknown" = character()
   )
 }

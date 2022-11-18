@@ -1,36 +1,6 @@
 
 #' @importFrom filelock lock unlock
 
-install_binary <- function(filename, lib = .libPaths()[[1L]],
-                           metadata = NULL, quiet = FALSE) {
-
-  stopifnot(
-    is_string(filename), file.exists(filename),
-    is_string(lib),
-    all_named(metadata),
-    is.null(quiet) || is_flag(quiet))
-
-  stdout <- ""
-
-  px <- make_install_process(filename, lib = lib, metadata = metadata)
-
-  repeat {
-    px$poll_io(100)
-    stdout <- paste0(stdout, px$read_output())
-    if (!px$is_alive() && !px$is_incomplete_output()) {
-      break
-    }
-  }
-
-  if (px$get_exit_status() != 0) {
-    stop("Package installation failed\n", stdout)
-  }
-
-  cli_alert_success(paste0("Installed ", filename))
-
-  invisible(px$get_result())
-}
-
 install_extracted_binary <- function(filename, lib_cache, pkg_cache, lib,
                                      metadata, now) {
 
@@ -114,7 +84,11 @@ add_metadata <- function(pkg_path, metadata) {
   }
 
   if (!file.exists(source_desc) && !file.exists(binary_desc)) {
-    stop("No DESCRIPTION found!", call. = FALSE)
+    throw(pkg_error(
+      "Could not find {.file DESCRIPTION} file when installing package
+       into {.path {pkg_path}}.",
+      i = msg_internal_error()
+    ))
   }
 
   md5 <- file.path(pkg_path, "MD5")

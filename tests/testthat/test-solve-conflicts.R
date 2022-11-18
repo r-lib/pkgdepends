@@ -14,7 +14,10 @@ test_that("different versions required", {
     error = TRUE,
     p$stop_for_solution_error(),
     # need to sort this, otherwise it is not deterministic
-    transform = function(x) sort(x, decreasing = TRUE)
+    transform = function(x) {
+      x[-1] <- sort(x[-1], decreasing = TRUE)
+      x
+    }
   )
 })
 

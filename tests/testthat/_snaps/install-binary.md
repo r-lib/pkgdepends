@@ -1,17 +1,3 @@
-# install_binary
-
-    Code
-      install_binary(pkg, lib = lib, quiet = TRUE)
-    Message <cliMessage>
-      v Installed /.../foo_0.0.0.9000.zip/.tgz/.tar.gz
-
----
-
-    Code
-      install_binary(pkg, lib = lib, quiet = TRUE)
-    Message <cliMessage>
-      v Installed /.../foo_0.0.0.9000.zip/.tgz/.tar.gz
-
 # install_extracted_binary, add_metadata
 
     Code
@@ -98,6 +84,7 @@
 
     Code
       add_metadata(tmp, c(foo = "bar"))
-    Error <simpleError>
-      No DESCRIPTION found!
+    Error <rlib_error_3_0>
+      ! Could not find 'DESCRIPTION' file when installing package into '<tempdir>/<tempfile>'.
+      i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
 

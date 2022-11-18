@@ -1,5 +1,9 @@
 # pkgdepends (development version)
 
+* pkgdepends has much improved and more informative error messages now.
+  This work is not yet finished, so if you find an unclear error message,
+  please open an issue. Thank you!
+
 * The solver is now more robust for non-canonical input (e.g. `DESCRIPTION`
   files) (https://github.com/r-lib/pak/issues/423).
 

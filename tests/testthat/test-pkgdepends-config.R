@@ -45,10 +45,10 @@ test_that("env_decode_difftime", {
     env_decode_difftime("1d")
   })
 
-  expect_snapshot(error = TRUE, env_decode_difftime("",    "UPDATE"))
-  expect_snapshot(error = TRUE, env_decode_difftime("123", "UPDATE"))
-  expect_snapshot(error = TRUE, env_decode_difftime("1k",  "UPDATE"))
-  expect_snapshot(error = TRUE, env_decode_difftime("k1k", "UPDATE"))
+  expect_snapshot(error = TRUE, env_decode_difftime("",    "PKG_UPDATE"))
+  expect_snapshot(error = TRUE, env_decode_difftime("123", "PKG_UPDATE"))
+  expect_snapshot(error = TRUE, env_decode_difftime("1k",  "PKG_UPDATE"))
+  expect_snapshot(error = TRUE, env_decode_difftime("k1k", "PKG_UPDATE"))
 })
 
 test_that("default_sysreqs", {

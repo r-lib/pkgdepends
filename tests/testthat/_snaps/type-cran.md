@@ -273,7 +273,10 @@
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: 0.9.0; ref: pkg1@0.9.0; type: standard; params: 
       + error:
-      <async_rejected/simpleError/error/condition> Versioned CRAN packages are not implemented yet
+      <async_rejected/rlib_error_3_0/rlib_error/error/condition> ! pkgdepends resolution error for pkg1@0.9.0.
+      Caused by error:
+      ! Versioned CRAN packages are not implemented yet.
+      i This feature is tracked at <https://github.com/r-lib/pak/issues/122>.
       + metadata:
       -
       + dep_types:
@@ -305,7 +308,10 @@
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: 1.0.0; ref: pkg1@1.0.0; type: standard; params: 
       + error:
-      <async_rejected/simpleError/error/condition> Versioned CRAN packages are not implemented yet
+      <async_rejected/rlib_error_3_0/rlib_error/error/condition> ! pkgdepends resolution error for pkg1@1.0.0.
+      Caused by error:
+      ! Versioned CRAN packages are not implemented yet.
+      i This feature is tracked at <https://github.com/r-lib/pak/issues/122>.
       + metadata:
       -
       + dep_types:
@@ -337,7 +343,10 @@
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: >=; version: 0.9.0; ref: pkg1@>=0.9.0; type: standard; params: 
       + error:
-      <async_rejected/simpleError/error/condition> Versioned CRAN packages are not implemented yet
+      <async_rejected/rlib_error_3_0/rlib_error/error/condition> ! pkgdepends resolution error for pkg1@>=0.9.0.
+      Caused by error:
+      ! Versioned CRAN packages are not implemented yet.
+      i This feature is tracked at <https://github.com/r-lib/pak/issues/122>.
       + metadata:
       -
       + dep_types:

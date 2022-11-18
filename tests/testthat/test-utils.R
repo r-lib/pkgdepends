@@ -241,8 +241,8 @@ test_that("update_named_vector", {
     expect_identical(update_named_vector(c[[1]], c[[2]]), c[[3]])
   }
 
-  expect_error(update_named_vector(1, c(a=1)), "named entries")
-  expect_error(update_named_vector(c(a=1), 1), "named entries")
+  expect_error(update_named_vector(1, c(a=1)), "must be named.")
+  expect_error(update_named_vector(c(a=1), 1), "must be named.")
 })
 
 test_that("make_dl_status", {

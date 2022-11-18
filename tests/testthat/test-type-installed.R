@@ -25,7 +25,7 @@ test_that("resolve", {
     unun(as.list(res[c("ref", "type", "direct", "status", "package", "version")])),
     list(ref = ref, type = "installed", direct = TRUE, status = "OK",
          package = "testthat",
-         version = as.character(packageVersion("testthat")))
+         version = as.character(utils::packageVersion("testthat")))
   )
 
   expect_true("cli" %in% attr(res, "unknown_deps"))

@@ -168,8 +168,3 @@ cut_into_lines <- function(x) {
   x <- strsplit(x, "\n", fixed = TRUE)[[1]]
   if (length(x)) x else ""
 }
-
-is_count <- function(x, min = 0L)  {
-  is.numeric(x) && length(x) == 1 && !is.na(x) &&
-    as.integer(x) == x && x >= min
-}

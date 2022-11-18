@@ -160,7 +160,10 @@ get_remote_types <- function(refs) {
   types[types == "" & grepl(param_rx(), refs, perl = TRUE)] <- "param"
 
   if (any(bad <- types == "")) {
-    stop("Can't parse remotes: ", paste(refs[bad], collapse = ", "))
+    throw(pkg_error(
+      "Cannot parse package{?s}: {.pkg {refs[bad]}}.",
+      i = msg_package_sources()
+    ))
   }
 
   types
@@ -197,7 +200,10 @@ parse_pkg_refs <- function(refs, remote_types = NULL, ...) {
   res <- vector("list", length(refs))
 
   if (length(bad <- setdiff(unique_types, names(remote_types)))) {
-    stop("Unknown remote type(s): ", format_items(bad))
+    throw(pkg_error(
+      "Unknown package source{?}: {.val {bad}}.",
+      i = msg_package_sources()
+    ))
   }
 
   for (this in unique_types) {
@@ -245,7 +251,10 @@ parse_ref_params <- function(refs) {
 
 add_ref_params <- function(res, params) {
   if (length(res) != length(params)) {
-    stop("Internal error, param length mismath")
+    throw(pkg_error(
+      "Internal error in the parameter parser, parameter length mismath.",
+      i = msg_internal_error()
+    ))
   }
   for (i in seq_along(res)) {
     res[[i]]$params <- if (length(params[[i]])) params[[i]] else character()

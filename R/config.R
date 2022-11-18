@@ -118,21 +118,34 @@ config <- local({
   # It is used as the check function if no check function is needed
   true <- function(...) TRUE
 
-  is_flag <- function(x) {
-    is.logical(x) && length(x) == 1 && !is.na(x)
+  is_config_name <- function(name) {
+    if (is_string(name)) return(TRUE)
+    structure(
+      FALSE,
+      msg = c(
+        "A config entry name ({.arg name} argument) must be a string
+         (character scalar).",
+        i = "It is {.type {name}} instead."
+      )
+    )
   }
 
-  is_count <- function(x) {
-    is.numeric(x) && length(x) == 1 && !is.na(x) &&
-      as.integer(x) == x
+  is_config_check <- function(check) {
+    if (is_string(check) || is.function(check) || is.null(check)) return(TRUE)
+    structure(
+      FALSE,
+      msg = c(
+        "A config check function ({.arg check} argument) must be of",
+        "*" = "a predicate function that returns a logical scalar, or",
+        "*" = "a config type name, a character scalar, or",
+        "*" = "{.code NULL} for no value checks.",
+        "i" = "{.arg check} is {.type {check}}."
+      )
+    )
   }
 
-  is_string <- function(x) {
-    is.character(x) && length(x) == 1 && !is.na(x)
-  }
-
-  is_string_or_null <- function(x) {
-    is.null(x) || is_string(x)
+  is_config_env_decoder <- function(env_decode) {
+    is_string(env_decode) || is.function(env_decode) || is.null(env_decode)
   }
 
   standard_name <- function(x) {
@@ -148,7 +161,7 @@ config <- local({
     custom = function(x) true(x),
     flag = function(x) is_flag(x),
     string = function(x) is_string(x),
-    string_or_null = function(x) is_string_or_null(x),
+    string_or_null = function(x) is_optional_string(x),
     count = function(x) is_count(x)
   )
 
@@ -157,34 +170,45 @@ config <- local({
     character = function(x, ...) {
       strsplit(x, ";", fixed = TRUE)[[1]]
     },
-    custom = function(x, name) {
-      stop("Don't know how to decode config value from `", name, "`")
+    custom = function(x, name, env, ...) {
+      throw(pkg_error(
+        "Cannot decode config value from environment variable {.envvar {name}}.",
+        i = "This is an probably an internal error in the {.pkg {env$package}} package."
+      ))
     },
-    flag = function(x, name) {
+    flag = function(x, name, ...) {
       x <- tolower(x)
       if (tolower(x) %in% c("yes", "true", "1", "on")) return(TRUE)
       if (tolower(x) %in% c("no", "false", "0", "off")) return(FALSE)
-      stop(
-        "Invalid value for `", name, "` envirironment variable, ",
-        "must be `true` or `false`."
-      )
+      throw(pkg_error(
+        "Invalid value for the {.envvar {name}} environment variable.",
+        i = "It must be either {.code true} or {.code false}."
+      ))
     },
     string = function(x, ...) x,
     string_or_null = function(x, ...) if (identical(x, "NULL")) NULL else x,
-    count = function(x, ...) {
+    count = function(x, name, ...) {
       num <- suppressWarnings(as.numeric(num))
       if (is.na(num) || !is_count(num)) {
-        stop("Cannot interpret environment variable value \"", x,
-             "\" as a count")
+        throw(pkg_error(
+          "Cannot interpret environment variable {.envvar {name}} as a
+           count: {.code {x}}."
+        ))
       }
       as.integer(num)
     }
   )
 
   get_internal <- function(env, name) {
-    stopifnot(is_string(name))
+    assert_that(is_config_name(name))
     name <- standard_name(name)
-    if (!name %in% names(env$data)) stop("No such entry: `", name, "`")
+    if (!name %in% names(env$data)) {
+      throw(pkg_error(
+        "Unknown conifguration entry: {.code {name}}.",
+        i = "This is an probably an internal error in the
+             {.pkg {env$package}} package."
+      ))
+    }
 
     rec <- env$data[[name]]
 
@@ -203,7 +227,7 @@ config <- local({
     envvname <- toupper(chartr(".", "_", paste0(env$prefix, name)))
     envv <- Sys.getenv(envvname, NA_character_)
     if (!is.na(envv)) {
-      return(list("envvar", rec$env_decode(envv)))
+      return(list("envvar", rec$env_decode(envv, envvname, env)))
     }
 
     # otherwise the default, but if it is a function, then call it
@@ -259,10 +283,12 @@ config <- local({
   #'
   #' # Configuration methods
 
-  new <- function(prefix = utils::packageName(parent.frame())) {
+  new <- function(prefix = utils::packageName(parent.frame()),
+                  package = utils::packageName(parent.frame())) {
     env <- new.env(parent = emptyenv())
     env$prefix <- if (!is.null(prefix)) paste0(prefix, ".")
     env$data <- new.env(parent = emptyenv())
+    env$package <- package
 
     # These can be modified by the user of the config class, as needed,
     # to add user-defined types
@@ -310,15 +336,17 @@ config <- local({
                         check = type[1], env_decode = type[1]) {
       # Need to explicitly add `env$types` on R 3.4.x
       type <- match.arg(type, env$types)
-      stopifnot(
-        is_string(name),
-        is_string(check) || is.function(check) || is.null(check),
-        is_string(env_decode) || is.function(env_decode) || is.null(env_decode)
+      assert_that(
+        is_config_name(name),
+        is_config_check(check),
+        is_config_env_decoder(env_decode)
       )
       name <- standard_name(name)
 
       if (name %in% names(env$data)) {
-        stop("There is already a config entry called `", name, "`")
+        throw(pkg_error(
+          "There is already a config entry called {.code {name}}."
+        ))
       }
 
       if (is_string(check)) check <- env$checks[[check]]
@@ -399,9 +427,14 @@ config <- local({
     #' The configuration, invisibly.
 
     env$set <- function(name, value) {
-      stopifnot(is_string(name))
+      assert_that(is_config_name(name))
       name <- standard_name(name)
-      if (!name %in% names(env$data)) stop("No such config entry: `", name, "`")
+      if (!name %in% names(env$data)) {
+        throw(pkg_error(
+          "Cannot set unknown config entry: {.code {name}}.",
+          i = "See `$list()` for the list of all config entries."
+        ))
+      }
       if (!is.null(chk <- env$data[[name]]$check)) chk(value)
       env$data[[name]]$value <- value
       invisible(env)
@@ -429,9 +462,14 @@ config <- local({
     #' The configuration, invisibly.
 
     env$unset <- function(name) {
-      stopifnot(is_string(name))
+      assert_that(is_config_name(name))
       name <- standard_name(name)
-      if (!name %in% names(env$data)) stop("No such config entry: `", name, "`")
+      if (!name %in% names(env$data)) {
+        throw(pkg_error(
+          "Cannot unset unknown config entry: {.code {name}}.",
+          i = "See `$list()` for the list of all config entries."
+        ))
+      }
       env$data[[name]]$value <- NULL
       invisible(env)
     }
@@ -510,7 +548,7 @@ config <- local({
     #' of the entry was set.
 
     env$exists <- function(name) {
-      stopifnot(is_string(name))
+      assert_that(is_config_name(name))
       name <- standard_name(name)
       name %in% env$list()
     }
@@ -558,9 +596,14 @@ config <- local({
     #' The configuration, invisibly.
 
     env$fix <- function(name) {
-      stopifnot(is_string(name))
+      assert_that(is_config_name(name))
       name <- standard_name(name)
-      if (!name %in% names(env$data)) stop("No such entry: `", name, "`")
+      if (!name %in% names(env$data)) {
+        throw(pkg_error(
+          "Cannot fix unknown config entry: {.code {name}}.",
+          i = "See `$list()` for the list of all config entries."
+        ))
+      }
       lockBinding(name, env$data)
       invisible(env)
     }
@@ -589,13 +632,15 @@ config <- local({
     #' The configuration, invisibly.
 
     env$add_type <- function(type_name, check, env_decode) {
-      stopifnot(
+      assert_that(
         is_string(type_name),
         is.function(check),
         is.function(env_decode)
       )
       if (type_name %in% env$types) {
-        stop("Type already exists: `", type_name, "`")
+        throw(pkg_error(
+          "There is already a config entry type called {.code {type_name}}."
+        ))
       }
       env$types <- c(env$types, type_name)
       env$checks[[type_name]] <- check

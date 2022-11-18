@@ -43,30 +43,42 @@
 ---
 
     Code
-      env_decode_difftime("", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: ``
+      env_decode_difftime("", "PKG_UPDATE")
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `PKG_UPDATE` environment variable: ""
+      i It must have the form `<number><unit>`.
+      i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).
+      i Examples: 60s, 2h, 1d.
 
 ---
 
     Code
-      env_decode_difftime("123", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: `123`
+      env_decode_difftime("123", "PKG_UPDATE")
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `PKG_UPDATE` environment variable: "123"
+      i It must have the form `<number><unit>`.
+      i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).
+      i Examples: 60s, 2h, 1d.
 
 ---
 
     Code
-      env_decode_difftime("1k", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: `1k`
+      env_decode_difftime("1k", "PKG_UPDATE")
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `PKG_UPDATE` environment variable: "1k"
+      i It must have the form `<number><unit>`.
+      i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).
+      i Examples: 60s, 2h, 1d.
 
 ---
 
     Code
-      env_decode_difftime("k1k", "UPDATE")
-    Error <simpleError>
-      Invalid time interval specification in `UPDATE` environment variable: `k1k`
+      env_decode_difftime("k1k", "PKG_UPDATE")
+    Error <rlib_error_3_0>
+      ! Invalid time interval specification in `PKG_UPDATE` environment variable: "k1k"
+      i It must have the form `<number><unit>`.
+      i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).
+      i Examples: 60s, 2h, 1d.
 
 # current_config
 

@@ -43,7 +43,7 @@ sysreqs_resolve_process <- function(sysreqs, os, os_release, resp) {
   Encoding(cnt) <- "UTF-8"
 
   data <- jsonlite::fromJSON(cnt, simplifyVector = FALSE)
-  if (!is.null(data$error)) stop(data$error)
+  if (!is.null(data$error)) throw(pkg_error(data$error))
 
   pre_install <- unique(as.character(unlist(c(
     data[["pre_install"]],

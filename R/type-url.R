@@ -66,12 +66,20 @@ download_remote_url <- function(resolution, target, target_tree, config,
       if (packaged == "TRUE") {
         mkdirp(dirname(target))
         if (!file.copy(tmpd$archive, target, overwrite = TRUE)) {
-          stop("Failed to copy package downloaded from `", remote$url, "`") # nocov
+          throw(pkg_error(
+            "Failed to copy package from {.path {tmpd$archive}} to
+             {.path{ target}}.",
+            i = "It was downloaded from {.url {remote$url}}."
+          ))
         }
       } else {
         mkdirp(target_tree)
         if (!file.copy(tmpd$extract, target_tree, recursive = TRUE)) {
-          stop("Failed to copy package downloaded from `", remote$url, "`") # nocov
+          throw(pkg_error(                                    # nocov start
+            "Failed to copy package from {.path {tmpd$archive}} to
+             {.path{ target}}.",
+            i = "It was downloaded from {.url {remote$url}}."
+          ))                                                  # nocov end
         }
       }
     })$
@@ -223,7 +231,11 @@ type_url_resolve <- function(remote, cache, config, direct = FALSE,
 get_pkg_dir_from_archive_dir <- function(x) {
   top <- dir(x)
   if (length(top) != 1) {
-    stop("Package archive should contain exactly one directory")
+    throw(pkg_error(
+      "Package archive at {.path {x}} should contain exactly one directory.",
+      i = "It has {cli::no(length(top))} file{?s}/director{?y/ies}:
+       {.path {top}}"
+    ))
   }
   file.path(x, top)
 }

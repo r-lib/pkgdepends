@@ -1,90 +1,4 @@
 
-test_that("install_binary", {
-
-  pkg <- binary_test_package("foo")
-  lib <- withr::local_tempdir()
-
-  expect_snapshot(
-    install_binary(pkg, lib = lib, quiet = TRUE),
-    transform = function(x) {
-      transform_ext(sub(dirname(pkg), "/...", x, fixed = TRUE))
-    }
-  )
-
-  x <- callr::r(function(l) {
-    library("foo", lib.loc = l)
-    foo::foo()
-  }, list(lib))
-  expect_null(x)
-
-  # overwrite installed package
-  expect_snapshot(
-    install_binary(pkg, lib = lib, quiet = TRUE),
-    transform = function(x) {
-      transform_ext(sub(dirname(pkg), "/...", x, fixed = TRUE))
-    }
-  )
-})
-
-test_that("install_binary works for simultaneous installs", {
-  skip_on_cran()
-
-  pkg <- binary_test_package("foo")
-  lib <- withr::local_tempdir()
-
-  processes <- list()
-  num <- 5
-
-  # install and load foo here to test loaded DLLs in another process
-  suppressMessages(
-    install_binary(pkg, lib = lib, quiet = TRUE)
-  )
-  x <- callr::r(function(l) {
-    library("foo", lib.loc = l)
-    foo::foo()
-  }, list(lib))
-  expect_null(x)
-
-  processes <- replicate(num, simplify = FALSE,
-    callr::r_bg(args = list(pkg, lib),
-      function(pkg, lib) asNamespace("pkgdepends")$install_binary(pkg, lib = lib))
-  )
-
-  w <- lapply(processes, function(x) x$wait(5000))
-  al <- vlapply(processes, function(x) x$is_alive())
-  if (any(al)) stop("Some install processes did not finish")
-
-  for (i in seq_len(num)) {
-    expect_identical(processes[[i]]$get_result(), file.path(lib, "foo"))
-  }
-})
-
-test_that("install_binary corrupt file", {
-  pkg <- binary_test_package("foo")
-  bin <- readBin(pkg, what = "raw", n = file.size(pkg))
-  writeBin(head(bin, as.integer(length(bin)/2)), pkg)
-
-  lib <- withr::local_tempdir()
-  err <- tryCatch(
-    install_binary(pkg, lib = lib, quiet = TRUE),
-    error = function(e) e
-  )
-
-  # It is fragile to test that error message, because different
-  # tar implementations have different messages.
-  expect_s3_class(err, "error")
-})
-
-test_that("install_binary errors", {
-  tmp <- tempfile()
-  on.exit(unlink(tmp), add = TRUE)
-  cat("foobar\n", file = tmp)
-
-  expect_error(
-    install_binary(tmp, lib = tempdir(), quiet = TRUE),
-    "unknown archive type", class = "install_input_error"
-  )
-})
 
 test_that("make_install_process error", {
   tmp <- tempfile()
@@ -193,6 +107,7 @@ test_that("add_metadata error", {
   tmp <- withr::local_tempdir()
   expect_snapshot(
     error = TRUE,
+    transform = transform_tempdir,
     add_metadata(tmp, c(foo = "bar"))
   )
 })

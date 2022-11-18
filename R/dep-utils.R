@@ -79,10 +79,13 @@ resolve_ref_deps <- function(deps, remotes, extra) {
     nms <- vcapply(x, function(e) e$package %||% NA_character_)
     bad <- is.na(nms)
     if (any(bad)) {
-      stop(
-        "Cannot determine package name for remote(s): ",
-        paste(vcapply(x, "[[", "ref")[bad], collapse = ", ")
-      )
+      badpkgs <- vcapply(x, "[[", "ref")[bad]
+      badtypes <- vcapply(x, "[[", "type")[bad]
+      throw(pkg_error(
+        "Cannot determine package {cli::qty(sum(bad))}name{?s} for
+         {sum(bad)} package{?s}: {.val {badpkgs}}.",
+        i = "Maybe you need to add a {.code <packagename>{zwnj()}=} prefix?"
+      ))
     }
     nms
   }

@@ -121,7 +121,7 @@ pkgplan_init <- function(self, private, refs, config, library,
   }
 
   assert_that(is_character(refs),
-              is_path_or_null(library))
+              is_optional_path(library))
 
   private$refs <- refs
   private$remotes <- parse_pkg_refs(refs)
@@ -164,7 +164,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
                                    library, remote_types) {
   assert_that(
     is_path(lockfile),
-    is_path_or_null(library)
+    is_optional_path(library)
   )
 
   private$config <- current_config()$update(config)
@@ -179,7 +179,11 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
 
   raw <- fromJSON(readLines(lockfile), simplifyVector = FALSE)
   if (raw$lockfile_version != 1) {
-    stop("Unknown lockfile version: ", raw$lockfile_version)
+    throw(pkg_error(
+      "This version of {pak_or_pkgdepends()} (version {pakx_version()})
+       does not support lockfile version {raw$lockfile_version}.",
+      i = "This lockfile was probably created by a newer version."
+    ))
   }
 
   pkgs <- raw$packages

@@ -450,7 +450,11 @@ check_app <- webfakes::new_app_process(
 )
 
 transform_no_srcref <- function(x) {
-  sub("[ ]*at [-a-zA-Z0-9]+[.]R:[0-9]+:[0-9]+:", ":", x)
+  x <- sub("[ ]*at [-a-zA-Z0-9]+[.]R:[0-9]+:[0-9]+", "", x)
+  x <- sub("[ ]*at line [0-9]+", "", x)
+  x <- sub("\033[90m\033[39m", "", x, fixed = TRUE)
+  x <- sub("Caused by error: ", "Caused by error:", x, fixed = TRUE)
+  x
 }
 
 transform_local_port <- function(x) {
@@ -473,4 +477,13 @@ transform_ext <- function(x) {
 
 transform_sha <- function(x) {
   gsub("[a-fA-F0-9]{64}", "<sha>", x)
+}
+
+transform_tempdir <- function(x) {
+  x <- sub(tempdir(), "<tempdir>", x)
+  x <- sub(normalizePath(tempdir()), "<tempdir>", x)
+  x <- sub(normalizePath(tempdir(), winslash = "/"), "<tempdir>", x)
+  x <- sub("[\\\\/]file[a-zA-Z0-9]+", "/<tempfile>", x)
+  x <- sub("[A-Z]:.*Rtmp[a-zA-Z0-9]+/", "<tempdir>/", x)
+  x
 }

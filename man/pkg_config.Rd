@@ -109,6 +109,8 @@ of the current process is not the \code{root} user.
 \item \code{sysreqs_verbose}: Whether to echo the output of system requirements
 installation. Defaults to \code{TRUE} if the \code{CI} environment variable is
 set.
+\item \code{use_bioconductor}: whether to automatically use the Bioconductor
+repositories. Defaults to \code{TRUE}.
 }
 }
 

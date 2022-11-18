@@ -21,8 +21,8 @@ The currently supported reference types are:
 \item \code{url}: An URL to a package archive.
 \item \code{installed} An installed package.
 \item \code{deps} The dependencies of a local package file or directory.
-\item \code{any} A special reference type that accepts a package from any
-source. See below.
+\item \code{any} A special reference type that accepts a package from any source.
+See below.
 }
 
 If a ref does not explicitly specify a type, then the following rules
@@ -61,20 +61,20 @@ package.
 Currently supported parameters:
 \itemize{
 \item \code{ignore} is a binary parameter. If specified the package is ignored.
-This usually makes sense in the \code{packagename=?ignore} form, to
-ignore a downstream soft dependency. If all versions of a hard
-dependency are ignored that will lead to a solution error.
+This usually makes sense in the \code{packagename=?ignore} form, to ignore
+a downstream soft dependency. If all versions of a hard dependency are
+ignored that will lead to a solution error.
 \item \code{ignore-before-r} is a version number parameter. The package will be
 ignored on R versions that are older than the specified one. E.g.
 \verb{Matrix=?ignore-before-r=4.1.2} will ignore the Matrix package on R
 versions that are older than 4.1.2. This parameter really only makes
 sense in the \code{packgename=?ignore} form.
-\item \code{source} is a binary parameter. If specified, then a source R
-package is requested from a CRAN-like repository. For package
-installations \code{source} always triggers a re-install. In other words,
-\code{source} implies the \code{reinstall} parameter. This parameter is
-supported for \verb{bioc::}, \verb{cran::} and \verb{standard::} remote types, and
-it is ignore for others.
+\item \code{source} is a binary parameter. If specified, then a source R package
+is requested from a CRAN-like repository. For package installations
+\code{source} always triggers a re-install. In other words, \code{source}
+implies the \code{reinstall} parameter. This parameter is supported for
+\verb{bioc::}, \verb{cran::} and \verb{standard::} remote types, and it is ignore for
+others.
 \item \code{reinstall} requests a re-install for package installations. It is
 supported by the \verb{bioc::}, \verb{cran::}, \verb{github::}, \verb{local::},
 \verb{standard::}, and \verb{url::} remote types.

@@ -16,8 +16,7 @@ package manager, see \href{https://github.com/r-lib/pak}{pak}.
 \item Visualize package dependencies.
 \item Download packages and their dependencies.
 \item Install downloaded packages.
-\item Includes a dependency solver to find a consistent set of
-dependencies.
+\item Includes a dependency solver to find a consistent set of dependencies.
 \item Supports CRAN and Bioconductor packages automatically.
 \item Supports packages on GitHub.
 \item Supports local package file and trees.

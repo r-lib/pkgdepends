@@ -74,8 +74,8 @@ can be obtained from. The full syntax of a reference is <code>type::ref</code>, 
 <li><p><code>url</code>: An URL to a package archive.</p></li>
 <li><p><code>installed</code> An installed package.</p></li>
 <li><p><code>deps</code> The dependencies of a local package file or directory.</p></li>
-<li><p><code>any</code> A special reference type that accepts a package from any
-source. See below.</p></li>
+<li><p><code>any</code> A special reference type that accepts a package from any source.
+See below.</p></li>
 </ul><p>If a ref does not explicitly specify a type, then the following rules
 are applied:</p><ul><li><p>if the ref is a valid <code>standard</code> ref type (without the <code>standard::</code>
 prefix), then <code>standard</code> is used;</p></li>
@@ -102,20 +102,20 @@ dependencies:</p>
 <p>can be given at the command line and refers to a (potential) downstream
 package.</p>
 <p>Currently supported parameters:</p><ul><li><p><code>ignore</code> is a binary parameter. If specified the package is ignored.
-This usually makes sense in the <code>packagename=?ignore</code> form, to
-ignore a downstream soft dependency. If all versions of a hard
-dependency are ignored that will lead to a solution error.</p></li>
+This usually makes sense in the <code>packagename=?ignore</code> form, to ignore
+a downstream soft dependency. If all versions of a hard dependency are
+ignored that will lead to a solution error.</p></li>
 <li><p><code>ignore-before-r</code> is a version number parameter. The package will be
 ignored on R versions that are older than the specified one. E.g.
 <code>Matrix=?ignore-before-r=4.1.2</code> will ignore the Matrix package on R
 versions that are older than 4.1.2. This parameter really only makes
 sense in the <code>packgename=?ignore</code> form.</p></li>
-<li><p><code>source</code> is a binary parameter. If specified, then a source R
-package is requested from a CRAN-like repository. For package
-installations <code>source</code> always triggers a re-install. In other words,
-<code>source</code> implies the <code>reinstall</code> parameter. This parameter is
-supported for <code>bioc::</code>, <code>cran::</code> and <code>standard::</code> remote types, and
-it is ignore for others.</p></li>
+<li><p><code>source</code> is a binary parameter. If specified, then a source R package
+is requested from a CRAN-like repository. For package installations
+<code>source</code> always triggers a re-install. In other words, <code>source</code>
+implies the <code>reinstall</code> parameter. This parameter is supported for
+<code>bioc::</code>, <code>cran::</code> and <code>standard::</code> remote types, and it is ignore for
+others.</p></li>
 <li><p><code>reinstall</code> requests a re-install for package installations. It is
 supported by the <code>bioc::</code>, <code>cran::</code>, <code>github::</code>, <code>local::</code>,
 <code>standard::</code>, and <code>url::</code> remote types.</p></li>

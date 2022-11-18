@@ -466,6 +466,12 @@ start_task_package_build <- function(state, task) {
   ## tree was downloaded from GitHub
   tree_dir <- task$args$tree_dir
   dir_tree_dir <- dir(tree_dir)
+
+  subdir <- state$plan$remote[[pkgidx]]$subdir
+  if (is.character(subdir) && !identical(subdir, "")) {
+    dir_tree_dir <- file.path(dir_tree_dir, subdir)
+  }
+
   if (! "DESCRIPTION" %in% dir_tree_dir && length(dir_tree_dir) == 1 &&
       "DESCRIPTION" %in% dir(file.path(tree_dir, dir_tree_dir))) {
     tree_dir <- file.path(tree_dir, dir_tree_dir)

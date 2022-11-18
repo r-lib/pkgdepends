@@ -97,7 +97,7 @@ test_that("default_sysreqs_rspm_url", {
   withr::local_envvar(RSPM_ROOT = NA_character_)
   expect_equal(
     default_sysreqs_rspm_url(),
-    "https://packagemanager.rstudio.com"
+    "https://packagemanager.posit.co"
   )
 })
 

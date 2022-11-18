@@ -54,7 +54,7 @@ default_sysreqs_verbose <- function() {
 }
 
 default_sysreqs_rspm_url <- function() {
-  Sys.getenv("RSPM_ROOT", "https://packagemanager.rstudio.com")
+  Sys.getenv("RSPM_ROOT", "https://packagemanager.posit.co")
 }
 
 default_sysreqs_rspm_repo_id <- function() {
@@ -188,7 +188,7 @@ current_config <- function() {
   #' * `sysreqs_rspm_url`: Root URL of RStudio Package Manager for system
   #'   requirements lookup. By default the `RSPM_ROOT` environment variable
   #'   is used, if set. If not set, it defaults to
-  #'   `https://packagemanager.rstudio.com`.
+  #'   `https://packagemanager.posit.co`.
   conf$add("sysreqs_rspm_url", "string", default_sysreqs_rspm_url)
 
   #' * `sysreqs_sudo`: Whether to use `sudo` to install system requirements,

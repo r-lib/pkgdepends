@@ -96,13 +96,14 @@ and the operating system is a supported Linux distribution:
 CentOS, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
 Enterprise. The default will change as new platforms gain system
 requirements support.
-\item \code{sysreqs_rspm_repo_id}: RStudio Package Manager repository id to use
-for CRAN system requirements lookup. Defaults to the \code{RSPM_REPO_ID}
-environment variable, if set. If not set, then it defaults to \code{1}.
-\item \code{sysreqs_rspm_url}: Root URL of RStudio Package Manager for system
-requirements lookup. By default the \code{RSPM_ROOT} environment variable
-is used, if set. If not set, it defaults to
-\verb{https://packagemanager.posit.co}.
+\item \code{sysreqs_rspm_repo_id}: Posit Package Manager (formerly RStudio
+Package Manager) repository id to use for CRAN system requirements
+lookup. Defaults to the \code{RSPM_REPO_ID} environment variable, if set.
+If not set, then it defaults to \code{1}.
+\item \code{sysreqs_rspm_url}: Root URL of Posit Package Manager (formerly
+RStudio Package Manager) for system requirements lookup. By default
+the \code{RSPM_ROOT} environment variable is used, if set. If not set,
+it defaults to \verb{https://packagemanager.posit.co}.
 \item \code{sysreqs_sudo}: Whether to use \code{sudo} to install system requirements,
 on Unix. By default it is \code{TRUE} on Linux if the effective user id
 of the current process is not the \code{root} user.

@@ -180,15 +180,16 @@ current_config <- function() {
   conf$add("sysreqs", "flag", default_sysreqs)
   conf$add("sysreqs_dry_run", "flag", FALSE)
 
-  #' * `sysreqs_rspm_repo_id`: RStudio Package Manager repository id to use
-  #'   for CRAN system requirements lookup. Defaults to the `RSPM_REPO_ID`
-  #'   environment variable, if set. If not set, then it defaults to `1`.
+  #' * `sysreqs_rspm_repo_id`: Posit Package Manager (formerly RStudio
+  #'   Package Manager) repository id to use for CRAN system requirements
+  #'   lookup. Defaults to the `RSPM_REPO_ID` environment variable, if set.
+  #'   If not set, then it defaults to `1`.
   conf$add("sysreqs_rspm_repo_id", "string", default_sysreqs_rspm_repo_id)
 
-  #' * `sysreqs_rspm_url`: Root URL of RStudio Package Manager for system
-  #'   requirements lookup. By default the `RSPM_ROOT` environment variable
-  #'   is used, if set. If not set, it defaults to
-  #'   `https://packagemanager.posit.co`.
+  #' * `sysreqs_rspm_url`: Root URL of Posit Package Manager (formerly
+  #'   RStudio Package Manager) for system requirements lookup. By default
+  #'   the `RSPM_ROOT` environment variable is used, if set. If not set,
+  #'   it defaults to `https://packagemanager.posit.co`.
   conf$add("sysreqs_rspm_url", "string", default_sysreqs_rspm_url)
 
   #' * `sysreqs_sudo`: Whether to use `sudo` to install system requirements,

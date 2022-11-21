@@ -575,3 +575,7 @@ transform_tempdir <- function(x) {
 transform_show_cursor <- function(x) {
   gsub("\033[?25h", "", x, fixed = TRUE)
 }
+
+transform_no_links <- function(x) {
+  cli::ansi_strip(x, sgr = FALSE, csi = FALSE, link = TRUE)
+}

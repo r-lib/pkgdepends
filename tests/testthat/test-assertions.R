@@ -8,7 +8,7 @@ test_that("is_character", {
 
 test_that("is_character errors", {
   asciicast::expect_snapshot_r_process(
-    transform = transform_show_cursor,
+    transform = function(x) transform_no_links(transform_show_cursor(x)),
     fn <- function(x) assert_that(is_character(x)),
     fn(1:2),
     fn(c("", NA_character_)),
@@ -29,14 +29,18 @@ test_that("is_character errors, noninteractive", {
     fn <- function(x) assert_that(is_character(x)),
     options(cli.unicode = FALSE),
     fn(c("", NA_character_)),
-    transform = function(x) transform_show_cursor(transform_no_srcref(x))
+    transform = function(x) {
+      transform_no_links(transform_show_cursor(transform_no_srcref(x)))
+    }
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
     options(cli.unicode = FALSE),
     fn(rep(NA_character_, 5)),
-    transform = function(x) transform_show_cursor(transform_no_srcref(x))
+    transform = function(x) {
+      transform_no_links(transform_show_cursor(transform_no_srcref(x)))
+    }
   )
 })
 
@@ -157,7 +161,7 @@ test_that("is_existing_file", {
 
 test_that("is_existing_file errors", {
   asciicast::expect_snapshot_r_process(
-    transform = transform_show_cursor,
+    transform = function(x) transform_no_links(transform_show_cursor(x)),
     fn <- function(x) assert_that(is_existing_file(x)),
     fn("file1500454880b58"),
     fn(".")

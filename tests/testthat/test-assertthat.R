@@ -48,6 +48,7 @@ test_that("assertion returns invalid value", {
 
 test_that("default messages", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(x == 1),
     fn(2),
 
@@ -68,6 +69,7 @@ test_that("default messages", {
   )
 
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is.atomic(x)),
     fn(mtcars),
 
@@ -94,6 +96,7 @@ test_that("default messages", {
   )
 
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is.factor(x)),
     fn(letters),
 
@@ -151,6 +154,7 @@ test_that("default messages", {
   )
 
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x, y) assert_that(x && y),
     fn(is.integer(1L), is.integer("a")),
 

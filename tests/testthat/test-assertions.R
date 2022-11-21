@@ -8,6 +8,7 @@ test_that("is_character", {
 
 test_that("is_character errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_character(x)),
     fn(1:2),
     fn(c("", NA_character_)),
@@ -21,21 +22,21 @@ test_that("is_character errors, noninteractive", {
     fn <- function(x) assert_that(is_character(x)),
     options(cli.unicode = FALSE),
     fn(1:2),
-    transform = transform_no_srcref
+    transform = function(x) transform_show_cursor(transform_no_srcref(x))
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
     options(cli.unicode = FALSE),
     fn(c("", NA_character_)),
-    transform = transform_no_srcref
+    transform = function(x) transform_show_cursor(transform_no_srcref(x))
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
     options(cli.unicode = FALSE),
     fn(rep(NA_character_, 5)),
-    transform = transform_no_srcref
+    transform = function(x) transform_show_cursor(transform_no_srcref(x))
   )
 })
 
@@ -49,6 +50,7 @@ test_that("is_string", {
 
 test_that("is_string errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_string(x)),
     fn(1:2),
     fn("foo"),
@@ -67,6 +69,7 @@ test_that("is_optional_string", {
 
 test_that("is_optional_string errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_optional_string(x)),
     fn(1:2),
     fn(c("foo", "bar")),
@@ -83,6 +86,7 @@ test_that("is_flag", {
 
 test_that("is_flag errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_flag(x)),
     fn(NA),
     fn(1:10)
@@ -99,6 +103,7 @@ test_that("is_path", {
 
 test_that("is_path errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_path(x)),
     fn(1:2),
     fn(c("foo", "bar")),
@@ -116,6 +121,7 @@ test_that("is_optional_path", {
 
 test_that("is_optional path errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_optional_path(x)),
     fn(1:2),
     fn(c("foo", "bar")),
@@ -132,6 +138,7 @@ test_that("all_named", {
 
 test_that("all_named errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(all_named(x)),
     fn(c(a = 1, 2)),
   )
@@ -150,6 +157,7 @@ test_that("is_existing_file", {
 
 test_that("is_existing_file errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_existing_file(x)),
     fn("file1500454880b58"),
     fn(".")
@@ -166,6 +174,7 @@ test_that("is_platform_list", {
 
 test_that("is_platform_list errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_platform_list(x)),
     fn(1:10),
     fn(character()),
@@ -185,6 +194,7 @@ test_that("is_dependencies", {
 
 test_that("is_dependencies errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_dependencies(x)),
     options(cli.unicode = FALSE),
     fn(c("Depends", NA))
@@ -201,7 +211,7 @@ test_that("is_r_version_list", {
 
 test_that("is_r_version_list errors", {
   asciicast::expect_snapshot_r_process(
-    transform = transform_no_srcref,
+    transform = function(x) transform_show_cursor(transform_no_srcref(x)),
     fn <- function(x) assert_that(is_r_version_list(x)),
     fn(1:10),
     fn(character()),
@@ -216,6 +226,7 @@ test_that("is_difftime", {
 
 test_that("is_difftime errors", {
   asciicast::expect_snapshot_r_process(
+    transform = transform_show_cursor,
     fn <- function(x) assert_that(is_difftime(x)),
     fn(1)
   )

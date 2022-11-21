@@ -571,3 +571,7 @@ transform_tempdir <- function(x) {
   x <- sub("[A-Z]:.*Rtmp[a-zA-Z0-9]+/", "<tempdir>/", x)
   x
 }
+
+transform_show_cursor <- function(x) {
+  gsub("\033[?25h", "", x, fixed = TRUE)
+}

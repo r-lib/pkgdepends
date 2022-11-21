@@ -57,6 +57,8 @@ test_that("sysreqs_install", {
     PKG_SYSREQS_SUDO = "false"
   )
 
+  # not verbose
+  withr::local_envvar(PKG_SYSREQS_VERBOSE = "false")
   srq <- sysreqs_resolve("java and also libcurl", "ubuntu", "22.04")
   expect_snapshot(sysreqs_install(srq))
 

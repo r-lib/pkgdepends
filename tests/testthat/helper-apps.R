@@ -538,6 +538,7 @@ transform_no_srcref <- function(x) {
   x <- sub("[ ]*at line [0-9]+", "", x)
   x <- sub("\033[90m\033[39m", "", x, fixed = TRUE)
   x <- sub("Caused by error: ", "Caused by error:", x, fixed = TRUE)
+  if (x[length(x)] == "") x <- x[-length(x)]
   x
 }
 

@@ -8,11 +8,13 @@ test_that("is_character", {
 
 test_that("is_character errors", {
   asciicast::expect_snapshot_r_process(
-    transform = function(x) transform_no_links(transform_show_cursor(x)),
     fn <- function(x) assert_that(is_character(x)),
     fn(1:2),
     fn(c("", NA_character_)),
-    fn(rep(NA_character_, 5))
+    fn(rep(NA_character_, 5)),
+    transform = function(x) {
+      transform_no_srcref(transform_no_links(transform_show_cursor(x)))
+    }
   )
 })
 
@@ -22,7 +24,9 @@ test_that("is_character errors, noninteractive", {
     fn <- function(x) assert_that(is_character(x)),
     options(cli.unicode = FALSE),
     fn(1:2),
-    transform = function(x) transform_show_cursor(transform_no_srcref(x))
+    transform = function(x) {
+      transform_no_srcref(transform_no_links(transform_show_cursor(x)))
+    }
   )
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
@@ -30,7 +34,7 @@ test_that("is_character errors, noninteractive", {
     options(cli.unicode = FALSE),
     fn(c("", NA_character_)),
     transform = function(x) {
-      transform_no_links(transform_show_cursor(transform_no_srcref(x)))
+      transform_no_srcref(transform_no_links(transform_show_cursor(x)))
     }
   )
   asciicast::expect_snapshot_r_process(
@@ -39,7 +43,7 @@ test_that("is_character errors, noninteractive", {
     options(cli.unicode = FALSE),
     fn(rep(NA_character_, 5)),
     transform = function(x) {
-      transform_no_links(transform_show_cursor(transform_no_srcref(x)))
+      transform_no_srcref(transform_no_links(transform_show_cursor(x)))
     }
   )
 })

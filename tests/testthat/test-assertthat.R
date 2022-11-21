@@ -48,7 +48,9 @@ test_that("assertion returns invalid value", {
 
 test_that("default messages", {
   asciicast::expect_snapshot_r_process(
-    transform = function(x) transform_no_links(transform_show_cursor(x)),
+    transform = function(x) {
+      transform_no_srcref(transform_no_links(transform_show_cursor(x)))
+    },
     fn <- function(x) assert_that(x == 1),
     fn(2),
 

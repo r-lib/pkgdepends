@@ -437,6 +437,90 @@ new_check_app <- function() {
   app
 }
 
+
+new_sysreqs_app <- function() {
+  app <- webfakes::new_app()
+  app$use(webfakes::mw_json())
+  app$use(webfakes::mw_urlencoded())
+
+  db <- list(
+    ubuntu = list(
+      "22.04" = list(
+        "java" = list(
+          install_scripts = list("apt-get install -y default-jdk"),
+          post_install = list(list(command = "R CMD javareconf"))
+        ),
+        "libcurl" = list(
+          install_scripts = list("apt-get install -y libcurl4-openssl-dev")
+        )
+      ),
+      "16.04" = list(
+        "\\bgeos\\b" = list(
+          pre_install = list(
+            list(command = "apt-get install -y software-properties-common"),
+            list(command = "add-apt-repository -y ppa:ubuntugis/ppa"),
+            list(command = "apt-get update")
+          ),
+          install_scripts = list("apt-get install -y libgeos-dev")
+        )
+      )
+    )
+  )
+
+  app$post("/__api__/repos/:id/sysreqs", function(req, res) {
+    dist <- req$query$distribution
+    rele <- req$query$release
+
+    dsc <- desc::desc(text = rawToChar(req$.body))
+    pkgsrq <- trimws(dsc$get("SystemRequirements"))
+    if (is.na(pkgsrq)) pkgsrq <- ""
+
+    if (dist == "ubuntu" && rele %in% c("16.04", "18.04", "20.04", "22.04")) {
+      mydb <- db[[dist]][[rele]]
+      srq <- lapply(names(mydb), function(nm) {
+        if (grepl(nm, pkgsrq)) mydb[[nm]] else NULL
+      })
+
+      bf <- unlist(lapply(srq, "[[", "pre_install"), recursive = FALSE)
+      is <- unlist(lapply(srq, "[[", "install_scripts"))
+      af <- unlist(lapply(srq, "[[", "post_install"), recursive = FALSE)
+
+      res$send_json(list(
+            name = jsonlite::unbox("pkgdependssysreqs"),
+            pre_install = bf,
+            install_scripts = is,
+            post_install = af
+          ))
+
+    } else {
+      res$set_status(400)
+      res$send_json(list(
+        code = jsonlite::unbox(14),
+        error = jsonlite::unbox("Unsupported system"),
+        payload = jsonlite::unbox(NA)
+      ))
+    }
+  })
+
+  app
+}
+
+fake_sysreqs <- webfakes::local_app_process(new_sysreqs_app())
+
+setup_fake_sysreqs_app <- function(.local_envir = parent.frame()) {
+  withr::local_envvar(
+    .local_envir = .local_envir,
+    RSPM_ROOT = sub("/$", "", fake_sysreqs$url())
+  )
+}
+
+transform_sysreqs_server <- function(x) {
+  x <- gsub("https://packagemanager.posit.co", "<server>", x, fixed = TRUE)
+  x <- gsub("http://127.0.0.1:[0-9]+", "<server>", x)
+  x <- gsub("http://localhost:[0-9]+", "<server>", x)
+  x
+}
+
 show_request <- function(req) {
   x <- fromJSON(rawToChar(req$content))
   cat(toupper(x$method), " ", x$type, sep = "", "\n")
@@ -454,6 +538,7 @@ transform_no_srcref <- function(x) {
   x <- sub("[ ]*at line [0-9]+", "", x)
   x <- sub("\033[90m\033[39m", "", x, fixed = TRUE)
   x <- sub("Caused by error: ", "Caused by error:", x, fixed = TRUE)
+  if (x[length(x)] == "") x <- x[-length(x)]
   x
 }
 
@@ -486,4 +571,12 @@ transform_tempdir <- function(x) {
   x <- sub("[\\\\/]file[a-zA-Z0-9]+", "/<tempfile>", x)
   x <- sub("[A-Z]:.*Rtmp[a-zA-Z0-9]+/", "<tempdir>/", x)
   x
+}
+
+transform_show_cursor <- function(x) {
+  gsub("\033[?25h", "", x, fixed = TRUE)
+}
+
+transform_no_links <- function(x) {
+  cli::ansi_strip(x, sgr = FALSE, csi = FALSE, link = TRUE)
 }

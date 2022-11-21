@@ -11,8 +11,17 @@ sysreqs_resolve <- function(sysreqs, os = NULL, os_release = NULL,
 }
 
 sysreqs_async_resolve <- function(sysreqs, os, os_release, config) {
+  sysreqs; os; os_release; config
   sysreqs_async_resolve_query(sysreqs, os, os_release, config)$
-    then(http_stop_for_status)$
+    then(function(resp) {
+      if (resp$status_code < 400) return(resp)
+      throw(pkg_error(
+        call. = FALSE,
+        "Failed to look up system requirements for OS {os} {os_release}.",
+        i = "HTTP error {resp$status_code} for {.url {resp$url}}.",
+        i = "Response: {.val {rawToChar(resp$content)}}."
+      ))
+    })$
       then(function(resp) sysreqs_resolve_process(sysreqs, os, os_release, resp))$
       then(function(res) add_class(res, "pkg_sysreqs_result"))
 }
@@ -43,7 +52,6 @@ sysreqs_resolve_process <- function(sysreqs, os, os_release, resp) {
   Encoding(cnt) <- "UTF-8"
 
   data <- jsonlite::fromJSON(cnt, simplifyVector = FALSE)
-  if (!is.null(data$error)) throw(pkg_error(data$error))
 
   pre_install <- unique(as.character(unlist(c(
     data[["pre_install"]],
@@ -119,8 +127,8 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
 
   output <- lapply(cmds, function(cmd) {
     if (sudo) {
-      sh <- "sudo"
-      cmdline <- c("sh", "-c", cmd)
+      sh <- "sudo"                                               # nocov
+      cmdline <- c("sh", "-c", cmd)                              # nocov
     } else {
       sh <- "sh"
       cmdline <- c("-c", cmd)

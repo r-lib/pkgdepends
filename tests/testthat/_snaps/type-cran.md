@@ -280,7 +280,6 @@
       + metadata:
       -
       + dep_types:
-      
 
 ---
 
@@ -315,7 +314,6 @@
       + metadata:
       -
       + dep_types:
-      
 
 # resolve a version range
 
@@ -350,5 +348,4 @@
       + metadata:
       -
       + dep_types:
-      
 

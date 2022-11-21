@@ -1,40 +1,10 @@
 
-skip_if_offline <- function() {
-  if (!is_online()) skip("Offline")
-}
-
 expect_equal_named_lists <- function(object, expected, ...) {
   expect_true(!is.null(names(object)) && !is.null(names(expected)))
   expect_true(is.list(object) && is.list(expected))
   object <- object[order(names(object))]
   expected <- expected[order(names(expected))]
   expect_equal(object, expected)
-}
-
-`set_private<-` <- function(x, member, value) {
-  pr <- get_private(x)
-  pr[[member]] <- value
-  invisible(x)
-}
-
-oneday <- function() as.difftime(1, units = "days")
-
-oneminute <- function() as.difftime(1, units = "mins")
-
-check_packages_data <- function(pkgs) {
-  cols <- packages_gz_cols()
-  p_cols <- cols$pkgs
-  d_cols <- cols$deps
-
-  expect_equal(length(pkgs), 2)
-  miss <- setdiff(p_cols, names(pkgs$pkgs))
-  expect_identical(miss, character(0))
-
-  miss2 <- setdiff(d_cols, names(pkgs$deps))
-  expect_identical(miss2, character(0))
-  expect_true(is.integer(pkgs$deps$idx))
-  pkgs$deps$idx <- as.character(pkgs$deps$idx)
-  expect_true(all(vlapply(pkgs$deps, is.character)))
 }
 
 test_temp_file <- function(fileext = "", pattern = "test-file-",
@@ -81,24 +51,6 @@ test_package_root <- function() {
 
 skip_in_covr <- function() {
   if (Sys.getenv("R_COVR") == "true") skip("In covr")
-}
-
-capture_messages <- function(expr) {
-  msg <- ""
-  withCallingHandlers(
-    expr,
-    message = function(m) msg <<- paste0(msg, m$message)
-  )
-  msg
-}
-
-capture_async_messages <- function(expr) {
-  msg <- ""
-  withCallingHandlers(
-    synchronise(expr),
-    message = function(m) msg <<- paste0(msg, m$message)
-  )
-  msg
 }
 
 # TODO: update this to cli.num_colors

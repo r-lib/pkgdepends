@@ -66,6 +66,9 @@ download_remote_github <- function(resolution, target, target_tree,
   nocache <- is_true_param(resolution$params[[1]], "nocache")
   source <- is_true_param(resolution$params[[1]], "source")
 
+  # in case there is a leftover package/tree here
+  unlink(c(target, target_tree), recursive = TRUE)
+
   ## 1. Check for a binary package
 
   if (!nocache && !source) {
@@ -76,8 +79,6 @@ download_remote_github <- function(resolution, target, target_tree,
       .list = c(if (need_vignettes) c(vignettes = TRUE)))
 
     if (nrow(hit)) {
-      # in case there is a leftover tree there
-      unlink(target_tree, recursive = TRUE)
       return(paste("Had", ptfm)) # TODO: untested currently
     }
   }
@@ -94,8 +95,6 @@ download_remote_github <- function(resolution, target, target_tree,
       .list = c(if (need_vignettes) c(vignettes = TRUE)))
     if (nrow(hit)) {
       "!DEBUG found GH `resolution$ref`@`sha` in the cache"
-      # in case there is a leftover tree there
-      unlink(target_tree, recursive = TRUE)
       return("Had")
     }
   }
@@ -118,7 +117,6 @@ download_remote_github <- function(resolution, target, target_tree,
   "!DEBUG Need to download GH package `resolution$ref`@`sha`"
   urls <- resolution$sources[[1]]
   rel_zip <- paste0(rel_target, "-t")
-  unlink(target, recursive = TRUE)
   type_github_download_repo(urls, target_tree, rel_zip, sha, package, cache,
                             on_progress, nocache)$
     then(function() {

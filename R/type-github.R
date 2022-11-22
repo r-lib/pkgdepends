@@ -66,6 +66,9 @@ download_remote_github <- function(resolution, target, target_tree,
   nocache <- is_true_param(resolution$params[[1]], "nocache")
   source <- is_true_param(resolution$params[[1]], "source")
 
+  # in case there is a leftover package/tree here
+  unlink(c(target, target_tree), recursive = TRUE)
+
   ## 1. Check for a binary package
 
   if (!nocache && !source) {

@@ -462,13 +462,21 @@ start_task_package_build <- function(state, task) {
   pkgidx <- task$args$pkgidx
   pkg <- state$plan$package[pkgidx]
 
-  ## The actual package might be in a subdirectory, e.g. when the
-  ## tree was downloaded from GitHub
-  tree_dir <- task$args$tree_dir
-  dir_tree_dir <- dir(tree_dir)
-  if (! "DESCRIPTION" %in% dir_tree_dir && length(dir_tree_dir) == 1 &&
-      "DESCRIPTION" %in% dir(file.path(tree_dir, dir_tree_dir))) {
-    tree_dir <- file.path(tree_dir, dir_tree_dir)
+  # GH (and similar) packages might be in a subdirectory
+  subdir <- c(state$plan$metadata[[pkgidx]]["RemoteSubdir"])[1]
+  if (is.null(subdir) || is.na(subdir)) {
+    subdir <- "."
+  }
+
+  # The actual package might be in a subdirectory of the tarball,
+  # e.g. when the tree was downloaded from GitHub. So the package is
+  # either in tree_dir/subdir or tree_dir/something/subdir
+  root_dir <- task$args$tree_dir
+  pkg_dir <- file.path(root_dir, subdir)
+  dir_root_dir <- dir(root_dir)
+
+  if (! "DESCRIPTION" %in% dir_root_dir && length(dir_root_dir) == 1) {
+    pkg_dir <- file.path(root_dir, dir_root_dir, subdir)
   }
 
   vignettes <- state$plan$vignettes[pkgidx]
@@ -476,7 +484,7 @@ start_task_package_build <- function(state, task) {
   lib <- state$config$lib
 
   task$args$phase <- "build"
-  px <- make_build_process(tree_dir, pkg, create_temp_dir(), lib, vignettes,
+  px <- make_build_process(pkg_dir, pkg, create_temp_dir(), lib, vignettes,
                            needscompilation, binary = FALSE,
                            cmd_args = NULL)
   worker <- list(id = get_worker_id(), task = task, process = px,

@@ -41,7 +41,6 @@ Suggests:
     asciicast (>= 2.2.0.9000),
     covr,
     debugme,
-    digest,
     fansi,
     fs,
     htmlwidgets,

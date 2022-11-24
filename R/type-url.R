@@ -8,7 +8,7 @@ parse_remote_url <- function(specs, config, ...) {
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
   parsed_specs <- parsed_specs[, cn]
   parsed_specs$type <- "url"
-  parsed_specs$hash <- vcapply(specs, function(x) digest::digest(x))
+  parsed_specs$hash <- vcapply(specs, function(x) cli::hash_obj_md5(x))
 
   # Special case downloads from GH
   parsed_gh_specs <- re_match(specs, type_github_download_url_rx())
@@ -183,7 +183,7 @@ type_url_download_and_extract <- function(remote, cache, config, tmpd,
   })$then(function(dl) {
     tmpd$status <<- attr(dl, "action")
     tmpd$etag <<- if (is.na(dl$etag)) substr(dl$sha256, 1, 16) else dl$etag
-    tmpd$id <<- digest::digest(tmpd$etag)
+    tmpd$id <<- cli::hash_obj_md5(tmpd$etag)
     rimraf(c(tmpd$extract, tmpd$ok))
     mkdirp(tmpd$extract)
     run_uncompress_process(tmpd$archive, tmpd$extract)

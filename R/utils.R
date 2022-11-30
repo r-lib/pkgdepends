@@ -416,3 +416,7 @@ is.dir <- function(path) {
 map_named <- function(x, fun) {
   mapply(names(x), x, SIMPLIFY = FALSE, FUN = fun)
 }
+
+sort_by_name <- function(x) {
+  x[order(names(x))]
+}

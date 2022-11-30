@@ -34,41 +34,15 @@ Call \code{current_config()} to print the current configuration.
 }
 \section{Configuration entries}{
 \itemize{
-\item \code{library}: Package library to install packages to. It is also used for
-already installed packages when considering dependencies in
-\link[=pkg_deps]{dependency lookup} or
-\link[=pkg_installation_proposal]{package installation}. Defaults to the
-first path in \code{\link[=.libPaths]{.libPaths()}}.
+\item \code{build_vignettes}: Whether to build vignettes for package trees.
+This is only used if the package is obtained from a package tree,
+and not from a source (or binary) package archive. By default
+vignettes are not built in this case. If you set this to \code{TRUE},
+then you need to make sure that the vignette builder packages are
+available, as these are not installed by default currently.
 \item \code{cache_dir}: Directory to download the packages to. Defaults to a temporary
 directory within the R session temporary directory, see
 \code{\link[base:tempfile]{base::tempdir()}}.
-\item \code{package_cache_dir}: Package cache location of \code{\link[pkgcache:package_cache]{pkgcache::package_cache}}. The default
-is the pkgcache default.
-\item \code{metadata_cache_dir}: Location of metadata replica of
-\code{\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}}. Defaults to a temporary
-directory within the R session temporary directory, see
-\code{\link[base:tempfile]{base::tempdir()}}.
-\item \code{platforms}: Character vector of platforms to \emph{download} or \emph{install} packages
-for. See \code{\link[=default_platforms]{default_platforms()}} for possible platform
-names. Defaults to the platform of the current R session, plus
-\code{"source"}.
-\item \code{windows_archs}: Character scalar specifying which architectures
-to download/install for on Windows. Its possible values are:
-\itemize{
-\item \code{"prefer-x64"}: Generally prefer x64 binaries. If the current R
-session is \code{x64}, then we download/install x64 packages.
-(These packages might still be multi-architecture binaries!)
-If the current R session is \code{i386}, then we download/install
-packages for both architectures. This might mean compiling
-packages from source if the binary packages are for \code{x64} only,
-like the CRAN Windows binaries for R 4.2.x currently.
-\code{"prefer-x64"} is the default for R 4.2.0 and later.
-\item \code{"both"}: Always download/install packages for both \code{i386} and
-\code{x64} architectures. This might need compilation from source
-if the available binaries are for \code{x64} only, like the CRAN
-Windows binaries for R 4.2.x currently. \code{"both"} is the default
-for R 4.2.0 and earlier.
-}
 \item \code{cran_mirror}: CRAN mirror to use. Defaults to the \code{repos} option
 (see \code{\link[base:options]{base::options()}}), if that's not set then
 \verb{https://cran.rstudio.com}.
@@ -79,19 +53,28 @@ supported in the \code{PKG_DEPENDENCIES} environment variable:
 \code{"TRUE"}, \code{"FALSE"}, \code{"NA"}, or a semicolon separated list of
 dependency types. See \code{\link[=as_pkg_dependencies]{as_pkg_dependencies()}} for
 details.
-\item \code{r_versions}: Character vector, R versions to download or install
-packages for. It defaults to the current R version.
-\item \code{build_vignettes}: Whether to build vignettes for package trees.
-This is only used if the package is obtained from a package tree,
-and not from a source (or binary) package archive. By default
-vignettes are not built in this case. If you set this to \code{TRUE},
-then you need to make sure that the vignette builder packages are
-available, as these are not installed by default currently.
+\item \code{library}: Package library to install packages to. It is also used for
+already installed packages when considering dependencies in
+\link[=pkg_deps]{dependency lookup} or
+\link[=pkg_installation_proposal]{package installation}. Defaults to the
+first path in \code{\link[=.libPaths]{.libPaths()}}.
+\item \code{metadata_cache_dir}: Location of metadata replica of
+\code{\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}}. Defaults to a temporary
+directory within the R session temporary directory, see
+\code{\link[base:tempfile]{base::tempdir()}}.
 \item \code{metadata_update_after}: A time interval as a \link{difftime} object. pkgdepends will update the
 metadata cache if it is older than this. The default is one day.
 The \code{PKG_METADATA_UPDATE_AFTER} environment variable may be set
 in seconds (\code{s} suffix), minutes (\code{m} suffix), hours (\code{h} suffix),
 or days (\code{d} suffix). E.g: \verb{1d} means one day.
+\item \code{package_cache_dir}: Package cache location of \code{\link[pkgcache:package_cache]{pkgcache::package_cache}}. The default
+is the pkgcache default.
+\item \code{platforms}: Character vector of platforms to \emph{download} or \emph{install} packages
+for. See \code{\link[=default_platforms]{default_platforms()}} for possible platform
+names. Defaults to the platform of the current R session, plus
+\code{"source"}.
+\item \code{r_versions}: Character vector, R versions to download or install
+packages for. It defaults to the current R version.
 \item \code{sysreqs}: Whether to look up and install system requirements.
 By default this is \code{TRUE} if the \code{CI} environment variable is set
 and the operating system is a supported Linux distribution:
@@ -115,6 +98,23 @@ of the current process is not the \code{root} user.
 Defaults to \code{TRUE} if the \code{CI} environment variable is set.
 \item \code{use_bioconductor}: Whether to automatically use the Bioconductor repositories.
 Defaults to \code{TRUE}.
+\item \code{windows_archs}: Character scalar specifying which architectures
+to download/install for on Windows. Its possible values are:
+\itemize{
+\item \code{"prefer-x64"}: Generally prefer x64 binaries. If the current R
+session is \code{x64}, then we download/install x64 packages.
+(These packages might still be multi-architecture binaries!)
+If the current R session is \code{i386}, then we download/install
+packages for both architectures. This might mean compiling
+packages from source if the binary packages are for \code{x64} only,
+like the CRAN Windows binaries for R 4.2.x currently.
+\code{"prefer-x64"} is the default for R 4.2.0 and later.
+\item \code{"both"}: Always download/install packages for both \code{i386} and
+\code{x64} architectures. This might need compilation from source
+if the available binaries are for \code{x64} only, like the CRAN
+Windows binaries for R 4.2.x currently. \code{"both"} is the default
+for R 4.2.0 and earlier.
+}
 }
 }
 

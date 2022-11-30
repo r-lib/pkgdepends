@@ -61,7 +61,7 @@ default_sysreqs_rspm_repo_id <- function() {
   Sys.getenv("RSPM_REPO_ID", "1")
 }
 
-pkgdepends_config <- list(
+pkgdepends_config <- sort_by_name(list(
   # -----------------------------------------------------------------------
   library = list(
     type = "string_or_null",
@@ -291,7 +291,7 @@ pkgdepends_config <- list(
   )
 
   # -----------------------------------------------------------------------
-)
+))
 
 #' pkgdepends configuration
 #' @name pkg_config

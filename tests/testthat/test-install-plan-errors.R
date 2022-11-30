@@ -102,7 +102,10 @@ test_that("packaging error", {
     show = FALSE
   )
 
-  expect_match(res$stdout, "not in valid DCF format")
+  expect_true(
+    grepl("not in valid DCF format", res$stdout, fixed = TRUE) ||
+    grepl("Error in read.dcf", res$stdout, fixed = TRUE)
+  )
 })
 
 test_that("warn_for_long_paths", {

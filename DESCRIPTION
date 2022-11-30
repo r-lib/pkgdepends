@@ -45,6 +45,7 @@ Suggests:
     fs,
     htmlwidgets,
     mockery,
+    pak,
     pingr (>= 2.0.0),
     rmarkdown,
     rstudioapi,

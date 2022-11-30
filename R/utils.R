@@ -412,3 +412,7 @@ is.dir <- function(path) {
   assert_that(is_string(path), file.exists(path))
   file.info(path)$isdir
 }
+
+map_named <- function(x, fun) {
+  mapply(names(x), x, SIMPLIFY = FALSE, FUN = fun)
+}

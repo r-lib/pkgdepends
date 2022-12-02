@@ -100,7 +100,7 @@ base::grep()."><meta name="robots" content="noindex"><!-- mathjax --><script src
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+)(?:/(?&lt;subdir&gt;(?:[^@#]*[^@#/])/?))?(?:(?:(?:@(?&lt;commitish&gt;[^*].*)))|(?:(?:#(?&lt;pull&gt;[0-9]+)))|(?:(?:@(?&lt;release&gt;[*]release))))?$"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $type_local</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?|local::(?&lt;path&gt;.*)|(?&lt;path&gt;(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*))$"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?|local::(?&lt;path&gt;.*)|(?&lt;path&gt;(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*))$"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $type_deps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:deps::)(?&lt;path&gt;.*)$"</span>
@@ -115,7 +115,7 @@ base::grep()."><meta name="robots" content="noindex"><!-- mathjax --><script src
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "(?&lt;repo&gt;[^/@#]+)"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $github_url</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?:(?:https?://)|(?:ssh://(?:[^@]+@)?)?)(?:[^/:]+)[/:](?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+?)(?&lt;subdir&gt;)(?:[.]git)?(?:/(?:(?:(?:tree|commit|releases/tag)/(?&lt;commitish&gt;.+$))|(?:pull/(?&lt;pull&gt;.+$))|(?:releases/)(?&lt;release&gt;.+$)))?$"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?:(?:https?://)|(?:(?:ssh://|[^@]+@)))(?:[^/:]+)[/:](?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+?)(?&lt;subdir&gt;)(?:[.]git)?(?:/(?:(?:(?:tree|commit|releases/tag)/(?&lt;commitish&gt;.+$))|(?:pull/(?&lt;pull&gt;.+$))|(?:releases/)(?&lt;release&gt;.+$)))?$"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

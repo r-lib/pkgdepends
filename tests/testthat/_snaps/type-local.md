@@ -52,6 +52,9 @@
       
       $remote
       $remote[[1]]
+      $package
+      [1] NA
+      
       $path
       [1] "fixtures/foobar_1.0.0.tar.gz"
       
@@ -163,6 +166,9 @@
       
       $remote
       $remote[[1]]
+      $package
+      [1] NA
+      
       $path
       [1] "foobar_1.0.0.tar.gz"
       
@@ -227,4 +233,47 @@
     Message <cliMessage>
       i Getting 1 pkg with unknown size
       x Failed to download foobar 1.0.0 (source)
+
+# satisfy
+
+    Code
+      # different package name, FALSE
+      satisfy_remote_local(list(package = "foo"), list(package = "bar"))
+    Output
+      [1] FALSE
+      attr(,"reason")
+      [1] "Package names differ"
+    Code
+      # different type is bad
+      satisfy_remote_local(list(package = "foo", remote = list(list(package = NA_character_)),
+      path = "/tmp/foo"), list(type = "notgood", package = "foo", path = "/tmp/foo"))
+    Output
+      [1] FALSE
+      attr(,"reason")
+      [1] "Package source mismatch"
+    Code
+      # any package name is good, good
+      satisfy_remote_local(list(package = "foo", remote = list(list(package = NA_character_,
+        path = "/tmp/foo"))), list(type = "local", package = "foo", remote = list(
+        list(path = "/tmp/foo"))))
+    Output
+      [1] TRUE
+    Code
+      # requested a different package, bad
+      satisfy_remote_local(list(package = "foo", remote = list(list(package = "bar",
+        path = "/tmp/foo"))), list(type = "local", package = "foo", remote = list(
+        list(package = "bar", path = "/tmp/foo"))))
+    Output
+      [1] FALSE
+      attr(,"reason")
+      [1] "Requested package bar but got foo"
+    Code
+      # different paths are bad
+      satisfy_remote_local(list(package = "foo", remote = list(list(package = "foo",
+        path = "/tmp/foo"))), list(type = "local", package = "foo", remote = list(
+        list(package = "foo", path = "/tmp/foo2"))))
+    Output
+      [1] FALSE
+      attr(,"reason")
+      [1] "Paths differ"
 

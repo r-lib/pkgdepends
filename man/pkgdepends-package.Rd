@@ -63,51 +63,22 @@ pd$solve()
 pd$draw()
 }\if{html}{\out{</div>}}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{#> r-lib/pkgcache 1.2.2.9000 [new][bld][cmp]
-#> +-assertthat 0.2.1 [new]
-#> +-callr 3.7.0 [new]
-#> | +-processx 3.5.2 [new]
-#> | | +-ps 1.6.0 [new]
-#> | | \-R6 2.5.1 [new]
+\if{html}{\out{<div class="sourceCode">}}\preformatted{#> r-lib/pkgcache 2.0.3.9000 [new][bld][cmp][dl] (unknown size)
+#> +-callr 3.7.3 [new]
+#> | +-processx 3.8.0 [new]
+#> | | +-ps 1.7.2 [new]
+#> | | \-R6 2.5.1 [new][dl] (82.52 kB)
 #> | \-R6
-#> +-cli 3.1.0 [new]
-#> | \-glue 1.5.0 [new]
-#> +-curl 4.3.2 [new]
-#> +-digest 0.6.28 [new]
-#> +-filelock 1.0.2 [new]
-#> +-glue
-#> +-jsonlite 1.7.2 [new]
-#> +-prettyunits 1.1.1 [new]
-#> +-R6
+#> +-cli 3.4.1 [new]
+#> +-curl 4.3.3 [new][dl] (756.97 kB)
+#> +-filelock 1.0.2 [new][dl] (29.09 kB)
+#> +-jsonlite 1.8.3 [new]
+#> +-prettyunits 1.1.1 [new][dl] (34.70 kB)
 #> +-processx
-#> +-rappdirs 0.3.3 [new]
-#> +-rlang 0.4.12 [new]
-#> +-tibble 3.1.6 [new]
-#> | +-ellipsis 0.3.2 [new]
-#> | | \-rlang
-#> | +-fansi 0.5.0 [new]
-#> | +-lifecycle 1.0.1 [new]
-#> | | +-glue
-#> | | \-rlang
-#> | +-magrittr 2.0.1 [new]
-#> | +-pillar 1.6.4 [new]
-#> | | +-cli
-#> | | +-crayon 1.4.2 [new]
-#> | | +-ellipsis
-#> | | +-fansi
-#> | | +-lifecycle
-#> | | +-rlang
-#> | | +-utf8 1.2.2 [new]
-#> | | \-vctrs 0.3.8 [new]
-#> | |   +-ellipsis
-#> | |   +-glue
-#> | |   \-rlang
-#> | +-pkgconfig 2.0.3 [new]
-#> | +-rlang
-#> | \-vctrs
-#> \-uuid 1.0-3 [new]
+#> +-R6
+#> \-rappdirs 0.3.3 [new][dl] (46.80 kB)
 #> 
-#> Key:  [new] new | [bld] build | [cmp] compile
+#> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
 }\if{html}{\out{</div>}}
 
 See the \code{\link{pkg_deps}} class for details.

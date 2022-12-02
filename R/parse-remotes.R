@@ -102,8 +102,8 @@ github_url_rx <- function() {
     "(?:(?<package>", package_name_rx(), ")=)?",
     ## Optional remote type
     "(?:github::)?",
-    ## Optional protocol
-    "(?:(?:https?://)|(?:ssh://(?:[^@]+@)?)?)",
+    ## Protocol
+    "(?:(?:https?://)|(?:(?:ssh://|[^@]+@)))",
     ## Servername
     "(?:[^/:]+)[/:]",
     ## Username
@@ -137,6 +137,8 @@ local_rx <- function() {
   sugar <- "(?<path>(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*)"
   paste0(
     "^",
+    ## Optional package name
+    "(?:(?<package>", package_name_rx(), ")=)?",
     "(?|", typed, "|", sugar, ")",
     "$"
   )

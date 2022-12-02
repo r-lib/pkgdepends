@@ -4,8 +4,13 @@
 
 parse_remote_local <- function(specs, config, ...) {
   parsed_specs <- re_match(specs, local_rx())
-  parsed_specs$ref <- paste0("local::", parsed_specs$path)
+  parsed_specs$ref <- paste0(
+    ifelse(parsed_specs$package == "", "", paste0(parsed_specs$package, "=")),
+    "local::",
+    parsed_specs$path
+  )
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
+  parsed_specs$package[parsed_specs$package == ""] <- NA_character_
   parsed_specs <- parsed_specs[, cn]
   parsed_specs$type <- "local"
   lapply(
@@ -58,8 +63,28 @@ download_remote_local <- function(resolution, target, target_tree, config,
 }
 
 satisfy_remote_local <- function(resolution, candidate, config, ...) {
-  ## TODO: we can probably do better than this
-  FALSE
+  if (resolution$package != candidate$package) {
+    return(structure(FALSE, reason = "Package names differ"))
+  }
+
+  # package name was explicitly given, check for match
+  req <- resolution$remote[[1]]$package
+  if (!is.null(req) && !is.na(req)) {
+    got <- candidate$package
+    if (req != got) {
+      return(structure(
+        FALSE,
+        reason = paste0("Requested package ", req, " but got ", got)
+      ))
+    }
+  }
+
+  if (candidate$type == "local") {
+    if (candidate$remote[[1]]$path == resolution$remote[[1]]$path) return(TRUE)
+    return(structure(FALSE, reason = "Paths differ"))
+  }
+
+  structure(FALSE, reason = "Package source mismatch")
 }
 
 installedok_remote_local <- function(installed, solution, config, ...) {

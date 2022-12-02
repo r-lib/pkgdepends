@@ -9,10 +9,16 @@ parse_remote_url <- function(specs, config, ...) {
   parsed_specs <- parsed_specs[, cn]
   parsed_specs$type <- "url"
   parsed_specs$hash <- vcapply(specs, function(x) cli::hash_obj_md5(x))
+  parsed_specs$package[parsed_specs$package == ""] <- NA_character_
 
   # Special case downloads from GH
   parsed_gh_specs <- re_match(specs, type_github_download_url_rx())
-  parsed_specs$package <- parsed_gh_specs$repo
+  parsed_specs$package <- ifelse(
+    is.na(parsed_specs$package) & !is.na(parsed_gh_specs$repo),
+    parsed_gh_specs$repo,
+    parsed_specs$package
+  )
+
   lapply(
     seq_len(nrow(parsed_specs)),
     function(i) as.list(parsed_specs[i,])
@@ -130,6 +136,8 @@ installedok_remote_url <- function(installed, solution, config, ...) {
 type_url_rx <- function() {
   paste0(
     "^",
+    ## Optional package name
+    "(?:(?<package>", package_name_rx(), ")=)?",
     "(?:url::)",
     "(?<url>.*)",
     "$"

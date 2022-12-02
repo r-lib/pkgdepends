@@ -240,7 +240,8 @@ test_that("parse_pkg_refs, local", {
     expect_equal(
       parse_pkg_ref(c[[1]]),
       structure(
-        list(path = c[[2]], ref = paste0("local::", c[[2]]), type = "local",
+        list(package = NA_character_, path = c[[2]],
+             ref = paste0("local::", c[[2]]), type = "local",
              params = character()),
         class = c("remote_ref_local", "remote_ref", "list")
       )
@@ -278,4 +279,21 @@ test_that("parameters", {
     wo$params <- c[[3]]
     expect_equal(wi, wo)
   }
+})
+
+test_that("explicit package names", {
+  expect_snapshot({
+    parse_pkg_ref("package=user/notpackage")
+    parse_pkg_ref("package=user/notpackage@tag")
+    parse_pkg_ref("package=github::user/notpackage@tag")
+
+    parse_pkg_ref("package=local::/abs/path")
+    parse_pkg_ref("package=local::rel/path")
+    parse_pkg_ref("package=local::~/home/path")
+    parse_pkg_ref("package=/abs/path")
+    parse_pkg_ref("package=./rel/path")
+    parse_pkg_ref("package=~/home/path")
+
+    parse_pkg_ref("package=url::https://example.com/p1.tar.gz")
+  })
 })

@@ -17,6 +17,10 @@
 * `pkg_name_check()` now works again, it needed a fix after changes at
   https://crandb.r-pkg.org.
 
+* Explicit package names in local and URL package sources, as in
+  `package=local::...` or `package=url::...` are now parsed correctly in
+  dependencies.
+
 # pkgdepends 0.3.2
 
 * The `?ignore` parameter works correctly now.

@@ -185,8 +185,66 @@ test_that("download_remote error", {
 })
 
 test_that("satisfy", {
-  ## Always FALSE, independently of arguments
-  expect_false(satisfy_remote_local())
+  expect_snapshot({
+    "different package name, FALSE"
+    satisfy_remote_local(
+      list(package = "foo"),
+      list(package = "bar")
+    )
+
+    "different type is bad"
+    satisfy_remote_local(
+      list(
+        package = "foo",
+        remote = list(list(package = NA_character_)),
+        path = "/tmp/foo"
+      ),
+      list(
+        type = "notgood",
+        package = "foo",
+        path = "/tmp/foo"
+      )
+    )
+
+    "any package name is good, good"
+    satisfy_remote_local(
+      list(
+        package = "foo",
+        remote = list(list(package = NA_character_, path = "/tmp/foo"))
+      ),
+      list(
+        type = "local",
+        package = "foo",
+        remote = list(list(path = "/tmp/foo"))
+      )
+    )
+
+    "requested a different package, bad"
+    satisfy_remote_local(
+      list(
+        package = "foo",
+        remote = list(list(package = "bar", path = "/tmp/foo"))
+      ),
+      list(
+        type = "local",
+        package = "foo",
+        remote = list(list(package = "bar", path = "/tmp/foo"))
+      )
+    )
+
+    "different paths are bad"
+    satisfy_remote_local(
+      list(
+        package = "foo",
+        remote = list(list(package = "foo", path = "/tmp/foo"))
+      ),
+      list(
+        type = "local",
+        package = "foo",
+        remote = list(list(package = "foo", path = "/tmp/foo2"))
+      )
+    )
+  })
 })
 
 test_that("installedok", {

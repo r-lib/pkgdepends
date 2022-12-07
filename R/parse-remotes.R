@@ -6,7 +6,11 @@
 #' can be obtained from. The full syntax of a reference is `type::ref`, but
 #' `type` can be often omitted, the common ref types have shortcuts.
 #'
-#' @includeRmd tools/doc/pkg-refs.Rmd
+#' @details
+#' ```{r child = "tools/doc/pkg-refs.Rmd"}
+#' ```
+#' `r doc_share_rmd("tools/doc/pkg-refs.Rmd", "inst/docs/pkg-refs.rds")`
+#'
 #' @name pkg_refs
 NULL
 
@@ -105,6 +109,7 @@ github_url_rx <- function() {
     ## Protocol
     "(?:(?:https?://)|(?:(?:ssh://|[^@]+@)))",
     ## Servername
+    ## TODO: should probably restrict this is (configurable) GH servers
     "(?:[^/:]+)[/:]",
     ## Username
     github_username_rx(), "/",

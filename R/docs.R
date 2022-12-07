@@ -22,10 +22,23 @@ roxy_to_rd <- function(text) {
     roxy_text
   ))
 
-  rd <- out$foo$get_rd("details")
-  rd <- sub("^[\\]details[{]\n?", "", rd)
-  rd <- sub("\n?[}]$", "", rd)
-  rd
+  det <- out$foo$get_rd("details")
+  sec <- out$foo$get_rd("section")
+  if (det == "NULL" && sec == "NULL") {
+    cli::cli_alert_warning("No content in {.fn roxy_to_rd}.")
+    ""
+  } else if (det == "NULL") {
+    sec
+  } else if (sec == "NULL") {
+    if (startsWith(det, "\\details")) {
+      det <- sub("^[\\]details[{]\n?", "", det)
+      det <- sub("\n?[}]$", "", det)
+    }
+    det
+  } else {
+    cli::cli_alert_warning("\\details{{}} content ignored in {.fn roxy_to_rd}.")
+    sec
+  }
 }
 
 generate_config_docs <- function() {
@@ -53,7 +66,7 @@ generate_config_docs <- function() {
 
 doc_share_rmd <- function(rmd, rds) {
   withr::local_envvar(THIS_IS_PAK = "true")
-  cmd <- paste0("@includeRmd ", rmd)
+  cmd <- paste0("```{r child=\"", rmd, "\"}\n```\n")
   rd <- roxy_to_rd(cmd)
   saveRDS(rd, rds, version = 2)
   return("")

@@ -580,3 +580,9 @@ transform_show_cursor <- function(x) {
 transform_no_links <- function(x) {
   cli::ansi_strip(x, sgr = FALSE, csi = FALSE, link = TRUE)
 }
+
+transform_installed_in_temp <- function(x) {
+  m <- regexpr("installed::.*$", x)
+  regmatches(x, m) <- paste0("installed::.../", basename(regmatches(x, m)))
+  x
+}

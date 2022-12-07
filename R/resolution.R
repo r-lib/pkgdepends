@@ -236,6 +236,17 @@ res_init <- function(self, private, config, cache, library,
       if (!is.data.frame(value)) prms <- list(prms)
       want_source <- vlapply(prms, is_true_param, "source")
       want_reinst <- vlapply(prms, is_true_param, "reinstall")
+
+      package <- value$package
+      for (par in private$params) {
+        if (is_true_param(par$params, "source")) {
+          want_source[package %in% par$package | par$package == ""] <- TRUE
+        }
+        if (is_true_param(par$params, "reinstall")) {
+          want_reinst[package %in% par$package | par$package == ""] <- TRUE
+        }
+      }
+
       npkgs <- value$package[not_inst & ! want_source & ! want_reinst]
 
       ## Installed already? Resolve that as well

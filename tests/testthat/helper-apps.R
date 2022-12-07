@@ -583,6 +583,6 @@ transform_no_links <- function(x) {
 
 transform_installed_in_temp <- function(x) {
   m <- regexpr("installed::.*$", x)
-  regmatches(x, m) <- paste0("installed::.../", basename(regmatches(x, m)))
+  regmatches(x, m) <- paste0("installed::.../", long_basename(regmatches(x, m)))
   x
 }

@@ -74,3 +74,10 @@ local_cli_config <- function(unicode = FALSE, dynamic = FALSE,
 }
 
 pst <- function(...) suppressMessages(...)
+
+long_basename <- function(x) {
+  # remove potential trailing slash
+  l <- nchar(x)
+  x <- ifelse (substr(x, l, l) %in% c("/", "\\"), substr(x, 1, l - 1), x)
+  sub("^.*[/\\]", "", x)
+}

@@ -8,57 +8,127 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+# Package references
 
-The currently supported reference types are:
+Many pkgdepends and pak functions take package names as arguments.
+E.g. `pak::pkg_install()` takes the names of the packages to install,
+`pak::pkg_deps_tree()` takes the names of the packages to draw dependency
+trees for.
+
+Most of these function can also take a more generic _package reference_
+instead of a package name.
+A package reference also tells `r pak_or_pkgdepends()` where to find the
+package, the package source.
+
+To specify a package source, use its name as a prefix, with a `::`
+separator.
+E.g. `cran::mypkg` means the `mypkg` package from CRAN.
+
+A package name is a special package reference, that implicitly specifies
+the configured CRAN(-like) repositories as the package source.
+(We call this the `standard` package source.)
+So `mypkg` is equivalent to `standard::mypkg` and pak look for mypkg in
+any of the configured CRAN-like repositories.
+If you did not explicitly specify any CRAN-like reposirories (e.g. with
+`options("repos")`), then pak uses the CRAN and Bioconductor repositories
+by default.
+
+This is the list of the currently supported package sources.
+We will discuss each in detail below.
 
 - `cran`: a CRAN package.
-- `bioc`: A Bioconductor package.
-- `standard`: a package from CRAN or Bioconductor.
-- `github`: A package from GitHub.
-- `local`: A local package file or directory.
-- `url`: An URL to a package archive.
-- `installed` An installed package.
-- `deps` The dependencies of a local package file or directory.
-- `any` A special reference type that accepts a package from any source.
+- `bioc`: a Bioconductor package.
+- `standard`: a package from a configured CRAN-like repository.
+- `github`: a package from GitHub.
+- `local`: a local package file or directory.
+- `url`: an URL that points to a package archive.
+- `installed` an installed package.
+- `deps` the dependencies of a local package file or directory.
+- `any` a special reference type that accepts a package from any source.
   See below.
+- `param` a special reference to change how other references are downloaded
+  or installed. See "Paraemters" below.
 
-If a ref does not explicitly specify a type, then the following rules
-are applied:
+## Shorthands
 
-- if the ref is a valid `standard` ref type (without the `standard::`
-  prefix), then `standard` is used;
-- if the ref is a valid `github` ref type (without the `github::` prefix),
-  then `github` is used;
-- if the ref is a GitHub URL, then `github` is used;
-- otherwise an error is thrown.
+To save typing, you do not always need to fully specify the package source
+in a package reference.
+You have seen before that a package name implicitly has a `standard`
+package source.
+Here are the complete rules for such shorthands, in the order they are
+applied:
+
+- If the ref is a valid package name, or a package name with a `@` version
+  specification, the `standard` package source is used. E.g. `pkg` is
+  equivalent to `standard::pkg` and `pkg@1.0` is equivalent to
+  `standard::pkg@1.0`.
+- If the ref is a valid `github` ref type without the `github::` prefix,
+  then `github` is used. E.g. `user/repo` is equivalent to
+  `github::user/repo` and `user/repo@tag` is equivalent to
+  `github::user/repo@tag`, etc.
+- If the ref is a GitHub URL (see below) without the `github::` prefix,
+  then `github` is used.
+- If the ref is a path that starts with `.` or `/` or `\` or `~` then
+  `local` is used. (`r pak_or_pkgdepends()` does not check if the path
+  exists.)
+- If a package reference if of the form `<package-name>=?<parameters>`,
+  then it will be the special `param` type. See "Parameters" below.
+
+If the package reference does not have an explicit package source,
+and the package source cannot be determined from these rules, then
+`r pak_or_pkgdepends()` throws an error.
+
+## Package names
+
+When `r pak_or_pkgdepends()` is looking up the dependencies of a package,
+it needs to be able to determine the name of the dependency from the
+package reference.
+This is sometimes not easy for dependencies in `Remotes` (or similar) fields.
+
+* For `github::` dependencies `r pak_or_pkgdepends()` assumes that the package
+  name is the same as the name of the repository. If this does not hold,
+  then you need to specify the package name explicitly, using a
+  `<package>=` prefix. E.g. `pins=rstudio/pins-r`. If you specify both the
+  package source type and the package name, the package name comes first:
+  `pins=github::rstudio/pins-r`.
+* For `local::` dependencies, you always need to specify the package name
+  explicitly. E.g. `pins=local::~/works/pins`.
+* For `url::` dependencies, you always need to specify the package name
+  explicitly. E.g. `ggplot2=url::https://cloud.r-project.org/src/contrib/...`.
 
 ## Parameters
 
-Package refs may have optional parameters, added after a question
-mark. Different parameters are separated by an ampersand (`&`) character.
-Parameters might be binary, or have a string value, assigned with an
-equal sign (`=`). If no value is assigned, then we assume the `true`
-value. For example these two package refs are the same:
+Package references may have optional parameters, added after a question
+mark.
+Different parameters are separated by an ampersand (`&`) character.
+(This is very similar to how HTTP URLs take query parameters.)
+
+Parameters may be flags that turn on some behavior, or they can have a
+string value, assigned with an equal sign (`=`).
+If no value is assigned, then we assume the `true` value. For example
+these two package refs are equivalent:
 
 ```
 cran::testthat?source&nocache
 cran::testthat?source=true&nocache=true
 ```
 
-Some parameters given in a special form allow configuring downstream
-dependencies:
+### Parameters for downstream packages
 
-```
-packagename=?parameter
-```
+`r pak_or_pkgdepends()` allows specifying parameters for downstream packages,
+using the `<package>=?<params>` special package reference, where `package` is
+the name of the package, and `<params>` are the parameters, as above.
+This is useful if you want to add a parameter to a downstream dependency.
 
-can be given at the command line and refers to a (potential) downstream
-package.
+For example, to install ggplot2, and always reinstall its cli package
+dependency you could use the `ggplot2` and `cli=?reinstall` package
+references.
+The latter tells `r pak_or_pkgdepends()` to always reinstall cli, even if
+it is already installed.
 
-Currently supported parameters:
+### Currently supported parameters
 
-- `ignore` is a binary parameter. If specified the package is ignored.
+- `ignore` is a flag parameter. If specified, the package is ignored.
   This usually makes sense in the `packagename=?ignore` form, to ignore a
   downstream soft dependency. If all versions of a hard dependency are
   ignored that will lead to a solution error.
@@ -67,25 +137,27 @@ Currently supported parameters:
   `Matrix=?ignore-before-r=4.1.2` will ignore the Matrix package on R versions
   that are older than 4.1.2. This parameter really only makes sense in the
   `packgename=?ignore` form.
-- `source` is a binary parameter. If specified, then a source R package
+- `source` is a flag parameter. If specified, then a source R package
   is requested from a CRAN-like repository. For package installations
   `source` always triggers a re-install. In other words, `source` implies the
   `reinstall` parameter. This parameter is supported for `bioc::`, `cran::`
-  and `standard::` remote types, and it is ignore for others.
+  and `standard::` remote types, and it is ignored for others.
 - `reinstall` requests a re-install for package installations. It is
   supported by the `bioc::`, `cran::`, `github::`, `local::`, `standard::`,
   and `url::` remote types.
 - `nocache` will ignore the package cache. It will always download the
-  package file, and it will not add the downloaded (and built) file to the
-  package cache. It is supported by the `bioc::`, `cran::`, `github::`,
+  package file, and it will not add the downloaded (and built) package(s)
+  to the package cache. It is supported by the `bioc::`, `cran::`, `github::`,
   `standard::` and `url::` remote types.
 
-### CRAN packages:
+## Package source details
+
+### CRAN packages (`cran::`)
 
 A package from CRAN. Full syntax:
 
 ```
-[cran::]<package>[@[>=]<version> | current | last]
+[cran::]<package>[@[>=]<version> | @current | @last]
 ```
 
 - `<package>` is a valid package name.
@@ -101,19 +173,19 @@ forecast@last
 forecast@current
 ```
 
-Note: pkgdepends currently parses the version specification part
+Note: `r pak_or_pkgdepends()` currently parses the version specification part
 (everything after `@`), but does not use it.
 
-### Bioconductor packages:
+### Bioconductor packages (`bioc::`)
 
 A package from Bioconductor. The syntax is the same as for CRAN packages,
-except of the prefix of course:
+except for the prefix.
 
 ```
-[bioc::]<package>[@[>=]<version> | current | last]
+[bioc::]<package>[@[>=]<version> | @current | @last]
 ```
 
-### Standard packages:
+### Standard packages (`standard::`)
 
 These are packages either from CRAN or Bioconductor, the full syntax
 is the same as for CRAN packages, except for the prefix:
@@ -122,7 +194,7 @@ is the same as for CRAN packages, except for the prefix:
 [standard::]<package>[@[>=]<version> | current | last]
 ```
 
-### GitHub packages:
+### GitHub packages (`github::`)
 
 Packages from a GitHub repository. Full syntax:
 
@@ -175,16 +247,16 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 ```
 
 A GitHub remote string can also be used instead of an URL, for example:
-`git@github.com:r-lib/pkgdepends.git`
+`git@github.com:r-lib/pak.git`
 
-### Local packages:
+### Local packages (`local::`)
 
 A path that refers to a package file built with `R CMD build`, or a
 directory that contains a package. Full syntax:
 
 ```
 local::<path>
-````
+```
 
 For brevity, you can omit the `local::` prefix, if you specify an
 absolute path, a path from the user's home directory, starting with `~`,
@@ -204,16 +276,20 @@ local::.
 .
 ```
 
-### URLs:
+If you specify a local package in a dependency (ie. in `DESCRIPTION`), then
+you also need to specify the name of the package, see "Package names"
+above.
+
+### URLs (`url::`)
 
 You can use `url::` to refer to URLs that hold R package archives
 (i.e. properly built with `R CMD build`), or compressed directories
-of package trees (i.e. not built with `R CMD build`). pkgdepends will
+of package trees (i.e. not built with `R CMD build`). `r pak_or_pkgdepends()` will
 figure out if it needs to run `R CMD build` on the package first.
 
 This remote type supports `.tar.gz` and `.zip` files.
 
-Note that URLs are not ideal remote types, because pkgdepends needs to
+Note that URLs are not ideal remote types, because `r pak_or_pkgdepends()` needs to
 download the package file to resolve its dependencies. When this happens,
 it puts the package file in the cache, so no further downloads are
 needed when installing the package later.
@@ -224,7 +300,11 @@ url::https://cloud.r-project.org/src/contrib/Archive/cli/cli_1.0.0.tar.gz
 url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 ```
 
-### Installed packages:
+If you specify a package from an URL in a dependency (ie. in `DESCRIPTION`),
+then you also need to specify the name of the package, see "Package names"
+above.
+
+### Installed packages (`installed::`)
 
 This is usually used internally, but can also be used directly.
 Full syntax:
@@ -241,7 +321,7 @@ Example:
 installed::~/R/3.6/crayon
 ```
 
-### Package dependencies:
+### Package dependencies (`deps::`)
 
 Usually used internally, it specifies the dependencies of a local
 package. It can be used to download or install the dependencies of a
@@ -286,3 +366,39 @@ pak::pkg_install(c("any::glue", "r-lib/cli"))
 ```
 
 works, independently of which glue version is requested by cli.
+
+### Parameter refs (`param::`)
+
+See "Parameters" above.
+
+## The `Remotes` field
+
+In the `DESCRIPTION` file of an R package you can mark any regular
+dependency defined in the `Depends`, `Imports`, `Suggests` or `Enhances`
+fields as being installed from a non-standard package source by adding
+a package reference to a `Remotes` entry.
+`r pak_or_pkgdepends()` will download and install the package from the
+from the specified location, instead of a CRAN-like repository.
+
+The remote dependencies specified in `Remotes` is a comma separated
+list of package sources:
+
+```
+Remotes: <pkg-source-1>, <pkg-source-2>, [ ... ]
+```
+
+Note that you will still need add the package to one of the regular
+dependency fields, i.e. `Imports`, `Suggests`, etc. Here is a concrete
+example that specifies the `r-lib/glue` package:
+
+```
+Imports: glue
+Remotes: r-lib/glue,
+  r-lib/httr@v0.4,
+  klutometis/roxygen#142,
+  r-lib/testthat@c67018fa4970
+```
+
+The CRAN and Bioconductor repositories do not support the `Remotes`
+field, so you need to remove this field, before submitting your package
+to either of them.

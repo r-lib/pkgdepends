@@ -45,15 +45,3 @@ msg_package_sources <- function() {
     "See {.help pkgdepends::pkg_refs} for supported package sources."
   }
 }
-
-is_pak <- function() {
-  Sys.getenv("R_PKG_PKG_WORKER") == "true"
-}
-
-pak_or_pkgdepends <- function() {
-  if (is_pak()) "pak" else "pkgdepends"
-}
-
-pakx_version <- function() {
-  if (is_pak()) utils::packageVersion("pak") else utils::packageVersion("pkgdepends")
-}

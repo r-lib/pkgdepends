@@ -420,3 +420,16 @@ map_named <- function(x, fun) {
 sort_by_name <- function(x) {
   x[order(names(x))]
 }
+
+is_pak <- function() {
+  Sys.getenv("THIS_IS_PAK") == "true" ||
+    Sys.getenv("R_PKG_PKG_WORKER") == "true"
+}
+
+pak_or_pkgdepends <- function() {
+  if (is_pak()) "pak" else "pkgdepends"
+}
+
+pakx_version <- function() {
+  if (is_pak()) utils::packageVersion("pak") else utils::packageVersion("pkgdepends")
+}

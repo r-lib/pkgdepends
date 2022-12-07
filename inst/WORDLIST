@@ -17,10 +17,13 @@ cloneable
 config
 devtools
 funder
+ggplot
 lifecycle
 macOS
+mypkg
 openSUSE
 pak
 pkgcache
 pkgdown
+shorthands
 tibbles

@@ -28,7 +28,7 @@ the configured CRAN(-like) repositories as the package source.
 (We call this the \code{standard} package source.)
 So \code{mypkg} is equivalent to \code{standard::mypkg} and pak look for mypkg in
 any of the configured CRAN-like repositories.
-If you did not explicitly specify any CRAN-like reposirories (e.g. with
+If you did not explicitly specify any CRAN-like repositories (e.g. with
 \code{options("repos")}), then pak uses the CRAN and Bioconductor repositories
 by default.
 
@@ -46,7 +46,7 @@ We will discuss each in detail below.
 \item \code{any} a special reference type that accepts a package from any source.
 See below.
 \item \code{param} a special reference to change how other references are downloaded
-or installed. See "Paraemters" below.
+or installed. See "Parameters" below.
 }
 \subsection{Shorthands}{
 
@@ -282,7 +282,7 @@ local::.
 .
 }\if{html}{\out{</div>}}
 
-If you specify a local package in a dependency (ie. in \code{DESCRIPTION}), then
+If you specify a local package in a dependency (i.e. in \code{DESCRIPTION}), then
 you also need to specify the name of the package, see "Package names"
 above.
 }
@@ -307,7 +307,7 @@ Examples:
 url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 }\if{html}{\out{</div>}}
 
-If you specify a package from an URL in a dependency (ie. in \code{DESCRIPTION}),
+If you specify a package from an URL in a dependency (i.e. in \code{DESCRIPTION}),
 then you also need to specify the name of the package, see "Package names"
 above.
 }

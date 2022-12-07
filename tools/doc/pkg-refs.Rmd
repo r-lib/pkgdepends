@@ -29,7 +29,7 @@ the configured CRAN(-like) repositories as the package source.
 (We call this the `standard` package source.)
 So `mypkg` is equivalent to `standard::mypkg` and pak look for mypkg in
 any of the configured CRAN-like repositories.
-If you did not explicitly specify any CRAN-like reposirories (e.g. with
+If you did not explicitly specify any CRAN-like repositories (e.g. with
 `options("repos")`), then pak uses the CRAN and Bioconductor repositories
 by default.
 
@@ -47,7 +47,7 @@ We will discuss each in detail below.
 - `any` a special reference type that accepts a package from any source.
   See below.
 - `param` a special reference to change how other references are downloaded
-  or installed. See "Paraemters" below.
+  or installed. See "Parameters" below.
 
 ## Shorthands
 
@@ -276,7 +276,7 @@ local::.
 .
 ```
 
-If you specify a local package in a dependency (ie. in `DESCRIPTION`), then
+If you specify a local package in a dependency (i.e. in `DESCRIPTION`), then
 you also need to specify the name of the package, see "Package names"
 above.
 
@@ -300,7 +300,7 @@ url::https://cloud.r-project.org/src/contrib/Archive/cli/cli_1.0.0.tar.gz
 url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 ```
 
-If you specify a package from an URL in a dependency (ie. in `DESCRIPTION`),
+If you specify a package from an URL in a dependency (i.e. in `DESCRIPTION`),
 then you also need to specify the name of the package, see "Package names"
 above.
 

@@ -1,5 +1,6 @@
 
 test_that("new_pkg_deps", {
+  pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
   deps <- new_pkg_deps("pkg3", config = list(library = tempfile()))

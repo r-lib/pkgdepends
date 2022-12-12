@@ -40,7 +40,7 @@ You typically use one of these values:
 dependencies.
 }
 
-If you need more flexibility, the full descirption of possible values for
+If you need more flexibility, the full description of possible values for
 the \code{deps} argument are:
 \itemize{
 \item \code{TRUE}: This means all hard dependencies plus \code{Suggests} for

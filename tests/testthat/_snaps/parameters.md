@@ -113,3 +113,25 @@
       + solution:
         - url::http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz
 
+# source
+
+    Code
+      sol[, c("package", "platform")]
+    Output
+      # A data frame: 2 x 2
+        package platform               
+      * <chr>   <chr>                  
+      1 pkg     source                 
+      2 pkg2    i386+x86_64-w64-mingw32
+
+# source for dependency
+
+    Code
+      sol[, c("package", "platform")]
+    Output
+      # A data frame: 2 x 2
+        package platform               
+      * <chr>   <chr>                  
+      1 pkg     i386+x86_64-w64-mingw32
+      2 pkg2    source                 
+

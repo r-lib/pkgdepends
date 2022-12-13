@@ -80,3 +80,59 @@ test_that("reinstsll from URL", {
     p$get_solution()
   }, transform = function(x) transform_local_port(transform_installed_in_temp(x)))
 })
+
+test_that("source", {
+  repo <- dcf("
+    Package: pkg
+    Imports: pkg2
+
+    Package: pkg2
+  ")
+
+  setup_fake_apps(
+    cran_repo = repo,
+    cran_options = list(platforms = c("windows", "source"))
+  )
+
+  p <- suppressMessages(new_pkg_installation_proposal(
+    "pkg?source",
+    config = list(
+      dependencies = TRUE,
+      library = tempfile(),
+      platforms = c("x86_64-w64-mingw32", "source")
+    )
+  ))
+  suppressMessages(p$resolve())
+  suppressMessages(p$solve())
+  sol <- p$get_solution()$data
+  sol <- sol[order(sol$ref), ]
+  expect_snapshot(sol[, c("package", "platform")])
+})
+
+test_that("source for dependency", {
+  repo <- dcf("
+    Package: pkg
+    Imports: pkg2
+
+    Package: pkg2
+  ")
+
+  setup_fake_apps(
+    cran_repo = repo,
+    cran_options = list(platforms = c("windows", "source"))
+  )
+
+  p <- suppressMessages(new_pkg_installation_proposal(
+    c("pkg", "pkg2=?source"),
+    config = list(
+      dependencies = TRUE,
+      library = tempfile(),
+      platforms = c("x86_64-w64-mingw32", "source")
+    )
+  ))
+  suppressMessages(p$resolve())
+  suppressMessages(p$solve())
+  sol <- p$get_solution()$data
+  sol <- sol[order(sol$ref), ]
+  expect_snapshot(sol[, c("package", "platform")])
+})

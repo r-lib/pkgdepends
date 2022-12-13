@@ -228,6 +228,7 @@ pkgplan_i_create_lp_problem <- function(pkgs, config, policy) {
 
   lp <- pkgplan_i_lp_init(pkgs, config, policy)
   lp <- pkgplan_i_lp_objectives(lp)
+  lp <- pkgplan_i_lp_force_source(lp)
   lp <- pkgplan_i_lp_failures(lp)
   lp <- pkgplan_i_lp_ignore(lp)
   lp <- pkgplan_i_lp_platforms(lp)
@@ -313,6 +314,20 @@ pkgplan_i_lp_objectives <- function(lp) {
   }
 
   lp$obj <- c(lp$obj, rep(solve_dummy_obj, lp$num_direct))
+
+  lp
+}
+
+pkgplan_i_lp_force_source <- function(lp) {
+  # if source package is forced, then rule out binaries
+  src_req <- vlapply(lp$pkgs$params, is_true_param, "source")
+  not_src <- lp$pkgs$platform != "source"
+  bad <- which(src_req & not_src)
+  for (wh in bad) {
+    lp <- pkgplan_i_lp_add_cond(lp, wh, op = "==", rhs = 0,
+                                type = "source-required")
+  }
+  lp$ruled_out <- c(lp$ruled_out, bad)
 
   lp
 }
@@ -693,6 +708,10 @@ format_cond <- function(x, cond) {
   } else if (cond$type == "ok-resolution") {
     ref <- x$pkgs$ref[cond$vars]
     glue("`{ref}` resolution failed")
+
+  } else if (cond$type == "source-required") {
+    ref <- x$pkgs$ref[conf$vars]
+    glue("a source package was required for `{ref}` by the user")
 
   } else if (cond$type == "ignored-by-user") {
     ref <- x$pkgs$ref[cond$vars]
@@ -1118,7 +1137,8 @@ describe_solution_error <- function(pkgs, solution) {
 
   FAILS <- c("failed-res", "satisfy-direct", "conflict", "dep-failed",
              "old-rversion", "new-rvresion", "different-rversion",
-             "matching-platform", "ignored-by-user", "binary-preferred")
+             "matching-platform", "ignored-by-user", "binary-preferred",
+             "source-required")
 
   state <- rep("maybe-good", num)
   note <- replicate(num, NULL)
@@ -1137,6 +1157,11 @@ describe_solution_error <- function(pkgs, solution) {
   ign_vars <- unlist(var[typ == "ignored-by-user"])
   ign_vars <- intersect(ign_vars, which(state == "maybe-good"))
   state[ign_vars] <- "ignored-by-user"
+
+  ## Source required
+  ign_vars <- unlist(var[typ == "source-required"])
+  ign_vars <- intersect(ign_vars, which(state == "maybe-good"))
+  state[ign_vars] <- "source-required"
 
   ## Ruled out in favor of a binary package
   bin_vars <- unlist(var[typ %in% c("prefer-binary", "prefer-new-binary")])

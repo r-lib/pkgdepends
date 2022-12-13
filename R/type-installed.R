@@ -60,6 +60,10 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
     reencode = FALSE
   )
 
+  if (!is.null(packages)) {
+    inst <- inst[inst$package %in% packages, ]
+  }
+
   all_fields <- names(inst)
   fields <- tolower(unique(c(
     "Package", "Title", "Version", "Depends", "Suggests", "Imports",

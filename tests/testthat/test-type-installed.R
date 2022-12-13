@@ -60,3 +60,9 @@ test_that("satisfy", {
 test_that("installedok_remote_installed", {
   expect_false(installedok_remote_installed())
 })
+
+test_that("make_installed_cache", {
+  # packages argument is used correctly
+  cache <- make_installed_cache(.Library, "boot")
+  expect_equal(cache$pkgs$package, "boot")
+})

@@ -60,7 +60,9 @@ make_installed_cache <- function(library, packages = NULL, priority = NULL) {
     reencode = FALSE
   )
 
-  if (!is.null(packages)) {
+  # Need nrow(inst) > 0 because otherwise it drops to a vector, and
+  # R ignores 'drop' in this case. (?!)
+  if (!is.null(packages) && nrow(inst) > 0) {
     inst <- inst[inst$package %in% packages, ]
   }
 

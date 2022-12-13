@@ -66,3 +66,12 @@ test_that("make_installed_cache", {
   cache <- make_installed_cache(.Library, "boot")
   expect_equal(cache$pkgs$package, "boot")
 })
+
+test_that("make_installed_cache edge case", {
+  tmp <- withr::local_tempdir()
+  cache <- make_installed_cache(tmp, "MASS")
+  expect_equal(nrow(cache$pkgs), 0)
+  expect_equal(nrow(cache$deps), 0)
+  expect_true(ncol(cache$pkgs) >= 20) # approx
+  expect_true(ncol(cache$deps) >= 5)  # approx
+})

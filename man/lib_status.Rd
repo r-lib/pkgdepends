@@ -14,6 +14,57 @@ lib_status(library = .libPaths()[1], packages = NULL)
 \value{
 Data frame that contains data about the packages
 installed in the library.
+
+It has always has columns:
+\itemize{
+\item \code{biocviews}: the corresponding field from \code{DESCRIPTION}, it must be
+present for all Bioconductor packages, other packages typically don't
+have it.
+\item \code{built}: the \code{Built} field from \code{DESCRIPTION}.
+\item \code{depends}, \code{suggests}, \code{Imports}, \code{linkingto}, \code{enhances}: the corresponding
+fields from the \code{DESCRIPTION} files.
+\item \code{deps}: A list or data frames, the dependencies of the package. It has
+columns: \code{ref}, \code{type} (dependency type in lowercase), \code{package}
+(dependent package, or \code{R}), \code{op} and \code{version}, for last two are for
+version requirement. \code{op} can be \code{>=}, \code{>}, \code{==} or \code{<=}, although the
+only the first one is common in practice.
+\item \code{library}: path to the package library containing the package.
+\item \code{license}: from \code{DESCRIPTION}.
+\item \code{md5sum}: from \code{DESCTIPTION}, typically \code{NA}, except on Windows.
+\item \code{needscompilation}: from \code{DESCRIPTION}, this column is logical.
+\item \code{package}: package name.
+\item \code{platform}: from the \code{Built} field in \code{DESCRIPTION}, the current platform
+if missing from \code{DESCRIPTION}.
+\item \code{priority}: from \code{DESCRIPTION}, usually \code{base}, \code{recommended}, or missing.
+\item \code{ref}: the corresponding \verb{installed::*} package reference.
+\item \code{repository}: from \code{DESCRIPTION}. For packages from a CRAN repository this
+is \code{CRAN}, some other repositories, e.g. R-universe adds the repository
+URL here.
+\item \code{repotype}: \code{cran}, \code{bioc} or missing.
+\item \code{rversion}: from the \code{Built} field. If no such field, then the current
+R version.
+\item \code{sysreqs}: the \code{SystemRequirements} field from \code{DESCRIPTION}.
+\item \code{title}: package title.
+\item \code{type}: always \code{installed}.
+\item \code{version}: package version (as string).
+}
+
+Most of these columns are unchanged from \code{DESCRIPTION}, but
+pkgdepends also adds a couple.
+\subsection{Notes:}{
+\itemize{
+\item In addition, it also has all \verb{remote*} and \verb{config/needs/*} entries from
+the \code{DESCRIPTION} files. (Case insensitive.)
+\item All columns are of type \code{character}, except for \code{needscompilation}, which
+is logical and \code{deps}, which is a list columns.
+\item If an entry is missing for a package, it is set to \code{NA}.
+\item Note that column names are lowercase, even if the corresponding entries
+are not in \code{DESCRIPTION}.
+\item The order of the columns is not deterministic, so don't assume any order.
+\item Additional columns might be present, these are internal for
+pkgdepends and should not be used in user code.
+}
+}
 }
 \description{
 Query data of all packages in a package library.

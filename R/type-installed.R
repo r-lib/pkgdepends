@@ -148,6 +148,9 @@ merge_installed_caches <- function(c1, c2) {
 #' @param packages If not `NULL`, then only these packages are shown.
 #' @return Data frame that contains data about the packages
 #'   installed in the library.
+#'   ```{r child = "tools/doc/lib-status-return.Rmd"}
+#'   ```
+#'  `r doc_share_rmd("tools/doc/lib-status-return.Rmd", "inst/docs/lib-status-return.rds")`
 #'
 #' @export
 

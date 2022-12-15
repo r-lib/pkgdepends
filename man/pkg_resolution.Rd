@@ -45,63 +45,71 @@ dependencies that are specified in one of the \code{Depends}, \code{Includes},
 
 \subsection{The result}{
 
-The result of the resolution is a data frame with lots of
-information about the packages and their dependencies. The columns that
-are not documented here may be removed or changed, because they are
-either used internally or experimental.
+The result of the resolution is a data frame with information about the
+packages and their dependencies.
 \itemize{
-\item \code{built}: The \code{Built} field from the \code{DESCRIPTION} file of binary
+\item \code{built}: the \code{Built} field from the \code{DESCRIPTION} file of binary
 packages, for which this information is available.
-\item \code{cache_status}: Whether the package file is in the package cache.
+\item \code{cache_status}: whether the package file is in the package cache.
 It is \code{NA} for \verb{installed::} package refs.
-\item \code{dep_types}: Character vector of dependency types that were
+\item \code{dep_types}: character vector of dependency types that were
 considered for this package. (This is a list column.)
-\item \code{deps}: Dependencies of the package, in a data frame. See
-'Package dependency tables' below.
-\item \code{direct}: Whether this package (ref, really) was directly specified,
+\item \code{deps}: dependencies of the package, in a data frame. See
+"Package dependency tables" below.
+\item \code{direct}: whether this package (ref, really) was directly specified,
 or added as a dependency.
-\item \code{error}: This is a list column that contains error objects for the
+\item \code{error}: this is a list column that contains error objects for the
 refs that pkgdepends failed to resolve.
-\item \code{filesize}: The file size in bytes, or \code{NA} if this information is
+\item \code{filesize}: the file size in bytes, or \code{NA} if this information is
 not available.
-\item \code{license}: License of the package, or \code{NA} if not available.
+\item \code{license}: license of the package, or \code{NA} if not available.
 \item \code{md5sum}: MD5 checksum of the package file, if available, or \code{NA} if
 not.
-\item \code{metadata}: A named character vector. These fields will be (should be)
+\item \code{metadata}: a named character vector. These fields will be (should be)
 added to the installed \code{DESCRIPTION} file of the package.
 \item \code{mirror}: URL of the CRAN(-like) mirror site where the metadata was
 obtained from. It is NA for non-CRAN-like sources, e.g. local files,
 installed packages, GitHub, etc.
-\item \code{needscompilation}: Whether the package needs compilation.
-\item \code{package}: Package name.
-\item \code{priority}: This is \code{"base"} for base packages, \code{"recommended"} for
+\item \code{needscompilation}: whether the package needs compilation.
+\item \code{package}: package name.
+\item \code{priority}: this is \code{"base"} for base packages, \code{"recommended"} for
 recommended packages, and \code{NA} otherwise.
-\item \code{ref}: Package reference.
-\item \code{remote}: The parsed \code{remote_ref} objects, see \code{\link[=parse_pkg_refs]{parse_pkg_refs()}}.
+\item \code{ref}: package reference.
+\item \code{remote}: the parsed \code{remote_ref} objects, see \code{\link[=parse_pkg_refs]{parse_pkg_refs()}}.
 This is a list column.
-\item \code{repodir}: The directory where this package should be in a CRAN-like
+\item \code{repodir}: the directory where this package should be in a CRAN-like
 repository.
 \item \code{sha256}: SHA256 hash of the package file, if available, otherwise
 \code{NA}.
 \item \code{sources}: URLs where this package can be downloaded from. This is a
 zero length vector for \verb{installed::} refs.
-\item \code{status}: Status of the dependency resolution, \code{"OK"} or \code{"FAILED"}.
-\item \code{target}: Path where this package should saved in a CRAN-repository.
-\item \code{type}: Ref type.
-\item \code{version}: Package version.
-}
+\item \code{status}: status of the dependency resolution, \code{"OK"} or \code{"FAILED"}.
+\item \code{target}: path where this package should be saved in a CRAN-repository.
+\item \code{type}: ref type.
+\item \code{version}: package version.
 }
 
+Additional columns might be present. They are either used internally or
+they are experimental. They might be removed or changed at any time.
+
+All columns are of type character, except for \code{direct} (logical),
+\code{needscompilation} (logical), \code{filesize} (integer), \code{deps} (list column, see
+"Package dependency tables" below), \code{sources} (list of character vectors),
+\code{remote} (list), \code{error} (list), \code{metadata} (list), \code{dep_types} (list).
 \subsection{Package dependency tables}{
 
-A package dependency table has five columns currently:
+A package dependency tables in the \code{deps} list column have five columns
+currently:
 \itemize{
-\item \code{ref}: The package ref of the dependency.
-\item \code{type}: The dependency type, in all lowercase. I.e. \code{imports},
+\item \code{ref}: the package ref of the dependency.
+\item \code{type}: the dependency type, in all lowercase. I.e. \code{imports},
 \code{suggests}, etc.
-\item \code{op}: Operator for version requirements, e.g. \code{>=}.
-\item \code{version}: Version number, for version requirements.
+\item \code{package}: package name of the dependency.
+\item \code{op}: operator for version requirements, e.g. \code{>=}.
+\item \code{version}: version number, for version requirements.
 }
+}
+
 }
 
 \subsection{Resolution failures}{

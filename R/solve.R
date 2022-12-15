@@ -710,7 +710,7 @@ format_cond <- function(x, cond) {
     glue("`{ref}` resolution failed")
 
   } else if (cond$type == "source-required") {
-    ref <- x$pkgs$ref[conf$vars]
+    ref <- x$pkgs$ref[cond$vars]
     glue("a source package was required for `{ref}` by the user")
 
   } else if (cond$type == "ignored-by-user") {

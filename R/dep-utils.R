@@ -110,38 +110,9 @@ resolve_ref_deps <- function(deps, remotes, extra) {
 #' Shorthands for dependency specifications
 #'
 #' @details
-#' Supports concise ways of specifying which types of dependencies of
-#' a package should be installed. It is similar to how
-#' [utils::install.packages()] interprets its `dependencies` argument.
-#' Possible values for the `deps` argument are:
-#' - `TRUE`: This means all hard dependencies plus `Suggests` for
-#'   direct installations, and hard dependencies only for dependent
-#'   packages.
-#' - `FALSE`: no dependencies are installed at all.
-#' - `NA` (any atomic type, so `NA_character_`, etc. as well): only hard
-#'   dependencies are installed. See [pkg_dep_types_hard()].
-#' - If a list with two entries named `direct` and `indirect`, it is taken
-#'   as the requested dependency types, for direct installations and
-#'   dependent packages.
-#' - If a character vector, then it is taken as the dependency types
-#'   for direct installations, and the hard dependencies are
-#'   used for the dependent packages.
-#'
-#' If `"hard"` is included, then it is replaced by the hard dependency
-#' types. If `"soft"` or `"all"` is included, then it is replaced by all
-#' dependency types.
-#'
-#' ## Extra dependencies
-#'
-#' pkgdepends supports extra dependency types for direct installations.
-#' These are specified with a `Config/Needs/` prefix in `DESCRIPTION`
-#' and they can contain package references, separated by commas.
-#' For example you can specify packages that are only needed for the
-#' pkgdown website of the package:
-#'
+#' ```{r child = "tools/doc/deps.Rmd"}
 #' ```
-#' Config/Needs/website: r-lib/pkgdown
-#' ```
+#' `r doc_share_rmd("tools/doc/deps.Rmd", "inst/docs/deps.rds")`
 #'
 #' @param deps See below.
 #' @return A named list with two character vectors: `direct`, `indirect`,

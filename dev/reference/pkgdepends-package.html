@@ -106,22 +106,32 @@ can be obtained from. Examples:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/pkgcache"</span><span class="op">)</span></span>
 <span><span class="va">pd</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; r-lib/pkgcache 2.0.3.9000 [new][bld][cmp][dl] (unknown size)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-callr 3.7.3 [new]</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | +-processx 3.8.0 [new]</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | +-ps 1.7.2 [new]</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | | \-R6 2.5.1 [new][dl] (82.52 kB)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; | \-R6</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-cli 3.4.1 [new]</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-curl 4.3.3 [new][dl] (756.97 kB)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-filelock 1.0.2 [new][dl] (29.09 kB)</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-jsonlite 1.8.3 [new]</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-prettyunits 1.1.1 [new][dl] (34.70 kB)</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-processx</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; +-R6</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; \-rappdirs 0.3.3 [new][dl] (46.80 kB)</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Key:  [new] new | [dl] download | [bld] build | [cmp] compile</span></span></code></pre><p></p></div>
+<div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
+
+
+<div class="sourceCode"><pre>
+## <span style="color: #859900;">✔</span> Loading metadata database ... done                                    
+## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.0.3.9000</span> <span style="color: #859900;">✨👷🏽🔧 ⬇ (</span><span style="color: #525252;">unknown size) </span>                        
+## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">✨</span>                                                         
+## │ ├─processx <span style="color: #525252;">3.8.0</span> <span style="color: #859900;">✨</span>                                                    
+## │ │ ├─ps <span style="color: #525252;">1.7.2</span> <span style="color: #859900;">✨</span>                                                        
+## │ │ └─R6 <span style="color: #525252;">2.5.1</span> <span style="color: #859900;">✨</span>                                                        
+## │ └─R6                                                                  
+## ├─cli <span style="color: #525252;">3.4.1</span> <span style="color: #859900;">✨</span>                                                           
+## ├─curl <span style="color: #525252;">4.3.3</span> <span style="color: #859900;">✨</span>                                                          
+## ├─filelock <span style="color: #525252;">1.0.2</span> <span style="color: #859900;">✨</span>                                                      
+## ├─jsonlite <span style="color: #525252;">1.8.4</span> <span style="color: #859900;">✨</span>                                                      
+## ├─prettyunits <span style="color: #525252;">1.1.1</span> <span style="color: #859900;">✨</span>                                                   
+## ├─processx                                                              
+## ├─R6                                                                    
+## └─rappdirs <span style="color: #525252;">0.3.3</span> <span style="color: #859900;">✨</span>                                                      
+##                                                                         
+## Key:  <span style="color: #859900;">✨</span> new | <span style="color: #859900;"> ⬇</span> download | <span style="color: #859900;">👷🏽 </span>build | 🔧<span style="color: #859900;"> </span>compile                        
+</pre></div>
+
+
+</div>
+
 <p>See the <code><a href="pkg_deps.html">pkg_deps</a></code> class for details.</p>
 </div>
 
@@ -133,6 +143,18 @@ can be obtained from. Examples:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">pdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_download_proposal.html">new_pkg_download_proposal</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span></span>
 <span><span class="va">pdl</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
+<div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
+
+
+<div class="sourceCode"><pre>
+## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                       
+## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.4.1.9000 (source) is the latest build            
+## <span style="color: #859900;">✔</span> No downloads needed, all packages are cached                          
+</pre></div>
+
+
+</div>
+
 <p>See the <code><a href="pkg_download_proposal.html">pkg_download_proposal</a></code> class for
 details.</p>
 </div>
@@ -143,6 +165,7 @@ details.</p>
 
 <p>Installing or updating a set of package:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">lib</span><span class="op">)</span></span>
 <span><span class="va">pdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_installation_proposal.html">new_pkg_installation_proposal</a></span><span class="op">(</span></span>
 <span>  <span class="st">"r-lib/cli"</span>,</span>
 <span>  config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="va">lib</span><span class="op">)</span></span>
@@ -150,6 +173,19 @@ details.</p>
 <span><span class="va">pdi</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pdi</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pdi</span><span class="op">$</span><span class="fu">install</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
+<div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
+
+
+<div class="sourceCode"><pre>
+## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                       
+## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.4.1.9000 (source) is the latest build            
+## <span style="color: #859900;">✔</span> No downloads needed, all packages are cached                          
+## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.4.1.9000 (github::r-lib/cli@c61e538) <span style="color: #a3a3a3;">(39ms)</span>           
+## <span style="color: #859900;">✔</span> Summary:  ✨ 1 new  in 39ms                                            
+</pre></div>
+
+
+</div>
 </div>
 
 <div class="section">

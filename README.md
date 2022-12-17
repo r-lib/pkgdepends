@@ -77,8 +77,8 @@ pd$draw()
 ```
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="/Users/gaborcsardi/works/pkgdepends/man/figures/README/deps-dark.svg">
-<img src="/Users/gaborcsardi/works/pkgdepends/man/figures/README/deps.svg" width="100%" />
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README/deps-dark.svg">
+<img src="man/figures/README/deps.svg" width="100%" />
 </picture>
 
 See the
@@ -96,8 +96,8 @@ pdl$download()
 ```
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="/Users/gaborcsardi/works/pkgdepends/man/figures/README/download-dark.svg">
-<img src="/Users/gaborcsardi/works/pkgdepends/man/figures/README/download.svg" width="100%" />
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README/download-dark.svg">
+<img src="man/figures/README/download.svg" width="100%" />
 </picture>
 
 See the
@@ -121,8 +121,8 @@ pdi$install()
 ```
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="/Users/gaborcsardi/works/pkgdepends/man/figures/README/install-dark.svg">
-<img src="/Users/gaborcsardi/works/pkgdepends/man/figures/README/install.svg" width="100%" />
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README/install-dark.svg">
+<img src="man/figures/README/install.svg" width="100%" />
 </picture>
 
 ## Dependency resolution

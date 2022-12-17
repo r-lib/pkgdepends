@@ -1,36 +1,4 @@
 
-```{r, setup, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(
-  comment = "#>",
-  cache = TRUE,
-  tidy = FALSE,
-  error = FALSE,
-  fig.width = 8,
-  fig.height = 8,
-  R.options = list(
-    pkg.show_progress = FALSE,
-    cli.unicode = FALSE
-  )
-)
-
-# Does not seem to work in `R.options` :(
-options(cli.default_handler = function(cond) {
-  if (!is.null(findRestart("cli_message_handled"))) {
-    invokeRestart("cli_message_handled")
-  } else if (!is.null(findRestart("muffleMessage"))) {
-    invokeRestart("muffleMessage")
-  }
-})
-
-# This does not work as a chunk option, because we need
-# to call `num_colors()` to update the config.
-options(crayon.enabled = FALSE)
-invisible(crayon::num_colors(forget = TRUE))
-
-# For nicer output
-library(tibble)
-```
-
 # Features
 
 * Look up package dependencies recursively.
@@ -57,7 +25,7 @@ install.packages("pkgdepends")
 
 # Usage
 
-```{r}
+```{r eval = FALSE}
 library(pkgdepends)
 ```
 
@@ -81,21 +49,10 @@ See ["Package references"][pkg_refs] for details.
 
 Dependencies of the development version of the cli package:
 
-```{r include = FALSE}
-in_roxygen <- function() {
-  rox <- quote(roxygen2::roxygenise)
-  any(sapply(sys.calls(), function(x) identical(x[[1]], rox)))
-}
-```
-
-```{r draw, include = !in_roxygen()}
+```{asciicast deps}
 pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
-```
-
-```{r, include = in_roxygen(), R.options = list(cli.unicode = FALSE)}
-<<draw>>
 ```
 
 See the [`pkg_deps`][pkg_deps] class for details.
@@ -104,7 +61,7 @@ See the [`pkg_deps`][pkg_deps] class for details.
 
 Downloading all dependencies of a package:
 
-```{r}
+```{asciicast download}
 pdl <- new_pkg_download_proposal("r-lib/cli")
 pdl$resolve()
 pdl$download()
@@ -116,8 +73,9 @@ See the [`pkg_download_proposal`][pkg_download_proposal] class for details.
 
 Installing or updating a set of package:
 
-```{r}
+```{asciicast install}
 lib <- tempfile()
+dir.create(lib)
 pdi <- new_pkg_installation_proposal(
   "r-lib/cli",
   config = list(library = lib)

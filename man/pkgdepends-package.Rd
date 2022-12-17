@@ -61,25 +61,35 @@ Dependencies of the development version of the cli package:
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
-}\if{html}{\out{</div>}}
+}\if{html}{\out{</div>}}\if{html}{\out{
+<div class="asciicast"
+style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
+}}
+\if{html}{\out{
+<pre>
+## <span style="color: #859900;">✔</span> Loading metadata database ... done                                    
+## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.0.3.9000</span> <span style="color: #859900;">✨👷🏽🔧 ⬇ (</span><span style="color: #525252;">unknown size) </span>                        
+## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">✨</span>                                                         
+## │ ├─processx <span style="color: #525252;">3.8.0</span> <span style="color: #859900;">✨</span>                                                    
+## │ │ ├─ps <span style="color: #525252;">1.7.2</span> <span style="color: #859900;">✨</span>                                                        
+## │ │ └─R6 <span style="color: #525252;">2.5.1</span> <span style="color: #859900;">✨</span>                                                        
+## │ └─R6                                                                  
+## ├─cli <span style="color: #525252;">3.4.1</span> <span style="color: #859900;">✨</span>                                                           
+## ├─curl <span style="color: #525252;">4.3.3</span> <span style="color: #859900;">✨</span>                                                          
+## ├─filelock <span style="color: #525252;">1.0.2</span> <span style="color: #859900;">✨</span>                                                      
+## ├─jsonlite <span style="color: #525252;">1.8.4</span> <span style="color: #859900;">✨</span>                                                      
+## ├─prettyunits <span style="color: #525252;">1.1.1</span> <span style="color: #859900;">✨</span>                                                   
+## ├─processx                                                              
+## ├─R6                                                                    
+## └─rappdirs <span style="color: #525252;">0.3.3</span> <span style="color: #859900;">✨</span>                                                      
+##                                                                         
+## Key:  <span style="color: #859900;">✨</span> new | <span style="color: #859900;"> ⬇</span> download | <span style="color: #859900;">👷🏽 </span>build | 🔧<span style="color: #859900;"> </span>compile                        
+</pre>
+}}
+\if{html}{\out{
+</div>
+}}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{#> r-lib/pkgcache 2.0.3.9000 [new][bld][cmp][dl] (unknown size)
-#> +-callr 3.7.3 [new]
-#> | +-processx 3.8.0 [new]
-#> | | +-ps 1.7.2 [new]
-#> | | \-R6 2.5.1 [new][dl] (82.52 kB)
-#> | \-R6
-#> +-cli 3.4.1 [new]
-#> +-curl 4.3.3 [new][dl] (756.97 kB)
-#> +-filelock 1.0.2 [new][dl] (29.09 kB)
-#> +-jsonlite 1.8.3 [new]
-#> +-prettyunits 1.1.1 [new][dl] (34.70 kB)
-#> +-processx
-#> +-R6
-#> \-rappdirs 0.3.3 [new][dl] (46.80 kB)
-#> 
-#> Key:  [new] new | [dl] download | [bld] build | [cmp] compile
-}\if{html}{\out{</div>}}
 
 See the \code{\link{pkg_deps}} class for details.
 }
@@ -91,7 +101,21 @@ Downloading all dependencies of a package:
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{pdl <- new_pkg_download_proposal("r-lib/cli")
 pdl$resolve()
 pdl$download()
-}\if{html}{\out{</div>}}
+}\if{html}{\out{</div>}}\if{html}{\out{
+<div class="asciicast"
+style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
+}}
+\if{html}{\out{
+<pre>
+## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                       
+## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.4.1.9000 (source) is the latest build            
+## <span style="color: #859900;">✔</span> No downloads needed, all packages are cached                          
+</pre>
+}}
+\if{html}{\out{
+</div>
+}}
+
 
 See the \code{\link{pkg_download_proposal}} class for
 details.
@@ -102,6 +126,7 @@ details.
 Installing or updating a set of package:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{lib <- tempfile()
+dir.create(lib)
 pdi <- new_pkg_installation_proposal(
   "r-lib/cli",
   config = list(library = lib)
@@ -109,7 +134,23 @@ pdi <- new_pkg_installation_proposal(
 pdi$solve()
 pdi$download()
 pdi$install()
-}\if{html}{\out{</div>}}
+}\if{html}{\out{</div>}}\if{html}{\out{
+<div class="asciicast"
+style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
+}}
+\if{html}{\out{
+<pre>
+## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                       
+## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.4.1.9000 (source) is the latest build            
+## <span style="color: #859900;">✔</span> No downloads needed, all packages are cached                          
+## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.4.1.9000 (github::r-lib/cli@c61e538) <span style="color: #a3a3a3;">(39ms)</span>           
+## <span style="color: #859900;">✔</span> Summary:  ✨ 1 new  in 39ms                                            
+</pre>
+}}
+\if{html}{\out{
+</div>
+}}
+
 }
 
 \subsection{Dependency resolution}{

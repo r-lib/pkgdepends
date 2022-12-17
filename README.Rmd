@@ -1,10 +1,29 @@
 ---
-output: github_document
+title: pkgdepends
+output:
+  github_document:
+always_allow_html: yes
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.path = file.path(getwd(), "man/figures/README"),
+  cache.path = file.path(getwd(), "man/_cache/"),
+  out.width = "100%",
+  cache = TRUE,
+  asciicast_theme = if (Sys.getenv("IN_PKGDOWN") == "true") "pkgdown" else "readme"
+)
+asciicast::init_knitr_engine(
+  startup = quote({
+    library(pkgdepends)
+    set.seed(1) }),
+  echo = TRUE,
+  echo_input = FALSE,
+  interactive = FALSE
+)
+```
 
-# pkgdepends
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 > Package Dependency Resolution, Downloads and Installation
 

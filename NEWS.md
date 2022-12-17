@@ -1,3 +1,5 @@
+# pkgdepends (development version)
+
 # pkgdepends 0.4.0
 
 * pkgdepends has much improved and more informative error messages now.

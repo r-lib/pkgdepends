@@ -53,8 +53,6 @@ Suggests:
     testthat,
     tibble,
     webfakes (>= 1.1.5.9000)
-Remotes:
-    r-lib/asciicast
 Config/Needs/coverage:
     covr,
     rmarkdown,

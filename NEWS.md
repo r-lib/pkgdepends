@@ -7,7 +7,7 @@
 * The solver is now more robust for non-canonical input (e.g. `DESCRIPTION`
   files) (https://github.com/r-lib/pak/issues/423).
 
-* Better installation output, standard output and error are now
+* Better installation output. Standard output and error are now
   collected together (https://github.com/r-lib/pkgdepends/commit/0669f0f8c).
 
 * The solver is now doing a better job when multiple versions of the
@@ -20,6 +20,20 @@
 * Explicit package names in local and URL package sources, as in
   `package=local::...` or `package=url::...` are now parsed correctly in
   dependencies.
+
+* pkgdepends is now more robust to `Archs` fields missing from the CRAN
+  metadata for packages with compiled code
+  (https://github.com/r-lib/pak/issues/448).
+
+* `url::` packages now always work correctly, even if the digest package is
+  not installed (https://github.com/r-lib/pak/issues/433).
+
+* pkgdepends is now more robust when installing packages from subdirectories
+  of GitHub repositories (https://github.com/r-lib/pak/issues/431,
+  @paleolimbot).
+
+* Parameters `?reinstall`, `?source` and `?ignore` now work correctly when
+  specified in the `package=?parameter` format (#294).
 
 # pkgdepends 0.3.2
 

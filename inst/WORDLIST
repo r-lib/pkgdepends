@@ -13,6 +13,7 @@ RedHat
 SHA
 Shorthands
 Sur
+async
 cli
 cloneable
 config
@@ -23,6 +24,7 @@ lifecycle
 macOS
 mypkg
 openSUSE
+packfile
 pak
 pkgcache
 pkgdown

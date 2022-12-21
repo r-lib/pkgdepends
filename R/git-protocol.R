@@ -12,6 +12,7 @@
 #' - Use async HTTP.
 #' - Optionally send authorization.
 #' - Better error messages.
+#' - Better errors for non-existing user, repo, ref, PR, etc.
 #'
 #' ## Docs and other helpful links:
 #' - https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt
@@ -58,10 +59,14 @@ NULL
 #' ```
 
 git_list_refs <- function(url, prefixes = NULL) {
+  synchronize(async_git_list_refs(url, prefixes))
+}
+
+async_git_list_refs <- function(url, prefixes = NULL) {
   if (is.null(prefixes)) {
-    git_list_refs_v1(url)
+    async_git_list_refs_v1(url)
   } else {
-    git_list_refs_v2(url, prefixes)
+    async_git_list_refs_v2(url, prefixes)
   }
 }
 
@@ -91,16 +96,32 @@ git_list_refs <- function(url, prefixes = NULL) {
 #' ```
 
 git_list_files <- function(url, ref = "HEAD") {
+  synchronize(async_git_list_files(url, ref))
+}
+
+async_git_list_files <- function(url, ref = "HEAD") {
+  url; ref
   sha <- ref
+
   if (!grepl("^[0-9a-f]{40}$", ref)) {
-    refs <- git_list_refs(url, ref)
-    if (!ref %in% refs$refs$ref) {
-      stop("Unknown ref: '", ref, "'")
-    }
-    sha <- refs$refs$hash[refs$refs$ref == ref]
+    get_sha <- async_git_list_refs(url, ref)$
+      then(function(refs) {
+        if (!ref %in% refs$refs$ref) {
+          stop("Unknown ref: '", ref, "'")
+        }
+        sha <<- refs$refs$hash[refs$refs$ref == ref]
+      })
+
+  } else {
+    get_sha <- async_constant(ref)
   }
 
-  packfile <- git_fetch(url, sha)
+  get_sha$
+    then(function(sha) git_fetch(url, sha))$
+    then(function(pf) async_git_list_files_process(pf, ref, sha))
+}
+
+async_git_list_files_process <- function(packfile, ref, sha) {
   names(packfile) <- vcapply(packfile, "[[", "hash")
   types <- unname(vcapply(packfile, "[[", "type"))
   tree_sizes <- viapply(packfile, function(x) nrow(x$object) %||% NA_integer_)
@@ -178,17 +199,24 @@ git_list_files <- function(url, ref = "HEAD") {
 #' ```
 
 git_download_file <- function(url, sha, output = sha) {
-  packfile <- git_fetch(url, sha)
-  if (length(packfile) != 1) {
-    stop("Invalid response from git server, packfile should have a single blob") # nocov
-  }
-  if (packfile[[1]]$type != "blob") {
-    stop("sha is not a blob")                                       # nocov
-  }
+  synchronize(async_git_download_file(url, sha, output))
+}
 
-  mkdirp(dirname(output))
-  writeBin(packfile[[1]]$object, output)
-  invisible(packfile[[1]])
+async_git_download_file <- function(url, sha, output = sha) {
+  url; sha; output
+  async_git_fetch(url, sha)$
+    then(function(packfile) {
+      if (length(packfile) != 1) {
+        stop("Invalid response from git server, packfile should have a single blob") # nocov
+      }
+      if (packfile[[1]]$type != "blob") {
+        stop("sha is not a blob")                                       # nocov
+      }
+
+      mkdirp(dirname(output))
+      writeBin(packfile[[1]]$object, output)
+      invisible(packfile[[1]])
+    })
 }
 
 #' Get a packfile for an object from a remote git repository
@@ -219,8 +247,12 @@ git_download_file <- function(url, sha, output = sha) {
 #' ```
 
 git_fetch <- function(url, sha) {
+  synchronize(async_git_fetch(url, sha))
+}
 
-  reply <- git_send_message(
+async_git_fetch <- function(url, sha) {
+
+  async_git_send_message(
     url,
     "fetch",
     caps = c(
@@ -235,7 +267,10 @@ git_fetch <- function(url, sha) {
       paste0("want ", sha, "\n"),
       "done\n"
     )
-  )
+  )$then(git_fetch_process)
+}
+
+git_fetch_process <- function(reply) {
 
   # https://github.com/git/git/blob/7c2ef319c52c4997256f5807564523dfd4acdfc7/Documentation/gitprotocol-v2.txt#L240
   #
@@ -414,16 +449,19 @@ git_send_message <- function(
   caps = character(),
   args = character()) {
 
+  synchronize(async_git_send_message(url, cmd, caps = caps, args = args))
+}
+
+async_git_send_message <- function(
+  url,
+  cmd,
+  caps = character(),
+  args = character()) {
+
   msg <- git_create_message_v2(cmd, caps = caps, args = args)
 
-  h <- curl::new_handle()
-  curl::handle_setopt(h,
-    customrequest = "POST",
-    postfieldsize = length(msg),
-    postfields = msg
-  )
-
-  curl::handle_setheaders(h,
+  url2 <- paste0(url, "/git-upload-pack")
+  headers <- c(
     "Content-Type" = "application/x-git-upload-pack-request",
     "User-Agent" = git_ua(),
     "accept-encoding" = "deflate, gzip",
@@ -431,13 +469,12 @@ git_send_message <- function(
     "git-protocol" = "version=2",
     "content-length" = as.character(length(msg))
   )
-
-  url2 <- paste0(url, "/git-upload-pack")
-  res <- curl::curl_fetch_memory(url2, handle = h)
-  if (res$status_code != 200) {
-    stop("HTTP failed")                                             # nocov
-  }
-  git_parse_message(res$content)
+  http_post(
+    url2,
+    data = msg,
+    headers = headers
+  )$then(http_stop_for_status)$
+    then(function(res) git_parse_message(res$content))
 }
 
 delim_pkt <- function() {
@@ -469,19 +506,20 @@ pkt_line <- function(payload, ...) {
   line
 }
 
+git_list_refs_v1 <- function(url) {
+  synchronize(async_git_list_refs_v1(url))
+}
+
 # https://github.com/git/git/blob/master/Documentation/gitprotocol-http.txt
 
-git_list_refs_v1 <- function(url) {
-  h <- curl::new_handle()
-  curl::handle_setheaders(
-    h,
-    "User-Agent" = git_ua()
-  )
+async_git_list_refs_v1 <- function(url) {
   url <- paste0(url, "/info/refs?service=git-upload-pack")
-  res1 <- curl::curl_fetch_memory(url, handle = h)
-  if (res1$status_code != 200) {
-    stop("HTTP failed")                                             # nocov
-  }
+  http_get(url, headers = c("User-Agent" = git_ua()))$
+    then(http_stop_for_status)$
+    then(git_list_refs_v1_process)
+}
+
+git_list_refs_v1_process <- function(res1) {
   psd <- git_parse_message(res1$content)
 
   # Clients MUST validate the first five bytes of the response entity
@@ -556,17 +594,24 @@ git_parse_pkt_line_refs <- function(lines) {
 }
 
 git_list_refs_v2 <- function(url, prefixes = character()) {
-  h <- curl::new_handle()
-  curl::handle_setheaders(h,
+  synchronize(async_list_refs_v2(url, prefixes))
+}
+
+async_git_list_refs_v2 <- function(url, prefixes = character()) {
+  url; prefixes
+
+  url1 <- paste0(url, "/info/refs?service=git-upload-pack")
+  headers <- c(
     "User-Agent" = git_ua(),
     "git-protocol" = "version=2"
   )
-  url1 <- paste0(url, "/info/refs?service=git-upload-pack")
-  res1 <- curl::curl_fetch_memory(url1, handle = h)
-  if (res1$status_code != 200) {
-    stop("HTTP failed")                                             # nocov
-  }
-  psd <- git_parse_message(res1$content)
+  http_get(url1, headers = headers)$
+    then(http_stop_for_status)$
+    then(function(res) async_git_list_refs_v2_process_1(res, url, prefixes))
+}
+
+async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
+  psd <- git_parse_message(response$content)
 
   # Clients MUST validate the first five bytes of the response entity
   # matches the regex `^[0-9a-f]{4}#`.  If this test fails, clients
@@ -615,17 +660,20 @@ git_list_refs_v2 <- function(url, prefixes = character()) {
 
   args <- if (length(prefixes)) paste0("ref-prefix ", prefixes, "\n")
 
-  psd2 <- git_send_message(url, "ls-refs", args = as.character(args))
+  async_git_send_message(url, "ls-refs", args = as.character(args))$
+    then(function(res) async_git_list_refs_v2_process_2(res, caps))
+}
 
-  if (psd2[[length(psd2)]]$type != "flush-pkt") {
+async_git_list_refs_v2_process_2 <- function(reply, caps) {
+  if (reply[[length(reply)]]$type != "flush-pkt") {
     stop("Invalid response from git, last line must be a flush-pkt") # nocov
   }
 
   # Any refs at all?
-  refs <- if (length(psd2) == 1) {
+  refs <- if (length(reply) == 1) {
     git_parse_pkt_line_refs(list())
   } else {
-    git_parse_pkt_line_refs(psd2[1:(length(psd2)-1)])
+    git_parse_pkt_line_refs(reply[1:(length(reply)-1)])
   }
   list(refs = refs, caps = caps)
 }

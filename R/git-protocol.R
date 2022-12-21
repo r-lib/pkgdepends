@@ -11,6 +11,7 @@
 #' - Tests.
 #' - Use async HTTP.
 #' - Optionally send authorization.
+#' - Better error messages.
 #'
 #' ## Docs and other helpful links:
 #' - https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt

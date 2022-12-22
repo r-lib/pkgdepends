@@ -713,7 +713,7 @@ git_parse_pkt_line_refs <- function(lines) {
 #' @noRd
 
 git_list_refs_v2 <- function(url, prefixes = character()) {
-  synchronize(async_list_refs_v2(url, prefixes))
+  synchronize(async_git_list_refs_v2(url, prefixes))
 }
 
 #' `async_git_list_refs_v2()` is the asynchronous version of

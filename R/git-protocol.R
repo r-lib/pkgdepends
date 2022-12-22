@@ -6,6 +6,7 @@
 #' - We use HTTP transport, not SSH.
 #' - The server should have the `shallow` capability.
 #' - The server should have the `filter` capability.
+#' - Only SHA-1 hashing is supported.
 #'
 #' Improvements needed:
 #' - Tests.
@@ -161,7 +162,7 @@ async_git_list_files_process <- function(packfile, ref, sha) {
         if (is.na(tidx)) next                                       # nocov
         wd <<- c(wd, tr$path[l])
         process_tree(tidx)
-        wd <<- head(wd, -1)
+        wd <<- utils::head(wd, -1)
       }
     }
   }
@@ -858,8 +859,8 @@ git_unpack <- function(pack) {
     stop("Unknown git packfile version, must be version 2")         # nocov
   }
 
-  chksum <- cli::hash_raw_sha1(head(pack, -20))
-  chksum_exp <- paste(format(tail(pack, 20)), collapse = "")
+  chksum <- cli::hash_raw_sha1(utils::head(pack, -20))
+  chksum_exp <- paste(format(utils::tail(pack, 20)), collapse = "")
   if (chksum != chksum_exp) {
     stop("Checksum mismatch in git packfile")                       # nocov
   }

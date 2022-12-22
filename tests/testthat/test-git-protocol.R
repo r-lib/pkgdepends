@@ -21,7 +21,7 @@ test_that("git_list_files", {
     ),
     "Unknown ref"
   )
-  if (!cli::is_utf8_output()) skip("UTF-8 snapshot")
+  if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
   expect_snapshot({
     git_list_files(
       "https://github.com/gaborcsardi/pak-test.git",
@@ -49,39 +49,48 @@ test_that("git_download_file", {
 })
 
 test_that("git_fetch", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("raw_as_utf8", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("git_parse_message", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("git_create_message_v2", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("git_send_message", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("pkt_line", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("git_list_refs_v1", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("git_parse_okt_line_refs", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("git_list_refs_v2", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("git_unpack", {
@@ -89,26 +98,31 @@ test_that("git_unpack", {
   up1 <- git_unpack(path)
   up2 <- git_unpack(readBin(path, "raw", file.size(path)))
   expect_equal(up1, up2)
-  if (!cli::is_utf8_output()) skip("UTF-8 snapshot")
+  if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
   expect_snapshot(git_unpack(path))
 })
 
 test_that("parse_int32_nwb", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("parse_size", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("parse_tree", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("bin_to_sha", {
-
+  # TODO
+  expect_true(TRUE)
 })
 
 test_that("parse_commit", {
-
+  # TODO
+  expect_true(TRUE)
 })

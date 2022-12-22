@@ -14,6 +14,14 @@ test_that("git_list_refs", {
 
 test_that("git_list_files", {
   skip_on_cran()
+  expect_error(
+    git_list_files(
+      "https://github.com/gaborcsardi/pak-test.git",
+      "foobar"
+    ),
+    "Unknown ref"
+  )
+  if (!cli::is_utf8_output()) skip("UTF-8 snapshot")
   expect_snapshot({
     git_list_files(
       "https://github.com/gaborcsardi/pak-test.git",
@@ -24,13 +32,6 @@ test_that("git_list_files", {
       "refs/tags/v1"
     )
   })
-  expect_error(
-    git_list_files(
-      "https://github.com/gaborcsardi/pak-test.git",
-      "foobar"
-    ),
-    "Unknown ref"
-  )
 })
 
 test_that("git_download_file", {
@@ -88,6 +89,7 @@ test_that("git_unpack", {
   up1 <- git_unpack(path)
   up2 <- git_unpack(readBin(path, "raw", file.size(path)))
   expect_equal(up1, up2)
+  if (!cli::is_utf8_output()) skip("UTF-8 snapshot")
   expect_snapshot(git_unpack(path))
 })
 

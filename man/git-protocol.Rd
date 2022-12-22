@@ -17,7 +17,18 @@ Improvements needed:
 \itemize{
 \item Tests.
 \item Use async HTTP.
+\item Support packfiles with deltas.
 \item Optionally send authorization.
+\item Better error messages.
+\item Better errors for non-existing user, repository, ref, PR, etc.
+}
+\subsection{Docs and other helpful links:}{
+\itemize{
+\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt}
+\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-pack.txt}
+\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.txt}
+\item \url{https://github.com/calebsander/git-internals/blob/part2/src/main.rs}
+}
 }
 }
 \keyword{internal}

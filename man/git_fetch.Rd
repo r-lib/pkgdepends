@@ -7,7 +7,8 @@
 git_fetch(url, sha)
 }
 \arguments{
-\item{url}{Repository URL, e.g. \verb{https://github.com/r-lib/pak.git}.}
+\item{url}{Repository URL, e.g. \verb{https://github.com/r-lib/pak.git}.
+It might include authentication information, e.g. a GitHub token.}
 
 \item{sha}{SHA of the object to get.}
 }

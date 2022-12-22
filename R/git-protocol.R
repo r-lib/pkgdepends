@@ -10,19 +10,22 @@
 #' Improvements needed:
 #' - Tests.
 #' - Use async HTTP.
+#' - Support packfiles with deltas.
 #' - Optionally send authorization.
 #' - Better error messages.
-#' - Better errors for non-existing user, repo, ref, PR, etc.
+#' - Better errors for non-existing user, repository, ref, PR, etc.
 #'
 #' ## Docs and other helpful links:
-#' - https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt
-#' - https://github.com/git/git/blob/master/Documentation/gitprotocol-pack.txt
-#' - https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.txt
-#' - https://github.com/calebsander/git-internals/blob/part2/src/main.rs
+#' - <https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt>
+#' - <https://github.com/git/git/blob/master/Documentation/gitprotocol-pack.txt>
+#' - <https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.txt>
+#' - <https://github.com/calebsander/git-internals/blob/part2/src/main.rs>
 #'
 #' @keywords internal
 #' @name git-protocol
 NULL
+
+# -------------------------------------------------------------------------
 
 #' List references in a remote git repository
 #'
@@ -39,6 +42,7 @@ NULL
 #'   branch on GitHub.
 #'
 #' @param url Repository URL, e.g. `https://github.com/r-lib/pak.git`.
+#'   It might include authentication information, e.g. a GitHub token.
 #' @param prefixes If not `NULL`, then only references of which one of
 #'   `prefixes` is a prefix, are listed.
 #' @return A list with entries: `refs` and `caps`.
@@ -69,6 +73,8 @@ async_git_list_refs <- function(url, prefixes = NULL) {
     async_git_list_refs_v2(url, prefixes)
   }
 }
+
+# -------------------------------------------------------------------------
 
 #' List files in a remote git repository
 #'
@@ -174,6 +180,8 @@ async_git_list_files_process <- function(packfile, ref, sha) {
   )
 }
 
+# -------------------------------------------------------------------------
+
 #' Download a blob for a remote git repository
 #'
 #' @inheritParams git_list_refs
@@ -218,6 +226,8 @@ async_git_download_file <- function(url, sha, output = sha) {
       invisible(packfile[[1]])
     })
 }
+
+# -------------------------------------------------------------------------
 
 #' Get a packfile for an object from a remote git repository
 #'
@@ -346,9 +356,23 @@ git_fetch_process <- function(reply) {
   git_unpack(packfile)
 }
 
+# -------------------------------------------------------------------------
+# Utility functions
+# -------------------------------------------------------------------------
+
 git_ua <- function() {
   "git/2.38.1"
 }
+
+#' Comvert raw message from a pkt_line to text, if possible
+#'
+#' If the input is binary it returns `NA_character_`.
+#'
+#' @param x Raw vector.
+#' @return Character string, if `x` can be an UTF-8 string. Otherwise
+#'   `NA_character_`.
+#'
+#' @noRd
 
 raw_as_utf8 <- function(x) {
   if (is.raw(x)) {
@@ -361,6 +385,22 @@ raw_as_utf8 <- function(x) {
 
   iconv(x, "UTF-8", "UTF-8")
 }
+
+#' Parse a message from git
+#'
+#' @param msg A raw vector, the full message.
+#' @return A list of objects that correspond to _pkt_lines_ of the git
+#' message. Each such object is a named list with potential entries:
+#' * `type`: this entry is always present, and it is one of
+#'   `flush-pkt`, `delim-pkt`, `response-end-pkt` or `data-pkt`. See the
+#'   git protocol docs for what these are.
+#' * `data`: for `data-pkt` lines this is a raw vector of the data.
+#' * `text`: for `data-pkt` lines that are text, this is the text of the
+#'   data. We use [raw_as_utf8()] to convert raw data to text, and sometimes
+#'   it might interpret binary data as text, especially if the data is
+#'   short. So this field is for convenience only.
+#'
+#' @noRd
 
 git_parse_message <- function(msg) {
   stopifnot(is.raw(msg))
@@ -429,10 +469,25 @@ git_parse_message <- function(msg) {
 #
 # https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.txt
 
+#' Create a git protocol version 2 message, to be sent to git
+#'
+#' @param cmd Command to send. E.g. `ls-refs` or `fetch`.
+#' @param caps Capabilities to advertise, a character vector.
+#'   If they don't include the trailing `\n` character, it will be added.
+#' @param args Arguments to send to git, a character vector. If they
+#'   don't include the trailing `\n` character, it will be added.
+#'
+#' @return The message as a raw vector.
+#'
+#' @noRd
+
 git_create_message_v2 <- function(
   cmd,
   caps = character(),
   args = character()) {
+
+  caps <- ifelse(last_char(caps) == "\n", caps, paste0(caps, "\n"))
+  args <- ifelse(last_char(args) == "\n", args, paste0(args, "\n"))
 
   c(
     pkt_line("command=", cmd, "\n"),
@@ -443,6 +498,14 @@ git_create_message_v2 <- function(
   )
 }
 
+#' Send a protocol version 2 message to a git server
+#'
+#' @inheritParams git_list_refs
+#' @inheritParams git_create_message_v2
+#' @return Response from git, already parsed with [git_parse_message()].
+#'
+#' @noRd
+
 git_send_message <- function(
   url,
   cmd,
@@ -451,6 +514,11 @@ git_send_message <- function(
 
   synchronize(async_git_send_message(url, cmd, caps = caps, args = args))
 }
+
+#' `async_git_send_message()` is the asynchronous variant of
+#' `git_send_message()`.
+#' @rdname git_send_message
+#' @noRd
 
 async_git_send_message <- function(
   url,
@@ -485,6 +553,16 @@ flush_pkt <- function() {
   charToRaw("0000")
 }
 
+#' Create a `pkt_line`, to be sent as part of a message to git
+#'
+#' Currently it errors if the complete payload is longer than 65516 bytes.
+#'
+#' @param payload Raw data, or a string to send.
+#' @param ... More strings to send. `payload` and `...` are all
+#'   concatenated to form the line.
+#' @return Raw vector containing the `pkt_line`.
+#' @noRd
+
 pkt_line <- function(payload, ...) {
   if (!is.raw(payload)) {
     payload <- charToRaw(payload)
@@ -506,9 +584,24 @@ pkt_line <- function(payload, ...) {
   line
 }
 
+#' List references in a remote git repositoty, protocol version 1
+#'
+#' We use this if we don't want to filter the references, because it
+#' needs a single HTTP query, whereas with version 2, we would need two
+#' queries.
+#'
+#' @inheritParams git_list_refs
+#' @return Same as [git_list_refs()].
+#' @noRd
+
 git_list_refs_v1 <- function(url) {
   synchronize(async_git_list_refs_v1(url))
 }
+
+#' `async_git_list_refs_v1()` is the asynchronous variant of
+#' `git_list_refs_v1()`.
+#' @rdname git_list_refs_v1
+#' @noRd
 
 # https://github.com/git/git/blob/master/Documentation/gitprotocol-http.txt
 
@@ -519,8 +612,15 @@ async_git_list_refs_v1 <- function(url) {
     then(git_list_refs_v1_process)
 }
 
-git_list_refs_v1_process <- function(res1) {
-  psd <- git_parse_message(res1$content)
+#' Process the response to a version 1 reference list query
+#'
+#' @param response Response from git, as returned by `async::http_get()`, which
+#'   is the same as the object from `curl::curl_fetch_memory()`.
+#' @return Same as [git_list_refs()].
+#' @noRd
+
+git_list_refs_v1_process <- function(response) {
+  psd <- git_parse_message(response$content)
 
   # Clients MUST validate the first five bytes of the response entity
   # matches the regex `^[0-9a-f]{4}#`.  If this test fails, clients
@@ -567,6 +667,16 @@ git_list_refs_v1_process <- function(res1) {
   list(refs = refs, caps = caps)
 }
 
+#' Helper function to parse a `pkt_line` containing a git ref
+#'
+#' E.g. an `ls-refs` commans responds with such lines.
+#'
+#' @param lines List of `pkt_line` objects, they must be all data
+#'   packets (`data-pkt`), in the right format.
+#' @return Data frame with columns `ref` (name of the reference), and
+#'   `hash` (SHA).
+#' @noRd
+
 git_parse_pkt_line_refs <- function(lines) {
   res <- data.frame(
     stringsAsFactors = FALSE,
@@ -593,9 +703,23 @@ git_parse_pkt_line_refs <- function(lines) {
   res
 }
 
+#' List references in a remote git repositoty, protocol version 2
+#'
+#' We use this to filter all refs using prefixes, if we are only
+#' interested in a subset of refs.
+#'
+#' @inheritParams git_list_refs
+#' @return Same as [git_list_refs()].
+#' @noRd
+
 git_list_refs_v2 <- function(url, prefixes = character()) {
   synchronize(async_list_refs_v2(url, prefixes))
 }
+
+#' `async_git_list_refs_v2()` is the asynchronous version of
+#' `git_list_refs_v2()`.
+#' @rdname git_list_refs_v2
+#' @noRd
 
 async_git_list_refs_v2 <- function(url, prefixes = character()) {
   url; prefixes
@@ -609,6 +733,19 @@ async_git_list_refs_v2 <- function(url, prefixes = character()) {
     then(http_stop_for_status)$
     then(function(res) async_git_list_refs_v2_process_1(res, url, prefixes))
 }
+
+#' Helper function to post-process the response to the initial client
+#' request, with protocol version 2
+#'
+#' @param response The HTTP response from git, from `async::http_get()`,
+#'   i.e. from `curl::curl_fetch_memory()`.
+#' @param url The original URL is passed in here.
+#' @param prefixes The original prefixes are passed in here.
+#' @return `async_git_list_refs_v2_process_1()` will send out the
+#'   second query, an `ls-refs` command, filtered for `prefixes`, and
+#'   return with (the deferred value of) the HTTP response.
+#'
+#' @noRd
 
 async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
   psd <- git_parse_message(response$content)
@@ -664,6 +801,14 @@ async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
     then(function(res) async_git_list_refs_v2_process_2(res, caps))
 }
 
+#' Helper function to process the response to an `ls-refs` command
+#'
+#' @param reply The parsed message from the server.
+#' @param caps Capabilities that are passed in from the response to
+#'   the initial client request.
+#' @return Same as [git_list_refs()].
+#' @noRd
+
 async_git_list_refs_v2_process_2 <- function(reply, caps) {
   if (reply[[length(reply)]]$type != "flush-pkt") {
     stop("Invalid response from git, last line must be a flush-pkt") # nocov
@@ -677,6 +822,25 @@ async_git_list_refs_v2_process_2 <- function(reply, caps) {
   }
   list(refs = refs, caps = caps)
 }
+
+#' Unpack a git packfile in memory
+#'
+#' @details
+#' It cannot currently unpack packfiles with deltas.
+#'
+#' It checks the packfile checksum.
+#'
+#' @param pack The git packfile as a raw vector, or the name of the file
+#'   containing the packfile.
+#' @return List of git objects. Each object is a named list with entries:
+#'   * `type`: `commit`, `tree`, `blob` or `tag`.
+#'   * `object`: the contents of the object. For `commit` the commit
+#'     data and message in a string. For `tree` a data frame, as returned
+#'     from [parse_tree()]. For `blob` and `tag` a raw vector.
+#'   * `size`: unpacked size.
+#'   * `packed_size`: packed size (size header not included).
+#'
+#' @noRd
 
 git_unpack <- function(pack) {
   # allow file names as well
@@ -745,12 +909,40 @@ git_unpack <- function(pack) {
   objects
 }
 
+#' Parse a four byte integer in network byte order
+#'
+#' @param x Raw vector or four bytes.
+#' @return Integer scalar.
+#' @noRd
+
 parse_int32_nwb <- function(x) {
   if (length(x) != 4L || !is.raw(x)) {
     stop("Cannot parse integer, not raw or number of bytes is wrong") # nocov
   }
   sum(as.integer(x) * (256L ** (3:0)))
 }
+
+#' Parse a variable length size field
+#'
+#' @details
+#' As in https://git-scm.com/docs/pack-format#_size_encoding.
+#' Some notes, because that docs is pretty dense.
+#'
+#' * First bit is zero for the last byte.
+#' * Next three bits of the first byte are the object type.
+#' * So we throw away the first four bits of the first byte and use the
+#'   last four bits only.
+#' * Then we keep processing the last seven bits of bytes, until the
+#'   first bit is zero. (We still process that byte.)
+#'
+#' @param x Raw vector, typically the whole packfile.
+#' @param idx Integer scalar, where to start reading the size field in the
+#'   `x` raw vector.
+#' @return Named list with entries:
+#'   * `size`: parsed size,
+#'   * `idx`: Integer, point to the last byte of the parsed size field.
+#'
+#' @noRd
 
 parse_size <- function(x, idx) {
   c <- as.integer(x[idx])
@@ -768,6 +960,19 @@ parse_size <- function(x, idx) {
 
   list(size = size, idx = idx)
 }
+
+#' Parse a git tree object
+#'
+#' @param tree The tree object in a raw vector, _without_ the 'tree' +
+#'   content size + `\0` header. Git packfiles do not have these headers,
+#'   so we don't require them here, either.
+#' @return Data frame with character columns:
+#'   * `type`: Either `"blob"` or `"tree"`.
+#'   * `mode`: Unix permissions.
+#'   * `path`: File or directory name.
+#'   * `hash`: Hash of `blob` or tree`.
+#'
+#' @noRd
 
 parse_tree <- function(tree) {
   nul <- which(tree == 0)
@@ -803,9 +1008,26 @@ parse_tree <- function(tree) {
   res
 }
 
+#' Format a raw vector as a hexa string
+#'
+#' @param x Raw vector.
+#' @return String.
+#'
+#' @noRd
+
 bin_to_sha <- function(x) {
   paste(format(x), collapse = "")
 }
+
+#' Parse a commit object
+#'
+#' @param commit Commit object as an UTF-8 string.
+#' @return Named character vector. Names are taken from the commit object,
+#'   plus `message` is the name of the commit message. The commit object
+#'   should have names `tree`, `parent` (one for each parent commit),
+#'   `author`, `committer`, `encoding`.
+#'
+#' @noRd
 
 parse_commit <- function(commit) {
   lines <- strsplit(commit, "\n", fixed = TRUE)[[1]]
@@ -825,4 +1047,11 @@ parse_commit <- function(commit) {
   vls <- sub("^[^ ]+ ", "", fields)
 
   structure(c(vls, message), names = c(nms, "message"))
+}
+
+# Returns `""` for empty strings!
+
+last_char <- function(x) {
+  nc <- nchar(x)
+  substr(x, nc, nc)
 }

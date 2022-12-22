@@ -7,7 +7,8 @@
 git_list_refs(url, prefixes = NULL)
 }
 \arguments{
-\item{url}{Repository URL, e.g. \verb{https://github.com/r-lib/pak.git}.}
+\item{url}{Repository URL, e.g. \verb{https://github.com/r-lib/pak.git}.
+It might include authentication information, e.g. a GitHub token.}
 
 \item{prefixes}{If not \code{NULL}, then only references of which one of
 \code{prefixes} is a prefix, are listed.}

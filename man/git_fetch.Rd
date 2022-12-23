@@ -4,13 +4,16 @@
 \alias{git_fetch}
 \title{Get a packfile for an object from a remote git repository}
 \usage{
-git_fetch(url, sha)
+git_fetch(url, sha, blobs = FALSE)
 }
 \arguments{
 \item{url}{Repository URL, e.g. \verb{https://github.com/r-lib/pak.git}.
 It might include authentication information, e.g. a GitHub token.}
 
 \item{sha}{SHA of the object to get.}
+
+\item{blobs}{Whether we want to download all blobs as well or not.
+We are still always requesting a shallow (depth = 1) clone.}
 }
 \value{
 A list of git objects. Each element has entries:

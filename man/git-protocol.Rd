@@ -10,17 +10,28 @@ Assumptions, they might be relaxed or checked for later:
 \item We use HTTP transport, not SSH.
 \item The server should have the \code{shallow} capability.
 \item The server should have the \code{filter} capability.
+\item Only SHA-1 hashing is supported.
 }
 }
 \details{
 Improvements needed:
 \itemize{
-\item Tests.
-\item Use async HTTP.
-\item Support packfiles with deltas.
-\item Optionally send authorization.
-\item Better error messages.
+\item DONE Tests. (Can always have more.)
+\item DONE Use async HTTP.
+\item DONE Support packfiles with deltas. (ofs-delta objects are still
+not supported.)
+\item DONE Optionally send authorization. Already possibly in the URL.
+\item DONE Better error messages.
 \item Better errors for non-existing user, repository, ref, PR, etc.
+}
+
+Optional improvements:
+\itemize{
+\item Support ofs-delta objects in packfiles. Not necessarily, unless we
+send this capability, the server is not sending ofs-delta objects.
+\item Make unpacking faster. It is not fast currently, with all the bit
+arithmetic in R. But it is already faster than a tar.gz + uncompress
+download from GH, so not really needed.
 }
 \subsection{Docs and other helpful links:}{
 \itemize{
@@ -28,6 +39,7 @@ Improvements needed:
 \item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-pack.txt}
 \item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.txt}
 \item \url{https://github.com/calebsander/git-internals/blob/part2/src/main.rs}
+\item \url{https://dev.to/calebsander/git-internals-part-1-the-git-object-model-474m}
 }
 }
 }

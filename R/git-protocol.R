@@ -9,18 +9,27 @@
 #' - Only SHA-1 hashing is supported.
 #'
 #' Improvements needed:
-#' - Tests.
-#' - Use async HTTP.
-#' - Support packfiles with deltas.
-#' - Optionally send authorization.
-#' - Better error messages.
+#' - DONE Tests. (Can always have more.)
+#' - DONE Use async HTTP.
+#' - DONE Support packfiles with deltas. (ofs-delta objects are still
+#'   not supported.)
+#' - DONE Optionally send authorization. Already possibly in the URL.
+#' - DONE Better error messages.
 #' - Better errors for non-existing user, repository, ref, PR, etc.
+#'
+#' Optional improvements:
+#' - Support ofs-delta objects in packfiles. Not necessarily, unless we
+#'   send this capability, the server is not sending ofs-delta objects.
+#' - Make unpacking faster. It is not fast currently, with all the bit
+#'   arithmetic in R. But it is already faster than a tar.gz + uncompress
+#'   download from GH, so not really needed.
 #'
 #' ## Docs and other helpful links:
 #' - <https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt>
 #' - <https://github.com/git/git/blob/master/Documentation/gitprotocol-pack.txt>
 #' - <https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.txt>
 #' - <https://github.com/calebsander/git-internals/blob/part2/src/main.rs>
+#' - <https://dev.to/calebsander/git-internals-part-1-the-git-object-model-474m>
 #'
 #' @keywords internal
 #' @name git-protocol
@@ -106,12 +115,12 @@ git_list_files <- function(url, ref = "HEAD") {
   synchronize(async_git_list_files(url, ref))
 }
 
-async_git_list_files <- function(url, ref = "HEAD") {
+async_git_resolve_ref <- function(url, ref) {
   url; ref
   sha <- ref
 
   if (!grepl("^[0-9a-f]{40}$", ref)) {
-    get_sha <- async_git_list_refs(url, ref)$
+    async_git_list_refs(url, ref)$
       then(function(refs) {
         if (!ref %in% refs$refs$ref) {
           throw(pkg_error(
@@ -124,12 +133,16 @@ async_git_list_files <- function(url, ref = "HEAD") {
       })
 
   } else {
-    get_sha <- async_constant(ref)
+    async_constant(ref)
   }
+}
 
-  get_sha$
-    then(function(sha) git_fetch(url, sha))$
-    then(function(pf) async_git_list_files_process(pf, ref, sha))
+async_git_list_files <- function(url, ref = "HEAD") {
+  url; ref
+  sha2 <- ref
+  async_git_resolve_ref(url, ref)$
+    then(function(sha) { sha2 <<- sha; async_git_fetch(url, sha) })$
+    then(function(pf) async_git_list_files_process(pf, ref, sha2))
 }
 
 async_git_list_files_process <- function(packfile, ref, sha) {
@@ -227,7 +240,7 @@ async_git_download_file <- function(url, sha, output = sha) {
         ))
       }
       mkdirp(dirname(output))
-      writeBin(packfile[[1]]$object, output)
+      writeBin(packfile[[1]]$raw, output)
       invisible(packfile[[1]])
     })
 }
@@ -242,6 +255,8 @@ async_git_download_file <- function(url, sha, output = sha) {
 #'
 #' @inheritParams git_list_refs
 #' @param sha SHA of the object to get.
+#' @param blobs Whether we want to download all blobs as well or not.
+#'   We are still always requesting a shallow (depth = 1) clone.
 #' @return A list of git objects. Each element has entries:
 #'   * `type`: `commit`, `tree`, `blob` or `tag`.
 #'   * `object`: the object itself. It is a
@@ -261,11 +276,11 @@ async_git_download_file <- function(url, sha, output = sha) {
 #' ft
 #' ```
 
-git_fetch <- function(url, sha) {
-  synchronize(async_git_fetch(url, sha))
+git_fetch <- function(url, sha, blobs = FALSE) {
+  synchronize(async_git_fetch(url, sha, blobs))
 }
 
-async_git_fetch <- function(url, sha) {
+async_git_fetch <- function(url, sha, blobs = FALSE) {
   url; sha
 
   async_git_send_message(
@@ -278,7 +293,7 @@ async_git_fetch <- function(url, sha) {
     args = c(
       "deepen 1\n",
       "no-progress\n",
-      "filter blob:none\n",
+      if (!blobs) "filter blob:none\n",
       paste0("want ", sha, "\n"),
       paste0("want ", sha, "\n"),
       "done\n"
@@ -380,6 +395,63 @@ git_fetch_process <- function(reply, url, sha) {
   packfile <- do.call("c", lapply(data, function(x) x$data[-1]))
 
   git_unpack(packfile)
+}
+
+# -------------------------------------------------------------------------
+
+git_download_repo <- function(url, ref = "HEAD", output = ref) {
+  synchronize(async_git_download_repo(url, ref, output))
+}
+
+async_git_download_repo <- function(url, ref = "HEAD", output = ref) {
+  url; ref
+  async_git_resolve_ref(url, ref)$
+    then(function(sha) async_git_download_repo_sha(url, sha, output))
+}
+
+async_git_download_repo_sha <- function(url, sha, output) {
+  url; sha; output
+  async_git_fetch(url, sha, blobs = TRUE)$
+    then(function(packfile) unpack_packfile_repo(packfile, output))
+}
+
+unpack_packfile_repo <- function(parsed, output) {
+  types <- unname(vcapply(parsed, "[[", "type"))
+  trees <- parsed[types == "tree"]
+  done <- logical(length(trees))
+  idx <- 1L
+  wd <- character()
+
+  mkdirp(output)
+
+  process_tree <- function(i) {
+    if (done[i]) return()
+    done[i] <<- TRUE
+    tr <- trees[[i]]$object
+    for (l in seq_len(nrow(tr))) {
+      idx <<- idx + 1L
+      opath <- file.path(output, paste(c(wd, tr$path[l]), collapse = "/"))
+      if (tr$type[l] == "tree") {
+        tidx <- which(tr$hash[l] == names(trees))[1]
+        if (is.na(tidx)) {
+          throw(new_error(
+            "git tree missing from packfile: {.val {tr$hash[i]}}.",
+            .class = "git_proto_error_unexpected_response"
+          ))
+        }
+        wd <<- c(wd, tr$path[l])
+        mkdirp(opath)
+        process_tree(tidx)
+        wd <<- utils::head(wd, -1)
+      } else if (tr$type[l] == "blob") {
+        writeBin(parsed[[tr$hash[l]]]$raw, opath)
+      }
+    }
+  }
+
+  for (i in seq_along(trees)) process_tree(i)
+
+  invisible()
 }
 
 # -------------------------------------------------------------------------
@@ -937,30 +1009,80 @@ git_unpack <- function(pack) {
   idx <- 13L
   objects <- vector("list", n_obj)
 
-  types <- c("commit", "tree", "blob", "tag", "reserved", "ofs_delta", "re_delta")
+  types <- c("commit", "tree", "blob", "tag", "reserved", "ofs_delta", "ref_delta")
 
   unpack_object <- function() {
     type <- bitwShiftR(bitwAnd(as.integer(pack[idx]), 0x7f), 4L)
     size <- parse_size(pack, idx)
     idx <<- size$idx + 1
+    if (type == 7L) {
+      if (idx + 19 > length(pack)) {
+        throw(pkg_error(
+          "Invalid packfile, unexpected end of file"
+        ))
+      }
+      base <- bin_to_sha(pack[idx:(idx+19)])
+      idx <<- idx + 20
+    }
     obj <- zip::inflate(pack, idx, size$size)
     idx <<- idx + obj$bytes_read
+    if (type == 7L) {
+      deltified_object(obj$output, base)
+    } else {
+      list(
+        type = types[type],
+        raw = obj$output,
+        size = size$size,
+        packed_size = obj$bytes_read
+      )
+    }
+  }
+
+  deltified_object <- function(delta, base) {
+    baseidx <- match(base, names(objects))
+    if (is.na(baseidx)) {
+      throw(pkg_error(
+        "Invalid git packfile, cannot find base of ref-delta"
+      ))
+    }
+    baseobj <- objects[[baseidx]]$raw
+    didx <- 1L
+    basesize <- parse_delta_size(delta, didx)
+    didx <- basesize$idx + 1L
+    size <- parse_delta_size(delta, didx)
+    didx <- size$idx + 1L
+    newobj <- raw(size$size)
+    nidx <- 1L
+    while (didx <= length(delta)) {
+      c <- as.integer(delta[didx])
+      if (c < 128) {
+        datasize <- bitwAnd(c, 0x7f)
+        newobj[nidx:(nidx + datasize - 1L)] <-
+          delta[(didx + 1L):(didx + datasize)]
+        nidx <- nidx + datasize
+        didx <- didx + datasize + 1L
+      } else {
+        ofs <- parse_delta_offset(delta, didx)
+        newobj[nidx:(nidx + ofs$size - 1L)] <-
+          baseobj[(ofs$offset + 1L):(ofs$offset + ofs$size)]
+        nidx <- nidx + ofs$size
+        didx <- ofs$idx + 1L
+      }
+    }
     list(
-      type = types[type],
-      object = obj$output,
-      size = size$size,
-      packed_size = obj$bytes_read
+      type = objects[[baseidx]]$type,
+      raw = newobj,
+      size = size,
+      packed_size = length(delta)
     )
   }
 
   for (i in seq_len(n_obj)) {
     objects[[i]] <- unpack_object()
     if (objects[[i]]$type == "commit") {
-      objects[[i]]$raw <- objects[[i]]$object
-      objects[[i]]$object <- rawToChar(objects[[i]]$object)
+      objects[[i]]$object <- rawToChar(objects[[i]]$raw)
     } else if (objects[[i]]$type == "tree") {
-      objects[[i]]$raw <- objects[[i]]$object
-      objects[[i]]$object <- parse_tree(objects[[i]]$object)
+      objects[[i]]$object <- parse_tree(objects[[i]]$raw)
     }
     if (objects[[i]]$type %in% c("commit", "tree", "blob", "tag")) {
       raw2 <- c(
@@ -969,6 +1091,7 @@ git_unpack <- function(pack) {
         objects[[i]]$raw
       )
       objects[[i]]$hash <- cli::hash_raw_sha1(raw2)
+      names(objects)[i] <- objects[[i]]$hash
     } else {
       throw(pkg_error(
         "git packfile object type {.cls {objects[[i]]$type}} is not
@@ -1036,6 +1159,65 @@ parse_size <- function(x, idx) {
   }
 
   list(size = size, idx = idx)
+}
+
+parse_delta_size <- function(x, idx) {
+  c <- as.integer(x[idx])
+  size <- bitwAnd(c, 0x7f)
+  shft <- 7L
+  while (c >= 128) {
+    idx <- idx + 1L
+    if (idx > length(x)) {
+      throw(pkg_error(
+        "Invalid git packfile, invalid size field.",
+        .class = "git_proto_error_invalid_data"
+      ))
+    }
+    c <- as.integer(x[idx])
+    size <- size + bitwShiftL(bitwAnd(c, 0x7f), shft)
+    shft <- shft + 7L
+  }
+
+  list(size = size, idx = idx)
+}
+
+parse_delta_offset <- function(x, idx) {
+  c <- as.integer(x[idx])
+  offset <- 0L
+  size <- 0L
+  if (bitwAnd(c, 0x01)) {
+    idx <- idx + 1L
+    offset <- offset + as.integer(x[idx])
+  }
+  if (bitwAnd(c, 0x02)) {
+    idx <- idx + 1L
+    offset <- offset + as.integer(x[idx]) * 256
+  }
+  if (bitwAnd(c, 0x04)) {
+    idx <- idx + 1L
+    offset <- offset + as.integer(x[idx]) * 256 * 256
+  }
+  if (bitwAnd(c, 0x08)) {
+    idx <- idx + 1L
+    offset <- offset + as.integer(x[idx]) * 256 * 256 * 256
+  }
+  if (bitwAnd(c, 0x10)) {
+    idx <- idx + 1L
+    size <- size + as.integer(x[idx])
+  }
+  if (bitwAnd(c, 0x20)) {
+    idx <- idx + 1L
+    size <- size + as.integer(x[idx]) * 256
+  }
+  if (bitwAnd(c, 0x40)) {
+    idx <- idx + 1L
+    size <- size + as.integer(x[idx]) * 256 * 256
+  }
+
+  # exception for easily including a block
+  if (size == 0L) size <- 0x10000
+
+  list(offset = offset, size = size, idx = idx)
 }
 
 #' Parse a git tree object

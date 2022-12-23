@@ -11,18 +11,18 @@
 #' Improvements needed:
 #' - DONE Tests. (Can always have more.)
 #' - DONE Use async HTTP.
-#' - DONE Support packfiles with deltas. (ofs-delta objects are still
+#' - DONE Support packfiles with deltas. (`ofs-delta` objects are still
 #'   not supported.)
 #' - DONE Optionally send authorization. Already possibly in the URL.
 #' - DONE Better error messages.
 #' - Better errors for non-existing user, repository, ref, PR, etc.
 #'
 #' Optional improvements:
-#' - Support ofs-delta objects in packfiles. Not necessarily, unless we
-#'   send this capability, the server is not sending ofs-delta objects.
+#' - Support `ofs-delta` objects in packfiles. Not necessarily, unless we
+#'   send this capability, the server is not sending `ofs-delta` objects.
 #' - Make unpacking faster. It is not fast currently, with all the bit
-#'   arithmetic in R. But it is already faster than a tar.gz + uncompress
-#'   download from GH, so not really needed.
+#'   arithmetic in R. But it is already faster than a `tar.gz` + uncompress
+#'   download from GitHub, so not really needed.
 #'
 #' ## Docs and other helpful links:
 #' - <https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt>
@@ -233,11 +233,13 @@ async_git_download_file <- function(url, sha, output = sha) {
   async_git_fetch(url, sha)$
     then(function(packfile) {
       if (length(packfile) != 1 || packfile[[1]]$type != "blob") {
+        # nocov start
         throw(pkg_error(
           "Invalid response from git server, packfile should have a single blob.",
           .class = "git_proto_error_unexpected_response",
           .data = list(url = redact_url(url), sha = sha)
         ))
+        # nocov end
       }
       mkdirp(dirname(output))
       writeBin(packfile[[1]]$raw, output)
@@ -336,11 +338,13 @@ git_fetch_process <- function(reply, url, sha) {
   # Since we sent a 'done', there must be no acknowledgements section
 
   if (is.null(reply[[1]]$text) || reply[[1]]$text != "shallow-info") {
+    # nocov start
     throw(pkg_error(
       "Expected {.code shallow-info} section from git server.",
       .class = "git_proto_error_unexpected_response",
       .data = list(url = redact_url(url), sha = sha)
     ))
+    # nocov end
   }
 
   # There should be only one 'shallow' line I think
@@ -351,44 +355,52 @@ git_fetch_process <- function(reply, url, sha) {
   idx <- idx + 1L
 
   if (idx > length(reply)) {
+    # nocov start
     throw(pkg_error(
       "Response from git server does not have a {.code packgile} section.",
       .class = "git_proto_error_unexpected_response",
       .data = list(url = redact_url(url), sha = sha)
     ))
+    # nocov end
   }
 
   # check closing flush-pkt
   if (reply[[length(reply)]]$type != "flush-pkt") {
+    # nocov start
     throw(pkg_error(
       "Response from git server does not have a closing {.code flush-pkt}.",
       .class = "git_proto_error_unexpected_response",
       .data = list(url = redact_url(url), sha = sha)
     ))
+    # nocov end
   }
 
   data <- reply[idx:(length(reply)-1)]
 
   if (any(vcapply(data, "[[", "type") != "data-pkt")) {
+    # nocov start
     throw(pkg_error(
       "Response from git server must contain {.code data-pkt} sections.",
       .class = "git_proto_error_unexpected_response",
       .data = list(url = redact_url(url), sha = sha)
     ))
+    # nocov end
   }
 
   # drop progress messages, although we did not requrest them...
   stream <- viapply(data, function(x) as.integer(x$data[1]))
   if (any(stream == 3)) {
-    msg <- tryCatch(                                                # nocov
-      rawToChar(reply[[which(stream == 3)[1]]]$data[-1]),             # nocov
-      error = function(err) "error message not available"           # nocov
-    )                                                               # nocov
+    # nocov start
+    msg <- tryCatch(
+      rawToChar(reply[[which(stream == 3)[1]]]$data[-1]),
+      error = function(err) "error message not available"
+    )
     throw(pkg_error(
       "Got fatal error from git server: {msg}.",
       .class = "git_proto_error_unexpected_response",
       .data = list(url = redact_url(url), sha = sha)
     ))
+    # nocov end
   }
   data <- data[stream == 1L]
 

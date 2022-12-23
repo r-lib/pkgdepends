@@ -18,7 +18,7 @@ Improvements needed:
 \itemize{
 \item DONE Tests. (Can always have more.)
 \item DONE Use async HTTP.
-\item DONE Support packfiles with deltas. (ofs-delta objects are still
+\item DONE Support packfiles with deltas. (\code{ofs-delta} objects are still
 not supported.)
 \item DONE Optionally send authorization. Already possibly in the URL.
 \item DONE Better error messages.
@@ -27,11 +27,11 @@ not supported.)
 
 Optional improvements:
 \itemize{
-\item Support ofs-delta objects in packfiles. Not necessarily, unless we
-send this capability, the server is not sending ofs-delta objects.
+\item Support \code{ofs-delta} objects in packfiles. Not necessarily, unless we
+send this capability, the server is not sending \code{ofs-delta} objects.
 \item Make unpacking faster. It is not fast currently, with all the bit
-arithmetic in R. But it is already faster than a tar.gz + uncompress
-download from GH, so not really needed.
+arithmetic in R. But it is already faster than a \code{tar.gz} + uncompress
+download from GitHub, so not really needed.
 }
 \subsection{Docs and other helpful links:}{
 \itemize{

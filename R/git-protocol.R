@@ -71,6 +71,14 @@ NULL
 #' ```{r git-list-refs-2, cache = TRUE}
 #' git_list_refs("https://github.com/r-lib/filelock.git", "refs/heads/main")
 #' ```
+#'
+#' Various services:
+#' ```{r git-list-refs-2, cache = TRUE}
+#' git_list_refs("https://gitlab.com/Linaro/tuxmake.git", "HEAD")
+#' git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
+#' git_list_refs("https://try.gitea.io/ferris/gitea.git", "HEAD")
+#' git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
+#' ```
 
 git_list_refs <- function(url, prefixes = NULL) {
   synchronize(async_git_list_refs(url, prefixes))

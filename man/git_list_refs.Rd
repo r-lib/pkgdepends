@@ -92,6 +92,122 @@ List only references having a certain prefix:
 #> [3] "fetch=shallow wait-for-done filter" "server-option"                     
 #> [5] "object-format=sha1"
 }\if{html}{\out{</div>}}
+
+Various services:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{git_list_refs("https://gitlab.com/Linaro/tuxmake.git", "HEAD")
+#> $refs
+#>    ref                                     hash
+#> 1 HEAD 7f45b45a9ec8b876c3239d2e520f82a7c8b9b681
+#> 
+#> $caps
+#> [1] "agent=git/2.38.2.gl2"               "ls-refs=unborn"                    
+#> [3] "fetch=shallow wait-for-done filter" "server-option"                     
+#> [5] "object-format=sha1"                 "object-info"
+git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
+#> $refs
+#>                                        ref
+#> 1                                     HEAD
+#> 2                           refs/heads/ask
+#> 3                    refs/heads/cran-3.0.0
+#> 4                   refs/heads/cran/v3.0.1
+#> 5      refs/heads/feature/cli-capabilities
+#> 6   refs/heads/feature/cli-condition-width
+#> 7  refs/heads/feature/format-error-options
+#> 8           refs/heads/feature/rstudio-job
+#> 9          refs/heads/feature/span-bullets
+#> 10                refs/heads/feature/table
+#> 11            refs/heads/fix/pkgdown-2.0.0
+#> 12                     refs/heads/gh-pages
+#> 13                         refs/heads/main
+#> 14    refs/heads/use-glue-literal-argument
+#> 15                        refs/tags/v1.0.1
+#> 16                        refs/tags/v1.1.0
+#> 17                    refs/tags/v1.1.0-pre
+#> 18                        refs/tags/v2.0.0
+#> 19                        refs/tags/v2.0.1
+#> 20                        refs/tags/v2.0.2
+#> 21                        refs/tags/v2.1.0
+#> 22                        refs/tags/v2.2.0
+#> 23                        refs/tags/v2.3.0
+#> 24                        refs/tags/v2.3.1
+#> 25                        refs/tags/v2.4.0
+#> 26                        refs/tags/v2.5.0
+#> 27                        refs/tags/v3.0.0
+#> 28                        refs/tags/v3.0.1
+#> 29                        refs/tags/v3.1.0
+#>                                        hash
+#> 1  928ff3e6a52a08bbabadc57027c43de13b0d7601
+#> 2  736e5824c082e94fc1acc68fb604fa66b19d1826
+#> 3  75f3f185c116ff69f3abd56bf89fa9032a9eb965
+#> 4  722cd638ebe4529db20442962cd2d7dc56c694d7
+#> 5  b6ebff6771ff9ee8e5b19f8b6c20e142182ab866
+#> 6  ee931427a9ee51bdfd837bd03c22d2d60ad81946
+#> 7  28d4efb9b8875e933d682285b65ab05c61f6aef2
+#> 8  8ddc6e68b970f14d45af6109108b17352dc8a4e7
+#> 9  bfaabf3658c229d406591b4436991e37720476cf
+#> 10 0d4089fc2f6cf8c7364f02698cf257363e877660
+#> 11 be878b57b6f9978953916b0a1d7272f104e27309
+#> 12 928ff3e6a52a08bbabadc57027c43de13b0d7601
+#> 13 f6794c4a2d845b6706a41c58f63b4acbbc663968
+#> 14 5c2904c05e8f809d0136e2253e2e6ea4b7743992
+#> 15 6e0ffb0de1b54953583e01068a8052ae4cbe72aa
+#> 16 d4f0e8618aba3475974394075f3f5384695d1d28
+#> 17 57fb26d1c4582fc73a3a8531aa534948f88e96bc
+#> 18 9a133422f200f7aa0cdc78b28eb42770cdfe4b35
+#> 19 31aaccbdb3904c5b681175483a95688940345725
+#> 20 19f3b864f4ee04c31627a3246dbea44bc07b7967
+#> 21 a914e326aea8a9ec7d07f7accd64bb624065ba8a
+#> 22 e0d0668030b482c1bda1fce66db63f402c4e9c5a
+#> 23 e4c9180c5b53f68c3f938473c0d5871ceefe9991
+#> 24 5c0c8a88549050e156ea4469adf536e1c0ac0881
+#> 25 251c84f298b46e0529dd992b9ec86da4aaaf4fa8
+#> 26 17fd0dc202a51aa82a7704786712d9f77c690c4d
+#> 27 df963095361d77322676260e60c549d8807ded1d
+#> 28 525e785e8b34e889707bbbe354287bd4a60e8fcb
+#> 29 e40cfd4eedad58c22c3e7bcfdba6f23f11a79e13
+#> 
+#> $caps
+#>  [1] "multi_ack"                       "thin-pack"                      
+#>  [3] "side-band"                       "side-band-64k"                  
+#>  [5] "ofs-delta"                       "shallow"                        
+#>  [7] "deepen-since"                    "deepen-not"                     
+#>  [9] "deepen-relative"                 "no-progress"                    
+#> [11] "include-tag"                     "multi_ack_detailed"             
+#> [13] "allow-tip-sha1-in-want"          "allow-reachable-sha1-in-want"   
+#> [15] "no-done"                         "symref=HEAD:refs/heads/gh-pages"
+#> [17] "object-format=sha1"              "agent=git/2.32.0"
+git_list_refs("https://try.gitea.io/ferris/gitea.git", "HEAD")
+#> $refs
+#>    ref                                     hash
+#> 1 HEAD e2fa84fddc80368c0315616870b8c75592397422
+#> 
+#> $caps
+#> [1] "agent=git/2.38.2"                   "ls-refs=unborn"                    
+#> [3] "fetch=shallow wait-for-done filter" "server-option"                     
+#> [5] "object-format=sha1"                 "object-info"
+git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
+#> $refs
+#>                               ref                                     hash
+#> 1                            HEAD 162d409c10e538ba8a91dbb659597520de4f2d88
+#> 2 refs/heads/banned-email-domains 3828e783d0c10fb9fa7c22e6ffe869c9e803b2fd
+#> 3             refs/heads/cvs-area cd10229b05f3c1fbaf367d7697fe328e9342d3de
+#> 4                 refs/heads/i18n 2bb9d8648a6ef1aebd584646f098656b4fe4d924
+#> 5               refs/heads/master 162d409c10e538ba8a91dbb659597520de4f2d88
+#> 6              refs/heads/nextgen 726244cb6a8c1752350ee63768a88d750a1a37d4
+#> 7   refs/heads/sv-test-2017-02-01 d23caef7bd0ec7bbddf063ef854aa62a83b2685e
+#> 8         refs/heads/text-captcha 4a35b8bc3bd642ff3a3cf19147c30a2b44715a7b
+#> 
+#> $caps
+#>  [1] "multi_ack"                     "thin-pack"                    
+#>  [3] "side-band"                     "side-band-64k"                
+#>  [5] "ofs-delta"                     "shallow"                      
+#>  [7] "deepen-since"                  "deepen-not"                   
+#>  [9] "deepen-relative"               "no-progress"                  
+#> [11] "include-tag"                   "multi_ack_detailed"           
+#> [13] "no-done"                       "symref=HEAD:refs/heads/master"
+#> [15] "agent=git/2.17.1"
+}\if{html}{\out{</div>}}
 }
 
 \keyword{internal}

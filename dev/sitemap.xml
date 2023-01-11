@@ -31,6 +31,21 @@
     <loc>https://r-lib.github.io/pkgdepends/dev/reference/default_platforms.html</loc>
   </url>
   <url>
+    <loc>https://r-lib.github.io/pkgdepends/dev/reference/git-protocol.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/dev/reference/git_download_file.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/dev/reference/git_fetch.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/dev/reference/git_list_files.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/dev/reference/git_list_refs.html</loc>
+  </url>
+  <url>
     <loc>https://r-lib.github.io/pkgdepends/dev/reference/index.html</loc>
   </url>
   <url>

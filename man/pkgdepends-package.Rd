@@ -68,20 +68,20 @@ style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream 
 \if{html}{\out{
 <pre>
 ## <span style="color: #859900;">✔</span> Loading metadata database ... done                                    
-## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.0.3.9000</span> <span style="color: #859900;">✨👷🏽🔧 ⬇ (</span><span style="color: #525252;">unknown size) </span>                        
-## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">✨</span>                                                         
-## │ ├─processx <span style="color: #525252;">3.8.0</span> <span style="color: #859900;">✨</span>                                                    
-## │ │ ├─ps <span style="color: #525252;">1.7.2</span> <span style="color: #859900;">✨</span>                                                        
-## │ │ └─R6 <span style="color: #525252;">2.5.1</span> <span style="color: #859900;">✨</span>                                                        
+## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.0.4.9000</span> <span style="color: #859900;">✨👷🏽🔧 ⬇ (</span><span style="color: #525252;">unknown size) </span>                        
+## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(428.84 kB)</span>                                           
+## │ ├─processx <span style="color: #525252;">3.8.0</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(312.94 kB)</span>                                      
+## │ │ ├─ps <span style="color: #525252;">1.7.2</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(309.64 kB)</span>                                          
+## │ │ └─R6 <span style="color: #525252;">2.5.1</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(82.52 kB)</span>                                           
 ## │ └─R6                                                                  
-## ├─cli <span style="color: #525252;">3.4.1</span> <span style="color: #859900;">✨</span>                                                           
-## ├─curl <span style="color: #525252;">4.3.3</span> <span style="color: #859900;">✨</span>                                                          
-## ├─filelock <span style="color: #525252;">1.0.2</span> <span style="color: #859900;">✨</span>                                                      
-## ├─jsonlite <span style="color: #525252;">1.8.4</span> <span style="color: #859900;">✨</span>                                                      
-## ├─prettyunits <span style="color: #525252;">1.1.1</span> <span style="color: #859900;">✨</span>                                                   
+## ├─cli <span style="color: #525252;">3.5.0</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(1.29 MB)</span>                                               
+## ├─curl <span style="color: #525252;">4.3.3</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(756.97 kB)</span>                                            
+## ├─filelock <span style="color: #525252;">1.0.2</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(29.09 kB)</span>                                         
+## ├─jsonlite <span style="color: #525252;">1.8.4</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(1.13 MB)</span>                                          
+## ├─prettyunits <span style="color: #525252;">1.1.1</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(34.70 kB)</span>                                      
 ## ├─processx                                                              
 ## ├─R6                                                                    
-## └─rappdirs <span style="color: #525252;">0.3.3</span> <span style="color: #859900;">✨</span>                                                      
+## └─rappdirs <span style="color: #525252;">0.3.3</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(46.80 kB)</span>                                         
 ##                                                                         
 ## Key:  <span style="color: #859900;">✨</span> new | <span style="color: #859900;"> ⬇</span> download | <span style="color: #859900;">👷🏽 </span>build | 🔧<span style="color: #859900;"> </span>compile                        
 </pre>
@@ -108,7 +108,7 @@ style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream 
 \if{html}{\out{
 <pre>
 ## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                       
-## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.4.1.9000 (source) is the latest build            
+## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.5.0.9000 (source) is the latest build            
 ## <span style="color: #859900;">✔</span> No downloads needed, all packages are cached                          
 </pre>
 }}
@@ -141,10 +141,10 @@ style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream 
 \if{html}{\out{
 <pre>
 ## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                       
-## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.4.1.9000 (source) is the latest build            
+## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.5.0.9000 (source) is the latest build            
 ## <span style="color: #859900;">✔</span> No downloads needed, all packages are cached                          
-## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.4.1.9000 (github::r-lib/cli@c61e538) <span style="color: #a3a3a3;">(39ms)</span>           
-## <span style="color: #859900;">✔</span> Summary:  ✨ 1 new  in 39ms                                            
+## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.5.0.9000 (github::r-lib/cli@8b0ce74) <span style="color: #a3a3a3;">(38ms)</span>           
+## <span style="color: #859900;">✔</span> Summary:  ✨ 1 new  in 38ms                                            
 </pre>
 }}
 \if{html}{\out{

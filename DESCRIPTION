@@ -19,7 +19,7 @@ BugReports: https://github.com/r-lib/pkgdepends/issues
 Depends: R (>= 3.4)
 Imports:
     callr (>= 3.3.1),
-    cli (>= 3.4.0),
+    cli (>= 3.6.0),
     curl,
     desc (>= 1.2.0),
     filelock (>= 1.0.2),
@@ -37,6 +37,8 @@ Imports:
     utils,
     withr (>= 2.1.1),
     zip (>= 2.1.0)
+Remotes:
+    r-lib/zip
 Suggests:
     asciicast (>= 2.2.0.9000),
     covr,

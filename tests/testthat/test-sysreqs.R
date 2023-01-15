@@ -45,7 +45,7 @@ test_that("error, unknown os", {
   expect_snapshot(
     error = TRUE,
     transform = transform_sysreqs_server,
-    sysreqs_resolve("java", "debian", "11")
+    sysreqs_resolve("java", "foobar", "11")
   )
 })
 

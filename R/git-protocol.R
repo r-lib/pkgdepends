@@ -958,7 +958,7 @@ async_git_list_refs_v2_process_2 <- function(reply, caps, url) {
     throw(pkg_error(
       "Response from git server does not have a closing {.code flush-pkt}.",
       .class = "git_proto_error_unexpected_response",
-      .data = list(url = redact_url(url), sha = sha)
+      .data = list(url = redact_url(url))
     ))
   }
 

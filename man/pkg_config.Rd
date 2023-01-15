@@ -78,7 +78,7 @@ packages for. It defaults to the current R version.
 \item \code{sysreqs}: Whether to look up and install system requirements.
 By default this is \code{TRUE} if the \code{CI} environment variable is set
 and the operating system is a supported Linux distribution:
-CentOS, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
+CentOS, Debian, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
 Enterprise. The default will change as new platforms gain system
 requirements support.
 \item \code{sysreqs_dry_run}: If \code{TRUE}, then pkgdepends only prints the system commands to

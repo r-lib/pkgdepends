@@ -36,8 +36,8 @@ env_decode_difftime <- function(x, name) {
 default_sysreqs <- function() {
   if (Sys.getenv("CI") != "true") return(FALSE)
   if (Sys.info()[["sysname"]] != "Linux") return(FALSE)
-  dist <- detect_linux()$distribution
-  dist %in% c("centos", "opensuse", "redhat", "sle", "ubuntu")
+  dist <- detect_linux()
+  sysreqs2_is_supported(dist$distribution, dist$release)
 }
 
 default_sysreqs_sudo <- function() {
@@ -225,7 +225,7 @@ pkgdepends_config <- sort_by_name(list(
       "Whether to look up and install system requirements.
        By default this is `TRUE` if the `CI` environment variable is set
        and the operating system is a supported Linux distribution:
-       CentOS, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
+       CentOS, Debian, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
        Enterprise. The default will change as new platforms gain system
        requirements support."
   ),

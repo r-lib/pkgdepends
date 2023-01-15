@@ -121,6 +121,7 @@ sysreqs2_async_update_metadata <- function(path = NULL, config = NULL) {
 
 sysreqs2_match <- function(sysreqs, path = NULL, os = NULL,
                            os_release = NULL, config = NULL ) {
+  sysreqs <- paste(sysreqs, collapse = " ")
   path <- path %||% file.path(get_user_cache_dir()$root, "sysreqs")
   rules <- dir(file.path(path, "rules"), pattern = "[.]json$", full.names = TRUE)
 

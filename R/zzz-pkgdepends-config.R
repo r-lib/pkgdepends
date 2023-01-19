@@ -225,9 +225,9 @@ pkgdepends_config <- sort_by_name(list(
       "Whether to look up and install system requirements.
        By default this is `TRUE` if the `CI` environment variable is set
        and the operating system is a supported Linux distribution:
-       CentOS, Debian, openSUSE, RedHat Linux, Ubuntu Linux or SUSE Linux
-       Enterprise. The default will change as new platforms gain system
-       requirements support."
+       CentOS, Debian, Fedora, openSUSE, RedHat Linux, Ubuntu Linux or SUSE
+       Linux Enterprise. The default will change as new platforms gain
+       system requirements support."
   ),
 
   sysreqs_dry_run = list(

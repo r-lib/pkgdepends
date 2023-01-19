@@ -9,6 +9,7 @@ sysreqs2_cmds <- utils::read.table(
    redhat     6           'yum update -y -q'                        'yum install -y'
    redhat     7           'yum update -y -q'                        'yum install -y'
    redhat     *           'dnf upgrade -y -q'                       'dnf install -y'
+   fedora     *           'dnf upgrade -y -q'                       'dnf install -y'
    opensuse   *           'zypper --quiet --non-interactive update' 'zypper --non-interactive install'
    sle        *           'zypper --quiet --non-interactive update' 'zypper --non-interactive install'
 "))

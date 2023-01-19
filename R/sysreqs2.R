@@ -1,17 +1,24 @@
 
+# There is no easy way to update the database in yum/dnf/zypper.
+# But FIXME. We'll need to solve this issue when (and if) we'll check the
+# installed system packages, and only install/update the ones that are
+# missing or out of date. For now this is OK, the first `install` command
+# will update the DB (cache it is called I believe), and the rest will
+# use it.
+
 sysreqs2_cmds <- utils::read.table(
    stringsAsFactors = FALSE, header = TRUE, textConnection("
-   os         os_release  update                                    install
-   ubuntu     *           'apt-get -y update'                       'apt-get -y install'
-   debian     *           'apt-get -y update'                       'apt-get -y install'
-   centos     *           'yum update -y -q'                        'yum install -y'
-   rockylinux *           'dnf upgrade -y -q'                       'dnf install -y'
-   redhat     6           'yum update -y -q'                        'yum install -y'
-   redhat     7           'yum update -y -q'                        'yum install -y'
-   redhat     *           'dnf upgrade -y -q'                       'dnf install -y'
-   fedora     *           'dnf upgrade -y -q'                       'dnf install -y'
-   opensuse   *           'zypper --quiet --non-interactive update' 'zypper --non-interactive install'
-   sle        *           'zypper --quiet --non-interactive update' 'zypper --non-interactive install'
+   os         os_release  update              install
+   ubuntu     *           'apt-get -y update' 'apt-get -y install'
+   debian     *           'apt-get -y update' 'apt-get -y install'
+   centos     *           NA                  'yum install -y'
+   rockylinux *           NA                  'dnf install -y'
+   redhat     6           NA                  'yum install -y'
+   redhat     7           NA                  'yum install -y'
+   redhat     *           NA                  'dnf install -y'
+   fedora     *           NA                  'dnf install -y'
+   opensuse   *           NA                  'zypper --non-interactive install'
+   sle        *           NA                  'zypper --non-interactive install'
 "))
 
 sysreqs2_is_supported <- function(os, os_release) {
@@ -59,6 +66,7 @@ sysreqs2_async_resolve <- function(sysreqs, os, os_release, config, ...) {
     })$
     then(function(recs) {
       upd <- sysreqs2_command(os, os_release, "update")
+      if (is.na(upd)) upd <- charcater()
       cmd <- sysreqs2_command(os, os_release, "install")
       pkgs <- unlist(lapply(recs, "[[", "packages"))
       pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()

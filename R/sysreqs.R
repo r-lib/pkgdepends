@@ -1,13 +1,20 @@
 
 sysreqs_resolve <- function(sysreqs, os = NULL, os_release = NULL,
-                            config = NULL) {
+                            config = NULL, ...) {
   if (is.null(os) || is.null(os_release)) {
     lnx <- detect_linux()
     os <- os %||% lnx$distribution
     os_release <- os_release %||% lnx$release
   }
   config <- config %||% current_config()
-  synchronise(sysreqs_async_resolve(sysreqs, os, os_release, config))
+
+  # TODO: switch to v2 completely
+  if (tolower(Sys.getenv("R_PKG_SYSREQS2")) == "true" ||
+      os %in% "debian") {
+    synchronize(sysreqs2_async_resolve(sysreqs, os, os_release, config, ...))
+  } else {
+    synchronise(sysreqs_async_resolve(sysreqs, os, os_release, config, ...))
+  }
 }
 
 sysreqs_async_resolve <- function(sysreqs, os, os_release, config) {

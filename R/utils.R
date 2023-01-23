@@ -302,6 +302,10 @@ external_process <- function(...) {
   asNamespace("pkgcache")$external_process(...)
 }
 
+get_user_cache_dir <- function(...) {
+  asNamespace("pkgcache")$get_user_cache_dir(...)
+}
+
 # nocov end
 
 format_error_with_stdout <- function(x, ...) {

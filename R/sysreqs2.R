@@ -66,7 +66,7 @@ sysreqs2_async_resolve <- function(sysreqs, os, os_release, config, ...) {
     })$
     then(function(recs) {
       upd <- sysreqs2_command(os, os_release, "update")
-      if (is.na(upd)) upd <- charcater()
+      if (is.na(upd)) upd <- character()
       cmd <- sysreqs2_command(os, os_release, "install")
       pkgs <- unlist(lapply(recs, "[[", "packages"))
       pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()

@@ -141,6 +141,15 @@
       sysreqs_install(srq)
     Message <cliMessage>
       i Installing system requirements
+      i Executing `sh -c echo apt-get install -y libssl-dev`
+      i Executing `sh -c echo apt-get install -y libcurl4-openssl-dev`
+
+---
+
+    Code
+      sysreqs_install(srq)
+    Message <cliMessage>
+      i Installing system requirements
       i Executing `sh -c echo apt-get install -y default-jdk`
       i Executing `sh -c echo apt-get install -y libcurl4-openssl-dev`
       i Executing `sh -c echo R CMD javareconf`

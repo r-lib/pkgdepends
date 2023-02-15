@@ -99,9 +99,5 @@ test_that("compact_cmds", {
       "apt-get install -y libssl-dev",
       "apt-get install -y libcurl4-openssl-dev"
     ))
-    compact_cmds(c(
-      "echo apt-get install -y libssl-dev",
-      "echo apt-get install -y libcurl4-openssl-dev"
-    ))
   })
 })

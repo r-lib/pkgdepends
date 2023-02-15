@@ -121,6 +121,8 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
   # TODO: fix 'R' commands (e.g. `R CMD javareconf`) to call the current
   # version of R and not the one on the PATH
 
+  cmds <- compact_cmds(cmds)
+
   if (dry_run) cmds <- paste("echo", cmds)
 
   if (verbose) {
@@ -131,8 +133,6 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
   } else {
     callback <- function(x, ...) invisible()
   }
-
-  cmds <- compact_cmds(cmds)
 
   output <- lapply(cmds, function(cmd) {
     if (sudo) {
@@ -164,14 +164,13 @@ detect_linux <- function() {
 }
 
 compact_cmds <- function(x) {
-  rx <- "^(echo )?apt-get install -y ([a-z0-9-]+)$"
+  rx <- "^apt-get install -y ([a-z0-9-]+)$"
   if (length(x) == 0 || !all(grepl(rx, x))) {
     return(x)
   }
 
   paste0(
-    gsub(rx, "\\1", x[[1]]),
     "apt-get install -y ",
-    paste(gsub(rx, "\\2", x), collapse = " ")
+    paste(gsub(rx, "\\1", x), collapse = " ")
   )
 }

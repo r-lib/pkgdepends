@@ -205,9 +205,4 @@
         "apt-get install -y libcurl4-openssl-dev"))
     Output
       [1] "apt-get install -y libssl-dev libcurl4-openssl-dev"
-    Code
-      compact_cmds(c("echo apt-get install -y libssl-dev",
-        "echo apt-get install -y libcurl4-openssl-dev"))
-    Output
-      [1] "echo apt-get install -y libssl-dev libcurl4-openssl-dev"
 

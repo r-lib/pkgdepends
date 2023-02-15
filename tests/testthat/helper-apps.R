@@ -450,6 +450,9 @@ new_sysreqs_app <- function() {
           install_scripts = list("apt-get install -y default-jdk"),
           post_install = list(list(command = "R CMD javareconf"))
         ),
+        "openssl" = list(
+          install_scripts = list("apt-get install -y libssl-dev")
+        ),
         "libcurl" = list(
           install_scripts = list("apt-get install -y libcurl4-openssl-dev")
         )

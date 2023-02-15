@@ -59,6 +59,9 @@ test_that("sysreqs_install", {
 
   # not verbose
   withr::local_envvar(PKG_SYSREQS_VERBOSE = "false")
+  srq <- sysreqs_resolve("libcurl and openssl", "ubuntu", "22.04")
+  expect_snapshot(sysreqs_install(srq))
+
   srq <- sysreqs_resolve("java and also libcurl", "ubuntu", "22.04")
   expect_snapshot(sysreqs_install(srq))
 
@@ -84,4 +87,21 @@ test_that("detect_linux", {
     list()
   )
   expect_snapshot(detect_linux())
+})
+
+test_that("compact_cmds", {
+  expect_snapshot({
+    compact_cmds(character())
+    compact_cmds(c(
+      "apt-get install -y libssl-dev"
+    ))
+    compact_cmds(c(
+      "apt-get install -y libssl-dev",
+      "apt-get install -y libcurl4-openssl-dev"
+    ))
+    compact_cmds(c(
+      "echo apt-get install -y libssl-dev",
+      "echo apt-get install -y libcurl4-openssl-dev"
+    ))
+  })
 })

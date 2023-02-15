@@ -132,6 +132,8 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
     callback <- function(x, ...) invisible()
   }
 
+  cmds <- compact_cmds(cmds)
+
   output <- lapply(cmds, function(cmd) {
     if (sudo) {
       sh <- "sudo"                                               # nocov
@@ -158,5 +160,18 @@ detect_linux <- function() {
   list(
     distribution = plt[["distribution"]] %||% "unknown",
     release = plt[["release"]] %||% "unknown"
+  )
+}
+
+compact_cmds <- function(x) {
+  rx <- "^(echo )?apt-get install -y ([a-z0-9-]+)$"
+  if (length(x) == 0 || !all(grepl(rx, x))) {
+    return(x)
+  }
+
+  paste0(
+    gsub(rx, "\\1", x[[1]]),
+    "apt-get install -y ",
+    paste(gsub(rx, "\\2", x), collapse = " ")
   )
 }

@@ -141,6 +141,14 @@
       sysreqs_install(srq)
     Message <cliMessage>
       i Installing system requirements
+      i Executing `sh -c echo apt-get install -y libssl-dev libcurl4-openssl-dev`
+
+---
+
+    Code
+      sysreqs_install(srq)
+    Message <cliMessage>
+      i Installing system requirements
       i Executing `sh -c echo apt-get install -y default-jdk`
       i Executing `sh -c echo apt-get install -y libcurl4-openssl-dev`
       i Executing `sh -c echo R CMD javareconf`
@@ -181,4 +189,25 @@
       $release
       [1] "unknown"
       
+
+# compact_cmds
+
+    Code
+      compact_cmds(character())
+    Output
+      character(0)
+    Code
+      compact_cmds(c("apt-get install -y libssl-dev"))
+    Output
+      [1] "apt-get install -y libssl-dev"
+    Code
+      compact_cmds(c("apt-get install -y libssl-dev",
+        "apt-get install -y libcurl4-openssl-dev"))
+    Output
+      [1] "apt-get install -y libssl-dev libcurl4-openssl-dev"
+    Code
+      compact_cmds(c("echo apt-get install -y libssl-dev",
+        "echo apt-get install -y libcurl4-openssl-dev"))
+    Output
+      [1] "echo apt-get install -y libssl-dev libcurl4-openssl-dev"
 

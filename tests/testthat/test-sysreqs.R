@@ -88,3 +88,20 @@ test_that("detect_linux", {
   )
   expect_snapshot(detect_linux())
 })
+
+test_that("compact_cmds", {
+  expect_snapshot({
+    compact_cmds(character())
+    compact_cmds(c(
+      "apt-get install -y libssl-dev"
+    ))
+    compact_cmds(c(
+      "apt-get install -y libssl-dev",
+      "apt-get install -y libcurl4-openssl-dev"
+    ))
+    compact_cmds(c(
+      "echo apt-get install -y libssl-dev",
+      "echo apt-get install -y libcurl4-openssl-dev"
+    ))
+  })
+})

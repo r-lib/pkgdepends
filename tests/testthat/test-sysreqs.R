@@ -1,6 +1,7 @@
 
 test_that("query, post_install", {
   setup_fake_sysreqs_app()
+  withr::local_envvar(R_PKG_SYSREQS2 = NA_character_)
   expect_snapshot({
     srq <- sysreqs_resolve("java", "ubuntu", "22.04")
     srq$total <- 1/3
@@ -10,6 +11,7 @@ test_that("query, post_install", {
 
 test_that("pre_install", {
   setup_fake_sysreqs_app()
+  withr::local_envvar(R_PKG_SYSREQS2 = NA_character_)
   expect_snapshot({
     srq <- sysreqs_resolve("this needs geos please", "ubuntu", "16.04")
     srq$total <- 1/3
@@ -19,6 +21,7 @@ test_that("pre_install", {
 
 test_that("multiple sysreqs", {
   setup_fake_sysreqs_app()
+  withr::local_envvar(R_PKG_SYSREQS2 = NA_character_)
   expect_snapshot({
     srq <- sysreqs_resolve("java and also libcurl", "ubuntu", "22.04")
     srq$total <- 1/3
@@ -28,6 +31,7 @@ test_that("multiple sysreqs", {
 
 test_that("system is detected", {
   setup_fake_sysreqs_app()
+  withr::local_envvar(R_PKG_SYSREQS2 = NA_character_)
   mockery::stub(
     sysreqs_resolve,
     "detect_linux",
@@ -42,6 +46,7 @@ test_that("system is detected", {
 
 test_that("error, unknown os", {
   setup_fake_sysreqs_app()
+  withr::local_envvar(R_PKG_SYSREQS2 = NA_character_)
   expect_snapshot(
     error = TRUE,
     transform = transform_sysreqs_server,
@@ -54,7 +59,8 @@ test_that("sysreqs_install", {
   setup_fake_sysreqs_app()
   withr::local_envvar(
     PKG_SYSREQS_DRY_RUN = "true",
-    PKG_SYSREQS_SUDO = "false"
+    PKG_SYSREQS_SUDO = "false",
+    R_PKG_SYSREQS2 = NA_character_
   )
 
   # not verbose

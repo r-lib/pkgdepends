@@ -951,7 +951,11 @@ pkgplan_install_plan <- function(self, private, downloads) {
   # but the dependencies column is already set.
   has_deps <- "deps" %in% names(sol)
   if (has_deps) {
-    hard_deps <- pkg_dep_types_hard()
+    if ("dep_types" %in% names(sol)) {
+      selected_deps <- sol$dep_types
+    } else {
+      selected_deps <- list(pkg_dep_types_hard())
+    }
     deps <- lapply(
       seq_len(nrow(sol)),
       function(i) {
@@ -959,7 +963,13 @@ pkgplan_install_plan <- function(self, private, downloads) {
         if (sol$platform[[i]] != "source") {
           x <- x[tolower(x$type) != "linkingto", ]
         }
-        x$package[tolower(x$type) %in% tolower(hard_deps)]
+
+        mydeps <- if (length(selected_deps) > 1) {
+          selected_deps[[i]]
+        } else {
+          selected_deps[[1]]
+        }
+        x$package[tolower(x$type) %in% tolower(mydeps)]
       })
     deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   }

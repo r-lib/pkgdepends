@@ -44,3 +44,41 @@
       
       Key:  [new] new | [dl] download | [bld] build
 
+---
+
+    Code
+      p$draw()
+    Output
+      pkg 1.0.0 [new][bld][dl] (<size>)
+      \-pl 1.0.0 [new][bld][dl] (<size>)
+        +-pld 1.0.0 [new][bld][dl] (<size>)
+        +-pli 1.0.0 [new][bld][dl] (<size>)
+        \-pll 1.0.0 [new][bld][dl] (<size>)
+      
+      Key:  [new] new | [dl] download | [bld] build
+
+---
+
+    Code
+      plan$package
+    Output
+      [1] "pkg" "pl"  "pld" "pli" "pll"
+    Code
+      plan$dependencies
+    Output
+      [[1]]
+      [1] "pl"
+      
+      [[2]]
+      [1] "pld" "pli" "pll"
+      
+      [[3]]
+      character(0)
+      
+      [[4]]
+      character(0)
+      
+      [[5]]
+      character(0)
+      
+

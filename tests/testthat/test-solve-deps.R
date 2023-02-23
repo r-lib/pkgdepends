@@ -70,4 +70,21 @@ test_that("dependencies", {
   suppressMessages(p$resolve())
   suppressMessages(p$solve())
   expect_snapshot(p$draw(), transform = transform_bytes)
+
+  # We can restrict dependencies. We need to test this more, to
+  # make sure that the install plan gets the right dependencies.
+  p <- suppressMessages(new_pkg_installation_proposal(
+    "pkg",
+    config = list(dependencies = "LinkingTo", library = tempfile())
+  ))
+  suppressMessages(p$resolve())
+  suppressMessages(p$solve())
+  expect_snapshot(p$draw(), transform = transform_bytes)
+
+  suppressMessages(p$download())
+  plan <- p$get_install_plan()
+  expect_snapshot({
+    plan$package
+    plan$dependencies
+  })
 })

@@ -970,7 +970,9 @@ pkgplan_install_plan <- function(self, private, downloads) {
           selected_deps[[1]]
         }
         pkgs <- x$package[tolower(x$type) %in% tolower(mydeps)]
-        intersect(pkgs, sol$package)
+        pkgs <- intersect(pkgs, sol$package)
+        # Yes, some packages Suggest themselves, apparently
+        setdiff(pkgs, sol$package[[i]])
       })
     deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   }

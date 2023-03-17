@@ -88,3 +88,36 @@ test_that("dependencies", {
     plan$dependencies
   })
 })
+
+test_that("self dependencies are OK", {
+  lib <- tempfile()
+  lock <- tempfile()
+  on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
+
+  repo <- dcf("
+    Package: pkg
+    Suggests: pkg
+  ")
+
+  setup_fake_apps(cran_repo = repo)
+
+  p <- suppressMessages(new_pkg_installation_proposal(
+    "pkg",
+    config = list(
+      dependencies = TRUE,
+      library = lib
+    )
+  ))
+  suppressMessages(p$resolve())
+  suppressMessages(p$solve())
+  sol <- p$get_solution()$data
+  sol <- sol[order(sol$ref), ]
+  expect_equal(sol$package, "pkg")
+  p$create_lockfile(lock)
+
+  plan <- new_pkg_installation_plan(lockfile = lock)
+  expect_equal(
+    plan$get_solution()$data$dependencies,
+    list(character())
+  )
+})

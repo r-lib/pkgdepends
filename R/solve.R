@@ -619,7 +619,7 @@ pkgplan_i_lp_dependencies <- function(lp) {
   if (any(!is.na(ignore_rver))) {
     ignore_rver[is.na(ignore_rver)] <- "0.0.0"
     current <- min(lp$config$get("r_versions"))
-    ignored2 <- ignore_rver > current
+    ignored2 <- package_version(ignore_rver) > current
     ignored <- ignored | ignored2
   }
   soft_deps <- tolower(pkg_dep_types_soft())
@@ -969,7 +969,8 @@ pkgplan_install_plan <- function(self, private, downloads) {
         } else {
           selected_deps[[1]]
         }
-        x$package[tolower(x$type) %in% tolower(mydeps)]
+        pkgs <- x$package[tolower(x$type) %in% tolower(mydeps)]
+        intersect(pkgs, sol$package)
       })
     deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   }

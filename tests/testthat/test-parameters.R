@@ -136,3 +136,77 @@ test_that("source for dependency", {
   sol <- sol[order(sol$ref), ]
   expect_snapshot(sol[, c("package", "platform")])
 })
+
+test_that("?ignore is ignored", {
+  lib <- tempfile()
+  lock <- tempfile()
+  on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
+
+  repo <- dcf("
+    Package: pkg
+    Suggests: pkg2
+
+    Package: pkg2
+
+    Package: pkg3
+  ")
+
+  setup_fake_apps(cran_repo = repo)
+
+  p <- suppressMessages(new_pkg_installation_proposal(
+    c("pkg", "pkg2=?ignore"),
+    config = list(
+      dependencies = TRUE,
+      library = lib
+    )
+  ))
+  suppressMessages(p$resolve())
+  suppressMessages(p$solve())
+  sol <- p$get_solution()$data
+  sol <- sol[order(sol$ref), ]
+  expect_equal(sol$package, "pkg")
+  p$create_lockfile(lock)
+
+  plan <- new_pkg_installation_plan(lockfile = lock)
+  expect_equal(
+    plan$get_solution()$data$dependencies,
+    list(character())
+  )
+})
+
+test_that("?ignore-before-r is ignored", {
+  lib <- tempfile()
+  lock <- tempfile()
+  on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
+
+  repo <- dcf("
+    Package: pkg
+    Suggests: pkg2
+
+    Package: pkg2
+
+    Package: pkg3
+  ")
+
+  setup_fake_apps(cran_repo = repo)
+
+  p <- suppressMessages(new_pkg_installation_proposal(
+    c("pkg", "pkg2=?ignore-before-r=100.0"),
+    config = list(
+      dependencies = TRUE,
+      library = lib
+    )
+  ))
+  suppressMessages(p$resolve())
+  suppressMessages(p$solve())
+  sol <- p$get_solution()$data
+  sol <- sol[order(sol$ref), ]
+  expect_equal(sol$package, "pkg")
+  p$create_lockfile(lock)
+
+  plan <- new_pkg_installation_plan(lockfile = lock)
+  expect_equal(
+    plan$get_solution()$data$dependencies,
+    list(character())
+  )
+})

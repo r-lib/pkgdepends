@@ -17,9 +17,12 @@ async
 cli
 cloneable
 config
+crandb
 devtools
 funder
 ggplot
+github
+https
 lifecycle
 macOS
 mypkg

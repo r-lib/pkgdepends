@@ -66,19 +66,23 @@ sysreqs2_async_resolve <- function(sysreqs, os, os_release, config, ...) {
     })$
     then(function(recs) {
       upd <- sysreqs2_command(os, os_release, "update")
+      pre <- unlist(lapply(recs, "[[", "pre_install"))
+      post <- unlist(lapply(recs, "[[", "post_install"))
       if (is.na(upd)) upd <- character()
       cmd <- sysreqs2_command(os, os_release, "install")
       pkgs <- unlist(lapply(recs, "[[", "packages"))
       pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
       pkgs <- if (length(pkgs)) paste(cmd, pkgs)
+      # no need to update if nothing to do
+      if (length(pre) + length(pkgs) + length(post) == 0) upd <- character()
       list(
         os = os,
         os_release = os_release,
         url = NA_character_,
         total = c(total = as.double(Sys.time() - start, units = "secs")),
-        pre_install = c(upd, unlist(lapply(recs, "[[", "pre_install"))),
+        pre_install = c(upd, pre),
         install_scripts = pkgs,
-        post_install = unlist(lapply(recs, "[[", "post_install")),
+        post_install = post,
         records = recs
       )
     })

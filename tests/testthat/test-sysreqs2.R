@@ -41,3 +41,10 @@ test_that("sysreqs2_command error", {
     sysreqs2_command("foobar", "2023")
   )
 })
+
+test_that("do not run update if nothing to do", {
+  skip_on_cran()
+  sr1 <- sysreqs2_resolve("nothing needed", "ubuntu", "22.04")
+  sr1$total <- 0.05
+  expect_snapshot(sr1)
+})

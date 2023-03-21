@@ -107,3 +107,33 @@
     Error <rlib_error_3_0>
       ! Unknown OS. Don't know how to install system packages for foobar 2023
 
+# do not run update if nothing to do
+
+    Code
+      sr1
+    Output
+      $os
+      [1] "ubuntu"
+      
+      $os_release
+      [1] "22.04"
+      
+      $url
+      [1] NA
+      
+      $total
+      [1] 0.05
+      
+      $pre_install
+      character(0)
+      
+      $install_scripts
+      NULL
+      
+      $post_install
+      NULL
+      
+      $records
+      list()
+      
+

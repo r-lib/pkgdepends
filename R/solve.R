@@ -952,7 +952,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
   has_deps <- "deps" %in% names(sol)
   if (has_deps) {
     if ("dep_types" %in% names(sol)) {
-      selected_deps <- sol$dep_types
+      selected_deps <- lapply(sol$dep_types, intersect, pkg_dep_types_hard())
     } else {
       selected_deps <- list(pkg_dep_types_hard())
     }

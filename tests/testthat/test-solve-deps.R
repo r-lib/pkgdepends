@@ -121,3 +121,41 @@ test_that("self dependencies are OK", {
     list(character())
   )
 })
+
+test_that("circular soft-dependencies are OK", {
+  lib <- tempfile()
+  lock <- tempfile()
+  on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
+
+  repo <- dcf("
+    Package: pkg1
+    Suggests: pkg2, pkg3
+
+    Package: pkg2
+    Suggests: pkg1
+
+    Package: pkg3
+  ")
+
+  setup_fake_apps(cran_repo = repo)
+
+  p <- suppressMessages(new_pkg_installation_proposal(
+    c("pkg1", "pkg2"),
+    config = list(
+      dependencies = TRUE,
+      library = lib
+    )
+  ))
+  suppressMessages(p$resolve())
+  suppressMessages(p$solve())
+  sol <- p$get_solution()$data
+  sol <- sol[order(sol$ref), ]
+  expect_equal(sort(sol$package), c("pkg1", "pkg2", "pkg3"))
+  p$create_lockfile(lock)
+
+  plan <- new_pkg_installation_plan(lockfile = lock)
+  expect_equal(
+    plan$get_solution()$data$dependencies,
+    list(character(), character(), character())
+  )
+})

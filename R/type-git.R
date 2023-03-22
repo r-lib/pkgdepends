@@ -82,6 +82,11 @@ type_git_get_data <- function(remote) {
   sha <- NULL
   dsc <- NULL
   async_git_list_files(remote$url, remote$commitish)$
+    catch(error = function(err) {
+      throw(pkg_error(
+        "Failed to download {.path DESCRIPTION} from git repo at {.url {remote$url}}."
+      ), parent = err)
+    })$
     then(function(files) {
       sha <<- files$sha
       desc_idx <- which(files$files$path == "DESCRIPTION")
@@ -97,20 +102,21 @@ type_git_get_data <- function(remote) {
       }
       files$files$hash[desc_idx]
     })$
-    catch(error = function(err) {
-      TODO
-    })$
     then(function(desc_hash) {
-      async_git_download_file(remote$url, desc_hash, output = NULL)
-    })$
-    catch(error = function(err) {
-      TODO
-    })$
-    then(function(desc_dl) {
-      dsc <<- desc::desc(text = rawToChar(desc_dl$raw))
-    })$
-    catch(error = function(err) {
-      TODO
+      async_git_download_file(remote$url, desc_hash, output = NULL)$
+      catch(error = function(err) {
+        throw(pkg_error(
+          "Failed to download {.path DESCRIPTION} from git repo at {.url {remote$url}}."
+        ), parent = err)
+      })$
+      then(function(desc_dl) {
+        dsc <<- desc::desc(text = rawToChar(desc_dl$raw))
+      })$
+      catch(error = function(err) {
+        throw(pkg_error(
+          "Failed to parse {.path DESCRIPTION} from git repo at {.url {remote$url}}."
+        ), parent = err)
+      })
     })$
     then(function() {
       list(sha = sha, description = dsc)

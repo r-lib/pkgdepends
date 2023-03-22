@@ -278,8 +278,10 @@ async_git_download_file <- function(url, sha, output = sha) {
         ))
         # nocov end
       }
-      mkdirp(dirname(output))
-      writeBin(packfile[[1]]$raw, output)
+      if (!is.null(output)) {
+        mkdirp(dirname(output))
+        writeBin(packfile[[1]]$raw, output)
+      }
       invisible(packfile[[1]])
     })
 }

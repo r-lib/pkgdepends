@@ -99,7 +99,7 @@ async_git_list_refs <- function(url, prefixes = NULL) {
 #' @inheritParams git_list_refs
 #' @param ref Either a SHA or a ref name. It may also be a branch name
 #'   without the `refs/heads` prefix, or a partial (but unique) SHA of
-#'   at least seven hexa digits.
+#'   at least seven hexadecimal digits.
 #'   See [git_list_refs()] for how branches, tags and GitHub pull
 #'   requests are named.
 #' @return A list with entries:

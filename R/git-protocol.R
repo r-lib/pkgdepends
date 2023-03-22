@@ -879,7 +879,19 @@ async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
   # key = 1*(ALPHA | DIGIT | "-_")
   # value = 1*(ALPHA | DIGIT | " -_.,?\/{}[]()<>!@#$%^&*+=:;")
 
-  if (is.null(psd[[3]]$text) || psd[[3]]$text != "version 2") {
+  if (is.null(psd[[3]]$text)) {
+    throw(pkg_error(
+      "Invalid git protocol message from {.url {url}}."
+    ))
+  }
+  if (is.na(psd[[3]]$text)) {
+    throw(pkg_error(
+      "Only git protocol version 2 is supported.",
+      "i" = "{.url {url}} seems to support version 1 only.",
+      .class = "git_proto_error_not_implemented"
+    ))
+  }
+  if (psd[[3]]$text != "version 2") {
     throw(pkg_error(
       "Only git protocol version 2 is supported, not {psd[[3]]$text}.",
       .class = "git_proto_error_not_implemented"

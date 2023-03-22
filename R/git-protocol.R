@@ -98,7 +98,8 @@ async_git_list_refs <- function(url, prefixes = NULL) {
 #'
 #' @inheritParams git_list_refs
 #' @param ref Either a SHA or a ref name. It may also be a branch name
-#'   without the `refs/heads` prefix, or a partial (but unique) SHA.
+#'   without the `refs/heads` prefix, or a partial (but unique) SHA of
+#'   at least seven hexa digits.
 #'   See [git_list_refs()] for how branches, tags and GitHub pull
 #'   requests are named.
 #' @return A list with entries:
@@ -130,8 +131,10 @@ async_git_resolve_ref <- function(url, ref) {
   sha <- ref
 
   if (!grepl("^[0-9a-f]{40}$", ref)) {
-    # Only use 'ref' as a filter if it is not a sha prefix
-    filt <- if (! grepl("^[0-9a-f]+$", ref)) ref
+    # Only use 'ref' as a filter if it is not a sha prefix of at least 7 chars
+    filt <- if (nchar(ref) < 7 || ! grepl("^[0-9a-f]+$", ref)) {
+      paste0(c("", "refs/heads/", "refs/tags/"), ref)
+    }
     async_git_list_refs(url, filt)$
       then(function(refs) {
         if (ref %in% refs$refs$ref) {
@@ -157,6 +160,9 @@ async_git_resolve_ref <- function(url, ref) {
         } else {
           throw(pkg_error(
             "Unknown git ref: {.val {ref}}.",
+            "i" = if (grepl("^[0-9a-f]+$", ref)) {
+              "If you want to specify a SHA prefix, then use at least 7 hexa digits."
+             },
             .class = "git_proto_error_unknown_ref",
             .data = list(ref = ref, url = redact_url(url))
           ))

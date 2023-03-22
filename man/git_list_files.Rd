@@ -11,7 +11,8 @@ git_list_files(url, ref = "HEAD")
 It might include authentication information, e.g. a GitHub token.}
 
 \item{ref}{Either a SHA or a ref name. It may also be a branch name
-without the \code{refs/heads} prefix, or a partial (but unique) SHA.
+without the \code{refs/heads} prefix, or a partial (but unique) SHA of
+at least seven hexa digits.
 See \code{\link[=git_list_refs]{git_list_refs()}} for how branches, tags and GitHub pull
 requests are named.}
 }

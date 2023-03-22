@@ -97,8 +97,10 @@ async_git_list_refs <- function(url, prefixes = NULL) {
 #' List files in a remote git repository
 #'
 #' @inheritParams git_list_refs
-#' @param ref Either a SHA or a ref name. See [git_list_refs()] for how
-#'   branches, tags and GitHub pull requests are named.
+#' @param ref Either a SHA or a ref name. It may also be a branch name
+#'   without the `refs/heads` prefix, or a partial (but unique) SHA.
+#'   See [git_list_refs()] for how branches, tags and GitHub pull
+#'   requests are named.
 #' @return A list with entries:
 #'   * `ref`: The `ref` the function was called with.
 #'   * `sha`: SHA of `ref`.
@@ -128,16 +130,37 @@ async_git_resolve_ref <- function(url, ref) {
   sha <- ref
 
   if (!grepl("^[0-9a-f]{40}$", ref)) {
-    async_git_list_refs(url, ref)$
+    # Only use 'ref' as a filter if it is not a sha prefix
+    filt <- if (! grepl("^[0-9a-f]+$", ref)) ref
+    async_git_list_refs(url, filt)$
       then(function(refs) {
-        if (!ref %in% refs$refs$ref) {
+        if (ref %in% refs$refs$ref) {
+          refs$refs$hash[refs$refs$ref == ref]
+
+        } else if (paste0("refs/tags/", ref) %in% refs$refs$ref) {
+          refs$refs$hash[refs$refs$ref == paste0("refs/tags/", ref)]
+
+        } else if (paste0("refs/heads/", ref) %in% refs$refs$ref) {
+          refs$refs$hash[refs$refs$ref == paste0("refs/heads/", ref)]
+
+        } else if (any(startsWith(refs$refs$hash, ref))) {
+          sha <- refs$refs$hash[startsWith(refs$refs$hash, ref)]
+          if (length(sha) > 1) {
+            throw(pkg_error(
+              "Found multiple git refs with prefix {.val {ref}}, it is ambiguous.",
+              "i" = "Matching git refs: {.val {sha}}.",
+              "i" = "Specify a longer prefix to choose a single git ref."
+            ))
+          }
+          sha
+
+        } else {
           throw(pkg_error(
-            "Unknown ref: {.val ref}.",
+            "Unknown git ref: {.val {ref}}.",
             .class = "git_proto_error_unknown_ref",
             .data = list(ref = ref, url = redact_url(url))
           ))
         }
-        sha <<- refs$refs$hash[refs$refs$ref == ref]
       })
 
   } else {

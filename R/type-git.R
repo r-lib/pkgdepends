@@ -5,7 +5,7 @@ parse_remote_git <- function(specs, config, ...) {
   cn <- setdiff(colnames(pds), c(".match", ".text"))
   pds <- pds[, cn]
   pds$type <- "git"
-  pds$dotgit <- sub("^.*[.]git$", ".git", pds$repo)
+  pds$dotgit <- if (grepl("[.]git$", pds$repo)) ".git" else ""
   pds$repo <- sub("[.]git$", "", pds$repo)
   pds$package <- ifelse(nzchar(pds$package), pds$package, pds$repo)
   pds$url <- paste0(pds$protocol, "://", pds$host, pds$path, pds$repo, pds$dotgit)

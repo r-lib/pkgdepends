@@ -10,6 +10,7 @@
 #' - `type_bioc`: A `bioc::` package reference.
 #' - `type_standard`: A `standard::` package reference.
 #' - `type_github`: A `github::` package reference.
+#' - `type_git`: A `git::` package reference.
 #' - `type_local`: A `local::` package reference.
 #' - `type_deps`: A `deps::` package reference.
 #' - `type_installed`: An `installed::` package reference.
@@ -30,6 +31,7 @@ pkg_rx <- function() {
     type_bioc        = standard_rx("bioc"),
     type_standard    = standard_rx("standard"),
     type_github      = github_rx(),
+    type_git         = git_rx(),
     type_local       = local_rx(),
     type_deps        = type_deps_rx(),
     type_installed   = type_installed_rx(),

@@ -25,7 +25,8 @@ test_that("resolve_remote", {
 
   expect_snapshot(
     as.list(res[, intersect(names(res), cols)]),
-    transform = transform_local_port
+    transform = transform_local_port,
+    variant = paste0("pillar-", packageVersion("pillar"))
   )
 
   # Bioc package as standard package --------------------------------------
@@ -57,7 +58,8 @@ test_that("resolve_remote", {
 
   expect_snapshot(
     as.list(res[, intersect(names(res), cols)]),
-    transform = transform_local_port
+    transform = transform_local_port,
+    variant = paste0("pillar-", packageVersion("pillar"))
   )
 })
 

@@ -22,7 +22,10 @@ stop <- function(..., call. = TRUE, domain = NA) {
   .hide_from_trace <- TRUE
   args <- list(...)
   if (length(args) == 1L && inherits(args[[1L]], "condition")) {
-    throw(args[[1]])
+    throw(
+      add_class(args[[1]], c("rlib_error_3_0", "rlib_error"), "end"),
+      frame = parent.frame()
+    )
   } else {
     throw(new_error(..., call. = call., domain = domain))
   }

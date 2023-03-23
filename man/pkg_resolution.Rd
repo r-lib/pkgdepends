@@ -81,8 +81,10 @@ This is a list column.
 repository.
 \item \code{sha256}: SHA256 hash of the package file, if available, otherwise
 \code{NA}.
-\item \code{sources}: URLs where this package can be downloaded from. This is a
-zero length vector for \verb{installed::} refs.
+\item \code{sources}: URLs where this package can be downloaded from. This is not
+necessarily a URL that you can download with a HTTP client. E.g. for
+\verb{local::} refs it is a path, and for \verb{git::} refs it is a URL for git.
+It is a zero length vector for \verb{installed::} refs.
 \item \code{status}: status of the dependency resolution, \code{"OK"} or \code{"FAILED"}.
 \item \code{target}: path where this package should be saved in a CRAN-repository.
 \item \code{type}: ref type.

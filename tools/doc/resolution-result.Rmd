@@ -32,8 +32,10 @@
   repository.
 * `sha256`: SHA256 hash of the package file, if available, otherwise
   `NA`.
-* `sources`: URLs where this package can be downloaded from. This is a
-   zero length vector for `installed::` refs.
+* `sources`: URLs where this package can be downloaded from. This is not
+   necessarily a URL that you can download with a HTTP client. E.g. for
+   `local::` refs it is a path, and for `git::` refs it is a URL for git.
+   It is a zero length vector for `installed::` refs.
 * `status`: status of the dependency resolution, `"OK"` or `"FAILED"`.
 * `target`: path where this package should be saved in a CRAN-repository.
 * `type`: ref type.

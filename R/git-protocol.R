@@ -76,7 +76,6 @@ NULL
 #' ```{r git-list-refs-2, cache = TRUE}
 #' git_list_refs("https://gitlab.com/Linaro/tuxmake.git", "HEAD")
 #' git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
-#' git_list_refs("https://try.gitea.io/ferris/gitea.git", "HEAD")
 #' git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
 #' ```
 
@@ -97,8 +96,11 @@ async_git_list_refs <- function(url, prefixes = NULL) {
 #' List files in a remote git repository
 #'
 #' @inheritParams git_list_refs
-#' @param ref Either a SHA or a ref name. See [git_list_refs()] for how
-#'   branches, tags and GitHub pull requests are named.
+#' @param ref Either a SHA or a ref name. It may also be a branch name
+#'   without the `refs/heads` prefix, or a partial (but unique) SHA of
+#'   at least seven hexadecimal digits.
+#'   See [git_list_refs()] for how branches, tags and GitHub pull
+#'   requests are named.
 #' @return A list with entries:
 #'   * `ref`: The `ref` the function was called with.
 #'   * `sha`: SHA of `ref`.
@@ -128,16 +130,42 @@ async_git_resolve_ref <- function(url, ref) {
   sha <- ref
 
   if (!grepl("^[0-9a-f]{40}$", ref)) {
-    async_git_list_refs(url, ref)$
+    # Only use 'ref' as a filter if it is not a sha prefix of at least 7 chars
+    filt <- if (nchar(ref) < 7 || ! grepl("^[0-9a-f]+$", ref)) {
+      paste0(c("", "refs/heads/", "refs/tags/"), ref)
+    }
+    async_git_list_refs(url, filt)$
       then(function(refs) {
-        if (!ref %in% refs$refs$ref) {
+        if (ref %in% refs$refs$ref) {
+          refs$refs$hash[refs$refs$ref == ref]
+
+        } else if (paste0("refs/tags/", ref) %in% refs$refs$ref) {
+          refs$refs$hash[refs$refs$ref == paste0("refs/tags/", ref)]
+
+        } else if (paste0("refs/heads/", ref) %in% refs$refs$ref) {
+          refs$refs$hash[refs$refs$ref == paste0("refs/heads/", ref)]
+
+        } else if (any(startsWith(refs$refs$hash, ref))) {
+          sha <- refs$refs$hash[startsWith(refs$refs$hash, ref)]
+          if (length(sha) > 1) {
+            throw(pkg_error(
+              "Found multiple git refs with prefix {.val {ref}}, it is ambiguous.",
+              "i" = "Matching git refs: {.val {sha}}.",
+              "i" = "Specify a longer prefix to choose a single git ref."
+            ))
+          }
+          sha
+
+        } else {
           throw(pkg_error(
-            "Unknown ref: {.val ref}.",
+            "Unknown git ref: {.val {ref}}.",
+            "i" = if (grepl("^[0-9a-f]+$", ref)) {
+              "If you want to specify a SHA prefix, then use at least 7 hexa digits."
+             },
             .class = "git_proto_error_unknown_ref",
             .data = list(ref = ref, url = redact_url(url))
           ))
         }
-        sha <<- refs$refs$hash[refs$refs$ref == ref]
       })
 
   } else {
@@ -249,8 +277,10 @@ async_git_download_file <- function(url, sha, output = sha) {
         ))
         # nocov end
       }
-      mkdirp(dirname(output))
-      writeBin(packfile[[1]]$raw, output)
+      if (!is.null(output)) {
+        mkdirp(dirname(output))
+        writeBin(packfile[[1]]$raw, output)
+      }
       invisible(packfile[[1]])
     })
 }
@@ -879,7 +909,19 @@ async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
   # key = 1*(ALPHA | DIGIT | "-_")
   # value = 1*(ALPHA | DIGIT | " -_.,?\/{}[]()<>!@#$%^&*+=:;")
 
-  if (is.null(psd[[3]]$text) || psd[[3]]$text != "version 2") {
+  if (is.null(psd[[3]]$text)) {
+    throw(pkg_error(
+      "Invalid git protocol message from {.url {url}}."
+    ))
+  }
+  if (is.na(psd[[3]]$text)) {
+    throw(pkg_error(
+      "Only git protocol version 2 is supported.",
+      "i" = "{.url {url}} seems to support version 1 only.",
+      .class = "git_proto_error_not_implemented"
+    ))
+  }
+  if (psd[[3]]$text != "version 2") {
     throw(pkg_error(
       "Only git protocol version 2 is supported, not {psd[[3]]$text}.",
       .class = "git_proto_error_not_implemented"

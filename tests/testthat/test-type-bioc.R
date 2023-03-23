@@ -53,7 +53,8 @@ test_that("failed resolution", {
 
   expect_snapshot(
     as.list(res),
-    transform = function(x) transform_local_port(transform_bioc_version(x))
+    transform = function(x) transform_local_port(transform_bioc_version(x)),
+    variant = paste0("pillar-", packageVersion("pillar"))
   )
 })
 

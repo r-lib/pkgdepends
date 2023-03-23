@@ -19,7 +19,7 @@ test_that("git_list_files", {
       "https://github.com/gaborcsardi/pak-test.git",
       "foobar"
     ),
-    "Unknown ref"
+    "Unknown git ref"
   )
   if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
   expect_snapshot({

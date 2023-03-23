@@ -1,5 +1,8 @@
 # pkgdepends (development version)
 
+* pkgdepends now support git repositories as package references. E.g.
+  `git::https://github.com/r-lib/pak.git`.
+
 # pkgdepends 0.4.0
 
 * pkgdepends has much improved and more informative error messages now.

@@ -21,6 +21,7 @@ Currently included:
 \item \code{type_bioc}: A \verb{bioc::} package reference.
 \item \code{type_standard}: A \verb{standard::} package reference.
 \item \code{type_github}: A \verb{github::} package reference.
+\item \code{type_git}: A \verb{git::} package reference.
 \item \code{type_local}: A \verb{local::} package reference.
 \item \code{type_deps}: A \verb{deps::} package reference.
 \item \code{type_installed}: An \verb{installed::} package reference.

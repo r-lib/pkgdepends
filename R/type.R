@@ -19,6 +19,12 @@ default_remote_types <- function() {
       download = download_remote_standard,
       satisfy = satisfy_remote_standard,
       installedok = installedok_remote_standard),
+    git = list(
+      parse = parse_remote_git,
+      resolve = resolve_remote_git,
+      download = download_remote_git,
+      satisfy = satisfy_remote_git,
+      installedok = installedok_remote_git),
     github = list(
       parse = parse_remote_github,
       resolve = resolve_remote_github,

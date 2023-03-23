@@ -744,13 +744,25 @@ installed_note <- function(pkg) {
            "@", substr(meta[["RemoteSha"]], 1, 7), ")")
   }
 
+  git_note <- function() {
+    meta <- pkg$metadata[[1]]
+    paste0(
+      "(git::",
+      meta[["RemoteUrl"]],
+      "@",
+      substr(meta[["RemoteSha"]], 1, 7),
+      ")"
+    )
+  }
+
   switch(
     pkg$type,
     cran = "",
     bioc = "(Bioconductor)",
     standard = "",
     local = "(local)",
-    github = github_note()
+    github = github_note(),
+    git = git_note()
   )
 }
 

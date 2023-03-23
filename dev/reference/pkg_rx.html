@@ -73,6 +73,7 @@ base::grep()."><meta name="robots" content="noindex"><!-- mathjax --><script src
 <li><p><code>type_bioc</code>: A <code>bioc::</code> package reference.</p></li>
 <li><p><code>type_standard</code>: A <code>standard::</code> package reference.</p></li>
 <li><p><code>type_github</code>: A <code>github::</code> package reference.</p></li>
+<li><p><code>type_git</code>: A <code>git::</code> package reference.</p></li>
 <li><p><code>type_local</code>: A <code>local::</code> package reference.</p></li>
 <li><p><code>type_deps</code>: A <code>deps::</code> package reference.</p></li>
 <li><p><code>type_installed</code>: An <code>installed::</code> package reference.</p></li>
@@ -98,6 +99,9 @@ base::grep()."><meta name="robots" content="noindex"><!-- mathjax --><script src
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $type_github</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:github::)?(?&lt;username&gt;(?:[a-zA-Z\\d](?:[a-zA-Z\\d-]){0,38}))/(?&lt;repo&gt;[^/@#]+)(?:/(?&lt;subdir&gt;(?:[^@#]*[^@#/])/?))?(?:(?:(?:@(?&lt;commitish&gt;[^*].*)))|(?:(?:#(?&lt;pull&gt;[0-9]+)))|(?:(?:@(?&lt;release&gt;[*]release))))?$"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $type_git</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?:git::)(?:(?&lt;protocol&gt;[^/]*)://)?(?&lt;host&gt;[^/]+)(?&lt;path&gt;[^@]*/)(?&lt;repo&gt;[^/@]*)(?:@(?&lt;commitish&gt;.*))?"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $type_local</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "^(?:(?&lt;package&gt;[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9])=)?(?|local::(?&lt;path&gt;.*)|(?&lt;path&gt;(?:/|\\\\|~|[.]/|[.]\\\\|[.]$).*))$"</span>

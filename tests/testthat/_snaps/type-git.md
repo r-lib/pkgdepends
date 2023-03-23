@@ -472,12 +472,7 @@
       [1] "miss"
       
       attr(,"metadata")
-      attr(,"metadata")$resolution_start
-      [1] "2023-03-23 13:54:37 CET"
-      
-      attr(,"metadata")$resolution_end
-      [1] "2023-03-23 13:54:40 CET"
-      
+      named list()
 
 # download_remote_git
 

@@ -14,11 +14,14 @@ test_that("parse_remote_git", {
 test_that("resolve_remote_git", {
   skip_on_cran()
   setup_fake_apps()
-  prop <- new_pkg_installation_proposal("git::https://github.com/r-lib/cli@v3.6.0")
+  prop <- suppressMessages(new_pkg_installation_proposal(
+    "git::https://github.com/r-lib/cli@v3.6.0",
+    config = list(library = tempfile())
+  ))
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
-  attr(res, "metadata")$resolution_start <- .POSIXct(1679576077)
-  attr(res, "metadata")$resolution_end <- .POSIXct(1679576080)
+  attr(res, "metadata")$resolution_start <- NULL
+  attr(res, "metadata")$resolution_end <- NULL
   expect_snapshot(as.list(res))
 })
 

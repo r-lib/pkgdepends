@@ -38,7 +38,6 @@ download_remote_git <- function(resolution, target, target_tree,
   url <- git_auth_url(resolution$remote[[1]])
   sha <- resolution$metadata[[1]][["RemoteSha"]]
   pkgdir <- file.path(target_tree, resolution$package)
-  # TODO: remove pkgdir if the download fails?
   mkdirp(pkgdir)
   async_git_download_repo(url, ref = sha, output = pkgdir)$
     then(function() {
@@ -48,13 +47,48 @@ download_remote_git <- function(resolution, target, target_tree,
 
 satisfy_remote_git <- function(resolution, candidate,
                                config, ...) {
-  # TODO
-  FALSE
+  ## 1. package name must match
+  if (resolution$package != candidate$package) {
+    return(structure(FALSE, reason = "Package names differ"))
+  }
+
+  ## 2. installed ref is good, if it has the same sha
+  if (candidate$type == "installed") {
+    want_reinst <- is_true_param(resolution$params[[1]], "reinstall")
+    if (want_reinst) {
+      return(structure(FALSE, reason = "Re-install requested"))
+    }
+    sha1 <- candidate$extra[[1]][["remotesha"]] %||% NA_character_
+    sha2 <- resolution$extra[[1]][["remotesha"]] %||% NA_character_
+    ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)
+    if (!ok) {
+      return(structure(FALSE, reason = "Installed package sha mismatch"))
+    } else {
+      return(TRUE)
+    }
+  }
+
+  ## 3. local packages satisfy a git remote
+  ## See https://github.com/r-lib/pkgdepends/issues/229
+  if (candidate$type == "local") {
+    return (TRUE)
+  }
+
+  ## 3. other refs are also good, as long as they have the same sha
+  sha1 <- (if (is.list(candidate$extra[[1]]))candidate$extra[[1]][["remotesha"]]) %||% NA_character_
+  sha2 <- resolution$extra[[1]][["remotesha"]] %||% NA_character_
+  ok <- is_string(sha1) && is_string(sha2) && same_sha(sha1, sha2)
+  if (!ok) {
+    return(structure(FALSE, reason = "Candidate package sha mismatch"))
+  } else {
+    return(TRUE)
+  }
 }
 
 installedok_remote_git <- function(installed, solution, config, ...) {
-  # TODO
-  FALSE
+  identical(installed$package, solution$package) &&
+    identical(installed$version, solution$version) &&
+    identical(installed[["remotesha"]], solution$metadata[[1]][["RemoteSha"]])
 }
 
 # -------------------------------------------------------------------------

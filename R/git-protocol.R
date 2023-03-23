@@ -76,7 +76,6 @@ NULL
 #' ```{r git-list-refs-2, cache = TRUE}
 #' git_list_refs("https://gitlab.com/Linaro/tuxmake.git", "HEAD")
 #' git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
-#' git_list_refs("https://try.gitea.io/ferris/gitea.git", "HEAD")
 #' git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
 #' ```
 

@@ -39,6 +39,7 @@ We will discuss each in detail below.
 \item \code{bioc}: a Bioconductor package.
 \item \code{standard}: a package from a configured CRAN-like repository.
 \item \code{github}: a package from GitHub.
+\item \code{git}: a package in a git repository.
 \item \code{local}: a local package file or directory.
 \item \code{url}: an URL that points to a package archive.
 \item \code{installed} an installed package.
@@ -92,6 +93,10 @@ then you need to specify the package name explicitly, using a
 \verb{<package>=} prefix. E.g. \code{pins=rstudio/pins-r}. If you specify both the
 package source type and the package name, the package name comes first:
 \code{pins=github::rstudio/pins-r}.
+\item For \verb{git::} dependencies, pkgdepends assumes that the package
+name is the same as the last component of the repository. If this does not
+hold, then you need to specify the package name explicitly, using a
+\verb{<package>=} prefix. E.g. \verb{pins=git::https://github.com/rstudio/pins-r}.
 \item For \verb{local::} dependencies, you always need to specify the package name
 explicitly. E.g. \verb{pins=local::~/works/pins}.
 \item For \verb{url::} dependencies, you always need to specify the package name
@@ -145,12 +150,12 @@ is requested from a CRAN-like repository. For package installations
 \code{reinstall} parameter. This parameter is supported for \verb{bioc::}, \verb{cran::}
 and \verb{standard::} remote types, and it is ignored for others.
 \item \code{reinstall} requests a re-install for package installations. It is
-supported by the \verb{bioc::}, \verb{cran::}, \verb{github::}, \verb{local::}, \verb{standard::},
-and \verb{url::} remote types.
+supported by the \verb{bioc::}, \verb{cran::}, \verb{git::}, \verb{github::}, \verb{local::},
+\verb{standard::}, and \verb{url::} remote types.
 \item \code{nocache} will ignore the package cache. It will always download the
 package file, and it will not add the downloaded (and built) package(s)
-to the package cache. It is supported by the \verb{bioc::}, \verb{cran::}, \verb{github::},
-\verb{standard::} and \verb{url::} remote types.
+to the package cache. It is supported by the \verb{bioc::}, \verb{cran::}, \verb{git::},
+\verb{github::}, \verb{standard::} and \verb{url::} remote types.
 }
 }
 
@@ -254,6 +259,39 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 
 A GitHub remote string can also be used instead of an URL, for example:
 \code{git@github.com:r-lib/pak.git}
+}
+
+\subsection{Packages in git repositories (\verb{git::})}{
+
+Full syntax:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=]github::https?://<host>[<detail>]
+}\if{html}{\out{</div>}}
+\itemize{
+\item \verb{<package>} is the name of the package. If this is missing, then
+the last component of the \verb{<host>} is used.
+\item \verb{<host>} host name and path of the git repository. Some git repositories
+need the \code{.git} suffix here, others are more forgiving.
+\item \verb{<detail>} specifies a certain version of the package:
+a git branch, tag or (prefix of) a commit hash: \verb{@<commitish>}.
+}
+
+If \verb{<detail>} is missing, then the latest commit of the \emph{default}
+branch is used.
+
+Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{git::https://github.com/r-lib/crayon
+git::https://github.com/r-lib/crayon.git
+git::https://github.com/r-lib/crayon.git@84be6207
+git::https://github.com/r-lib/crayon.git@branch
+git::https://gitlab.com/gaborcsardi/cli.git
+}\if{html}{\out{</div>}}
+
+Currently pkgdepends only supports git servers that use
+version 2 of the git protocol.
+Most git servers do that, but there are some exceptions, a notable one is
+https://bitbucket.org/.
 }
 
 \subsection{Local packages (\verb{local::})}{

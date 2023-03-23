@@ -34,7 +34,61 @@ resolve_remote_git <- function(remote, direct, config, cache,
 download_remote_git <- function(resolution, target, target_tree,
                                 config, cache, which, on_progress) {
 
-  # TODO: cache
+  # This is similar to github
+
+  package <- resolution$package
+  sha <- resolution$extra[[1]][["remotesha"]] %||% NA_character_
+  need_vignettes <- which == "resolution"
+  nocache <- is_true_param(resolution$params[[1]], "nocache")
+  source <- is_true_param(resolution$params[[1]], "source")
+
+  # in case there is a leftover tree here
+  unlink(target_tree, recursive = TRUE)
+
+  ## 1. Check for a binary package
+
+  if (!nocache && !source) {
+    ptfm <- current_r_platform()
+    hit <- cache$package$copy_to(
+      target, package = package, sha256 = sha, built = TRUE,
+      platform = ptfm, rversion = current_r_version(),
+      .list = c(if (need_vignettes) c(vignettes = TRUE)))
+
+    if (nrow(hit)) {
+      return(paste("Had", ptfm)) # TODO: untested currently
+    }
+  }
+
+  ## 2. Check if we have a built package in the cache. We do not check the
+  ## ref or the type, so the package could have been built from a local
+  ## ref or from another repo. As long as the sha is the same, we are
+  ## fine. If we don't require vignetted, then a package with or without
+  ## vignettes is fine.
+
+  if (!nocache) {
+    hit <- cache$package$copy_to(
+      target, package = package, sha256 = sha, built = TRUE,
+      .list = c(if (need_vignettes) c(vignettes = TRUE)))
+    if (nrow(hit)) {
+      return("Had")
+    }
+  }
+
+  ## 3. Check if we have a repo snapshot in the cache.
+
+  rel_target <- resolution$target
+  if (!nocache) {
+    subdir <- resolution$remote[[1]]$subdir
+    hit <- cache$package$copy_to(
+      target_tree, package = package, sha256 = sha, built = FALSE)
+    if (nrow(hit)) {
+      "!DEBUG found GH zip for `resolution$ref`@`sha` in the cache"
+      return("Had")
+    }
+  }
+
+  ## 4. Need to download the repo
+
   url <- git_auth_url(resolution$remote[[1]])
   sha <- resolution$metadata[[1]][["RemoteSha"]]
   pkgdir <- file.path(target_tree, resolution$package)

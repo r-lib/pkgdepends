@@ -22,7 +22,10 @@ test_that("resolve_remote_git", {
   res <- prop$get_resolution()
   attr(res, "metadata")$resolution_start <- NULL
   attr(res, "metadata")$resolution_end <- NULL
-  expect_snapshot(as.list(res))
+  expect_snapshot(
+    as.list(res),
+    variant = paste0("pillar-", packageVersion("pillar"))
+  )
 })
 
 test_that("download_remote_git", {

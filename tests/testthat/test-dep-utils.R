@@ -6,7 +6,10 @@ test_that("pkg_dep_types_*", {
 })
 
 test_that("make_null_deps", {
-  expect_snapshot(make_null_deps())
+  expect_snapshot(
+    make_null_deps(),
+    variant = paste0("pillar-", packageVersion("pillar"))
+  )
 })
 
 test_that("parse_deps", {
@@ -35,18 +38,30 @@ test_that("parse_deps", {
 
   # base packages are not included
   expect_snapshot(parse_deps("foo, stats", "Imports"))
-  expect_snapshot(parse_deps("grid, stats", "Imports"))
+  expect_snapshot(
+    parse_deps("grid, stats", "Imports"),
+    variant = paste0("pillar-", packageVersion("pillar"))
+  )
 })
 
 test_that("parse_all_deps", {
   # edge cases
-  expect_snapshot(parse_all_deps(c(Imports = NA_character_)))
-  expect_snapshot(parse_all_deps(c(Imports = "grid")))
+  expect_snapshot(
+    parse_all_deps(c(Imports = NA_character_)),
+    variant = paste0("pillar-", packageVersion("pillar"))
+  )
+  expect_snapshot(
+    parse_all_deps(c(Imports = "grid")),
+    variant = paste0("pillar-", packageVersion("pillar"))
+  )
 
-  expect_snapshot(parse_all_deps(c(
-    Imports = "foo (>= 1.0.0), bar",
-    Suggests = "baz, foobaz (>= 2.0.0)"
-  )))
+  expect_snapshot(
+    parse_all_deps(c(
+      Imports = "foo (>= 1.0.0), bar",
+      Suggests = "baz, foobaz (>= 2.0.0)"
+    )),
+    variant = paste0("pillar-", packageVersion("pillar"))
+  )
 })
 
 test_that("resolve_ref_deps", {

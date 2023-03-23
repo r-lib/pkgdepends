@@ -82,7 +82,6 @@ download_remote_git <- function(resolution, target, target_tree,
     hit <- cache$package$copy_to(
       target_tree, package = package, sha256 = sha, built = FALSE)
     if (nrow(hit)) {
-      "!DEBUG found GH zip for `resolution$ref`@`sha` in the cache"
       return("Had")
     }
   }

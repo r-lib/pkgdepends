@@ -123,9 +123,15 @@ comma_wrap <- function(x, indent = 2, exdent = indent, sep = ", ") {
   paste(w, collapse = "\n")
 }
 
-add_class <- function(x, cl) {
-  class(x) <- c(cl, class(x))
-  x
+add_class <- function(obj, classes, where = c("start", "end")) {
+  where <- match.arg(where)
+  nc <- c(
+    if (where == "start") classes,
+    class(obj),
+    if (where == "end") classes
+  )
+  class(obj) <- unique(nc)
+  obj
 }
 
 is_na_scalar <- function(x) {

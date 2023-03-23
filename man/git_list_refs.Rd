@@ -181,7 +181,7 @@ git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
 #> $refs
 #>                         ref                                     hash
 #> 1                      HEAD db125acf2f96c7e1838ba889a683047acb7bb34b
-#> 2           refs/heads/i18n d62ac2844d35654712bc57a52c07b72290172a93
+#> 2           refs/heads/i18n d8a811087241e77833203cf0a85f5f85c556890c
 #> 3         refs/heads/master db125acf2f96c7e1838ba889a683047acb7bb34b
 #> 4    refs/tags/release-3.10 e1db1a011effeb7d16a5af9c15b91d8998579ad7
 #> 5 refs/tags/release-3.10^\{\} d16b7e7e849d5d63794b1c48847e8a57250ce2bd

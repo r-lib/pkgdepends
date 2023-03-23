@@ -142,8 +142,8 @@ style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream 
 \if{html}{\out{
 <pre>
 ## <span style="color: #2AA198;">ℹ</span> No downloads are needed, 1 pkg is cached                              
-## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.6.0.9000 (github::r-lib/cli@8d8a211) <span style="color: #a3a3a3;">(35ms)</span>           
-## <span style="color: #859900;">✔</span> Summary:  ✨ 1 new  in 35ms                                            
+## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.6.0.9000 (github::r-lib/cli@8d8a211) <span style="color: #a3a3a3;">(36ms)</span>           
+## <span style="color: #859900;">✔</span> Summary:  ✨ 1 new  in 36ms                                            
 </pre>
 }}
 \if{html}{\out{

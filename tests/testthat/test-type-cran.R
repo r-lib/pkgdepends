@@ -87,7 +87,9 @@ test_that("resolve an old version", {
 
   expect_snapshot({
     snapshot(res, extra = "all")
-  }, transform = function(x) transform_no_srcref(fix_port(x)))
+  }, transform = function(x) {
+    transform_etag(transform_hash(transform_no_srcref(fix_port(x))))
+  })
 
   prop <- new_pkg_installation_proposal("pkg1@1.0.0")
   suppressMessages(prop$resolve())

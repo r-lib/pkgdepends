@@ -12,6 +12,8 @@ parse_remote_cran <- function(specs, ...) {
   parsed_specs$ref <- parsed_specs$.text
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
   parsed_specs <- parsed_specs[, cn]
+  eq <- parsed_specs$atleast == "" & parsed_specs$version != ""
+  parsed_specs$atleast[eq] <- "=="
   parsed_specs$type <- "cran"
   lapply(
     seq_len(nrow(parsed_specs)),
@@ -115,10 +117,40 @@ type_cran_resolve_current <- function(remote, direct, config, cache,
 }
 
 type_cran_resolve_version <- function(remote, direct, config,
-                                      crancache, dependencies) {
-  throw(pkg_error(
-    "Versioned CRAN packages are not implemented yet.",
-    i = "This feature is tracked at
-     {.url https://github.com/r-lib/pak/issues/122}."
-  ))
+                                      cache, dependencies) {
+
+  if (remote$atleast == ">=") {
+    throw(pkg_error(
+      "Version ranges are not implemented yet."
+    ))
+  }
+
+  url_remote <- remote
+  url_remote$url <- paste0(
+    config$get("cran-mirror"),
+    "/src/contrib/Archive/", remote$package, "/",
+    remote$package, "_", remote$version, ".tar.gz"
+  )
+  url_remote$hash <- url_hash(paste0(remote$package, "=url::", remote$url))
+
+  resolve_remote_url(url_remote, direct, config, cache, dependencies)$
+    then(function(res) {
+      # Also resolve as the main package. This should not be needed,
+      # but we do it in case the package file is both in the main repo
+      # and Archive, or in case the binary version matches the requested
+      # one, which is typical shortly after a new release.
+      res$unknown_deps <- c(res$unknown_deps, remote$package)
+
+      # Metadata for standard::, not url::
+      res$metadata[["RemoteRef"]] <- remote$package
+      res$metadata[["RemoteRepos"]] <- config$get("cran-mirror")
+      res$metadata[["RemotePkgPlatform"]] <- "source"
+      res$metadata[["RemoteSha"]] <- remote$version
+      res
+    })$
+    catch(error = function(err) {
+      # if it is not in Archive, try the main package.
+      # This will fail if not the right vesion
+      resolve_from_metadata(remote, direct, config, cache, dependencies)
+    })
 }

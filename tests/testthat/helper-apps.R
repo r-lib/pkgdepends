@@ -567,6 +567,16 @@ transform_sha <- function(x) {
   gsub("[a-fA-F0-9]{64}", "<sha>", x)
 }
 
+transform_hash <- function(x) {
+  x <- gsub("[a-f0-9]{32}", "<hash>", x)
+  x <- gsub("[a-f0-9]{10}", "<hash>", x)
+  x
+}
+
+transform_etag <- function(x) {
+  sub("RemoteEtag: \"[a-z0-9]+\"", "RemoteEtag: \"<etag>\"", x)
+}
+
 transform_tempdir <- function(x) {
   x <- sub(tempdir(), "<tempdir>", x)
   x <- sub(normalizePath(tempdir()), "<tempdir>", x)

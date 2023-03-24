@@ -26,15 +26,15 @@ test_that("parse_pkg_refs, standard", {
     list("pkg",
          list(package = "pkg", atleast = "", version = "")),
     list("pkg@0.1-2",
-         list(package = "pkg", atleast = "", version = "0.1-2")),
+         list(package = "pkg", atleast = "==", version = "0.1-2")),
     list("pkg@>=2.9",
          list(package = "pkg", atleast = ">=", version = "2.9")),
     list("pkg@last",
-         list(package = "pkg", atleast = "", version = "last")),
+         list(package = "pkg", atleast = "==", version = "last")),
     list("standard::pkg",
          list(package = "pkg", atleast = "", version = "")),
     list("standard::pkg@0.1-2",
-         list(package = "pkg", atleast = "", version = "0.1-2"))
+         list(package = "pkg", atleast = "==", version = "0.1-2"))
   )
 
   expect_equal(
@@ -58,7 +58,7 @@ test_that("parse_pkg_refs, cran", {
     list("cran::pkg",
          list(package = "pkg", atleast = "", version = "")),
     list("cran::pkg@0.1-2",
-         list(package = "pkg", atleast = "", version = "0.1-2"))
+         list(package = "pkg", atleast = "==", version = "0.1-2"))
   )
 
   expect_equal(

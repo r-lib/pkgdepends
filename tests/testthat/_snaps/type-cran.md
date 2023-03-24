@@ -239,7 +239,7 @@
       + sources:
       http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
-      <remote_ref_cran/remote_ref/list> package: pkg1; atleast: ; version: current; ref: cran::pkg1@current; type: cran; params: 
+      <remote_ref_cran/remote_ref/list> package: pkg1; atleast: ==; version: current; ref: cran::pkg1@current; type: cran; params: 
       + error:
       -
       + metadata:
@@ -252,34 +252,42 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 1 x 30
+      # A data frame: 2 x 30
         ref        type     direct directpkg status package version license
         <chr>      <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-      1 pkg1@0.9.0 standard TRUE   TRUE      FAILED pkg1    <NA>    <NA>   
-        needscompilation priority md5sum sha256 filesize built platform rversion
-        <lgl>            <chr>    <chr>  <chr>     <int> <chr> <chr>    <chr>   
-      1 TRUE             <NA>     <NA>   <NA>         NA <NA>  source   *       
-        repotype repodir     target                     deps          mirror sources  
-        <chr>    <chr>       <chr>                      <list>        <chr>  <list>   
-      1 <NA>     src/contrib src/contrib/pkg1_NA.tar.gz <tbl [0 x 5]> <NA>   <chr [1]>
-        remote         error      metadata   extra      dep_types  params    sysreqs
-        <list>         <list>     <list>     <list>     <list>     <list>    <chr>  
-      1 <rmt_rf_s [6]> <async_rj> <list [0]> <list [0]> <list [0]> <chr [0]> <NA>   
-        cache_status
-        <chr>       
-      1 miss        
+      1 pkg1@0.9.0 standard TRUE   TRUE      OK     pkg1    0.9.0   <NA>   
+      2 pkg1       standard FALSE  TRUE      OK     pkg1    1.0.0   <NA>   
+        needscompilation priority md5sum sha256   filesize built platform rversion
+        <lgl>            <chr>    <chr>  <chr>       <int> <chr> <chr>    <chr>   
+      1 FALSE            <NA>     <NA>   <NA>           NA <NA>  source   *       
+      2 FALSE            <NA>     <md5>  <sha256>       42 <NA>  source   *       
+        repotype repodir     target                                   deps         
+        <chr>    <chr>       <chr>                                    <list>       
+      1 <NA>     src/contrib src/contrib/pkg1_0.9.0-<hash>.tar.gz <tbl [0 x 5]>
+      2 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz            <tbl [0 x 5]>
+        mirror                  sources   remote         error      metadata 
+        <chr>                   <list>    <list>         <list>     <list>   
+      1 <NA>                    <chr [1]> <rmt_rf_s [8]> <list [0]> <chr [8]>
+      2 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+        extra            dep_types params    sysreqs cache_status
+        <list>           <list>    <list>    <chr>   <chr>       
+      1 <named list [1]> <chr [3]> <chr [0]> ""      miss        
+      2 <list [0]>       <chr [3]> <chr [0]> <NA>    miss        
       + sources:
-      NA
+      http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz
+      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
-      <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: 0.9.0; ref: pkg1@0.9.0; type: standard; params: 
+      <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ==; version: 0.9.0; ref: pkg1@0.9.0; type: standard; params: ; url: http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz; hash: <hash>
+      <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: ; ref: pkg1; type: standard; params: 
       + error:
-      <async_rejected/rlib_error_3_0/rlib_error/error/condition> ! pkgdepends resolution error for pkg1@0.9.0.
-      Caused by error:
-      ! Versioned CRAN packages are not implemented yet.
-      i This feature is tracked at <https://github.com/r-lib/pak/issues/122>.
-      + metadata:
       -
+      -
+      + metadata:
+      RemotePkgRef: pkg1@0.9.0; RemoteType: standard; RemoteEtag: "<etag>"; RemotePackaged: TRUE; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 0.9.0
+      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
+      Depends, Imports, LinkingTo
+      Depends, Imports, LinkingTo
 
 ---
 
@@ -289,31 +297,29 @@
       # A data frame: 1 x 30
         ref        type     direct directpkg status package version license
         <chr>      <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-      1 pkg1@1.0.0 standard TRUE   TRUE      FAILED pkg1    <NA>    <NA>   
-        needscompilation priority md5sum sha256 filesize built platform rversion
-        <lgl>            <chr>    <chr>  <chr>     <int> <chr> <chr>    <chr>   
-      1 TRUE             <NA>     <NA>   <NA>         NA <NA>  source   *       
-        repotype repodir     target                     deps          mirror sources  
-        <chr>    <chr>       <chr>                      <list>        <chr>  <list>   
-      1 <NA>     src/contrib src/contrib/pkg1_NA.tar.gz <tbl [0 x 5]> <NA>   <chr [1]>
-        remote         error      metadata   extra      dep_types  params    sysreqs
-        <list>         <list>     <list>     <list>     <list>     <list>    <chr>  
-      1 <rmt_rf_s [6]> <async_rj> <list [0]> <list [0]> <list [0]> <chr [0]> <NA>   
-        cache_status
-        <chr>       
-      1 miss        
+      1 pkg1@1.0.0 standard TRUE   TRUE      OK     pkg1    1.0.0   <NA>   
+        needscompilation priority md5sum sha256   filesize built platform rversion
+        <lgl>            <chr>    <chr>  <chr>       <int> <chr> <chr>    <chr>   
+      1 FALSE            <NA>     <md5>  <sha256>       42 <NA>  source   *       
+        repotype repodir     target                        deps         
+        <chr>    <chr>       <chr>                         <list>       
+      1 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz <tbl [0 x 5]>
+        mirror                  sources   remote         error      metadata 
+        <chr>                   <list>    <list>         <list>     <list>   
+      1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+        extra      dep_types params    sysreqs cache_status
+        <list>     <list>    <list>    <chr>   <chr>       
+      1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
       + sources:
-      NA
+      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
-      <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: 1.0.0; ref: pkg1@1.0.0; type: standard; params: 
+      <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ==; version: 1.0.0; ref: pkg1@1.0.0; type: standard; params: 
       + error:
-      <async_rejected/rlib_error_3_0/rlib_error/error/condition> ! pkgdepends resolution error for pkg1@1.0.0.
-      Caused by error:
-      ! Versioned CRAN packages are not implemented yet.
-      i This feature is tracked at <https://github.com/r-lib/pak/issues/122>.
-      + metadata:
       -
+      + metadata:
+      RemoteType: standard; RemotePkgRef: pkg1@1.0.0; RemoteRef: pkg1@1.0.0; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
+      Depends, Imports, LinkingTo
 
 # resolve a version range
 
@@ -343,8 +349,7 @@
       + error:
       <async_rejected/rlib_error_3_0/rlib_error/error/condition> ! pkgdepends resolution error for pkg1@>=0.9.0.
       Caused by error:
-      ! Versioned CRAN packages are not implemented yet.
-      i This feature is tracked at <https://github.com/r-lib/pak/issues/122>.
+      ! Version ranges are not implemented yet.
       + metadata:
       -
       + dep_types:

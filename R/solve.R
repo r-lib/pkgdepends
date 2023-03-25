@@ -1151,7 +1151,7 @@ describe_solution_error <- function(pkgs, solution) {
   FAILS <- c("failed-res", "satisfy-direct", "conflict", "dep-failed",
              "old-rversion", "new-rvresion", "different-rversion",
              "matching-platform", "ignored-by-user", "binary-preferred",
-             "source-required")
+             "source-required", "installed-preferred")
 
   state <- rep("maybe-good", num)
   note <- replicate(num, NULL)
@@ -1175,6 +1175,11 @@ describe_solution_error <- function(pkgs, solution) {
   ign_vars <- unlist(var[typ == "source-required"])
   ign_vars <- intersect(ign_vars, which(state == "maybe-good"))
   state[ign_vars] <- "source-required"
+
+  ## Ruled out in favor of an installed package
+  ins_vars <- unlist(var[typ == "prefer-installed"])
+  ins_vars <- intersect(ins_vars, which(state == "maybe-good"))
+  state[ins_vars] <- "installed-preferred"
 
   ## Ruled out in favor of a binary package
   bin_vars <- unlist(var[typ %in% c("prefer-binary", "prefer-new-binary")])
@@ -1300,7 +1305,9 @@ format.pkg_solution_failures <- function(x, ...) {
 
   do <- function(i) {
     if (done[i]) return()
-    if (fails$failure_type[i] == "binary-preferred") return()
+    if (fails$failure_type[i] %in% c("installed-preferred", "binary-preferred")) {
+      return()
+    }
     done[i] <<- TRUE
     msgs <- unique(fails$failure_message[[i]])
 

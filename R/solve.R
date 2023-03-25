@@ -1319,7 +1319,10 @@ format.pkg_solution_failures <- function(x, ...) {
     }
 
     res <<- c(res, fail)
-    down <- which(fails$ref %in% fails$failure_down[[i]])
+    down <- which(
+      fails$package %in% fails$failure_down[[i]] |
+      fails$ref %in% fails$failure_down[[i]]
+    )
     lapply(down, do)
   }
 

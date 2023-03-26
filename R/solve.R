@@ -1284,7 +1284,7 @@ describe_solution_error <- function(pkgs, solution) {
   ## The rest is good
   state[state == "maybe-good"] <- "could-be"
 
-  wh <- state %in% FAILS
+  wh <- state %in% FAILS | (pkgs$direct & sol_pkg == 0)
   fails <- pkgs[wh, ]
   fails$failure_type <- state[wh]
   fails$failure_message <-  note[wh]
@@ -1312,9 +1312,11 @@ format.pkg_solution_failures <- function(x, ...) {
     msgs <- unique(fails$failure_message[[i]])
 
     fail <- paste0("* ", cli::style_bold(fails$ref[i]), ":")
-    if (length(msgs) == 1) {
+    if (length(msgs) == 0) {
+      fail <- paste0(fail, " ", "dependency conflict")
+    } else if (length(msgs) == 1) {
       fail <- paste0(fail, " ", msgs)
-    } else {
+    } else if (length(msgs) > 1) {
       fail <- paste0(fail, "\n", paste0("  * ", msgs, collapse = "\n"))
     }
 

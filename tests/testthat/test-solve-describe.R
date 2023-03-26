@@ -81,6 +81,11 @@ test_that("conflicting dependencies and installed packages", {
 
     Package: dplyr
     Version: 1.1.1
+
+    Package: foo
+    Imports: bar
+
+    Package: bar
   ")
 
   fake_gh <- webfakes::local_app_process(gh_app(gh))
@@ -88,6 +93,7 @@ test_that("conflicting dependencies and installed packages", {
   setup_fake_apps(cran_repo = cran)
 
   # -----------------------------------------------------------------------
+
   lib <- withr::local_tempdir()
 
   p <- new_pkg_installation_proposal(
@@ -100,6 +106,7 @@ test_that("conflicting dependencies and installed packages", {
 
   # -----------------------------------------------------------------------
   # fake an installed package
+
   dir.create(file.path(lib, "tidyr"))
   writeLines(c(
     "Package: tidyr",
@@ -120,8 +127,8 @@ test_that("conflicting dependencies and installed packages", {
     }
   )
 
-  # For the rest we need a better way to explain failures
-  skip("TODO")
+  # -----------------------------------------------------------------------
+  # cannot install anything, accoridng to the solver...
 
   local <- withr::local_tempdir()
   writeLines(c(
@@ -138,5 +145,26 @@ test_that("conflicting dependencies and installed packages", {
   )
   suppressMessages(p$resolve())
   suppressMessages(p$solve())
+  expect_snapshot(
+    p$get_solution()$failures,
+    transform = function(x) {
+      sub(paste0("local::.*", basename(local)), "local::<path>/<pkg>", x)
+    }
+  )
 
+  # -----------------------------------------------------------------------
+  # cannot install anything for some direct refs
+
+  p2 <- new_pkg_installation_proposal(
+    c(paste0("local::", local), "foo"),
+    config = list(library = lib)
+  )
+  suppressMessages(p2$resolve())
+  suppressMessages(p2$solve())
+  expect_snapshot(
+    p2$get_solution()$failures,
+    transform = function(x) {
+      sub(paste0("local::.*", basename(local)), "local::<path>/<pkg>", x)
+    }
+  )
 })

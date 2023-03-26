@@ -33,3 +33,17 @@
       * installed::<path>/tidyr: Can't install dependency dplyr (>= 1.0.10)
       * dplyr: Conflicts with cran/dplyr@1.0.9
 
+---
+
+    Code
+      p$get_solution()$failures
+    Output
+      * local::<path>/<pkg>: dependency conflict
+
+---
+
+    Code
+      p2$get_solution()$failures
+    Output
+      * local::<path>/<pkg>: dependency conflict
+

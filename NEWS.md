@@ -3,6 +3,10 @@
 * pkgdepends now support git repositories as package references. E.g.
   `git::https://github.com/r-lib/pak.git`.
 
+* pkgdepends now supports versioned CRAN packages, e.g. `dplyr@1.1.1` will
+  always install dplyr 1.1.1. Note that only CRAN packages are supported,
+  Bioconductor packages are not (yet).
+
 # pkgdepends 0.4.0
 
 * pkgdepends has much improved and more informative error messages now.

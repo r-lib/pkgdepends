@@ -11,6 +11,8 @@ parse_remote_bioc <- function(specs, config, ...) {
   parsed_specs$ref <- parsed_specs$.text
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
   parsed_specs <- parsed_specs[, cn]
+  eq <- parsed_specs$atleast == "" & parsed_specs$version != ""
+  parsed_specs$atleast[eq] <- "=="
   parsed_specs$type <- "bioc"
   lapply(
     seq_len(nrow(parsed_specs)),

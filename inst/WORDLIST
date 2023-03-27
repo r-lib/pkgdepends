@@ -20,6 +20,7 @@ cloneable
 config
 crandb
 devtools
+dplyr
 funder
 ggplot
 gitcreds

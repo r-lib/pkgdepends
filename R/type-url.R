@@ -8,7 +8,7 @@ parse_remote_url <- function(specs, config, ...) {
   cn <- setdiff(colnames(parsed_specs), c(".match", ".text"))
   parsed_specs <- parsed_specs[, cn]
   parsed_specs$type <- "url"
-  parsed_specs$hash <- vcapply(specs, function(x) cli::hash_obj_md5(x))
+  parsed_specs$hash <- vcapply(specs, url_hash)
   parsed_specs$package[parsed_specs$package == ""] <- NA_character_
 
   # Special case downloads from GH
@@ -142,6 +142,10 @@ type_url_rx <- function() {
     "(?<url>.*)",
     "$"
   )
+}
+
+url_hash <- function(x) {
+  cli::hash_obj_md5(x)
 }
 
 # E.g. url::https://github.com/r-lib/tidyselect/archive/main.tar.gz

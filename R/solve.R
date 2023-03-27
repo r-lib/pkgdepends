@@ -466,7 +466,9 @@ pkgplan_i_lp_satisfy_direct <-  function(lp) {
 
 pkgplan_i_lp_latest_direct <- function(lp) {
   pkgs <- lp$pkgs
-  dirpkgs <- unique(lp$pkgs$package[lp$pkgs$direct])
+  # these have version requirements
+  vreq <- vlapply(lp$pkgs$remote, function(r) !is.null(r$version) && r$version != "")
+  dirpkgs <- unique(lp$pkgs$package[lp$pkgs$direct & !vreq])
   for (pkg in dirpkgs) {
     cand <- which(
       pkgs$package == pkg &
@@ -735,8 +737,8 @@ format_cond <- function(x, cond) {
     glue("`{ref}` needs a different R version: {cond$note}")
 
   } else if (cond$type == "direct-update") {
-    ref <- x$pkgs$ref[cond$vars]
-    glue("`{ref}` is direct, needs latest version")
+    package <- x$pkgs$package[cond$vars]
+    glue("`{package}` is direct, needs latest version")
 
   } else if (cond$type == "choose-latest") {
     ref <- x$pkgs$ref[cond$vars]

@@ -467,7 +467,10 @@ pkgplan_i_lp_satisfy_direct <-  function(lp) {
 pkgplan_i_lp_latest_direct <- function(lp) {
   pkgs <- lp$pkgs
   # these have version requirements
-  vreq <- vlapply(lp$pkgs$remote, function(r) !is.null(r$version) && r$version != "")
+  vreq <- vlapply(
+    lp$pkgs$remote,
+    function(r) is.list(r) && !is.null(r$version) && r$version != ""
+  )
   dirpkgs <- unique(lp$pkgs$package[lp$pkgs$direct & !vreq])
   for (pkg in dirpkgs) {
     cand <- which(

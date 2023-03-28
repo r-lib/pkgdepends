@@ -28,6 +28,7 @@ test_that("resolve_remote", {
 
   res$md5sum <- "<md5sum>"
 
+  # If this fails then we need to update bioc-config.yaml in pkgcache
   expect_snapshot(
     as.list(res),
     transform = function(x) transform_local_port(transform_bioc_version(x)),

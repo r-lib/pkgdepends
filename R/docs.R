@@ -65,9 +65,10 @@ generate_config_docs <- function() {
 }
 
 doc_share_rmd <- function(rmd, rds) {
-  withr::local_envvar(THIS_IS_PAK = "true")
-  cmd <- paste0("```{r child=\"", rmd, "\"}\n```\n")
-  rd <- roxy_to_rd(cmd)
-  saveRDS(rd, rds, version = 2)
-  return("")
+  withr_with_envvar(c(THIS_IS_PAK = "true"), {
+    cmd <- paste0("```{r child=\"", rmd, "\"}\n```\n")
+    rd <- roxy_to_rd(cmd)
+    saveRDS(rd, rds, version = 2)
+    ""
+  })
 }

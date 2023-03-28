@@ -362,7 +362,7 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
   if (is_windows()) {
     zip_tool_path <- asNamespace("zip")$get_tool("zip")
     rtools <- get_rtools_path()
-    withr::local_path(
+    withr_local_path(
       paste0(
         dirname(zip_tool_path),
         .Platform$path.sep,
@@ -389,7 +389,7 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
   ## with_libpath() is needed for newer callr, which forces the current
   ## lib path in the child process.
   mkdirp(tmplib <- tempfile("pkg-lib"))
-  withr::with_libpaths(c(tmplib, lib), action = "prefix",
+  withr_with_libpaths(c(tmplib, lib), action = "prefix",
     pkgbuild_process$new(
       path, tmp_dir, binary = binary, vignettes = vignettes,
       needs_compilation = needscompilation, compile_attributes = FALSE,

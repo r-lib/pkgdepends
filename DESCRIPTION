@@ -35,7 +35,6 @@ Imports:
     rprojroot,
     stats,
     utils,
-    withr (>= 2.1.1),
     zip (>= 2.1.0)
 Remotes:
     r-lib/zip,
@@ -55,7 +54,8 @@ Suggests:
     spelling,
     testthat,
     tibble,
-    webfakes (>= 1.1.5.9000)
+    webfakes (>= 1.1.5.9000),
+    withr (>= 2.1.1),
 Config/Needs/coverage:
     covr,
     rmarkdown,

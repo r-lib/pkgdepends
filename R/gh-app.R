@@ -32,7 +32,9 @@ gr_response_headers_graphql <- function(upd = NULL) {
 
 make_dummy_zip <- function(commit) {
   mkdirp(tmp <- tempfile())
-  withr::local_dir(tmp)
+  old <- getwd()
+  on.exit(setwd(old), add = TRUE)
+  setwd(tmp)
   root <- paste0(commit$repo, "-", commit$branch)
   mkdirp(root)
   setwd(root)

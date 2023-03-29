@@ -336,9 +336,9 @@
         repotype repodir     target                     deps          mirror sources  
         <chr>    <chr>       <chr>                      <list>        <chr>  <list>   
       1 <NA>     src/contrib src/contrib/pkg1_NA.tar.gz <tbl [0 x 5]> <NA>   <chr [1]>
-        remote         error      metadata   extra      dep_types  params    sysreqs
-        <list>         <list>     <list>     <list>     <list>     <list>    <chr>  
-      1 <rmt_rf_s [6]> <async_rj> <list [0]> <list [0]> <list [0]> <chr [0]> <NA>   
+        remote         error      metadata   extra      dep_types params    sysreqs
+        <list>         <list>     <list>     <list>     <list>    <list>    <chr>  
+      1 <rmt_rf_s [6]> <async_rj> <list [0]> <list [0]> <chr [3]> <chr [0]> <NA>   
         cache_status
         <chr>       
       1 miss        
@@ -353,4 +353,5 @@
       + metadata:
       -
       + dep_types:
+      Depends, Imports, LinkingTo
 

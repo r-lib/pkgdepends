@@ -46,3 +46,33 @@ test_that("parse_remote_any", {
   suppressMessages(plan$download())
   suppressMessages(plan$install())
 })
+
+test_that("dep_types", {
+  setup_fake_apps()
+  pkgcache::pkg_cache_delete_files()
+  lib <- withr::local_tempdir()
+
+  plan <- suppressMessages(new_pkg_installation_proposal(
+    c("any::pkg3", "pkg3"),
+    config = list(library = lib, dependencies = TRUE)
+  ))
+  suppressMessages(plan$resolve())
+  plan$solve()
+  res <- plan$get_resolution()
+  res <- res[order(res$ref), ]
+  expect_snapshot(as.list(res[c("ref", "dep_types")]))
+  suppressMessages(plan$download())
+  suppressMessages(plan$install())
+
+  plan <- suppressMessages(new_pkg_installation_proposal(
+    c("any::pkg3", "pkg3"),
+    config = list(library = lib, dependencies = TRUE)
+  ))
+  suppressMessages(plan$resolve())
+  plan$solve()
+
+  res <- plan$get_resolution()
+  res <- res[order(res$ref), ]
+  res$ref <- sub("installed::.*pkg", "installed::<path>/pkg", res$ref)
+  expect_snapshot(as.list(res[c("ref", "dep_types")]))
+})

@@ -68,7 +68,7 @@ res_df_defaults <- local({
         metadata = list(list()),
         mirror   = NA_character_,
         extra    = list(list()),
-        dep_types= list(list()),
+        dep_types= list("default"),
         params   = list(character()),
         sysreqs  = NA_character_
       )

@@ -288,9 +288,14 @@ pkgdepends_config <- sort_by_name(list(
     docs =
       "Whether to automatically use the Bioconductor repositories.
        Defaults to `TRUE`."
-  )
+  ),
 
   # -----------------------------------------------------------------------
+  # Internal
+  goal = list(
+    type = "string",
+    default = "unknown"
+  )
 ))
 
 #' pkgdepends configuration

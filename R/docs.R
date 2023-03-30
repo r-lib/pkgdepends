@@ -44,9 +44,10 @@ roxy_to_rd <- function(text) {
 generate_config_docs <- function() {
 
   # for the dynamic help in pak
-  nms <- names(pkgdepends_config)
-  dcs <- lapply(pkgdepends_config, function(x) x[["docs_pak"]] %||% x[["docs"]])
-  inc <- vlapply(pkgdepends_config, function(x) x$pak %||% TRUE)
+  config <- Filter(function(x) !is.null(x$docs), pkgdepends_config)
+  nms <- names(config)
+  dcs <- lapply(config, function(x) x[["docs_pak"]] %||% x[["docs"]])
+  inc <- vlapply(config, function(x) x$pak %||% TRUE)
   nms <- nms[inc]
   dcs <- dcs[inc]
 
@@ -56,7 +57,7 @@ generate_config_docs <- function() {
   saveRDS(rd, outfile, version = 2)
 
   # for roxygen2 in pkgdepends
-  items <- map_named(pkgdepends_config, function(name, entry) {
+  items <- map_named(config, function(name, entry) {
     paste0("* `", name, "`: ", entry$docs)
   })
 

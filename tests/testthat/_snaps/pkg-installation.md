@@ -22,11 +22,12 @@
       sort(prop$get_config()$list())
     Output
        [1] "build_vignettes"       "cache_dir"             "cran_mirror"          
-       [4] "dependencies"          "library"               "metadata_cache_dir"   
-       [7] "metadata_update_after" "package_cache_dir"     "platforms"            
-      [10] "r_versions"            "sysreqs"               "sysreqs_dry_run"      
-      [13] "sysreqs_rspm_repo_id"  "sysreqs_rspm_url"      "sysreqs_sudo"         
-      [16] "sysreqs_verbose"       "use_bioconductor"      "windows_archs"        
+       [4] "dependencies"          "goal"                  "library"              
+       [7] "metadata_cache_dir"    "metadata_update_after" "package_cache_dir"    
+      [10] "platforms"             "r_versions"            "sysreqs"              
+      [13] "sysreqs_dry_run"       "sysreqs_rspm_repo_id"  "sysreqs_rspm_url"     
+      [16] "sysreqs_sudo"          "sysreqs_verbose"       "use_bioconductor"     
+      [19] "windows_archs"        
 
 ---
 

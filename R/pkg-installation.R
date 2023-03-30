@@ -98,6 +98,7 @@ pkg_installation_proposal <- R6::R6Class(
       policy = c("lazy", "upgrade"),
       remote_types = NULL) {
 
+      config$goal <- "install"
       policy <- match.arg(policy)
       assert_that(is_path(config$library))
       private$library <- config$library

@@ -59,6 +59,7 @@ pkg_installation_plan <- R6::R6Class(
       ) {
       assert_that(is_path(config$library))
       private$library <- config$library
+      config$goal <- "install"
       private$plan <- pkg_plan$new(
         lockfile = lockfile,
         config = config,

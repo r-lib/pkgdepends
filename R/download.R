@@ -246,16 +246,31 @@ download_ping_if_no_sha <- function(resolution, target, config, cache,
   if (is_true_param(resolution$params[[1]], "nocache")) {
     ## If the cache is ignored, then we just download it and put it
     ## at the right place
-    download_one_of(
-      resolution$sources[[1]], target, on_progress = on_progress
-    )$
+    return(
+      download_one_of(
+        resolution$sources[[1]], target, on_progress = on_progress
+      )$
       then(function() "Got")
+    )
+  }
 
-  } else  if (! "sha256" %in% names(resolution) || is.na(resolution$sha256)) {
+  if (!is_true_param(resolution$params[[1]], "source")) {
+    ## Try to find a binary in the cache
+    bin <- cache$package$copy_to(
+      target, package = resolution$package, version = resolution$version,
+      platform = current_r_platform()
+    )
+    if (nrow(bin)) {
+      return(async_constant("Had"))
+    }
+  }
+
+  if (! "sha256" %in% names(resolution) || is.na(resolution$sha256)) {
+    ## Otherwise we need to ping or download a source package
     ## If we don't know the hash of the CRAN package, then just download
     ## it. This happens if there is some discrepancy between the package
     ## data and the metadata.
-    cache$package$async_copy_or_add(
+    cache$package$async_update_or_add(
       target, resolution$sources[[1]], path = resolution$target,
       package = resolution$package, version = resolution$version,
       platform = resolution$platform, on_progress = on_progress,

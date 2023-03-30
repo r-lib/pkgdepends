@@ -112,7 +112,16 @@ test_that("conflicting dependencies and installed packages", {
     "Package: tidyr",
     "Version: 1.0.0",
     "Imports: dplyr (>= 1.0.10)",
-    "Repository: CRAN"
+    "Repository: CRAN",
+    # need this on older windows, because pak matches archs on that
+    if (is_windows()) {
+      paste0(
+        "R ", getRversion(), "; ",
+        "i386+x86_64-w64-mingw32; ",
+        "2023-02-06 08:15:41 UTC; ",
+        "windows"
+      )
+    }
   ), file.path(lib, "tidyr", "DESCRIPTION"))
   p <- new_pkg_installation_proposal(
     c("cran/dm@1.0.0", "cran/dplyr@1.0.9"),

@@ -21,12 +21,13 @@
     Code
       sort(prop$get_config()$list())
     Output
-       [1] "build_vignettes"       "cache_dir"             "cran_mirror"          
-       [4] "dependencies"          "library"               "metadata_cache_dir"   
-       [7] "metadata_update_after" "package_cache_dir"     "platforms"            
-      [10] "r_versions"            "sysreqs"               "sysreqs_dry_run"      
-      [13] "sysreqs_rspm_repo_id"  "sysreqs_rspm_url"      "sysreqs_sudo"         
-      [16] "sysreqs_verbose"       "use_bioconductor"      "windows_archs"        
+       [1] "bioconductor_mirror"   "bioconductor_version"  "build_vignettes"      
+       [4] "cache_dir"             "cran_mirror"           "dependencies"         
+       [7] "library"               "metadata_cache_dir"    "metadata_update_after"
+      [10] "package_cache_dir"     "platforms"             "r_versions"           
+      [13] "sysreqs"               "sysreqs_dry_run"       "sysreqs_rspm_repo_id" 
+      [16] "sysreqs_rspm_url"      "sysreqs_sudo"          "sysreqs_verbose"      
+      [19] "use_bioconductor"      "windows_archs"        
 
 ---
 

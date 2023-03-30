@@ -34,6 +34,16 @@ Call \code{current_config()} to print the current configuration.
 }
 \section{Configuration entries}{
 \itemize{
+\item \code{bioconductor_mirror}: Bioconductor mirror. Defaults to the \code{repos} option if it
+contains a repository named \code{"BioCsoft"}. If that is not set
+then the \code{BioC_mirror} option and the \code{R_BIOC_MIRROR}
+environment variable are also consulted for compatibility with
+pkgcache. If none of these are set then \verb{https://bioconductor.org}
+is used.
+\item \code{bioconductor_version}: Bioconductor version to use. Defaults to the \code{R_BIOC_VERSION}
+environment variable, if set, for compatibility with pkgcache.
+If this is not set, then the it is the Bioconductor version that
+is appropriate for the current R version.
 \item \code{build_vignettes}: Whether to build vignettes for package trees.
 This is only used if the package is obtained from a package tree,
 and not from a source (or binary) package archive. By default

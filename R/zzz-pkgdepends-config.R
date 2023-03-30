@@ -1,4 +1,34 @@
 
+detect_bioc_mirror <- function() {
+  repos <- getOption("repos")
+  if ("BioCsoft" %in% names(repos)) {
+    mirror <- repos[["BioCsoft"]]
+    # e.g. https://bioconductor.org/packages/3.16/bioc
+    return(dirname(dirname(mirror)))
+  }
+
+  mirror <- getOption("BioC_mirror")
+  if (!is.null(mirror)) {
+    return(mirror)
+  }
+
+  mirror <- Sys.getenv("R_BIOC_MIRROR")
+  if (mirror != "") {
+    return(mirror)
+  }
+
+  "https://bioconductor.org"
+}
+
+detect_bioc_version <- function() {
+  # handles te R_BIOC_VERSION env var
+  as.character(pkgcache::bioc_version())
+}
+
+is_bioc_version <- function(x) {
+  is.na(package_version(x, strict = FALSE))
+}
+
 windows_archs <- function() c("prefer-x64", "both")
 
 default_windows_archs <- function() {
@@ -63,6 +93,41 @@ default_sysreqs_rspm_repo_id <- function() {
 
 pkgdepends_config <- sort_by_name(list(
   # -----------------------------------------------------------------------
+  bioconductor_mirror = list(
+    type = "string",
+    default = detect_bioc_mirror,
+    docs =
+      "Bioconductor mirror. Defaults to the `repos` option if it
+       contains a repository named `\"BioCsoft\"`. If that is not set
+       then the `BioC_mirror` option and the `R_BIOC_MIRROR`
+       environment variable are also consulted for compatibility with
+       pkgcache. If none of these are set then `https://bioconductor.org`
+       is used."
+  ),
+
+  # -----------------------------------------------------------------------
+  bioconductor_version = list(
+    type = "string",
+    default = detect_bioc_version,
+    check = is_bioc_version,
+    docs =
+      "Bioconductor version to use. Defaults to the `R_BIOC_VERSION`
+       environment variable, if set, for compatibility with pkgcache.
+       If this is not set, then the it is the Bioconductor version that
+       is appropriate for the current R version."
+  ),
+
+  # -----------------------------------------------------------------------
+  cache_dir = list(
+    type = "string",
+    default = detect_download_cache_dir,
+    docs =
+      "Directory to download the packages to. Defaults to a temporary
+       directory within the R session temporary directory, see
+       [base::tempdir()]."
+  ),
+
+  # -----------------------------------------------------------------------
   library = list(
     type = "string_or_null",
     docs =
@@ -74,16 +139,6 @@ pkgdepends_config <- sort_by_name(list(
     docs_pak =
       "Package library to install packages to. It is also used for
        already installed packages when considering dependencies."
-  ),
-
-  # -----------------------------------------------------------------------
-  cache_dir = list(
-    type = "string",
-    default = detect_download_cache_dir,
-    docs =
-      "Directory to download the packages to. Defaults to a temporary
-       directory within the R session temporary directory, see
-       [base::tempdir()]."
   ),
 
   # -----------------------------------------------------------------------

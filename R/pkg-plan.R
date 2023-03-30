@@ -143,6 +143,10 @@ pkgplan_init <- function(self, private, refs, config, library,
     )
   }
 
+  oldopts <- options(BioC_mirror = private$config$get("bioconductor_mirror"))
+  on.exit(options(oldopts), add = TRUE)
+  withr::local_envvar(R_BIOC_VERSION = private$config$get("bioconductor_version"))
+  
   private$cache <- list(
     metadata = pkgcache::cranlike_metadata_cache$new(
       replica_path = private$config$get("metadata_cache_dir"),

@@ -118,6 +118,16 @@ res_one_row_df <- function(l) {
   as_data_frame(l)
 }
 
+res_list_to_df <- function(reslist) {
+  unk <- unlist(lapply(reslist, "[[", "unknown_deps"))
+  df <- res_make_empty_df()
+  for (res in reslist) {
+    df <- res_add_df_entries(df, remove_entry(res, "unknown_deps"))
+  }
+  attr(df, "unknown_deps") <- unk
+  df
+}
+
 res_add_defaults <- function(df) {
   if (length(bad <- setdiff(res_df_must_have(), names(df)))) {
     throw(pkg_error(

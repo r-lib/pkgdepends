@@ -355,3 +355,14 @@
       + dep_types:
       Depends, Imports, LinkingTo
 
+# versioned cran
+
+    Code
+      prop$draw()
+    Output
+      local::<path>
+      +-pkg1 1.0.0 [new][bld][dl] (<size>)
+      \-pkg3 0.9.9 [new][bld][dl] (unknown size)
+      
+      Key:  [new] new | [dl] download | [bld] build
+

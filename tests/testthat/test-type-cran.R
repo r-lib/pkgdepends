@@ -170,7 +170,7 @@ test_that("versioned cran", {
   on.exit(unlink(c(tmp, lib), recursive = TRUE), add = TRUE)
   dsc$write(dsc_path)
   prop <- pkgdepends::new_pkg_deps(
-    dirname(dsc_path),
+    paste0("local::", dirname(dsc_path)),
     config = list(library = lib)
   )
   suppressMessages(prop$solve())

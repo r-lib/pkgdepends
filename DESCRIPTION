@@ -42,6 +42,7 @@ Suggests:
     debugme,
     fansi,
     fs,
+    gitcreds,
     htmlwidgets,
     mockery,
     pak,

@@ -6,9 +6,11 @@ pkg_build <- function(pkg, library = .libPaths()[1]) {
       "Cannot find package {.pkg {pkg}} in library at {.path {library}}."
     ))
   }
-  version <- desc::desc_get_field("Version", file = pkgdir)
-  rversion <- get_minor_r_version(getRversion())
   platform <- pkgcache::current_r_platform()
+  add_metadata(pkgdir, c(RemoteBuildPlatform = platform))
+  dsc <- desc::desc(file = pkgdir)
+  version <- dsc$get_field("Version")
+  rversion <- get_minor_r_version(getRversion())
 
   sys <- sysname()
   if (sys == "windows") {

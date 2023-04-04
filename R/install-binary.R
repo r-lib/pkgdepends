@@ -61,6 +61,8 @@ install_extracted_binary <- function(filename, lib_cache, pkg_cache, lib,
 
 #' @importFrom utils modifyList
 add_metadata <- function(pkg_path, metadata) {
+  if (!length(metadata)) return()
+
   ## During installation, the DESCRIPTION file is read and an package.rds
   ## file created with most of the information from the DESCRIPTION file.
   ## Functions that read package metadata may use either the DESCRIPTION

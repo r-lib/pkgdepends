@@ -13,12 +13,12 @@ pkg_build <- function(pkg, library = .libPaths()[1]) {
   sys <- sysname()
   if (sys == "windows") {
     install_md5_sums(pkg)
-    fn <- paste0(pkg, "_", "R", rversion, "_", version, ".zip")
+    fn <- paste0(pkg, "_", version, "_R", rversion, ".zip")
     zip::zip(fn, pkgdir, mode = "cherry-pick")
 
   } else {
     ext <- if (sys == "mac") ".tgz" else ".tar.gz"
-    fn <- paste0(pkg, "_", platform, "_", "R", rversion, "_", version, ext)
+    fn <- paste0(pkg, "_", version, "_", "R", rversion, "_", platform, ext)
     ffn <- file.path(normalizePath("."), fn)
     old <- getwd()
     on.exit(setwd(old), add = TRUE)

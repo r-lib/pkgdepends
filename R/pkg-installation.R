@@ -14,6 +14,7 @@
 
 new_pkg_installation_proposal <- function(refs, config = list(), ...) {
   config$library <- config$library %||% .libPaths()[[1]]
+  config$library <- path_norm(config$library)
   pkg_installation_proposal$new(refs, config = config, ...)
 }
 

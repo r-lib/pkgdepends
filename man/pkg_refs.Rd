@@ -265,7 +265,7 @@ A GitHub remote string can also be used instead of an URL, for example:
 
 Full syntax:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=]github::https?://<host>[<detail>]
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=]git::https?://<host>[<detail>]
 }\if{html}{\out{</div>}}
 \itemize{
 \item \verb{<package>} is the name of the package. If this is missing, then

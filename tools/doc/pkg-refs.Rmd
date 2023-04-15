@@ -259,7 +259,7 @@ A GitHub remote string can also be used instead of an URL, for example:
 Full syntax:
 
 ```
-[<package>=]github::https?://<host>[<detail>]
+[<package>=]git::https?://<host>[<detail>]
 ```
 
 - `<package>` is the name of the package. If this is missing, then

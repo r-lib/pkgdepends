@@ -7,6 +7,26 @@
   always install dplyr 1.1.1. Note that only CRAN packages are supported,
   Bioconductor packages are not (yet).
 
+* pkgdepends now has an alternative system requirements lookup
+  implementation. It supports Fedora and Debian systems as well, in
+  addition to Debian, Ubuntu, SUSE and RedHat derivatives.
+  You can switch to this implementation by setting the
+  `R_PKG_SYSREQS2` environment variable to `true`.
+
+* pkgdepends now does a better job looking up dependencies for
+  hand-selected dependency types. E.g. `dependencies = "LinkingTo"`.
+
+* pkgdepends now removed `?ignore`-d packages from dependencies, and
+  uses the correct version comparison for `?ignore-before.r`
+  (https://github.com/r-lib/actions/issues/708).
+
+* pkgdepends now does not fail for circular soft dependencies (#306).
+
+* pkgdepends now reports dependency solver failures better in some cases
+  (#305, https://github.com/r-lib/pak/issues/474).
+
+* pkgdepends now uses locally built CRAN binaries from the cache.
+
 # pkgdepends 0.4.0
 
 * pkgdepends has much improved and more informative error messages now.

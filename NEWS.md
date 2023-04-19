@@ -16,7 +16,7 @@
 * pkgdepends now does a better job looking up dependencies for
   hand-selected dependency types. E.g. `dependencies = "LinkingTo"`.
 
-* pkgdepends now removed `?ignore`-d packages from dependencies, and
+* pkgdepends now removes `?ignore`-d packages from dependencies, and
   uses the correct version comparison for `?ignore-before.r`
   (https://github.com/r-lib/actions/issues/708).
 

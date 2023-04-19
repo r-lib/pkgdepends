@@ -1,3 +1,5 @@
+# pkgdepends (development version)
+
 # pkgdepends 0.5.0
 
 * pkgdepends now support git repositories as package references. E.g.

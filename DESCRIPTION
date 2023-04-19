@@ -27,7 +27,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild (>= 1.0.2),
-    pkgcache (>= 2.0.0),
+    pkgcache (>= 2.1.0),
     prettyunits (>= 1.1.1),
     processx (>= 3.4.2),
     ps,
@@ -37,8 +37,6 @@ Imports:
     utils,
     withr (>= 2.1.1),
     zip (>= 2.3.0)
-Remotes:
-    r-lib/pkgcache
 Suggests:
     asciicast (>= 2.2.0.9000),
     covr,

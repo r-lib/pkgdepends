@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pkgdepends</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.4.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,11 +49,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="pkgdepends-development-version">pkgdepends (development version)<a class="anchor" aria-label="anchor" href="#pkgdepends-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="pkgdepends-050">pkgdepends 0.5.0<a class="anchor" aria-label="anchor" href="#pkgdepends-050"></a></h2><p class="text-muted">CRAN release: 2023-04-19</p>
 <ul><li><p>pkgdepends now support git repositories as package references. E.g. <code>git::https://github.com/r-lib/pak.git</code>.</p></li>
 <li><p>pkgdepends now supports versioned CRAN packages, e.g. <code>dplyr@1.1.1</code> will always install dplyr 1.1.1. Note that only CRAN packages are supported, Bioconductor packages are not (yet).</p></li>
 <li><p>pkgdepends now has an alternative system requirements lookup implementation. It supports Fedora and Debian systems as well, in addition to Debian, Ubuntu, SUSE and RedHat derivatives. You can switch to this implementation by setting the <code>R_PKG_SYSREQS2</code> environment variable to <code>true</code>.</p></li>
 <li><p>pkgdepends now does a better job looking up dependencies for hand-selected dependency types. E.g. <code>dependencies = "LinkingTo"</code>.</p></li>
-<li><p>pkgdepends now removed <code>?ignore</code>-d packages from dependencies, and uses the correct version comparison for <code>?ignore-before.r</code> (<a href="https://github.com/r-lib/actions/issues/708" class="external-link uri">https://github.com/r-lib/actions/issues/708</a>).</p></li>
+<li><p>pkgdepends now removes <code>?ignore</code>-d packages from dependencies, and uses the correct version comparison for <code>?ignore-before.r</code> (<a href="https://github.com/r-lib/actions/issues/708" class="external-link uri">https://github.com/r-lib/actions/issues/708</a>).</p></li>
 <li><p>pkgdepends now does not fail for circular soft dependencies (<a href="https://github.com/r-lib/pkgdepends/issues/306" class="external-link">#306</a>).</p></li>
 <li><p>pkgdepends now reports dependency solver failures better in some cases (<a href="https://github.com/r-lib/pkgdepends/issues/305" class="external-link">#305</a>, <a href="https://github.com/r-lib/pak/issues/474" class="external-link uri">https://github.com/r-lib/pak/issues/474</a>).</p></li>
 <li><p>pkgdepends now uses locally built CRAN binaries from the cache.</p></li>

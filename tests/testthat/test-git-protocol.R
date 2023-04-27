@@ -116,6 +116,7 @@ test_that("git_list_refs_v1", {
 })
 
 test_that("git_list_refs_v1_process_1", {
+  skip_on_cran()
   resp <- readRDS(test_path("fixtures", "git-response-v1.rds"))
   expect_snapshot(
     git_list_refs_v1_process_1(

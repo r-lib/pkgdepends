@@ -12,7 +12,8 @@
 ---
 
     Code
-      git_list_refs("https://github.com/gaborcsardi/pak-test.git", "refs/heads/")$refs
+      git_list_refs_v2("https://github.com/gaborcsardi/pak-test.git", "refs/heads/")$
+        refs
     Output
                       ref                                     hash
       1   refs/heads/main 3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
@@ -208,6 +209,119 @@
       [1] ".dynLibs()"          "pkgload::load_all()" ".dynLibs()"         
       [4] "gc()"                ".dynLibs()"          "pkgload::load_all()"
       [7] ".dynLibs()"          "gc()"                ".dynLibs()"         
+
+# git_fetch
+
+    Code
+      cat(pack[[1]]$object)
+    Output
+      tree aac34e05a0cb9852aa425757dc8480fa29c6c783
+      parent cb8e35b36f8096ef604eff80c70259c64b34f125
+      author Gábor Csárdi <csardi.gabor@gmail.com> 1639165496 +0100
+      committer Gábor Csárdi <csardi.gabor@gmail.com> 1639165496 +0100
+      
+      Just bumping
+
+# git_parse_message errors
+
+    Code
+      git_parse_message(raw(3))
+    Error <git_proto_error_invalid_data>
+      ! Invalid pkt-line at the enf of message from git.
+
+---
+
+    Code
+      git_parse_message(charToRaw("foobvar"))
+    Error <git_proto_error_invalid_data>
+      ! Invalid pkt-len field in message from git, must be four hexa digits.
+
+---
+
+    Code
+      git_parse_message(charToRaw("00bbnoteonugh"))
+    Error <git_proto_error_invalid_data>
+      ! Invalid pkt-payload in message from git.
+      i Need 187 bytes, found 13.
+
+# git_create_message_v1
+
+    Code
+      git_create_message_v1(character())
+    Error <rlib_error_3_0>
+      ! Invalid git protocol (v1) message, must have at least one argument
+
+# pkt_line
+
+    Code
+      pkt_line(raw(70000))
+    Error <rlib_error_3_0>
+      ! packet line longer than 65516 bytes is not implemented yet.
+
+# git_list_refs_v1
+
+    Code
+      git_list_refs_v1("https://github.com/gaborcsardi/pak-test.git")$refs
+    Output
+                      ref                                     hash
+      1              HEAD 3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
+      2   refs/heads/main 3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
+      3 refs/heads/subdir cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+      4      refs/tags/v1 cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+
+# git_list_refs_v1_process_1
+
+    Code
+      git_list_refs_v1_process_1(resp, "https://github.com/gaborcsardi/pak-test.git",
+        "refs/tags/v1")$refs
+    Output
+                 ref                                     hash
+      4 refs/tags/v1 cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+
+# async_git_list_refs_v2_process_1
+
+    Code
+      sy(async_git_list_refs_v2_process_1(resp,
+        "https://github.com/gaborcsardi/pak-test.git", "refs/tags/v1"))$refs
+    Output
+                 ref                                     hash
+      4 refs/tags/v1 cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+
+# async_git_list_refs_v2_process_2
+
+    Code
+      async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
+    Error <rlib_error_3_0>
+      ! Invalid git protocol message from <http://localhost:3000/git/cli>.
+
+---
+
+    Code
+      async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
+    Error <git_proto_error_not_implemented>
+      ! Only git protocol version 2 is supported, not version 10.
+
+---
+
+    Code
+      async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
+    Error <git_proto_error_unexpected_response>
+      ! Response from git server does not have a closing `flush-pkt`.
+
+---
+
+    Code
+      async_git_list_refs_v2_process_3(list(list(type = "data-pkt")), character(),
+      url)
+    Error <git_proto_error_unexpected_response>
+      ! Response from git server does not have a closing `flush-pkt`.
+
+# check_initial_response
+
+    Code
+      check_initial_response(list(), "http://localhost:3000/git/cli")
+    Error <git_proto_error_unexpected_response>
+      ! Unexpected response from git server, no `data-pkt` line.
 
 # git_unpack
 
@@ -477,4 +591,116 @@
       [1] "d4ef766204f3087d32148d714df664ae66eece82"
       
       
+
+# git_unpack errors
+
+    Code
+      git_unpack(pack[1:30])
+    Error <git_proto_error_invalid_data>
+      ! Invalid packfile from git, too short.
+
+---
+
+    Code
+      git_unpack(charToRaw("nope and some more so we have enough bytes"))
+    Error <git_proto_error_invalid_data>
+      ! Not a git packfile, it does not have a `PACK` header.
+
+---
+
+    Code
+      git_unpack(pack2)
+    Error <git_proto_error_unexpected_response>
+      ! Unexpected packfile version, must be version 2.
+
+---
+
+    Code
+      git_unpack(pack2)
+    Error <git_proto_error_invalid_data>
+      ! Checksum mismatch in git packfile.
+
+# parse_int32_nwb
+
+    Code
+      parse_int32_nwb(raw(3))
+    Error <rlib_error_3_0>
+      ! Cannot parse integer, not raw or number of bytes is wrong.
+
+# async_git_resolve_ref
+
+    Code
+      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git", "main"))
+    Output
+      [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
+      attr(,"protocol")
+      [1] 2
+
+---
+
+    Code
+      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git", "v1"))
+    Output
+      [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
+      attr(,"protocol")
+      [1] 2
+
+---
+
+    Code
+      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
+        "3f3b0b4ee8a0ff"))
+    Output
+      [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
+      attr(,"protocol")
+      [1] 2
+
+---
+
+    Code
+      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
+        "badcafe"))
+    Error <async_rejected>
+      ! Unknown git ref: "badcafe".
+
+---
+
+    Code
+      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
+        "badcafe"))
+    Error <async_rejected>
+      ! Found multiple git refs with prefix "badcafe", it is ambiguous.
+      i Matching git refs: "badcafe1" and "badcafe2".
+      i Specify a longer prefix to choose a single git ref.
+
+# git_fetch_process_v1
+
+    Code
+      git_fetch_process_v1(list(), url, "badcafe")
+    Error <rlib_error_3_0>
+      ! Empty reply from git server (protocol v1) at <https://<auth>@example.com>.
+
+---
+
+    Code
+      git_fetch_process_v1(list(list(type = "boo")), url, "badcafe")
+    Error <rlib_error_3_0>
+      ! No PACK in git server response (protocol v1) from <https://<auth>@example.com>.
+
+# git_download_repo
+
+    Code
+      dir(tmp, recursive = TRUE)
+    Output
+       [1] "v1/foo"                                
+       [2] "v1/subdir/dotenv/DESCRIPTION"          
+       [3] "v1/subdir/dotenv/LICENSE"              
+       [4] "v1/subdir/dotenv/NAMESPACE"            
+       [5] "v1/subdir/dotenv/NEWS.md"              
+       [6] "v1/subdir/dotenv/R/dotenv-package.r"   
+       [7] "v1/subdir/dotenv/README.Rmd"           
+       [8] "v1/subdir/dotenv/README.md"            
+       [9] "v1/subdir/dotenv/man/dotenv-package.Rd"
+      [10] "v1/subdir/dotenv/man/load_dot_env.Rd"  
+      [11] "v1/wipe.R"                             
 

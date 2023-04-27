@@ -105,6 +105,8 @@
       
       $sha
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
+      attr(,"protocol")
+      [1] 2
       
       $commit
                                                           tree 

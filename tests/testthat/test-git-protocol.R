@@ -60,6 +60,7 @@ test_that("git_fetch", {
     structure("cefdc0eebcd7f757efb9a80652fd8aaf1a87508e", protocol = "1")
   )
 
+  if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
   expect_snapshot(cat(pack[[1]]$object))
 })
 

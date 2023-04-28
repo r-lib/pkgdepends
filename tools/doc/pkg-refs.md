@@ -29,6 +29,7 @@ We will discuss each in detail below.
 \item \code{bioc}: a Bioconductor package.
 \item \code{standard}: a package from a configured CRAN-like repository.
 \item \code{github}: a package from GitHub.
+\item \code{gitlab}: a package from GitLab.
 \item \code{git}: a package in a git repository.
 \item \code{local}: a local package file or directory.
 \item \code{url}: an URL that points to a package archive.
@@ -77,10 +78,10 @@ it needs to be able to determine the name of the dependency from the
 package reference.
 This is sometimes not easy for dependencies in \code{Remotes} (or similar) fields.
 \itemize{
-\item For \verb{github::} dependencies pak assumes that the package
-name is the same as the name of the repository. If this does not hold,
-then you need to specify the package name explicitly, using a
-\verb{<package>=} prefix. E.g. \code{pins=rstudio/pins-r}. If you specify both the
+\item For \verb{github::} and \verb{gitlab::} dependencies pak assumes
+that the package name is the same as the name of the repository. If this
+does not hold, then you need to specify the package name explicitly, using
+a \verb{<package>=} prefix. E.g. \code{pins=rstudio/pins-r}. If you specify both the
 package source type and the package name, the package name comes first:
 \code{pins=github::rstudio/pins-r}.
 \item For \verb{git::} dependencies, pak assumes that the package
@@ -140,12 +141,12 @@ is requested from a CRAN-like repository. For package installations
 \code{reinstall} parameter. This parameter is supported for \verb{bioc::}, \verb{cran::}
 and \verb{standard::} remote types, and it is ignored for others.
 \item \code{reinstall} requests a re-install for package installations. It is
-supported by the \verb{bioc::}, \verb{cran::}, \verb{git::}, \verb{github::}, \verb{local::},
-\verb{standard::}, and \verb{url::} remote types.
+supported by the \verb{bioc::}, \verb{cran::}, \verb{git::}, \verb{github::}, \verb{gitlab::},
+\verb{local::}, \verb{standard::}, and \verb{url::} remote types.
 \item \code{nocache} will ignore the package cache. It will always download the
 package file, and it will not add the downloaded (and built) package(s)
 to the package cache. It is supported by the \verb{bioc::}, \verb{cran::}, \verb{git::},
-\verb{github::}, \verb{standard::} and \verb{url::} remote types.
+\verb{github::}, \verb{gitlab::}, \verb{standard::} and \verb{url::} remote types.
 }
 }
 
@@ -249,6 +250,32 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 
 A GitHub remote string can also be used instead of an URL, for example:
 \code{git@github.com:r-lib/pak.git}
+}
+
+\subsection{GitLab packages (\verb{gitlab::})}{
+
+Packages from a GitLab repository. Full syntax:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
+}\if{html}{\out{</div>}}
+\itemize{
+\item \verb{<package>} is the name of the package. If this is missing, then
+the name of the repository is used.
+\item \verb{<username>} is a GitLab username or group name.
+\item \verb{<repository>} is the name of the repository.
+\item \verb{<subdir>} optional subdirectory, if the package is within a
+subdirectory in the repository.
+\item \verb{<detail>} may specify a git branch, tag or (prefix of) a commit hash.
+}
+
+If \verb{<detail>} is missing, then the latest commit of the \emph{default}
+branch is used.
+
+Examples:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{gitlab::gaborcsardi/cli
+gitlab::r-hub/filelock@main
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Packages in git repositories (\verb{git::})}{
@@ -448,4 +475,3 @@ field, so you need to remove this field, before submitting your package
 to either of them.
 }
 }
-

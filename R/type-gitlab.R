@@ -27,6 +27,9 @@ resolve_remote_gitlab <- function(remote, direct, config, cache,
       res$metadata["RemoteRepo"] <- remote$repo
       res$metadata["RemoteUsername"] <- remote$username
       res$metadata["RemoteType"] <- "gitlab"
+      if (!is.null(remote$subdir) && remote$subdir != "") {
+        res$metadata["RemoteSubdir"] <- remote$subdir
+      }
       res
     })
 }

@@ -184,23 +184,29 @@ type_git_get_data <- function(remote) {
   sha <- NULL
   dsc <- NULL
   auth_url <- git_auth_url(remote)
+  desc_path <- if (is.null(remote$subdir) || remote$subdir == "") {
+    "DESCRIPTION"
+  } else {
+    paste0(remote$subdir, "/", "DESCRIPTION")
+  }
+
   async_git_list_files(auth_url, remote$commitish)$
     catch(error = function(err) {
       throw(pkg_error(
-        "Failed to download {.path DESCRIPTION} from git repo at {.url {remote$url}}."
+        "Failed to download {.path {desc_path}} from git repo at {.url {remote$url}}."
       ), parent = err)
     })$
     then(function(files) {
       sha <<- files$sha
-      desc_idx <- which(files$files$path == "DESCRIPTION")
+      desc_idx <- which(files$files$path == desc_path)
       if (length(desc_idx) == 0) {
         throw(pkg_error(
-          "Could not find {.path DESCRIPTION} in git repo at {.url {remote$url}}."
+          "Could not find {.path {desc_path}} in git repo at {.url {remote$url}}."
         ))
       }
       if (files$files$type[desc_idx] != "blob") {
         throw(pkg_error(
-          "{.path DESCRIPTION} is a directory in git repo at {.url {remote$url}}."
+          "{.path {desc_path}} is a directory in git repo at {.url {remote$url}}."
         ))
       }
       files$files$hash[desc_idx]
@@ -209,7 +215,7 @@ type_git_get_data <- function(remote) {
       async_git_download_file(auth_url, desc_hash, output = NULL)$
       catch(error = function(err) {
         throw(pkg_error(
-          "Failed to download {.path DESCRIPTION} from git repo at {.url {remote$url}}."
+          "Failed to download {.path {desc_path}} from git repo at {.url {remote$url}}."
         ), parent = err)
       })$
       then(function(desc_dl) {
@@ -217,7 +223,7 @@ type_git_get_data <- function(remote) {
       })$
       catch(error = function(err) {
         throw(pkg_error(
-          "Failed to parse {.path DESCRIPTION} from git repo at {.url {remote$url}}."
+          "Failed to parse {.path {desc_path}} from git repo at {.url {remote$url}}."
         ), parent = err)
       })
     })$

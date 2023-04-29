@@ -54,6 +54,9 @@ generate_config_docs <- function() {
   rd <- lapply(dcs, roxy_to_rd)
   outfile <- file.path("inst/docs/pak-config-docs.rds")
   cli::cli_alert_info("Writing {.path {outfile}}")
+  sink("tools/doc/pak-config-docs.md")
+  print(rd)
+  sink(NULL)
   saveRDS(rd, outfile, version = 2)
 
   # for roxygen2 in pkgdepends
@@ -66,9 +69,11 @@ generate_config_docs <- function() {
 }
 
 doc_share_rmd <- function(rmd, rds) {
+  md <- sub("[.]Rmd$", ".md", rmd)
   withr::local_envvar(THIS_IS_PAK = "true")
   cmd <- paste0("```{r child=\"", rmd, "\"}\n```\n")
   rd <- roxy_to_rd(cmd)
+  if (rmd != md) writeLines(rd, md)
   saveRDS(rd, rds, version = 2)
   return("")
 }

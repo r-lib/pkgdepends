@@ -93,7 +93,7 @@ pkgdepends_config <- sort_by_name(list(
     docs =
       "Whether to always include `LinkingTo` dependencies in the solution
        of and installation, even if they are needed because the packages
-       are installed from binaries. This is sometimes usefule, see e.g.
+       are installed from binaries. This is sometimes useful, see e.g.
        <https://github.com/r-lib/pak/issues/485> for an example use case."
   ),
 

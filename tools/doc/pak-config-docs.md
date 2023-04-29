@@ -8,7 +8,7 @@ $cran_mirror
 [1] "CRAN mirror to use. Defaults to the \\code{repos} option\n(see \\code{\\link[base:options]{base::options()}}), if that's not set then\n\\verb{https://cran.rstudio.com}. See also \\code{\\link[pak:repo_add]{pak::repo_add()}} and\n\\code{\\link[pak:repo_get]{pak::repo_get()}}"
 
 $include_linkingto
-[1] "Whether to always include \\code{LinkingTo} dependencies in the solution\nof and installation, even if they are needed because the packages\nare installed from binaries. This is sometimes usefule, see e.g.\n\\url{https://github.com/r-lib/pak/issues/485} for an example use case."
+[1] "Whether to always include \\code{LinkingTo} dependencies in the solution\nof and installation, even if they are needed because the packages\nare installed from binaries. This is sometimes useful, see e.g.\n\\url{https://github.com/r-lib/pak/issues/485} for an example use case."
 
 $library
 [1] "Package library to install packages to. It is also used for\nalready installed packages when considering dependencies."

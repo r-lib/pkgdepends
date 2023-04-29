@@ -467,7 +467,8 @@ gitcreds_env <- function() {
   c(
     GCM_INTERACTIVE = "Never",
     GCM_MODAL_PROMPT = "false",
-    GCM_VALIDATE = "false"
+    GCM_VALIDATE = "false",
+    GCM_GUI_PROMPT = "false"
   )
 }
 

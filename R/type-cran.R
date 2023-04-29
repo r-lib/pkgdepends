@@ -119,6 +119,20 @@ type_cran_resolve_current <- function(remote, direct, config, cache,
 type_cran_resolve_version <- function(remote, direct, config,
                                       cache, dependencies) {
 
+  remote; direct; config; cache; dependencies
+
+  # remote can be a list
+  if (!inherits(remote, "remote_ref")) {
+    return(async_map(
+      remote,
+      type_cran_resolve_version,
+      direct = direct,
+      config = config,
+      cache = cache,
+      dependencies = dependencies
+    )$then(function(reslist) res_list_to_df(reslist)))
+  }
+
   if (remote$atleast == ">=") {
     throw(pkg_error(
       "Version ranges are not implemented yet."

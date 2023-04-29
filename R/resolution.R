@@ -382,6 +382,7 @@ res__try_finish <- function(self, private, resolve) {
   if (all(! is.na(private$state$status))) {
     "!DEBUG resolution finished"
     update_params(self, private, private$params)
+    update_dep_types(self, private)
     private$metadata$resolution_end <- Sys.time()
     self$result$cache_status <-
       calculate_cache_status(self$result, private$cache)
@@ -420,36 +421,15 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
     remote, direct = direct, config = config, cache = cache,
     dependencies = dependencies
   )$
-  then(function(value) {
-      # if 'dep_types' was already added by the resolution of the remote
-      # type (like any::) then we just keep that. Otherwise calculate from
-      # 'dependencies'
-      if (is.null(value[["dep_types"]])) {
-        # remote is either direct or indirect dependency, depending on
-        # 'direct', and the rest are all indirect
-        if (NROW(value)) {
-          value[["dep_types"]] <- list(dependencies[[2]])
-          if (!is.null(remote$package)) {
-            value$dep_types[value$package == remote$package] <-
-              list(dependencies[[2 - direct]])
-          } else {
-            value$dep_types[value$ref == remote$ref] <-
-              list(dependencies[[2 - direct]])
-          }
-        } else {
-          value[["dep_types"]] <- list()
-        }
-      }
-      list(value = value, id = id)
-  })$
-    catch(error = function(err) {
-      err$id <- id
-      err$call <- NULL
-      throw(pkg_error(
-        "{pak_or_pkgdepends()} resolution error for {.pkg {remote$ref}}.",
-        .data = list(id = id)
-      ), parent = err)
-    })
+  then(function(value) list(value = value, id = id))$
+  catch(error = function(err) {
+    err$id <- id
+    err$call <- NULL
+    throw(pkg_error(
+      "{pak_or_pkgdepends()} resolution error for {.pkg {remote$ref}}.",
+      .data = list(id = id)
+    ), parent = err)
+  })
 
   list(dx = dx, id = id)
 }
@@ -479,6 +459,36 @@ update_params <- function(self, private, params) {
       }
     }
   }
+}
+
+update_dep_types <- function(self, private) {
+  # these are the default
+  def <- vlapply(
+    self$result$dep_types,
+    function(x) length(x) == 1 && x == "default"
+  )
+  dep_types <- self$result$dep_types
+
+  directdef <- self$result$direct[def]
+  directpkgdef <- self$result$directpkg[def]
+
+  # dependencies get the default
+  dep_types[def][!directpkgdef] <- list(private$dependencies[["indirect"]])
+
+  # direct refs that use the default
+  dep_types[def][directdef] <- list(private$dependencies[["direct"]])
+
+  # direct packages that are not direct refs will get their default from
+  # their direct ref(s)
+  dpkgs <- unique(self$result$package[def][directpkgdef & !directdef])
+  for (pkg in dpkgs) {
+    myrefs <- self$result$package == pkg & self$result$direct
+    myrefdeps <- unique(unlist(dep_types[myrefs]))
+    mypkgs <- self$result$package[def] == pkg
+    dep_types[def][mypkgs & directpkgdef & !directdef] <- list(myrefdeps)
+  }
+
+  self$result$dep_types <- dep_types
 }
 
 resolve_from_description <- function(path, sources, remote, direct,

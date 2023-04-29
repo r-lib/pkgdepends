@@ -88,7 +88,7 @@ test_that("pkgplan_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
   config <- current_config()
   lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
-  lp <- pkgplan_i_lp_dependencies(lp)
+  lp <- pkgplan_i_lp_dependencies(lp, config)
   expect_equal(length(lp$conds), 32)
   expect_equal(
     cli::hash_obj_md5(lp$conds[[3]]),

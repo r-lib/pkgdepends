@@ -744,6 +744,14 @@ installed_note <- function(pkg) {
            "@", substr(meta[["RemoteSha"]], 1, 7), ")")
   }
 
+  gitlab_note <- function() {
+    meta <- pkg$metadata[[1]]
+    paste0(
+      "(gitlab::", meta[["RemoteUsername"]], "/", meta[["RemoteRepo"]],
+      "@", substr(meta[["RemoteSha"]], 1, 7), ")"
+    )
+  }
+
   git_note <- function() {
     meta <- pkg$metadata[[1]]
     paste0(
@@ -762,6 +770,7 @@ installed_note <- function(pkg) {
     standard = "",
     local = "(local)",
     github = github_note(),
+    gitlab = gitlab_note(),
     git = git_note()
   )
 }

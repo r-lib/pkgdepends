@@ -257,3 +257,358 @@
       attr(,"class")
       [1] "remote_ref_url" "remote_ref"     "list"          
 
+# gitlab
+
+    Code
+      parse_pkg_ref("gitlab::user/repo")
+    Output
+      $package
+      [1] "repo"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] ""
+      
+      $commitish
+      [1] "HEAD"
+      
+      $ref
+      [1] "gitlab::user/repo"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+    Code
+      parse_pkg_ref("gitlab::user/repo@ref")
+    Output
+      $package
+      [1] "repo"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] ""
+      
+      $commitish
+      [1] "ref"
+      
+      $ref
+      [1] "gitlab::user/repo@ref"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+    Code
+      parse_pkg_ref("gitlab::user/repo/sub/dir")
+    Output
+      $package
+      [1] "repo"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] "sub/dir"
+      
+      $commitish
+      [1] "HEAD"
+      
+      $ref
+      [1] "gitlab::user/repo/sub/dir"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+    Code
+      parse_pkg_ref("gitlab::user/repo/sub/dir@ref")
+    Output
+      $package
+      [1] "repo"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] "sub/dir"
+      
+      $commitish
+      [1] "ref"
+      
+      $ref
+      [1] "gitlab::user/repo/sub/dir@ref"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+    Code
+      parse_pkg_ref("pkg=gitlab::user/repo")
+    Output
+      $package
+      [1] "pkg"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] ""
+      
+      $commitish
+      [1] "HEAD"
+      
+      $ref
+      [1] "pkg=gitlab::user/repo"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+    Code
+      parse_pkg_ref("pkg=gitlab::user/repo@ref")
+    Output
+      $package
+      [1] "pkg"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] ""
+      
+      $commitish
+      [1] "ref"
+      
+      $ref
+      [1] "pkg=gitlab::user/repo@ref"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+    Code
+      parse_pkg_ref("pkg=gitlab::user/repo/sub/dir")
+    Output
+      $package
+      [1] "pkg"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] "sub/dir"
+      
+      $commitish
+      [1] "HEAD"
+      
+      $ref
+      [1] "pkg=gitlab::user/repo/sub/dir"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+    Code
+      parse_pkg_ref("pkg=gitlab::user/repo/sub/dir@ref")
+    Output
+      $package
+      [1] "pkg"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "gitlab.com"
+      
+      $username
+      [1] "user"
+      
+      $repo
+      [1] "repo"
+      
+      $subdir
+      [1] "sub/dir"
+      
+      $commitish
+      [1] "ref"
+      
+      $ref
+      [1] "pkg=gitlab::user/repo/sub/dir@ref"
+      
+      $path
+      [1] "/user/"
+      
+      $dotgit
+      [1] ""
+      
+      $url
+      [1] "https://gitlab.com/user/repo.git"
+      
+      $type
+      [1] "gitlab"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_gitlab" "remote_ref"        "list"             
+

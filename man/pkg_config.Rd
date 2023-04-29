@@ -53,6 +53,10 @@ supported in the \code{PKG_DEPENDENCIES} environment variable:
 \code{"TRUE"}, \code{"FALSE"}, \code{"NA"}, or a semicolon separated list of
 dependency types. See \code{\link[=as_pkg_dependencies]{as_pkg_dependencies()}} for
 details.
+\item \code{include_linkingto}: Whether to always include \code{LinkingTo} dependencies in the solution
+of and installation, even if they are needed because the packages
+are installed from binaries. This is sometimes useful, see e.g.
+\url{https://github.com/r-lib/pak/issues/485} for an example use case.
 \item \code{library}: Package library to install packages to. It is also used for
 already installed packages when considering dependencies in
 \link[=pkg_deps]{dependency lookup} or

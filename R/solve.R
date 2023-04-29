@@ -240,7 +240,7 @@ pkgplan_i_create_lp_problem <- function(pkgs, config, policy) {
   lp <- pkgplan_i_lp_prefer_installed(lp)
   lp <- pkgplan_i_lp_prefer_binaries(lp)
   lp <- pkgplan_i_lp_prefer_new_binaries(lp)
-  lp <- pkgplan_i_lp_dependencies(lp)
+  lp <- pkgplan_i_lp_dependencies(lp, config)
 
   lp
 }
@@ -467,7 +467,10 @@ pkgplan_i_lp_satisfy_direct <-  function(lp) {
 pkgplan_i_lp_latest_direct <- function(lp) {
   pkgs <- lp$pkgs
   # these have version requirements
-  vreq <- vlapply(lp$pkgs$remote, function(r) !is.null(r$version) && r$version != "")
+  vreq <- vlapply(
+    lp$pkgs$remote,
+    function(r) is.list(r) && !is.null(r$version) && r$version != ""
+  )
   dirpkgs <- unique(lp$pkgs$package[lp$pkgs$direct & !vreq])
   for (pkg in dirpkgs) {
     cand <- which(
@@ -610,9 +613,10 @@ pkgplan_i_lp_prefer_new_binaries <- function(lp) {
   lp
 }
 
-pkgplan_i_lp_dependencies <- function(lp) {
+pkgplan_i_lp_dependencies <- function(lp, config) {
 
   pkgs <- lp$pkgs
+  linkingto <- config$get("include_linkingto")
   num_candidates <- lp$num_candidates
   ruled_out <- lp$ruled_out
   base <- base_packages()
@@ -634,7 +638,7 @@ pkgplan_i_lp_dependencies <- function(lp) {
     deps <- deps[deps$ref != "R", ]
     deps <- deps[! deps$ref %in% base, ]
     deps <- deps[tolower(deps$type) %in% tolower(deptypes), ]
-    if (pkgs$platform[wh] != "source") {
+    if (!linkingto && pkgs$platform[wh] != "source") {
       deps <- deps[tolower(deps$type) != "linkingto", ]
     }
     for (i in seq_len(nrow(deps))) {
@@ -953,6 +957,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
   # but the dependencies column is already set.
   has_deps <- "deps" %in% names(sol)
   if (has_deps) {
+    linkingto <- private$config$get("include_linkingto")
     if ("dep_types" %in% names(sol)) {
       selected_deps <- lapply(sol$dep_types, intersect, pkg_dep_types_hard())
     } else {
@@ -962,7 +967,7 @@ pkgplan_install_plan <- function(self, private, downloads) {
       seq_len(nrow(sol)),
       function(i) {
         x <- sol$deps[[i]]
-        if (sol$platform[[i]] != "source") {
+        if (!linkingto && sol$platform[[i]] != "source") {
           x <- x[tolower(x$type) != "linkingto", ]
         }
 

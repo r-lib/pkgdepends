@@ -204,8 +204,8 @@ r_untar_process <- R6::R6Class(
 
 eup_get_args <- function(options) {
   c(
-    "-x", "-f", options$tarfile,
-    "-C", options$exdir,
+    "-x", "-f", path_norm(options$tarfile),
+    "-C", path_norm(options$exdir),
     get_untar_decompress_arg(options$tarfile),
     if (! options$restore_times) "-m",
     options$files

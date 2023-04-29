@@ -288,6 +288,10 @@ async <- function(...) {
   asNamespace("pkgcache")$async(...)
 }
 
+async_map <- function(...) {
+  asNamespace("pkgcache")$async_map(...)
+}
+
 download_file <- function(...) {
   asNamespace("pkgcache")$download_file(...)
 }
@@ -442,4 +446,12 @@ pak_or_pkgdepends <- function() {
 
 pakx_version <- function() {
   if (is_pak()) utils::packageVersion("pak") else utils::packageVersion("pkgdepends")
+}
+
+remove_entry <- function(l, n) {
+  l[names(l) != n]
+}
+
+path_norm <- function(x) {
+  normalizePath(x, mustWork = FALSE)
 }

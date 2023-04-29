@@ -70,28 +70,28 @@ test_that("eup_get_args", {
 
   expect_equal(
     eup_get_args(opts),
-    c("-x", "-f", opts$tarfile, "-C", opts$exdir, "-z")
+    c("-x", "-f", path_norm(opts$tarfile), "-C", path_norm(opts$exdir), "-z")
   )
 
   ## No need to ungzip
   opts$tarfile <- system.file(package = "pkgdepends", "tools", "xxx")
   expect_equal(
     eup_get_args(opts),
-    c("-x", "-f", opts$tarfile, "-C", opts$exdir)
+    c("-x", "-f", path_norm(opts$tarfile), "-C", path_norm(opts$exdir))
   )
 
   ## Files are specified
   opts$files <- c("this", "that")
   expect_equal(
     eup_get_args(opts),
-    c("-x", "-f", opts$tarfile, "-C", opts$exdir, opts$files)
+    c("-x", "-f", path_norm(opts$tarfile), "-C", path_norm(opts$exdir), opts$files)
   )
 
   ## Do not restore times
   opts$restore_times <- FALSE
   expect_equal(
     eup_get_args(opts),
-    c("-x", "-f", opts$tarfile, "-C", opts$exdir, "-m", opts$files)
+    c("-x", "-f", path_norm(opts$tarfile), "-C", path_norm(opts$exdir), "-m", opts$files)
   )
 })
 

@@ -6,10 +6,10 @@
 \description{
 Assumptions, they might be relaxed or checked for later:
 \itemize{
-\item The server must speak the smart protocol, version 2.
+\item The server must speak the smart protocol, version 1 or 2.
 \item We use HTTP transport, not SSH.
 \item The server should have the \code{shallow} capability.
-\item The server should have the \code{filter} capability.
+\item The server should have the \code{filter} capability if protocol version 2.
 \item Only SHA-1 hashing is supported.
 }
 }

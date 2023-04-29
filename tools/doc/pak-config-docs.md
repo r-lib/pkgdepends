@@ -7,6 +7,9 @@ $cache_dir
 $cran_mirror
 [1] "CRAN mirror to use. Defaults to the \\code{repos} option\n(see \\code{\\link[base:options]{base::options()}}), if that's not set then\n\\verb{https://cran.rstudio.com}. See also \\code{\\link[pak:repo_add]{pak::repo_add()}} and\n\\code{\\link[pak:repo_get]{pak::repo_get()}}"
 
+$include_linkingto
+[1] "Whether to always include \\code{LinkingTo} dependencies in the solution\nof and installation, even if they are needed because the packages\nare installed from binaries. This is sometimes usefule, see e.g.\n\\url{https://github.com/r-lib/pak/issues/485} for an example use case."
+
 $library
 [1] "Package library to install packages to. It is also used for\nalready installed packages when considering dependencies."
 
@@ -48,4 +51,3 @@ $use_bioconductor
 
 $windows_archs
 [1] "Character scalar specifying which architectures\nto download/install for on Windows. Its possible values are:\n\\itemize{\n\\item \\code{\"prefer-x64\"}: Generally prefer x64 binaries. If the current R\nsession is \\code{x64}, then we download/install x64 packages.\n(These packages might still be multi-architecture binaries!)\nIf the current R session is \\code{i386}, then we download/install\npackages for both architectures. This might mean compiling\npackages from source if the binary packages are for \\code{x64} only,\nlike the CRAN Windows binaries for R 4.2.x currently.\n\\code{\"prefer-x64\"} is the default for R 4.2.0 and later.\n\\item \\code{\"both\"}: Always download/install packages for both \\code{i386} and\n\\code{x64} architectures. This might need compilation from source\nif the available binaries are for \\code{x64} only, like the CRAN\nWindows binaries for R 4.2.x currently. \\code{\"both\"} is the default\nfor R 4.2.0 and earlier.\n}"
-

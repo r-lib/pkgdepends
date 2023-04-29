@@ -35,7 +35,6 @@ Imports:
     rprojroot,
     stats,
     utils,
-    withr (>= 2.1.1),
     zip (>= 2.3.0)
 Suggests:
     asciicast (>= 2.2.0.9000),
@@ -52,7 +51,8 @@ Suggests:
     spelling,
     testthat,
     tibble,
-    webfakes (>= 1.1.5.9000)
+    webfakes (>= 1.1.5.9000),
+    withr (>= 2.1.1),
 Config/Needs/coverage:
     covr,
     rmarkdown,

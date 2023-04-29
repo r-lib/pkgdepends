@@ -76,10 +76,10 @@ doc_share_rmd <- function(rmd, rds) {
   if (md == rmd) {
     stop("Docs Rmd file must have extension `.Rmd`")
   }
-  withr::local_envvar(THIS_IS_PAK = "true")
-  cmd <- paste0("```{r child=\"", rmd, "\"}\n```\n")
-  rd <- roxy_to_rd(cmd)
-
+  withr_with_envvar(c(THIS_IS_PAK = "true"), {
+    cmd <- paste0("```{r child=\"", rmd, "\"}\n```\n")
+    rd <- roxy_to_rd(cmd)
+  })
   oldp <- read_char(md)
   if (oldp != rd) {
     cli::cli_alert_info("Writing {.path {rds}.}")

@@ -4,6 +4,7 @@ CentOS
 Codecov
 Config
 El
+GitLab
 HOWTO
 ILP
 JSON
@@ -18,13 +19,11 @@ bitbucket
 cli
 cloneable
 config
-crandb
 devtools
 dplyr
 funder
 ggplot
 gitcreds
-github
 https
 lifecycle
 macOS

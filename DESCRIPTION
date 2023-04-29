@@ -1,6 +1,6 @@
 Package: pkgdepends
 Title: Package Dependency Resolution and Downloads
-Version: 0.4.0.9000
+Version: 0.5.0.9000
 Authors@R: c(
     person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
     person("RStudio", role = c("cph", "fnd"))
@@ -27,7 +27,7 @@ Imports:
     jsonlite,
     lpSolve,
     pkgbuild (>= 1.0.2),
-    pkgcache (>= 2.0.0),
+    pkgcache (>= 2.1.0),
     prettyunits (>= 1.1.1),
     processx (>= 3.4.2),
     ps,
@@ -36,10 +36,7 @@ Imports:
     stats,
     utils,
     withr (>= 2.1.1),
-    zip (>= 2.1.0)
-Remotes:
-    r-lib/zip,
-    r-lib/pkgcache
+    zip (>= 2.3.0)
 Suggests:
     asciicast (>= 2.2.0.9000),
     covr,
@@ -69,4 +66,4 @@ Config/Needs/website:
     tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
-RoxygenNote: 7.2.1.9000
+RoxygenNote: 7.2.3

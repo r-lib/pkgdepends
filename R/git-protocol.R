@@ -2,10 +2,10 @@
 #' git protocol notes, for developers
 #'
 #' Assumptions, they might be relaxed or checked for later:
-#' - The server must speak the smart protocol, version 2.
+#' - The server must speak the smart protocol, version 1 or 2.
 #' - We use HTTP transport, not SSH.
 #' - The server should have the `shallow` capability.
-#' - The server should have the `filter` capability.
+#' - The server should have the `filter` capability if protocol version 2.
 #' - Only SHA-1 hashing is supported.
 #'
 #' Improvements needed:
@@ -84,11 +84,7 @@ git_list_refs <- function(url, prefixes = NULL) {
 }
 
 async_git_list_refs <- function(url, prefixes = NULL) {
-  if (is.null(prefixes)) {
-    async_git_list_refs_v1(url)
-  } else {
-    async_git_list_refs_v2(url, prefixes)
-  }
+  async_git_list_refs_v2(url, prefixes)
 }
 
 # -------------------------------------------------------------------------
@@ -136,7 +132,7 @@ async_git_resolve_ref <- function(url, ref) {
     }
     async_git_list_refs(url, filt)$
       then(function(refs) {
-        if (ref %in% refs$refs$ref) {
+        result <- if (ref %in% refs$refs$ref) {
           refs$refs$hash[refs$refs$ref == ref]
 
         } else if (paste0("refs/tags/", ref) %in% refs$refs$ref) {
@@ -146,7 +142,7 @@ async_git_resolve_ref <- function(url, ref) {
           refs$refs$hash[refs$refs$ref == paste0("refs/heads/", ref)]
 
         } else if (any(startsWith(refs$refs$hash, ref))) {
-          sha <- refs$refs$hash[startsWith(refs$refs$hash, ref)]
+          sha <- unique(refs$refs$hash[startsWith(refs$refs$hash, ref)])
           if (length(sha) > 1) {
             throw(pkg_error(
               "Found multiple git refs with prefix {.val {ref}}, it is ambiguous.",
@@ -159,13 +155,13 @@ async_git_resolve_ref <- function(url, ref) {
         } else {
           throw(pkg_error(
             "Unknown git ref: {.val {ref}}.",
-            "i" = if (grepl("^[0-9a-f]+$", ref)) {
-              "If you want to specify a SHA prefix, then use at least 7 hexa digits."
-             },
             .class = "git_proto_error_unknown_ref",
             .data = list(ref = ref, url = redact_url(url))
           ))
         }
+
+        attr(result, "protocol") <- if ("version 2" %in% refs$caps) 2 else 1
+        result
       })
 
   } else {
@@ -323,7 +319,34 @@ git_fetch <- function(url, sha, blobs = FALSE) {
 async_git_fetch <- function(url, sha, blobs = FALSE) {
   url; sha
 
-  async_git_send_message(
+  if (!is.null(attr(sha, "protocol"))) {
+    if (attr(sha, "protocol") == 1) {
+      async_git_fetch_v1(url, sha, blobs)
+    } else {
+      async_git_fetch_v2(url, sha, blobs)
+    }
+  } else {
+    async_git_fetch_v2(url, sha, blobs)$
+      catch(error = function(err) async_git_fetch_v1(url, sha, blobs))
+  }
+}
+
+async_git_fetch_v1 <- function(url, sha, blobs) {
+  async_git_send_message_v1(
+    url,
+    args = c(
+      paste0("want ", sha),
+      "deepen 1",
+      "",
+      "done",
+      ""
+    ),
+    caps = c("no-done", "no-progress", paste0("agent=", git_ua()))
+  )$then(function(reply) git_fetch_process_v1(reply, url, sha))
+}
+
+async_git_fetch_v2 <- function(url, sha, blobs) {
+  async_git_send_message_v2(
     url,
     "fetch",
     caps = c(
@@ -339,6 +362,21 @@ async_git_fetch <- function(url, sha, blobs = FALSE) {
       "done\n"
     )
   )$then(function(reply) git_fetch_process(reply, url, sha))
+}
+
+git_fetch_process_v1 <- function(reply, url, sha) {
+  if (length(reply) == 0) {
+    throw(pkg_error(
+      "Empty reply from git server (protocol v1) at {.url {redact_url(url)}}."
+    ))
+  }
+  if (reply[[length(reply)]]$type != "pack") {
+    throw(pkg_error(
+      "No PACK in git server response (protocol v1) from {.url {redact_url(url)}}."
+    ))
+  }
+
+  git_unpack(reply[[length(reply)]]$data)
 }
 
 git_fetch_process <- function(reply, url, sha) {
@@ -484,10 +522,10 @@ unpack_packfile_repo <- function(parsed, output) {
       if (tr$type[l] == "tree") {
         tidx <- which(tr$hash[l] == names(trees))[1]
         if (is.na(tidx)) {
-          throw(new_error(
-            "git tree missing from packfile: {.val {tr$hash[i]}}.",
-            .class = "git_proto_error_unexpected_response"
-          ))
+          throw(new_error(                                          # nocov
+            "git tree missing from packfile: {.val {tr$hash[i]}}.", # nocov
+            .class = "git_proto_error_unexpected_response"          # nocov
+          ))                                                        # nocov
         }
         wd <<- c(wd, tr$path[l])
         mkdirp(opath)
@@ -563,15 +601,23 @@ git_parse_message <- function(msg) {
       ))
     }
     pkg_len <- msg[pos:(pos+3)]
-    if (any(pkg_len < charToRaw('0') | pkg_len > charToRaw('f'))) {
-      throw(pkg_error(
-        "Invalid pkt-len field in message from git, must be four hexa digits.",
-        .class = "git_proto_error_invalid_data"
-      ))
+    if (!all(pkg_len == charToRaw("PACK"))) {
+      if (any(pkg_len < charToRaw('0') | pkg_len > charToRaw('f'))) {
+        throw(pkg_error(
+          "Invalid pkt-len field in message from git, must be four hexa digits.",
+          .class = "git_proto_error_invalid_data"
+        ))
+      }
+      len <- as.integer(as.hexmode(rawToChar(pkg_len)))
     }
-    len <- as.integer(as.hexmode(rawToChar(pkg_len)))
 
-    if (len == 0) {
+    if (all(pkg_len == charToRaw("PACK"))) {
+      lines[[length(lines) + 1L]] <- list(
+        type = "pack",
+        data = msg[pos:length(msg)]
+      )
+      pos <- length(msg) + 1L
+    } else if (len == 0) {
       lines[[length(lines) + 1L]] <- list(type = "flush-pkt")
       pos <- pos + 4L
     } else if (len == 1) {
@@ -653,6 +699,25 @@ git_create_message_v2 <- function(
   )
 }
 
+git_create_message_v1 <- function(args = character(), caps = character()) {
+  if (length(args) == 0) {
+    throw(pkg_error(
+      "Invalid git protocol (v1) message, must have at least one argument"
+    ))
+  }
+
+  args[1] <- paste0(args[1], " ", paste(caps, collapse = " "))
+  args <- ifelse(
+    last_char(args) == "\n" | args == "",
+    args,
+    paste0(args, "\n")
+  )
+
+  res <- lapply(args, pkt_line)
+  res[args == ""] <- list(charToRaw("0000"))
+  unlist(res)
+}
+
 #' Send a protocol version 2 message to a git server
 #'
 #' @inheritParams git_list_refs
@@ -661,21 +726,21 @@ git_create_message_v2 <- function(
 #'
 #' @noRd
 
-git_send_message <- function(
+git_send_message_v2 <- function(
   url,
   cmd,
   caps = character(),
   args = character()) {
 
-  synchronize(async_git_send_message(url, cmd, caps = caps, args = args))
+  synchronize(async_git_send_message_v2(url, cmd, caps = caps, args = args)) # nocov
 }
 
-#' `async_git_send_message()` is the asynchronous variant of
-#' `git_send_message()`.
-#' @rdname git_send_message
+#' `async_git_send_message_v2()` is the asynchronous variant of
+#' `git_send_message_v2()`.
+#' @rdname git_send_message_v2
 #' @noRd
 
-async_git_send_message <- function(
+async_git_send_message_v2 <- function(
   url,
   cmd,
   caps = character(),
@@ -690,6 +755,25 @@ async_git_send_message <- function(
     "accept-encoding" = "deflate, gzip",
     "accept" = "application/x-git-upload-pack-result",
     "git-protocol" = "version=2",
+    "content-length" = as.character(length(msg))
+  )
+  http_post(
+    url2,
+    data = msg,
+    headers = headers
+  )$then(http_stop_for_status)$
+    then(function(res) git_parse_message(res$content))
+}
+
+async_git_send_message_v1 <- function(url, args, caps) {
+
+  msg <- git_create_message_v1(caps = caps, args = args)
+
+  url2 <- paste0(url, "/git-upload-pack")
+  headers <- c(
+    "Content-Type" = "application/x-git-upload-pack-request",
+    "User-Agent" = git_ua(),
+    "accept" = "application/x-git-upload-pack-result",
     "content-length" = as.character(length(msg))
   )
   http_post(
@@ -779,39 +863,57 @@ async_git_list_refs_v1 <- function(url) {
 
 git_list_refs_v1_process <- function(response, url) {
   psd <- git_parse_message(response$content)
+  psd <- drop_service_line(psd)
   check_initial_response(psd, url)
 
   # The stream MUST include capability declarations behind a NUL on the
   # first ref.
-  nul <- which(psd[[3]]$data == 0)
+  nul <- which(psd[[1]]$data == 0)
   if (length(nul) != 1) {
-      throw(pkg_error(
-        "Unexpected response from git server, third pkt-line should contain
-         exactly one {.code NUL} byte.",
-        .class = "git_proto_error_unexpected_response",
-        .data = list(url = redact_url(url))
-      ))
+    # nocov start
+    throw(pkg_error(
+      "Unexpected response from git server, third pkt-line should contain
+       exactly one {.code NUL} byte.",
+      .class = "git_proto_error_unexpected_response",
+      .data = list(url = redact_url(url))
+    ))
+    # nocov end
   }
 
-  caps <- if (nul < length(psd[[3]]$data)) {
-    rawToChar(psd[[3]]$data[(nul+1):length(psd[[3]]$data)])
+  caps <- if (nul < length(psd[[1]]$data)) {
+    rawToChar(psd[[1]]$data[(nul+1):length(psd[[1]]$data)])
   } else {
     ""                                                              # nocov
   }
   caps <- strsplit(trimws(caps), " ", fixed = TRUE)[[1]]
-  psd[[3]]$data <- if (nul == 1) raw() else psd[[3]]$data[1:(nul-1)]
-  psd[[3]]$text <- rawToChar(psd[[3]]$data)
+  psd[[1]]$data <- if (nul == 1) raw() else psd[[1]]$data[1:(nul-1)]
+  psd[[1]]$text <- rawToChar(psd[[1]]$data)
 
   if (psd[[length(psd)]]$type != "flush-pkt") {
+    # nocov start
     throw(pkg_error(
       "Response from git server does not have a closing {.code flush-pkt}.",
       .class = "git_proto_error_unexpected_response",
       .data = list(url = redact_url(url))
     ))
+    # nocov end
   }
 
-  refs <- git_parse_pkt_line_refs(psd[3:(length(psd)-1)], url)
+  refs <- git_parse_pkt_line_refs(psd[1:(length(psd)-1)], url)
   list(refs = refs, caps = caps)
+}
+
+git_list_refs_v1_process_1 <- function(response, url, prefixes) {
+  # We wanted v2, but the server replied in v1, so we'll use v1 now
+  refs <- git_list_refs_v1_process(response, url)
+  if (length(prefixes) > 0) {
+    keep <- logical(length(refs$refs$ref))
+    for (pfx in prefixes) {
+      keep <- keep | startsWith(refs$refs$ref, pfx)
+    }
+    refs$refs <- refs$refs[keep, ]
+  }
+  refs
 }
 
 #' Helper function to parse a `pkt_line` containing a git ref
@@ -835,12 +937,14 @@ git_parse_pkt_line_refs <- function(lines, url) {
     line <- lines[[idx]]
     if (line$type != "data-pkt" || is.null(line$text) ||
         !grepl("^[0-9a-f]{40} .+$", line$text)) {
+      # nocov start
       throw(pkg_error(
         "Expected response from git server.",
         i = "Line {idx} must be a text {.code data-pkt} with a sha and a ref name.",
         .class = "git_proto_error_unexpected_response",
         .data = list(url = redact_url(url))
       ))
+      # nocov end
     }
 
     res$ref[idx] <- substr(line$text, 42, nchar(line$text))
@@ -896,8 +1000,13 @@ async_git_list_refs_v2 <- function(url, prefixes = character()) {
 
 async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
   psd <- git_parse_message(response$content)
+  psd <- drop_service_line(psd)
   check_initial_response(psd, url)
+  async_git_list_refs_v2_process_2(response, psd, url, prefixes)
+}
 
+
+async_git_list_refs_v2_process_2 <- function(response, psd, url, prefixes) {
   # capability-advertisement = protocol-version
   #                capability-list
   #                flush-pkt
@@ -909,21 +1018,19 @@ async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
   # key = 1*(ALPHA | DIGIT | "-_")
   # value = 1*(ALPHA | DIGIT | " -_.,?\/{}[]()<>!@#$%^&*+=:;")
 
-  if (is.null(psd[[3]]$text)) {
+  if (is.null(psd[[1]]$text)) {
     throw(pkg_error(
-      "Invalid git protocol message from {.url {url}}."
+      "Invalid git protocol message from {.url {redact_url(url)}}."
     ))
   }
-  if (is.na(psd[[3]]$text)) {
-    throw(pkg_error(
-      "Only git protocol version 2 is supported.",
-      "i" = "{.url {url}} seems to support version 1 only.",
-      .class = "git_proto_error_not_implemented"
-    ))
+
+  if (is.na(psd[[1]]$text)) {
+    return(git_list_refs_v1_process_1(response, url, prefixes))
   }
-  if (psd[[3]]$text != "version 2") {
+
+  if (psd[[1]]$text != "version 2") {
     throw(pkg_error(
-      "Only git protocol version 2 is supported, not {psd[[3]]$text}.",
+      "Only git protocol version 2 is supported, not {psd[[1]]$text}.",
       .class = "git_proto_error_not_implemented"
     ))
   }
@@ -936,51 +1043,32 @@ async_git_list_refs_v2_process_1 <- function(response, url, prefixes) {
     ))
   }
 
-  caps <- unlist(lapply(psd[4:(length(psd)-1)], "[[", "text"))
+  caps <- unlist(lapply(psd[1:(length(psd)-1)], "[[", "text"))
 
   args <- if (length(prefixes)) paste0("ref-prefix ", prefixes, "\n")
 
-  async_git_send_message(url, "ls-refs", args = as.character(args))$
-    then(function(res) async_git_list_refs_v2_process_2(res, caps, url))
+  async_git_send_message_v2(url, "ls-refs", args = as.character(args))$
+    then(function(res) async_git_list_refs_v2_process_3(res, caps, url))
+}
+
+drop_service_line <- function(psd) {
+  # Actually, this might not be present in V2 servers...
+  if (length(psd) > 0 && !is.null(psd[[1]]$text) &&
+      grepl("^# service=.+", psd[[1]]$text)) {
+    psd <- psd[-1]
+  }
+
+  if (length(psd) > 0 && psd[[1]]$type == "flush-pkt") {
+    psd <- psd[-1]
+  }
+
+  psd
 }
 
 check_initial_response <- function(psd, url) {
-  # Clients MUST validate the first five bytes of the response entity
-  # matches the regex `^[0-9a-f]{4}#`.  If this test fails, clients
-  # MUST NOT continue.
-  if (length(psd) == 0 || is.null(psd[[1]]$text) ||
-      !grepl("^#", psd[[1]]$text)) {
+  if (length(psd) < 1 || psd[[1]]$type != "data-pkt") {
       throw(pkg_error(
-        "Unexpected response from git server, first pkt_line should start
-         with {.code #}.",
-        .class = "git_proto_error_unexpected_response",
-        .data = list(url = redact_url(url))
-      ))
-  }
-
-  # Clients MUST verify the first pkt-line is `# service=$servicename`.
-  if (!grepl("^# service=.+", psd[[1]]$text)) {
-      throw(pkg_error(
-        "Unexpected response from git server, first pkt_line should be
-         {.code #servicename}.",
-        .class = "git_proto_error_unexpected_response",
-        .data = list(url = redact_url(url))
-      ))
-  }
-
-  if (length(psd) < 2 || psd[[2]]$type != "flush-pkt") {
-      throw(pkg_error(
-        "Unexpected response from git server, second pkt_line should be a
-         {.code flush-pkt}.",
-        .class = "git_proto_error_unexpected_response",
-        .data = list(url = redact_url(url))
-      ))
-  }
-
-  if (length(psd) < 3 || psd[[3]]$type != "data-pkt") {
-      throw(pkg_error(
-        "Unexpected response from git server, third pkt-line should be a
-         {.code data-pkt}.",
+        "Unexpected response from git server, no {.code data-pkt} line.",
         .class = "git_proto_error_unexpected_response",
         .data = list(url = redact_url(url))
       ))
@@ -995,7 +1083,7 @@ check_initial_response <- function(psd, url) {
 #' @return Same as [git_list_refs()].
 #' @noRd
 
-async_git_list_refs_v2_process_2 <- function(reply, caps, url) {
+async_git_list_refs_v2_process_3 <- function(reply, caps, url) {
   if (reply[[length(reply)]]$type != "flush-pkt") {
     throw(pkg_error(
       "Response from git server does not have a closing {.code flush-pkt}.",
@@ -1079,9 +1167,11 @@ git_unpack <- function(pack) {
     idx <<- size$idx + 1
     if (type == 7L) {
       if (idx + 19 > length(pack)) {
+        # nocov start
         throw(pkg_error(
           "Invalid packfile, unexpected end of file"
         ))
+        # nocov end
       }
       base <- bin_to_sha(pack[idx:(idx+19)])
       idx <<- idx + 20
@@ -1103,9 +1193,11 @@ git_unpack <- function(pack) {
   deltified_object <- function(delta, base) {
     baseidx <- match(base, names(objects))
     if (is.na(baseidx)) {
+      # nocov start
       throw(pkg_error(
         "Invalid git packfile, cannot find base of ref-delta"
       ))
+      # nocov end
     }
     baseobj <- objects[[baseidx]]$raw
     didx <- 1L
@@ -1155,11 +1247,13 @@ git_unpack <- function(pack) {
       objects[[i]]$hash <- cli::hash_raw_sha1(raw2)
       names(objects)[i] <- objects[[i]]$hash
     } else {
+      # nocov start
       throw(pkg_error(
         "git packfile object type {.cls {objects[[i]]$type}} is not
          implemented yet.",
         .class = "git_proto_error_not_implemented"
       ))
+      # nocov end
     }
   }
 
@@ -1210,10 +1304,12 @@ parse_size <- function(x, idx) {
   while (c >= 128) {
     idx <- idx + 1L
     if (idx > length(x)) {
+      # nocov start
       throw(pkg_error(
         "Invalid git packfile, invalid size field.",
         .class = "git_proto_error_invalid_data"
       ))
+      # nocov end
     }
     c <- as.integer(x[idx])
     size <- size + bitwShiftL(bitwAnd(c, 0x7f), shft)
@@ -1230,10 +1326,12 @@ parse_delta_size <- function(x, idx) {
   while (c >= 128) {
     idx <- idx + 1L
     if (idx > length(x)) {
+      # nocov start
       throw(pkg_error(
         "Invalid git packfile, invalid size field.",
         .class = "git_proto_error_invalid_data"
       ))
+      # nocov end
     }
     c <- as.integer(x[idx])
     size <- size + bitwShiftL(bitwAnd(c, 0x7f), shft)
@@ -1354,10 +1452,12 @@ parse_commit <- function(commit) {
   lines <- strsplit(commit, "\n", fixed = TRUE)[[1]]
   delim <- which(lines == "")[1]
   if (delim == 1) {
+    # nocov start
     throw(pkg_error(
       "Invalid git commit object, no {.code tree} field.",
       .class = "git_proto_error_invalid_data"
     ))
+    # nocov end
   }
 
   message <- if (is.na(delim)) {
@@ -1383,5 +1483,5 @@ last_char <- function(x) {
 }
 
 redact_url <- function(x) {
-  sub("^https://[^/]+@", "https://<auth>@", x)
+  sub("://[^/]+@", "://<auth>@", x)
 }

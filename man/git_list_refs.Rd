@@ -85,12 +85,12 @@ List only references having a certain prefix:
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{git_list_refs("https://github.com/r-lib/filelock.git", "refs/heads/main")
 #> $refs
 #>               ref                                     hash
-#> 1 refs/heads/main 0331c49c0b17845468b5f3e2da75680475bc9989
+#> 1 refs/heads/main 211dde89c4974b295aa02c5c77b5570ead0fc458
 #> 
 #> $caps
-#> [1] "agent=git/github-ad9b45022ef2"      "ls-refs=unborn"                    
-#> [3] "fetch=shallow wait-for-done filter" "server-option"                     
-#> [5] "object-format=sha1"
+#> [1] "version 2"                          "agent=git/github-1c5ee477c782"     
+#> [3] "ls-refs=unborn"                     "fetch=shallow wait-for-done filter"
+#> [5] "server-option"                      "object-format=sha1"
 }\if{html}{\out{</div>}}
 
 Various services:
@@ -98,12 +98,13 @@ Various services:
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{git_list_refs("https://gitlab.com/Linaro/tuxmake.git", "HEAD")
 #> $refs
 #>    ref                                     hash
-#> 1 HEAD 2a83555ae16562d04778bab6e92d033b5de1dc7d
+#> 1 HEAD 9441c1f6ae68148882e9d15ab2d6b3008f4c2c19
 #> 
 #> $caps
-#> [1] "agent=git/2.39.2"                   "ls-refs=unborn"                    
-#> [3] "fetch=shallow wait-for-done filter" "server-option"                     
-#> [5] "object-format=sha1"                 "object-info"
+#> [1] "version 2"                          "agent=git/2.40.0.gl1"              
+#> [3] "ls-refs=unborn"                     "fetch=shallow wait-for-done filter"
+#> [5] "server-option"                      "object-format=sha1"                
+#> [7] "object-info"
 git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
 #> $refs
 #>                                        ref
@@ -180,11 +181,13 @@ git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
 git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
 #> $refs
 #>                         ref                                     hash
-#> 1                      HEAD db125acf2f96c7e1838ba889a683047acb7bb34b
-#> 2           refs/heads/i18n d8a811087241e77833203cf0a85f5f85c556890c
-#> 3         refs/heads/master db125acf2f96c7e1838ba889a683047acb7bb34b
+#> 1                      HEAD bdfce5e39c3ebb36b748925dfc8a0cde483fda6a
+#> 2           refs/heads/i18n e5f2c309b038789a82ab5a54d723a3564f1bde58
+#> 3         refs/heads/master bdfce5e39c3ebb36b748925dfc8a0cde483fda6a
 #> 4    refs/tags/release-3.10 e1db1a011effeb7d16a5af9c15b91d8998579ad7
 #> 5 refs/tags/release-3.10^\{\} d16b7e7e849d5d63794b1c48847e8a57250ce2bd
+#> 6    refs/tags/release-3.11 7d5723e022a7144c077501ecff5ac23984effe8d
+#> 7 refs/tags/release-3.11^\{\} af29b8a99fe4b4e7deefb6bcbf9a6d98f43228bf
 #> 
 #> $caps
 #>  [1] "multi_ack"                     "thin-pack"                    

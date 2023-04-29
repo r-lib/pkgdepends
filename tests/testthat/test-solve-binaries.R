@@ -65,3 +65,39 @@ test_that("but source is used if that version is required", {
   sol <- sol[order(sol$ref), ]
   expect_snapshot(sol[, c("package", "version", "platform")])
 })
+
+test_that("can opt in into including LinkingTo", {
+  repo <- dcf("
+    Package: pkg
+    LinkingTo: pkg2
+
+    Package: pkg2
+  ")
+
+  setup_fake_apps(
+    cran_repo = repo,
+    cran_options = list(platforms = c("windows", "source"))
+  )
+
+  do <- function() {
+    p <- suppressMessages(new_pkg_installation_proposal(
+      "pkg",
+      config = list(
+        dependencies = TRUE,
+        library = tempfile(),
+        platforms = c("x86_64-w64-mingw32", "source")
+      )
+    ))
+    suppressMessages(p$resolve())
+    suppressMessages(p$solve())
+    sol <- p$get_solution()$data
+    sol <- sol[order(sol$ref), ]
+    expect_snapshot(sol[, c("package", "platform")])
+  }
+
+  withr::local_options(pkg.include_linkingto = TRUE)
+  do()
+
+  withr::local_options(pkg.include_linkingto = FALSE)
+  do()
+})

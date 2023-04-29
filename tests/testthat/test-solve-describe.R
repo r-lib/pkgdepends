@@ -116,7 +116,7 @@ test_that("conflicting dependencies and installed packages", {
     # need this on older windows, because pak matches archs on that
     if (is_windows()) {
       paste0(
-        "R ", getRversion(), "; ",
+        "Built: R ", getRversion(), "; ",
         "i386+x86_64-w64-mingw32; ",
         "2023-02-06 08:15:41 UTC; ",
         "windows"

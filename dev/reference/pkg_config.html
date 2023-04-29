@@ -96,6 +96,10 @@ supported in the <code>PKG_DEPENDENCIES</code> environment variable:
 <code>"TRUE"</code>, <code>"FALSE"</code>, <code>"NA"</code>, or a semicolon separated list of
 dependency types. See <code><a href="as_pkg_dependencies.html">as_pkg_dependencies()</a></code> for
 details.</p></li>
+<li><p><code>include_linkingto</code>: Whether to always include <code>LinkingTo</code> dependencies in the solution
+of and installation, even if they are needed because the packages
+are installed from binaries. This is sometimes useful, see e.g.
+<a href="https://github.com/r-lib/pak/issues/485" class="external-link">https://github.com/r-lib/pak/issues/485</a> for an example use case.</p></li>
 <li><p><code>library</code>: Package library to install packages to. It is also used for
 already installed packages when considering dependencies in
 <a href="pkg_deps.html">dependency lookup</a> or

@@ -140,22 +140,23 @@ branch on GitHub.</p></li>
 <p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/git_list_refs.html">git_list_refs</a></span><span class="op">(</span><span class="st">"https://github.com/r-lib/filelock.git"</span>, <span class="st">"refs/heads/main"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $refs</span></span>
 <span><span class="co">#&gt;               ref                                     hash</span></span>
-<span><span class="co">#&gt; 1 refs/heads/main 0331c49c0b17845468b5f3e2da75680475bc9989</span></span>
+<span><span class="co">#&gt; 1 refs/heads/main 211dde89c4974b295aa02c5c77b5570ead0fc458</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $caps</span></span>
-<span><span class="co">#&gt; [1] "agent=git/github-ad9b45022ef2"      "ls-refs=unborn"                    </span></span>
-<span><span class="co">#&gt; [3] "fetch=shallow wait-for-done filter" "server-option"                     </span></span>
-<span><span class="co">#&gt; [5] "object-format=sha1"</span></span></code></pre><p></p></div>
+<span><span class="co">#&gt; [1] "version 2"                          "agent=git/github-1c5ee477c782"     </span></span>
+<span><span class="co">#&gt; [3] "ls-refs=unborn"                     "fetch=shallow wait-for-done filter"</span></span>
+<span><span class="co">#&gt; [5] "server-option"                      "object-format=sha1"</span></span></code></pre><p></p></div>
 <p>Various services:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/git_list_refs.html">git_list_refs</a></span><span class="op">(</span><span class="st">"https://gitlab.com/Linaro/tuxmake.git"</span>, <span class="st">"HEAD"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $refs</span></span>
 <span><span class="co">#&gt;    ref                                     hash</span></span>
-<span><span class="co">#&gt; 1 HEAD 2a83555ae16562d04778bab6e92d033b5de1dc7d</span></span>
+<span><span class="co">#&gt; 1 HEAD 9441c1f6ae68148882e9d15ab2d6b3008f4c2c19</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $caps</span></span>
-<span><span class="co">#&gt; [1] "agent=git/2.39.2"                   "ls-refs=unborn"                    </span></span>
-<span><span class="co">#&gt; [3] "fetch=shallow wait-for-done filter" "server-option"                     </span></span>
-<span><span class="co">#&gt; [5] "object-format=sha1"                 "object-info"</span></span>
+<span><span class="co">#&gt; [1] "version 2"                          "agent=git/2.40.0.gl1"              </span></span>
+<span><span class="co">#&gt; [3] "ls-refs=unborn"                     "fetch=shallow wait-for-done filter"</span></span>
+<span><span class="co">#&gt; [5] "server-option"                      "object-format=sha1"                </span></span>
+<span><span class="co">#&gt; [7] "object-info"</span></span>
 <span><span class="fu"><a href="../reference/git_list_refs.html">git_list_refs</a></span><span class="op">(</span><span class="st">"https://bitbucket.org/gaborcsardi/cli.git"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $refs</span></span>
 <span><span class="co">#&gt;                                        ref</span></span>
@@ -232,11 +233,13 @@ branch on GitHub.</p></li>
 <span><span class="fu"><a href="../reference/git_list_refs.html">git_list_refs</a></span><span class="op">(</span><span class="st">"https://git.savannah.nongnu.org/git/administration/savane.git"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $refs</span></span>
 <span><span class="co">#&gt;                         ref                                     hash</span></span>
-<span><span class="co">#&gt; 1                      HEAD db125acf2f96c7e1838ba889a683047acb7bb34b</span></span>
-<span><span class="co">#&gt; 2           refs/heads/i18n d8a811087241e77833203cf0a85f5f85c556890c</span></span>
-<span><span class="co">#&gt; 3         refs/heads/master db125acf2f96c7e1838ba889a683047acb7bb34b</span></span>
+<span><span class="co">#&gt; 1                      HEAD b540bb642c563644f1fb357cbed02127e2d57fb9</span></span>
+<span><span class="co">#&gt; 2           refs/heads/i18n 3c2564837d04252deae84065bd6efcb65450411a</span></span>
+<span><span class="co">#&gt; 3         refs/heads/master b540bb642c563644f1fb357cbed02127e2d57fb9</span></span>
 <span><span class="co">#&gt; 4    refs/tags/release-3.10 e1db1a011effeb7d16a5af9c15b91d8998579ad7</span></span>
 <span><span class="co">#&gt; 5 refs/tags/release-3.10^{} d16b7e7e849d5d63794b1c48847e8a57250ce2bd</span></span>
+<span><span class="co">#&gt; 6    refs/tags/release-3.11 7d5723e022a7144c077501ecff5ac23984effe8d</span></span>
+<span><span class="co">#&gt; 7 refs/tags/release-3.11^{} af29b8a99fe4b4e7deefb6bcbf9a6d98f43228bf</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $caps</span></span>
 <span><span class="co">#&gt;  [1] "multi_ack"                     "thin-pack"                    </span></span>

@@ -63,5 +63,11 @@ jobs:
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
+        timeout-minutes: 20
         with:
           upload-snapshots: true
+
+      - uses: OrbitalOwen/desktop-screenshot-action@0.1
+        if: always() && runner.os == 'Windows'
+        with:
+          file-name: 'desktop.jpg'

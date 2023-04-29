@@ -451,3 +451,7 @@ pakx_version <- function() {
 remove_entry <- function(l, n) {
   l[names(l) != n]
 }
+
+path_norm <- function(x) {
+  normalizePath(x, mustWork = FALSE)
+}

@@ -297,3 +297,16 @@ test_that("explicit package names", {
     parse_pkg_ref("package=url::https://example.com/p1.tar.gz")
   })
 })
+
+test_that("gitlab", {
+  expect_snapshot({
+    parse_pkg_ref("gitlab::user/repo")
+    parse_pkg_ref("gitlab::user/repo@ref")
+    parse_pkg_ref("gitlab::user/repo/sub/dir")
+    parse_pkg_ref("gitlab::user/repo/sub/dir@ref")
+    parse_pkg_ref("pkg=gitlab::user/repo")
+    parse_pkg_ref("pkg=gitlab::user/repo@ref")
+    parse_pkg_ref("pkg=gitlab::user/repo/sub/dir")
+    parse_pkg_ref("pkg=gitlab::user/repo/sub/dir@ref")
+  })
+})

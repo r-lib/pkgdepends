@@ -40,6 +40,7 @@ We will discuss each in detail below.
 - `bioc`: a Bioconductor package.
 - `standard`: a package from a configured CRAN-like repository.
 - `github`: a package from GitHub.
+- `gitlab`: a package from GitLab.
 - `git`: a package in a git repository.
 - `local`: a local package file or directory.
 - `url`: an URL that points to a package archive.
@@ -86,10 +87,10 @@ it needs to be able to determine the name of the dependency from the
 package reference.
 This is sometimes not easy for dependencies in `Remotes` (or similar) fields.
 
-* For `github::` dependencies `r pak_or_pkgdepends()` assumes that the package
-  name is the same as the name of the repository. If this does not hold,
-  then you need to specify the package name explicitly, using a
-  `<package>=` prefix. E.g. `pins=rstudio/pins-r`. If you specify both the
+* For `github::` and `gitlab::` dependencies `r pak_or_pkgdepends()` assumes
+  that the package name is the same as the name of the repository. If this
+  does not hold, then you need to specify the package name explicitly, using
+  a `<package>=` prefix. E.g. `pins=rstudio/pins-r`. If you specify both the
   package source type and the package name, the package name comes first:
   `pins=github::rstudio/pins-r`.
 * For `git::` dependencies, `r pak_or_pkgdepends()` assumes that the package
@@ -148,12 +149,12 @@ it is already installed.
   `reinstall` parameter. This parameter is supported for `bioc::`, `cran::`
   and `standard::` remote types, and it is ignored for others.
 - `reinstall` requests a re-install for package installations. It is
-  supported by the `bioc::`, `cran::`, `git::`, `github::`, `local::`,
-  `standard::`, and `url::` remote types.
+  supported by the `bioc::`, `cran::`, `git::`, `github::`, `gitlab::`,
+  `local::`, `standard::`, and `url::` remote types.
 - `nocache` will ignore the package cache. It will always download the
   package file, and it will not add the downloaded (and built) package(s)
   to the package cache. It is supported by the `bioc::`, `cran::`, `git::`,
-  `github::`, `standard::` and `url::` remote types.
+  `github::`, `gitlab::`, `standard::` and `url::` remote types.
 
 ## Package source details
 
@@ -253,6 +254,31 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 
 A GitHub remote string can also be used instead of an URL, for example:
 `git@github.com:r-lib/pak.git`
+
+### GitLab packages (`gitlab::`)
+
+Packages from a GitLab repository. Full syntax:
+
+```
+[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
+```
+
+- `<package>` is the name of the package. If this is missing, then
+  the name of the repository is used.
+- `<username>` is a GitLab username or group name.
+- `<repository>` is the name of the repository.
+- `<subdir>` optional subdirectory, if the package is within a
+  subdirectory in the repository.
+- `<detail>` may specify a git branch, tag or (prefix of) a commit hash.
+
+If `<detail>` is missing, then the latest commit of the _default_
+branch is used.
+
+Examples:
+```
+gitlab::gaborcsardi/cli
+gitlab::r-hub/filelock@main
+```
 
 ### Packages in git repositories (`git::`)
 

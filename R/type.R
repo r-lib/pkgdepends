@@ -31,6 +31,12 @@ default_remote_types <- function() {
       download = download_remote_github,
       satisfy = satisfy_remote_github,
       installedok = installedok_remote_github),
+    gitlab = list(
+      parse = parse_remote_gitlab,
+      resolve = resolve_remote_gitlab,
+      download = download_remote_gitlab,
+      satisfy = satisfy_remote_gitlab,
+      installedok = installedok_remote_gitlab),
     local = list(
       parse = parse_remote_local,
       resolve = resolve_remote_local,

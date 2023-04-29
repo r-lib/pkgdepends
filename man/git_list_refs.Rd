@@ -181,9 +181,9 @@ git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
 git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
 #> $refs
 #>                         ref                                     hash
-#> 1                      HEAD b540bb642c563644f1fb357cbed02127e2d57fb9
-#> 2           refs/heads/i18n 3c2564837d04252deae84065bd6efcb65450411a
-#> 3         refs/heads/master b540bb642c563644f1fb357cbed02127e2d57fb9
+#> 1                      HEAD bdfce5e39c3ebb36b748925dfc8a0cde483fda6a
+#> 2           refs/heads/i18n e5f2c309b038789a82ab5a54d723a3564f1bde58
+#> 3         refs/heads/master bdfce5e39c3ebb36b748925dfc8a0cde483fda6a
 #> 4    refs/tags/release-3.10 e1db1a011effeb7d16a5af9c15b91d8998579ad7
 #> 5 refs/tags/release-3.10^\{\} d16b7e7e849d5d63794b1c48847e8a57250ce2bd
 #> 6    refs/tags/release-3.11 7d5723e022a7144c077501ecff5ac23984effe8d

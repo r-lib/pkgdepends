@@ -18,7 +18,7 @@ package manager, see \href{https://github.com/r-lib/pak}{pak}.
 \item Install downloaded packages.
 \item Includes a dependency solver to find a consistent set of dependencies.
 \item Supports CRAN and Bioconductor packages automatically.
-\item Supports packages on GitHub.
+\item Supports packages on GitHub and GitLab.
 \item Supports packages in git repositories.
 \item Supports package bundles or files on the web.
 \item Supports local package file and trees.
@@ -71,19 +71,19 @@ style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream 
 <pre>
 ## <span style="color: #859900;">✔</span> Loading metadata database ... done                                    
 ## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.1.0.9000</span> <span style="color: #859900;">✨👷🏽🔧 </span>                                         
-## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">✨</span>                                                         
-## │ ├─processx <span style="color: #525252;">3.8.1</span> <span style="color: #859900;">✨</span>                                                    
-## │ │ ├─ps <span style="color: #525252;">1.7.5</span> <span style="color: #859900;">✨</span>                                                        
+## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(431.00 kB)</span>                                           
+## │ ├─processx <span style="color: #525252;">3.8.1</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(316.20 kB)</span>                                      
+## │ │ ├─ps <span style="color: #525252;">1.7.5</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(313.92 kB)</span>                                          
 ## │ │ └─R6 <span style="color: #525252;">2.5.1</span> <span style="color: #859900;">✨</span>                                                        
 ## │ └─R6                                                                  
-## ├─cli <span style="color: #525252;">3.6.1</span> <span style="color: #859900;">✨</span>                                                           
-## ├─curl <span style="color: #525252;">5.0.0</span> <span style="color: #859900;">✨</span>                                                          
+## ├─cli <span style="color: #525252;">3.6.1</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(1.38 MB)</span>                                               
+## ├─curl <span style="color: #525252;">5.0.0</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(777.64 kB)</span>                                            
 ## ├─filelock <span style="color: #525252;">1.0.2</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(29.58 kB)</span>                                         
-## ├─jsonlite <span style="color: #525252;">1.8.4</span> <span style="color: #859900;">✨</span>                                                      
+## ├─jsonlite <span style="color: #525252;">1.8.4</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(1.13 MB)</span>                                          
 ## ├─prettyunits <span style="color: #525252;">1.1.1</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(35.23 kB)</span>                                      
 ## ├─processx                                                              
 ## ├─R6                                                                    
-## └─rappdirs <span style="color: #525252;">0.3.3</span> <span style="color: #859900;">✨</span>                                                      
+## └─rappdirs <span style="color: #525252;">0.3.3</span> <span style="color: #859900;">✨ ⬇ </span><span style="color: #525252;">(47.50 kB)</span>                                         
 ##                                                                         
 ## Key:  <span style="color: #859900;">✨</span> new | <span style="color: #859900;"> ⬇</span> download | <span style="color: #859900;">👷🏽 </span>build | 🔧<span style="color: #859900;"> </span>compile                        
 </pre>

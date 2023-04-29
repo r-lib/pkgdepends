@@ -56,7 +56,6 @@ generate_config_docs <- function() {
   mdfile <- "tools/doc/pak-config-docs.md"
   oldp <- read_char(mdfile)
   if (outp != oldp) {
-    browser()
     outfile <- file.path("inst/docs/pak-config-docs.rds")
     cli::cli_alert_info("Writing {.path {outfile}}")
     saveRDS(rd, outfile, version = 2)
@@ -83,7 +82,6 @@ doc_share_rmd <- function(rmd, rds) {
 
   oldp <- read_char(md)
   if (oldp != rd) {
-    browser()
     cli::cli_alert_info("Writing {.path {rds}.}")
     saveRDS(rd, rds, version = 2)
     write_char(rd, md)

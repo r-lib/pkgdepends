@@ -233,7 +233,7 @@ repo <- local({
 # -------------------------------------------------------------------------
 # Docs
 
-#' List packages in a reporitory
+#' List packages in a repository
 #'
 #' @name repo$list
 #' @keywords internal
@@ -300,18 +300,18 @@ repo$update
 #' 3. Adds and commits changes.
 #' 4. Pushes the git repository to GitHub.
 #' If the push fails, then it resets the git repository, pulls it from
-#' GitHub and tries the update process again, until the push suceeds.
+#' GitHub and tries the update process again, until the push succeeds.
 #'
 #' This function needs command line git installed.
 #'
 #' It sets up a `cache` credential helper, so the `git push` works
 #' without interaction with the user.
 #'
-#' @name repo$udpate_gh
+#' @name repo$update_gh
 #' @keywords internal
 #' @usage repo$update_gh(repo, subdir, file)
-#' @param repo Github slug, e.g. `r-hub/repos`.
-#' @param subdir Subdirectory in the GitHub repo, where the R package
+#' @param repo GitHub slug, e.g. `r-hub/repos`.
+#' @param subdir Subdirectory in the GitHub repository, where the R package
 #'   metadata should be updated. It must exist in the repository.
 #'   If it does not have `PACKAGES*` files, then they will be created.
 #' @param file Package file to add. The file will _not_ be added to the

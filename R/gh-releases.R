@@ -241,7 +241,7 @@ ghr <- local({
 #' @param repo Repository slug, e.g. `"cran/cli"`.
 #' @return Data frame with columns:
 #'   * `id`: release id,
-#'   * `name`: release name, usuaally the version number, possibly with
+#'   * `name`: release name, usually the version number, possibly with
 #'     a `v` prefix: `3.6.1` or `v3.6.1`, but can be different.
 #'   * `tag_name`: usually the same as `name`.
 #'   * `created_at`: `POSIXct` vector.

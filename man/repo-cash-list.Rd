@@ -2,7 +2,7 @@
 % Please edit documentation in R/repo.R
 \name{repo$list}
 \alias{repo$list}
-\title{List packages in a reporitory}
+\title{List packages in a repository}
 \usage{
 repo_list(..., path = ".")
 }
@@ -15,6 +15,6 @@ repo_list(..., path = ".")
 Data frame of package data.
 }
 \description{
-List packages in a reporitory
+List packages in a repository
 }
 \keyword{internal}

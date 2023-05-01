@@ -10,7 +10,7 @@
 Data frame with columns:
 \itemize{
 \item \code{id}: release id,
-\item \code{name}: release name, usuaally the version number, possibly with
+\item \code{name}: release name, usually the version number, possibly with
 a \code{v} prefix: \verb{3.6.1} or \code{v3.6.1}, but can be different.
 \item \code{tag_name}: usually the same as \code{name}.
 \item \code{created_at}: \code{POSIXct} vector.

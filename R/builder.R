@@ -1,4 +1,19 @@
 
+#' Create a binary package from an installed package
+#'
+#' The built package will be in the current working directory.
+#'
+#' This function is currently experimental.
+#'
+#' @param pkg Package name.
+#' @param library Library path.
+#' @param flavour Platform flavour. Defaults to the `PKG_BUILD_FLAVOUR`
+#'   environment variable. If not `NULL` or an empty string, then it is
+#'   appended to the platform string with a dash.
+#' @return Path to the built package.
+#'
+#' @export
+
 pkg_build <- function(pkg, library = .libPaths()[1],
                       flavour = Sys.getenv("PKG_BUILD_FLAVOUR")) {
   pkgdir <- file.path(library, pkg)

@@ -1,5 +1,6 @@
 
-pkg_build <- function(pkg, library = .libPaths()[1]) {
+pkg_build <- function(pkg, library = .libPaths()[1],
+                      flavour = Sys.getenv("PKG_BUILD_FLAVOUR")) {
   pkgdir <- file.path(library, pkg)
   if (!dir.exists(pkgdir)) {
     throw(pkg_error(
@@ -7,6 +8,9 @@ pkg_build <- function(pkg, library = .libPaths()[1]) {
     ))
   }
   platform <- pkgcache::current_r_platform()
+  if (nzchar(flavour %||% "")) {
+    platform <- paste0(platform, "-", flavour)
+  }
   meta <- c(
     RemoteBuildPlatform = platform,
     GraphicsAPIVersion = pkgcache::get_graphics_api_version(),
@@ -20,7 +24,12 @@ pkg_build <- function(pkg, library = .libPaths()[1]) {
   sys <- sysname()
   if (sys == "windows") {
     install_md5_sums(pkg)
-    fn <- paste0(pkg, "_", version, "_R", rversion, ".zip")
+    fn <- paste0(
+      pkg, "_", version, "_",
+      "R", rversion,
+      if (nzchar(flavour %||% "")) paste0("_", flavour),
+      ".zip"
+    )
     zip::zip(fn, pkgdir, mode = "cherry-pick")
 
   } else {

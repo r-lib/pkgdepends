@@ -13,6 +13,7 @@
 #' @return Path to the built package.
 #'
 #' @export
+#' @keywords internal
 
 pkg_build <- function(pkg, library = .libPaths()[1],
                       flavour = Sys.getenv("PKG_BUILD_FLAVOUR")) {

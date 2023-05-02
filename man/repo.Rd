@@ -4,7 +4,7 @@
 \alias{repo}
 \title{Query and manipulate CRAN-like repositories}
 \description{
-Query and manipulate CRAN-like repositories
+These functions are currently experimental.
 }
 \details{
 \subsection{List packages in a repository}{

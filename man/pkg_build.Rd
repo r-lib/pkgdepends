@@ -28,3 +28,4 @@ The built package will be in the current working directory.
 \details{
 This function is currently experimental.
 }
+\keyword{internal}

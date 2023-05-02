@@ -245,6 +245,8 @@ repo <- local({
 
 #' Query and manipulate CRAN-like repositories
 #'
+#' These functions are currently experimental.
+#'
 #' @details
 #'
 #' ## List packages in a repository
@@ -373,5 +375,6 @@ repo <- local({
 #'
 #' @name repo
 #' @keywords internal
+#' @export
 
 repo

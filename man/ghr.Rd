@@ -4,7 +4,8 @@
 \alias{ghr}
 \title{GitHub Releases}
 \description{
-Functions to query and manipulate GitHub releases.
+Functions to query and manipulate GitHub releases. These functions are
+currently experimental.
 }
 \details{
 \subsection{List releases}{

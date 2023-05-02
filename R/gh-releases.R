@@ -231,7 +231,8 @@ ghr <- local({
 
 #' GitHub Releases
 #'
-#' Functions to query and manipulate GitHub releases.
+#' Functions to query and manipulate GitHub releases. These functions are
+#' currently experimental.
 #'
 #' @details
 #'
@@ -388,5 +389,6 @@ ghr <- local({
 #'
 #' @name ghr
 #' @keywords internal
+#' @export
 
 ghr

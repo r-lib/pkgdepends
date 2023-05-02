@@ -7,7 +7,12 @@ pkg_build <- function(pkg, library = .libPaths()[1]) {
     ))
   }
   platform <- pkgcache::current_r_platform()
-  add_metadata(pkgdir, c(RemoteBuildPlatform = platform))
+  meta <- c(
+    RemoteBuildPlatform = platform,
+    GraphicsAPIVersion = pkgcache::get_graphics_api_version(),
+    InternalsId = pkgcache::get_internals_id()
+  )
+  add_metadata(pkgdir, meta)
   dsc <- desc::desc(file = pkgdir)
   version <- dsc$get_field("Version")
   rversion <- get_minor_r_version(getRversion())

@@ -23,6 +23,8 @@ repo <- local({
       pkgs$SHA256 <- character()
       pkgs$RVersion <- character()
       pkgs$Platform <- character()
+      pkgs$GraphicsAPIVersion <- character()
+      pkgs$InternalsId <- character()
     }
 
     pkgs
@@ -152,7 +154,9 @@ repo <- local({
       Filesize = file.size(path),
       SHA256 = cli::hash_file_sha256(path),
       RVersion = rminor,
-      Platform = unname(desc$get("RemoteBuildPlatform"))
+      Platform = unname(desc$get("RemoteBuildPlatform")),
+      GraphicsAPIVersion = unname(desc$get("GraphicsAPIVersion")),
+      InternalsId = unname(desc$get("InternalsId"))
     )
 
     pkg

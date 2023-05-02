@@ -46,6 +46,8 @@ columns, possibly more if there are other entries in the metadata:
 \item \code{SHA256}
 \item \code{RVersion}
 \item \code{Platform}
+\item \code{GraphicsAPIVersion}
+\item \code{InternalsId}
 }
 }
 

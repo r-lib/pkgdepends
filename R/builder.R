@@ -7,7 +7,7 @@
 #'
 #' @param pkg Package name.
 #' @param library Library path.
-#' @param flavour Platform flavour. Defaults to the `PKG_BUILD_FLAVOUR`
+#' @param flavor Platform flavor. Defaults to the `PKG_BUILD_FLAVOR`
 #'   environment variable. If not `NULL` or an empty string, then it is
 #'   appended to the platform string with a dash.
 #' @return Path to the built package.
@@ -16,7 +16,7 @@
 #' @keywords internal
 
 pkg_build <- function(pkg, library = .libPaths()[1],
-                      flavour = Sys.getenv("PKG_BUILD_FLAVOUR")) {
+                      flavor = Sys.getenv("PKG_BUILD_FLAVOR")) {
   pkgdir <- file.path(library, pkg)
   if (!dir.exists(pkgdir)) {
     throw(pkg_error(
@@ -24,8 +24,8 @@ pkg_build <- function(pkg, library = .libPaths()[1],
     ))
   }
   platform <- pkgcache::current_r_platform()
-  if (nzchar(flavour %||% "")) {
-    platform <- paste0(platform, "-", flavour)
+  if (nzchar(flavor %||% "")) {
+    platform <- paste0(platform, "-", flavor)
   }
   meta <- c(
     RemoteBuildPlatform = platform,
@@ -43,7 +43,7 @@ pkg_build <- function(pkg, library = .libPaths()[1],
     fn <- paste0(
       pkg, "_", version, "_",
       "R", rversion,
-      if (nzchar(flavour %||% "")) paste0("_", flavour),
+      if (nzchar(flavor %||% "")) paste0("_", flavor),
       ".zip"
     )
     zip::zip(fn, pkgdir, mode = "cherry-pick")

@@ -7,7 +7,7 @@
 pkg_build(
   pkg,
   library = .libPaths()[1],
-  flavour = Sys.getenv("PKG_BUILD_FLAVOUR")
+  flavor = Sys.getenv("PKG_BUILD_FLAVOR")
 )
 }
 \arguments{
@@ -15,7 +15,7 @@ pkg_build(
 
 \item{library}{Library path.}
 
-\item{flavour}{Platform flavour. Defaults to the \code{PKG_BUILD_FLAVOUR}
+\item{flavor}{Platform flavor. Defaults to the \code{PKG_BUILD_FLAVOR}
 environment variable. If not \code{NULL} or an empty string, then it is
 appended to the platform string with a dash.}
 }

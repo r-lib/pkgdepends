@@ -228,84 +228,137 @@ ghr <- local({
 })
 
 # -------------------------------------------------------------------------
-# Docs
 
-#' List GitHub releases
+#' GitHub Releases
 #'
-#' Lists the last 100 releases for a GitHub repository.
+#' Functions to query and manipulate GitHub releases.
 #'
+#' @details
+#'
+#' ## List releases
+#'
+#' ### Description
+#'
+#' `ghr$list()` lists the last 100 releases for a GitHub repository.
 #' `ghr$async_list()` is the async version of `ghr$list()`.
 #'
-#' @name ghr$list
-#' @keywords internal
-#' @param repo Repository slug, e.g. `"cran/cli"`.
-#' @return Data frame with columns:
+#' ### Usage
+#' ```
+#' ghr$list(repo)
+#' ghr$async_list(repo)
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `repo`: repository slug, e.g. `"cran/cli"`.
+#'
+#' ### Value
+#'
+#' Data frame with columns:
 #'   * `id`: release id,
 #'   * `name`: release name, usually the version number, possibly with
 #'     a `v` prefix: `3.6.1` or `v3.6.1`, but can be different.
 #'   * `tag_name`: usually the same as `name`.
 #'   * `created_at`: `POSIXct` vector.
-
-ghr$list
-
-#' Get information about a release, including release assets
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## Get information about a release
+#'
+#' ### Description
+#'
+#' `ghr$get()` downloads information about a release, including
+#' release assets.
 #'
 #' `ghr$async_get` is the async version of `ghr$get`.
 #'
-#' @name ghr$get
-#' @keywords internal
-#' @param repo Repository slug, e.g. `"cran/cli"`.
-#' @param tag Tag to get.
-#' @return Named list, see
-#'   <https://docs.github.com/en/rest/releases/releases#get-a-release>
-#'   for the entries.
-
-ghr$get
-
-#' List assets of a release
+#' ### Usage
+#' ```
+#' ghr$get(repo, tag)
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `repo`: repository slug, e.g. `"cran/cli"`.
+#' * `tag`: tag to get.
+#'
+#' ### Value
+#'
+#' Named list, see
+#' <https://docs.github.com/en/rest/releases/releases#get-a-release>
+#' for the entries.
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## List assets of a release
+#'
+#' ### Description
+#'
+#' `ghr$list_assets()` lists the last 100 assets of a release.
 #'
 #' `ghr$async_list_assets()` is the async version of `ghr$list_assets()`
 #'
-#' @name ghr$list_assets
-#' @keywords internal
-#' @usage ghr$list_assets(repo, tag)
-#' @param repo Repository slug, e.g. `"cran/cli"`.
-#' @param tag Tag to query.
-#' @return Data frame with columns:
-#'   * `id`: asset id,
-#'   * `name`: file name of the asset,
-#'   * `download_url`: download URL,
-#'   * `size`: size in bytes,
-#'   * `created_at`: `POSIXct` vector,
-#'   * `updated_at`: `POSXct` vector,
-#'   * `content_type`: content type of asset.
-
-ghr$list_assets
-
-#' Add asset got GitHub release
+#' ### Usage
+#' ```
+#' ghr$list_assets(repo, tag)
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `repo`: repository slug, e.g. `"cran/cli"`.
+#' * `tag`: tag to query.
+#'
+#' ### Value
+#'
+#' Data frame with columns:
+#' * `id`: asset id,
+#' * `name`: file name of the asset,
+#' * `download_url`: download URL,
+#' * `size`: size in bytes,
+#' * `created_at`: `POSIXct` vector,
+#' * `updated_at`: `POSXct` vector,
+#' * `content_type`: content type of asset.
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## Add a release asset
+#'
+#' ### Description
+#'
+#' `ghr$add_asset()` adds an asset to a GitHub release.
 #'
 #' `ghr$async_add_asset()` is the async version of `ghr$add_asset()`.
 #'
-#' @name ghr$add_asset
-#' @keywords internal
-#' @usage ghr%add_asset(repo, file, tag, name = basename(file))
-#' @param repo Repository slug, e.g. `cran/cli`.
-#' @param file Path to file to upload as an asset.
-#' @param tag Tag name to add the asset to. It must exist on GitHub.
-#' @param name File name of the asset in the release.
-#' @return Response from GitHub as a named list. See
-#'   <https://docs.github.com/en/rest/releases/assets#upload-a-release-asset>
-#'   for the structure.
-
-ghr$add_asset
-
-#' Create a GitHub release
+#' ### Usage
+#' ```
+#' ghr%add_asset(repo, file, tag, name = basename(file))
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `repo`: repository slug, e.g. `cran/cli`.
+#' * `file`: path to file to upload as an asset.
+#' * `tag`: tag name to add the asset to. It must exist on GitHub.
+#' * `name`: file name of the asset in the release.
+#'
+#' ### Value
+#'
+#' Response from GitHub as a named list. See
+#' <https://docs.github.com/en/rest/releases/assets#upload-a-release-asset>
+#' for the structure.
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## Create a GitHub release
+#'
+#' ### Description
+#'
+#' `ghr$create()` creates a GitHub release from a tag.
 #'
 #' `ghr$async_create()` is an async version of `ghr$create()`.
 #'
-#' @name ghr$create
-#' @keywords internal
-#' @usage
+#' ### Usage
+#' ```
 #' ghr$create(
 #'   repo,
 #'   tag,
@@ -314,14 +367,26 @@ ghr$add_asset
 #'   prerelease = FALSE,
 #'   generage_release_notes = FALSE
 #' )
-#' @param repo Repository slug, e.g. `cran/cli`.
-#' @param tag Tag name to create a release for. It must exist on GitHub.
-#' @param description Release description.
-#' @param draft Whether to create a draft release.
-#' @param prerelease Whether to create a prerelease.
-#' @param generate_release_notes Whether to auto-generate release notes.
-#' @return Response from GitHub as a named list. See
-#'   <https://docs.github.com/en/rest/releases/releases#create-a-release>
-#'   for the structure.
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `repo`: repository slug, e.g. `cran/cli`.
+#' * `tag`: tag name to create a release for. It must exist on GitHub.
+#' * `description`: release description.
+#' * `draft`: whether to create a draft release.
+#' * `prerelease`: whether to create a prerelease.
+#' * `generate_release_notes`: whether to auto-generate release notes.
+#'
+#' ### Value
+#'
+#' Response from GitHub as a named list. See
+#' <https://docs.github.com/en/rest/releases/releases#create-a-release>
+#' for the structure.
+#'
+# -------------------------------------------------------------------------
+#'
+#' @name ghr
+#' @keywords internal
 
-ghr$create
+ghr

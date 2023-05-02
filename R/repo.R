@@ -214,6 +214,13 @@ repo <- local({
     git("push", "--porcelain", "origin", stderr_to_stdout = TRUE)
   }
 
+  repo_columns <- function() {
+    dir.create(tmp <- tempfile())
+    on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+    file.create(file.path(tmp, "PACKAGES"))
+    paste0("* `", colnames(repo_list(path = tmp)), "`", collapse = "\n")
+  }
+
   # -----------------------------------------------------------------------
   # Exported functions
 
@@ -231,51 +238,82 @@ repo <- local({
 })
 
 # -------------------------------------------------------------------------
-# Docs
 
-#' List packages in a repository
+#' Query and manipulate CRAN-like repositories
 #'
-#' @name repo$list
-#' @keywords internal
-#' @usage repo_list(..., path = ".")
-#' @param ... Ignored currently.
-#' @param path Path to repository. Must contain a `PACKAGES` file.
-#' @return Data frame of package data.
-
-repo$list
-
-#' Delete packages from repository metadata
+#' @details
+#'
+#' ## List packages in a repository
+#'
+#' `repo$list()` lists packages in a repository. It reads the `PACKAGES`
+#' file containing the repository metadata.
+#'
+#' ### Usage
+#' ```
+#' repo_list(..., path = ".")
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `...`: ignored currently.
+#' * `path`: path to repository. Must contain a `PACKAGES` file.
+#'
+#' ### Value
+#'
+#' Data frame of package data, a data frame with at least the following
+#' columns, possibly more if there are other entries in the metadata:
+#' `r repo$.internal$repo_columns()`
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## Delete packages from repository metadata
+#'
+#' `repo_delete()` deletes matching packages from the repository
+#' metadata.
+#'
+#' ### Description
 #'
 #' All matching packages will be removed.
-#'
 #' It does not delete the files themselves.
 #'
-#' @name repo$delete
-#' @keywords internal
-#' @usage repo$delete(package, ..., path = ".")
-#' @param package Package name.
-#' @param ... Other fields to match, they must be named. Matching is
+#' ### Usage
+#' ```
+#' repo$delete(package, ..., path = ".")
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `package`: package name.
+#' * `...`: other fields to match, they must be named. Matching is
 #'   case insensitive.
-#' @param path Path to repository. Must contain a `PACKAGES` file.
-
-repo$delete
-
-#' Add a package to a repository
+#' * `path`: path to repository. Must contain a `PACKAGES` file.
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## Add a package to a repository
+#'
+#' ### Description
 #'
 #' It does not check if any version of the package is already
 #' in the repository. If you want to _update_ a package, use
-#' `repo_update()`.
+#' `repo$update()`.
 #'
-#' @name repo$add
-#' @keywords internal
-#' @usage repo$add(file, ..., path = ".")
-#' @param file Package file.
-#' @param ... Ignored currently.
-#' @param path Path to repository. Must contain a `PACKAGES` file.
-
-repo$add
-
-#' Update a package in a repository
+#' ### Usage
+#' ```
+#' repo$add(file, ..., path = ".")
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `file Package file.
+#' * `... Ignored currently.
+#' * `path Path to repository. Must contain a `PACKAGES` file.
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## Update a package in a repository
+#'
+#' ### Description
 #'
 #' Previous version of the same package are removed. In particular,
 #' it removes packages with matching:
@@ -284,16 +322,22 @@ repo$add
 #' - same OS (`OS` field), or no `OS` field,
 #' - same architecture (`Arch` field), or not `Arch` field.
 #'
-#' @name repo$update
-#' @keywords internal
-#' @usage repo$update(file, ..., path = ".")
-#' @param file Package file.
-#' @param ... Ignored currently.
-#' @param path Path to repository. Must contain a `PACKAGES` file.
-
-repo$update
-
-#' Update a file in a package metadata, stored on GitHub
+#' ### Usage
+#' ```
+#' repo$update(file, ..., path = ".")
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `file Package file.
+#' * `... Ignored currently.
+#' * `path Path to repository. Must contain a `PACKAGES` file.
+#'
+# -------------------------------------------------------------------------
+#'
+#' ## Update a file in a package metadata, stored on GitHub
+#'
+#' ### Description
 #'
 #' 1. Clones the GitHub repository.
 #' 2. Calls `repo_update()` with `file`, in the `subdir` directory.
@@ -307,14 +351,23 @@ repo$update
 #' It sets up a `cache` credential helper, so the `git push` works
 #' without interaction with the user.
 #'
-#' @name repo$update_gh
-#' @keywords internal
-#' @usage repo$update_gh(repo, subdir, file)
-#' @param repo GitHub slug, e.g. `r-hub/repos`.
-#' @param subdir Subdirectory in the GitHub repository, where the R package
+#' ### Usage
+#' ```
+#' repo$update_gh(repo, subdir, file)
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `repo`: GitHub slug, e.g. `r-hub/repos`.
+#' * `subdir`: subdirectory in the GitHub repository, where the R package
 #'   metadata should be updated. It must exist in the repository.
 #'   If it does not have `PACKAGES*` files, then they will be created.
-#' @param file Package file to add. The file will _not_ be added to the
+#' * `file`: package file to add. The file will _not_ be added to the
 #'   repository.
+#'
+# -------------------------------------------------------------------------
+#'
+#' @name repo
+#' @keywords internal
 
-repo$update_gh
+repo

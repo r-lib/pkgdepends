@@ -9,8 +9,7 @@ sysreqs_resolve <- function(sysreqs, os = NULL, os_release = NULL,
   config <- config %||% current_config()
 
   # TODO: switch to v2 completely
-  if (tolower(Sys.getenv("R_PKG_SYSREQS2")) == "true" ||
-      os %in% "debian") {
+  if (tolower(Sys.getenv("R_PKG_SYSREQS2")) != "false") {
     synchronize(sysreqs2_async_resolve(sysreqs, os, os_release, config, ...))
   } else {
     synchronise(sysreqs_async_resolve(sysreqs, os, os_release, config, ...))

@@ -12,22 +12,38 @@
       [1] "22.04"
       
       $url
-      [1] "<server>/__api__/repos/1/sysreqs?distribution=ubuntu&release=22.04"
+      [1] NA
       
       $total
       [1] 0.3333333
       
       $pre_install
-      character(0)
+      [1] "apt-get -y update"
       
       $install_scripts
-      [1] "apt-get install -y default-jdk"
+      [1] "apt-get -y install default-jdk"
       
       $post_install
       [1] "R CMD javareconf"
       
-      attr(,"class")
-      [1] "pkg_sysreqs_result" "list"              
+      $records
+      $records[[1]]
+      $records[[1]][[1]]
+      $records[[1]][[1]]$sysreq
+      [1] "java"
+      
+      $records[[1]][[1]]$packages
+      [1] "default-jdk"
+      
+      $records[[1]][[1]]$pre_install
+      NULL
+      
+      $records[[1]][[1]]$post_install
+      [1] "R CMD javareconf"
+      
+      
+      
+      
 
 # pre_install
 
@@ -43,24 +59,43 @@
       [1] "16.04"
       
       $url
-      [1] "<server>/__api__/repos/1/sysreqs?distribution=ubuntu&release=16.04"
+      [1] NA
       
       $total
       [1] 0.3333333
       
       $pre_install
+      [1] "apt-get -y update"                            
+      [2] "apt-get install -y software-properties-common"
+      [3] "add-apt-repository -y ppa:ubuntugis/ppa"      
+      [4] "apt-get update"                               
+      
+      $install_scripts
+      [1] "apt-get -y install libgeos-dev"
+      
+      $post_install
+      NULL
+      
+      $records
+      $records[[1]]
+      $records[[1]][[1]]
+      $records[[1]][[1]]$sysreq
+      [1] "geos"
+      
+      $records[[1]][[1]]$packages
+      [1] "libgeos-dev"
+      
+      $records[[1]][[1]]$pre_install
       [1] "apt-get install -y software-properties-common"
       [2] "add-apt-repository -y ppa:ubuntugis/ppa"      
       [3] "apt-get update"                               
       
-      $install_scripts
-      [1] "apt-get install -y libgeos-dev"
+      $records[[1]][[1]]$post_install
+      NULL
       
-      $post_install
-      character(0)
       
-      attr(,"class")
-      [1] "pkg_sysreqs_result" "list"              
+      
+      
 
 # multiple sysreqs
 
@@ -76,23 +111,52 @@
       [1] "22.04"
       
       $url
-      [1] "<server>/__api__/repos/1/sysreqs?distribution=ubuntu&release=22.04"
+      [1] NA
       
       $total
       [1] 0.3333333
       
       $pre_install
-      character(0)
+      [1] "apt-get -y update"
       
       $install_scripts
-      [1] "apt-get install -y default-jdk"         
-      [2] "apt-get install -y libcurl4-openssl-dev"
+      [1] "apt-get -y install default-jdk libcurl4-openssl-dev"
       
       $post_install
       [1] "R CMD javareconf"
       
-      attr(,"class")
-      [1] "pkg_sysreqs_result" "list"              
+      $records
+      $records[[1]]
+      $records[[1]][[1]]
+      $records[[1]][[1]]$sysreq
+      [1] "java"
+      
+      $records[[1]][[1]]$packages
+      [1] "default-jdk"
+      
+      $records[[1]][[1]]$pre_install
+      NULL
+      
+      $records[[1]][[1]]$post_install
+      [1] "R CMD javareconf"
+      
+      
+      $records[[1]][[2]]
+      $records[[1]][[2]]$sysreq
+      [1] "libcurl"
+      
+      $records[[1]][[2]]$packages
+      [1] "libcurl4-openssl-dev"
+      
+      $records[[1]][[2]]$pre_install
+      NULL
+      
+      $records[[1]][[2]]$post_install
+      NULL
+      
+      
+      
+      
 
 # system is detected
 
@@ -108,32 +172,59 @@
       [1] "22.04"
       
       $url
-      [1] "<server>/__api__/repos/1/sysreqs?distribution=ubuntu&release=22.04"
+      [1] NA
       
       $total
       [1] 0.3333333
       
       $pre_install
-      character(0)
+      [1] "apt-get -y update"
       
       $install_scripts
-      [1] "apt-get install -y default-jdk"         
-      [2] "apt-get install -y libcurl4-openssl-dev"
+      [1] "apt-get -y install default-jdk libcurl4-openssl-dev"
       
       $post_install
       [1] "R CMD javareconf"
       
-      attr(,"class")
-      [1] "pkg_sysreqs_result" "list"              
+      $records
+      $records[[1]]
+      $records[[1]][[1]]
+      $records[[1]][[1]]$sysreq
+      [1] "java"
+      
+      $records[[1]][[1]]$packages
+      [1] "default-jdk"
+      
+      $records[[1]][[1]]$pre_install
+      NULL
+      
+      $records[[1]][[1]]$post_install
+      [1] "R CMD javareconf"
+      
+      
+      $records[[1]][[2]]
+      $records[[1]][[2]]$sysreq
+      [1] "libcurl"
+      
+      $records[[1]][[2]]$packages
+      [1] "libcurl4-openssl-dev"
+      
+      $records[[1]][[2]]$pre_install
+      NULL
+      
+      $records[[1]][[2]]$post_install
+      NULL
+      
+      
+      
+      
 
 # error, unknown os
 
     Code
       sysreqs_resolve("java", "foobar", "11")
     Error <async_rejected>
-      ! Failed to look up system requirements for OS foobar 11.
-      i HTTP error 400 for <<server>/__api__/repos/1/sysreqs?distribution=foobar&release=11>.
-      i Response: "{\"code\":14,\"error\":\"Unsupported system\",\"payload\":null}".
+      ! Unknown OS. Don't know how to install system packages for foobar 11
 
 # sysreqs_install
 
@@ -141,7 +232,8 @@
       sysreqs_install(srq)
     Message <cliMessage>
       i Installing system requirements
-      i Executing `sh -c echo apt-get install -y libssl-dev libcurl4-openssl-dev`
+      i Executing `sh -c echo apt-get -y update`
+      i Executing `sh -c echo apt-get -y install libcurl4-openssl-dev libssl-dev`
 
 ---
 
@@ -149,8 +241,8 @@
       sysreqs_install(srq)
     Message <cliMessage>
       i Installing system requirements
-      i Executing `sh -c echo apt-get install -y default-jdk`
-      i Executing `sh -c echo apt-get install -y libcurl4-openssl-dev`
+      i Executing `sh -c echo apt-get -y update`
+      i Executing `sh -c echo apt-get -y install default-jdk libcurl4-openssl-dev`
       i Executing `sh -c echo R CMD javareconf`
 
 ---
@@ -159,10 +251,10 @@
       sysreqs_install(srq)
     Message <cliMessage>
       i Installing system requirements
-      i Executing `sh -c echo apt-get install -y default-jdk`
-      apt-get install -y default-jdk
-      i Executing `sh -c echo apt-get install -y libcurl4-openssl-dev`
-      apt-get install -y libcurl4-openssl-dev
+      i Executing `sh -c echo apt-get -y update`
+      apt-get -y update
+      i Executing `sh -c echo apt-get -y install default-jdk libcurl4-openssl-dev`
+      apt-get -y install default-jdk libcurl4-openssl-dev
       i Executing `sh -c echo R CMD javareconf`
       R CMD javareconf
 

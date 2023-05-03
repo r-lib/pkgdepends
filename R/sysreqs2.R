@@ -65,12 +65,13 @@ sysreqs2_async_resolve <- function(sysreqs, os, os_release, config, ...) {
       sysreqs2_match(sysreqs, os = os, os_release = os_release, config = config, ...)
     })$
     then(function(recs) {
+      flatrecs <- unlist(recs, recursive = FALSE)
       upd <- sysreqs2_command(os, os_release, "update")
-      pre <- unlist(lapply(recs, "[[", "pre_install"))
-      post <- unlist(lapply(recs, "[[", "post_install"))
+      pre <- unlist(lapply(flatrecs, "[[", "pre_install"))
+      post <- unlist(lapply(flatrecs, "[[", "post_install"))
       if (is.na(upd)) upd <- character()
       cmd <- sysreqs2_command(os, os_release, "install")
-      pkgs <- unlist(lapply(recs, "[[", "packages"))
+      pkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
       pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
       pkgs <- if (length(pkgs)) paste(cmd, pkgs)
       # no need to update if nothing to do
@@ -133,36 +134,53 @@ sysreqs2_async_update_metadata <- function(path = NULL, config = NULL) {
 }
 
 sysreqs2_match <- function(sysreqs, path = NULL, os = NULL,
-                           os_release = NULL, config = NULL ) {
-  sysreqs <- paste(sysreqs, collapse = " ")
+                           os_release = NULL, config = NULL) {
+
   path <- path %||% file.path(get_user_cache_dir()$root, "sysreqs")
   rules <- dir(file.path(path, "rules"), pattern = "[.]json$", full.names = TRUE)
 
-  records <- list()
+  result <- structure(
+    vector(mode = "list", length(sysreqs)),
+    names = names(sysreqs)
+  )
+  todo <- !is.na(sysreqs) & sysreqs != ""
 
+  rsysreqs <- sysreqs[todo]
   for (r in rules) {
     rule <- fromJSON(r, simplifyVector = FALSE)
     pats <- unlist(rule$patterns)
-    if (!any(vlapply(pats, grepl, sysreqs, ignore.case = TRUE))) next
+    mch <- vapply(
+      pats,
+      grepl,
+      logical(length(rsysreqs)),
+      x = rsysreqs,
+      ignore.case = TRUE
+    )
+    mch <- apply(rbind(mch), 1, any)
+    if (!any(mch)) next
     for (dep in rule$dependencies) {
       appl <- FALSE
       for (const in dep$constraints) {
-        if (const$distribution == os &&
+        if (identical(const$distribution, os) &&
             (is.null(const$versions) || os_release %in% const$versions)) {
           appl <- TRUE
           break
         }
       }
-      if (appl) {
-        records[[length(records) + 1]] <- list(
-          packages = unname(unlist(dep$packages)),
-          pre_install = unname(unlist(dep$pre_install)),
-          post_install = unname(unlist(dep$post_install))
-        )
-        break
+      if (!appl) next
+      sysreq_name <- tools::file_path_sans_ext(basename(r))
+      rec <- list(
+        sysreq = sysreq_name,
+        packages = unname(unlist(dep$packages)),
+        pre_install = unname(unlist(dep$pre_install)),
+        post_install = unname(unlist(dep$post_install))
+      )
+      for (idx in which(mch)) {
+        result[todo][[idx]] <- c(result[todo][[idx]], list(rec))
       }
+      break
     }
   }
 
-  records
+  result
 }

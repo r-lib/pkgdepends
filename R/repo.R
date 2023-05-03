@@ -67,6 +67,13 @@ repo <- local({
     write_dcf(pkgs, PACKAGES)
   }
 
+  repo_list_gh <- function(repo, subdir) {
+    dir.create(tmp <- tempfile())
+    on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+    get_packages(repo, subdir, tmp)
+    repo_list(path = tmp)
+  }
+
   repo_update_gh <- function(repo, subdir, file) {
     file <- normalizePath(file)
 
@@ -225,6 +232,25 @@ repo <- local({
     paste0("* `", colnames(repo_list(path = tmp)), "`", collapse = "\n")
   }
 
+  get_packages <- function(repo, subdir, target) {
+    url <- paste0("https://github.com/", repo)
+    files <- git_list_files(url)
+    wh <- which(files$files$path == paste0(subdir, "/PACKAGES.gz"))[1]
+    if (is.na(wh)) {
+      wh <- which(files$files$path == paste0(subdir, "/PACKAGES"))[1]
+    }
+    if (is.na(wh)) {
+      wh <- which(files$files$path == paste0(subdir, "/PACKAGES.rds"))[1]
+    }
+    if (is.na(wh)) {
+      throw(pkg_error(
+        "Cannot file `PACKAGES*` in {.val {subdir}} at repo {.val {repo}}."
+      ))
+    }
+    hash <- files$files$hash[wh]
+    git_download_file(url, hash, file.path(target, "PACKAGES"))
+  }
+
   # -----------------------------------------------------------------------
   # Exported functions
 
@@ -234,6 +260,7 @@ repo <- local({
       add       = repo_add,
       delete    = repo_delete,
       list      = repo_list,
+      list_gh   = repo_list_gh,
       update    = repo_update,
       update_gh = repo_update_gh
     ),

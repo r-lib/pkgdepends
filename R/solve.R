@@ -154,13 +154,12 @@ pkgplan_solve <- function(self, private, policy) {
   }
 
   if (private$config$get("sysreqs")) {
-    res$sysreqs <- tryCatch(
-      list(
-        result = sysreqs_resolve(res$data$sysreqs, config = private$config),
-        error = NULL
-      ),
-      error = function(err) list(result = NULL, error = err)
-    )
+    res$sysreqs <- tryCatch({
+      sq <- sysreqs_resolve(res$data$sysreqs, config = private$config)
+      res$data$sysreqs_packages <- sq$records
+      sq$records <- NULL
+      list(result = sq, error = NULL)
+    }, error = function(err) list(result = NULL, error = err))
   }
 
   private$solution$result <- res
@@ -897,6 +896,8 @@ highlight_package_list <- function(sol) {
   hash <- character(nrow(sol))
   hash[gh] <- vcapply(sol$metadata[gh], function(x) x["RemoteSha"])
 
+  sysreqs <- highlight_sysreqs(sol$sysreqs_packages)
+
   ann <- paste0(
     ifelse(
       bld, if (has_emoji()) emo_builder(sum(ins)) else emoji("builder"), ""),
@@ -907,7 +908,8 @@ highlight_package_list <- function(sol) {
       paste0(" ", format_file_size(sol$filesize)),
       ""
     ),
-    ifelse(gh, paste0(" (GitHub: ", substr(hash, 1, 7), ")"), "")
+    ifelse(gh, paste0(" (GitHub: ", substr(hash, 1, 7), ")"), ""),
+    sysreqs
   )
 
   lns <- paste0(pkg, " ", old, " ", arr, " ", new, " ", ann)
@@ -923,6 +925,21 @@ highlight_package_list <- function(sol) {
 
   attr(ret, "key") <-  if (key == "") "" else paste("[", key, "]")
   ret
+}
+
+highlight_sysreqs <- function(sysreqs) {
+  if (is.null(sysreqs)) return("")
+  vcapply(sysreqs, function(p) {
+    if (length(p) == 0) return("")
+    pkgs <- unlist(lapply(p, function(x) {
+      x$packages %||% paste0(x$sysreq, " (installer)")
+    }))
+    if (length(pkgs) == 0) return("")
+    paste0(
+      cli::col_silver(" + "),
+      paste(col_blue(pkgs), collapse = ", ")
+    )
+  })
 }
 
 pkgplan_show_solution <- function(self, private, key = FALSE) {

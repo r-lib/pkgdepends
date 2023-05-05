@@ -8,18 +8,33 @@
 
 sysreqs2_cmds <- utils::read.table(
    stringsAsFactors = FALSE, header = TRUE, textConnection("
-   os         os_release  update              install
-   ubuntu     *           'apt-get -y update' 'apt-get -y install'
-   debian     *           'apt-get -y update' 'apt-get -y install'
-   centos     *           NA                  'yum install -y'
-   rockylinux *           NA                  'dnf install -y'
-   redhat     6           NA                  'yum install -y'
-   redhat     7           NA                  'yum install -y'
-   redhat     *           NA                  'dnf install -y'
-   fedora     *           NA                  'dnf install -y'
-   opensuse   *           NA                  'zypper --non-interactive install'
-   sle        *           NA                  'zypper --non-interactive install'
+   os         os_release  update              install                             query
+   ubuntu     *           'apt-get -y update' 'apt-get -y install'                dpkg-query
+   debian     *           'apt-get -y update' 'apt-get -y install'                dpkg-query
+   centos     *           NA                  'yum install -y'                    rpm
+   rockylinux *           NA                  'dnf install -y'                    rpm
+   redhat     6           NA                  'yum install -y'                    rpm
+   redhat     7           NA                  'yum install -y'                    rpm
+   redhat     *           NA                  'dnf install -y'                    rpm
+   fedora     *           NA                  'dnf install -y'                    rpm
+   opensuse   *           NA                  'zypper --non-interactive install'  rpm
+   sle        *           NA                  'zypper --non-interactive install'  rpm
 "))
+
+# TODO: query installed system packages
+#
+# For RPM, we need this query:
+# rpm -qa --provides --qf '---%{NAME}\n'
+# The output is a bit weird, for each package first the capabilities are
+# listed, then the package name, after `---`.
+# We can use %{NAME} %{VERSION} if we want the version numbers as well.
+#
+# For DEB systems we need
+# dpkg-query -W -f '${db:Status-Abbrev} ${Package} ${Version} ${Provides}\n' '*'
+# This also lists the packages that are not installed currently.
+# First field is the status code, second is package name, then version
+# number (if installed), then capabilities in a comma separated list.
+# Capabilities may include version requirements.
 
 sysreqs2_is_supported <- function(os, os_release) {
   os %in% sysreqs2_cmds$os
@@ -53,12 +68,10 @@ sysreqs2_async_resolve <- function(sysreqs, os, os_release, config, ...) {
   sysreqs; os; os_release; config; list(...)
   start <- Sys.time()
 
-  if (is.null(os) || is.null(os_release)) {
-    lnx <- detect_linux()
-    os <- os %||% lnx$distribution
-    os_release <- os_release %||% lnx$release
-  }
   config <- config %||% current_config()
+  plt <- parse_sysreqs_platform(config$get("sysreqs_platform"))
+  os <- os %||% plt$os
+  os_release <- os_release %||% plt$os_release
 
   sysreqs2_async_update_metadata(config = config)$
     then(function() {

@@ -158,67 +158,6 @@
       
       
 
-# system is detected
-
-    Code
-      srq <- sysreqs_resolve("java and also libcurl")
-      srq$total <- 1 / 3
-      srq
-    Output
-      $os
-      [1] "ubuntu"
-      
-      $os_release
-      [1] "22.04"
-      
-      $url
-      [1] NA
-      
-      $total
-      [1] 0.3333333
-      
-      $pre_install
-      [1] "apt-get -y update"
-      
-      $install_scripts
-      [1] "apt-get -y install default-jdk libcurl4-openssl-dev"
-      
-      $post_install
-      [1] "R CMD javareconf"
-      
-      $records
-      $records[[1]]
-      $records[[1]][[1]]
-      $records[[1]][[1]]$sysreq
-      [1] "java"
-      
-      $records[[1]][[1]]$packages
-      [1] "default-jdk"
-      
-      $records[[1]][[1]]$pre_install
-      NULL
-      
-      $records[[1]][[1]]$post_install
-      [1] "R CMD javareconf"
-      
-      
-      $records[[1]][[2]]
-      $records[[1]][[2]]$sysreq
-      [1] "libcurl"
-      
-      $records[[1]][[2]]$packages
-      [1] "libcurl4-openssl-dev"
-      
-      $records[[1]][[2]]$pre_install
-      NULL
-      
-      $records[[1]][[2]]$post_install
-      NULL
-      
-      
-      
-      
-
 # error, unknown os
 
     Code
@@ -257,30 +196,6 @@
       apt-get -y install default-jdk libcurl4-openssl-dev
       i Executing `sh -c echo R CMD javareconf`
       R CMD javareconf
-
-# detect_linux
-
-    Code
-      detect_linux()
-    Output
-      $distribution
-      [1] "ubuntu"
-      
-      $release
-      [1] "22.04"
-      
-
----
-
-    Code
-      detect_linux()
-    Output
-      $distribution
-      [1] "unknown"
-      
-      $release
-      [1] "unknown"
-      
 
 # compact_cmds
 

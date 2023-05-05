@@ -33,11 +33,28 @@ env_decode_difftime <- function(x, name) {
   ))
 }
 
-default_sysreqs <- function() {
-  if (Sys.getenv("CI") != "true") return(FALSE)
-  if (Sys.info()[["sysname"]] != "Linux") return(FALSE)
-  dist <- detect_linux()
-  sysreqs2_is_supported(dist$distribution, dist$release)
+default_sysreqs_platform <- local({
+  sysreqs_platform <- NULL
+  function() {
+    if (is.null(sysreqs_platform)) {
+      plt <- pkgcache::current_r_platform_data()
+      sysreqs_platform <<- if (plt$os == "linux" || grepl("linux-", plt$os)) {
+        paste0(
+          plt[["distribution"]] %||% "unknown",
+          "-",
+          plt[["release"]] %||% "unknown"
+        )
+      } else {
+        plt$os
+      }
+    }
+    sysreqs_platform
+  }
+})
+
+default_sysreqs <- function(config) {
+  plt <- parse_sysreqs_platform(config$get("sysreqs_platform"))
+  sysreqs2_is_supported(plt$os, plt$os_release)
 }
 
 default_sysreqs_sudo <- function() {
@@ -233,14 +250,21 @@ pkgdepends_config <- sort_by_name(list(
     type = "flag",
     default = default_sysreqs,
     docs =
-      "Whether to look up and install system requirements.
-       By default this is `TRUE` if the `CI` environment variable is set
-       and the operating system is a supported Linux distribution:
-       CentOS, Debian, Fedora, openSUSE, RedHat Linux, Ubuntu Linux or SUSE
-       Linux Enterprise. The default will change as new platforms gain
-       system requirements support."
+      "TODO"
   ),
 
+  # -----------------------------------------------------------------------
+  sysreqs_platform = list(
+    type = "string",
+    default = default_sysreqs_platform,
+    docs =
+      "The platform to use for system requirements lookup. On Linux, where
+       system requirements are currently supported, it must be a string
+       containing the distribution name and release, separated by a dash.
+       E.g.: `\"ubuntu-22.04\"`, or `\"rhel-9\"`."
+  ),
+
+  # -----------------------------------------------------------------------
   sysreqs_dry_run = list(
     type = "flag",
     default = FALSE,

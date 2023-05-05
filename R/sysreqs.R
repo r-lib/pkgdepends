@@ -1,14 +1,24 @@
 
+parse_sysreqs_platform <- function(x) {
+  ltrs <- strsplit(x, "")[[1]]
+  dash <- which(ltrs == "-")[1]
+  if (is.na(dash)) {
+    list(os = x, os_release = NA_character_)
+  } else {
+    list(
+      os = substr(x, 1, dash - 1),
+      os_release = substr(x, dash + 1, nchar(x))
+    )
+  }
+}
+
 sysreqs_resolve <- function(sysreqs, os = NULL, os_release = NULL,
                             config = NULL, ...) {
-  if (is.null(os) || is.null(os_release)) {
-    lnx <- detect_linux()
-    os <- os %||% lnx$distribution
-    os_release <- os_release %||% lnx$release
-  }
   config <- config %||% current_config()
+  plt <- parse_sysreqs_platform(config$get("sysreqs_platform"))
+  os <- os %||% plt$os
+  os_release <- os_release %||% plt$os_release
 
-  # TODO: switch to v2 completely
   if (tolower(Sys.getenv("R_PKG_SYSREQS2")) != "false") {
     synchronize(sysreqs2_async_resolve(sysreqs, os, os_release, config, ...))
   } else {
@@ -154,14 +164,6 @@ sysreqs_install <- function(sysreqs_cmds, config = NULL) {
   invisible(output)
 }
 
-detect_linux <- function() {
-  plt <- pkgcache::current_r_platform_data()
-  list(
-    distribution = plt[["distribution"]] %||% "unknown",
-    release = plt[["release"]] %||% "unknown"
-  )
-}
-
 compact_cmds <- function(x) {
   rx <- "^apt-get install -y ([a-z0-9-]+)$"
   if (length(x) == 0 || !all(grepl(rx, x))) {
@@ -172,4 +174,14 @@ compact_cmds <- function(x) {
     "apt-get install -y ",
     paste(gsub(rx, "\\1", x), collapse = " ")
   )
+}
+
+is_root <- function() {
+  if (.Platform$OS.type != "unix") return(FALSE)
+  ps::ps_uids()[["effective"]] == 0
+}
+
+can_sudo_without_pw <- function() {
+  if (.Platform$OS.type != "unix") return(FALSE)
+  processx::run("sudo", c("-s", "id"), error_on_status=FALSE)$status == 0
 }

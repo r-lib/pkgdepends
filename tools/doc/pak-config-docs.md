@@ -29,10 +29,13 @@ $r_versions
 [1] "Character vector, R versions to download or install\npackages for. It defaults to the current R version."
 
 $sysreqs
-[1] "Whether to look up and install system requirements.\nBy default this is \\code{TRUE} if the \\code{CI} environment variable is set\nand the operating system is a supported Linux distribution:\nCentOS, Debian, Fedora, openSUSE, RedHat Linux, Ubuntu Linux or SUSE\nLinux Enterprise. The default will change as new platforms gain\nsystem requirements support."
+[1] "Whether to automatically install system requirements. If \\code{TRUE},\nthen pkgdepends will try to install required system\npackages. If \\code{FALSE}, then system requirements are still printed\non supported platforms, but they are not installed.\nBy default it is \\code{TRUE} on supported platforms, if the current\nuser is the root user or password-less \\code{sudo} is configured for the\ncurrent user."
 
 $sysreqs_dry_run
 [1] "If \\code{TRUE}, then pak only prints the system commands to\ninstall system requirements, but does not execute them."
+
+$sysreqs_platform
+[1] "The platform to use for system requirements lookup. On Linux, where\nsystem requirements are currently supported, it must be a string\ncontaining the distribution name and release, separated by a dash.\nE.g.: \\code{\"ubuntu-22.04\"}, or \\code{\"rhel-9\"}."
 
 $sysreqs_rspm_repo_id
 [1] "Posit Package Manager (formerly RStudio Package Manager) repository\nid to use for CRAN system requirements lookup. Defaults to the\n\\code{RSPM_REPO_ID} environment variable, if set. If not set, then it\ndefaults to \\code{1}."

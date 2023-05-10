@@ -6,92 +6,82 @@
 # will update the DB (cache it is called I believe), and the rest will
 # use it.
 
+# TODO: get this data from the DB
+
 sysreqs2_cmds <- utils::read.table(
    stringsAsFactors = FALSE, header = TRUE, textConnection("
-   os         os_release  update              install                             query
-   ubuntu     *           'apt-get -y update' 'apt-get -y install'                dpkg-query
-   debian     *           'apt-get -y update' 'apt-get -y install'                dpkg-query
-   centos     *           NA                  'yum install -y'                    rpm
-   rockylinux *           NA                  'dnf install -y'                    rpm
-   redhat     6           NA                  'yum install -y'                    rpm
-   redhat     7           NA                  'yum install -y'                    rpm
-   redhat     *           NA                  'dnf install -y'                    rpm
-   fedora     *           NA                  'dnf install -y'                    rpm
-   opensuse   *           NA                  'zypper --non-interactive install'  rpm
-   sle        *           NA                  'zypper --non-interactive install'  rpm
+   name                       os      distribution version  update_command      install_command                     query_command
+   'Ubuntu Linux'             linux   ubuntu       *        'apt-get -y update' 'apt-get -y install'                dpkg-query
+   'Debian Linux'             linux   debian       *        'apt-get -y update' 'apt-get -y install'                dpkg-query
+   'CentOS Linux'             linux   centos       *         NA                  'yum install -y'                    rpm
+   'Rocky Linux'              linux   rockylinux   *         NA                  'dnf install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   redhat       6         NA                  'yum install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   redhat       7         NA                  'yum install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   redhat       *         NA                  'dnf install -y'                    rpm
+   'Fedora Linux'             linux   fedora       *         NA                  'dnf install -y'                    rpm
+   'openSUSE Linux'           linux   opensuse     *         NA                  'zypper --non-interactive install'  rpm
+   'SUSE Linux Enterprise'    linux   sle          *         NA                  'zypper --non-interactive install'  rpm
 "))
 
-# TODO: query installed system packages
-#
-# For RPM, we need this query:
-# rpm -qa --provides --qf '---%{NAME}\n'
-# The output is a bit weird, for each package first the capabilities are
-# listed, then the package name, after `---`.
-# We can use %{NAME} %{VERSION} if we want the version numbers as well.
-#
-# For DEB systems we need
-# dpkg-query -W -f '${db:Status-Abbrev} ${Package} ${Version} ${Provides}\n' '*'
-# This also lists the packages that are not installed currently.
-# First field is the status code, second is package name, then version
-# number (if installed), then capabilities in a comma separated list.
-# Capabilities may include version requirements.
-
-sysreqs2_is_supported <- function(os, os_release) {
-  os %in% sysreqs2_cmds$os
+find_sysreqs_platform <- function(platform = NULL) {
+  platform <- platform %||% current_config()$get("sysreqs_platform")
+  plt <- parse_sysreqs_platform(platform)
+  idx <- which(
+    sysreqs2_cmds$os == plt$os &
+    sysreqs2_cmds$distribution == plt$distribution &
+    sysreqs2_cmds$version %in% c("*", plt$version)
+  )[1]
 }
 
-sysreqs2_command <- function(os, os_release,
-                             cmd = c("install", "update")) {
+sysreqs2_command <- function(platform = NULL,
+                             cmd = c("install_command", "update_command",
+                                     "query_command")) {
   cmd <- match.arg(cmd)
-  sel <- which(sysreqs2_cmds$os == os & sysreqs2_cmds$os_release == os_release)[1]
+  sel <- find_sysreqs_platform(platform)
   if (is.na(sel)) {
-    sel <- which(sysreqs2_cmds$os == os & sysreqs2_cmds$os_release == "*")[1]
-  }
-  if (is.na(sel)) {
-    stop(
-      "Unknown OS. Don't know how to install system packages for ",
-      os,
-      " ",
-      os_release
-    )
+    throw(pkg_error(paste0(
+      "Unknown OS. Don't know how to query or install system packages for ",
+      platform,
+      "."
+    )))
   }
 
   sysreqs2_cmds[[cmd]][sel]
 }
 
-sysreqs2_resolve <- function(sysreqs, os = NULL, os_release = NULL,
+sysreqs2_resolve <- function(sysreqs, platform = NULL,
                              config = NULL, ...) {
-  synchronize(sysreqs2_async_resolve(sysreqs, os, os_release, config, ...))
+  synchronize(sysreqs2_async_resolve(sysreqs, platform, config, ...))
 }
 
-sysreqs2_async_resolve <- function(sysreqs, os, os_release, config, ...) {
-  sysreqs; os; os_release; config; list(...)
+sysreqs2_async_resolve <- function(sysreqs, platform, config, ...) {
+  sysreqs; platform; config; list(...)
   start <- Sys.time()
 
   config <- config %||% current_config()
-  plt <- parse_sysreqs_platform(config$get("sysreqs_platform"))
-  os <- os %||% plt$os
-  os_release <- os_release %||% plt$os_release
+  platform <- platform %||% config$get("sysreqs_platform")
+  plt <- parse_sysreqs_platform(platform)
 
   sysreqs2_async_update_metadata(config = config)$
     then(function() {
-      sysreqs2_match(sysreqs, os = os, os_release = os_release, config = config, ...)
+      sysreqs2_match(sysreqs, platform = platform, config = config, ...)
     })$
     then(function(recs) {
       flatrecs <- unlist(recs, recursive = FALSE)
-      upd <- sysreqs2_command(os, os_release, "update")
+      upd <- sysreqs2_command(platform, "update")
       pre <- unlist(lapply(flatrecs, "[[", "pre_install"))
       post <- unlist(lapply(flatrecs, "[[", "post_install"))
       if (is.na(upd)) upd <- character()
-      cmd <- sysreqs2_command(os, os_release, "install")
+      cmd <- sysreqs2_command(platform, "install")
       pkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
       pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
       pkgs <- if (length(pkgs)) paste(cmd, pkgs)
       # no need to update if nothing to do
       if (length(pre) + length(pkgs) + length(post) == 0) upd <- character()
       list(
-        os = os,
-        os_release = os_release,
+        os = plt$os,
+        distribution = plt$distribution,
+        version = plt$version,
         url = NA_character_,
         total = c(total = as.double(Sys.time() - start, units = "secs")),
         pre_install = c(upd, pre),
@@ -135,7 +125,11 @@ sysreqs2_async_update_metadata <- function(path = NULL, config = NULL) {
   async_git_list_refs_v1(repo$repo)$
     then(function(refs) {
       rem_head <- refs$refs$hash[refs$refs$ref == "HEAD"]
-      if (rem_head == head) return()
+      if (rem_head == head) {
+        # still update the time stamps
+        Sys.setFileTime(head_file, Sys.time())
+        return()
+      }
       tmp <- paste0(path, "-new")
       async_git_download_repo(repo$repo, rem_head, tmp)$
         then(function() {
@@ -146,17 +140,24 @@ sysreqs2_async_update_metadata <- function(path = NULL, config = NULL) {
     })
 }
 
-sysreqs2_match <- function(sysreqs, path = NULL, os = NULL,
-                           os_release = NULL, config = NULL) {
-
+sysreqs2_list_rules <- function(path = NULL) {
   path <- path %||% file.path(get_user_cache_dir()$root, "sysreqs")
   rules <- dir(file.path(path, "rules"), pattern = "[.]json$", full.names = TRUE)
+}
+
+sysreqs2_match <- function(sysreqs, path = NULL, platform = NULL,
+                           config = NULL) {
+
+  rules <- sysreqs2_list_rules(path)
 
   result <- structure(
     vector(mode = "list", length(sysreqs)),
     names = names(sysreqs)
   )
   todo <- !is.na(sysreqs) & sysreqs != ""
+
+  config <- config %||% current_config()
+  plt <- parse_sysreqs_platform(platform %||% config$get("sysreqs_platform"))
 
   rsysreqs <- sysreqs[todo]
   for (r in rules) {
@@ -174,8 +175,9 @@ sysreqs2_match <- function(sysreqs, path = NULL, os = NULL,
     for (dep in rule$dependencies) {
       appl <- FALSE
       for (const in dep$constraints) {
-        if (identical(const$distribution, os) &&
-            (is.null(const$versions) || os_release %in% const$versions)) {
+        if (identical(const$os, plt$os) &&
+            identical(const$distribution, plt$distribution) &&
+            (is.null(const$versions) || plt$version %in% const$versions)) {
           appl <- TRUE
           break
         }

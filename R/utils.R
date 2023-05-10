@@ -455,3 +455,14 @@ remove_entry <- function(l, n) {
 path_norm <- function(x) {
   normalizePath(x, mustWork = FALSE)
 }
+
+parse_platform <- function(x) {
+  pcs <- strsplit(x, "-", fixed = TRUE)
+  data_frame(
+    cpu = vcapply(pcs, "[", 1),
+    vendor = vcapply(pcs, "[", 2),
+    os = vcapply(pcs, function(y) {
+      if (length(y) < 3) NA_character_ else paste(y[-(1:2)], collapse = "-")
+    })
+  )
+}

@@ -4,9 +4,12 @@
       sr1
     Output
       $os
+      [1] "linux"
+      
+      $distribution
       [1] "ubuntu"
       
-      $os_release
+      $version
       [1] "22.04"
       
       $url
@@ -63,9 +66,12 @@
       sr2
     Output
       $os
+      [1] "linux"
+      
+      $distribution
       [1] "debian"
       
-      $os_release
+      $version
       [1] "unstable"
       
       $url
@@ -119,9 +125,9 @@
 # sysreqs2_command error
 
     Code
-      sysreqs2_command("foobar", "2023")
+      sysreqs2_command("foobar-2023")
     Error <rlib_error_3_0>
-      ! Unknown OS. Don't know how to install system packages for foobar 2023
+      ! Unknown OS. Don't know how to query or install system packages for foobar-2023.
 
 # do not run update if nothing to do
 
@@ -129,9 +135,12 @@
       sr1
     Output
       $os
+      [1] "linux"
+      
+      $distribution
       [1] "ubuntu"
       
-      $os_release
+      $version
       [1] "22.04"
       
       $url

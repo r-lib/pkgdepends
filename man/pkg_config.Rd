@@ -4,6 +4,7 @@
 \alias{pkg_config}
 \alias{current_config}
 \alias{pkgdepends-config}
+\alias{pkgdepends_config}
 \title{pkgdepends configuration}
 \usage{
 current_config()
@@ -79,14 +80,19 @@ names. Defaults to the platform of the current R session, plus
 \code{"source"}.
 \item \code{r_versions}: Character vector, R versions to download or install
 packages for. It defaults to the current R version.
-\item \code{sysreqs}: Whether to look up and install system requirements.
-By default this is \code{TRUE} if the \code{CI} environment variable is set
-and the operating system is a supported Linux distribution:
-CentOS, Debian, Fedora, openSUSE, RedHat Linux, Ubuntu Linux or SUSE
-Linux Enterprise. The default will change as new platforms gain
-system requirements support.
+\item \code{sysreqs}: Whether to automatically install system requirements. If \code{TRUE},
+then \verb{r pak_or_pkgdepends()} will try to install required system
+packages. If \code{FALSE}, then system requirements are still printed
+on supported platforms, but they are not installed.
+By default it is \code{TRUE} on supported platforms, if the current
+user is the root user or password-less \code{sudo} is configured for the
+current user.
 \item \code{sysreqs_dry_run}: If \code{TRUE}, then pkgdepends only prints the system commands to
 install system requirements, but does not execute them.
+\item \code{sysreqs_platform}: The platform to use for system requirements lookup. On Linux, where
+system requirements are currently supported, it must be a string
+containing the distribution name and release, separated by a dash.
+E.g.: \code{"ubuntu-22.04"}, or \code{"rhel-9"}.
 \item \code{sysreqs_rspm_repo_id}: Posit Package Manager (formerly RStudio Package Manager) repository
 id to use for CRAN system requirements lookup. Defaults to the
 \code{RSPM_REPO_ID} environment variable, if set. If not set, then it

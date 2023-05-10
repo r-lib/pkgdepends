@@ -1074,7 +1074,8 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
   sysreqs <- self$get_solution()$sysreqs$result
   if (!is.null(sysreqs)) {
     sysreqs$os <- unbox(sysreqs$os)
-    sysreqs$os_release <- unbox(sysreqs$os_release)
+    sysreqs$distribution <- unbox(sysreqs$distribution)
+    sysreqs$version <- unbox(sysreqs$version)
     sysreqs$url <- unbox(sysreqs$url)
     sysreqs$total <- NULL
     plan$sysreqs <- sysreqs

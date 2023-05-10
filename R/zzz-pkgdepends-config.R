@@ -33,28 +33,14 @@ env_decode_difftime <- function(x, name) {
   ))
 }
 
-default_sysreqs_platform <- local({
-  sysreqs_platform <- NULL
-  function() {
-    if (is.null(sysreqs_platform)) {
-      plt <- pkgcache::current_r_platform_data()
-      sysreqs_platform <<- if (plt$os == "linux" || grepl("linux-", plt$os)) {
-        paste0(
-          plt[["distribution"]] %||% "unknown",
-          "-",
-          plt[["release"]] %||% "unknown"
-        )
-      } else {
-        plt$os
-      }
-    }
-    sysreqs_platform
-  }
-})
+default_sysreqs_platform <- function() {
+  pkgcache::current_r_platform()
+}
 
 default_sysreqs <- function(config) {
-  plt <- parse_sysreqs_platform(config$get("sysreqs_platform"))
-  sysreqs2_is_supported(plt$os, plt$os_release)
+  plt <- config$get("sysreqs_platform")
+  sysreqs_is_supported(plt) &&
+    (is_root() || can_sudo_without_pw())
 }
 
 default_sysreqs_sudo <- function() {
@@ -250,7 +236,13 @@ pkgdepends_config <- sort_by_name(list(
     type = "flag",
     default = default_sysreqs,
     docs =
-      "TODO"
+      "Whether to automatically install system requirements. If `TRUE`,
+       then `r pak_or_pkgdepends()` will try to install required system
+       packages. If `FALSE`, then system requirements are still printed
+       on supported platforms, but they are not installed.
+       By default it is `TRUE` on supported platforms, if the current
+       user is the root user or password-less `sudo` is configured for the
+       current user."
   ),
 
   # -----------------------------------------------------------------------
@@ -335,7 +327,7 @@ pkgdepends_config <- sort_by_name(list(
 
 #' pkgdepends configuration
 #' @name pkg_config
-#' @aliases pkgdepends-config
+#' @aliases pkgdepends-config pkgdepends_config
 #'
 #' @description
 #' Configuration entries for several pkgdepends classes.

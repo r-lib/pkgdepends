@@ -1,58 +1,467 @@
+# -------------------------------------------------------------------------
+# Public API
+# -------------------------------------------------------------------------
 
-parse_sysreqs_platform <- function(x) {
-  ltrs <- strsplit(x, "")[[1]]
-  dash <- which(ltrs == "-")[1]
-  if (is.na(dash)) {
-    list(os = x, os_release = NA_character_)
-  } else {
+#' List platforms with system requirements support
+#'
+#' @return
+#' Data frame with columns:
+#' * `name`: human readable OS name.
+#' * `os`: OS name, e.g. `linux`.
+#' * `distribution`: OS id, e.g. `ubuntu` or `redhat`.
+#' * `version`: distribution version. A star means that all versions are
+#'    supported, that are also supported by the vendor.
+#' * `update_command`: command to run to update the system package metadata.
+#' * `install_command`: command to run to install packages.
+#' * `query_command`: name of the tool to use to query system package
+#'    information.
+#'
+#' @export
+#' @family system requirements functions
+#' @examples
+#' sysreqs_platforms()
+
+sysreqs_platforms <- function() {
+  as_data_frame(sysreqs2_cmds)
+}
+
+#' Check if a platform has system requirements support
+#'
+#' @param platform System requirements platform.
+#' @return Logical scalar.
+#'
+#' @export
+#' @family system requirements functions
+#' @seealso The `sysreqs_platform` [configuration option][pkgdepends-config].
+#' @examples
+#' sysreqs_is_supported()
+
+sysreqs_is_supported <- function(platform = NULL) {
+  platform <- platform %||% current_config()$get("sysreqs_platform")
+  !is.na(find_sysreqs_platform(platform))
+}
+
+#' List contents of the system requirements DB, for a platform
+#'
+#' @inheritParams sysreqs_is_supported
+#' @return Data frame with columns:
+#' * `name`: cross platform system dependency name in the database.
+#' * `patterns`: one or more regular expressions to match to
+#'   `SystemRequirements` fields.
+#' * `packages`: one or more system package names to install.
+#' * `pre_install`: command(s) to run before installing the packages.
+#' * `post_install`:: command(s) to run after installing the packages.
+#'
+#' @export
+#' @family system requirements functions
+
+sysreqs_db_list <- function(platform = NULL) {
+  platform <- platform %||% current_config()$get("sysreqs_platform")
+  plt <- parse_sysreqs_platform(platform)
+
+  sysreqs_db_update()
+  rule_files <- sysreqs2_list_rules()
+  rules <- lapply(rule_files, fromJSON, simplifyVector = FALSE)
+
+  matching_deps <- function(rule) {
+    for (dep in rule$dependencies) {
+      appl <- FALSE
+      for (const in dep$constraints) {
+        if (identical(const$os, plt$os) &&
+            identical(const$distribution, plt$distribution) &&
+            (is.null(const$versions) || plt$version %in% const$versions)) {
+          appl <- TRUE
+          break
+        }
+      }
+      if (appl) {
+        return(list(
+          packages = unname(unlist(dep$packages)),
+          pre_install = unname(unlist(dep$pre_install)),
+          post_install = unname(unlist(dep$post_install))
+        ))
+      }
+    }
     list(
-      os = substr(x, 1, dash - 1),
-      os_release = substr(x, dash + 1, nchar(x))
+      packages = NULL,
+      pre_install = NULL,
+      post_install = NULL
     )
   }
+
+  dependencies <- lapply(rules, matching_deps)
+  data_frame(
+    name = tools::file_path_sans_ext(basename(rule_files)),
+    patterns = lapply(rules, function(r) unlist(r$patterns)),
+    packages = lapply(dependencies, "[[", "packages"),
+    pre_install = lapply(dependencies, "[[", "pre_install"),
+    post_install = lapply(dependencies, "[[", "post_install")
+  )
 }
 
-sysreqs_resolve <- function(sysreqs, os = NULL, os_release = NULL,
-                            config = NULL, ...) {
-  config <- config %||% current_config()
-  plt <- parse_sysreqs_platform(config$get("sysreqs_platform"))
-  os <- os %||% plt$os
-  os_release <- os_release %||% plt$os_release
+#' Match system requirement descriptions to the database
+#'
+#' In the usual workflow `r pak_or_pkgdepends()` matches the
+#' `SystemRequirements` fields of the `DESCRIPTION` files to the database.
+#'
+#' The `sysreqs_db_match()` function lets you match any string, and it is
+#' mainly useful for debugging.
+#'
+#' @param specs Character vector of system requirements descriptions.
+#' @param platform System requirements platform. Defaults to the current
+#' platform.
+#' @return Data frame with columns:
+#' * `spec`: the input `specs`.
+#' * `sysreq`:  name of the system library or tool.
+#' * `packages`: system packages, list column of character vectors.
+#'    Rarely it can be an empty string, e.g. if a `pre_install` script
+#'    performs the installation.
+#' * `pre_install`: list column of character vectors. Shell script(s) to
+#'    run before the installation.
+#' * `post_install`: list column of character vectors. Shell script(s) to
+#'    run after the installation.
+#'
+#' @export
+#' @family system requirements functions
+#' @examplesIf !pkgdepends:::is_rcmd_check()
+#' sysreqs_db_match(
+#'   c("Needs libcurl", "Java, libssl"),
+#'   platform = "ubuntu-22.04"
+#' )
 
-  if (tolower(Sys.getenv("R_PKG_SYSREQS2")) != "false") {
-    synchronize(sysreqs2_async_resolve(sysreqs, os, os_release, config, ...))
+sysreqs_db_match <- function(specs, platform = NULL) {
+  sysreqs_db_update()
+  recs <- sysreqs2_match(specs, platform = platform)
+  mapply(
+    specs,
+    recs,
+    SIMPLIFY = FALSE,
+    USE.NAMES = FALSE,
+    FUN = function(spec, rec) {
+      data_frame(
+        spec = spec,
+        sysreq = vcapply(rec, "[[", "sysreq"),
+        packages = lapply(rec, "[[", "packages"),
+        pre_install = lapply(rec, "[[", "pre_install"),
+        post_install = lapply(rec, "[[", "post_install")
+      )
+    }
+  )
+}
+
+#' Update the cached copy of the system requirements database
+#'
+#' @details
+#' If the the cached copy is recent, then no update is attempted. See the
+#' `metadata_update_after` [configuration option][pkgdepends-config].
+#'
+#' @export
+#' @family system requirements functions
+
+sysreqs_db_update <- function() {
+  invisible(sysreqs2_update_metadata())
+}
+
+#' Create an installation plan for system requirements
+#'
+#' This function uses [new_pkg_installation_proposal()] and its methods
+#' to create an installation plan for one or more packages, and then print
+#' their system requirements.
+#'
+#' @param refs Packages to install.
+#' @param config Configuration options. See
+#'   ['Configuration'][pkgdepends-config]. If it does not include
+#'   `library`, then a temporary library is used, which is equivalent to
+#'   not assuming any preinstalled packages. Pass `sysreqs_platform` here
+#'   if you want a different platform than the one R is running on.
+#' @return List with entries:
+#'   * `os`: character string. Operating system.
+#'   * `distribution`: character string. Linux distribution, `NA` if the
+#'     OS is not Linux.
+#'   * `version`: character string. Distribution version, `NA` is the OS
+#'     is not Linux.
+#'   * `pre_install`: character vector. Commands to run before the
+#'     installation of system packages.
+#'   * `install_scripts`: character vector. Commands to run to install the
+#'     system packages.
+#'   * `post_install`: character vector. Commands to run after the
+#'     installation of system packages.
+#'   * `packages`: data frame. Information about the system packages that
+#'     are needed. It has columns:
+#'     * `sysreq`: string, cross-platform name of the system requirement.
+#'     * `packages`: list column of character vectors. The names of the R
+#'       packages that have this system requirement.
+#'     * `pre_install`: list column of character vectors. Commands run
+#'       before the package installation for this system requirement.
+#'     * `system_packages`: list column of character vectors. Names of
+#'       system packages to install.
+#'     * `post_install`: list column of character vectors. Commands run
+#'       after the package installation for this system requirement.
+#'
+#' @export
+#' @family system requirements functions
+#' @seealso [new_pkg_installation_proposal()] to actually install
+#' packages, and potentially system requirements.
+#' @examplesIf !pkgdepends:::is_rcmd_check()
+#' sysreqs_install_plan(
+#'   "tidyverse",
+#'   config = list(sysreqs_platform = "ubuntu-22.04")
+#' )
+
+sysreqs_install_plan <- function(refs, config = list()) {
+  if (!"library" %in% names(config)) {
+    dir.create(lib <- tempfile())
+    on.exit(unlink(lib, recursive = TRUE), add = TRUE)
+    config$library <- lib
+  }
+  config$sysreqs <- TRUE
+
+  prop <- new_pkg_installation_proposal(refs, config = config)
+  prop$solve()
+  sol <- prop$get_solution()
+
+  res <- sol$sysreqs$result[c(
+    "os",
+    "distribution",
+    "version",
+    "pre_install",
+    "install_scripts",
+    "post_install"
+  )]
+
+  res$pre_install <- as.character(res$pre_install)
+  res$install_scripts <- as.character(res$install_scripts)
+  res$post_install <- as.character(res$post_install)
+
+  sysreqs <- lapply(sol$data$sysreqs_packages, sapply, "[[", "sysreq")
+  names <- as.character(sort(unique(unlist(sysreqs))))
+  if (length(names)) {
+    records <- unlist(sol$data$sysreqs_packages, recursive=FALSE)
+    names(records) <- vcapply(records, "[[", "sysreq")
+    records <- records[!duplicated(names(records))]
+  }
+
+  spkgs <- data_frame(
+    sysreq = names,
+    packages = lapply(names, function(n) {
+      sol$data$package[vlapply(sysreqs, function(s) n %in% s)]
+    }),
+    pre_install = lapply(names, function(n) as.character(records[[n]]$pre_install)),
+    system_packages = lapply(names, function(n) as.character(records[[n]]$packages)),
+    post_install = lapply(names, function(n) as.character(records[[n]]$post_install))
+  )
+
+  res$packages <- spkgs
+  res
+}
+
+#' Check if installed packages have all their system requirements
+#'
+#' @details
+#' This function uses the `sysreqs_platform` configuration option,
+#' see [Configuration][pkgdepends-config]. Set this if
+#' `r pak_or_pkgdepends()` does not detect your platform correctly.
+#'
+#' @param packages If not `NULL`, then only these packages are checked.
+#'   If a package in `packages` is not installed, then
+#'   `r pak_or_pkgdepends()` throws a warning.
+#' @param library Library or libraries to check.
+#' @return Data frame with a custom print and format method, and a
+#'   `pkg_sysreqs_check_result` class. Its columns are:
+#'    * `system_package`: string, name of the required system package.
+#'    * `installed`: logical, whether the system package is correctly
+#'      installed.
+#'    * `packages`: list column of character vectors. The names of the
+#'      installed R packages that need this system package.
+#'
+#' @export
+#' @family system requirements functions
+#' @examplesIf !pkgdepends:::is_rcmd_check() && pkgdepends::sysreqs_is_supported()
+#' # This only works on supported platforms
+#' sysreqs_check_installed()
+
+sysreqs_check_installed <- function(packages = NULL,
+                                    library = .libPaths()[1]) {
+
+  data <- synchronize(when_all(
+    sysreqs2_async_update_metadata(),
+    async_system_list_packages(),
+    async_parse_installed(library = library, packages = packages)
+  ))
+
+  spkgs <- data[[2]]
+  spkgs <- spkgs[grepl("^.i$", spkgs$status), ]
+  rpkgs <- data[[3]]
+  if (is.null(rpkgs$SystemRequirements)) {
+    rpkgs$SystemRequirements <- rep(NA, nrow(rpkgs))
+  }
+  rpkgs$sysreqs_packages <- sysreqs2_match(rpkgs$SystemRequirements)
+  rpkgs <- rpkgs[!vlapply(rpkgs$sysreqs_packages, is.null), ]
+  rpkgs$sys_package_name <- lapply(
+    rpkgs$sysreqs_packages,
+    function(s) as.character(unlist(lapply(s, "[[", "packages")))
+  )
+  rpkgs <- rpkgs[lengths(rpkgs$sys_package_name) > 0, ]
+
+  upkgs <- unique(sort(unlist(rpkgs$sys_package_name)))
+  provided <- c(spkgs$package, unlist(spkgs$provides))
+  res <- data_frame(
+    system_package = upkgs,
+    installed = upkgs %in% provided,
+    packages = lapply(upkgs, function(p) {
+      rpkgs$Package[vlapply(rpkgs$sys_package_name, function(s) p %in% s)]
+    })
+  )
+
+  class(res) <- c("pkg_sysreqs_check_result", class(res))
+  res
+}
+
+#' @export
+
+format.pkg_sysreqs_check_result <- function(x, ...) {
+  ok <- cli::col_green(cli::symbol$tick)
+  notok <- cli::col_red(cli::symbol$cross)
+  req <- vcapply(x$packages, paste, collapse = ", ")
+  paste(
+    ansi_align_width(c("system package", "--------------", x$system_package)),
+    ansi_align_width(c("installed", "--", ifelse(x$installed, ok, notok))),
+    ansi_align_width(c("required by", "-----------", req))
+  )
+}
+
+#' @export
+
+print.pkg_sysreqs_check_result <- function(x, ...) {
+  writeLines(format(x, ...))
+}
+
+#' @export
+
+`[.pkg_sysreqs_check_result` <- function(x, i, j, drop = FALSE) {
+  class(x) <- setdiff(class(x), "pkg_sysreqs_check_result")
+  NextMethod("[")
+}
+
+async_parse_installed <- function(library, packages) {
+  pkgs <- pkgcache::parse_installed(library = library, packages = packages)
+  miss <- unique(setdiff(packages, pkgs$Package))
+  if (length(miss)) {
+    warning(cli::format_warning(
+      "Ignored {length(miss)} package{?s} that {?is/are} not
+       installed: {.pkg {miss}}."
+    ))
+  }
+
+  async_constant(pkgs)
+}
+
+#' List installed system packages
+#'
+#' @details
+#' This function uses the `sysreqs_platform` configuration option,
+#' see [Configuration][pkgdepends-config]. Set this if
+#' `r pak_or_pkgdepends()` does not detect your platform correctly.
+#'
+#' @return Data frame with columns:
+#'   * `status`. two or three characters, the notation of `dpkg` on Debian
+#'     based systems. `"ii"` means the package is correctly installed.
+#'     On `RPM` based systems it is always `"ii"` currently.
+#'   * `package`: name of the system package.
+#'   * `version`: installed version of the system package.
+#'   * `capabilities`: list column of character vectors, the capabilities
+#'     provided by the package.
+#'
+#' @export
+#' @family system requirements functions
+#' @examplesIf !pkgdepends:::is_rcmd_check() && pkgdepends::sysreqs_is_supported()
+#' sysreqs_list_system_packages()[1:10,]
+
+sysreqs_list_system_packages <- function() {
+  synchronize(async_system_list_packages())                         # nocov
+}
+
+# -------------------------------------------------------------------------
+# Implementation
+# -------------------------------------------------------------------------
+
+parse_sysreqs_platform <- function(x) {
+  stopifnot(length(x) == 1)
+
+  # full form or only distro [+ version]
+  if (sum(strsplit(x, "")[[1]] == "-") >= 2) {
+    osplt <- parse_platform(x)
+    if (startsWith(osplt$os, "linux-")) {
+      rest <- sub("^linux[-]((dietlibc|gnu|musl|uclibc|unknown)[-])?", "", osplt$os)
+      osplt$os <- "linux"
+    } else {
+      rest <- ""
+    }
   } else {
-    synchronise(sysreqs_async_resolve(sysreqs, os, os_release, config, ...))
+    osplt <- data_frame(
+      cpu = NA_character_,
+      vendor = NA_character_,
+      os = "linux"
+    )
+    rest <- x
+  }
+  osplt$distribution <- NA_character_
+  osplt$version <- NA_character_
+
+  if (nchar(rest) == 0) {
+    return(osplt)
+  }
+
+  restpcs <- strsplit(rest, "-", fixed = TRUE)[[1]]
+  if (length(restpcs) == 1) {
+    osplt$distribution <- restpcs
+  } else if (length(restpcs) == 2) {
+    osplt$distribution <- restpcs[1]
+    osplt$version <- restpcs[2]
+  } else {
+    osplt$distribution <- restpcs[1]
+    osplt$version <- paste0(restpcs[-1], collapse = "-")
+  }
+  osplt
+}
+
+sysreqs_resolve <- function(sysreqs, platform = NULL, config = NULL, ...) {
+  if (tolower(Sys.getenv("R_PKG_SYSREQS2")) != "false") {
+    synchronize(sysreqs2_async_resolve(sysreqs, platform, config, ...))
+  } else {
+    synchronise(sysreqs_async_resolve(sysreqs, platform, config, ...))
   }
 }
 
-sysreqs_async_resolve <- function(sysreqs, os, os_release, config) {
-  sysreqs; os; os_release; config
-  sysreqs_async_resolve_query(sysreqs, os, os_release, config)$
+sysreqs_async_resolve <- function(sysreqs, platform, config) {
+  sysreqs; platform; config
+  sysreqs_async_resolve_query(sysreqs, platform, config)$
     then(function(resp) {
       if (resp$status_code < 400) return(resp)
       throw(pkg_error(
         call. = FALSE,
-        "Failed to look up system requirements for OS {os} {os_release}.",
+        "Failed to look up system requirements for OS {platform}.",
         i = "HTTP error {resp$status_code} for {.url {resp$url}}.",
         i = "Response: {.val {rawToChar(resp$content)}}."
       ))
     })$
-      then(function(resp) sysreqs_resolve_process(sysreqs, os, os_release, resp))$
+      then(function(resp) sysreqs_resolve_process(sysreqs, platform, resp))$
       then(function(res) add_class(res, "pkg_sysreqs_result"))
 }
 
-sysreqs_async_resolve_query <- function(sysreqs, os, os_release, config) {
+sysreqs_async_resolve_query <- function(sysreqs, platform, config) {
   config <- config %||% current_config()
+  platform <- platform %||% config$get("sysreqs_platform")
   rspm <- config$get("sysreqs_rspm_url")
   rspm_repo_id <- config$get("sysreqs_rspm_repo_id")
   rspm_repo_url <- sprintf("%s/__api__/repos/%s", rspm, rspm_repo_id)
 
+  plt <- parse_sysreqs_platform(platform)
   req_url <- sprintf(
     "%s/sysreqs?distribution=%s&release=%s",
     rspm_repo_url,
-    os,
-    os_release
+    plt$distribution,
+    plt$version
   )
 
   headers <- c("Content-Type" = "text/plain")
@@ -62,7 +471,7 @@ sysreqs_async_resolve_query <- function(sysreqs, os, os_release, config) {
   http_post(req_url, data = data, headers = headers)
 }
 
-sysreqs_resolve_process <- function(sysreqs, os, os_release, resp) {
+sysreqs_resolve_process <- function(sysreqs, platform, resp) {
   hdr <- curl::parse_headers_list(resp$headers)
   cnt <- rawToChar(resp$content)
   Encoding(cnt) <- "UTF-8"
@@ -82,9 +491,11 @@ sysreqs_resolve_process <- function(sysreqs, os, os_release, resp) {
     lapply(data[["dependencies"]], `[[`, "post_install")
   ))))
 
+  plt <- parse_sysreqs_platform(platform)
   list(
-    os = os,
-    os_release = os_release,
+    os = plt$os,
+    distribution = plt$distribution,
+    version = plt$version,
     url = resp$url,
     total = resp$times["total"],
     pre_install = pre_install,
@@ -177,11 +588,11 @@ compact_cmds <- function(x) {
 }
 
 is_root <- function() {
-  if (.Platform$OS.type != "unix") return(FALSE)
+  if (os_type() != "unix") return(FALSE)
   ps::ps_uids()[["effective"]] == 0
 }
 
 can_sudo_without_pw <- function() {
-  if (.Platform$OS.type != "unix") return(FALSE)
+  if (os_type() != "unix") return(FALSE)
   processx::run("sudo", c("-s", "id"), error_on_status=FALSE)$status == 0
 }

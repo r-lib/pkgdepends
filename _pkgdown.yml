@@ -58,6 +58,10 @@ reference:
 - title: Package libraries
   contents:
   - lib_status
+
+- title: System requirements
+  contents:
+  - starts_with("sysreqs_")
   
 - title: Utility functions
   contents:

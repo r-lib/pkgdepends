@@ -66,17 +66,16 @@ default_sysreqs_rspm_repo_id <- function() {
 
 pkgdepends_config <- sort_by_name(list(
   # -----------------------------------------------------------------------
-  library = list(
-    type = "string_or_null",
+  build_vignettes = list(
+    type = "flag",
+    default = FALSE,
     docs =
-      "Package library to install packages to. It is also used for
-       already installed packages when considering dependencies in
-       [dependency lookup][pkg_deps] or
-       [package installation][pkg_installation_proposal]. Defaults to the
-       first path in [.libPaths()].",
-    docs_pak =
-      "Package library to install packages to. It is also used for
-       already installed packages when considering dependencies."
+      "Whether to build vignettes for package trees.
+       This is only used if the package is obtained from a package tree,
+       and not from a source (or binary) package archive. By default
+       vignettes are not built in this case. If you set this to `TRUE`,
+       then you need to make sure that the vignette builder packages are
+       available, as these are not installed by default currently."
   ),
 
   # -----------------------------------------------------------------------
@@ -87,76 +86,6 @@ pkgdepends_config <- sort_by_name(list(
       "Directory to download the packages to. Defaults to a temporary
        directory within the R session temporary directory, see
        [base::tempdir()]."
-  ),
-
-  # -----------------------------------------------------------------------
-  include_linkingto = list(
-    type = "flag",
-    default = FALSE,
-    docs =
-      "Whether to always include `LinkingTo` dependencies in the solution
-       of and installation, even if they are needed because the packages
-       are installed from binaries. This is sometimes useful, see e.g.
-       <https://github.com/r-lib/pak/issues/485> for an example use case."
-  ),
-
-  # -----------------------------------------------------------------------
-  package_cache_dir = list(
-    type = "string",
-    docs =
-      "Package cache location of [`pkgcache::package_cache`]. The default
-       is the pkgcache default.",
-    docs_pak =
-      "Location of the package cache on the disk. See
-       [pak::cache_summary()]. Default is selected by pkgcache."
-  ),
-
-  # -----------------------------------------------------------------------
-  metadata_cache_dir = list(
-    type = "string",
-    default = function() tempfile(),
-    # TODO: do not link to pkgcache docs from pak
-    docs =
-      "Location of metadata replica of
-       [`pkgcache::cranlike_metadata_cache`]. Defaults to a temporary
-       directory within the R session temporary directory, see
-       [base::tempdir()]."
-  ),
-
-  # -----------------------------------------------------------------------
-  platforms = list(
-    type = "character",
-    default = default_platforms,
-    # TODO: do not link to pkgdepends docs from pak
-    docs =
-      "Character vector of platforms to _download_ or _install_ packages
-       for. See [pkgdepends::default_platforms()] for possible platform
-       names. Defaults to the platform of the current R session, plus
-       `\"source\"`."
-  ),
-
-  # -----------------------------------------------------------------------
-  windows_archs = list(
-    type = "string",
-    default = default_windows_archs,
-    docs =
-  # we can't indent this "correctly" because markdown will take it as code
-  "Character scalar specifying which architectures
-   to download/install for on Windows. Its possible values are:
-
-   - `\"prefer-x64\"`: Generally prefer x64 binaries. If the current R
-     session is `x64`, then we download/install x64 packages.
-     (These packages might still be multi-architecture binaries!)
-     If the current R session is `i386`, then we download/install
-     packages for both architectures. This might mean compiling
-     packages from source if the binary packages are for `x64` only,
-     like the CRAN Windows binaries for R 4.2.x currently.
-     `\"prefer-x64\"` is the default for R 4.2.0 and later.
-   - `\"both\"`: Always download/install packages for both `i386` and
-     `x64` architectures. This might need compilation from source
-     if the available binaries are for `x64` only, like the CRAN
-     Windows binaries for R 4.2.x currently. `\"both\"` is the default
-     for R 4.2.0 and earlier."
   ),
 
   # -----------------------------------------------------------------------
@@ -191,26 +120,40 @@ pkgdepends_config <- sort_by_name(list(
   ),
 
   # -----------------------------------------------------------------------
-  r_versions = list(
-    type = "character",
-    default = current_r_version,
-    check = is_r_version_list,
-    docs =
-      "Character vector, R versions to download or install
-       packages for. It defaults to the current R version."
-  ),
-
-  # -----------------------------------------------------------------------
-  build_vignettes = list(
+  include_linkingto = list(
     type = "flag",
     default = FALSE,
     docs =
-      "Whether to build vignettes for package trees.
-       This is only used if the package is obtained from a package tree,
-       and not from a source (or binary) package archive. By default
-       vignettes are not built in this case. If you set this to `TRUE`,
-       then you need to make sure that the vignette builder packages are
-       available, as these are not installed by default currently."
+      "Whether to always include `LinkingTo` dependencies in the solution
+       of and installation, even if they are needed because the packages
+       are installed from binaries. This is sometimes useful, see e.g.
+       <https://github.com/r-lib/pak/issues/485> for an example use case."
+  ),
+
+  # -----------------------------------------------------------------------
+  library = list(
+    type = "string_or_null",
+    docs =
+      "Package library to install packages to. It is also used for
+       already installed packages when considering dependencies in
+       [dependency lookup][pkg_deps] or
+       [package installation][pkg_installation_proposal]. Defaults to the
+       first path in [.libPaths()].",
+    docs_pak =
+      "Package library to install packages to. It is also used for
+       already installed packages when considering dependencies."
+  ),
+
+  # -----------------------------------------------------------------------
+  metadata_cache_dir = list(
+    type = "string",
+    default = function() tempfile(),
+    # TODO: do not link to pkgcache docs from pak
+    docs =
+      "Location of metadata replica of
+       [`pkgcache::cranlike_metadata_cache`]. Defaults to a temporary
+       directory within the R session temporary directory, see
+       [base::tempdir()]."
   ),
 
   # -----------------------------------------------------------------------
@@ -232,6 +175,39 @@ pkgdepends_config <- sort_by_name(list(
   ),
 
   # -----------------------------------------------------------------------
+  package_cache_dir = list(
+    type = "string",
+    docs =
+      "Package cache location of [`pkgcache::package_cache`]. The default
+       is the pkgcache default.",
+    docs_pak =
+      "Location of the package cache on the disk. See
+       [pak::cache_summary()]. Default is selected by pkgcache."
+  ),
+
+  # -----------------------------------------------------------------------
+  platforms = list(
+    type = "character",
+    default = default_platforms,
+    # TODO: do not link to pkgdepends docs from pak
+    docs =
+      "Character vector of platforms to _download_ or _install_ packages
+       for. See [pkgdepends::default_platforms()] for possible platform
+       names. Defaults to the platform of the current R session, plus
+       `\"source\"`."
+  ),
+
+  # -----------------------------------------------------------------------
+  r_versions = list(
+    type = "character",
+    default = current_r_version,
+    check = is_r_version_list,
+    docs =
+      "Character vector, R versions to download or install
+       packages for. It defaults to the current R version."
+  ),
+
+  # -----------------------------------------------------------------------
   sysreqs = list(
     type = "flag",
     default = default_sysreqs,
@@ -246,17 +222,6 @@ pkgdepends_config <- sort_by_name(list(
   ),
 
   # -----------------------------------------------------------------------
-  sysreqs_platform = list(
-    type = "string",
-    default = default_sysreqs_platform,
-    docs =
-      "The platform to use for system requirements lookup. On Linux, where
-       system requirements are currently supported, it must be a string
-       containing the distribution name and release, separated by a dash.
-       E.g.: `\"ubuntu-22.04\"`, or `\"rhel-9\"`."
-  ),
-
-  # -----------------------------------------------------------------------
   sysreqs_dry_run = list(
     type = "flag",
     default = FALSE,
@@ -266,6 +231,17 @@ pkgdepends_config <- sort_by_name(list(
     docs_pak =
       "If `TRUE`, then pak only prints the system commands to
        install system requirements, but does not execute them."
+  ),
+
+  # -----------------------------------------------------------------------
+  sysreqs_platform = list(
+    type = "string",
+    default = default_sysreqs_platform,
+    docs =
+      "The platform to use for system requirements lookup. On Linux, where
+       system requirements are currently supported, it must be a string
+       containing the distribution name and release, separated by a dash.
+       E.g.: `\"ubuntu-22.04\"`, or `\"rhel-9\"`."
   ),
 
   # -----------------------------------------------------------------------
@@ -315,6 +291,30 @@ pkgdepends_config <- sort_by_name(list(
     docs =
       "Whether to automatically use the Bioconductor repositories.
        Defaults to `TRUE`."
+  ),
+
+  # -----------------------------------------------------------------------
+  windows_archs = list(
+    type = "string",
+    default = default_windows_archs,
+    docs =
+  # we can't indent this "correctly" because markdown will take it as code
+  "Character scalar specifying which architectures
+   to download/install for on Windows. Its possible values are:
+
+   - `\"prefer-x64\"`: Generally prefer x64 binaries. If the current R
+     session is `x64`, then we download/install x64 packages.
+     (These packages might still be multi-architecture binaries!)
+     If the current R session is `i386`, then we download/install
+     packages for both architectures. This might mean compiling
+     packages from source if the binary packages are for `x64` only,
+     like the CRAN Windows binaries for R 4.2.x currently.
+     `\"prefer-x64\"` is the default for R 4.2.0 and later.
+   - `\"both\"`: Always download/install packages for both `i386` and
+     `x64` architectures. This might need compilation from source
+     if the available binaries are for `x64` only, like the CRAN
+     Windows binaries for R 4.2.x currently. `\"both\"` is the default
+     for R 4.2.0 and earlier."
   ),
 
   # -----------------------------------------------------------------------

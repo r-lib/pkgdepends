@@ -5,6 +5,8 @@ test_that("sysreqs_platforms", {
 
 test_that("sysreqs_db_list", {
   skip_on_cran()
+  withr::local_options(pkg.sysreqs_db_update = FALSE)
+
   lst <- sysreqs_db_list("ubuntu-22.04")
   lst <- lst[lst$name %in% c("cairo", "chrome", "libcurl"), ]
   expect_snapshot({
@@ -16,6 +18,8 @@ test_that("sysreqs_db_list", {
 
 test_that("sysreqs_db_match", {
   skip_on_cran()
+  withr::local_options(pkg.sysreqs_db_update = FALSE)
+
   res <- sysreqs_db_match(
     c("java and libcurl", "openssl would be good"),
     platform = "ubuntu-22.04"
@@ -29,6 +33,10 @@ test_that("sysreqs_db_match", {
 
 test_that("sysreqs_install_plan", {
   skip_on_cran()
+  setup_fake_apps()
+  setup_fake_gh_app()
+  withr::local_options(pkg.sysreqs_db_update = FALSE)
+
   res <- suppressMessages(sysreqs_install_plan(
     "curl",
     config = list(sysreqs_platform = "ubuntu-22.04")
@@ -52,6 +60,7 @@ test_that("sysreqs_install_plan", {
 
 test_that("sysreqs_check_installed", {
   skip_on_cran()
+  withr::local_options(pkg.sysreqs_db_update = FALSE)
 
   fakesys <- data_frame(
     status = "ii",

@@ -110,39 +110,75 @@ sysreqs2_update_metadata <- function(path = NULL, config = NULL) {
   synchronize(sysreqs2_async_update_metadata(path = path, config = config))
 }
 
-sysreqs2_async_update_metadata <- function(path = NULL, config = NULL) {
-  path <- path %||% file.path(get_user_cache_dir()$root, "sysreqs")
-  config <- config %||% current_config()
-  head_file <- file.path(path, "HEAD")
+# Increase this if the syntax breaks or if we need more / different files
+# from the r-system-requirements repo.
+sysreqs_db_version <- "1"
 
-  if (file.exists(head_file)) {
+sysreqs2_async_update_metadata <- function(path = NULL, config = NULL) {
+  config <- config %||% current_config()
+  if (!config$get("sysreqs_db_update")) return(async_constant())
+
+  path <- path %||% file.path(get_user_cache_dir()$root, "sysreqs")
+  head_file <- file.path(path, "HEAD")
+  ver_file <- file.path(path, "VERSION")
+
+  if (file.exists(head_file) && file.exists(ver_file)) {
     mt <- file.mtime(head_file)
+    ver <- readLines(ver_file)
     upd <- config$get("metadata_update_after")
-    if (!is.na(mt) && Sys.time() - mt < upd) return(async_constant())
+    if (ver == sysreqs_db_version && !is.na(mt) && Sys.time() - mt < upd) {
+      return(async_constant())
+    }
   }
 
-  head <- if (file.exists(head_file)) readLines(head_file)[1] else ""
-  repo <- sysreqs2_git_repo()
-  async_git_list_refs_v1(repo$repo)$
-    then(function(refs) {
-      rem_head <- refs$refs$hash[refs$refs$ref == "HEAD"]
-      if (rem_head == head) {
-        # still update the time stamps
-        Sys.setFileTime(head_file, Sys.time())
-        return()
-      }
-      tmp <- paste0(path, "-new")
-      async_git_download_repo(repo$repo, rem_head, tmp)$
-        then(function() {
-          unlink(path, recursive = TRUE, force = TRUE)
-          file.rename(tmp, path)
-          writeLines(rem_head, head_file)
-        })
+  upd <- function() {
+    head <- if (file.exists(head_file)) readLines(head_file)[1] else ""
+    repo <- sysreqs2_git_repo()
+    async_git_list_refs_v1(repo$repo)$
+      then(function(refs) {
+        rem_head <- refs$refs$hash[refs$refs$ref == "HEAD"]
+        if (rem_head == head) {
+          # still update the time stamps
+          Sys.setFileTime(head_file, Sys.time())
+          return()
+        }
+        tmp <- paste0(path, "-new")
+        async_git_download_repo(repo$repo, rem_head, tmp)$
+          then(function() {
+            unlink(path, recursive = TRUE, force = TRUE)
+            file.rename(tmp, path)
+            writeLines(rem_head, head_file)
+            writeLines(sysreqs_db_version, ver_file)
+          })
+      })
+  }
+
+  timeout <- as.double(
+    config$get("sysreqs_db_update_timeout"),
+    units = "secs"
+  )
+  async_timeout(upd, timeout)$
+    catch(error = function(e) {
+      cli::cli_alert_warning(
+        "Failed to update system requirement mappings,
+         will use cached mappings.",
+        wrap = TRUE
+      )
+      invisible()
     })
 }
 
 sysreqs2_list_rules <- function(path = NULL) {
-  path <- path %||% file.path(get_user_cache_dir()$root, "sysreqs")
+  if (is.null(path)) {
+    cached_path <- file.path(get_user_cache_dir()$root, "sysreqs")
+    head_file <- file.path(cached_path, "HEAD")
+    ver_file <- file.path(cached_path, "VERSION")
+    if (file.exists(ver_file) && readLines(ver_file) == sysreqs_db_version) {
+      path <- cached_path
+    } else {
+      path <- system.file("sysreqs", package = "pkgdepends")
+    }
+  }
   rules <- dir(file.path(path, "rules"), pattern = "[.]json$", full.names = TRUE)
 }
 

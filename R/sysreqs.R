@@ -219,6 +219,7 @@ sysreqs_install_plan <- function(refs, config = list()) {
 
   prop <- new_pkg_installation_proposal(refs, config = config)
   prop$solve()
+  prop$stop_for_solution_error()
   sol <- prop$get_solution()
 
   platform <- prop$get_config()$get("sysreqs_platform")

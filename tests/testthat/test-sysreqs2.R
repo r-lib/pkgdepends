@@ -12,6 +12,7 @@ test_that("sysreqs_is_supported", {
 })
 
 test_that("update", {
+  # TODO: needs internet
   skip_on_cran()
   tmp <- withr::local_tempdir()
   synchronize(sysreqs2_async_update_metadata(tmp))

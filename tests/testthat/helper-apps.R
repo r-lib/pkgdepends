@@ -60,6 +60,9 @@ cran_app_pkgs <- dcf("
   Package: tibble
 
   Package: testthat
+
+  Package: curl
+  SystemRequirements: libcurl: libcurl-devel (rpm) or libcurl4-openssl-dev (deb).
 ")
 
 fake_cran <- webfakes::local_app_process(
@@ -283,7 +286,26 @@ gh_app_repos <- list(
           )
         )
       )
+    ),
+
+    "cran" = list(
+      repos = list(
+        "rJava" = list(
+          commits = list(
+            list(
+              sha = "dfb3b64b13343e07b2db038777d9dc2aba5d824c5eca8c891c87bd4fd38d7256",
+              tag = "HEAD",
+              branch = "master",
+              files = list(
+                DESCRIPTION = "Package: rJava\nVersion: 1.0-6\nSystemRequirements: Java JDK 1.2 or higher (for JRI/REngine JDK 1.4 or higher), GNU make\n",
+                NAMESPACE = ""
+              )
+            )
+          )
+        )
+      )
     )
+
   )
 )
 

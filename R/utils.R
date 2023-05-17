@@ -292,6 +292,10 @@ async_map <- function(...) {
   asNamespace("pkgcache")$async_map(...)
 }
 
+async_timeout <- function(...) {
+  asNamespace("pkgcache")$async_timeout(...)
+}
+
 download_file <- function(...) {
   asNamespace("pkgcache")$download_file(...)
 }

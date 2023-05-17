@@ -88,6 +88,11 @@ are not installed.
 By default it is \code{TRUE} on supported platforms,
 if the current user is the root user or password-less \code{sudo} is
 configured for the current user.
+\item \code{sysreqs_db_update}: Whether to try to update the system requirements database from
+GitHub. If the update fails, then the cached or the build-in
+database if used. Defaults to TRUE.
+\item \code{sysreqs_db_update_timeout}: Timeout for the system requirements database update.
+Defaults to five seconds.
 \item \code{sysreqs_dry_run}: If \code{TRUE}, then pkgdepends only prints the system commands to
 install system requirements, but does not execute them.
 \item \code{sysreqs_platform}: The platform to use for system requirements lookup. On Linux, where

@@ -223,6 +223,25 @@ pkgdepends_config <- sort_by_name(list(
   ),
 
   # -----------------------------------------------------------------------
+  sysreqs_db_update = list(
+    type = "flag",
+    default = TRUE,
+    docs =
+      "Whether to try to update the system requirements database from
+       GitHub. If the update fails, then the cached or the build-in
+       database if used. Defaults to TRUE."
+  ),
+
+  # -----------------------------------------------------------------------
+  sysreqs_db_update_timeout = list(
+    type = "difftime",
+    default = as.difftime(5, units = "secs"),
+    docs =
+      "Timeout for the system requirements database update.
+       Defaults to five seconds."
+  ),
+
+  # -----------------------------------------------------------------------
   sysreqs_dry_run = list(
     type = "flag",
     default = FALSE,

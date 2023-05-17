@@ -31,6 +31,12 @@ $r_versions
 $sysreqs
 [1] "Whether to automatically look up and install system requirements.\nIf \\code{TRUE}, then pkgdepends will try to install required\nsystem packages. If \\code{FALSE}, then system requirements are still\nprinted (including OS packages on supported platforms), but they\nare not installed.\nBy default it is \\code{TRUE} on supported platforms,\nif the current user is the root user or password-less \\code{sudo} is\nconfigured for the current user."
 
+$sysreqs_db_update
+[1] "Whether to try to update the system requirements database from\nGitHub. If the update fails, then the cached or the build-in\ndatabase if used. Defaults to TRUE."
+
+$sysreqs_db_update_timeout
+[1] "Timeout for the system requirements database update.\nDefaults to five seconds."
+
 $sysreqs_dry_run
 [1] "If \\code{TRUE}, then pak only prints the system commands to\ninstall system requirements, but does not execute them."
 

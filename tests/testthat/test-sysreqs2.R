@@ -27,11 +27,9 @@ test_that("update", {
 test_that("match", {
   skip_on_cran()
   sr1 <- sysreqs2_resolve("libcurl and Java", "ubuntu-22.04")
-  sr1$total <- 0.05
   expect_snapshot(sr1)
 
   sr2 <- sysreqs2_resolve("libcurl and Java", "debian-unstable")
-  sr2$total <- 0.05
   expect_snapshot(sr2)
 })
 
@@ -45,6 +43,5 @@ test_that("sysreqs2_command error", {
 test_that("do not run update if nothing to do", {
   skip_on_cran()
   sr1 <- sysreqs2_resolve("nothing needed", "ubuntu-22.04")
-  sr1$total <- 0.05
   expect_snapshot(sr1)
 })

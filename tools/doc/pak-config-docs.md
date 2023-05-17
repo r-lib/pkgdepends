@@ -29,7 +29,7 @@ $r_versions
 [1] "Character vector, R versions to download or install\npackages for. It defaults to the current R version."
 
 $sysreqs
-[1] "Whether to automatically install system requirements. If \\code{TRUE},\nthen pkgdepends will try to install required system\npackages. If \\code{FALSE}, then system requirements are still printed\non supported platforms, but they are not installed.\nBy default it is \\code{TRUE} on supported platforms, if the current\nuser is the root user or password-less \\code{sudo} is configured for the\ncurrent user."
+[1] "Whether to automatically look up and install system requirements.\nIf \\code{TRUE}, then pkgdepends will try to install required\nsystem packages. If \\code{FALSE}, then system requirements are still\nprinted (including OS packages on supported platforms), but they\nare not installed.\nBy default it is \\code{TRUE} on supported platforms,\nif the current user is the root user or password-less \\code{sudo} is\nconfigured for the current user."
 
 $sysreqs_dry_run
 [1] "If \\code{TRUE}, then pak only prints the system commands to\ninstall system requirements, but does not execute them."

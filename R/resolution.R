@@ -66,6 +66,8 @@ pkgplan_async_resolve <- function(self, private) {
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
   private$solution <- NULL
+  private$system_packages <- NULL
+  private$sysreqs <- NULL
 
   private$dirty <- TRUE
   private$resolution <- new_resolution(
@@ -132,6 +134,8 @@ resolution <- R6::R6Class(
     params = NULL,
     dependencies = NULL,
     metadata = NULL,
+    system_packages = NULL,
+    sysreqs = NULL,
     bar = NULL,
 
     delayed = list(),
@@ -146,6 +150,8 @@ resolution <- R6::R6Class(
 
     set_result = function(row_idx, value)
       res__set_result(self, private, row_idx, value),
+    sysreqs_match = function()
+      res__sysreqs_match(self, private),
     try_finish = function(resolve)
       res__try_finish(self, private, resolve)
   )
@@ -240,6 +246,21 @@ res_init <- function(self, private, config, cache, library,
       private$set_result(wh, fail_val)
       private$try_finish(resolve)
     })
+
+  # If sysreqs is supported on this platform, then
+  # 1. look up system packages, and
+  # 2. (try to) update sysreqs mapping
+  sys_sup <- sysreqs_is_supported(private$config$get("sysreqs_platform"))
+  sys_lookup <- private$config$get("sysreqs_lookup_system")
+  if (sys_sup && sys_lookup) {
+    async_system_list_packages(private$config)$
+      then(function(x) { private$system_packages <- x })$
+        then(private$deferred)
+  }
+  if (sys_sup) {
+    sysreqs2_async_update_metadata(config = private$config)$
+      then(private$deferred)
+  }
 }
 
 res_push <- function(self, private, ..., direct, .list = .list) {
@@ -376,6 +397,15 @@ res__set_result_list <- function(self, private, row_idx, value) {
   self$result <- res_add_df_entries(self$result, value)
 }
 
+res__sysreqs_match <- function(self, private) {
+  if ("sysreqs" %in% names(self$result)) {
+    sys <- sysreqs2_match(self$result$sysreqs, config = private$config)
+    self$result$sysreqs_packages <- sys
+  } else {
+    self$result$sysreqs_packages <- list(NULL)
+  }
+}
+
 res__try_finish <- function(self, private, resolve) {
   "!DEBUG resolution trying to finish with `nrow(self$result)` results"
   if (length(private$delayed)) return(private$resolve_delayed(resolve))
@@ -389,6 +419,9 @@ res__try_finish <- function(self, private, resolve) {
     attr(self$result, "metadata") <- private$metadata
     class(self$result) <- c("pkg_resolution_result", class(self$result))
     private$done_progress_bar()
+    if (private$config$get("sysreqs")) {
+      private$sysreqs_match()
+    }
     resolve(self$result)
   }
 }

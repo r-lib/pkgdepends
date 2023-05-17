@@ -78,6 +78,8 @@ pkg_plan <- R6::R6Class(
     progress_bar = NULL,
     progress_bar_timer = NULL,
     remote_types = NULL,
+    system_packages = NULL,
+    sysreqs = NULL,
 
     download_res = function(res, which, on_progress = NULL)
       pkgplan_download_res(self, private, res, which, on_progress),
@@ -216,7 +218,9 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     extra            = list(list()),
     install_args     = lapply(pkgs, function(x) unlist(x$install_args) %||% character()),
     repotype         = vcapply(pkgs, function(x) x$repotype %||% NA_character_),
-    params           = lapply(pkgs, function(x) unlist(x$params))
+    params           = lapply(pkgs, function(x) unlist(x$params)),
+    sysreqs          = vcapply(pkgs, function(x) x[["sysreqs"]] %||% NA_character_),
+    sysreqs_packages = lapply(pkgs, function(x) x[["sysreqs_packages"]])
   )
 
   private$refs <- refs[soldata$direct]

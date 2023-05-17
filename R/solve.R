@@ -153,15 +153,6 @@ pkgplan_solve <- function(self, private, policy) {
     res$failures <- describe_solution_error(pkgs, res)
   }
 
-  if (private$config$get("sysreqs")) {
-    res$sysreqs <- tryCatch({
-      sq <- sysreqs_resolve(res$data$sysreqs, config = private$config)
-      res$data$sysreqs_packages <- sq$records
-      sq$records <- NULL
-      list(result = sq, error = NULL)
-    }, error = function(err) list(result = NULL, error = err))
-  }
-
   private$solution$result <- res
   self$get_solution()
 }
@@ -182,13 +173,6 @@ pkgplan_stop_for_solve_error <- function(self, private) {
       msg,
       call. = FALSE
     ))
-  }
-
-  # sysreqs error?
-  if (!is.null(sol$sysreqs$error)) {
-    throw(new_error(
-      "Could not look up system requirements."
-    ), parent = sol$sysreqs$error)
   }
 }
 
@@ -1056,6 +1040,8 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     "directpkg", "license", "sha256", "filesize", "dep_types",
     "params", "install_args", "repotype"
   ))
+  if ("sysreqs" %in% names(pkgs)) cols <- c(cols, "sysreqs")
+  if ("sysreqs_packages" %in% names(pkgs)) cols <- c(cols, "sysreqs_packages")
 
   packages <- pkgs[, cols]
   packages$params <- lapply(
@@ -1071,8 +1057,11 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     packages = packages
   )
 
-  sysreqs <- self$get_solution()$sysreqs$result
-  if (!is.null(sysreqs)) {
+  if (private$config$get("sysreqs")) {
+    sysreqs <- sysreqs2_scripts(
+      self$get_solution()$data$sysreqs_packages,
+      private$config$get("sysreqs_platform")
+    )
     sysreqs$os <- unbox(sysreqs$os)
     sysreqs$distribution <- unbox(sysreqs$distribution)
     sysreqs$version <- unbox(sysreqs$version)

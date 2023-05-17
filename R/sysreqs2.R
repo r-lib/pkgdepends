@@ -56,40 +56,41 @@ sysreqs2_resolve <- function(sysreqs, platform = NULL,
 
 sysreqs2_async_resolve <- function(sysreqs, platform, config, ...) {
   sysreqs; platform; config; list(...)
-  start <- Sys.time()
 
   config <- config %||% current_config()
   platform <- platform %||% config$get("sysreqs_platform")
-  plt <- parse_sysreqs_platform(platform)
 
   sysreqs2_async_update_metadata(config = config)$
     then(function() {
       sysreqs2_match(sysreqs, platform = platform, config = config, ...)
     })$
     then(function(recs) {
-      flatrecs <- unlist(recs, recursive = FALSE)
-      upd <- sysreqs2_command(platform, "update")
-      pre <- unlist(lapply(flatrecs, "[[", "pre_install"))
-      post <- unlist(lapply(flatrecs, "[[", "post_install"))
-      if (is.na(upd)) upd <- character()
-      cmd <- sysreqs2_command(platform, "install")
-      pkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
-      pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
-      pkgs <- if (length(pkgs)) paste(cmd, pkgs)
-      # no need to update if nothing to do
-      if (length(pre) + length(pkgs) + length(post) == 0) upd <- character()
-      list(
-        os = plt$os,
-        distribution = plt$distribution,
-        version = plt$version,
-        url = NA_character_,
-        total = c(total = as.double(Sys.time() - start, units = "secs")),
-        pre_install = c(upd, pre),
-        install_scripts = pkgs,
-        post_install = post,
-        records = recs
-      )
+      sysreqs2_scripts(recs, platform)
     })
+}
+
+sysreqs2_scripts <- function(recs, platform) {
+  plt <- parse_sysreqs_platform(platform)
+  flatrecs <- unlist(recs, recursive = FALSE)
+  upd <- sysreqs2_command(platform, "update")
+  pre <- unlist(lapply(flatrecs, "[[", "pre_install"))
+  post <- unlist(lapply(flatrecs, "[[", "post_install"))
+  if (is.na(upd)) upd <- character()
+  cmd <- sysreqs2_command(platform, "install")
+  pkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
+  pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
+  pkgs <- if (length(pkgs)) paste(cmd, pkgs)
+  # no need to update if nothing to do
+  if (length(pre) + length(pkgs) + length(post) == 0) upd <- character()
+  list(
+    os = plt$os,
+    distribution = plt$distribution,
+    version = plt$version,
+    url = NA_character_,
+    pre_install = c(upd, pre),
+    install_scripts = pkgs,
+    post_install = post
+  )
 }
 
 sysreqs2_git_repo <- function() {

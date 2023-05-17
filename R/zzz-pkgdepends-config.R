@@ -212,13 +212,14 @@ pkgdepends_config <- sort_by_name(list(
     type = "flag",
     default = default_sysreqs,
     docs =
-      "Whether to automatically install system requirements. If `TRUE`,
-       then `r pak_or_pkgdepends()` will try to install required system
-       packages. If `FALSE`, then system requirements are still printed
-       on supported platforms, but they are not installed.
-       By default it is `TRUE` on supported platforms, if the current
-       user is the root user or password-less `sudo` is configured for the
-       current user."
+      "Whether to automatically look up and install system requirements.
+       If `TRUE`, then `r pak_or_pkgdepends()` will try to install required
+       system packages. If `FALSE`, then system requirements are still
+       printed (including OS packages on supported platforms), but they
+       are not installed.
+       By default it is `TRUE` on supported platforms,
+       if the current user is the root user or password-less `sudo` is
+       configured for the current user."
   ),
 
   # -----------------------------------------------------------------------
@@ -322,6 +323,10 @@ pkgdepends_config <- sort_by_name(list(
   goal = list(
     type = "string",
     default = "unknown"
+  ),
+  sysreqs_lookup_system = list(
+    type = "flag",
+    default = FALSE
   )
 ))
 

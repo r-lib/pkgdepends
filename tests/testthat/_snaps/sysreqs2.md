@@ -15,9 +15,6 @@
       $url
       [1] NA
       
-      $total
-      [1] 0.05
-      
       $pre_install
       [1] "apt-get -y update"
       
@@ -26,38 +23,6 @@
       
       $post_install
       [1] "R CMD javareconf"
-      
-      $records
-      $records[[1]]
-      $records[[1]][[1]]
-      $records[[1]][[1]]$sysreq
-      [1] "java"
-      
-      $records[[1]][[1]]$packages
-      [1] "default-jdk"
-      
-      $records[[1]][[1]]$pre_install
-      NULL
-      
-      $records[[1]][[1]]$post_install
-      [1] "R CMD javareconf"
-      
-      
-      $records[[1]][[2]]
-      $records[[1]][[2]]$sysreq
-      [1] "libcurl"
-      
-      $records[[1]][[2]]$packages
-      [1] "libcurl4-openssl-dev"
-      
-      $records[[1]][[2]]$pre_install
-      NULL
-      
-      $records[[1]][[2]]$post_install
-      NULL
-      
-      
-      
       
 
 ---
@@ -77,9 +42,6 @@
       $url
       [1] NA
       
-      $total
-      [1] 0.05
-      
       $pre_install
       [1] "apt-get -y update"
       
@@ -88,38 +50,6 @@
       
       $post_install
       [1] "R CMD javareconf"
-      
-      $records
-      $records[[1]]
-      $records[[1]][[1]]
-      $records[[1]][[1]]$sysreq
-      [1] "java"
-      
-      $records[[1]][[1]]$packages
-      [1] "default-jdk"
-      
-      $records[[1]][[1]]$pre_install
-      NULL
-      
-      $records[[1]][[1]]$post_install
-      [1] "R CMD javareconf"
-      
-      
-      $records[[1]][[2]]
-      $records[[1]][[2]]$sysreq
-      [1] "libcurl"
-      
-      $records[[1]][[2]]$packages
-      [1] "libcurl4-openssl-dev"
-      
-      $records[[1]][[2]]$pre_install
-      NULL
-      
-      $records[[1]][[2]]$post_install
-      NULL
-      
-      
-      
       
 
 # sysreqs2_command error
@@ -146,9 +76,6 @@
       $url
       [1] NA
       
-      $total
-      [1] 0.05
-      
       $pre_install
       character(0)
       
@@ -157,10 +84,5 @@
       
       $post_install
       NULL
-      
-      $records
-      $records[[1]]
-      NULL
-      
       
 

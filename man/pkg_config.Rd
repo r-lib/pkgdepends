@@ -80,13 +80,14 @@ names. Defaults to the platform of the current R session, plus
 \code{"source"}.
 \item \code{r_versions}: Character vector, R versions to download or install
 packages for. It defaults to the current R version.
-\item \code{sysreqs}: Whether to automatically install system requirements. If \code{TRUE},
-then \verb{r pak_or_pkgdepends()} will try to install required system
-packages. If \code{FALSE}, then system requirements are still printed
-on supported platforms, but they are not installed.
-By default it is \code{TRUE} on supported platforms, if the current
-user is the root user or password-less \code{sudo} is configured for the
-current user.
+\item \code{sysreqs}: Whether to automatically look up and install system requirements.
+If \code{TRUE}, then \verb{r pak_or_pkgdepends()} will try to install required
+system packages. If \code{FALSE}, then system requirements are still
+printed (including OS packages on supported platforms), but they
+are not installed.
+By default it is \code{TRUE} on supported platforms,
+if the current user is the root user or password-less \code{sudo} is
+configured for the current user.
 \item \code{sysreqs_dry_run}: If \code{TRUE}, then pkgdepends only prints the system commands to
 install system requirements, but does not execute them.
 \item \code{sysreqs_platform}: The platform to use for system requirements lookup. On Linux, where

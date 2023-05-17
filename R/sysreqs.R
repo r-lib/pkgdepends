@@ -215,12 +215,15 @@ sysreqs_install_plan <- function(refs, config = list()) {
     config$library <- lib
   }
   config$sysreqs <- TRUE
+  config$sysreqs_lookup_system <- FALSE
 
   prop <- new_pkg_installation_proposal(refs, config = config)
   prop$solve()
   sol <- prop$get_solution()
 
-  res <- sol$sysreqs$result[c(
+  platform <- prop$get_config()$get("sysreqs_platform")
+  scripts <- sysreqs2_scripts(sol$data$sysreqs_packages, platform)
+  res <- scripts[c(
     "os",
     "distribution",
     "version",

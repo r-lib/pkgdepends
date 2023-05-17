@@ -85,12 +85,16 @@
     Code
       sort(current_config()$list())
     Output
-       [1] "build_vignettes"       "cache_dir"             "cran_mirror"          
-       [4] "dependencies"          "goal"                  "include_linkingto"    
-       [7] "library"               "metadata_cache_dir"    "metadata_update_after"
-      [10] "package_cache_dir"     "platforms"             "r_versions"           
-      [13] "sysreqs"               "sysreqs_dry_run"       "sysreqs_lookup_system"
-      [16] "sysreqs_platform"      "sysreqs_rspm_repo_id"  "sysreqs_rspm_url"     
-      [19] "sysreqs_sudo"          "sysreqs_verbose"       "use_bioconductor"     
-      [22] "windows_archs"        
+       [1] "build_vignettes"           "cache_dir"                
+       [3] "cran_mirror"               "dependencies"             
+       [5] "goal"                      "include_linkingto"        
+       [7] "library"                   "metadata_cache_dir"       
+       [9] "metadata_update_after"     "package_cache_dir"        
+      [11] "platforms"                 "r_versions"               
+      [13] "sysreqs"                   "sysreqs_db_update"        
+      [15] "sysreqs_db_update_timeout" "sysreqs_dry_run"          
+      [17] "sysreqs_lookup_system"     "sysreqs_platform"         
+      [19] "sysreqs_rspm_repo_id"      "sysreqs_rspm_url"         
+      [21] "sysreqs_sudo"              "sysreqs_verbose"          
+      [23] "use_bioconductor"          "windows_archs"            
 

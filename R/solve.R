@@ -919,10 +919,14 @@ highlight_sysreqs <- function(sysreqs) {
     cross <- paste0(cli::col_red(cli::symbol$cross), " ")
     pkgs <- unlist(lapply(p, function(x) {
       if (length(x$packages) != 0) {
-        paste0(
-          ifelse(x$packages %in% x$packages_missing, cross, tick),
+        if ("packages_missing" %in% names(x)) {
+          paste0(
+            ifelse(x$packages %in% x$packages_missing, cross, tick),
+            x$packages
+          )
+        } else {
           x$packages
-        )
+        }
       } else {
         paste0(x$sysreq, " (installer)")
       }
@@ -1049,10 +1053,25 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     "directpkg", "license", "sha256", "filesize", "dep_types",
     "params", "install_args", "repotype"
   ))
-  if ("sysreqs" %in% names(pkgs)) cols <- c(cols, "sysreqs")
-  if ("sysreqs_packages" %in% names(pkgs)) cols <- c(cols, "sysreqs_packages")
 
   packages <- pkgs[, cols]
+  if ("sysreqs" %in% names(pkgs)) packages[["sysreqs"]] <- pkgs[["sysreqs"]]
+
+  # drop missing system packages from sysreqs, we don't want these in
+  # the lock file
+  if ("sysreqs_packages" %in% names(pkgs)) {
+    spkgs <- pkgs[["sysreqs_packages"]]
+    for (i in seq_along(spkgs)) {
+      elt <- spkgs[[i]]
+      for (j in seq_along(elt)) {
+        elt[[j]]$sysreq <- jsonlite::unbox(elt[[j]]$sysreq)
+        elt[[j]]$packages_missing <- NULL
+      }
+      if (!is.null(elt)) spkgs[[i]] <- elt
+    }
+    packages[["sysreqs_packages"]] <- spkgs
+  }
+
   packages$params <- lapply(
     packages$params,
     function(x) lapply(as.list(x), unbox)

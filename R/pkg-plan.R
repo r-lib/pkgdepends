@@ -196,7 +196,6 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     sq <- lapply(sq, function(sq1) {
       sq1[["sysreq"]] <- unlist(sq1[["sysreq"]])
       sq1[["packages"]] <- unlist(sq1[["packages"]])
-      sq1[["packages_missing"]] <- unlist(sq1[["packages_missing"]])
       sq1
     })
     sq

@@ -190,6 +190,18 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
 
   pkgs <- raw$packages
   refs <- vcapply(pkgs, "[[", "ref")
+
+  sysreqs_packages <- lapply(pkgs, function(x) {
+    sq <- x[["sysreqs_packages"]]
+    sq <- lapply(sq, function(sq1) {
+      sq1[["sysreq"]] <- unlist(sq1[["sysreq"]])
+      sq1[["packages"]] <- unlist(sq1[["packages"]])
+      sq1[["packages_missing"]] <- unlist(sq1[["packages_missing"]])
+      sq1
+    })
+    sq
+  })
+
   soldata <- data_frame(
     ref              = refs,
     type             = vcapply(pkgs, "[[", "type"),
@@ -220,7 +232,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     repotype         = vcapply(pkgs, function(x) x$repotype %||% NA_character_),
     params           = lapply(pkgs, function(x) unlist(x$params)),
     sysreqs          = vcapply(pkgs, function(x) x[["sysreqs"]] %||% NA_character_),
-    sysreqs_packages = lapply(pkgs, function(x) x[["sysreqs_packages"]])
+    sysreqs_packages = sysreqs_packages
   )
 
   private$refs <- refs[soldata$direct]
@@ -233,6 +245,14 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     installed = NULL
   )
 
+  sysreqs <- raw$sysreqs
+  if (!is.null(sysreqs)) {
+    sysreqs$packages <- unlist(sysreqs$packages)
+    sysreqs["pre_install"] <- list(unlist(sysreqs$pre_install))
+    sysreqs["post_install"] <- list(unlist(sysreqs$post_install))
+    sysreqs["install_scripts"] <- list(unlist(sysreqs$install_scripts))
+  }
+
   private$resolution <- list(result = soldata)
   private$solution <- list(
     result = structure(
@@ -242,7 +262,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
         data = soldata,
         problem = list(pkgs = soldata),
         solution = NULL,
-        sysreqs = raw$sysreqs
+        sysreqs = sysreqs
       )
     )
   )

@@ -78,18 +78,19 @@ sysreqs2_scripts <- function(recs, platform) {
   if (is.na(upd)) upd <- character()
   cmd <- sysreqs2_command(platform, "install")
   pkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
-  pkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
-  pkgs <- if (length(pkgs)) paste(cmd, pkgs)
+  ipkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
+  ipkgs <- if (length(ipkgs)) paste(cmd, ipkgs)
   # no need to update if nothing to do
-  if (length(pre) + length(pkgs) + length(post) == 0) upd <- character()
+  if (length(pre) + length(ipkgs) + length(post) == 0) upd <- character()
   list(
     os = plt$os,
     distribution = plt$distribution,
     version = plt$version,
     url = NA_character_,
     pre_install = c(upd, pre),
-    install_scripts = pkgs,
-    post_install = post
+    install_scripts = ipkgs,
+    post_install = post,
+    packages = pkgs
   )
 }
 

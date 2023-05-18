@@ -24,6 +24,9 @@
       $post_install
       [1] "R CMD javareconf"
       
+      $packages
+      [1] "default-jdk"          "libcurl4-openssl-dev"
+      
 
 ---
 
@@ -50,6 +53,9 @@
       
       $post_install
       [1] "R CMD javareconf"
+      
+      $packages
+      [1] "default-jdk"          "libcurl4-openssl-dev"
       
 
 # sysreqs2_command error
@@ -83,6 +89,9 @@
       NULL
       
       $post_install
+      NULL
+      
+      $packages
       NULL
       
 

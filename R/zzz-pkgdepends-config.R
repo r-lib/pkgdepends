@@ -345,7 +345,7 @@ pkgdepends_config <- sort_by_name(list(
   ),
   sysreqs_lookup_system = list(
     type = "flag",
-    default = FALSE
+    default = TRUE
   )
 ))
 

@@ -183,6 +183,8 @@ res_init <- function(self, private, config, cache, library,
     type = "resolution_queue",
     parent_resolve = function(value, resolve) {
       "!DEBUG resolution done"
+      # maybe a non-resolution task ended, e.g. sysreqs
+      if (!"id" %in% names(value)) return(private$try_finish(resolve))
       id <- value$id
       value <- value$value
       wh <- which(id == private$state$async_id)
@@ -253,12 +255,15 @@ res_init <- function(self, private, config, cache, library,
   sys_sup <- sysreqs_is_supported(private$config$get("sysreqs_platform"))
   sys_lookup <- private$config$get("sysreqs_lookup_system")
   if (sys_sup && sys_lookup) {
+    private$system_packages <- NA
     async_system_list_packages(private$config)$
-      then(function(x) { private$system_packages <- x })$
-        then(private$deferred)
+      then(function(x) { private$system_packages <- x; NULL })$
+      then(private$deferred)
   }
   if (sys_sup) {
+    private$sysreqs <- NA
     sysreqs2_async_update_metadata(config = private$config)$
+      then(function() { private$sysreqs <- TRUE; NULL })$
       then(private$deferred)
   }
 }
@@ -409,7 +414,9 @@ res__sysreqs_match <- function(self, private) {
 res__try_finish <- function(self, private, resolve) {
   "!DEBUG resolution trying to finish with `nrow(self$result)` results"
   if (length(private$delayed)) return(private$resolve_delayed(resolve))
-  if (all(! is.na(private$state$status))) {
+  if (all(! is.na(private$state$status)) &&
+      ! identical(private$system_packages, NA) &&
+      ! identical(private$sysreqs, NA)) {
     "!DEBUG resolution finished"
     update_params(self, private, private$params)
     update_dep_types(self, private)

@@ -52,6 +52,10 @@ default_sysreqs_sudo <- function() {
   }
 }
 
+default_sysreqs_update <- function() {
+  Sys.getenv("CI") == "true"
+}
+
 default_sysreqs_verbose <- function() {
   Sys.getenv("CI") != ""
 }
@@ -293,6 +297,16 @@ pkgdepends_config <- sort_by_name(list(
       "Whether to use `sudo` to install system requirements,
        on Unix. By default it is `TRUE` on Linux if the effective user id
        of the current process is not the `root` user."
+  ),
+
+  # -----------------------------------------------------------------------
+  sysreqs_update = list(
+    type = "flag",
+    default = default_sysreqs_update,
+    docs =
+      "Whether to try to update system packages that are already installed.
+       It defaults to `TRUE` on CI systems: if the `CI` environment
+       variable is set to `true`."
   ),
 
   # -----------------------------------------------------------------------

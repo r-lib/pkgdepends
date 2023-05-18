@@ -52,6 +52,9 @@ $sysreqs_rspm_url
 $sysreqs_sudo
 [1] "Whether to use \\code{sudo} to install system requirements,\non Unix. By default it is \\code{TRUE} on Linux if the effective user id\nof the current process is not the \\code{root} user."
 
+$sysreqs_update
+[1] "Whether to try to update system packages that are already installed.\nIt defaults to \\code{TRUE} on CI systems: if the \\code{CI} environment\nvariable is set to \\code{true}."
+
 $sysreqs_verbose
 [1] "Whether to echo the output of system requirements installation.\nDefaults to \\code{TRUE} if the \\code{CI} environment variable is set."
 

@@ -69,7 +69,7 @@ sysreqs2_async_resolve <- function(sysreqs, platform, config, ...) {
     })
 }
 
-sysreqs2_scripts <- function(recs, platform) {
+sysreqs2_scripts <- function(recs, platform, missing = FALSE) {
   plt <- parse_sysreqs_platform(platform)
   flatrecs <- unlist(recs, recursive = FALSE)
   upd <- sysreqs2_command(platform, "update")
@@ -77,12 +77,20 @@ sysreqs2_scripts <- function(recs, platform) {
   post <- unlist(lapply(flatrecs, "[[", "post_install"))
   if (is.na(upd)) upd <- character()
   cmd <- sysreqs2_command(platform, "install")
-  pkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
+  allpkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
+  misspkgs <- unique(unlist(lapply(flatrecs, function(x) {
+    if ("packages_missing" %in% names(x)) {
+      x$packages_missing
+    } else {
+      x$packages
+    }
+  })))
+  pkgs <- if (missing) misspkgs else allpkgs
   ipkgs <- if (length(pkgs)) paste(pkgs, collapse = " ") else character()
   ipkgs <- if (length(ipkgs)) paste(cmd, ipkgs)
   # no need to update if nothing to do
   if (length(pre) + length(ipkgs) + length(post) == 0) upd <- character()
-  list(
+  res <- list(
     os = plt$os,
     distribution = plt$distribution,
     version = plt$version,
@@ -90,8 +98,10 @@ sysreqs2_scripts <- function(recs, platform) {
     pre_install = c(upd, pre),
     install_scripts = ipkgs,
     post_install = post,
-    packages = pkgs
+    packages = allpkgs
   )
+  if (missing) res$misspkgs <- misspkgs
+  res
 }
 
 sysreqs2_git_repo <- function() {

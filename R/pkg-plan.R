@@ -40,6 +40,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_get_solution(self, private),
     show_solution = function(key = FALSE)
       pkgplan_show_solution(self, private, key),
+    show_sysreqs = function()
+      pkgplan_show_sysreqs(self, private),
     get_install_plan = function()
       pkgplan_install_plan(self, private, downloads = TRUE),
     export_install_plan = function(plan_file = "pkg.lock", version = 2)
@@ -59,6 +61,7 @@ pkg_plan <- R6::R6Class(
       pkgplan_stop_for_resolution_download_error(self, private),
 
     update = function() pkgplan_update(self, private),
+    update_sysreqs = function() pkgplan_update_sysreqs(self, private),
 
     print = function(...)
       pkgplan_print(self, private, ...)
@@ -341,4 +344,21 @@ pkgplan_update <- function(self, private) {
     private$solution$result$data$old_version[[i]] <- installed$version
     private$solution$result$data$new_version[[i]] <- NA
   }
+}
+
+pkgplan_update_sysreqs <- function(self, private) {
+  if (!private$config$get("sysreqs")) return(invisible())
+  sys <- self$get_solution()$data$sysreqs_packages
+  if (is.null(sys)) return(invisible())
+  spkgs <- sysreqs_list_system_packages()
+  spkgs <- spkgs[grepl("^.i$", spkgs$status), ]
+  allspkgs <- unique(unlist(c(spkgs$package, spkgs$provides)))
+  for (i in seq_along(sys)) {
+    elt <- sys[[i]]
+    for (j in seq_along(elt)) {
+      elt[[j]]$packages_missing <- setdiff(elt[[j]]$packages, allspkgs)
+        }
+    if (!is.null(elt)) sys[[i]] <- elt
+  }
+  private$solution$result$data$sysreqs_packages <- sys
 }

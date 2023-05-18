@@ -602,8 +602,7 @@ The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-install_sysreqs}{}}}
 \subsection{Method \code{install_sysreqs()}}{
 Install system requirements. It does nothing if system requirements
-are turned off. It errors if we could not look up the system
-requirements.
+are turned off.
 Create an installation plan for the downloaded packages.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$install_sysreqs()}\if{html}{\out{</div>}}

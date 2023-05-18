@@ -934,7 +934,7 @@ highlight_sysreqs <- function(sysreqs) {
     if (length(pkgs) == 0) return("")
     paste0(
       cli::col_silver(" + "),
-      paste(col_blue(pkgs), collapse = ", ")
+      paste(cli::col_cyan(pkgs), collapse = ", ")
     )
   })
 }
@@ -955,6 +955,63 @@ pkgplan_show_solution <- function(self, private, key = FALSE) {
   }
 
   invisible(self$get_solution())
+}
+
+pkgplan_show_sysreqs <- function(self, private) {
+  rpkgs <- self$get_solution()[["data"]]
+  if (is.null(rpkgs[["sysreqs_packages"]])) return(invisible())
+  rpkgs <- rpkgs[vlapply(rpkgs$sysreqs_packages, function(x) length(x) > 0), ]
+
+  inst <- structure(list(), names = character())
+  miss <- structure(list(), names = character())
+  upd <- structure(list(), names = character())
+
+  for (i in seq_along(rpkgs$sysreqs_packages)) {
+    elt <- rpkgs$sysreqs_packages[[i]]
+    pkg <- rpkgs$package[i]
+    for (j in seq_along(elt)) {
+      if ("packages_missing" %in% names(elt[[j]])) {
+        # we know exactly what is missing
+        miss1 <- elt[[j]][["packages_missing"]]
+        inst1 <- setdiff(elt[[j]][["packages"]], miss)
+        upd1 <- character()
+      } else {
+        # we don't know what is missing
+        upd1 <- elt[[j]][["packages"]]
+        inst1 <- miss1 <- character()
+      }
+
+      for (p in miss1) miss[[p]] <- c(miss[[p]], pkg)
+      for (p in inst1) inst[[p]] <- c(inst[[p]], pkg)
+      for (o in upd1) upd[[p]] <- c(upd[[p]], pkg)
+    }
+  }
+
+  col1 <- col2 <- character()
+  if (length(miss)) {
+    miss <- miss[order(tolower(names(miss)))]
+    col1 <- paste0(cli::col_silver("+ "), cli::col_cyan(names(miss)))
+    col2 <- paste0(
+      cli::col_silver("- "),
+      vcapply(miss, function(x) paste(cli::col_blue(x), collapse = ", "))
+    )
+  }
+
+  if (length(upd)) {
+    upd <- upd[order(tolower(names(upd)))]
+    col1 <- c(col1, paste0(cli::col_silver("* "), cli::col_cyan(names(upd))))
+    col2 <- c(col2, paste0(
+      cli::col_silver("- "),
+      vcapply(upd, function(x) paste(cli::col_blue(x), collapse = ", "))
+    ))
+  }
+
+  col1 <- ansi_align_width(col1)
+  col2 <- ansi_align_width(col2)
+  out <- paste0(col1, "  ", col2)
+  if (length(out)) cli::cli_verbatim(paste(out, collapse = "\n"))
+
+  invisible(self)
 }
 
 pkgplan_install_plan <- function(self, private, downloads) {

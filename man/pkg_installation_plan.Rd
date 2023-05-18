@@ -45,6 +45,7 @@ them.
 \item \href{#method-pkg_installation_plan-set_solve_policy}{\code{pkg_installation_plan$set_solve_policy()}}
 \item \href{#method-pkg_installation_plan-solve}{\code{pkg_installation_plan$solve()}}
 \item \href{#method-pkg_installation_plan-update}{\code{pkg_installation_plan$update()}}
+\item \href{#method-pkg_installation_plan-update_sysreqs}{\code{pkg_installation_plan$update_sysreqs()}}
 \item \href{#method-pkg_installation_plan-format}{\code{pkg_installation_plan$format()}}
 \item \href{#method-pkg_installation_plan-clone}{\code{pkg_installation_plan$clone()}}
 }
@@ -173,6 +174,16 @@ updated library, because it uses the the packages and package
 versions of the original plan. E.g. if the library has a newer
 version of a package, then \verb{$update()} will downgrade it to the
 version in the plan.
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-pkg_installation_plan-update_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_plan-update_sysreqs}{}}}
+\subsection{Method \code{update_sysreqs()}}{
+Update information about installed and missing system requirements.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$update_sysreqs()}\if{html}{\out{</div>}}
 }
 
 }

@@ -110,6 +110,9 @@ it defaults to \verb{https://packagemanager.posit.co}.
 \item \code{sysreqs_sudo}: Whether to use \code{sudo} to install system requirements,
 on Unix. By default it is \code{TRUE} on Linux if the effective user id
 of the current process is not the \code{root} user.
+\item \code{sysreqs_update}: Whether to try to update system packages that are already installed.
+It defaults to \code{TRUE} on CI systems: if the \code{CI} environment
+variable is set to \code{true}.
 \item \code{sysreqs_verbose}: Whether to echo the output of system requirements installation.
 Defaults to \code{TRUE} if the \code{CI} environment variable is set.
 \item \code{use_bioconductor}: Whether to automatically use the Bioconductor repositories.

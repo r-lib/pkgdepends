@@ -31,8 +31,9 @@
       [15] "sysreqs_db_update_timeout" "sysreqs_dry_run"          
       [17] "sysreqs_lookup_system"     "sysreqs_platform"         
       [19] "sysreqs_rspm_repo_id"      "sysreqs_rspm_url"         
-      [21] "sysreqs_sudo"              "sysreqs_verbose"          
-      [23] "use_bioconductor"          "windows_archs"            
+      [21] "sysreqs_sudo"              "sysreqs_update"           
+      [23] "sysreqs_verbose"           "use_bioconductor"         
+      [25] "windows_archs"            
 
 ---
 

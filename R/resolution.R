@@ -405,6 +405,17 @@ res__set_result_list <- function(self, private, row_idx, value) {
 res__sysreqs_match <- function(self, private) {
   if ("sysreqs" %in% names(self$result)) {
     sys <- sysreqs2_match(self$result$sysreqs, config = private$config)
+    if (!is.null(spkgs <- private$system_packages)) {
+      spkgs <- spkgs[grepl("^.i$", spkgs$status), ]
+      allspkgs <- unique(unlist(c(spkgs$package, spkgs$provides)))
+      for (i in seq_along(sys)) {
+        elt <- sys[[i]]
+        for (j in seq_along(elt)) {
+          elt[[j]]$packages_missing <- setdiff(elt[[j]]$packages, allspkgs)
+        }
+        if (!is.null(elt)) sys[[i]] <- elt
+      }
+    }
     self$result$sysreqs_packages <- sys
   } else {
     self$result$sysreqs_packages <- list(NULL)

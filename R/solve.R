@@ -915,8 +915,17 @@ highlight_sysreqs <- function(sysreqs) {
   if (is.null(sysreqs)) return("")
   vcapply(sysreqs, function(p) {
     if (length(p) == 0) return("")
+    tick <- paste0(cli::col_green(cli::symbol$tick), " ")
+    cross <- paste0(cli::col_red(cli::symbol$cross), " ")
     pkgs <- unlist(lapply(p, function(x) {
-      x$packages %||% paste0(x$sysreq, " (installer)")
+      if (length(x$packages) != 0) {
+        paste0(
+          ifelse(x$packages %in% x$packages_missing, cross, tick),
+          x$packages
+        )
+      } else {
+        paste0(x$sysreq, " (installer)")
+      }
     }))
     if (length(pkgs) == 0) return("")
     paste0(

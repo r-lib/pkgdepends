@@ -311,11 +311,6 @@ Note that pak has a built-in git client, and does
 If the system has git installed, then pak will use the
 credentials stored in the configured git credential store, automatically,
 via the gitcreds package.
-
-Currently pak only supports git servers that use
-version 2 of the git protocol.
-Most git servers do that, but there are some exceptions, a notable one is
-https://bitbucket.org/.
 }
 
 \subsection{Local packages (\verb{local::})}{

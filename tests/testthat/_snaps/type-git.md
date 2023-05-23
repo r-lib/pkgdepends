@@ -302,6 +302,87 @@
       
       
 
+---
+
+    Code
+      parse_pkg_refs(c("git::https://github.com/cran/falsy.git",
+        "git::https://github.com/cran/falsy2.git"))
+    Output
+      [[1]]
+      $package
+      [1] "falsy"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "github.com"
+      
+      $path
+      [1] "/cran/"
+      
+      $repo
+      [1] "falsy"
+      
+      $commitish
+      [1] "HEAD"
+      
+      $ref
+      [1] "git::https://github.com/cran/falsy.git"
+      
+      $type
+      [1] "git"
+      
+      $dotgit
+      [1] ".git"
+      
+      $url
+      [1] "https://github.com/cran/falsy.git"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_git" "remote_ref"     "list"          
+      
+      [[2]]
+      $package
+      [1] "falsy2"
+      
+      $protocol
+      [1] "https"
+      
+      $host
+      [1] "github.com"
+      
+      $path
+      [1] "/cran/"
+      
+      $repo
+      [1] "falsy2"
+      
+      $commitish
+      [1] "HEAD"
+      
+      $ref
+      [1] "git::https://github.com/cran/falsy2.git"
+      
+      $type
+      [1] "git"
+      
+      $dotgit
+      [1] ".git"
+      
+      $url
+      [1] "https://github.com/cran/falsy2.git"
+      
+      $params
+      character(0)
+      
+      attr(,"class")
+      [1] "remote_ref_git" "remote_ref"     "list"          
+      
+
 # download_remote_git
 
     Code

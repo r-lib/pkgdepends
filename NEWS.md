@@ -1,6 +1,6 @@
 # pkgdepends (development version)
 
-* pkgdepends now correctly parses mutliple `git::` packages at once (#318).
+* pkgdepends now correctly parses multiple `git::` packages at once (#318).
 
 # pkgdepends 0.5.0
 

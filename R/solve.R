@@ -103,18 +103,18 @@ solve_dummy_obj <- 1000000000
 pkgplan_solve <- function(self, private, policy) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
   if (is.null(private$config$get("library"))) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "No package library specified for installation plan.",
       i = "Maybe you need to specify {.code config = list(library = ...)}
        in {.code pkg_installation_plan$new()} or another initializer?"
-    ))
+    ))                                                                     # nocov end
   }
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "Package list has changed, you need to call the {.code $resolve()}
        method again?"
-    ))
+    ))                                                                     # nocov end
   }
 
   metadata <- list(solution_start = Sys.time())
@@ -125,11 +125,11 @@ pkgplan_solve <- function(self, private, policy) {
   sol <- private$solve_lp_problem(prb)
 
   if (sol$status != 0) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "Error in dependency solver, cannot solve installation.",
       i = "Solver status: {sol$status}.",
       i = msg_internal_error()
-    ))
+    ))                                                                     # nocov end
   }
 
   selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
@@ -159,9 +159,9 @@ pkgplan_solve <- function(self, private, policy) {
 
 pkgplan_stop_for_solve_error <- function(self, private) {
   if (is.null(private$solution)) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "You need to call the {.code $solve()} method first."
-    ))
+    ))                                                                     # nocov end
   }
 
   sol <- self$get_solution()
@@ -290,10 +290,10 @@ pkgplan_i_lp_objectives <- function(lp) {
     lp$obj <- lp$obj - min(lp$obj)
 
   } else {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "Unknown version selection policy: {.val {policy}}.",
       i = "It has to be one of {.val lazy} or {.val upgrade}."
-    ))
+    ))                                                                     # nocov end
   }
 
   lp$obj <- c(lp$obj, rep(solve_dummy_obj, lp$num_direct))
@@ -931,7 +931,7 @@ highlight_sysreqs <- function(sysreqs) {
         paste0(x$sysreq, " (installer)")
       }
     }))
-    if (length(pkgs) == 0) return("")
+    if (length(pkgs) == 0) return("")                               # nocov
     paste0(
       cli::col_silver(" + "),
       paste(cli::col_cyan(pkgs), collapse = ", ")
@@ -983,7 +983,7 @@ pkgplan_show_sysreqs <- function(self, private) {
 
       for (p in miss1) miss[[p]] <- c(miss[[p]], pkg)
       for (p in inst1) inst[[p]] <- c(inst[[p]], pkg)
-      for (o in upd1) upd[[p]] <- c(upd[[p]], pkg)
+      for (p in upd1) upd[[p]] <- c(upd[[p]], pkg)
     }
   }
 

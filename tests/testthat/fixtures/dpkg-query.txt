@@ -1,0 +1,12 @@
+un  acl  
+ii  adduser 3.118ubuntu5 
+un  alsa-utils  
+un  amanda-common  
+un  approx  
+un  appstream  
+ii  apt 2.4.9 apt-transport-https (= 2.4.9)
+un  apt-doc  
+un  apt-listchanges  
+ii  x11proto-dev 2021.5-1 x11proto-core-dev (= 2021.5-1), x11proto-dri2-dev (= 2021.5-1), x11proto-fonts-dev (= 2021.5-1), x11proto-gl-dev (= 2021.5-1)
+un  x11proto-dri2-dev  
+un  x11proto-fonts-dev  

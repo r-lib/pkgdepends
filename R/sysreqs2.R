@@ -170,11 +170,11 @@ sysreqs2_async_update_metadata <- function(path = NULL, config = NULL) {
   )
   async_timeout(upd, timeout)$
     catch(error = function(e) {
-      cli::cli_alert_warning(
+      cli::cli_alert_warning(                                  # nocov start
         "Failed to update system requirement mappings,
          will use cached mappings.",
         wrap = TRUE
-      )
+      )                                                        # nocov end
       invisible()
     })
 }

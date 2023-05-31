@@ -239,3 +239,97 @@ test_that("compact_cmds", {
     ))
   })
 })
+
+test_that("highlight_sysreqs", {
+  # edge case
+  expect_equal(highlight_sysreqs(NULL), "")
+
+  sq <- list(
+    NULL,
+    list(
+      list(
+        sysreq = "fontconfig",
+        packages = "libfontconfig1-dev",
+        pre_install = NULL,
+        post_install = NULL,
+        packages_missing = character(0)
+      ),
+      list(
+        sysreq = "freetype",
+        packages = "libfreetype6-dev",
+        pre_install = NULL,
+        post_install = NULL,
+        packages_missing = character(0)
+      )
+    ),
+    list(
+      list(
+        sysreq = "freetype",
+        packages = "libfreetype6-dev",
+        pre_install = NULL,
+        post_install = NULL,
+        packages_missing = character(0)
+      ),
+      list(
+        sysreq = "fribidi",
+        packages = "libfribidi-dev",
+        pre_install = NULL,
+        post_install = NULL,
+        packages_missing = "libfribidi-dev"
+      ),
+      list(
+        sysreq = "harfbuzz",
+        packages = "libharfbuzz-dev",
+        pre_install = NULL,
+        post_install = NULL,
+        packages_missing = "libharfbuzz-dev"
+      )
+    ),
+    NULL
+  )
+  sq2 <- lapply(sq, function(x) {
+    lapply(x, function(xx) xx[setdiff(names(xx), "packages_missing")])
+  })
+
+  expect_snapshot({
+    highlight_sysreqs(sq)
+    highlight_sysreqs(sq2)
+  })
+
+  withr::local_options(cli.unicode = TRUE, cli.num_colors = 256)
+  expect_snapshot({
+    highlight_sysreqs(sq)
+    highlight_sysreqs(sq2)
+  })
+
+  # installer
+  sq[[2]] <- list(list(
+    sysreq = "chrome",
+    packages = NULL,
+    pre_install = "download and install chrome",
+    post_install = NULL,
+    packages_missing = character()
+  ))
+  expect_snapshot({
+    highlight_sysreqs(sq)
+  })
+})
+
+test_that("default_sysreqs", {
+  config <- current_config()
+  config$set("sysreqs_platform", "aarch64-apple-darwin20")
+  expect_false(default_sysreqs(config))
+
+  config$set("sysreqs_platform", "x86_64-pc-linux-gnu-ubuntu-22.04")
+  mockery::stub(default_sysreqs, "is_root", FALSE)
+  mockery::stub(default_sysreqs, "can_sudo_without_pw", FALSE)
+  expect_false(default_sysreqs(config))
+
+  mockery::stub(default_sysreqs, "is_root", TRUE)
+  mockery::stub(default_sysreqs, "can_sudo_without_pw", FALSE)
+  expect_true(default_sysreqs(config))
+
+  mockery::stub(default_sysreqs, "is_root", FALSE)
+  mockery::stub(default_sysreqs, "can_sudo_without_pw", TRUE)
+  expect_true(default_sysreqs(config))
+})

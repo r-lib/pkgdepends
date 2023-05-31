@@ -366,6 +366,12 @@ is_windows <- function() {
   identical(tolower(Sys.info()[["sysname"]]), "windows")
 }
 
+# used in coverage condition
+
+is_linux <- function() {
+  identical(tolower(Sys.info()[["sysname"]]), "linux")                # nocov
+}
+
 # This is a workaround for some RStudio bugs:
 # https://github.com/r-lib/pkginstall/issues/42
 # https://github.com/rstudio/rstudio/issues/2387

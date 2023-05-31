@@ -81,3 +81,10 @@ long_basename <- function(x) {
   x <- ifelse (substr(x, l, l) %in% c("/", "\\"), substr(x, 1, l - 1), x)
   sub("^.*[/\\]", "", x)
 }
+
+read_all <- function(path) {
+  bytes <- readBin(path, "raw", file.size(path))
+  chr <- rawToChar(bytes)
+  Encoding(chr) <- "UTF-8"
+  chr
+}

@@ -183,3 +183,34 @@
       [1] "pkg2"
       
 
+# show_sysreqs
+
+    Code
+      prop$show_sysreqs()
+    Message <cliMessage>
+      * libcurl4-openssl-dev  - curl
+      * libssl-dev            - curl
+
+# install_sysreqs
+
+    Code
+      prop$install_sysreqs()
+    Message <cliMessage>
+      i Installing system requirements
+      i Executing `sh -c echo apt-get -y update`
+      i Executing `sh -c echo apt-get -y install libcurl4-openssl-dev libssl-dev`
+
+---
+
+    Code
+      prop$install_sysreqs()
+    Output
+      NULL
+
+---
+
+    Code
+      prop$install_sysreqs()
+    Output
+      NULL
+

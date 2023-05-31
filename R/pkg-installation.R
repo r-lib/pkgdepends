@@ -470,7 +470,7 @@ pkg_installation_proposal <- R6::R6Class(
       config <- get_private(private$plan)$config
       if (!config$get("sysreqs")) return()
       srq <- self$get_solution()$data$sysreqs_packages
-      if (is.null(srq)) return(invisible())
+      if (is.null(srq)) return(invisible())                         # nocov
       cmds <- sysreqs2_scripts(
         srq,
         platform = config$get("sysreqs_platform"),

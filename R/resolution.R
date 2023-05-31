@@ -255,10 +255,10 @@ res_init <- function(self, private, config, cache, library,
   sys_sup <- sysreqs_is_supported(private$config$get("sysreqs_platform"))
   sys_lookup <- private$config$get("sysreqs_lookup_system")
   if (sys_sup && sys_lookup) {
-    private$system_packages <- NA
-    async_system_list_packages(private$config)$
-      then(function(x) { private$system_packages <- x; NULL })$
-      then(private$deferred)
+    private$system_packages <- NA                                 # nocovif !is_linux()
+    async_system_list_packages(private$config)$                   # nocovif !is_linux()
+      then(function(x) { private$system_packages <- x; NULL })$   # nocovif !is_linux()
+      then(private$deferred)                                      # nocovif !is_linux()
   }
   if (sys_sup) {
     private$sysreqs <- NA
@@ -406,19 +406,19 @@ res__sysreqs_match <- function(self, private) {
   if ("sysreqs" %in% names(self$result)) {
     sys <- sysreqs2_match(self$result$sysreqs, config = private$config)
     if (!is.null(spkgs <- private$system_packages)) {
-      spkgs <- spkgs[grepl("^.i$", spkgs$status), ]
-      allspkgs <- unique(unlist(c(spkgs$package, spkgs$provides)))
-      for (i in seq_along(sys)) {
-        elt <- sys[[i]]
-        for (j in seq_along(elt)) {
-          elt[[j]]$packages_missing <- setdiff(elt[[j]]$packages, allspkgs)
-        }
-        if (!is.null(elt)) sys[[i]] <- elt
+      spkgs <- spkgs[grepl("^.i$", spkgs$status), ]                         # nocovif !is_linux()
+      allspkgs <- unique(unlist(c(spkgs$package, spkgs$provides)))          # nocovif !is_linux()
+      for (i in seq_along(sys)) {                                           # nocovif !is_linux()
+        elt <- sys[[i]]                                                     # nocovif !is_linux()
+        for (j in seq_along(elt)) {                                         # nocovif !is_linux()
+          elt[[j]]$packages_missing <- setdiff(elt[[j]]$packages, allspkgs) # nocovif !is_linux()
+        }                                                                   # nocovif !is_linux()
+        if (!is.null(elt)) sys[[i]] <- elt                                  # nocovif !is_linux()
       }
     }
     self$result$sysreqs_packages <- sys
   } else {
-    self$result$sysreqs_packages <- list(NULL)
+    self$result$sysreqs_packages <- list(NULL)                             # nocovif !is_linux()
   }
 }
 

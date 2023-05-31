@@ -483,3 +483,47 @@
     Output
       [1] "apt-get install -y libssl-dev libcurl4-openssl-dev"
 
+# highlight_sysreqs
+
+    Code
+      highlight_sysreqs(sq)
+    Output
+      [1] ""                                                          
+      [2] " + v libfontconfig1-dev, v libfreetype6-dev"               
+      [3] " + v libfreetype6-dev, x libfribidi-dev, x libharfbuzz-dev"
+      [4] ""                                                          
+    Code
+      highlight_sysreqs(sq2)
+    Output
+      [1] ""                                                    
+      [2] " + libfontconfig1-dev, libfreetype6-dev"             
+      [3] " + libfreetype6-dev, libfribidi-dev, libharfbuzz-dev"
+      [4] ""                                                    
+
+---
+
+    Code
+      highlight_sysreqs(sq)
+    Output
+      [1] ""                                                                                                                                                                          
+      [2] "\033[90m + \033[39m\033[36m\033[32m✔\033[36m libfontconfig1-dev\033[39m, \033[36m\033[32m✔\033[36m libfreetype6-dev\033[39m"                                               
+      [3] "\033[90m + \033[39m\033[36m\033[32m✔\033[36m libfreetype6-dev\033[39m, \033[36m\033[31m✖\033[36m libfribidi-dev\033[39m, \033[36m\033[31m✖\033[36m libharfbuzz-dev\033[39m"
+      [4] ""                                                                                                                                                                          
+    Code
+      highlight_sysreqs(sq2)
+    Output
+      [1] ""                                                                                                                    
+      [2] "\033[90m + \033[39m\033[36mlibfontconfig1-dev\033[39m, \033[36mlibfreetype6-dev\033[39m"                             
+      [3] "\033[90m + \033[39m\033[36mlibfreetype6-dev\033[39m, \033[36mlibfribidi-dev\033[39m, \033[36mlibharfbuzz-dev\033[39m"
+      [4] ""                                                                                                                    
+
+---
+
+    Code
+      highlight_sysreqs(sq)
+    Output
+      [1] ""                                                                                                                                                                          
+      [2] "\033[90m + \033[39m\033[36mchrome (installer)\033[39m"                                                                                                                     
+      [3] "\033[90m + \033[39m\033[36m\033[32m✔\033[36m libfreetype6-dev\033[39m, \033[36m\033[31m✖\033[36m libfribidi-dev\033[39m, \033[36m\033[31m✖\033[36m libharfbuzz-dev\033[39m"
+      [4] ""                                                                                                                                                                          
+

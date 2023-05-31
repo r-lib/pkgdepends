@@ -348,8 +348,10 @@ pkgplan_update <- function(self, private) {
 
 pkgplan_update_sysreqs <- function(self, private) {
   if (!private$config$get("sysreqs")) return(invisible())
+  # Stop here is no sysreqs at all, no need to look up system packages
   sys <- self$get_solution()$data$sysreqs_packages
-  if (is.null(sys)) return(invisible())
+  if (length(unlist(sys)) == 0) return(invisible())
+
   spkgs <- sysreqs_list_system_packages()
   spkgs <- spkgs[grepl("^.i$", spkgs$status), ]
   allspkgs <- unique(unlist(c(spkgs$package, spkgs$provides)))

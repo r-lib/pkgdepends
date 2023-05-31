@@ -183,6 +183,7 @@ test_that("show_sysreqs", {
 
 test_that("install_sysreqs", {
   setup_fake_apps()
+  withr::local_envvar(CI = NA_character_)
   dir.create(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
 

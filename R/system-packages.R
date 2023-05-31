@@ -43,15 +43,16 @@ async_system_list_packages_dpkg_query <- function(config) {
 parse_dpkg_query_output <- function(lines) {
   # If not installed, then not interesting
   lines <- lines[grepl("^.[^n]", lines)]
-  status <- sub(" .*$", "", lines)
+  status <- trimws(sub(" .*$", "", lines))
   rest <- sub("^[^ ]+[ ]+", "", lines)
-  package <- sub(" .*$", "", rest)
+  package <- trimws(sub(" .*$", "", rest))
   rest <- sub("^[^ ]+[ ]+", "", rest)
-  version <- sub(" .*$", "", rest)
+  version <- trimws(sub(" .*$", "", rest))
   rest <- sub("^[^ ]+[ ]+", "", rest)
-  provides <- strsplit(rest, ",[ ]?")
+  provides <- lapply(strsplit(rest, ",[ ]?"), trimws)
   # just drop version requirements, we probably don't need them
   provides <- lapply(provides, sub, pattern = "[ ].*$", replacement = "")
+  provides <- lapply(provides, function(x) x[x != ""])
   # sorted by default
   data_frame(
     status = status,
@@ -96,8 +97,8 @@ parse_rpm_output <- function(lines) {
   to <- c(last)
   blocks <- mapply(from, to, FUN = function(f, t) lines[f:t])
   pkglines <- sub("^---", "", vcapply(blocks, utils::tail, 1))
-  package <- sub(" .*$", "", pkglines)
-  version <- sub("^[^ ]+[ ]+", "", pkglines)
+  package <- trimws(sub(" .*$", "", pkglines))
+  version <- trimws(sub("^[^ ]+[ ]+", "", pkglines))
   provides <- mapply(
     package,
     blocks,
@@ -109,6 +110,7 @@ parse_rpm_output <- function(lines) {
       blk <- blk[!startsWith(blk, paste0(pkg, " = "))]
       # drop version numbers
       blk <- sub(" .*$", "", blk)
+      trimws(blk)
     }
   )
 

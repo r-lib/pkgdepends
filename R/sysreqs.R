@@ -2,58 +2,14 @@
 # Public API
 # -------------------------------------------------------------------------
 
-#' List platforms with system requirements support
-#'
-#' @return
-#' Data frame with columns:
-#' * `name`: human readable OS name.
-#' * `os`: OS name, e.g. `linux`.
-#' * `distribution`: OS id, e.g. `ubuntu` or `redhat`.
-#' * `version`: distribution version. A star means that all versions are
-#'    supported, that are also supported by the vendor.
-#' * `update_command`: command to run to update the system package metadata.
-#' * `install_command`: command to run to install packages.
-#' * `query_command`: name of the tool to use to query system package
-#'    information.
-#'
-#' @export
-#' @family system requirements functions
-#' @examples
-#' sysreqs_platforms()
-
 sysreqs_platforms <- function() {
   as_data_frame(sysreqs2_cmds)
 }
-
-#' Check if a platform has system requirements support
-#'
-#' @param platform System requirements platform.
-#' @return Logical scalar.
-#'
-#' @export
-#' @family system requirements functions
-#' @seealso The `sysreqs_platform` [configuration option][pkgdepends-config].
-#' @examples
-#' sysreqs_is_supported()
 
 sysreqs_is_supported <- function(platform = NULL) {
   platform <- platform %||% current_config()$get("sysreqs_platform")
   !is.na(find_sysreqs_platform(platform))
 }
-
-#' List contents of the system requirements DB, for a platform
-#'
-#' @inheritParams sysreqs_is_supported
-#' @return Data frame with columns:
-#' * `name`: cross platform system dependency name in the database.
-#' * `patterns`: one or more regular expressions to match to
-#'   `SystemRequirements` fields.
-#' * `packages`: one or more system package names to install.
-#' * `pre_install`: command(s) to run before installing the packages.
-#' * `post_install`:: command(s) to run after installing the packages.
-#'
-#' @export
-#' @family system requirements functions
 
 sysreqs_db_list <- function(platform = NULL) {
   platform <- platform %||% current_config()$get("sysreqs_platform")
@@ -99,36 +55,6 @@ sysreqs_db_list <- function(platform = NULL) {
   )
 }
 
-#' Match system requirement descriptions to the database
-#'
-#' In the usual workflow `r pak_or_pkgdepends()` matches the
-#' `SystemRequirements` fields of the `DESCRIPTION` files to the database.
-#'
-#' The `sysreqs_db_match()` function lets you match any string, and it is
-#' mainly useful for debugging.
-#'
-#' @param specs Character vector of system requirements descriptions.
-#' @param platform System requirements platform. Defaults to the current
-#' platform.
-#' @return Data frame with columns:
-#' * `spec`: the input `specs`.
-#' * `sysreq`:  name of the system library or tool.
-#' * `packages`: system packages, list column of character vectors.
-#'    Rarely it can be an empty string, e.g. if a `pre_install` script
-#'    performs the installation.
-#' * `pre_install`: list column of character vectors. Shell script(s) to
-#'    run before the installation.
-#' * `post_install`: list column of character vectors. Shell script(s) to
-#'    run after the installation.
-#'
-#' @export
-#' @family system requirements functions
-#' @examplesIf !pkgdepends:::is_rcmd_check()
-#' sysreqs_db_match(
-#'   c("Needs libcurl", "Java, libssl"),
-#'   platform = "ubuntu-22.04"
-#' )
-
 sysreqs_db_match <- function(specs, platform = NULL) {
   sysreqs_db_update()
   recs <- sysreqs2_match(specs, platform = platform)
@@ -148,15 +74,6 @@ sysreqs_db_match <- function(specs, platform = NULL) {
     }
   )
 }
-
-#' Update the cached copy of the system requirements database
-#'
-#' @details
-#' If the the cached copy is recent, then no update is attempted. See the
-#' `metadata_update_after` [configuration option][pkgdepends-config].
-#'
-#' @export
-#' @family system requirements functions
 
 sysreqs_db_update <- function() {
   invisible(sysreqs2_update_metadata())
@@ -258,31 +175,6 @@ sysreqs_install_plan <- function(refs, config = list()) {
   res$packages <- spkgs
   res
 }
-
-#' Check if installed packages have all their system requirements
-#'
-#' @details
-#' This function uses the `sysreqs_platform` configuration option,
-#' see [Configuration][pkgdepends-config]. Set this if
-#' `r pak_or_pkgdepends()` does not detect your platform correctly.
-#'
-#' @param packages If not `NULL`, then only these packages are checked.
-#'   If a package in `packages` is not installed, then
-#'   `r pak_or_pkgdepends()` throws a warning.
-#' @param library Library or libraries to check.
-#' @return Data frame with a custom print and format method, and a
-#'   `pkg_sysreqs_check_result` class. Its columns are:
-#'    * `system_package`: string, name of the required system package.
-#'    * `installed`: logical, whether the system package is correctly
-#'      installed.
-#'    * `packages`: list column of character vectors. The names of the
-#'      installed R packages that need this system package.
-#'
-#' @export
-#' @family system requirements functions
-#' @examplesIf !pkgdepends:::is_rcmd_check() && pkgdepends::sysreqs_is_supported()
-#' # This only works on supported platforms
-#' sysreqs_check_installed()
 
 sysreqs_check_installed <- function(packages = NULL,
                                     library = .libPaths()[1]) {

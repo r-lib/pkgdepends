@@ -10,7 +10,7 @@
 ^\.Rprofile$
 ^r-packages$
 ^README_cache$
-^tools$
+^tools/doc$
 ^doc$
 ^Meta$
 ^_pkgdown\.yml$

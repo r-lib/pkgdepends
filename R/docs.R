@@ -100,3 +100,7 @@ read_char <- function(path) {
 write_char <- function(x, path) {
   writeBin(charToRaw(x), path)
 }
+
+man_config_link <- function(txt) {
+  paste0("\\link[=pkgdepends-config]{", txt, "}")
+}

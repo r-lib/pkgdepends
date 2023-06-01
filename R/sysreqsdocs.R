@@ -157,3 +157,30 @@ sysreqs_db_update
 #' sysreqs_check_installed()
 
 sysreqs_check_installed
+
+#' List installed system packages
+#'
+#' @usage
+#' ssyreqs_list_system_packages()
+#'
+#' @details
+#' This function uses the `sysreqs_platform` configuration option,
+#' see \eval{man_config_link("Configuration")}. Set this if
+#' `r pak_or_pkgdepends()` does not detect your platform correctly.
+#'
+#' @return Data frame with columns:
+#'   * `status`. two or three characters, the notation of `dpkg` on Debian
+#'     based systems. `"ii"` means the package is correctly installed.
+#'     On `RPM` based systems it is always `"ii"` currently.
+#'   * `package`: name of the system package.
+#'   * `version`: installed version of the system package.
+#'   * `capabilities`: list column of character vectors, the capabilities
+#'     provided by the package.
+#'
+#' @name sysreqs_list_system_packages
+#' @export
+#' @family system requirements functions
+#' @examplesIf Sys.getenv("IN_PKGDOWN") == "true" && Sys.info()[["sysname"]] == "Linux"
+#' sysreqs_list_system_packages()[1:10,]
+
+sysreqs_list_system_packages

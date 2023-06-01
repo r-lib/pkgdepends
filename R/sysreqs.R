@@ -252,27 +252,6 @@ async_parse_installed <- function(library, packages) {
   async_constant(pkgs)
 }
 
-#' List installed system packages
-#'
-#' @details
-#' This function uses the `sysreqs_platform` configuration option,
-#' see [Configuration][pkgdepends-config]. Set this if
-#' `r pak_or_pkgdepends()` does not detect your platform correctly.
-#'
-#' @return Data frame with columns:
-#'   * `status`. two or three characters, the notation of `dpkg` on Debian
-#'     based systems. `"ii"` means the package is correctly installed.
-#'     On `RPM` based systems it is always `"ii"` currently.
-#'   * `package`: name of the system package.
-#'   * `version`: installed version of the system package.
-#'   * `capabilities`: list column of character vectors, the capabilities
-#'     provided by the package.
-#'
-#' @export
-#' @family system requirements functions
-#' @examplesIf !pkgdepends:::is_rcmd_check() && pkgdepends::sysreqs_is_supported()
-#' sysreqs_list_system_packages()[1:10,]
-
 sysreqs_list_system_packages <- function() {
   synchronize(async_system_list_packages())                         # nocov
 }

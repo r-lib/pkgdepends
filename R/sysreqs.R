@@ -477,5 +477,8 @@ is_root <- function() {
 
 can_sudo_without_pw <- function() {
   if (os_type() != "unix") return(FALSE)
-  processx::run("sudo", c("-s", "id"), error_on_status=FALSE)$status == 0
+  tryCatch({
+    processx::run("sudo", c("-s", "id"))
+    TRUE
+  }, error = function(err) FALSE)
 }

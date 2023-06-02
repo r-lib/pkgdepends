@@ -417,6 +417,27 @@ res__sysreqs_match <- function(self, private) {
       }
     }
     self$result$sysreqs_packages <- sys
+    platform <- private$config$get("sysreqs_platform")
+    cmd_upd <- sysreqs2_command(platform, "update_command")
+    cmd_inst <- sysreqs2_command(platform, "install_command")
+    pre <- lapply(sys, function(x) unlist(lapply(x, "[[", "pre_install")))
+    post <- lapply(sys, function(x) unlist(lapply(x, "[[", "post_install")))
+    spkg <- lapply(sys, function(x) {
+      unlist(lapply(x, function(xx) xx$packages_missing %||% xx$packages))
+    })
+
+    pre <- vcapply(pre, paste, collapse = ";")
+    post <- vcapply(post, paste, collapse = ";")
+    spkg <- vcapply(spkg, paste, collapse = " ")
+    if (!is.na(cmd_upd)) {
+      pre <- ifelse(spkg == "", pre, paste0(cmd_upd, ";", pre))
+    }
+    spkg <- ifelse(spkg == "", "", paste(cmd_inst, spkg))
+
+    self$result$sysreqs_pre_install <- pre
+    self$result$sysreqs_post_install <- post
+    self$result$sysreqs_install <- spkg
+
   } else {
     self$result$sysreqs_packages <- list(NULL)                             # nocovif !is_linux()
   }

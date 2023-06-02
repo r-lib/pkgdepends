@@ -458,7 +458,7 @@ res__try_finish <- function(self, private, resolve) {
     attr(self$result, "metadata") <- private$metadata
     class(self$result) <- c("pkg_resolution_result", class(self$result))
     private$done_progress_bar()
-    if (private$config$get("sysreqs")) {
+    if (sysreqs_is_supported(private$config$get("sysreqs_platform"))) {
       private$sysreqs_match()
     }
     resolve(self$result)

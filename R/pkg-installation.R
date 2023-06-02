@@ -478,7 +478,7 @@ pkg_installation_proposal <- R6::R6Class(
       if (is.null(srq)) return(invisible())                         # nocov
       cmds <- sysreqs2_scripts(
         srq,
-        platform = config$get("sysreqs_platform"),
+        sysreqs_platform = config$get("sysreqs_platform"),
         missing = ! config$get("sysreqs_update")
       )
       sysreqs_install(cmds, config)

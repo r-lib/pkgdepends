@@ -1,8 +1,8 @@
 
 async_system_list_packages <- function(config = NULL) {
   config <- config %||% current_config()
-  platform <- config$get("sysreqs_platform")
-  pkgtool <- sysreqs2_command(platform, "query")
+  sysreqs_platform <- config$get("sysreqs_platform")
+  pkgtool <- sysreqs2_command(sysreqs_platform, "query")
   if (pkgtool == "dpkg-query") {
     async_system_list_packages_dpkg_query(config)
   } else {

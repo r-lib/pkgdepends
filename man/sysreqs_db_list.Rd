@@ -4,10 +4,10 @@
 \alias{sysreqs_db_list}
 \title{List contents of the system requirements DB, for a platform}
 \usage{
-sysreqs_db_list(platform = NULL)
+sysreqs_db_list(sysreqs_platform = NULL)
 }
 \arguments{
-\item{platform}{System requirements platform. If \code{NULL}, then the
+\item{sysreqs_platform}{System requirements platform. If \code{NULL}, then the
 \code{sysreqs_platform} \eval{man_config_link("configuration option")}
 is used, which defaults to the current platform. Set this option if
 \eval{.packageName} does not detect your platform correctly.}
@@ -30,7 +30,7 @@ outdated. (I.e. older than allowed in the \code{metadata_update_after}
 }
 \examples{
 \dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-sysreqs_db_list(platform = "ubuntu-22.04")
+sysreqs_db_list(sysreqs_platform = "ubuntu-22.04")
 \dontshow{\}) # examplesIf}
 }
 \seealso{

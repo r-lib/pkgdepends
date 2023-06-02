@@ -23,9 +23,9 @@ sysreqs2_cmds <- utils::read.table(
    'SUSE Linux Enterprise'    linux   sle          *         NA                  'zypper --non-interactive install'  rpm
 "))
 
-find_sysreqs_platform <- function(platform = NULL) {
-  platform <- platform %||% current_config()$get("sysreqs_platform")
-  plt <- parse_sysreqs_platform(platform)
+find_sysreqs_platform <- function(sysreqs_platform = NULL) {
+  sysreqs_platform <- sysreqs_platform %||% current_config()$get("sysreqs_platform")
+  plt <- parse_sysreqs_platform(sysreqs_platform)
   idx <- which(
     sysreqs2_cmds$os == plt$os &
     sysreqs2_cmds$distribution == plt$distribution &
@@ -33,15 +33,15 @@ find_sysreqs_platform <- function(platform = NULL) {
   )[1]
 }
 
-sysreqs2_command <- function(platform = NULL,
+sysreqs2_command <- function(sysreqs_platform = NULL,
                              cmd = c("install_command", "update_command",
                                      "query_command")) {
   cmd <- match.arg(cmd)
-  sel <- find_sysreqs_platform(platform)
+  sel <- find_sysreqs_platform(sysreqs_platform)
   if (is.na(sel)) {
     throw(pkg_error(paste0(
       "Unknown OS. Don't know how to query or install system packages for ",
-      platform,
+      sysreqs_platform,
       "."
     )))
   }
@@ -49,34 +49,34 @@ sysreqs2_command <- function(platform = NULL,
   sysreqs2_cmds[[cmd]][sel]
 }
 
-sysreqs2_resolve <- function(sysreqs, platform = NULL,
+sysreqs2_resolve <- function(sysreqs, sysreqs_platform = NULL,
                              config = NULL, ...) {
-  synchronize(sysreqs2_async_resolve(sysreqs, platform, config, ...))
+  synchronize(sysreqs2_async_resolve(sysreqs, sysreqs_platform, config, ...))
 }
 
-sysreqs2_async_resolve <- function(sysreqs, platform, config, ...) {
-  sysreqs; platform; config; list(...)
+sysreqs2_async_resolve <- function(sysreqs, sysreqs_platform, config, ...) {
+  sysreqs; sysreqs_platform; config; list(...)
 
   config <- config %||% current_config()
-  platform <- platform %||% config$get("sysreqs_platform")
+  sysreqs_platform <- sysreqs_platform %||% config$get("sysreqs_platform")
 
   sysreqs2_async_update_metadata(config = config)$
     then(function() {
-      sysreqs2_match(sysreqs, platform = platform, config = config, ...)
+      sysreqs2_match(sysreqs, sysreqs_platform = sysreqs_platform, config = config, ...)
     })$
     then(function(recs) {
-      sysreqs2_scripts(recs, platform)
+      sysreqs2_scripts(recs, sysreqs_platform)
     })
 }
 
-sysreqs2_scripts <- function(recs, platform, missing = FALSE) {
-  plt <- parse_sysreqs_platform(platform)
+sysreqs2_scripts <- function(recs, sysreqs_platform, missing = FALSE) {
+  plt <- parse_sysreqs_platform(sysreqs_platform)
   flatrecs <- unlist(recs, recursive = FALSE)
-  upd <- sysreqs2_command(platform, "update")
+  upd <- sysreqs2_command(sysreqs_platform, "update")
   pre <- unlist(lapply(flatrecs, "[[", "pre_install"))
   post <- unlist(lapply(flatrecs, "[[", "post_install"))
   if (is.na(upd)) upd <- character()
-  cmd <- sysreqs2_command(platform, "install")
+  cmd <- sysreqs2_command(sysreqs_platform, "install")
   allpkgs <- unique(unlist(lapply(flatrecs, "[[", "packages")))
   misspkgs <- unique(unlist(lapply(flatrecs, function(x) {
     if ("packages_missing" %in% names(x)) {
@@ -193,7 +193,7 @@ sysreqs2_list_rules <- function(path = NULL) {
   rules <- dir(file.path(path, "rules"), pattern = "[.]json$", full.names = TRUE)
 }
 
-sysreqs2_match <- function(sysreqs, path = NULL, platform = NULL,
+sysreqs2_match <- function(sysreqs, path = NULL, sysreqs_platform = NULL,
                            config = NULL) {
 
   rules <- sysreqs2_list_rules(path)
@@ -205,7 +205,7 @@ sysreqs2_match <- function(sysreqs, path = NULL, platform = NULL,
   todo <- !is.na(sysreqs) & sysreqs != ""
 
   config <- config %||% current_config()
-  plt <- parse_sysreqs_platform(platform %||% config$get("sysreqs_platform"))
+  plt <- parse_sysreqs_platform(sysreqs_platform %||% config$get("sysreqs_platform"))
 
   rsysreqs <- sysreqs[todo]
   for (r in rules) {

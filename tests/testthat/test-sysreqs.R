@@ -22,7 +22,7 @@ test_that("sysreqs_db_match", {
 
   res <- sysreqs_db_match(
     c("java and libcurl", "openssl would be good"),
-    platform = "ubuntu-22.04"
+    sysreqs_platform = "ubuntu-22.04"
   )
   expect_snapshot({
     res

@@ -6,14 +6,14 @@ sysreqs_platforms <- function() {
   as_data_frame(sysreqs2_cmds)
 }
 
-sysreqs_is_supported <- function(platform = NULL) {
-  platform <- platform %||% current_config()$get("sysreqs_platform")
-  !is.na(find_sysreqs_platform(platform))
+sysreqs_is_supported <- function(sysreqs_platform = NULL) {
+  sysreqs_platform <- sysreqs_platform %||% current_config()$get("sysreqs_platform")
+  !is.na(find_sysreqs_platform(sysreqs_platform))
 }
 
-sysreqs_db_list <- function(platform = NULL) {
-  platform <- platform %||% current_config()$get("sysreqs_platform")
-  plt <- parse_sysreqs_platform(platform)
+sysreqs_db_list <- function(sysreqs_platform = NULL) {
+  sysreqs_platform <- sysreqs_platform %||% current_config()$get("sysreqs_platform")
+  plt <- parse_sysreqs_platform(sysreqs_platform)
 
   sysreqs_db_update()
   rule_files <- sysreqs2_list_rules()
@@ -55,9 +55,9 @@ sysreqs_db_list <- function(platform = NULL) {
   )
 }
 
-sysreqs_db_match <- function(specs, platform = NULL) {
+sysreqs_db_match <- function(specs, sysreqs_platform = NULL) {
   sysreqs_db_update()
-  recs <- sysreqs2_match(specs, platform = platform)
+  recs <- sysreqs2_match(specs, sysreqs_platform = sysreqs_platform)
   mapply(
     specs,
     recs,
@@ -147,8 +147,8 @@ sysreqs_install_plan <- function(refs, upgrade = TRUE, config = list()) {
   prop$stop_for_solution_error()
   sol <- prop$get_solution()
 
-  platform <- prop$get_config()$get("sysreqs_platform")
-  scripts <- sysreqs2_scripts(sol$data$sysreqs_packages, platform)
+  sysreqs_platform <- prop$get_config()$get("sysreqs_platform")
+  scripts <- sysreqs2_scripts(sol$data$sysreqs_packages, sysreqs_platform)
   res <- scripts[c(
     "os",
     "distribution",
@@ -308,38 +308,38 @@ parse_sysreqs_platform <- function(x) {
   osplt
 }
 
-sysreqs_resolve <- function(sysreqs, platform = NULL, config = NULL, ...) {
+sysreqs_resolve <- function(sysreqs, sysreqs_platform = NULL, config = NULL, ...) {
   if (tolower(Sys.getenv("R_PKG_SYSREQS2")) != "false") {
-    synchronize(sysreqs2_async_resolve(sysreqs, platform, config, ...))
+    synchronize(sysreqs2_async_resolve(sysreqs, sysreqs_platform, config, ...))
   } else {
-    synchronise(sysreqs_async_resolve(sysreqs, platform, config, ...))
+    synchronise(sysreqs_async_resolve(sysreqs, sysreqs_platform, config, ...))
   }
 }
 
-sysreqs_async_resolve <- function(sysreqs, platform, config) {
-  sysreqs; platform; config
-  sysreqs_async_resolve_query(sysreqs, platform, config)$
+sysreqs_async_resolve <- function(sysreqs, sysreqs_platform, config) {
+  sysreqs; sysreqs_platform; config
+  sysreqs_async_resolve_query(sysreqs, sysreqs_platform, config)$
     then(function(resp) {
       if (resp$status_code < 400) return(resp)
       throw(pkg_error(
         call. = FALSE,
-        "Failed to look up system requirements for OS {platform}.",
+        "Failed to look up system requirements for OS {sysreqs_platform}.",
         i = "HTTP error {resp$status_code} for {.url {resp$url}}.",
         i = "Response: {.val {rawToChar(resp$content)}}."
       ))
     })$
-      then(function(resp) sysreqs_resolve_process(sysreqs, platform, resp))$
+      then(function(resp) sysreqs_resolve_process(sysreqs, sysreqs_platform, resp))$
       then(function(res) add_class(res, "pkg_sysreqs_result"))
 }
 
-sysreqs_async_resolve_query <- function(sysreqs, platform, config) {
+sysreqs_async_resolve_query <- function(sysreqs, sysreqs_platform, config) {
   config <- config %||% current_config()
-  platform <- platform %||% config$get("sysreqs_platform")
+  sysreqs_platform <- sysreqs_platform %||% config$get("sysreqs_platform")
   rspm <- config$get("sysreqs_rspm_url")
   rspm_repo_id <- config$get("sysreqs_rspm_repo_id")
   rspm_repo_url <- sprintf("%s/__api__/repos/%s", rspm, rspm_repo_id)
 
-  plt <- parse_sysreqs_platform(platform)
+  plt <- parse_sysreqs_platform(sysreqs_platform)
   req_url <- sprintf(
     "%s/sysreqs?distribution=%s&release=%s",
     rspm_repo_url,
@@ -354,7 +354,7 @@ sysreqs_async_resolve_query <- function(sysreqs, platform, config) {
   http_post(req_url, data = data, headers = headers)
 }
 
-sysreqs_resolve_process <- function(sysreqs, platform, resp) {
+sysreqs_resolve_process <- function(sysreqs, sysreqs_platform, resp) {
   hdr <- curl::parse_headers_list(resp$headers)
   cnt <- rawToChar(resp$content)
   Encoding(cnt) <- "UTF-8"
@@ -374,7 +374,7 @@ sysreqs_resolve_process <- function(sysreqs, platform, resp) {
     lapply(data[["dependencies"]], `[[`, "post_install")
   ))))
 
-  plt <- parse_sysreqs_platform(platform)
+  plt <- parse_sysreqs_platform(sysreqs_platform)
   list(
     os = plt$os,
     distribution = plt$distribution,

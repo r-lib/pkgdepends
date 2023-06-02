@@ -4,7 +4,7 @@
 \alias{sysreqs_list_system_packages}
 \title{List installed system packages}
 \usage{
-syreqs_list_system_packages()
+sysreqs_list_system_packages()
 }
 \value{
 Data frame with columns:

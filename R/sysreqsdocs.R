@@ -161,7 +161,7 @@ sysreqs_check_installed
 #' List installed system packages
 #'
 #' @usage
-#' syreqs_list_system_packages()
+#' sysreqs_list_system_packages()
 #'
 #' @details
 #' This function uses the `sysreqs_platform` configuration option,

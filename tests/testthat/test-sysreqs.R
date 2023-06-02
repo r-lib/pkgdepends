@@ -155,7 +155,7 @@ test_that("can_sudo_without_pw", {
   mockery::stub(can_sudo_without_pw, "processx::run", list(status = 0))
   expect_true(can_sudo_without_pw())
 
-  mockery::stub(can_sudo_without_pw, "processx::run", list(status = 1))
+  mockery::stub(can_sudo_without_pw, "processx::run", function(...) stop("no"))
   expect_false(can_sudo_without_pw())
 })
 

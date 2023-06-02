@@ -249,6 +249,8 @@ pdi
 \item \href{#method-pkg_installation_proposal-solve}{\code{pkg_installation_proposal$solve()}}
 \item \href{#method-pkg_installation_proposal-get_solution}{\code{pkg_installation_proposal$get_solution()}}
 \item \href{#method-pkg_installation_proposal-show_solution}{\code{pkg_installation_proposal$show_solution()}}
+\item \href{#method-pkg_installation_proposal-get_sysreqs}{\code{pkg_installation_proposal$get_sysreqs()}}
+\item \href{#method-pkg_installation_proposal-show_sysreqs}{\code{pkg_installation_proposal$show_sysreqs()}}
 \item \href{#method-pkg_installation_proposal-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
 \item \href{#method-pkg_installation_proposal-create_lockfile}{\code{pkg_installation_proposal$create_lockfile()}}
 \item \href{#method-pkg_installation_proposal-draw}{\code{pkg_installation_proposal$draw()}}
@@ -464,6 +466,26 @@ Show the solution on the screen.
 A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_sysreqs}{}}}
+\subsection{Method \code{get_sysreqs()}}{
+Query and categorize system requirements.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_sysreqs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-show_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-show_sysreqs}{}}}
+\subsection{Method \code{show_sysreqs()}}{
+Show system requirements for the packages in the solution.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$show_sysreqs()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-stop_for_solution_error"></a>}}

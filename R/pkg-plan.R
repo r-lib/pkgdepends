@@ -40,6 +40,8 @@ pkg_plan <- R6::R6Class(
       pkgplan_get_solution(self, private),
     show_solution = function(key = FALSE)
       pkgplan_show_solution(self, private, key),
+    get_sysreqs = function()
+      pkgplan_get_sysreqs(self, private),
     show_sysreqs = function()
       pkgplan_show_sysreqs(self, private),
     get_install_plan = function()

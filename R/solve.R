@@ -957,9 +957,7 @@ pkgplan_show_solution <- function(self, private, key = FALSE) {
   invisible(self$get_solution())
 }
 
-pkgplan_show_sysreqs <- function(self, private) {
-  rpkgs <- self$get_solution()[["data"]]
-  if (is.null(rpkgs[["sysreqs_packages"]])) return(invisible())
+categorize_sysreqs <- function(rpkgs) {
   rpkgs <- rpkgs[vlapply(rpkgs$sysreqs_packages, function(x) length(x) > 0), ]
 
   inst <- structure(list(), names = character())
@@ -987,6 +985,21 @@ pkgplan_show_sysreqs <- function(self, private) {
     }
   }
 
+  list(inst = inst, miss = miss, upd = upd)
+}
+
+pkgplan_get_sysreqs <- function(self, private) {
+  categorize_sysreqs(self$get_solution()[["data"]])
+}
+
+pkgplan_show_sysreqs <- function(self, private) {
+  rpkgs <- self$get_solution()[["data"]]
+  if (is.null(rpkgs[["sysreqs_packages"]])) return(invisible())
+  cats <- categorize_sysreqs(rpkgs)
+  inst <- cats$inst
+  miss <- cats$miss
+  upd <- cats$upd
+
   col1 <- col2 <- character()
   if (length(miss)) {
     miss <- miss[order(tolower(names(miss)))]
@@ -1011,7 +1024,7 @@ pkgplan_show_sysreqs <- function(self, private) {
   out <- paste0(col1, "  ", col2)
   if (length(out)) cli::cli_verbatim(paste(out, collapse = "\n"))
 
-  invisible(self)
+  invisible(cats)
 }
 
 pkgplan_install_plan <- function(self, private, downloads) {

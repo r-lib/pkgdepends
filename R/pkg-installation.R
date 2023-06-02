@@ -312,6 +312,11 @@ pkg_installation_proposal <- R6::R6Class(
     show_solution = function(key = FALSE) private$plan$show_solution(key),
 
     #' @description
+    #' Query and categorize system requirements.
+
+    get_sysreqs = function() private$plan$get_sysreqs(),
+
+    #' @description
     #' Show system requirements for the packages in the solution.
 
     show_sysreqs = function() private$plan$show_sysreqs(),

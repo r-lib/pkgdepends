@@ -4,10 +4,14 @@
 \alias{sysreqs_install_plan}
 \title{Create an installation plan for system requirements}
 \usage{
-sysreqs_install_plan(refs, config = list())
+sysreqs_install_plan(refs, upgrade = TRUE, config = list())
 }
 \arguments{
 \item{refs}{Packages to install.}
+
+\item{upgrade}{If \code{TRUE}, pkgdepends will choose the latest available
+versions of packages, instead of preferring binary packages over
+source packages.}
 
 \item{config}{Configuration options. See
 \link[=pkgdepends-config]{'Configuration'}. If it does not include

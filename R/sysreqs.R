@@ -86,6 +86,9 @@ sysreqs_db_update <- function() {
 #' their system requirements.
 #'
 #' @param refs Packages to install.
+#' @param upgrade If `TRUE`, pkgdepends will choose the latest available
+#'   versions of packages, instead of preferring binary packages over
+#'   source packages.
 #' @param config Configuration options. See
 #'   ['Configuration'][pkgdepends-config]. If it does not include
 #'   `library`, then a temporary library is used, which is equivalent to
@@ -125,7 +128,7 @@ sysreqs_db_update <- function() {
 #'   config = list(sysreqs_platform = "ubuntu-22.04")
 #' )
 
-sysreqs_install_plan <- function(refs, config = list()) {
+sysreqs_install_plan <- function(refs, upgrade = TRUE, config = list()) {
   if (!"library" %in% names(config)) {
     dir.create(lib <- tempfile())
     on.exit(unlink(lib, recursive = TRUE), add = TRUE)
@@ -135,6 +138,11 @@ sysreqs_install_plan <- function(refs, config = list()) {
   config$sysreqs_lookup_system <- FALSE
 
   prop <- new_pkg_installation_proposal(refs, config = config)
+  if (upgrade) {
+    prop$set_solve_policy("upgrade")
+  } else {
+    prop$set_solve_policy("lazy")
+  }
   prop$solve()
   prop$stop_for_solution_error()
   sol <- prop$get_solution()

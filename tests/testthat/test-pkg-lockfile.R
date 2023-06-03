@@ -191,7 +191,7 @@ test_that("update_sysreqs with old lock file", {
   config <- list(
     library = lib,
     sysreqs = FALSE,
-    sysreqs_platform = "aarch64-unknown-linux-gnu-ubuntu-22.04",
+    sysreqs_platform = "unknown",
     sysreqs_lookup_system = FALSE
   )
   prop <- new_pkg_installation_proposal("curl", config = config)

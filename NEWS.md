@@ -2,6 +2,8 @@
 
 * pkgdepends now correctly parses multiple `git::` packages at once (#318).
 
+* Fix `@*release` reference for the latest release.
+
 # pkgdepends 0.5.0
 
 * pkgdepends now support git repositories as package references. E.g.

@@ -113,6 +113,7 @@ them.</p>
 <li><p><a href="#method-pkg_installation_plan-set_solve_policy"><code>pkg_installation_plan$set_solve_policy()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_plan-solve"><code>pkg_installation_plan$solve()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_plan-update"><code>pkg_installation_plan$update()</code></a></p></li>
+<li><p><a href="#method-pkg_installation_plan-update_sysreqs"><code>pkg_installation_plan$update_sysreqs()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_plan-format"><code>pkg_installation_plan$format()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_plan-clone"><code>pkg_installation_plan$clone()</code></a></p></li>
 </ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="async_download"><a href="pkg_installation_proposal.html#method-async_download"><code>pkgdepends::pkg_installation_proposal$async_download()</code></a></span></li>
@@ -125,10 +126,12 @@ them.</p>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_refs"><a href="pkg_installation_proposal.html#method-get_refs"><code>pkgdepends::pkg_installation_proposal$get_refs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_resolution"><a href="pkg_installation_proposal.html#method-get_resolution"><code>pkgdepends::pkg_installation_proposal$get_resolution()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_solution"><a href="pkg_installation_proposal.html#method-get_solution"><code>pkgdepends::pkg_installation_proposal$get_solution()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_sysreqs"><a href="pkg_installation_proposal.html#method-get_sysreqs"><code>pkgdepends::pkg_installation_proposal$get_sysreqs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install"><a href="pkg_installation_proposal.html#method-install"><code>pkgdepends::pkg_installation_proposal$install()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install_sysreqs"><a href="pkg_installation_proposal.html#method-install_sysreqs"><code>pkgdepends::pkg_installation_proposal$install_sysreqs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="print"><a href="pkg_installation_proposal.html#method-print"><code>pkgdepends::pkg_installation_proposal$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_solution"><a href="pkg_installation_proposal.html#method-show_solution"><code>pkgdepends::pkg_installation_proposal$show_solution()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_sysreqs"><a href="pkg_installation_proposal.html#method-show_sysreqs"><code>pkgdepends::pkg_installation_proposal$show_sysreqs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_download_error"><a href="pkg_installation_proposal.html#method-stop_for_download_error"><code>pkgdepends::pkg_installation_proposal$stop_for_download_error()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_solution_error"><a href="pkg_installation_proposal.html#method-stop_for_solution_error"><code>pkgdepends::pkg_installation_proposal$stop_for_solution_error()</code></a></span></li>
 </ul></details></p><hr><a id="method-pkg_installation_plan-new"></a><div class="section">
@@ -227,10 +230,18 @@ version in the plan.</p>
 </div>
 
 
+</div><p></p><hr><a id="method-pkg_installation_plan-update_sysreqs"></a><div class="section">
+<h3 id="method-update-sysreqs-">Method <code>update_sysreqs()</code><a class="anchor" aria-label="anchor" href="#method-update-sysreqs-"></a></h3>
+<p>Update information about installed and missing system requirements.</p><div class="section">
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_plan</span><span class="op">$</span><span class="fu">update_sysreqs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-pkg_installation_plan-format"></a><div class="section">
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
 <p>Format a <code>pkg_installation_plan</code> object, typically for printing.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_plan</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -250,7 +261,7 @@ version in the plan.</p>
 </div><p></p><hr><a id="method-pkg_installation_plan-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_plan</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 

@@ -120,6 +120,8 @@ making pkgdepends a build time dependency.</p>
 <li><p><a href="#method-pkg_installation_proposal-solve"><code>pkg_installation_proposal$solve()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_proposal-get_solution"><code>pkg_installation_proposal$get_solution()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_proposal-show_solution"><code>pkg_installation_proposal$show_solution()</code></a></p></li>
+<li><p><a href="#method-pkg_installation_proposal-get_sysreqs"><code>pkg_installation_proposal$get_sysreqs()</code></a></p></li>
+<li><p><a href="#method-pkg_installation_proposal-show_sysreqs"><code>pkg_installation_proposal$show_sysreqs()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_proposal-stop_for_solution_error"><code>pkg_installation_proposal$stop_for_solution_error()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_proposal-create_lockfile"><code>pkg_installation_proposal$create_lockfile()</code></a></p></li>
 <li><p><a href="#method-pkg_installation_proposal-draw"><code>pkg_installation_proposal$draw()</code></a></p></li>
@@ -329,11 +331,27 @@ most once. See <a href="pkg_solution.html">'The dependency solver'</a> for detai
 <a href="pkg_solution.html">pkg_solution_result</a> for details.</p>
 </div>
 
+</div><p></p><hr><a id="method-pkg_installation_proposal-get_sysreqs"></a><div class="section">
+<h3 id="method-get-sysreqs-">Method <code>get_sysreqs()</code><a class="anchor" aria-label="anchor" href="#method-get-sysreqs-"></a></h3>
+<p>Query and categorize system requirements.</p><div class="section">
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">get_sysreqs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-pkg_installation_proposal-show_sysreqs"></a><div class="section">
+<h3 id="method-show-sysreqs-">Method <code>show_sysreqs()</code><a class="anchor" aria-label="anchor" href="#method-show-sysreqs-"></a></h3>
+<p>Show system requirements for the packages in the solution.</p><div class="section">
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">show_sysreqs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-pkg_installation_proposal-stop_for_solution_error"></a><div class="section">
 <h3 id="method-stop-for-solution-error-">Method <code>stop_for_solution_error()</code><a class="anchor" aria-label="anchor" href="#method-stop-for-solution-error-"></a></h3>
 <p>Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">stop_for_solution_error</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -342,7 +360,7 @@ packages that can be installed together.</p><div class="section">
 <h3 id="method-create-lockfile-">Method <code>create_lockfile()</code><a class="anchor" aria-label="anchor" href="#method-create-lockfile-"></a></h3>
 <p>Create a lock file that contains the information to perform
 the installation later, possibly in another R session.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">create_lockfile</span><span class="op">(</span>path <span class="op">=</span> <span class="st">"pkg.lock"</span>, version <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -381,7 +399,7 @@ for caching systems.</p>
 <p>Draw a tree of package dependencies. It returns a <code>tree</code> object, see
 <code><a href="https://cli.r-lib.org/reference/tree.html" class="external-link">cli::tree()</a></code>. Printing this object prints the dependency tree to the
 screen.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -395,7 +413,7 @@ screen.</p><div class="section">
 <p>Download all packages that are part of the solution. It uses the
 package cache in the pkgcache package by default, to avoid downloads
 if possible.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -408,7 +426,7 @@ if possible.</p><div class="section">
 <h3 id="method-async-download-">Method <code>async_download()</code><a class="anchor" aria-label="anchor" href="#method-async-download-"></a></h3>
 <p>The same as <a href="#method-download"><code>download()</code></a>, but asynchronous.
 This method is for advanced use.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">async_download</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -420,7 +438,7 @@ This method is for advanced use.</p><div class="section">
 </div><p></p><hr><a id="method-pkg_installation_proposal-get_downloads"></a><div class="section">
 <h3 id="method-get-downloads-">Method <code>get_downloads()</code><a class="anchor" aria-label="anchor" href="#method-get-downloads-"></a></h3>
 <p>Returns the summary of the package downloads.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">get_downloads</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -435,7 +453,7 @@ This method is for advanced use.</p><div class="section">
 <p>Throw and error if the some of the downloads have failed for the
 most recent
 <a href="#method-download"><code>pkg_installation_proposal$download()</code></a> call.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">stop_for_download_error</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -443,7 +461,7 @@ most recent
 </div><p></p><hr><a id="method-pkg_installation_proposal-install"></a><div class="section">
 <h3 id="method-install-">Method <code>install()</code><a class="anchor" aria-label="anchor" href="#method-install-"></a></h3>
 <p>Install the downloaded packages. It calls <code><a href="install_package_plan.html">install_package_plan()</a></code>.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">install</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -455,10 +473,9 @@ most recent
 </div><p></p><hr><a id="method-pkg_installation_proposal-install_sysreqs"></a><div class="section">
 <h3 id="method-install-sysreqs-">Method <code>install_sysreqs()</code><a class="anchor" aria-label="anchor" href="#method-install-sysreqs-"></a></h3>
 <p>Install system requirements. It does nothing if system requirements
-are turned off. It errors if we could not look up the system
-requirements.
+are turned off.
 Create an installation plan for the downloaded packages.</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">install_sysreqs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -467,7 +484,7 @@ Create an installation plan for the downloaded packages.</p><div class="section"
 <h3 id="method-get-install-plan-">Method <code>get_install_plan()</code><a class="anchor" aria-label="anchor" href="#method-get-install-plan-"></a></h3>
 
 <div class="section">
-<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
+<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">get_install_plan</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -480,7 +497,7 @@ the format.</p>
 </div><p></p><hr><a id="method-pkg_installation_proposal-format"></a><div class="section">
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
 <p>Format a <code>pkg_installation_proposal</code> object, typically for printing.</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -508,7 +525,7 @@ the format.</p>
 <li><p>Whether the downloads had errors.</p></li>
 <li><p>Advice on which methods to call next.</p></li>
 </ul><p>See the example below.</p><div class="section">
-<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
+<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -528,7 +545,7 @@ the format.</p>
 </div><p></p><hr><a id="method-pkg_installation_proposal-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
+<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_installation_proposal</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -566,7 +583,7 @@ the format.</p>
 <span class="r-in"><span><span class="va">pdi</span> <span class="op">&lt;-</span> <span class="fu">new_pkg_installation_proposal</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"r-lib/pkgdepends"</span>,</span></span>
 <span class="r-in"><span>  config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmp3FQKbx/file19212e1514c5</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmpj50Bhh/file1c8f25e2cb40</span></span>
 <span class="r-in"><span><span class="va">pdi</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;pkg_installation_proposal&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + refs:</span>
@@ -580,89 +597,109 @@ the format.</p>
 <span class="r-in"><span>  <span class="st">"pak"</span>,</span></span>
 <span class="r-in"><span>  config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmp3FQKbx/file1921223e29ad</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmpj50Bhh/file1c8f2211e332</span></span>
 <span class="r-in"><span><span class="va">pdi</span><span class="op">$</span><span class="fu">get_config</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> # pkg config</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_sudo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## build_vignettes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## package_cache_dir</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_rspm_repo_id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_dry_run</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_cache_dir</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp3FQKbx/file19213a0ac503"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## dependencies</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Depends"   "Imports"   "LinkingTo"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_rspm_url</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://packagemanager.posit.co"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## use_bioconductor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## platforms</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x86_64-pc-linux-gnu-ubuntu-22.04" "source"                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## library</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;set&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp3FQKbx/file1921223e29ad"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## windows_archs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "prefer-x64"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_update_after</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Time difference of 24 hours</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## cran_mirror</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          CRAN </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "https://cloud.r-project.org" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## cache_dir</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp3FQKbx/file192141e968e2"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_verbose</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_db_update</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_cache_dir</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmpj50Bhh/file1c8f3f8322e1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## platforms</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x86_64-pc-linux-gnu-ubuntu-22.04" "source"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## goal</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;set&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "install"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## r_versions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.3.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## cache_dir</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmpj50Bhh/file1c8f34981eb3"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## library</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;set&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmpj50Bhh/file1c8f2211e332"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_update_after</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Time difference of 24 hours</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## include_linkingto</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## goal</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;set&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "install"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_rspm_repo_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_update</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## package_cache_dir</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_rspm_url</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://packagemanager.posit.co"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_sudo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_db_update_timeout</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Time difference of 5 secs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_lookup_system</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_platform</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x86_64-pc-linux-gnu-ubuntu-22.04"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## dependencies</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Depends"   "Imports"   "LinkingTo"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## sysreqs_dry_run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## windows_archs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "prefer-x64"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## use_bioconductor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ## cran_mirror</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                          CRAN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "https://cloud.r-project.org" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="va">pdi</span> <span class="op">&lt;-</span> <span class="fu">new_pkg_installation_proposal</span><span class="op">(</span></span></span>
@@ -685,7 +722,7 @@ the format.</p>
 <span class="r-in"><span>  <span class="st">"r-lib/pkgdepends"</span>,</span></span>
 <span class="r-in"><span>  config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmp3FQKbx/file192162fe35f0</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmpj50Bhh/file1c8f46c872aa</span></span>
 <span class="r-in"><span><span class="va">pdi</span><span class="op">$</span><span class="fu">get_solve_policy</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "lazy"</span>
 <span class="r-in"><span><span class="va">pdi</span><span class="op">$</span><span class="fu">set_solve_policy</span><span class="op">(</span><span class="st">"upgrade"</span><span class="op">)</span></span></span>
@@ -695,7 +732,7 @@ the format.</p>
 <span class="r-in"><span>  <span class="st">"r-lib/pkgdepends"</span>,</span></span>
 <span class="r-in"><span>  config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmp3FQKbx/file1921a23e90d</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmpj50Bhh/file1c8f29fb53db</span></span>
 <span class="r-in"><span><span class="va">pdi</span><span class="op">$</span><span class="fu">get_solve_policy</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "lazy"</span>
 <span class="r-in"><span><span class="va">pdi</span><span class="op">$</span><span class="fu">set_solve_policy</span><span class="op">(</span><span class="st">"upgrade"</span><span class="op">)</span></span></span>
@@ -785,7 +822,7 @@ the format.</p>
 <span class="r-in"><span>  <span class="st">"pak"</span>,</span></span>
 <span class="r-in"><span>  config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmp3FQKbx/file1921320ff003</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating library directory: <span style="color: #0000BB;">/tmp/Rtmpj50Bhh/file1c8f1aafffa5</span></span>
 <span class="r-in"><span><span class="va">pdi</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;pkg_installation_proposal&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + refs:</span>
@@ -813,7 +850,6 @@ the format.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$get_solution()` to see the full solution results)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$draw()` to draw the dependency tree)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$create_lockfile()` to write a lock file)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (use `$install_sysreqs()` to install system packages)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pdi</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Getting 1 pkg with unknown size</span>
@@ -831,7 +867,6 @@ the format.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$create_lockfile()` to write a lock file)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$get_downloads()` to get download data)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$get_install_plan()` to get the installation plan)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (use `$install_sysreqs()` to install system packages)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (use `$install()` to install the packages)</span>
 </code></pre></div>
     </div>

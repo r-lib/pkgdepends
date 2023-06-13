@@ -1,0 +1,42 @@
+gpg(AlmaLinux OS 9 <packager@almalinux.org>) = 4:d36cb86cb86b3716-61e69f29
+gpg(b86b3716) = 4:d36cb86cb86b3716-61e69f29
+gpg(d36cb86cb86b3716) = 4:d36cb86cb86b3716-61e69f29
+gpg(c9ba6caa) = 4:b7bb94f0c9ba6caa-61e69f29
+gpg(b7bb94f0c9ba6caa) = 4:b7bb94f0c9ba6caa-61e69f29
+---gpg-pubkey
+libgcc = 11.3.1-4.3.el9.alma
+libgcc(aarch-64) = 11.3.1-4.3.el9.alma
+libgcc_s.so.1()(64bit)
+libgcc_s.so.1(GCC_11.0)(64bit)
+libgcc_s.so.1(GCC_3.0)(64bit)
+libgcc_s.so.1(GCC_3.3)(64bit)
+libgcc_s.so.1(GCC_3.3.1)(64bit)
+libgcc_s.so.1(GCC_3.4)(64bit)
+libgcc_s.so.1(GCC_3.4.2)(64bit)
+libgcc_s.so.1(GCC_3.4.4)(64bit)
+libgcc_s.so.1(GCC_4.0.0)(64bit)
+libgcc_s.so.1(GCC_4.2.0)(64bit)
+libgcc_s.so.1(GCC_4.3.0)(64bit)
+libgcc_s.so.1(GCC_4.5.0)(64bit)
+libgcc_s.so.1(GCC_4.7.0)(64bit)
+libgcc_s.so.1(GCC_7.0.0)(64bit)
+libgcc_s.so.1(GLIBC_2.0)(64bit)
+---libgcc
+config(crypto-policies) = 20221215-1.git9a18988.el9
+crypto-policies = 20221215-1.git9a18988.el9
+---crypto-policies
+tzdata = 2023c-1.el9
+---tzdata
+bundled(python3dist(appdirs)) = 1.4.3
+bundled(python3dist(ordered-set)) = 3.1.1
+bundled(python3dist(packaging)) = 20.4
+bundled(python3dist(pyparsing)) = 2.2.1
+python-setuptools-wheel = 53.0.0-12.el9
+python-setuptools-wheel = 53.0.0-12.el9
+python3-setuptools-wheel = 53.0.0-12.el9
+python3.9-setuptools-wheel = 53.0.0-12.el9
+---python3-setuptools-wheel
+pcre2-syntax = 10.40-2.el9
+---pcre2-syntax
+ncurses-base = 6.2-8.20210508.el9
+---ncurses-base

@@ -3,7 +3,8 @@ test_that("resolve_remote", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal("pkg1")
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal("pkg1", config = config)
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -16,7 +17,11 @@ test_that("resolve_remote, multiple", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal(c("cran::pkg3", "pkg1"))
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal(
+    c("cran::pkg3", "pkg1"),
+    config = config
+  )
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -29,7 +34,8 @@ test_that("dependencies", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal("pkg3")
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal("pkg3", config = config)
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -42,7 +48,11 @@ test_that("failed resolution", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal("cran::xxyyzzqwertyqwerty")
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal(
+    "cran::xxyyzzqwertyqwerty",
+    config = config
+  )
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -55,7 +65,11 @@ test_that("failed resolution, multiple", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal(c("cran::pkg1", "cran::xxyyzzqwertyqwerty"))
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal(
+    c("cran::pkg1", "cran::xxyyzzqwertyqwerty"),
+    config = config
+  )
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -68,7 +82,11 @@ test_that("resolve current version", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal("cran::pkg1@current")
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal(
+    "cran::pkg1@current",
+    config = config
+  )
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -81,7 +99,8 @@ test_that("resolve an old version", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal("pkg1@0.9.0")
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal("pkg1@0.9.0", config = config)
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -91,7 +110,8 @@ test_that("resolve an old version", {
     transform_etag(transform_hash(transform_no_srcref(fix_port(x))))
   })
 
-  prop <- new_pkg_installation_proposal("pkg1@1.0.0")
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal("pkg1@1.0.0", config = config)
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
@@ -104,7 +124,8 @@ test_that("resolve a version range", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
 
-  prop <- new_pkg_installation_proposal("pkg1@>=0.9.0")
+  config <- list(sysreqs_platform = "unknown")
+  prop <- new_pkg_installation_proposal("pkg1@>=0.9.0", config = config)
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 

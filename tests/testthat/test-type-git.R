@@ -21,7 +21,7 @@ test_that("resolve_remote_git", {
   setup_fake_apps()
   prop <- suppressMessages(new_pkg_installation_proposal(
     "git::https://github.com/r-lib/cli@v3.6.0",
-    config = list(library = tempfile())
+    config = list(library = tempfile(), sysreqs_platform = "unknown")
   ))
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()

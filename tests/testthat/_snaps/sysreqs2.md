@@ -4,16 +4,16 @@
       sr1
     Output
       $os
+      [1] "linux"
+      
+      $distribution
       [1] "ubuntu"
       
-      $os_release
+      $version
       [1] "22.04"
       
       $url
       [1] NA
-      
-      $total
-      [1] 0.05
       
       $pre_install
       [1] "apt-get -y update"
@@ -24,29 +24,8 @@
       $post_install
       [1] "R CMD javareconf"
       
-      $records
-      $records[[1]]
-      $records[[1]]$packages
-      [1] "default-jdk"
-      
-      $records[[1]]$pre_install
-      NULL
-      
-      $records[[1]]$post_install
-      [1] "R CMD javareconf"
-      
-      
-      $records[[2]]
-      $records[[2]]$packages
-      [1] "libcurl4-openssl-dev"
-      
-      $records[[2]]$pre_install
-      NULL
-      
-      $records[[2]]$post_install
-      NULL
-      
-      
+      $packages
+      [1] "default-jdk"          "libcurl4-openssl-dev"
       
 
 ---
@@ -55,16 +34,16 @@
       sr2
     Output
       $os
+      [1] "linux"
+      
+      $distribution
       [1] "debian"
       
-      $os_release
+      $version
       [1] "unstable"
       
       $url
       [1] NA
-      
-      $total
-      [1] 0.05
       
       $pre_install
       [1] "apt-get -y update"
@@ -75,37 +54,16 @@
       $post_install
       [1] "R CMD javareconf"
       
-      $records
-      $records[[1]]
-      $records[[1]]$packages
-      [1] "default-jdk"
-      
-      $records[[1]]$pre_install
-      NULL
-      
-      $records[[1]]$post_install
-      [1] "R CMD javareconf"
-      
-      
-      $records[[2]]
-      $records[[2]]$packages
-      [1] "libcurl4-openssl-dev"
-      
-      $records[[2]]$pre_install
-      NULL
-      
-      $records[[2]]$post_install
-      NULL
-      
-      
+      $packages
+      [1] "default-jdk"          "libcurl4-openssl-dev"
       
 
 # sysreqs2_command error
 
     Code
-      sysreqs2_command("foobar", "2023")
+      sysreqs2_command("foobar-2023")
     Error <rlib_error_3_0>
-      ! Unknown OS. Don't know how to install system packages for foobar 2023
+      ! Unknown OS. Don't know how to query or install system packages for foobar-2023.
 
 # do not run update if nothing to do
 
@@ -113,16 +71,16 @@
       sr1
     Output
       $os
+      [1] "linux"
+      
+      $distribution
       [1] "ubuntu"
       
-      $os_release
+      $version
       [1] "22.04"
       
       $url
       [1] NA
-      
-      $total
-      [1] 0.05
       
       $pre_install
       character(0)
@@ -133,7 +91,7 @@
       $post_install
       NULL
       
-      $records
-      list()
+      $packages
+      NULL
       
 

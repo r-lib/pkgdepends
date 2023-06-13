@@ -292,6 +292,10 @@ async_map <- function(...) {
   asNamespace("pkgcache")$async_map(...)
 }
 
+async_timeout <- function(...) {
+  asNamespace("pkgcache")$async_timeout(...)
+}
+
 download_file <- function(...) {
   asNamespace("pkgcache")$download_file(...)
 }
@@ -360,6 +364,12 @@ rimraf <- function(...) {
 
 is_windows <- function() {
   identical(tolower(Sys.info()[["sysname"]]), "windows")
+}
+
+# used in coverage condition
+
+is_linux <- function() {
+  identical(tolower(Sys.info()[["sysname"]]), "linux")                # nocov
 }
 
 # This is a workaround for some RStudio bugs:
@@ -454,4 +464,15 @@ remove_entry <- function(l, n) {
 
 path_norm <- function(x) {
   normalizePath(x, mustWork = FALSE)
+}
+
+parse_platform <- function(x) {
+  pcs <- strsplit(x, "-", fixed = TRUE)
+  data_frame(
+    cpu = vcapply(pcs, "[", 1),
+    vendor = vcapply(pcs, "[", 2),
+    os = vcapply(pcs, function(y) {
+      if (length(y) < 3) NA_character_ else paste(y[-(1:2)], collapse = "-")
+    })
+  )
 }

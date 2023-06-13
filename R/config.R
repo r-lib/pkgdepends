@@ -204,7 +204,7 @@ config <- local({
     name <- standard_name(name)
     if (!name %in% names(env$data)) {
       throw(pkg_error(
-        "Unknown conifguration entry: {.code {name}}.",
+        "Unknown configuration entry: {.code {name}}.",
         i = "This is an probably an internal error in the
              {.pkg {env$package}} package."
       ))
@@ -233,7 +233,11 @@ config <- local({
     # otherwise the default, but if it is a function, then call it
     def <- rec$default
     if (is.function(def)) {
-      def <- def()
+      if (length(formals(def)) > 0) {
+        def <- def(env)
+      } else {
+        def <- def()
+      }
       if (!is.null(chk <- env$data[[name]]$check)) chk(def)
     }
     list("default", def)

@@ -53,7 +53,10 @@ Suggests:
     tibble,
     webfakes (>= 1.1.5.9000),
     withr (>= 2.1.1),
+Remotes:
+    r-lib/pkgcache
 Config/Needs/coverage:
+    r-lib/asciicast,
     covr,
     rmarkdown,
     svglite

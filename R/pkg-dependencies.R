@@ -70,6 +70,7 @@ pkg_deps <- R6::R6Class(
                           remote_types = NULL) {
 
       private$library <- tempfile()
+      config$sysreqs_lookup_system <- FALSE
       policy <- match.arg(policy)
       private$policy <- policy
       dir.create(private$library)

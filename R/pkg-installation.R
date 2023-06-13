@@ -312,6 +312,16 @@ pkg_installation_proposal <- R6::R6Class(
     show_solution = function(key = FALSE) private$plan$show_solution(key),
 
     #' @description
+    #' Query and categorize system requirements.
+
+    get_sysreqs = function() private$plan$get_sysreqs(),
+
+    #' @description
+    #' Show system requirements for the packages in the solution.
+
+    show_sysreqs = function() private$plan$show_sysreqs(),
+
+    #' @description
     #' Error if the dependency solver failed to find a consistent set of
     #' packages that can be installed together.
     #'
@@ -459,19 +469,19 @@ pkg_installation_proposal <- R6::R6Class(
 
     #' @description
     #' Install system requirements. It does nothing if system requirements
-    #' are turned off. It errors if we could not look up the system
-    #' requirements.
+    #' are turned off.
 
     install_sysreqs = function() {
-      srq <- self$get_solution()$sysreqs
-      if (is.null(srq)) return(invisible())
-      if (!is.null(srq$error)) {
-        throw(new_error(
-          "Failed to look up system requirements."
-        ), parent = srq$error)
-      }
       config <- get_private(private$plan)$config
-      sysreqs_install(srq$result %||% srq, config)
+      if (!config$get("sysreqs")) return()
+      srq <- self$get_solution()$data$sysreqs_packages
+      if (is.null(srq)) return(invisible())                         # nocov
+      cmds <- sysreqs2_scripts(
+        srq,
+        sysreqs_platform = config$get("sysreqs_platform"),
+        missing = ! config$get("sysreqs_update")
+      )
+      sysreqs_install(cmds, config)
     },
 
     #' Create an installation plan for the downloaded packages.

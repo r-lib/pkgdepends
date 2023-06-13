@@ -249,6 +249,8 @@ pdi
 \item \href{#method-pkg_installation_proposal-solve}{\code{pkg_installation_proposal$solve()}}
 \item \href{#method-pkg_installation_proposal-get_solution}{\code{pkg_installation_proposal$get_solution()}}
 \item \href{#method-pkg_installation_proposal-show_solution}{\code{pkg_installation_proposal$show_solution()}}
+\item \href{#method-pkg_installation_proposal-get_sysreqs}{\code{pkg_installation_proposal$get_sysreqs()}}
+\item \href{#method-pkg_installation_proposal-show_sysreqs}{\code{pkg_installation_proposal$show_sysreqs()}}
 \item \href{#method-pkg_installation_proposal-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
 \item \href{#method-pkg_installation_proposal-create_lockfile}{\code{pkg_installation_proposal$create_lockfile()}}
 \item \href{#method-pkg_installation_proposal-draw}{\code{pkg_installation_proposal$draw()}}
@@ -466,6 +468,26 @@ A \link{pkg_solution_result} object, which is a list. See
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-get_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_sysreqs}{}}}
+\subsection{Method \code{get_sysreqs()}}{
+Query and categorize system requirements.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_sysreqs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-pkg_installation_proposal-show_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-show_sysreqs}{}}}
+\subsection{Method \code{show_sysreqs()}}{
+Show system requirements for the packages in the solution.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$show_sysreqs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-stop_for_solution_error"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-stop_for_solution_error}{}}}
 \subsection{Method \code{stop_for_solution_error()}}{
@@ -602,8 +624,7 @@ The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-install_sysreqs}{}}}
 \subsection{Method \code{install_sysreqs()}}{
 Install system requirements. It does nothing if system requirements
-are turned off. It errors if we could not look up the system
-requirements.
+are turned off.
 Create an installation plan for the downloaded packages.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$install_sysreqs()}\if{html}{\out{</div>}}

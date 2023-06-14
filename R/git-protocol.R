@@ -183,8 +183,7 @@ async_git_list_files_process <- function(packfile, ref, sha) {
   tree_sizes <- viapply(packfile, function(x) nrow(x$object) %||% NA_integer_)
   num_files <- sum(tree_sizes, na.rm = TRUE)
 
-  files = data.frame(
-    stringsAsFactors = FALSE,
+  files = data_frame(
     hash = character(num_files),
     type = character(num_files),
     mode = character(num_files),
@@ -927,8 +926,7 @@ git_list_refs_v1_process_1 <- function(response, url, prefixes) {
 #' @noRd
 
 git_parse_pkt_line_refs <- function(lines, url) {
-  res <- data.frame(
-    stringsAsFactors = FALSE,
+  res <- data_frame(
     ref = character(length(lines)),
     hash = character(length(lines))
   )
@@ -1407,8 +1405,7 @@ parse_tree <- function(tree) {
 
   nul <- nul[!is.na(nul)]
   num <- length(nul)
-  res <- data.frame(
-    stringsAsFactors = FALSE,
+  res <- data_frame(
     type = character(num),
     mode = character(num),
     path = character(num),

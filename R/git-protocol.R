@@ -1482,3 +1482,174 @@ last_char <- function(x) {
 redact_url <- function(x) {
   sub("://[^/]+@", "://<auth>@", x)
 }
+
+git_dummy_list_refs <- function(url) {
+  synchronize(async_git_dummy_list_refs(url))
+}
+
+async_git_dummy_list_refs <- function(url) {
+  url
+
+  url1 <- paste0(url, "/info/refs")
+  url2 <- paste0(url, "/HEAD")
+  headers <- c(
+    "User-Agent" = git_ua()
+  )
+  when_all(
+    http_get(url1, headers = headers)$
+      then(http_stop_for_status),
+    http_get(url2, headers = headers)$
+      then(http_stop_for_status)
+  )$
+    then(function(res) async_git_dummy_list_refs_process(res, url))
+}
+
+async_git_dummy_list_refs_process <- function(res, url) {
+  res_refs <- res[[1]]
+  res_head <- res[[2]]
+  lines <- strsplit(rawToChar(res_refs$content), "\n", fixed = TRUE)[[1]]
+  lines2 <- strsplit(lines, "\t", fixed = TRUE)
+  ref <- vcapply(lines2, "[[", 2)
+  hash <-   vcapply(lines2, "[[", 1)
+
+  head <- trimws(rawToChar(res_head$content))
+  head <- sub("^[^ ]* ", "", head)
+  if (! head %in% ref) {
+    throw(pkg_error(
+      "HEAD does not refer to a ref in git repo at {.url {url}}.",
+      "i" = "HEAD is {.val {head}}."
+    ))
+  }
+
+  list(
+    refs = data_frame(
+      ref = c("HEAD", ref),
+      hash = c(hash[match(head, ref)], hash)
+    ),
+    caps = character()
+  )
+}
+
+git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
+  invisible(synchronize(async_git_dummy_download_file(url, sha, path, output)))
+}
+
+# This only works for blobs at the root of the tree currently!
+
+async_git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
+  async_git_dummy_get_commit(url, sha)$
+    then(function(cmt) {
+      async_git_dummy_get_tree(url, cmt[["tree"]])
+    })$
+    then(function(tree) {
+      wh <- match(path, tree$path)
+      if (is.na(wh)) {
+        throw(pkg_error(
+          "Could not find path {.val {path}} in git repo at {.url {url}}."
+        ))
+      }
+      if (tree$type[wh] != "blob") {
+        throw(pkg_error(
+          "Path {.val {path}} is not a blob in git repo at {.url {url}}."
+        ))
+      }
+      tree$hash[wh]
+    })$
+    then(function(blob) {
+      async_git_dummy_get_blob(url, blob)
+    })$
+    then(function(bytes) {
+      if (!is.null(output)) {
+        mkdirp(dirname(output))
+        writeBin(bytes, output)
+      }
+      invisible(bytes)
+    })
+}
+
+async_git_dummy_get_commit <- function(url, sha) {
+  url1 <- paste0(
+    url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
+  )
+  headers <- c(
+    "User-Agent" = git_ua(),
+    "accept-encoding" = "deflate, gzip"
+  )
+  http_get(url = url1, headers = headers)$
+    then(http_stop_for_status)$
+    then(function(res) {
+      cmt <- zip::inflate(res$content)$output
+      if (any(head(cmt, 6) != charToRaw("commit"))) {
+        throw(pkg_error(
+          "Git object {.val {substr(sha, 1, 7)}} is not a commit object
+           in git repo at {.url {url}}."
+        ))
+      }
+      nul <- which(cmt == 0)
+      if (length(nul) != 1) {
+        throw(pkg_error(
+          "Git commit object {.val {substr(sha, 1, 7)}} is invalid, does not
+           contain a single zero byte, in git repo at {.url {url}}."
+        ))
+      }
+      parse_commit(rawToChar(cmt[(nul+1):length(cmt)]))
+    })
+}
+
+async_git_dummy_get_tree <- function(url, sha) {
+  url1 <- paste0(
+    url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
+  )
+  headers <- c(
+    "User-Agent" = git_ua(),
+    "accept-encoding" = "deflate, gzip"
+  )
+  http_get(url = url1, headers = headers)$
+    then(http_stop_for_status)$
+    then(function(res) {
+      cmt <- zip::inflate(res$content)$output
+      if (any(head(cmt, 4) != charToRaw("tree"))) {
+        throw(pkg_error(
+          "Git object {.val {substr(sha, 1, 7)}} is not a tree object
+           in git repo at {.url {url}}."
+        ))
+      }
+      nul <- which(cmt == 0)[1]
+      if (is.na(nul)) {
+        throw(pkg_error(
+          "Git tree object {.val {substr(sha, 1, 7)}} is invalid, does not
+           contain any zero bytes, in git repo at {.url {url}}."
+        ))
+      }
+      parse_tree(cmt[(nul+1):length(cmt)])
+    })
+}
+
+async_git_dummy_get_blob <- function(url, sha) {
+  url1 <- paste0(
+    url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
+  )
+  headers <- c(
+    "User-Agent" = git_ua(),
+    "accept-encoding" = "deflate, gzip"
+  )
+  http_get(url = url1, headers = headers)$
+    then(http_stop_for_status)$
+    then(function(res) {
+      cmt <- zip::inflate(res$content)$output
+      if (any(head(cmt, 4) != charToRaw("blob"))) {
+        throw(pkg_error(
+          "Git object {.val {substr(sha, 1, 7)}} is not a blob object
+           in git repo at {.url {url}}."
+        ))
+      }
+      nul <- which(cmt == 0)[1]
+      if (is.na(nul)) {
+        throw(pkg_error(
+          "Git blob object {.val {substr(sha, 1, 7)}} is invalid, does not
+           contain any zero bytes, in git repo at {.url {url}}."
+        ))
+      }
+      cmt[(nul+1):length(cmt)]
+    })
+}

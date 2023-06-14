@@ -1579,7 +1579,7 @@ async_git_dummy_get_commit <- function(url, sha) {
     then(http_stop_for_status)$
     then(function(res) {
       cmt <- zip::inflate(res$content)$output
-      if (any(head(cmt, 6) != charToRaw("commit"))) {
+      if (any(utils::head(cmt, 6) != charToRaw("commit"))) {
         throw(pkg_error(
           "Git object {.val {substr(sha, 1, 7)}} is not a commit object
            in git repo at {.url {url}}."
@@ -1608,7 +1608,7 @@ async_git_dummy_get_tree <- function(url, sha) {
     then(http_stop_for_status)$
     then(function(res) {
       cmt <- zip::inflate(res$content)$output
-      if (any(head(cmt, 4) != charToRaw("tree"))) {
+      if (any(utils::head(cmt, 4) != charToRaw("tree"))) {
         throw(pkg_error(
           "Git object {.val {substr(sha, 1, 7)}} is not a tree object
            in git repo at {.url {url}}."
@@ -1637,7 +1637,7 @@ async_git_dummy_get_blob <- function(url, sha) {
     then(http_stop_for_status)$
     then(function(res) {
       cmt <- zip::inflate(res$content)$output
-      if (any(head(cmt, 4) != charToRaw("blob"))) {
+      if (any(utils::head(cmt, 4) != charToRaw("blob"))) {
         throw(pkg_error(
           "Git object {.val {substr(sha, 1, 7)}} is not a blob object
            in git repo at {.url {url}}."

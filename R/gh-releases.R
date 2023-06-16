@@ -114,22 +114,22 @@ ghr <- local({
       catch(async_http_404 = function(err) {
         async_ghr_create(repo, tag)
       })$
-        then(function(rel) rel$upload_url)$
-         then(function(upload_url) {
-           upload_url <- sub("[{].*[}]", "", upload_url)
-           prepo <- parse_slug(repo)
-           async_github_v3_query(
-             url = upload_url,
-             endpoint = "",
-             query = c(name = name),
-             method = "POST",
-             headers = c("Content-Type" = "application/octet-stream"),
-             file = file
-           )
-         })$
-           then(function(resp) {
-             jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-           })
+      then(function(rel) rel$upload_url)$
+      then(function(upload_url) {
+        upload_url <- sub("[{].*[}]", "", upload_url)
+        prepo <- parse_slug(repo)
+        async_github_v3_query(
+          url = upload_url,
+          endpoint = "",
+          query = c(name = name),
+          method = "POST",
+          headers = c("Content-Type" = "application/octet-stream"),
+          file = file
+        )
+      })$
+      then(function(resp) {
+        jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
+      })
   }
 
   # -------------------------------------------------------------------------

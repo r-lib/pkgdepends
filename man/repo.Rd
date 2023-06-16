@@ -152,7 +152,7 @@ without interaction with the user.
 
 \subsection{Usage}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{repo$update_gh(repo, subdir, file)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{repo$update_gh(repo, subdir, files)
 }\if{html}{\out{</div>}}
 }
 
@@ -162,8 +162,9 @@ without interaction with the user.
 \item \code{subdir}: subdirectory in the GitHub repository, where the R package
 metadata should be updated. It must exist in the repository.
 If it does not have \verb{PACKAGES*} files, then they will be created.
-\item \code{file}: package file to add. The file will \emph{not} be added to the
-repository.
+\item \code{files}: package files to add. The files will \emph{not} be added to the
+repository, only to the metadata. They should be in the repository
+already.
 }
 }
 

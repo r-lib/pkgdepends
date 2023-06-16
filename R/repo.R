@@ -1,6 +1,8 @@
 
 repo <- local({
 
+  # List packages in local repo -------------------------------------------
+
   repo_list <- function(..., path = ".") {
     pkgs <- suppressWarnings(
       pkgcache::parse_packages(file.path(path, "PACKAGES"))
@@ -30,6 +32,8 @@ repo <- local({
     pkgs
   }
 
+  # Delete package from local repo ----------------------------------------
+
   repo_delete <- function(package, ..., path = ".") {
     pkgs <- repo_list(path = path)
     idx <- find_in_data_frame(pkgs, package = package, ...)
@@ -40,6 +44,8 @@ repo <- local({
     write_dcf(pkgs, PACKAGES)
   }
 
+  # Add package to local repo ---------------------------------------------
+
   repo_add <- function(file, ..., path = ".") {
     pkgs <- repo_list(path = path)
     pkg_data <- get_package_data(file)
@@ -47,6 +53,8 @@ repo <- local({
     PACKAGES <- file.path(path, "PACKAGES")
     write_dcf(pkgs, PACKAGES)
   }
+
+  # Update package in local repo ------------------------------------------
 
   repo_update <- function(file, ..., path = ".") {
     pkgs <- repo_list(path = path)
@@ -67,6 +75,8 @@ repo <- local({
     write_dcf(pkgs, PACKAGES)
   }
 
+  # List packages in repo on GH -------------------------------------------
+
   repo_list_gh <- function(repo, subdir) {
     dir.create(tmp <- tempfile())
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -74,8 +84,10 @@ repo <- local({
     repo_list(path = tmp)
   }
 
-  repo_update_gh <- function(repo, subdir, file) {
-    file <- normalizePath(file)
+  # Update packages in GH repo --------------------------------------------
+
+  repo_update_gh <- function(repo, subdir, files) {
+    files <- normalizePath(files)
 
     oldwd <- getwd()
     workdir <- tempfile()
@@ -97,7 +109,9 @@ repo <- local({
 
     repeat {
       git("pull")
-      repo_update(file)
+      for (file in files) {
+        repo_update(file)
+      }
       tryCatch({
         git_push()
         break
@@ -386,7 +400,7 @@ repo <- local({
 #'
 #' ### Usage
 #' ```
-#' repo$update_gh(repo, subdir, file)
+#' repo$update_gh(repo, subdir, files)
 #' ```
 #'
 #' ### Arguments
@@ -395,8 +409,9 @@ repo <- local({
 #' * `subdir`: subdirectory in the GitHub repository, where the R package
 #'   metadata should be updated. It must exist in the repository.
 #'   If it does not have `PACKAGES*` files, then they will be created.
-#' * `file`: package file to add. The file will _not_ be added to the
-#'   repository.
+#' * `files`: package files to add. The files will _not_ be added to the
+#'   repository, only to the metadata. They should be in the repository
+#'   already.
 #'
 # -------------------------------------------------------------------------
 #'

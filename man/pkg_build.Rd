@@ -7,7 +7,8 @@
 pkg_build(
   pkg,
   library = .libPaths()[1],
-  flavor = Sys.getenv("PKG_BUILD_FLAVOR")
+  flavor = Sys.getenv("PKG_BUILD_FLAVOR"),
+  build_number = 1L
 )
 }
 \arguments{
@@ -18,6 +19,10 @@ pkg_build(
 \item{flavor}{Platform flavor. Defaults to the \code{PKG_BUILD_FLAVOR}
 environment variable. If not \code{NULL} or an empty string, then it is
 appended to the platform string with a dash.}
+
+\item{build_number}{An integer number that is added to the file name,
+after the version number, to be able to have multiple builds for the
+same package version.}
 }
 \value{
 Path to the built package.

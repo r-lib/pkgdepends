@@ -10,13 +10,17 @@
 #' @param flavor Platform flavor. Defaults to the `PKG_BUILD_FLAVOR`
 #'   environment variable. If not `NULL` or an empty string, then it is
 #'   appended to the platform string with a dash.
+#' @param build_number An integer number that is added to the file name,
+#'   after the version number, to be able to have multiple builds for the
+#'   same package version.
 #' @return Path to the built package.
 #'
 #' @export
 #' @keywords internal
 
 pkg_build <- function(pkg, library = .libPaths()[1],
-                      flavor = Sys.getenv("PKG_BUILD_FLAVOR")) {
+                      flavor = Sys.getenv("PKG_BUILD_FLAVOR"),
+                      build_number = 1L) {
   pkgdir <- file.path(library, pkg)
   if (!dir.exists(pkgdir)) {
     throw(pkg_error(
@@ -42,6 +46,7 @@ pkg_build <- function(pkg, library = .libPaths()[1],
     install_md5_sums(pkg)
     fn <- paste0(
       pkg, "_", version, "_",
+      "b", build_number, "_",
       "R", rversion,
       if (nzchar(flavor %||% "")) paste0("_", flavor),
       ".zip"
@@ -50,7 +55,13 @@ pkg_build <- function(pkg, library = .libPaths()[1],
 
   } else {
     ext <- if (sys == "mac") ".tgz" else ".tar.gz"
-    fn <- paste0(pkg, "_", version, "_", "R", rversion, "_", platform, ext)
+    fn <- paste0(
+      pkg, "_", version, "_",
+      "b", build_number, "_",
+      "R", rversion, "_",
+      platform,
+      ext
+    )
     ffn <- file.path(normalizePath("."), fn)
     old <- getwd()
     on.exit(setwd(old), add = TRUE)

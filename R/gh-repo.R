@@ -183,7 +183,7 @@ ghrepo <- local({
     inst <- inst[match(todo, inst$package),, drop = FALSE]
 
     # get build numbers
-    inst$buildnum <- 1L
+    inst$buildnum <- rep(1L, nrow(inst))
     inst$buildnum[todo %in% mirrored] <-
       parse_build_number(mirror_pkgs$target[match(todo[todo %in% mirrored], mirror_pkgs$package)])
     inst

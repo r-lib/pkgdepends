@@ -37,7 +37,7 @@ ghrepo <- local({
 
     if (nrow(inst) > 0) {
       cli::cli_par()
-      cli::cli_h2("Upload new releases assets to GH")
+      cli::cli_h2("Upload new release assets to GH")
       upload_releases(inst, release_org)
     }
 

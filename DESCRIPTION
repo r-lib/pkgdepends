@@ -57,6 +57,10 @@ Suggests:
     withr (>= 2.1.1),
 Remotes:
     r-lib/pkgcache
+Config/Needs/builder:
+    gh,
+    pkgsearch,
+    withr
 Config/Needs/coverage:
     r-lib/asciicast,
     covr,

@@ -46,9 +46,9 @@ repo <- local({
 
   # Add package to local repo ---------------------------------------------
 
-  repo_add <- function(file, ..., path = ".") {
+  repo_add <- function(file, ..., path = ".", release_org = "cran") {
     pkgs <- repo_list(path = path)
-    pkg_data <- get_package_data(file)
+    pkg_data <- get_package_data(file, release_org = release_org)
     pkgs <- rbind_expand(pkgs, pkg_data)
     PACKAGES <- file.path(path, "PACKAGES")
     write_dcf(pkgs, PACKAGES)
@@ -56,13 +56,13 @@ repo <- local({
 
   # Update package in local repo ------------------------------------------
 
-  repo_update <- function(file, ..., path = ".") {
+  repo_update <- function(file, ..., path = ".", release_org = "cran") {
     pkgs <- repo_list(path = path)
-    pkg_data <- get_package_data(file)
+    pkg_data <- get_package_data(file, release_org = release_org)
 
     idx <- which(
       pkgs$Package == pkg_data$Package &
-      pkgs$RVersion == pkg_data$RVersion &
+      pkgs$RVersion <= pkg_data$RVersion &
       (is.na(pkg_data$OS) | is.na(pkgs$OS) | identical(pkgs$OS, pkg_data$OS)) &
       (is.na(pkg_data$Arch) | is.na(pkgs$Arch) | identical(pkgs$Arch, pkg_data$Arch))
     )
@@ -86,7 +86,7 @@ repo <- local({
 
   # Update packages in GH repo --------------------------------------------
 
-  repo_update_gh <- function(repo, subdir, files) {
+  repo_update_gh <- function(repo, subdir, files, release_org = "cran") {
     files <- normalizePath(files)
 
     oldwd <- getwd()
@@ -100,6 +100,8 @@ repo <- local({
     setwd(prepo$repo)
     setwd(subdir)
 
+    git("config", "user.email", "csardi.gabor@gmail.com")
+    git("config", "user.name", "Gabor Csardi")
     git("config", "credential.helper", "cache")
     gitcreds::gitcreds_approve(list(
                 url = "https://github.com",
@@ -110,7 +112,7 @@ repo <- local({
     repeat {
       git("pull")
       for (file in files) {
-        repo_update(file)
+        repo_update(file, release_org = release_org)
       }
       tryCatch({
         git_push()
@@ -139,7 +141,7 @@ repo <- local({
     desc::desc(file.path(tmp, pkg))
   }
 
-  get_package_data <- function(path) {
+  get_package_data <- function(path, release_org = "cran") {
     desc <- get_desc(path)
     pkgname <- desc$get_field("Package")
     pkgver <- desc$get_field("Version")
@@ -162,7 +164,7 @@ repo <- local({
       License = unname(desc$get("License")),
       File = basename(path),
       DownloadURL = paste0(
-        "https://github.com/cran/",
+        "https://github.com/", release_org, "/",
         pkgname,
         "/releases/download/",
         pkgver,
@@ -183,7 +185,7 @@ repo <- local({
     pkg
   }
 
-  write_dcf <- function(meta, PACKAGES, quiet = FALSE) {
+  write_dcf <- function(meta, PACKAGES, quiet = TRUE) {
     if (!quiet) cat("Writing ", PACKAGES, "\n")
     meta <- as.matrix(meta)
     write.dcf(meta, PACKAGES, width = 200)
@@ -199,6 +201,7 @@ repo <- local({
   find_in_data_frame <- function(df, ..., .list = NULL) {
     cols <- drop_nulls(c(list(...), .list))
     idx <- seq_len(nrow(df))
+    names(df) <- tolower(names(df))
     for (i in seq_along(cols)) {
       if (length(idx) == 0) break
       n <- tolower(names(cols)[i])
@@ -235,7 +238,7 @@ repo <- local({
 
   git_push <- function() {
     git("add", "-A", ".")
-    git("commit", "-m", "Update package")
+    git("commit", "-m", "Update repository")
     git("push", "--porcelain", "origin", stderr_to_stdout = TRUE)
   }
 
@@ -263,6 +266,11 @@ repo <- local({
     }
     hash <- files$files$hash[wh]
     git_download_file(url, hash, file.path(target, "PACKAGES"))
+  }
+
+  parse_slug <- function(slug) {
+    parts <- strsplit(slug, "/", fixed = TRUE)[[1]]
+    list(user = parts[1], owner = parts[1], repo = parts[2])
   }
 
   # -----------------------------------------------------------------------
@@ -315,7 +323,7 @@ repo <- local({
 #'
 #' ## Delete packages from repository metadata
 #'
-#' `repo_delete()` deletes matching packages from the repository
+#' `repo$delete()` deletes matching packages from the repository
 #' metadata.
 #'
 #' ### Description

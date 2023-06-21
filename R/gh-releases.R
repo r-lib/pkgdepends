@@ -110,11 +110,12 @@ ghr <- local({
 
     repo; file; tag; name
 
-    async_ghr_get(repo, tag)$
+    async_ghr_delete_asset(repo, tag, name)$
+      then(function(res) res$release$upload_url)$
       catch(async_http_404 = function(err) {
-        async_ghr_create(repo, tag)
+        async_ghr_create(repo, tag)$
+          then(function(rel) rel$upload_url)
       })$
-      then(function(rel) rel$upload_url)$
       then(function(upload_url) {
         upload_url <- sub("[{].*[}]", "", upload_url)
         prepo <- parse_slug(repo)
@@ -129,6 +130,34 @@ ghr <- local({
       })$
       then(function(resp) {
         jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
+      })
+  }
+
+  # -------------------------------------------------------------------------
+
+  ghr_delete_asset <- function(repo, tag, name) {
+    synchronize(async_ghr_delete_asset(repo, tag, name))
+  }
+
+  async_ghr_delete_asset <- function(repo, tag, name) {
+    prepo <- parse_slug(repo)
+    async_ghr_get(repo, tag)$
+      then(function(res) {
+        release_id <- res$id
+        asset_names <- vcapply(res$assets, "[[", "name")
+        if (name %in% asset_names) {
+          asset_id <- res$assets[[match(name, asset_names)]]$id
+          ep <- glue("/repos/{prepo$user}/{prepo$repo}/releases/assets/{asset_id}")
+          async_github_v3_query(ep, method = "DELETE")$
+            then(function(resp) {
+              list(
+                release = res,
+                deleted = TRUE
+              )
+            })
+        } else {
+          list(release = res, deleted = FALSE)
+        }
       })
   }
 
@@ -170,7 +199,7 @@ ghr <- local({
   }
 
   async_github_v3_query <- function(endpoint, query = NULL,
-                                    method = c("GET", "POST"),
+                                    method = c("GET", "POST", "DELETE"),
                                     headers = NULL,
                                     data = NULL,
                                     file = NULL,
@@ -197,6 +226,8 @@ ghr <- local({
             }
             if (is.null(data)) data <- readBin(file, "raw", file.size(file))
             http_post(url, data, headers = headers)
+          } else if (method == "DELETE") {
+            http_delete(url, headers = headers)
           }
 
     px$
@@ -210,19 +241,21 @@ ghr <- local({
 
   structure(
     list(
-      .internal         = environment(),
+      .internal          = environment(),
 
-      async_add_asset   = async_ghr_add_asset,
-      async_create      = async_ghr_create,
-      async_get         = async_ghr_get,
-      async_list        = async_ghr_list,
-      async_list_assets = async_ghr_list_assets,
+      async_add_asset    = async_ghr_add_asset,
+      async_delete_asset = async_ghr_delete_asset,
+      async_create       = async_ghr_create,
+      async_get          = async_ghr_get,
+      async_list         = async_ghr_list,
+      async_list_assets  = async_ghr_list_assets,
 
-      add_asset         = ghr_add_asset,
-      create            = ghr_create,
-      get               = ghr_get,
-      list              = ghr_list,
-      list_assets       = ghr_list_assets
+      add_asset          = ghr_add_asset,
+      delete_asset       = ghr_delete_asset,
+      create             = ghr_create,
+      get                = ghr_get,
+      list               = ghr_list,
+      list_assets        = ghr_list_assets
     )
   )
 })
@@ -342,11 +375,45 @@ ghr <- local({
 #' * `tag`: tag name to add the asset to. It must exist on GitHub.
 #' * `name`: file name of the asset in the release.
 #'
+#' ### Details
+#'
+#' If an asset with the same name already exists, then that will be deleted
+#' first.
+#'
 #' ### Value
 #'
 #' Response from GitHub as a named list. See
 #' <https://docs.github.com/en/rest/releases/assets#upload-a-release-asset>
 #' for the structure.
+#'
+# -------------------------------------------------------------------------
+#' ## Delete a release asset
+#'
+#' ### Description
+#'
+#' `ghr$delete_asset()` deleted a release asset.
+#'
+#' `ghr$async_delete_asset()` is an async version of `ghr$delete_asset()`.
+#'
+#' ### Usage
+#' ```
+#' ghr$delete_asset(repo, tag, name)
+#' ghr$async_delete_asset(repo, tag, name)
+#' ```
+#'
+#' ### Arguments
+#'
+#' * `repo`: repository slug, e.g. `cran/cli`.
+#' * `tag`: tag name to create a release for. It must exist on GitHub.
+#' * `name`: name of the asset.
+#'
+#' ### Value
+#'
+#' A list with entries:
+#' * `release`: a list with the data about the release, before the
+#'   deletion. It has the same format as the return value of `ghr$get()`.
+#' * `deleted`: `TRUE` if the asset was deleted. `FALSE` if the asset
+#'   did not exist.
 #'
 # -------------------------------------------------------------------------
 #'

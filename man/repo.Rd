@@ -55,7 +55,7 @@ columns, possibly more if there are other entries in the metadata:
 
 \subsection{Delete packages from repository metadata}{
 
-\code{repo_delete()} deletes matching packages from the repository
+\code{repo$delete()} deletes matching packages from the repository
 metadata.
 \subsection{Description}{
 

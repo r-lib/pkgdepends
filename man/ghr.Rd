@@ -133,11 +133,53 @@ Data frame with columns:
 }
 }
 
+\subsection{Details}{
+
+If an asset with the same name already exists, then that will be deleted
+first.
+}
+
 \subsection{Value}{
 
 Response from GitHub as a named list. See
 \url{https://docs.github.com/en/rest/releases/assets#upload-a-release-asset}
 for the structure.
+}
+
+}
+
+\subsection{Delete a release asset}{
+\subsection{Description}{
+
+\code{ghr$delete_asset()} deleted a release asset.
+
+\code{ghr$async_delete_asset()} is an async version of \code{ghr$delete_asset()}.
+}
+
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ghr$delete_asset(repo, tag, name)
+ghr$async_delete_asset(repo, tag, name)
+}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\itemize{
+\item \code{repo}: repository slug, e.g. \code{cran/cli}.
+\item \code{tag}: tag name to create a release for. It must exist on GitHub.
+\item \code{name}: name of the asset.
+}
+}
+
+\subsection{Value}{
+
+A list with entries:
+\itemize{
+\item \code{release}: a list with the data about the release, before the
+deletion. It has the same format as the return value of \code{ghr$get()}.
+\item \code{deleted}: \code{TRUE} if the asset was deleted. \code{FALSE} if the asset
+did not exist.
+}
 }
 
 }

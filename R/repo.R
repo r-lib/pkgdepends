@@ -27,6 +27,7 @@ repo <- local({
       pkgs$Platform <- character()
       pkgs$GraphicsAPIVersion <- character()
       pkgs$InternalsId <- character()
+      pkgs$SystemRequirements <- character()
     }
 
     pkgs
@@ -179,7 +180,8 @@ repo <- local({
       RVersion = rminor,
       Platform = unname(desc$get("RemoteBuildPlatform")),
       GraphicsAPIVersion = unname(desc$get("GraphicsAPIVersion")),
-      InternalsId = unname(desc$get("InternalsId"))
+      InternalsId = unname(desc$get("InternalsId")),
+      SystemRequirements = unname(desc$get("SystemRequirements")),
     )
 
     pkg

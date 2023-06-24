@@ -181,7 +181,7 @@ repo <- local({
       Platform = unname(desc$get("RemoteBuildPlatform")),
       GraphicsAPIVersion = unname(desc$get("GraphicsAPIVersion")),
       InternalsId = unname(desc$get("InternalsId")),
-      SystemRequirements = unname(desc$get("SystemRequirements")),
+      SystemRequirements = unname(desc$get("SystemRequirements"))
     )
 
     pkg

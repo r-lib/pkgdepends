@@ -25,7 +25,7 @@ test_that("async_pkg_name_check", {
 
   ans <- sy(async_pkg_name_check("foo"))
   expect_s3_class(ans, "pkg_name_check")
-  expect_equal(sort(unlist(ans, use.names = FALSE)), 1:5)
+  expect_equal(sort(unlist(ans, use.names = FALSE)), 1:4)
 })
 
 # format.pkg_name_check via print

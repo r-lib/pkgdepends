@@ -35,7 +35,6 @@
 #'   Available dictionaries:
 #'     * `wikipedia`
 #'     * `wiktionary`,
-#'     * `acromine` (<http://www.nactem.ac.uk/software/acromine/>),
 #'     * `sentiment` (<https://github.com/fnielsen/afinn>),
 #'     * `urban` (Urban Dictionary).
 #'   If `NULL` (by default), the Urban Dictionary is omitted, as it
@@ -59,7 +58,6 @@ async_pkg_name_check <- function(name, dictionaries = NULL) {
   default_dictionaries <- c(
     "wikipedia",
     "wiktionary",
-    "acromine",
     "sentiment"
   )
   dicts <- dictionaries %||% default_dictionaries
@@ -69,7 +67,6 @@ async_pkg_name_check <- function(name, dictionaries = NULL) {
     basics     = basics,
     wikipedia  = if ("wikipedia"  %in% dicts) async_wikipedia_get (name),
     wiktionary = if ("wiktionary" %in% dicts) async_wiktionary_get(name),
-    acromine   = if ("acromine"   %in% dicts) async_acromine_get  (name),
     sentiment  = if ("sentiment"  %in% dicts) async_sentiment_get (name),
     urban      = if ("urban"      %in% dicts) async_urban_get     (name)
   )$then(function(res) add_class(res, "pkg_name_check"))
@@ -408,63 +405,6 @@ clean_wiktionary_text <- function(x) {
   eng7 <- gsub("\n[\n]+", "\n\n", eng6)
   eng8 <- gsub("([^\n])\n([^\n])", "\\1 \\2", eng7)
   eng8
-}
-
-# -------------------------------------------------------------------------
-
-async_acromine_get <- function(term) {
-  async_acromine_get_query(term)$
-    then(http_stop_for_status)$
-    catch(error = function(err) list(content = charToRaw("[]")))$
-    then(function(resp) acromine_get_process(term, resp))
-}
-
-async_acromine_get_query <- function(term) {
-  base <- Sys.getenv(
-    "PKG_NAME_CHECK_ACROMINE_URL",
-    "http://www.nactem.ac.uk/software/acromine/dictionary.py"
-  )
-  url <- paste0(base, "?sf=", utils::URLencode(term))
-  http_get(url)
-}
-
-acromine_get_process <- function(term, resp) {
-  obj <- jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
-  if (length(obj) == 0) obj <- list(list())
-  tbl <- data_frame(
-    term = term,
-    short_form = obj[[1]]$sf %||% character(),
-    long_form = vcapply(obj[[1]]$lfs, "[[", "lf"),
-    frequency = viapply(obj[[1]]$lfs, "[[", "freq"),
-    since = viapply(obj[[1]]$lfs, "[[", "since")
-  )
-  add_class(tbl, "pkg_name_check_acromine")
-}
-
-#' @export
-
-format.pkg_name_check_acromine <- function(x, limit = 6, ...) {
-  if (nrow(x) == 0) {
-    txt <- "No acronyms found."
-  } else {
-    txt <- paste0(
-      seq_len(nrow(x)), ". ", x$long_form, " (", x$frequency, ")",
-      collapse = "\n\n"
-    )
-  }
-
-  cw <- cli::console_width()
-  wrp <- cli::ansi_strwrap(txt, width = cw - 4)
-  wrp <- wrp[cli::ansi_strip(wrp) != ""]
-  hdr <- cli::col_green("Acroynms (from Acromine)")
-  alg <- cli::ansi_align(wrp, width = cw - 4)
-  if (length(alg) > limit) alg <- c(alg[1:limit], cli::symbol$ellipsis)
-  cli::boxx(
-    alg,
-    padding = c(0,1,0,1),
-    header = hdr,
-    border_col = cli::col_silver
-  )
 }
 
 # -------------------------------------------------------------------------

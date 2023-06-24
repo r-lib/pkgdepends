@@ -25,9 +25,6 @@
       | Third-person singular simple present indicative form of tool                 |
       | Anagrams: loots, lotos, sloot, sotol, stool, tosol                           |
       +---------------------------------------- https://en.wiktionary.org/wiki/tools +
-      + Acroynms (from Acromine) ----------------------------------------------------+
-      | No acronyms found.                                                           |
-      +------------------------------------------------------------------------------+
       +------------------------------------------------------------------------------+
       | Sentiment: :| (0)                                                            |
       +------------------------------------------------------------------------------+
@@ -203,45 +200,6 @@
     Output
       + Wiktionary ------------------------------------------------------------------+
       | not-at-all-sdfsdfsdf No English definition found                             |
-      +------------------------------------------------------------------------------+
-
-# async_acromine_get_query
-
-    Code
-      show_request(ret)
-    Output
-      GET 
-      Query string: sf=foobar
-      Body: 
-
-# format.pkg_name_check_acromine
-
-    Code
-      writeLines(format(ans))
-    Output
-      + Acroynms (from Acromine) ----------------------------------------------------+
-      | 1. Federal Bureau of Investigation (18)                                      |
-      | 2. Frontal Behavioral Inventory (9)                                          |
-      | 3. fresh blood imaging (7)                                                   |
-      | 4. foreign body infections (4)                                               |
-      +------------------------------------------------------------------------------+
-    Code
-      writeLines(format(ans2))
-    Output
-      + Acroynms (from Acromine) ----------------------------------------------------+
-      | No acronyms found.                                                           |
-      +------------------------------------------------------------------------------+
-    Code
-      writeLines(format(ans3))
-    Output
-      + Acroynms (from Acromine) ----------------------------------------------------+
-      | 1. critical limb ischemia (228)                                              |
-      | 2. lithium clearance (63)                                                    |
-      | 3. critical leg ischaemia (43)                                               |
-      | 4. clindamycin (21)                                                          |
-      | 5. clomipramine (14)                                                         |
-      | 6. central lymphatic irradiation (10)                                        |
-      | ...                                                                          |
       +------------------------------------------------------------------------------+
 
 # async_profanity_get_query

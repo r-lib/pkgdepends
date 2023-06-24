@@ -10,19 +10,19 @@
       | v  valid name      x  CRAN            v  Bioconductor    v  not a profanity  |
       +------------------------------------------------------------------------------+
       + Wikipedia -------------------------------------------------------------------+
-      | Tool (from Tools) A tool is an object used to extend the ability of an       |
-      | individual to modify features of the surrounding environment. Although many  |
-      | animals use simple tools, only human beings, whose use of stone tools dates  |
-      | back hundreds of millennia, have been observed using tools to make other     |
-      | tools.  The set of tools required to perform different tasks that are part   |
-      | of the same activity is called gear or equipment.                            |
+      | Tool (from Tools) A tool is an object that can extend an individual's        |
+      | ability to modify features of the surrounding environment or help them       |
+      | accomplish a particular task. Although many animals use simple tools, only   |
+      | human beings, whose use of stone tools dates back hundreds of millennia,     |
+      | have been observed using tools to make other tools.                          |
+      |                                                                              |
       | ...                                                                          |
       +------------------------------------------ https://en.wikipedia.org/wiki/Tool +
       + Wiktionary ------------------------------------------------------------------+
       | tools Noun: tools                                                            |
       | plural of tool                                                               |
       | Verb: tools                                                                  |
-      | Third-person singular simple present indicative form of tool                 |
+      | third-person singular simple present indicative form of tool                 |
       | Anagrams: loots, lotos, sloot, sotol, stool, tosol                           |
       +---------------------------------------- https://en.wiktionary.org/wiki/tools +
       +------------------------------------------------------------------------------+
@@ -148,12 +148,12 @@
       writeLines(format(wpd[[3]]))
     Output
       + Wikipedia -------------------------------------------------------------------+
-      | R (programming language) (from GNU R) R is a programming language and free   |
-      | software environment for statistical computing and graphics supported by     |
-      | the R Foundation for Statistical Computing. The R language is widely used    |
-      | among statisticians and data miners for developing statistical software and  |
-      | data analysis. Polls, data mining surveys, and studies of scholarly          |
-      | literature databases show substantial increases in popularity; as of         |
+      | R (programming language) (from GNU R) R is a programming language for        |
+      | statistical computing and graphics supported by the R Core Team and the R    |
+      | Foundation for Statistical Computing. Created by statisticians Ross Ihaka    |
+      | and Robert Gentleman, R is used among data miners, bioinformaticians and     |
+      | statisticians for data analysis and developing statistical software. The     |
+      | core R language is augmented by a large number of extension packages         |
       | ...                                                                          |
       +---------------------- https://en.wikipedia.org/wiki/R_(programming_language) +
 
@@ -165,7 +165,7 @@
       + Wiktionary ------------------------------------------------------------------+
       | foobar Etymology: Phonetic spelling of FUBAR, which is either an acronym     |
       | for "Fucked up beyond all recognition", or derived from foo.                 |
-      | Noun: foobar                                                                 |
+      | Noun: foobar (plural foobars)                                                |
       | (slang) A serious mistake. (programming) A metasyntactic variable name, a    |
       | place holder for words; compare foo, bar.                                    |
       | foo foo fighter FUBAR                                                        |
@@ -189,7 +189,7 @@
       + Wiktionary ------------------------------------------------------------------+
       | foobar Etymology: Phonetic spelling of FUBAR, which is either an acronym     |
       | for "Fucked up beyond all recognition", or derived from foo.                 |
-      | Noun: foobar                                                                 |
+      | Noun: foobar (plural foobars)                                                |
       | (slang) A serious mistake. (programming) A metasyntactic variable name, a    |
       | place holder for words; compare foo, bar.                                    |
       | foo foo fighter FUBAR                                                        |
@@ -232,8 +232,8 @@
       ans
     Output
       + Urban dictionary ------------------------------------------------------------+
-      | One who lacks the mental [capacity] to know he is [being used].  A fool.  A  |
-      | [cretin].  Characterized by low intelligence and/or self-steem.              |
+      | One who lacks the mental capacity to know he is [being used].  A fool.  A    |
+      | [cretin].  Characterized by low intelligence and/or [self-steem].            |
       +----------------------------------------------- http://tool.urbanup.com/38616 +
 
 # async_urban_get_query
@@ -251,8 +251,8 @@
       ans
     Output
       + Urban dictionary ------------------------------------------------------------+
-      | One who lacks the mental [capacity] to know he is [being used].  A fool.  A  |
-      | [cretin].  Characterized by low intelligence and/or self-steem.              |
+      | One who lacks the mental capacity to know he is [being used].  A fool.  A    |
+      | [cretin].  Characterized by low intelligence and/or [self-steem].            |
       +----------------------------------------------- http://tool.urbanup.com/38616 +
 
 # format.pkg_name_check_urban
@@ -261,8 +261,8 @@
       writeLines(format(ans))
     Output
       + Urban dictionary ------------------------------------------------------------+
-      | One who lacks the mental [capacity] to know he is [being used].  A fool.  A  |
-      | [cretin].  Characterized by low intelligence and/or self-steem.              |
+      | One who lacks the mental capacity to know he is [being used].  A fool.  A    |
+      | [cretin].  Characterized by low intelligence and/or [self-steem].            |
       +----------------------------------------------- http://tool.urbanup.com/38616 +
 
 ---
@@ -280,12 +280,12 @@
       writeLines(format(ans))
     Output
       + Urban dictionary ------------------------------------------------------------+
-      | One who lacks the mental [capacity] to know he is [being used].  A fool.  A  |
-      | [cretin].  Characterized by low intelligence and/or self-steem. One who      |
-      | lacks the mental [capacity] to know he is [being used].  A fool.  A          |
-      | [cretin].  Characterized by low intelligence and/or self-steem. One who      |
-      | lacks the mental [capacity] to know he is [being used].  A fool.  A          |
-      | [cretin].  Characterized by low intelligence and/or self-steem. One who      |
+      | One who lacks the mental capacity to know he is [being used].  A fool.  A    |
+      | [cretin].  Characterized by low intelligence and/or [self-steem]. One who    |
+      | lacks the mental capacity to know he is [being used].  A fool.  A [cretin].  |
+      | Characterized by low intelligence and/or [self-steem]. One who lacks the     |
+      | mental capacity to know he is [being used].  A fool.  A [cretin].            |
+      | Characterized by low intelligence and/or [self-steem]. One who lacks the     |
       | ...                                                                          |
       +----------------------------------------------- http://tool.urbanup.com/38616 +
 

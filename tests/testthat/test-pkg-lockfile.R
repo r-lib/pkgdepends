@@ -175,8 +175,9 @@ test_that("update_sysreqs", {
     version = "3.0.2-0ubuntu1.10",
     provides = list(list())
   )
-  mockery::stub(pkgplan_update_sysreqs, "sysreqs_list_system_packages", fake)
-  pkgplan_update_sysreqs(iplan, get_private(iplan))
+  old <- iplan$.__enclos_env__$private$solution$result$data$sysreqs_packages
+  new <- sysreqs_update_state(old, fake)
+  iplan$.__enclos_env__$private$solution$result$data$sysreqs_packages <- new
   expect_snapshot({
     plan$show_sysreqs()
   })

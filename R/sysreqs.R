@@ -199,7 +199,9 @@ sysreqs_check_installed <- function(packages = NULL,
   if (is.null(rpkgs$SystemRequirements)) {
     rpkgs$SystemRequirements <- rep(NA, nrow(rpkgs))
   }
-  rpkgs$sysreqs_packages <- sysreqs2_match(rpkgs$SystemRequirements)
+  sys <- sysreqs2_match(rpkgs$SystemRequirements)
+  sys <- sysreqs_update_state(sys, spkgs)
+  rpkgs$sysreqs_packages <- sys
   rpkgs <- rpkgs[!vlapply(rpkgs$sysreqs_packages, is.null), ]
   rpkgs$sys_package_name <- lapply(
     rpkgs$sysreqs_packages,
@@ -209,13 +211,34 @@ sysreqs_check_installed <- function(packages = NULL,
 
   upkgs <- unique(sort(unlist(rpkgs$sys_package_name)))
   provided <- c(spkgs$package, unlist(spkgs$provides))
+
+  pre <- vector("list", length(upkgs))
+  post <- vector("list", length(upkgs))
+  for (pi in seq_along(upkgs)) {
+    p <- upkgs[pi]
+    for (s in sys) {
+      sp <- unlist(lapply(s, "[[", "packages"))
+      if (p %in% sp) {
+        newpre <- unlist(lapply(s, "[[", "pre_install"))
+        if (length(newpre) > 0) pre[[pi]] <- c(pre[[pi]], newpre)
+        newpost <- unlist(lapply(s, "[[", "post_install"))
+        if (length(newpost) > 0) post[[pi]] <- c(post[[pi]], newpost)
+      }
+    }
+  }
+
   res <- data_frame(
     system_package = upkgs,
     installed = upkgs %in% provided,
     packages = lapply(upkgs, function(p) {
       rpkgs$Package[vlapply(rpkgs$sys_package_name, function(s) p %in% s)]
-    })
+    }),
+    pre_install = pre,
+    post_install = post
   )
+
+  attr(res, "sysreqs_records") <- sys
+  attr(res, "system_packages") <- spkgs
 
   class(res) <- c("pkg_sysreqs_check_result", class(res))
   res
@@ -245,6 +268,25 @@ print.pkg_sysreqs_check_result <- function(x, ...) {
 `[.pkg_sysreqs_check_result` <- function(x, i, j, drop = FALSE) {
   class(x) <- setdiff(class(x), "pkg_sysreqs_check_result")
   NextMethod("[")
+}
+
+sysreqs_fix_installed <- function(packages = NULL, library = .libPaths()[1]) {
+  chk <- sysreqs_check_installed(packages = packages, library = library)
+  if (nrow(chk) == 0) {
+    cli::cli_alert("No system requirements.")
+  } else if (all(chk$installed)) {
+    cli::cli_alert_success("All system requirements are installed.")
+  } else {
+    cli::cli_alert_info("Need to install {sum(!chk$installed)} system package{?s}.")
+    config <- current_config()
+    cmds <- sysreqs2_scripts(
+      attr(chk, "sysreqs_records"),
+      sysreqs_platform = config$get("sysreqs_platform"),
+      missing = TRUE
+    )
+    sysreqs_install(cmds, config)
+  }
+  invisible(chk)
 }
 
 async_parse_installed <- function(library, packages) {

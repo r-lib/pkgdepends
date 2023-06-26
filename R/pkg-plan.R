@@ -354,15 +354,6 @@ pkgplan_update_sysreqs <- function(self, private) {
   sys <- self$get_solution()$data$sysreqs_packages
   if (length(unlist(sys)) == 0) return(invisible())
 
-  spkgs <- sysreqs_list_system_packages()
-  spkgs <- spkgs[grepl("^.i$", spkgs$status), ]
-  allspkgs <- unique(unlist(c(spkgs$package, spkgs$provides)))
-  for (i in seq_along(sys)) {
-    elt <- sys[[i]]
-    for (j in seq_along(elt)) {
-      elt[[j]]$packages_missing <- setdiff(elt[[j]]$packages, allspkgs)
-        }
-    if (!is.null(elt)) sys[[i]] <- elt
-  }
-  private$solution$result$data$sysreqs_packages <- sys
+  private$solution$result$data$sysreqs_packages <-
+    sysreqs_update_state(sys)
 }

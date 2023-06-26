@@ -137,7 +137,7 @@ sysreqs_db_update
 #' `sysreqs_check_installed()` checks if the system requirements of all
 #' packages (or a subset of packages) are installed.
 #'
-#' `sysreqs_fix_installed()` installed the missing system packages.
+#' `sysreqs_fix_installed()` installs the missing system packages.
 #'
 #' @details
 #' These functions use the `sysreqs_platform` configuration option,

@@ -42,7 +42,7 @@ The data frame also have two attributes with additional data:
 \code{sysreqs_check_installed()} checks if the system requirements of all
 packages (or a subset of packages) are installed.
 
-\code{sysreqs_fix_installed()} installed the missing system packages.
+\code{sysreqs_fix_installed()} installs the missing system packages.
 }
 \details{
 These functions use the \code{sysreqs_platform} configuration option,

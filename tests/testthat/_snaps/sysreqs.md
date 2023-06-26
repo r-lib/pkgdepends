@@ -225,14 +225,14 @@
     Code
       res[]
     Output
-      # A data frame: 5 x 3
-        system_package       installed packages 
-        <chr>                <lgl>     <list>   
-      1 gsfonts              TRUE      <chr [1]>
-      2 imagemagick          FALSE     <chr [1]>
-      3 libcurl4-openssl-dev TRUE      <chr [1]>
-      4 libmagick++-dev      FALSE     <chr [1]>
-      5 libssl-dev           FALSE     <chr [1]>
+      # A data frame: 5 x 5
+        system_package       installed packages  pre_install post_install
+        <chr>                <lgl>     <list>    <list>      <list>      
+      1 gsfonts              TRUE      <chr [1]> <NULL>      <NULL>      
+      2 imagemagick          FALSE     <chr [1]> <NULL>      <NULL>      
+      3 libcurl4-openssl-dev TRUE      <chr [1]> <NULL>      <NULL>      
+      4 libmagick++-dev      FALSE     <chr [1]> <NULL>      <NULL>      
+      5 libssl-dev           FALSE     <chr [1]> <NULL>      <NULL>      
 
 ---
 

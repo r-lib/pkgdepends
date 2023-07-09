@@ -2,6 +2,9 @@
 
 * pkgdepends now correctly parses multiple `git::` packages at once (#318).
 
+* The `platforms` config parameter now works correctly with `deps::`
+  package sources (#522).
+
 # pkgdepends 0.5.0
 
 * pkgdepends now support git repositories as package references. E.g.

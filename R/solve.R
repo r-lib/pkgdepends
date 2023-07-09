@@ -343,6 +343,7 @@ pkgplan_i_lp_ignore <- function(lp) {
 pkgplan_i_lp_platforms <- function(lp) {
   ## check if platform is good
   badplatform <- function(wh) {
+    if (lp$pkgs$type[wh] %in% c("deps", "param")) return()
     ok <- platform_is_ok(
       lp$pkgs$platform[wh],
       lp$config$get("platforms"),

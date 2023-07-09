@@ -3,7 +3,7 @@
 * pkgdepends now correctly parses multiple `git::` packages at once (#318).
 
 * The `platforms` config parameter now works correctly with `deps::`
-  package sources (#522).
+  package sources (https://github.com/r-lib/pak/issues/522).
 
 # pkgdepends 0.5.0
 

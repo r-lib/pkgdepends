@@ -63,9 +63,9 @@ repo <- local({
 
     idx <- which(
       pkgs$Package == pkg_data$Package &
-      pkgs$RVersion <= pkg_data$RVersion &
-      (is.na(pkg_data$OS) | is.na(pkgs$OS) | identical(pkgs$OS, pkg_data$OS)) &
-      (is.na(pkg_data$Arch) | is.na(pkgs$Arch) | identical(pkgs$Arch, pkg_data$Arch))
+      pkgs$RVersion == pkg_data$RVersion &
+      (is.na(pkg_data$OS) | is.na(pkgs$OS) | pkgs$OS == pkg_data$OS) &
+      (is.na(pkg_data$Arch) | is.na(pkgs$Arch) | pkgs$Arch == pkg_data$Arch)
     )
     if (length(idx)) {
       pkgs <- pkgs[-idx, , drop = FALSE]

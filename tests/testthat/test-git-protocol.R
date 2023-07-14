@@ -1,4 +1,6 @@
 
+withr::local_envvar(GITHUB_PAT="FAIL")
+
 test_that("git_list_refs", {
   skip_on_cran()
   expect_snapshot(
@@ -201,6 +203,11 @@ test_that("git_unpack", {
   expect_equal(up1, up2)
   if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
   expect_snapshot(git_unpack(path))
+})
+
+test_that("git_list_pack_index", {
+  path <- test_path("fixtures/git-test-1.idx")
+  expect_snapshot(git_list_pack_index(path))
 })
 
 test_that("git_unpack errors", {

@@ -1156,14 +1156,19 @@ git_unpack <- function(pack) {
 
   idx <- 13L
   objects <- vector("list", n_obj)
+  object_starts <- integer()
 
   types <- c("commit", "tree", "blob", "tag", "reserved", "ofs_delta", "ref_delta")
 
   unpack_object <- function() {
+    start <- idx
     type <- bitwShiftR(bitwAnd(as.integer(pack[idx]), 0x7f), 4L)
     size <- parse_size(pack, idx)
     idx <<- size$idx + 1
-    if (type == 7L) {
+    if (type == 6L) {
+      offset <- parse_ofs_delta_offset(pack, idx)
+      idx <<- offset$idx + 1
+    } else if (type == 7L) {
       if (idx + 19 > length(pack)) {
         # nocov start
         throw(pkg_error(
@@ -1176,8 +1181,11 @@ git_unpack <- function(pack) {
     }
     obj <- zip::inflate(pack, idx, size$size)
     idx <<- idx + obj$bytes_read
-    if (type == 7L) {
-      deltified_object(obj$output, base)
+    if (type == 6L) {
+      baseidx <- object_starts[[as.character(start - offset$size)]]
+      deltified_object(obj$output, baseidx = baseidx)
+    } else if (type == 7L) {
+      deltified_object(obj$output, base = base)
     } else {
       list(
         type = types[type],
@@ -1188,14 +1196,15 @@ git_unpack <- function(pack) {
     }
   }
 
-  deltified_object <- function(delta, base) {
-    baseidx <- match(base, names(objects))
-    if (is.na(baseidx)) {
-      # nocov start
-      throw(pkg_error(
-        "Invalid git packfile, cannot find base of ref-delta"
+  deltified_object <- function(delta, base = NULL, baseidx = NULL) {
+    baseidx <- baseidx %||% match(base, names(objects))
+    if (is.na(baseidx) || objects[[baseidx]]$type == "delta") {
+      return(list(
+        type = "delta",
+        data = delta,
+        base = base,
+        baseidx = if (is.na(baseidx)) NULL else baseidx
       ))
-      # nocov end
     }
     baseobj <- objects[[baseidx]]$raw
     didx <- 1L
@@ -1229,33 +1238,135 @@ git_unpack <- function(pack) {
     )
   }
 
-  for (i in seq_len(n_obj)) {
-    objects[[i]] <- unpack_object()
-    if (objects[[i]]$type == "commit") {
-      objects[[i]]$object <- rawToChar(objects[[i]]$raw)
-    } else if (objects[[i]]$type == "tree") {
-      objects[[i]]$object <- parse_tree(objects[[i]]$raw)
+  finalize_object <- function(x) {
+    if (x$type == "commit") {
+      x$object <- rawToChar(x$raw)
+    } else if (x$type == "tree") {
+      x$object <- parse_tree(x$raw)
     }
-    if (objects[[i]]$type %in% c("commit", "tree", "blob", "tag")) {
+
+    if (x$type %in% c("commit", "tree", "blob", "tag")) {
       raw2 <- c(
-        charToRaw(paste0(objects[[i]]$type, " ", length(objects[[i]]$raw))),
+        charToRaw(paste0(x$type, " ", length(x$raw))),
         as.raw(0L),
-        objects[[i]]$raw
+        x$raw
       )
-      objects[[i]]$hash <- cli::hash_raw_sha1(raw2)
-      names(objects)[i] <- objects[[i]]$hash
+      x$hash <- cli::hash_raw_sha1(raw2)
+    } else if (x$type == "delta") {
+      # do nothing
     } else {
       # nocov start
       throw(pkg_error(
-        "git packfile object type {.cls {objects[[i]]$type}} is not
+        "git packfile object type {.cls {x$type}} is not
          implemented yet.",
         .class = "git_proto_error_not_implemented"
       ))
       # nocov end
     }
+    x
+  }
+
+  for (i in seq_len(n_obj)) {
+    object_starts[[as.character(idx)]] <- i
+    objects[[i]] <- unpack_object()
+    objects[[i]] <- finalize_object(objects[[i]])
+    if (!is.null(objects[[i]]$hash)) names(objects)[i] <- objects[[i]]$hash
+  }
+
+  # now need to resolve the deltas
+  n_delta <- sum(sapply(objects, "[[", "type") == "delta")
+  while (n_delta > 0) {
+    for (i in seq_len(n_obj)) {
+      if (objects[[i]]$type == "delta") {
+        objects[[i]] <- deltified_object(
+          objects[[i]]$data,
+          objects[[i]]$base,
+          objects[[i]]$baseidx
+        )
+        objects[[i]] <- finalize_object(objects[[i]])
+        if (!is.null(objects[[i]]$hash)) names(objects)[i] <- objects[[i]]$hash
+      }
+    }
+    n_delta2 <- sum(sapply(objects, "[[", "type") == "delta")
+    if (n_delta2 == n_delta) {
+      throw(pkg_error(
+        "Found circular references while resolving deltas in git pack file."
+      ))
+    }
+    n_delta <- n_delta2
   }
 
   objects
+}
+
+git_list_pack_index <- function(idx) {
+  if (is.character(idx)) {
+    idx <- readBin(idx, "raw", file.size(idx))
+  }
+
+  if (length(idx) < 4 + 4 + 256) {
+    throw(pkg_error(
+      "Invalid pack index file, too short: {length(idx)} byte{?s}."
+    ))
+  }
+
+  if (any(idx[1:4] != c(0xff, 0x74, 0x4f, 0x63))) {
+    throw(pkg_error(
+      "Invalid pack index file, no {.code \\377tOc} header."
+    ))
+  }
+  if (any(idx[5:8] != c(0, 0, 0, 2))) {
+    throw(pkg_error(
+      "Only version 2 pack index files are supported"
+    ))
+  }
+
+  tab <- matrix(as.integer(idx[9L:(9L + (256L * 4L) - 1L)]), nrow = 4)
+  tab <- tab[1,] * 256**3 + tab[2,] * 256**2 + tab[3,] * 256 + tab[4,]
+  n_obj <- tab[256]
+
+  hash_off <- 256L * 4L + 9L
+  hash_len <- n_obj * 20L
+  hash <- matrix(
+    as.character(idx[hash_off:(hash_off + hash_len - 1L)]),
+    nrow = 20
+  )
+  hash <- apply(hash, 2, paste, collapse = "")
+
+  crc_off <- hash_off + hash_len
+  crc_len <- n_obj * 4
+  crc <- matrix(as.integer(idx[crc_off:(crc_off + crc_len - 1L)]), nrow = 4)
+  crc <- crc[1,] * 256**3 + crc[2,] * 256**2 + crc[3,] * 256 + crc[4,]
+
+  off_off <- crc_off + crc_len
+  off_len <- n_obj * 4
+  off <- matrix(as.integer(idx[off_off:(off_off + off_len - 1L)]), nrow = 4)
+  off <- off[1,] * 256**3 + off[2,] * 256**2 + off[3,] * 256 + off[4,]
+
+  data_chksum <- idx[(off_off + off_len): (off_off + off_len + 20L - 1L)]
+  data_chksum <- paste(as.character(data_chksum), collapse = "")
+
+  idx_chksum <- idx[(off_off + off_len): (off_off + off_len + 20L - 1L) + 20L]
+  idx_chksum <- paste(as.character(idx_chksum), collapse = "")
+
+  if (length(idx) > off_off + off_len + 40L) {
+    warning("Ignored 8 byte offsets in git pack file")
+  }
+
+  objects <- data.frame(
+    stringsAsFactors = FALSE,
+    hash = hash,
+    crc = crc,
+    offset = off
+  )
+  objects <- objects[order(objects$offset), ]
+  rownames(objects) <- NULL
+
+  list(
+    objects = objects,
+    data_chksum = data_chksum,
+    idx_chksum = idx_chksum
+  )
 }
 
 #' Parse a four byte integer in network byte order
@@ -1317,6 +1428,10 @@ parse_size <- function(x, idx) {
   list(size = size, idx = idx)
 }
 
+parse_ofs_size <- function(x, idx) {
+
+}
+
 parse_delta_size <- function(x, idx) {
   c <- as.integer(x[idx])
   size <- bitwAnd(c, 0x7f)
@@ -1334,6 +1449,19 @@ parse_delta_size <- function(x, idx) {
     c <- as.integer(x[idx])
     size <- size + bitwShiftL(bitwAnd(c, 0x7f), shft)
     shft <- shft + 7L
+  }
+
+  list(size = size, idx = idx)
+}
+
+parse_ofs_delta_offset <- function(x, idx) {
+  c <- as.integer(x[idx])
+  size <- bitwAnd(c, 0x7f)
+  while (c >= 128) {
+    idx <- idx + 1L
+    c <- as.integer(x[idx])
+    size <- size + 1L
+    size <- bitwShiftL(size, 7) + (bitwAnd(c, 0x7f))
   }
 
   list(size = size, idx = idx)
@@ -1535,6 +1663,8 @@ git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
 }
 
 # This only works for blobs at the root of the tree currently!
+# Also, it only works if the object with sha is not in a pack file!
+# So it is pretty limited, and can only be used with a fallback.
 
 async_git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
   async_git_dummy_get_commit(url, sha)$

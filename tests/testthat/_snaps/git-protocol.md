@@ -548,6 +548,31 @@
       
       
 
+# git_list_pack_index
+
+    Code
+      git_list_pack_index(path)
+    Output
+      $objects
+                                             hash        crc offset
+      1  cefdc0eebcd7f757efb9a80652fd8aaf1a87508e 3597296333     12
+      2  aac34e05a0cb9852aa425757dc8480fa29c6c783  585558493    175
+      3  61102a589aeef025b8c11015d5de4fd6f91b0fdb 3679009946    343
+      4  0784f430fc5830e1b26ceb5fa9a22551fbe9a400  125079169    420
+      5  c3117c75084ec688a9bf82ce11789e0295f01ca3  706758901    466
+      6  23b72b52356f0a1ac89925f5431e44a0ab23bab6 3850203054    515
+      7  5ba9d25318eacd311bb9f73cf83f859b0bfb7235 3361408054    573
+      8  75210921adb3ebdf805d8b01691e2d4b3915d096 2355823347    615
+      9  9a09c0540f29a3f0e0cd0bf9acd7303e1fa9bff2 2235782520    938
+      10 d4ef766204f3087d32148d714df664ae66eece82   23708622    993
+      
+      $data_chksum
+      [1] "775021fe2c99a033831f23b73d3a1176c9c4e435"
+      
+      $idx_chksum
+      [1] "8037ebb73a48b7d4a7d18250fda6bb8370160158"
+      
+
 # git_unpack errors
 
     Code

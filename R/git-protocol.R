@@ -3,6 +3,7 @@
 #'
 #' Assumptions, they might be relaxed or checked for later:
 #' - The server must speak the smart protocol, version 1 or 2.
+#'   (Although I added some functions specifically for the dumb
 #' - We use HTTP transport, not SSH.
 #' - The server should have the `shallow` capability.
 #' - The server should have the `filter` capability if protocol version 2.
@@ -1611,11 +1612,11 @@ redact_url <- function(x) {
   sub("://[^/]+@", "://<auth>@", x)
 }
 
-git_dummy_list_refs <- function(url) {
-  synchronize(async_git_dummy_list_refs(url))
+git_dumb_list_refs <- function(url) {
+  synchronize(async_git_dumb_list_refs(url))
 }
 
-async_git_dummy_list_refs <- function(url) {
+async_git_dumb_list_refs <- function(url) {
   url
 
   url1 <- paste0(url, "/info/refs")
@@ -1629,10 +1630,10 @@ async_git_dummy_list_refs <- function(url) {
     http_get(url2, headers = headers)$
       then(http_stop_for_status)
   )$
-    then(function(res) async_git_dummy_list_refs_process(res, url))
+    then(function(res) async_git_dumb_list_refs_process(res, url))
 }
 
-async_git_dummy_list_refs_process <- function(res, url) {
+async_git_dumb_list_refs_process <- function(res, url) {
   res_refs <- res[[1]]
   res_head <- res[[2]]
   lines <- strsplit(rawToChar(res_refs$content), "\n", fixed = TRUE)[[1]]
@@ -1658,18 +1659,18 @@ async_git_dummy_list_refs_process <- function(res, url) {
   )
 }
 
-git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
-  invisible(synchronize(async_git_dummy_download_file(url, sha, path, output)))
+git_dumb_download_file <- function(url, sha, path, output = basename(path)) {
+  invisible(synchronize(async_git_dumb_download_file(url, sha, path, output)))
 }
 
 # This only works for blobs at the root of the tree currently!
 # Also, it only works if the object with sha is not in a pack file!
 # So it is pretty limited, and can only be used with a fallback.
 
-async_git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
-  async_git_dummy_get_commit(url, sha)$
+async_git_dumb_download_file <- function(url, sha, path, output = basename(path)) {
+  async_git_dumb_get_commit(url, sha)$
     then(function(cmt) {
-      async_git_dummy_get_tree(url, cmt[["tree"]])
+      async_git_dumb_get_tree(url, cmt[["tree"]])
     })$
     then(function(tree) {
       wh <- match(path, tree$path)
@@ -1686,7 +1687,7 @@ async_git_dummy_download_file <- function(url, sha, path, output = basename(path
       tree$hash[wh]
     })$
     then(function(blob) {
-      async_git_dummy_get_blob(url, blob)
+      async_git_dumb_get_blob(url, blob)
     })$
     then(function(bytes) {
       if (!is.null(output)) {
@@ -1697,7 +1698,7 @@ async_git_dummy_download_file <- function(url, sha, path, output = basename(path
     })
 }
 
-async_git_dummy_get_commit <- function(url, sha) {
+async_git_dumb_get_commit <- function(url, sha) {
   url1 <- paste0(
     url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
   )
@@ -1726,7 +1727,7 @@ async_git_dummy_get_commit <- function(url, sha) {
     })
 }
 
-async_git_dummy_get_tree <- function(url, sha) {
+async_git_dumb_get_tree <- function(url, sha) {
   url1 <- paste0(
     url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
   )
@@ -1755,7 +1756,7 @@ async_git_dummy_get_tree <- function(url, sha) {
     })
 }
 
-async_git_dummy_get_blob <- function(url, sha) {
+async_git_dumb_get_blob <- function(url, sha) {
   url1 <- paste0(
     url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
   )

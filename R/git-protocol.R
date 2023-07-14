@@ -18,6 +18,8 @@
 #' - DONE Optionally send authorization. Already possibly in the URL.
 #' - DONE Better error messages.
 #' - Better errors for non-existing user, repository, ref, PR, etc.
+#' - Function to extract an object from a .pack (+ .idx) file.
+#' - Make `dumn_download_file()` work if the objects are packed.
 #'
 #' Optional improvements:
 #' - Support `ofs-delta` objects in packfiles. Not necessarily, unless we
@@ -1160,86 +1162,6 @@ git_unpack <- function(pack) {
   objects <- vector("list", n_obj)
   object_starts <- integer()
 
-  types <- c("commit", "tree", "blob", "tag", "reserved", "ofs_delta", "ref_delta")
-
-  unpack_object <- function() {
-    start <- idx
-    type <- bitwShiftR(bitwAnd(as.integer(pack[idx]), 0x7f), 4L)
-    size <- parse_size(pack, idx)
-    idx <<- size$idx + 1
-    if (type == 6L) {
-      offset <- parse_ofs_delta_offset(pack, idx)
-      idx <<- offset$idx + 1
-    } else if (type == 7L) {
-      if (idx + 19 > length(pack)) {
-        # nocov start
-        throw(pkg_error(
-          "Invalid packfile, unexpected end of file"
-        ))
-        # nocov end
-      }
-      base <- bin_to_sha(pack[idx:(idx+19)])
-      idx <<- idx + 20
-    }
-    obj <- zip::inflate(pack, idx, size$size)
-    idx <<- idx + obj$bytes_read
-    if (type == 6L) {
-      baseidx <- object_starts[[as.character(start - offset$size)]]
-      deltified_object(obj$output, baseidx = baseidx)
-    } else if (type == 7L) {
-      deltified_object(obj$output, base = base)
-    } else {
-      list(
-        type = types[type],
-        raw = obj$output,
-        size = size$size,
-        packed_size = obj$bytes_read
-      )
-    }
-  }
-
-  deltified_object <- function(delta, base = NULL, baseidx = NULL) {
-    baseidx <- baseidx %||% match(base, names(objects))
-    if (is.na(baseidx) || objects[[baseidx]]$type == "delta") {
-      return(list(
-        type = "delta",
-        data = delta,
-        base = base,
-        baseidx = if (is.na(baseidx)) NULL else baseidx
-      ))
-    }
-    baseobj <- objects[[baseidx]]$raw
-    didx <- 1L
-    basesize <- parse_delta_size(delta, didx)
-    didx <- basesize$idx + 1L
-    size <- parse_delta_size(delta, didx)
-    didx <- size$idx + 1L
-    newobj <- raw(size$size)
-    nidx <- 1L
-    while (didx <= length(delta)) {
-      c <- as.integer(delta[didx])
-      if (c < 128) {
-        datasize <- bitwAnd(c, 0x7f)
-        newobj[nidx:(nidx + datasize - 1L)] <-
-          delta[(didx + 1L):(didx + datasize)]
-        nidx <- nidx + datasize
-        didx <- didx + datasize + 1L
-      } else {
-        ofs <- parse_delta_offset(delta, didx)
-        newobj[nidx:(nidx + ofs$size - 1L)] <-
-          baseobj[(ofs$offset + 1L):(ofs$offset + ofs$size)]
-        nidx <- nidx + ofs$size
-        didx <- ofs$idx + 1L
-      }
-    }
-    list(
-      type = objects[[baseidx]]$type,
-      raw = newobj,
-      size = size,
-      packed_size = length(delta)
-    )
-  }
-
   finalize_object <- function(x) {
     if (x$type == "commit") {
       x$object <- rawToChar(x$raw)
@@ -1270,7 +1192,9 @@ git_unpack <- function(pack) {
 
   for (i in seq_len(n_obj)) {
     object_starts[[as.character(idx)]] <- i
-    objects[[i]] <- unpack_object()
+    obj <- unpack_object(objects, pack, idx)
+    objects[[i]] <- obj$object
+    idx <- obj$idx
     objects[[i]] <- finalize_object(objects[[i]])
     if (!is.null(objects[[i]]$hash)) names(objects)[i] <- objects[[i]]$hash
   }
@@ -1281,6 +1205,7 @@ git_unpack <- function(pack) {
     for (i in seq_len(n_obj)) {
       if (objects[[i]]$type == "delta") {
         objects[[i]] <- deltified_object(
+          objects,
           objects[[i]]$data,
           objects[[i]]$base,
           objects[[i]]$baseidx
@@ -1300,6 +1225,89 @@ git_unpack <- function(pack) {
 
   objects
 }
+
+git_object_types <- c("commit", "tree", "blob", "tag", "reserved", "ofs_delta", "ref_delta")
+
+unpack_object <- function(objects, pack, idx) {
+  start <- idx
+  type <- bitwShiftR(bitwAnd(as.integer(pack[idx]), 0x7f), 4L)
+  size <- parse_size(pack, idx)
+  idx <- size$idx + 1
+  if (type == 6L) {
+    offset <- parse_ofs_delta_offset(pack, idx)
+    idx <- offset$idx + 1
+  } else if (type == 7L) {
+    if (idx + 19 > length(pack)) {
+      # nocov start
+      throw(pkg_error(
+        "Invalid packfile, unexpected end of file"
+      ))
+      # nocov end
+    }
+    base <- bin_to_sha(pack[idx:(idx+19)])
+    idx <- idx + 20
+  }
+  obj <- zip::inflate(pack, idx, size$size)
+  idx <- idx + obj$bytes_read
+  ret <- if (type == 6L) {
+    baseidx <- object_starts[[as.character(start - offset$size)]]
+    deltified_object(objects, obj$output, baseidx = baseidx)
+  } else if (type == 7L) {
+    deltified_object(objects, obj$output, base = base)
+  } else {
+    list(
+      type = git_object_types[type],
+      raw = obj$output,
+      size = size$size,
+      packed_size = obj$bytes_read
+    )
+  }
+
+  list(object = ret, idx = idx)
+}
+
+deltified_object <- function(objects, delta, base = NULL, baseidx = NULL) {
+  baseidx <- baseidx %||% match(base, names(objects))
+  if (is.na(baseidx) || objects[[baseidx]]$type == "delta") {
+    return(list(
+      type = "delta",
+      data = delta,
+      base = base,
+      baseidx = if (is.na(baseidx)) NULL else baseidx
+    ))
+  }
+  baseobj <- objects[[baseidx]]$raw
+  didx <- 1L
+  basesize <- parse_delta_size(delta, didx)
+  didx <- basesize$idx + 1L
+  size <- parse_delta_size(delta, didx)
+  didx <- size$idx + 1L
+  newobj <- raw(size$size)
+  nidx <- 1L
+  while (didx <= length(delta)) {
+    c <- as.integer(delta[didx])
+    if (c < 128) {
+      datasize <- bitwAnd(c, 0x7f)
+      newobj[nidx:(nidx + datasize - 1L)] <-
+        delta[(didx + 1L):(didx + datasize)]
+      nidx <- nidx + datasize
+      didx <- didx + datasize + 1L
+    } else {
+      ofs <- parse_delta_offset(delta, didx)
+      newobj[nidx:(nidx + ofs$size - 1L)] <-
+        baseobj[(ofs$offset + 1L):(ofs$offset + ofs$size)]
+      nidx <- nidx + ofs$size
+      didx <- ofs$idx + 1L
+    }
+  }
+  list(
+    type = objects[[baseidx]]$type,
+    raw = newobj,
+    size = size,
+    packed_size = length(delta)
+  )
+}
+
 
 git_list_pack_index <- function(idx) {
   if (is.character(idx)) {

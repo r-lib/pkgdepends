@@ -3,7 +3,8 @@
 #'
 #' Assumptions, they might be relaxed or checked for later:
 #' - The server must speak the smart protocol, version 1 or 2.
-#'   (Although I added some functions specifically for the dumb
+#'   (Although I added some functions specifically for the dumb protocol,
+#'   but they are pretty limited.)
 #' - We use HTTP transport, not SSH.
 #' - The server should have the `shallow` capability.
 #' - The server should have the `filter` capability if protocol version 2.

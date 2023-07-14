@@ -1644,7 +1644,8 @@ async_git_dumb_list_refs_process <- function(res, url) {
 
   head <- trimws(rawToChar(res_head$content))
   head <- sub("^[^ ]* ", "", head)
-  if (! head %in% ref) {
+  has_head <- head != ""
+  if (has_head && ! head %in% ref) {
     throw(pkg_error(
       "HEAD does not refer to a ref in git repo at {.url {url}}.",
       "i" = "HEAD is {.val {head}}."
@@ -1653,8 +1654,8 @@ async_git_dumb_list_refs_process <- function(res, url) {
 
   list(
     refs = data_frame(
-      ref = c("HEAD", ref),
-      hash = c(hash[match(head, ref)], hash)
+      ref = c(if (has_head) "HEAD", ref),
+      hash = c(if (has_head) hash[match(head, ref)], hash)
     ),
     caps = character()
   )

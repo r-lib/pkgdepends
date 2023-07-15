@@ -1162,37 +1162,9 @@ git_unpack <- function(pack) {
   objects <- vector("list", n_obj)
   object_starts <- integer()
 
-  finalize_object <- function(x) {
-    if (x$type == "commit") {
-      x$object <- rawToChar(x$raw)
-    } else if (x$type == "tree") {
-      x$object <- parse_tree(x$raw)
-    }
-
-    if (x$type %in% c("commit", "tree", "blob", "tag")) {
-      raw2 <- c(
-        charToRaw(paste0(x$type, " ", length(x$raw))),
-        as.raw(0L),
-        x$raw
-      )
-      x$hash <- cli::hash_raw_sha1(raw2)
-    } else if (x$type == "delta") {
-      # do nothing
-    } else {
-      # nocov start
-      throw(pkg_error(
-        "git packfile object type {.cls {x$type}} is not
-         implemented yet.",
-        .class = "git_proto_error_not_implemented"
-      ))
-      # nocov end
-    }
-    x
-  }
-
   for (i in seq_len(n_obj)) {
     object_starts[[as.character(idx)]] <- i
-    obj <- unpack_object(objects, pack, idx)
+    obj <- unpack_object(pack, idx)
     objects[[i]] <- obj$object
     idx <- obj$idx
     objects[[i]] <- finalize_object(objects[[i]])
@@ -1228,7 +1200,7 @@ git_unpack <- function(pack) {
 
 git_object_types <- c("commit", "tree", "blob", "tag", "reserved", "ofs_delta", "ref_delta")
 
-unpack_object <- function(objects, pack, idx) {
+unpack_object <- function(pack, idx) {
   start <- idx
   type <- bitwShiftR(bitwAnd(as.integer(pack[idx]), 0x7f), 4L)
   size <- parse_size(pack, idx)
@@ -1251,9 +1223,19 @@ unpack_object <- function(objects, pack, idx) {
   idx <- idx + obj$bytes_read
   ret <- if (type == 6L) {
     baseidx <- object_starts[[as.character(start - offset$size)]]
-    deltified_object(objects, obj$output, baseidx = baseidx)
+    list(
+      type = "delta",
+      data = obj$output,
+      base = NULL,
+      baseidx = baseidx
+    )
   } else if (type == 7L) {
-    deltified_object(objects, obj$output, base = base)
+    list(
+      type = "delta",
+      data = obj$output,
+      base = base,
+      baseidx = NULL
+    )
   } else {
     list(
       type = git_object_types[type],
@@ -1308,6 +1290,33 @@ deltified_object <- function(objects, delta, base = NULL, baseidx = NULL) {
   )
 }
 
+finalize_object <- function(x) {
+  if (x$type == "commit") {
+    x$object <- rawToChar(x$raw)
+  } else if (x$type == "tree") {
+    x$object <- parse_tree(x$raw)
+  }
+
+  if (x$type %in% c("commit", "tree", "blob", "tag")) {
+    raw2 <- c(
+      charToRaw(paste0(x$type, " ", length(x$raw))),
+      as.raw(0L),
+      x$raw
+    )
+    x$hash <- cli::hash_raw_sha1(raw2)
+  } else if (x$type == "delta") {
+    # do nothing
+  } else {
+    # nocov start
+    throw(pkg_error(
+      "git packfile object type {.cls {x$type}} is not
+         implemented yet.",
+      .class = "git_proto_error_not_implemented"
+    ))
+    # nocov end
+  }
+  x
+}
 
 git_list_pack_index <- function(idx) {
   if (is.character(idx)) {

@@ -1,4 +1,4 @@
-# pkgdepends (development version)
+# pkgdepends 0.6.0
 
 * Many system requirements improvements:
   - New sysreqs functions:

@@ -209,6 +209,7 @@ MIT (c) RStudio
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://r-lib.github.io/pkgdepends/}
   \item \url{https://github.com/r-lib/pkgdepends#readme}
   \item Report bugs at \url{https://github.com/r-lib/pkgdepends/issues}
 }

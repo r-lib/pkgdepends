@@ -105,4 +105,28 @@
   <url>
     <loc>https://r-lib.github.io/pkgdepends/reference/pkgdepends-package.html</loc>
   </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_check_installed.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_list.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_match.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_update.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_install_plan.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_is_supported.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_list_system_packages.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_platforms.html</loc>
+  </url>
 </urlset>

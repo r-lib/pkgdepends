@@ -9,8 +9,8 @@
 <title>pkgdepends HOWTO • pkgdepends</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="pkgdepends HOWTO">
@@ -29,7 +29,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pkgdepends</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9001</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.6.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@
 <h3 id="how-to-list-all-dependencies-of-a-cranbioconductor-package">How to list all dependencies of a CRAN/Bioconductor package?<a class="anchor" aria-label="anchor" href="#how-to-list-all-dependencies-of-a-cranbioconductor-package"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme" class="external-link">pkgdepends</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span>
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">get_solution</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span></code></pre></div>
@@ -135,7 +135,7 @@
 #&gt; │ └─rlang                                                                       
 #&gt; ├─isoband <span style="color: #525252;">0.2.7</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(1.59 MB)</span>                                   
 #&gt; ├─lifecycle                                                                     
-#&gt; ├─MASS <span style="color: #525252;">7.3-60</span>                                                                   
+#&gt; ├─MASS <span style="color: #859900;">7.3-60 &lt; 7.3-60.1</span> <span style="color: #859900;">[old]</span>                                                  
 #&gt; ├─mgcv <span style="color: #859900;">1.8-42 &lt; 1.9-0</span> <span style="color: #859900;">[old]</span>                                                     
 #&gt; │ ├─nlme <span style="color: #525252;">3.1-162</span>                                                                
 #&gt; │ │ └─lattice <span style="color: #525252;">0.21-8</span>                                                            
@@ -182,7 +182,7 @@
 <h3 id="how-to-list-all-dependencies-of-a-github-package">How to list all dependencies of a GitHub package?<a class="anchor" aria-label="anchor" href="#how-to-list-all-dependencies-of-a-github-package"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme" class="external-link">pkgdepends</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"tidyverse/ggplot2"</span><span class="op">)</span></span>
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">get_solution</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span></code></pre></div>
@@ -216,7 +216,7 @@
 <h3 id="how-to-list-all-dependencies-of-a-local-package">How to list all dependencies of a local package?<a class="anchor" aria-label="anchor" href="#how-to-list-all-dependencies-of-a-local-package"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme" class="external-link">pkgdepends</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"local::."</span><span class="op">)</span></span>
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">get_solution</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span></code></pre></div>
@@ -225,7 +225,7 @@
 #&gt; <span style="color: #999999;"># A data frame: 19 × 37</span>                                                         
 #&gt;    ref    type  direct directpkg status package version license needscompilation
 #&gt;    <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>     <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;"> 1</span> local… local TRUE   TRUE      OK     pkgdep… 0.5.0.… MIT + … <span style="color: #DC322F;">NA</span>              
+#&gt; <span style="color: #c2c2c2;"> 1</span> local… local TRUE   TRUE      OK     pkgdep… 0.6.0.… MIT + … <span style="color: #DC322F;">NA</span>              
 #&gt; <span style="color: #c2c2c2;"> 2</span> callr  stan… FALSE  FALSE     OK     callr   3.7.3   MIT + … FALSE           
 #&gt; <span style="color: #c2c2c2;"> 3</span> cli    stan… FALSE  FALSE     OK     cli     3.6.1   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 4</span> crayon stan… FALSE  FALSE     OK     crayon  1.5.2   MIT + … FALSE           
@@ -236,14 +236,14 @@
 #&gt; <span style="color: #c2c2c2;"> 9</span> jsonl… stan… FALSE  FALSE     OK     jsonli… 1.8.7   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;">10</span> lpSol… stan… FALSE  FALSE     OK     lpSolve 5.6.18  LGPL-2  TRUE            
 #&gt; <span style="color: #c2c2c2;">11</span> pkgbu… stan… FALSE  FALSE     OK     pkgbui… 1.4.2   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">12</span> prett… stan… FALSE  FALSE     OK     pretty… 1.1.1   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">13</span> proce… stan… FALSE  FALSE     OK     proces… 3.8.2   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">14</span> ps     stan… FALSE  FALSE     OK     ps      1.7.5   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">15</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">16</span> rproj… stan… FALSE  FALSE     OK     rprojr… 2.0.3   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">17</span> zip    stan… FALSE  FALSE     OK     zip     2.3.0   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">18</span> r-lib… gith… FALSE  FALSE     OK     pkgcac… 2.1.1.… MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">19</span> rappd… stan… FALSE  FALSE     OK     rappdi… 0.3.3   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">12</span> pkgca… stan… FALSE  FALSE     OK     pkgcac… 2.2.0.1 MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">13</span> prett… stan… FALSE  FALSE     OK     pretty… 1.1.1   MIT + … FALSE           
+#&gt; <span style="color: #c2c2c2;">14</span> proce… stan… FALSE  FALSE     OK     proces… 3.8.2   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">15</span> ps     stan… FALSE  FALSE     OK     ps      1.7.5   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">16</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
+#&gt; <span style="color: #c2c2c2;">17</span> rappd… stan… FALSE  FALSE     OK     rappdi… 0.3.3   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">18</span> rproj… stan… FALSE  FALSE     OK     rprojr… 2.0.3   MIT + … FALSE           
+#&gt; <span style="color: #c2c2c2;">19</span> zip    stan… FALSE  FALSE     OK     zip     2.3.0   MIT + … TRUE            
 #&gt; <span style="color: #999999;"># ℹ 28 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;, sha256 &lt;chr&gt;,</span>              
 #&gt; <span style="color: #999999;">#   filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span>                
 #&gt; <span style="color: #999999;">#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;chr&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span>     
@@ -262,7 +262,7 @@
 <h3 id="how-to-download-a-package-and-all-of-its-dependencies">How to download a package and all of its dependencies?<a class="anchor" aria-label="anchor" href="#how-to-download-a-package-and-all-of-its-dependencies"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme" class="external-link">pkgdepends</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span>
 <span><span class="va">target_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">target_dir</span><span class="op">)</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_download_proposal.html">new_pkg_download_proposal</a></span><span class="op">(</span><span class="st">"ggplot2"</span>, config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cache_dir <span class="op">=</span> <span class="va">target_dir</span><span class="op">)</span><span class="op">)</span></span>
@@ -272,39 +272,39 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="va">target_dir</span><span class="op">)</span></span></code></pre></div>
 <div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
 <pre>
-#&gt; <span style="color: #2AA198;">ℹ</span> Getting 28 pkgs (23.39 MB), 5 (1.60 MB) cached                                
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">gtable</span> 0.3.3 (source) (130.06 kB)                                         
+#&gt; <span style="color: #2AA198;">ℹ</span> Getting 28 pkgs (23.40 MB), 5 (1.60 MB) cached                                
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">cli</span> 3.6.1 (source) (567.29 kB)                                            
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">fansi</span> 1.0.4 (source) (482.06 kB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">gtable</span> 0.3.3 (source) (130.06 kB)                                         
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">magrittr</span> 2.0.3 (source) (267.07 kB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pkgconfig</span> 2.0.3 (source) (6.08 kB)                                        
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lattice</span> 0.21-8 (source) (589.33 kB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">utf8</span> 1.2.3 (source) (241.41 kB)                                           
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-162 (source) (848.55 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">glue</span> 1.6.2 (source) (106.51 kB)                                           
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">labeling</span> 0.4.2 (source) (10.16 kB)                                        
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">viridisLite</span> 0.4.2 (source) (1.27 MB)                                      
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">tibble</span> 3.2.1 (source) (565.98 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">MASS</span> 7.3-60 (source) (561.53 kB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lifecycle</span> 1.0.3 (source) (106.85 kB)                                      
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pkgconfig</span> 2.0.3 (source) (6.08 kB)                                        
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">colorspace</span> 2.1-0 (source) (2.12 MB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-0 (source) (2.06 MB)                                           
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pillar</span> 1.9.0 (source) (444.53 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">withr</span> 2.5.0 (source) (102.09 kB)                                          
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">farver</span> 2.1.1 (source) (1.27 MB)                                           
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">rlang</span> 1.1.1 (source) (762.53 kB)                                          
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">RColorBrewer</span> 1.1-3 (source) (11.64 kB)                                    
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-0 (source) (2.06 MB)                                           
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-162 (source) (848.55 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">vctrs</span> 0.6.3 (source) (967.34 kB)                                          
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">munsell</span> 0.5.0 (source) (182.65 kB)                                        
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">mgcv</span> 1.9-0 (source) (1.11 MB)                                             
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">scales</span> 1.2.1 (source) (270.61 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">tibble</span> 3.2.1 (source) (565.98 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lattice</span> 0.21-8 (source) (589.33 kB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">R6</span> 2.5.1 (source) (63.42 kB)                                              
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lifecycle</span> 1.0.3 (source) (106.85 kB)                                      
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">glue</span> 1.6.2 (source) (106.51 kB)                                           
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">isoband</span> 0.2.7 (source) (1.59 MB)                                          
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">MASS</span> 7.3-60 (source) (561.53 kB)                                          
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">MASS</span> 7.3-60 (source) (561.53 kB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">scales</span> 1.2.1 (source) (270.61 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">vctrs</span> 0.6.3 (source) (967.34 kB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pillar</span> 1.9.0 (source) (444.53 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">withr</span> 2.5.0 (source) (102.09 kB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-0 (source) (2.06 MB)                                           
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">munsell</span> 0.5.0 (source) (182.65 kB)                                        
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">labeling</span> 0.4.2 (source) (10.16 kB)                                        
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">mgcv</span> 1.9-0 (source) (1.11 MB)                                             
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">RColorBrewer</span> 1.1-3 (source) (11.64 kB)                                    
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lattice</span> 0.21-8 (source) (589.33 kB)                                       
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-162 (source) (848.55 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-162 (source) (848.55 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">utf8</span> 1.2.3 (source) (241.41 kB)                                           
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">R6</span> 2.5.1 (source) (63.42 kB)                                              
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-0 (source) (2.06 MB)                                           
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">MASS</span> 7.3-60.1 (source) (535.22 kB)                                        
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">viridisLite</span> 0.4.2 (source) (1.27 MB)                                      
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">ggplot2</span> 3.4.2 (source) (3.15 MB)                                          
 #&gt; <span style="color: #999999;"># A data frame: 33 × 39</span>                                                         
 #&gt;    ref    type  direct directpkg status package version license needscompilation
@@ -339,7 +339,7 @@
 <h3 id="how-to-install-a-package-into-a-new-library">How to install a package into a new library?<a class="anchor" aria-label="anchor" href="#how-to-install-a-package-into-a-new-library"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme" class="external-link">pkgdepends</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">new_lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_installation_proposal.html">new_pkg_installation_proposal</a></span><span class="op">(</span><span class="st">"pkgconfig"</span>, config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="va">new_lib</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
@@ -350,13 +350,13 @@
 <pre>
 #&gt; <span style="color: #2AA198;">ℹ</span> No downloads are needed, 1 pkg (6.08 kB) is cached                            
 #&gt; <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">pkgconfig</span> 2.0.3                                                      
-#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(859ms)</span>                                                 
-#&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.3  <span style="color: #a3a3a3;">(20ms)</span>                                             
-#&gt; <span style="color: #859900;">✔</span> Summary:   1 new  in 879ms                                                    
+#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(1s)</span>                                                    
+#&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.3  <span style="color: #a3a3a3;">(1s)</span>                                               
+#&gt; <span style="color: #859900;">✔</span> Summary:   1 new  in 2.1s                                                     
 #&gt; <span style="color: #999999;"># A data frame: 1 × 31</span>                                                          
 #&gt;   library        package title version license imports suggests needscompilation
 #&gt;   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>          <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>    <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;">1</span> /tmp/RtmpYVOU… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+#&gt; <span style="color: #c2c2c2;">1</span> /tmp/Rtmp6Tz4… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
 #&gt; <span style="color: #999999;"># ℹ 23 more variables: repository &lt;chr&gt;, built &lt;chr&gt;, remotetype &lt;chr&gt;,</span>         
 #&gt; <span style="color: #999999;">#   remotepkgref &lt;chr&gt;, remoteref &lt;chr&gt;, remoterepos &lt;chr&gt;,</span>                     
 #&gt; <span style="color: #999999;">#   remotepkgplatform &lt;chr&gt;, remotesha &lt;chr&gt;, depends &lt;chr&gt;, linkingto &lt;chr&gt;,</span>   
@@ -371,7 +371,7 @@
 </h3>
 <p>Install an older version first.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme" class="external-link">pkgdepends</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">new_lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>library <span class="op">=</span> <span class="va">new_lib</span><span class="op">)</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_installation_proposal.html">new_pkg_installation_proposal</a></span><span class="op">(</span><span class="st">"cran/pkgconfig@2.0.2"</span>, config <span class="op">=</span> <span class="va">config</span><span class="op">)</span></span>
@@ -384,15 +384,15 @@
 #&gt; <span style="color: #2AA198;">ℹ</span> No downloads are needed, 1 pkg is cached                                      
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pkgconfig</span> 2.0.2 (source) (13.22 kB)                                       
 #&gt; <span style="color: #2AA198;">ℹ</span> Packaging <span style="color: #268BD2;">pkgconfig</span> 2.0.2                                                     
-#&gt; <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(275ms)</span>                                              
+#&gt; <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(367ms)</span>                                              
 #&gt; <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">pkgconfig</span> 2.0.2                                                      
-#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(853ms)</span>                                                 
-#&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.2 (github::cran/pkgconfig@d892880) <span style="color: #a3a3a3;">(18ms)</span>             
-#&gt; <span style="color: #859900;">✔</span> Summary:   1 new  in 871ms                                                    
+#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(976ms)</span>                                                 
+#&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.2 (github::cran/pkgconfig@d892880) <span style="color: #a3a3a3;">(20ms)</span>             
+#&gt; <span style="color: #859900;">✔</span> Summary:   1 new  in 995ms                                                    
 #&gt; <span style="color: #999999;"># A data frame: 1 × 32</span>                                                          
 #&gt;   library        package title version license imports suggests needscompilation
 #&gt;   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>          <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>    <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;">1</span> /tmp/RtmpYVOU… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
+#&gt; <span style="color: #c2c2c2;">1</span> /tmp/Rtmp6Tz4… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
 #&gt; <span style="color: #999999;"># ℹ 24 more variables: repository &lt;chr&gt;, built &lt;chr&gt;, remotetype &lt;chr&gt;,</span>         
 #&gt; <span style="color: #999999;">#   remotehost &lt;chr&gt;, remoterepo &lt;chr&gt;, remoteusername &lt;chr&gt;,</span>                   
 #&gt; <span style="color: #999999;">#   remotepkgref &lt;chr&gt;, remoteref &lt;chr&gt;, remotesha &lt;chr&gt;, depends &lt;chr&gt;,</span>        
@@ -403,7 +403,7 @@
 </div>
 <p>Now update.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/pkgdepends#readme" class="external-link">pkgdepends</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span>
 <span><span class="va">prop2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pkg_installation_proposal.html">new_pkg_installation_proposal</a></span><span class="op">(</span><span class="st">"pkgconfig"</span>, config <span class="op">=</span> <span class="va">config</span><span class="op">)</span></span>
 <span><span class="va">prop2</span><span class="op">$</span><span class="fu">set_solve_policy</span><span class="op">(</span><span class="st">"upgrade"</span><span class="op">)</span></span>
 <span><span class="va">prop2</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
@@ -414,13 +414,13 @@
 <pre>
 #&gt; <span style="color: #2AA198;">ℹ</span> No downloads are needed, 1 pkg (6.08 kB) is cached                            
 #&gt; <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">pkgconfig</span> 2.0.3                                                      
-#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(853ms)</span>                                                 
-#&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.3  <span style="color: #a3a3a3;">(19ms)</span>                                             
-#&gt; <span style="color: #859900;">✔</span> Summary:   1 updated  in 872ms                                                
+#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(1s)</span>                                                    
+#&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.3  <span style="color: #a3a3a3;">(25ms)</span>                                             
+#&gt; <span style="color: #859900;">✔</span> Summary:   1 updated  in 1.1s                                                 
 #&gt; <span style="color: #999999;"># A data frame: 1 × 31</span>                                                          
 #&gt;   library        package title version license imports suggests needscompilation
 #&gt;   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>          <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>    <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;">1</span> /tmp/RtmpYVOU… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+#&gt; <span style="color: #c2c2c2;">1</span> /tmp/Rtmp6Tz4… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
 #&gt; <span style="color: #999999;"># ℹ 23 more variables: repository &lt;chr&gt;, built &lt;chr&gt;, remotetype &lt;chr&gt;,</span>         
 #&gt; <span style="color: #999999;">#   remotepkgref &lt;chr&gt;, remoteref &lt;chr&gt;, remoterepos &lt;chr&gt;,</span>                     
 #&gt; <span style="color: #999999;">#   remotepkgplatform &lt;chr&gt;, remotesha &lt;chr&gt;, depends &lt;chr&gt;, linkingto &lt;chr&gt;,</span>   

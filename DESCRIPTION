@@ -18,7 +18,7 @@ URL:
     https://r-lib.github.io/pkgdepends/,
     https://github.com/r-lib/pkgdepends#readme
 BugReports: https://github.com/r-lib/pkgdepends/issues
-Depends: R (>= 3.4)
+Depends: R (>= 3.5)
 Imports:
     callr (>= 3.3.1),
     cli (>= 3.6.0),

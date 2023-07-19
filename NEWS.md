@@ -3,7 +3,7 @@
 # pkgdepends 0.6.0
 
 * Many system requirements improvements:
-  - New sysreqs functions:
+  - New functions:
     - `sysreqs_check_installed()`: check if all required system packages
       are installed,
     - `sysreqs_fix_installed()`: install missing system packages,
@@ -23,8 +23,8 @@
   - pkgdepends now looks up system requirements asynchronously, during
     dependency resolution.
   - pkgdepends now does not reinstall system requirements by default,
-    if they are already installed. (You can force a reinstallation/upgrade
-    wtih the `sysreqs_update` configuration option.)
+    if they are already installed. (You can force a reinstall/upgrade
+    with the `sysreqs_update` configuration option.)
 
 * New `gitlab::` package source to install packages from GitLab (#315).
 

@@ -1,6 +1,6 @@
+Acromine
 CMD
 Capitan
-CentOS
 Codecov
 Config
 El
@@ -15,7 +15,6 @@ SHA
 Shorthands
 Sur
 async
-bitbucket
 cli
 cloneable
 config
@@ -24,11 +23,9 @@ dplyr
 funder
 ggplot
 gitcreds
-https
 lifecycle
 macOS
 mypkg
-openSUSE
 packfile
 packfiles
 pak

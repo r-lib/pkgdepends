@@ -54,7 +54,7 @@
 <h2 class="pkg-version" data-toc-text="0.6.0" id="pkgdepends-060">pkgdepends 0.6.0<a class="anchor" aria-label="anchor" href="#pkgdepends-060"></a></h2><p class="text-muted">CRAN release: 2023-07-18</p>
 <ul><li>
 <p>Many system requirements improvements:</p>
-<ul><li>New sysreqs functions:
+<ul><li>New functions:
 <ul><li>
 <code><a href="../reference/sysreqs_check_installed.html">sysreqs_check_installed()</a></code>: check if all required system packages are installed,</li>
 <li>
@@ -78,7 +78,7 @@
 <li>The output of <code>$show_solution()</code> now includes system requirements.</li>
 <li>New <code>sysreqs_platform</code> configuration option.</li>
 <li>pkgdepends now looks up system requirements asynchronously, during dependency resolution.</li>
-<li>pkgdepends now does not reinstall system requirements by default, if they are already installed. (You can force a reinstallation/upgrade wtih the <code>sysreqs_update</code> configuration option.)</li>
+<li>pkgdepends now does not reinstall system requirements by default, if they are already installed. (You can force a reinstall/upgrade with the <code>sysreqs_update</code> configuration option.)</li>
 </ul></li>
 <li><p>New <code>gitlab::</code> package source to install packages from GitLab (<a href="https://github.com/r-lib/pkgdepends/issues/315" class="external-link">#315</a>).</p></li>
 <li><p>pkgdepends now correctly parses multiple <code>git::</code> packages at once (<a href="https://github.com/r-lib/pkgdepends/issues/318" class="external-link">#318</a>).</p></li>

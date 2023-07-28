@@ -186,6 +186,19 @@ test_that("git_auth_url", {
     )),
     "https://user:secret@github.com/r-lib/cli.git"
   )
+
+  mockery::stub(
+    git_auth_url,
+    "gitcreds_get",
+    list(username = "user@example.com", password = "$ecret!")
+  )
+  expect_equal(
+    git_auth_url(list(
+      protocol = "https",
+      url = "https://github.com/r-lib/cli.git"
+    )),
+    "https://user%40example.com:%24ecret%21@github.com/r-lib/cli.git"
+  )
 })
 
 test_that("type_git_get_data", {

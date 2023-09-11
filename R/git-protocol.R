@@ -342,7 +342,7 @@ async_git_fetch_v1 <- function(url, sha, blobs) {
       "done",
       ""
     ),
-    caps = c("no-done", "no-progress", paste0("agent=", git_ua()))
+    caps = c("multi_ack" ,"no-done", "no-progress", paste0("agent=", git_ua()))
   )$then(function(reply) git_fetch_process_v1(reply, url, sha))
 }
 

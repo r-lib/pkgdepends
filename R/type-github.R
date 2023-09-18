@@ -367,63 +367,48 @@ type_github_get_data_release <- function(rem) {
   ref <- NULL
   subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
 
-  query1 <- glue("{
+  query <- glue("{
     repository(owner: \"<user>\", name:\"<repo>\") {
       latestRelease {
+        tagName
         tagCommit {
-          oid
+          oid,
+          file(path: \"<subdir>DESCRIPTION\") {
+            object {
+              ... on Blob {
+                isBinary
+                text
+              }
+            }
+          }
         }
       }
     }
   }",
   .open = "<", .close = ">")
 
-  github_query(query1)$
+  github_query(query)$
     then(function(resp) {
-      check_github_response_release1(resp$response, resp$obj, rem, call. = call)
+      check_github_response_release(resp$response, resp$obj, rem, call. = call)
     })$
     then(function(obj) {
-      ref <<- obj[[c("data", "repository", "latestRelease", "tagCommit", "oid")]]
-      query2 <- glue("{
-        repository(owner: \"<user>\", name:\"<repo>\") {
-          object(expression: \"<ref>:<subdir>DESCRIPTION\") {
-            ... on Blob {
-              isBinary
-              text
-            }
-          }
-        }
-      }",
-      .open = "<", .close = ">")
-      github_query(query2)
-    })$
-    then(function(resp) {
-      check_github_response_release2(resp$response, resp$obj, rem, call. = call)
-    })$
-    then(function(obj) {
-      txt <- obj[[c("data", "repository", "object", "text")]]
+      ref <- obj[[c("data", "repository", "latestRelease", "tagCommit", "oid")]]
+      txt <- obj[[c("data", "repository", "latestRelease", "tagCommit", "file", "object", "text")]]
       list(sha = ref, desc = txt)
     })
 }
 
-check_github_response_release1 <- function(resp, obj, rem, call.) {
+check_github_response_release <- function(resp, obj, rem, call.) {
   if (!is.null(obj$errors)) {
     throw(new_github_query_error(rem, resp, obj, call.))
   }
   if (is.null(obj[[c("data", "repository", "latestRelease")]])) {
     throw(new_github_no_release_error(rem, call.))
   }
-  obj
-}
-
-check_github_response_release2 <- function(resp, obj, rem, call.) {
-  if (!is.null(obj$errors)) {
-    throw(new_github_query_error(rem, resp, obj, call.))
-  }
-  if (isTRUE(obj[[c("data", "repository", "object", "isBinary")]])) {
+  if (isTRUE(obj[[c("data", "repository", "latestRelease", "tagCommit", "file", "object", "isBinary")]])) {
     throw(new_github_baddesc_error(rem, call.))
   }
-  if (is.null(obj[[c("data", "repository", "object")]])) {
+  if (is.null(obj[[c("data", "repository", "latestRelease", "tagCommit", "file", "object")]])) {
     throw(new_github_no_package_error(rem, call.))
   }
   obj

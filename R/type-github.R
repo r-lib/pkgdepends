@@ -370,8 +370,10 @@ type_github_get_data_release <- function(rem) {
   query1 <- glue("{
     repository(owner: \"<user>\", name:\"<repo>\") {
       latestRelease {
-        tagName
-    	}
+        tagCommit {
+          oid
+        }
+      }
     }
   }",
   .open = "<", .close = ">")
@@ -381,7 +383,7 @@ type_github_get_data_release <- function(rem) {
       check_github_response_release1(resp$response, resp$obj, rem, call. = call)
     })$
     then(function(obj) {
-      ref <<- obj[[c("data", "repository", "latestRelease", "tagName")]]
+      ref <<- obj[[c("data", "repository", "latestRelease", "tagCommit", "oid")]]
       query2 <- glue("{
         repository(owner: \"<user>\", name:\"<repo>\") {
           object(expression: \"<ref>:<subdir>DESCRIPTION\") {

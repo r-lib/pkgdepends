@@ -142,10 +142,6 @@ test_that("install", {
   )
 })
 
-test_that("install_sysreqs", {
-  # TODO
-})
-
 test_that("get_install_plan", {
   setup_fake_apps()
   pkgcache::pkg_cache_delete_files()
@@ -165,4 +161,57 @@ test_that("get_install_plan", {
   expect_snapshot(
     prop$get_install_plan()[["dependencies"]]
   )
+})
+
+test_that("show_sysreqs", {
+  setup_fake_apps()
+  dir.create(lib <- tempfile())
+  on.exit(unlink(lib, recursive = TRUE), add = TRUE)
+
+  config <- list(
+    library = lib,
+    sysreqs = TRUE,
+    sysreqs_platform = "aarch64-unknown-linux-gnu-ubuntu-22.04",
+    sysreqs_lookup_system = FALSE
+  )
+  prop <- new_pkg_installation_proposal("curl", config = config)
+  suppressMessages(prop$solve())
+  expect_snapshot({
+    prop$show_sysreqs()
+  })
+})
+
+test_that("install_sysreqs", {
+  setup_fake_apps()
+  withr::local_envvar(CI = NA_character_)
+  dir.create(lib <- tempfile())
+  on.exit(unlink(lib, recursive = TRUE), add = TRUE)
+
+  config <- list(
+    library = lib,
+    sysreqs = TRUE,
+    sysreqs_platform = "aarch64-unknown-linux-gnu-ubuntu-22.04",
+    sysreqs_lookup_system = FALSE,
+    sysreqs_dry_run = TRUE,
+    sysreqs_sudo = FALSE
+  )
+  prop <- new_pkg_installation_proposal("curl", config = config)
+  suppressMessages(prop$solve())
+  expect_snapshot({
+    prop$install_sysreqs()
+  })
+
+  config$sysreqs <- FALSE
+  prop <- new_pkg_installation_proposal("curl", config = config)
+  suppressMessages(prop$solve())
+  expect_snapshot({
+    prop$install_sysreqs()
+  })
+
+  config$sysreqs <- TRUE
+  prop <- new_pkg_installation_proposal("pkg1", config = config)
+  suppressMessages(prop$solve())
+  expect_snapshot({
+    prop$install_sysreqs()
+  })
 })

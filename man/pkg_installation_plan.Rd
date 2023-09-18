@@ -45,6 +45,7 @@ them.
 \item \href{#method-pkg_installation_plan-set_solve_policy}{\code{pkg_installation_plan$set_solve_policy()}}
 \item \href{#method-pkg_installation_plan-solve}{\code{pkg_installation_plan$solve()}}
 \item \href{#method-pkg_installation_plan-update}{\code{pkg_installation_plan$update()}}
+\item \href{#method-pkg_installation_plan-update_sysreqs}{\code{pkg_installation_plan$update_sysreqs()}}
 \item \href{#method-pkg_installation_plan-format}{\code{pkg_installation_plan$format()}}
 \item \href{#method-pkg_installation_plan-clone}{\code{pkg_installation_plan$clone()}}
 }
@@ -62,10 +63,12 @@ them.
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_refs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_refs'><code>pkgdepends::pkg_installation_proposal$get_refs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_resolution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_resolution'><code>pkgdepends::pkg_installation_proposal$get_resolution()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_solution'><code>pkgdepends::pkg_installation_proposal$get_solution()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_sysreqs'><code>pkgdepends::pkg_installation_proposal$get_sysreqs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-install'><code>pkgdepends::pkg_installation_proposal$install()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-install_sysreqs'><code>pkgdepends::pkg_installation_proposal$install_sysreqs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="print"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-print'><code>pkgdepends::pkg_installation_proposal$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-show_solution'><code>pkgdepends::pkg_installation_proposal$show_solution()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-show_sysreqs'><code>pkgdepends::pkg_installation_proposal$show_sysreqs()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_download_error"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-stop_for_download_error'><code>pkgdepends::pkg_installation_proposal$stop_for_download_error()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_solution_error"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-stop_for_solution_error'><code>pkgdepends::pkg_installation_proposal$stop_for_solution_error()</code></a></span></li>
 </ul>
@@ -173,6 +176,16 @@ updated library, because it uses the the packages and package
 versions of the original plan. E.g. if the library has a newer
 version of a package, then \verb{$update()} will downgrade it to the
 version in the plan.
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-pkg_installation_plan-update_sysreqs"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_plan-update_sysreqs}{}}}
+\subsection{Method \code{update_sysreqs()}}{
+Update information about installed and missing system requirements.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$update_sysreqs()}\if{html}{\out{</div>}}
 }
 
 }

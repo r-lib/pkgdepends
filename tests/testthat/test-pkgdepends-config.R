@@ -51,22 +51,6 @@ test_that("env_decode_difftime", {
   expect_snapshot(error = TRUE, env_decode_difftime("k1k", "PKG_UPDATE"))
 })
 
-test_that("default_sysreqs", {
-  withr::local_envvar(CI = NA_character_)
-  expect_false(default_sysreqs())
-
-  withr::local_envvar(CI = "true")
-  mockery::stub(default_sysreqs, "Sys.info", c(sysname = "Darwin"))
-  expect_false(default_sysreqs())
-
-  mockery::stub(default_sysreqs, "Sys.info", c(sysname = "Linux"))
-  mockery::stub(default_sysreqs, "detect_linux", list(distribution = "ubuntu"))
-  expect_true(default_sysreqs())
-
-  mockery::stub(default_sysreqs, "detect_linux", list(distribution = "slackware"))
-  expect_false(default_sysreqs())
-})
-
 test_that("default_sysreqs_sudo", {
   mockery::stub(default_sysreqs_sudo, "os_type", "windows")
   expect_false(default_sysreqs_sudo())

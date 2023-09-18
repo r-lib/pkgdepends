@@ -63,60 +63,6 @@
           sy(async_wiktionary_get_query("not-at-all-sdfsdfsdf"))
       }
 
-# async_acromine_get
-
-    Hash
-      e75a63f773735c1255b5fc8e3b40c83a
-    Code
-      {
-          sy(async_acromine_get_query("fbi"))
-      }
-
-# acromine_get_process
-
-    Hash
-      e75a63f773735c1255b5fc8e3b40c83a
-    Code
-      {
-          sy(async_acromine_get_query("fbi"))
-      }
-
----
-
-    Hash
-      75e1ebbe71ff2fe03ab19fff1d668396
-    Code
-      {
-          sy(async_acromine_get_query("notanacronym"))
-      }
-
-# format.pkg_name_check_acromine
-
-    Hash
-      e75a63f773735c1255b5fc8e3b40c83a
-    Code
-      {
-          sy(async_acromine_get_query("fbi"))
-      }
-
----
-
-    Hash
-      75e1ebbe71ff2fe03ab19fff1d668396
-    Code
-      {
-          sy(async_acromine_get_query("notanacronym"))
-      }
-
----
-
-    Hash
-      c9f7a9df91de392d775dbe895fbcbe9d
-    Code
-      {
-          sy(async_acromine_get_query("cli"))
-      }
-
 # async_profanity_get
 
     Hash

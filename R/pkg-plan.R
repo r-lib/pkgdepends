@@ -40,6 +40,10 @@ pkg_plan <- R6::R6Class(
       pkgplan_get_solution(self, private),
     show_solution = function(key = FALSE)
       pkgplan_show_solution(self, private, key),
+    get_sysreqs = function()
+      pkgplan_get_sysreqs(self, private),
+    show_sysreqs = function()
+      pkgplan_show_sysreqs(self, private),
     get_install_plan = function()
       pkgplan_install_plan(self, private, downloads = TRUE),
     export_install_plan = function(plan_file = "pkg.lock", version = 2)
@@ -59,6 +63,7 @@ pkg_plan <- R6::R6Class(
       pkgplan_stop_for_resolution_download_error(self, private),
 
     update = function() pkgplan_update(self, private),
+    update_sysreqs = function() pkgplan_update_sysreqs(self, private),
 
     print = function(...)
       pkgplan_print(self, private, ...)
@@ -78,6 +83,8 @@ pkg_plan <- R6::R6Class(
     progress_bar = NULL,
     progress_bar_timer = NULL,
     remote_types = NULL,
+    system_packages = NULL,
+    sysreqs = NULL,
 
     download_res = function(res, which, on_progress = NULL)
       pkgplan_download_res(self, private, res, which, on_progress),
@@ -188,6 +195,17 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
 
   pkgs <- raw$packages
   refs <- vcapply(pkgs, "[[", "ref")
+
+  sysreqs_packages <- lapply(pkgs, function(x) {
+    sq <- x[["sysreqs_packages"]]
+    sq <- lapply(sq, function(sq1) {
+      sq1[["sysreq"]] <- unlist(sq1[["sysreq"]])
+      sq1[["packages"]] <- unlist(sq1[["packages"]])
+      sq1
+    })
+    sq
+  })
+
   soldata <- data_frame(
     ref              = refs,
     type             = vcapply(pkgs, "[[", "type"),
@@ -216,7 +234,9 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     extra            = list(list()),
     install_args     = lapply(pkgs, function(x) unlist(x$install_args) %||% character()),
     repotype         = vcapply(pkgs, function(x) x$repotype %||% NA_character_),
-    params           = lapply(pkgs, function(x) unlist(x$params))
+    params           = lapply(pkgs, function(x) unlist(x$params)),
+    sysreqs          = vcapply(pkgs, function(x) x[["sysreqs"]] %||% NA_character_),
+    sysreqs_packages = sysreqs_packages
   )
 
   private$refs <- refs[soldata$direct]
@@ -229,6 +249,14 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
     installed = NULL
   )
 
+  sysreqs <- raw$sysreqs
+  if (!is.null(sysreqs)) {
+    sysreqs$packages <- unlist(sysreqs$packages)
+    sysreqs["pre_install"] <- list(unlist(sysreqs$pre_install))
+    sysreqs["post_install"] <- list(unlist(sysreqs$post_install))
+    sysreqs["install_scripts"] <- list(unlist(sysreqs$install_scripts))
+  }
+
   private$resolution <- list(result = soldata)
   private$solution <- list(
     result = structure(
@@ -238,7 +266,7 @@ pkgplan_init_lockfile <- function(self, private, lockfile, config,
         data = soldata,
         problem = list(pkgs = soldata),
         solution = NULL,
-        sysreqs = raw$sysreqs
+        sysreqs = sysreqs
       )
     )
   )
@@ -318,4 +346,14 @@ pkgplan_update <- function(self, private) {
     private$solution$result$data$old_version[[i]] <- installed$version
     private$solution$result$data$new_version[[i]] <- NA
   }
+}
+
+pkgplan_update_sysreqs <- function(self, private) {
+  if (!private$config$get("sysreqs")) return(invisible())
+  # Stop here is no sysreqs at all, no need to look up system packages
+  sys <- self$get_solution()$data$sysreqs_packages
+  if (length(unlist(sys)) == 0) return(invisible())
+
+  private$solution$result$data$sysreqs_packages <-
+    sysreqs_update_state(sys)
 }

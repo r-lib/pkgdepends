@@ -118,6 +118,11 @@ pkg_installation_plan <- R6::R6Class(
     update = function() pkg_lockfile_update(self, private),
 
     #' @description
+    #' Update information about installed and missing system requirements.
+
+    update_sysreqs = function() pkg_lockfile_update_sysreqs(self, private),
+
+    #' @description
     #' Format a `pkg_installation_plan` object, typically for printing.
     #'
     #' @param ... not used currently.
@@ -161,5 +166,10 @@ pkg_installation_plan <- R6::R6Class(
 
 pkg_lockfile_update <- function(self, private) {
   private$plan$update()
+  invisible(self)
+}
+
+pkg_lockfile_update_sysreqs <- function(self, private) {
+  private$plan$update_sysreqs()
   invisible(self)
 }

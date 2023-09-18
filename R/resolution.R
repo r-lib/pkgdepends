@@ -66,6 +66,8 @@ pkgplan_async_resolve <- function(self, private) {
   ## We remove this, to avoid a discrepancy between them
   private$downloads <- NULL
   private$solution <- NULL
+  private$system_packages <- NULL
+  private$sysreqs <- NULL
 
   private$dirty <- TRUE
   private$resolution <- new_resolution(
@@ -132,6 +134,8 @@ resolution <- R6::R6Class(
     params = NULL,
     dependencies = NULL,
     metadata = NULL,
+    system_packages = NULL,
+    sysreqs = NULL,
     bar = NULL,
 
     delayed = list(),
@@ -146,6 +150,8 @@ resolution <- R6::R6Class(
 
     set_result = function(row_idx, value)
       res__set_result(self, private, row_idx, value),
+    sysreqs_match = function()
+      res__sysreqs_match(self, private),
     try_finish = function(resolve)
       res__try_finish(self, private, resolve)
   )
@@ -177,6 +183,8 @@ res_init <- function(self, private, config, cache, library,
     type = "resolution_queue",
     parent_resolve = function(value, resolve) {
       "!DEBUG resolution done"
+      # maybe a non-resolution task ended, e.g. sysreqs
+      if (!"id" %in% names(value)) return(private$try_finish(resolve))
       id <- value$id
       value <- value$value
       wh <- which(id == private$state$async_id)
@@ -240,6 +248,24 @@ res_init <- function(self, private, config, cache, library,
       private$set_result(wh, fail_val)
       private$try_finish(resolve)
     })
+
+  # If sysreqs is supported on this platform, then
+  # 1. look up system packages, and
+  # 2. (try to) update sysreqs mapping
+  sys_sup <- sysreqs_is_supported(private$config$get("sysreqs_platform"))
+  sys_lookup <- private$config$get("sysreqs_lookup_system")
+  if (sys_sup && sys_lookup) {
+    private$system_packages <- NA                                 # nocovif !is_linux()
+    async_system_list_packages(private$config)$                   # nocovif !is_linux()
+      then(function(x) { private$system_packages <- x; NULL })$   # nocovif !is_linux()
+      then(private$deferred)                                      # nocovif !is_linux()
+  }
+  if (sys_sup) {
+    private$sysreqs <- NA
+    sysreqs2_async_update_metadata(config = private$config)$
+      then(function() { private$sysreqs <- TRUE; NULL })$
+      then(private$deferred)
+  }
 }
 
 res_push <- function(self, private, ..., direct, .list = .list) {
@@ -376,10 +402,53 @@ res__set_result_list <- function(self, private, row_idx, value) {
   self$result <- res_add_df_entries(self$result, value)
 }
 
+res__sysreqs_match <- function(self, private) {
+  if ("sysreqs" %in% names(self$result)) {
+    sys <- sysreqs2_match(self$result$sysreqs, config = private$config)
+    if (!is.null(spkgs <- private$system_packages)) {
+      spkgs <- spkgs[grepl("^.i$", spkgs$status), ]                         # nocovif !is_linux()
+      allspkgs <- unique(unlist(c(spkgs$package, spkgs$provides)))          # nocovif !is_linux()
+      for (i in seq_along(sys)) {                                           # nocovif !is_linux()
+        elt <- sys[[i]]                                                     # nocovif !is_linux()
+        for (j in seq_along(elt)) {                                         # nocovif !is_linux()
+          elt[[j]]$packages_missing <- setdiff(elt[[j]]$packages, allspkgs) # nocovif !is_linux()
+        }                                                                   # nocovif !is_linux()
+        if (!is.null(elt)) sys[[i]] <- elt                                  # nocovif !is_linux()
+      }
+    }
+    self$result$sysreqs_packages <- sys
+    platform <- private$config$get("sysreqs_platform")
+    cmd_upd <- sysreqs2_command(platform, "update_command")
+    cmd_inst <- sysreqs2_command(platform, "install_command")
+    pre <- lapply(sys, function(x) unlist(lapply(x, "[[", "pre_install")))
+    post <- lapply(sys, function(x) unlist(lapply(x, "[[", "post_install")))
+    spkg <- lapply(sys, function(x) {
+      unlist(lapply(x, function(xx) xx$packages_missing %||% xx$packages))
+    })
+
+    pre <- vcapply(pre, paste, collapse = ";")
+    post <- vcapply(post, paste, collapse = ";")
+    spkg <- vcapply(spkg, paste, collapse = " ")
+    if (!is.na(cmd_upd)) {
+      pre <- ifelse(spkg == "", pre, paste0(cmd_upd, ";", pre))
+    }
+    spkg <- ifelse(spkg == "", "", paste(cmd_inst, spkg))
+
+    self$result$sysreqs_pre_install <- pre
+    self$result$sysreqs_post_install <- post
+    self$result$sysreqs_install <- spkg
+
+  } else {
+    self$result$sysreqs_packages <- list(NULL)                             # nocovif !is_linux()
+  }
+}
+
 res__try_finish <- function(self, private, resolve) {
   "!DEBUG resolution trying to finish with `nrow(self$result)` results"
   if (length(private$delayed)) return(private$resolve_delayed(resolve))
-  if (all(! is.na(private$state$status))) {
+  if (all(! is.na(private$state$status)) &&
+      ! identical(private$system_packages, NA) &&
+      ! identical(private$sysreqs, NA)) {
     "!DEBUG resolution finished"
     update_params(self, private, private$params)
     update_dep_types(self, private)
@@ -389,6 +458,9 @@ res__try_finish <- function(self, private, resolve) {
     attr(self$result, "metadata") <- private$metadata
     class(self$result) <- c("pkg_resolution_result", class(self$result))
     private$done_progress_bar()
+    if (sysreqs_is_supported(private$config$get("sysreqs_platform"))) {
+      private$sysreqs_match()
+    }
     resolve(self$result)
   }
 }

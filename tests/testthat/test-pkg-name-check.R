@@ -20,13 +20,12 @@ test_that("async_pkg_name_check", {
   mockery::stub(async_pkg_name_check, "async_pnc_basics", fun)
   mockery::stub(async_pkg_name_check, "async_wikipedia_get", fun)
   mockery::stub(async_pkg_name_check, "async_wiktionary_get", fun)
-  mockery::stub(async_pkg_name_check, "async_acromine_get", fun)
   mockery::stub(async_pkg_name_check, "async_sentiment_get", fun)
   mockery::stub(async_pkg_name_check, "async_urban_get", fun)
 
   ans <- sy(async_pkg_name_check("foo"))
   expect_s3_class(ans, "pkg_name_check")
-  expect_equal(sort(unlist(ans, use.names = FALSE)), 1:5)
+  expect_equal(sort(unlist(ans, use.names = FALSE)), 1:4)
 })
 
 # format.pkg_name_check via print
@@ -213,70 +212,6 @@ test_that("format.pkg_name_check_wiktionary", {
 })
 
 # clean_wiktionary_text
-
-test_that("async_acromine_get", {
-  resp <- fixture$get({
-    sy(async_acromine_get_query("fbi"))
-  })
-  mockery::stub(
-    async_acromine_get,
-    "async_acromine_get_query",
-    function(...) async_constant(resp)
-  )
-  ans <- sy(async_acromine_get("fbi"))
-  expect_s3_class(ans, "pkg_name_check_acromine")
-  expect_s3_class(ans, "tbl")
-  expect_true("Federal Bureau of Investigation" %in% ans$long_form)
-})
-
-test_that("async_acromine_get_query", {
-  local_edition(3)
-  local_reproducible_output()
-  withr::local_envvar(PKG_NAME_CHECK_ACROMINE_URL = check_app$url("/echo"))
-  ret <- synchronize(async_acromine_get_query("foobar"))
-  expect_snapshot(show_request(ret))
-})
-
-test_that("acromine_get_process", {
-  resp <- fixture$get({
-    sy(async_acromine_get_query("fbi"))
-  })
-  resp2 <- fixture$get({
-    sy(async_acromine_get_query("notanacronym"))
-  })
-  ans <- acromine_get_process("fbi", resp)
-  expect_s3_class(ans, "pkg_name_check_acromine")
-  expect_s3_class(ans, "tbl")
-  expect_true("Federal Bureau of Investigation" %in% ans$long_form)
-
-  ans2 <- acromine_get_process("notanacronym", resp2)
-  expect_s3_class(ans2, "pkg_name_check_acromine")
-  expect_s3_class(ans2, "tbl")
-  expect_equal(nrow(ans2), 0L)
-})
-
-test_that("format.pkg_name_check_acromine", {
-  local_edition(3)
-  local_reproducible_output()
-  resp <- fixture$get({
-    sy(async_acromine_get_query("fbi"))
-  })
-  resp2 <- fixture$get({
-    sy(async_acromine_get_query("notanacronym"))
-  })
-  resp3 <- fixture$get({
-    sy(async_acromine_get_query("cli"))
-  })
-
-  ans <- acromine_get_process("fbi", resp)
-  ans2 <- acromine_get_process("fbi", resp2)
-  ans3 <- acromine_get_process("fbi", resp3)
-  expect_snapshot({
-    writeLines(format(ans))
-    writeLines(format(ans2))
-    writeLines(format(ans3))
-  })
-})
 
 test_that("async_profanity_get", {
   resp <- fixture$get({

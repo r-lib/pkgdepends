@@ -13,7 +13,6 @@ pkg_name_check(name, dictionaries = NULL)
 Available dictionaries:
 * \code{wikipedia}
 * \code{wiktionary},
-* \code{acromine} (\url{http://www.nactem.ac.uk/software/acromine/}),
 * \code{sentiment} (\url{https://github.com/fnielsen/afinn}),
 * \code{urban} (Urban Dictionary).
 If \code{NULL} (by default), the Urban Dictionary is omitted, as it

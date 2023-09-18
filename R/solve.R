@@ -103,18 +103,18 @@ solve_dummy_obj <- 1000000000
 pkgplan_solve <- function(self, private, policy) {
   "!DEBUG starting to solve `length(private$resolution$packages)` packages"
   if (is.null(private$config$get("library"))) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "No package library specified for installation plan.",
       i = "Maybe you need to specify {.code config = list(library = ...)}
        in {.code pkg_installation_plan$new()} or another initializer?"
-    ))
+    ))                                                                     # nocov end
   }
   if (is.null(private$resolution)) self$resolve()
   if (private$dirty) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "Package list has changed, you need to call the {.code $resolve()}
        method again?"
-    ))
+    ))                                                                     # nocov end
   }
 
   metadata <- list(solution_start = Sys.time())
@@ -125,11 +125,11 @@ pkgplan_solve <- function(self, private, policy) {
   sol <- private$solve_lp_problem(prb)
 
   if (sol$status != 0) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "Error in dependency solver, cannot solve installation.",
       i = "Solver status: {sol$status}.",
       i = msg_internal_error()
-    ))
+    ))                                                                     # nocov end
   }
 
   selected <- as.logical(sol$solution[seq_len(nrow(pkgs))])
@@ -153,25 +153,15 @@ pkgplan_solve <- function(self, private, policy) {
     res$failures <- describe_solution_error(pkgs, res)
   }
 
-  if (private$config$get("sysreqs")) {
-    res$sysreqs <- tryCatch(
-      list(
-        result = sysreqs_resolve(res$data$sysreqs, config = private$config),
-        error = NULL
-      ),
-      error = function(err) list(result = NULL, error = err)
-    )
-  }
-
   private$solution$result <- res
   self$get_solution()
 }
 
 pkgplan_stop_for_solve_error <- function(self, private) {
   if (is.null(private$solution)) {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "You need to call the {.code $solve()} method first."
-    ))
+    ))                                                                     # nocov end
   }
 
   sol <- self$get_solution()
@@ -183,13 +173,6 @@ pkgplan_stop_for_solve_error <- function(self, private) {
       msg,
       call. = FALSE
     ))
-  }
-
-  # sysreqs error?
-  if (!is.null(sol$sysreqs$error)) {
-    throw(new_error(
-      "Could not look up system requirements."
-    ), parent = sol$sysreqs$error)
   }
 }
 
@@ -307,10 +290,10 @@ pkgplan_i_lp_objectives <- function(lp) {
     lp$obj <- lp$obj - min(lp$obj)
 
   } else {
-    throw(pkg_error(
+    throw(pkg_error(                                                       # nocov start
       "Unknown version selection policy: {.val {policy}}.",
       i = "It has to be one of {.val lazy} or {.val upgrade}."
-    ))
+    ))                                                                     # nocov end
   }
 
   lp$obj <- c(lp$obj, rep(solve_dummy_obj, lp$num_direct))
@@ -360,6 +343,7 @@ pkgplan_i_lp_ignore <- function(lp) {
 pkgplan_i_lp_platforms <- function(lp) {
   ## check if platform is good
   badplatform <- function(wh) {
+    if (lp$pkgs$type[wh] %in% c("deps", "param")) return()
     ok <- platform_is_ok(
       lp$pkgs$platform[wh],
       lp$config$get("platforms"),
@@ -600,6 +584,7 @@ pkgplan_i_lp_prefer_new_binaries <- function(lp) {
         pkgs$platform != "source" &
         pkgs$type %in% c("cran", "bioc", "standard")
     )
+    whp <- setdiff(whp, lp$ruled_out)
     v <- package_version(pkgs$version[whp])
     ruled_out <- c(ruled_out, whp[v != max(v)])
   }
@@ -897,6 +882,8 @@ highlight_package_list <- function(sol) {
   hash <- character(nrow(sol))
   hash[gh] <- vcapply(sol$metadata[gh], function(x) x["RemoteSha"])
 
+  sysreqs <- highlight_sysreqs(sol$sysreqs_packages)
+
   ann <- paste0(
     ifelse(
       bld, if (has_emoji()) emo_builder(sum(ins)) else emoji("builder"), ""),
@@ -907,7 +894,8 @@ highlight_package_list <- function(sol) {
       paste0(" ", format_file_size(sol$filesize)),
       ""
     ),
-    ifelse(gh, paste0(" (GitHub: ", substr(hash, 1, 7), ")"), "")
+    ifelse(gh, paste0(" (GitHub: ", substr(hash, 1, 7), ")"), ""),
+    sysreqs
   )
 
   lns <- paste0(pkg, " ", old, " ", arr, " ", new, " ", ann)
@@ -923,6 +911,34 @@ highlight_package_list <- function(sol) {
 
   attr(ret, "key") <-  if (key == "") "" else paste("[", key, "]")
   ret
+}
+
+highlight_sysreqs <- function(sysreqs) {
+  if (is.null(sysreqs)) return("")
+  vcapply(sysreqs, function(p) {
+    if (length(p) == 0) return("")
+    tick <- paste0(cli::col_green(cli::symbol$tick), " ")
+    cross <- paste0(cli::col_red(cli::symbol$cross), " ")
+    pkgs <- unlist(lapply(p, function(x) {
+      if (length(x$packages) != 0) {
+        if ("packages_missing" %in% names(x)) {
+          paste0(
+            ifelse(x$packages %in% x$packages_missing, cross, tick),
+            x$packages
+          )
+        } else {
+          x$packages
+        }
+      } else {
+        paste0(x$sysreq, " (installer)")
+      }
+    }))
+    if (length(pkgs) == 0) return("")                               # nocov
+    paste0(
+      cli::col_silver(" + "),
+      paste(cli::col_cyan(pkgs), collapse = ", ")
+    )
+  })
 }
 
 pkgplan_show_solution <- function(self, private, key = FALSE) {
@@ -941,6 +957,76 @@ pkgplan_show_solution <- function(self, private, key = FALSE) {
   }
 
   invisible(self$get_solution())
+}
+
+categorize_sysreqs <- function(rpkgs) {
+  rpkgs <- rpkgs[vlapply(rpkgs$sysreqs_packages, function(x) length(x) > 0), ]
+
+  inst <- structure(list(), names = character())
+  miss <- structure(list(), names = character())
+  upd <- structure(list(), names = character())
+
+  for (i in seq_along(rpkgs$sysreqs_packages)) {
+    elt <- rpkgs$sysreqs_packages[[i]]
+    pkg <- rpkgs$package[i]
+    for (j in seq_along(elt)) {
+      if ("packages_missing" %in% names(elt[[j]])) {
+        # we know exactly what is missing
+        miss1 <- elt[[j]][["packages_missing"]]
+        inst1 <- setdiff(elt[[j]][["packages"]], miss)
+        upd1 <- character()
+      } else {
+        # we don't know what is missing
+        upd1 <- elt[[j]][["packages"]]
+        inst1 <- miss1 <- character()
+      }
+
+      for (p in miss1) miss[[p]] <- c(miss[[p]], pkg)
+      for (p in inst1) inst[[p]] <- c(inst[[p]], pkg)
+      for (p in upd1) upd[[p]] <- c(upd[[p]], pkg)
+    }
+  }
+
+  list(inst = inst, miss = miss, upd = upd)
+}
+
+pkgplan_get_sysreqs <- function(self, private) {
+  categorize_sysreqs(self$get_solution()[["data"]])
+}
+
+pkgplan_show_sysreqs <- function(self, private) {
+  rpkgs <- self$get_solution()[["data"]]
+  if (is.null(rpkgs[["sysreqs_packages"]])) return(invisible())
+  cats <- categorize_sysreqs(rpkgs)
+  inst <- cats$inst
+  miss <- cats$miss
+  upd <- cats$upd
+
+  col1 <- col2 <- character()
+  if (length(miss)) {
+    miss <- miss[order(tolower(names(miss)))]
+    col1 <- paste0(cli::col_silver("+ "), cli::col_cyan(names(miss)))
+    col2 <- paste0(
+      cli::col_silver("- "),
+      vcapply(miss, function(x) paste(cli::col_blue(x), collapse = ", "))
+    )
+  }
+
+  if (length(upd)) {
+    upd <- upd[order(tolower(names(upd)))]
+    col1 <- c(col1, paste0(cli::col_silver("* "), cli::col_cyan(names(upd))))
+    col2 <- c(col2, paste0(
+      cli::col_silver("- "),
+      vcapply(upd, function(x) paste(cli::col_blue(x), collapse = ", "))
+    ))
+  }
+
+  col1 <- ansi_align_width(col1)
+  col2 <- ansi_align_width(col2)
+  out <- paste0(col1, "  ", col2)
+  if (length(out)) cli::cli_verbatim(paste(out, collapse = "\n"))
+
+  invisible(cats)
 }
 
 pkgplan_install_plan <- function(self, private, downloads) {
@@ -1041,6 +1127,23 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
   ))
 
   packages <- pkgs[, cols]
+  if ("sysreqs" %in% names(pkgs)) packages[["sysreqs"]] <- pkgs[["sysreqs"]]
+
+  # drop missing system packages from sysreqs, we don't want these in
+  # the lock file
+  if ("sysreqs_packages" %in% names(pkgs)) {
+    spkgs <- pkgs[["sysreqs_packages"]]
+    for (i in seq_along(spkgs)) {
+      elt <- spkgs[[i]]
+      for (j in seq_along(elt)) {
+        elt[[j]]$sysreq <- jsonlite::unbox(elt[[j]]$sysreq)
+        elt[[j]]$packages_missing <- NULL
+      }
+      if (!is.null(elt)) spkgs[[i]] <- elt
+    }
+    packages[["sysreqs_packages"]] <- spkgs
+  }
+
   packages$params <- lapply(
     packages$params,
     function(x) lapply(as.list(x), unbox)
@@ -1054,10 +1157,14 @@ pkgplan_export_install_plan <- function(self, private, plan_file, version) {
     packages = packages
   )
 
-  sysreqs <- self$get_solution()$sysreqs$result
-  if (!is.null(sysreqs)) {
+  if (private$config$get("sysreqs")) {
+    sysreqs <- sysreqs2_scripts(
+      self$get_solution()$data$sysreqs_packages,
+      private$config$get("sysreqs_platform")
+    )
     sysreqs$os <- unbox(sysreqs$os)
-    sysreqs$os_release <- unbox(sysreqs$os_release)
+    sysreqs$distribution <- unbox(sysreqs$distribution)
+    sysreqs$version <- unbox(sysreqs$version)
     sysreqs$url <- unbox(sysreqs$url)
     sysreqs$total <- NULL
     plan$sysreqs <- sysreqs

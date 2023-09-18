@@ -21,13 +21,19 @@
     Code
       sort(prop$get_config()$list())
     Output
-       [1] "build_vignettes"       "cache_dir"             "cran_mirror"          
-       [4] "dependencies"          "goal"                  "include_linkingto"    
-       [7] "library"               "metadata_cache_dir"    "metadata_update_after"
-      [10] "package_cache_dir"     "platforms"             "r_versions"           
-      [13] "sysreqs"               "sysreqs_dry_run"       "sysreqs_rspm_repo_id" 
-      [16] "sysreqs_rspm_url"      "sysreqs_sudo"          "sysreqs_verbose"      
-      [19] "use_bioconductor"      "windows_archs"        
+       [1] "build_vignettes"           "cache_dir"                
+       [3] "cran_mirror"               "dependencies"             
+       [5] "goal"                      "include_linkingto"        
+       [7] "library"                   "metadata_cache_dir"       
+       [9] "metadata_update_after"     "package_cache_dir"        
+      [11] "platforms"                 "r_versions"               
+      [13] "sysreqs"                   "sysreqs_db_update"        
+      [15] "sysreqs_db_update_timeout" "sysreqs_dry_run"          
+      [17] "sysreqs_lookup_system"     "sysreqs_platform"         
+      [19] "sysreqs_rspm_repo_id"      "sysreqs_rspm_url"         
+      [21] "sysreqs_sudo"              "sysreqs_update"           
+      [23] "sysreqs_verbose"           "use_bioconductor"         
+      [25] "windows_archs"            
 
 ---
 
@@ -176,4 +182,35 @@
       [[3]]
       [1] "pkg2"
       
+
+# show_sysreqs
+
+    Code
+      prop$show_sysreqs()
+    Message <cliMessage>
+      * libcurl4-openssl-dev  - curl
+      * libssl-dev            - curl
+
+# install_sysreqs
+
+    Code
+      prop$install_sysreqs()
+    Message <cliMessage>
+      i Installing system requirements
+      i Executing `sh -c echo apt-get -y update`
+      i Executing `sh -c echo apt-get -y install libcurl4-openssl-dev libssl-dev`
+
+---
+
+    Code
+      prop$install_sysreqs()
+    Output
+      NULL
+
+---
+
+    Code
+      prop$install_sysreqs()
+    Output
+      NULL
 

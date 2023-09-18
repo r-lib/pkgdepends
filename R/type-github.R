@@ -613,7 +613,7 @@ new_github_nopr_error <- function(rem, obj, call. = NULL) {
 
 # No releases
 new_github_no_release_error <- function(rem, obj, call. = NULL) {
-  msg <- glue("Can't find release in GitHub repo {rem$username}/{rem$repo}")
+  msg <- glue("Can't find any release in GitHub repo {rem$username}/{rem$repo}.")
   new_github_error(msg, call. = call.)
 }
 

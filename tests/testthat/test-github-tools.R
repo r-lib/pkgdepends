@@ -182,7 +182,7 @@ test_that("no release error", {
   setup_fake_gh_app()
   expect_snapshot(
     error = TRUE,
-    synchronise(type_github_get_data(parse_pkg_ref("rstudio/shiny@*release"))),
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@*release"))),
     transform = transform_no_srcref
   )
 })

@@ -273,6 +273,38 @@ gh_app <- function(repos = NULL, log = interactive(), options = list()) {
     send_sha_not_found(res, psd)
   })
 
+  app$post("/graphql", function(req, res) {
+    re_release <- paste0(
+      "owner:[ ]*\"(?<user>[^\"]+)\"", "(?s:.)*",
+      "name:[ ]*\"(?<repo>[^\"]+)\"", "(?s:.)*",
+      "file[(]path:[ ]*\"(?<path>.*)\""
+    )
+
+    psd <- re_match(req$json$query, re_release)
+    if (is.na(psd$.match)) return("next")
+
+    commits <- app$locals$repos$users[[psd$user]]$repos[[psd$repo]]$commits
+    for (cmt in commits) {
+      if (isTRUE(cmt$latestRelease)) {
+        add_gh_headers(res)
+        dsc <- cmt$files[[psd$path]]
+        res$send_json(
+          auto_unbox = TRUE,
+          list(data = list(repository = list(latestRelease = list(
+            tagName = cmt$tagName,
+            tagCommit = list(
+              oid = cmt$sha,
+              file = list(object = gh_fmt_desc(dsc))
+            )
+          ))))
+        )
+        return()
+      }
+    }
+
+    send_no_releases(res, psd)
+  })
+
   app$get("/repos/:user/:repo/zipball/:sha", function(req, res) {
     if (!req$params$user %in% names(app$locals$repos$users)) {
       send_user_not_found(res, req$params)
@@ -366,6 +398,15 @@ send_pull_not_found <- function(res, psd) {
 send_sha_not_found <- function(res, psd) {
   # TODO
   res$send_status(404)
+}
+
+send_no_releases <- function(res, psd) {
+  res$set_status(200)
+  res$send_json(auto_unbox = TRUE,
+    list(
+      data = list(repository = list(latestRelease = NA))
+    )
+  )
 }
 
 # nocov end

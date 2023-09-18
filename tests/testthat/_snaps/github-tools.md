@@ -40,6 +40,19 @@
 ---
 
     Code
+      synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@*release")))
+    Output
+      $sha
+      [1] "b001d6ddeab1589ad367b62baabbeeb2af3b0ebac2e61d239df660c1d63e3232"
+      
+      $description
+      Package: pak
+      Version: 1.0.0
+      
+
+---
+
+    Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@e65de1e9630d")))
     Output
       $sha
@@ -219,6 +232,13 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@bad-ref-no-no-no")))
     Error <async_rejected>
       ! Can't find reference @bad-ref-no-no-no in GitHub repo r-lib/pak.
+
+# no release error
+
+    Code
+      synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@*release")))
+    Error <async_rejected>
+      ! Can't find any release in GitHub repo r-lib/bad.
 
 # builtin token messages once per session
 

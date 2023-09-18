@@ -173,6 +173,12 @@ gh_app_repos <- list(
               branch = "somebranch",
               pull = 90,
               files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+            ),
+            list(
+              sha = "b001d6ddeab1589ad367b62baabbeeb2af3b0ebac2e61d239df660c1d63e3232",
+              latestRelease = TRUE,
+              tagName = "v1.2.3",
+              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
             )
           )
         ),

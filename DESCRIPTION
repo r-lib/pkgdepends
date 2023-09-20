@@ -51,18 +51,14 @@ Suggests:
     rmarkdown,
     rstudioapi,
     spelling,
+    svglite,
     testthat,
     tibble,
     webfakes (>= 1.1.5.9000),
     withr (>= 2.1.1),
 Config/Needs/coverage:
     r-lib/asciicast,
-    covr,
-    rmarkdown,
-    svglite
-Config/Needs/dev:
-    rmarkdown,
-    svglite
+    covr
 Config/Needs/website:
     r-lib/asciicast,
     pkgdown (>= 2.0.2),

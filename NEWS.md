@@ -1,5 +1,8 @@
 # pkgdepends (development version)
 
+* pkgdepends now correctly supports the `@*release` suffix for GitHub
+  repositories (#275, @pawelru).
+
 # pkgdepends 0.6.0
 
 * Many system requirements improvements:
@@ -29,6 +32,8 @@
 * New `gitlab::` package source to install packages from GitLab (#315).
 
 * pkgdepends now correctly parses multiple `git::` packages at once (#318).
+
+* Fix `@*release` reference for the latest release.
 
 * `git::` package sources now support version 1 of the git protocol.
   E.g. the Bioconductor git repositories now work:

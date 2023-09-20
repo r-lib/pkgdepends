@@ -228,6 +228,8 @@ type_github_get_headers <- function() {
 type_github_get_data <- function(rem) {
   dx <- if (!is.null(rem$pull) && rem$pull != "") {
     type_github_get_data_pull(rem)
+  } else if (!is.null(rem$release) && rem$release != "") {
+    type_github_get_data_release(rem)
   } else {
     type_github_get_data_ref(rem)
   }
@@ -353,6 +355,60 @@ check_github_response_pull2 <- function(resp, obj, rem, call.) {
     throw(new_github_baddesc_error(rem, call.))                     # nocov
   }
   if (is.null(obj[[c("data", "repository", "object")]])) {
+    throw(new_github_no_package_error(rem, call.))
+  }
+  obj
+}
+
+type_github_get_data_release <- function(rem) {
+  call <- sys.call(-1)
+  user <- rem$username
+  repo <- rem$repo
+  ref <- NULL
+  subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
+
+  query <- glue("{
+    repository(owner: \"<user>\", name:\"<repo>\") {
+      latestRelease {
+        tagName
+        tagCommit {
+          oid,
+          file(path: \"<subdir>DESCRIPTION\") {
+            object {
+              ... on Blob {
+                isBinary
+                text
+              }
+            }
+          }
+        }
+      }
+    }
+  }",
+  .open = "<", .close = ">")
+
+  github_query(query)$
+    then(function(resp) {
+      check_github_response_release(resp$response, resp$obj, rem, call. = call)
+    })$
+    then(function(obj) {
+      ref <- obj[[c("data", "repository", "latestRelease", "tagCommit", "oid")]]
+      txt <- obj[[c("data", "repository", "latestRelease", "tagCommit", "file", "object", "text")]]
+      list(sha = ref, desc = txt)
+    })
+}
+
+check_github_response_release <- function(resp, obj, rem, call.) {
+  if (!is.null(obj$errors)) {
+    throw(new_github_query_error(rem, resp, obj, call.))
+  }
+  if (is.null(obj[[c("data", "repository", "latestRelease")]])) {
+    throw(new_github_no_release_error(rem, call.))
+  }
+  if (isTRUE(obj[[c("data", "repository", "latestRelease", "tagCommit", "file", "object", "isBinary")]])) {
+    throw(new_github_baddesc_error(rem, call.))
+  }
+  if (is.null(obj[[c("data", "repository", "latestRelease", "tagCommit", "file", "object")]])) {
     throw(new_github_no_package_error(rem, call.))
   }
   obj
@@ -552,6 +608,12 @@ new_github_baddesc_error <- function(rem, call. = NULL) {
 
 new_github_nopr_error <- function(rem, obj, call. = NULL) {
   msg <- glue("Can't find PR #{rem$pull} in GitHub repo {rem$username}/{rem$repo}")
+  new_github_error(msg, call. = call.)
+}
+
+# No releases
+new_github_no_release_error <- function(rem, obj, call. = NULL) {
+  msg <- glue("Can't find any release in GitHub repo {rem$username}/{rem$repo}.")
   new_github_error(msg, call. = call.)
 }
 

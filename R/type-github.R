@@ -297,64 +297,59 @@ type_github_get_data_pull <- function(rem) {
   user <- rem$username
   repo <- rem$repo
   pull <- rem$pull
-  ref <- NULL
   subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
 
-  # Get the sha first, seemingly there is no good way to do this in one go
-  query1 <- glue("{
-    repository(owner: \"<user>\", name:\"<repo>\") {
+  query <- glue("{
+    repository(owner: \"<user>\", name: \"<repo>\") {
       pullRequest(number: <pull>) {
         headRefOid
+        headRef {
+          target {
+            ... on Commit {
+              file(path: \"<subdir>DESCRIPTION\") {
+                object {
+                  ... on Blob {
+                    isBinary
+                    text
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }",
   .open = "<", .close = ">")
 
-  github_query(query1)$
+  github_query(query)$
     then(function(resp) {
-      check_github_response_pull1(resp$response, resp$obj, rem, call. = call)
+      check_github_response_pull(resp$response, resp$obj, rem, call. = call)
     })$
     then(function(obj) {
-      ref <<- obj[[c("data", "repository", "pullRequest", "headRefOid")]]
-      query2 <- glue("{
-        repository(owner: \"<user>\", name:\"<repo>\") {
-          object(expression: \"<ref>:<subdir>DESCRIPTION\") {
-            ... on Blob {
-              isBinary
-              text
-            }
-          }
-        }
-      }",
-      .open = "<", .close = ">")
-      github_query(query2)
-    })$
-    then(function(resp) {
-      check_github_response_pull2(resp$response, resp$obj, rem, call. = call)
-    })$
-    then(function(obj) {
-      txt <- obj[[c("data", "repository", "object", "text")]]
+      ref <- obj[[c("data", "repository", "pullRequest", "headRefOid")]]
+      txt <- obj[[c("data", "repository", "pullRequest", "headRef",
+                    "target", "file", "object", "text")]]
       list(sha = ref, desc = txt)
     })
 }
 
-check_github_response_pull1 <- function(resp, obj, rem, call.) {
+check_github_response_pull <- function(resp, obj, rem, call.) {
   if (!is.null(obj$errors)) {
     throw(new_github_query_error(rem, resp, obj, call.))
   }
-  obj
-}
-
-check_github_response_pull2 <- function(resp, obj, rem, call.) {
   # No full coverage here, because unless something goes super wrong,
   # these cases almost never happen.
   if (!is.null(obj$errors)) {
     throw(new_github_query_error(rem, resp, obj, call.))            # nocov
   }
-  if (isTRUE(obj[[c("data", "repository", "object", "isBinary")]])) {
+
+  if (isTRUE(obj[[c("data", "repository", "pullRequest", "headRef",
+                    "target", "file", "object", "isBinary")]])) {
     throw(new_github_baddesc_error(rem, call.))                     # nocov
   }
-  if (is.null(obj[[c("data", "repository", "object")]])) {
+  if (is.null(obj[[c("data", "repository", "pullRequest", "headRef",
+                     "target", "file", "object")]])) {
     throw(new_github_no_package_error(rem, call.))
   }
   obj

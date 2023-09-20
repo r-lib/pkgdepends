@@ -1,6 +1,7 @@
 # pkgdepends (development version)
 
-* Fix `@*release` reference for the latest release.
+* pkgdepends now correctly supports the `@*release` suffix for GitHub
+  repositories (#275, @pawelru).
 
 # pkgdepends 0.6.0
 

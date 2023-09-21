@@ -432,3 +432,33 @@ test_that("installedok", {
     sol
   ))
 })
+
+test_that("installedok Linux binaries", {
+  solution <- list(
+    package = "package",
+    version = "1.0.0",
+    platform = "x86_64-pc-linux-gnu-ubuntu-22.04"
+  )
+  installed <- list(
+    package = "package",
+    version = "1.0.0",
+    platform = "x86_64-pc-linux-gnu",
+    built = "R 4.3.1; x86_64-pc-linux-gnu; 2023-09-21 14:53:54 UTC; unix"
+  )
+
+  expect_true(installedok_remote_standard(installed, solution))
+
+  solution2 <- list(
+    package = "package",
+    version = "1.0.0",
+    platform = "x86_64-pc-linux-gnu-ubuntu-22.04"
+  )
+  installed2 <- list(
+    package = "package",
+    version = "1.0.0",
+    remotepkgplatform = "x86_64-pc-linux-gnu-ubuntu-22.04",
+    platform = "x86_64-pc-linux-gnu"
+  )
+
+  expect_true(installedok_remote_standard(installed2, solution2))
+})

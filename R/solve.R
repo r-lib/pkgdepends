@@ -437,7 +437,8 @@ pkgplan_i_lp_satisfy_direct <-  function(lp) {
       }
     }
   }
-  lapply(seq_len(lp$num_candidates)[lp$pkgs$direct], satisfy)
+  direct <- setdiff(which(lp$pkgs$direct), lp$ruled_out)
+  lapply(direct, satisfy)
 
   lp
 }

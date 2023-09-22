@@ -107,3 +107,38 @@ test_that("failed resolution", {
   suppressMessages(p2$solve())
   expect_snapshot(error = TRUE, p2$stop_for_solution_error())
 })
+
+test_that("ruled out direct dep", {
+  # I.e. there are multiple versions, the newer version is ruled out
+  # for the current R version, but the older vresion is fine.
+
+  # pkgcache::cran_app cannot seem to do this with a single repo
+  repo1 <- dcf("
+    Package: pkg1
+    Version: 1.0.0
+  ")
+
+  repo2 <- dcf("
+    Package: pkg1
+    Version: 1.0.1
+    Depends: R (>= 20000.0.0)
+  ")
+
+  fake1 <- webfakes::new_app_process(cran_app(repo1))
+  fake2 <- webfakes::new_app_process(cran_app(repo2))
+  withr::local_options(repos = c(CRAN = fake1$url(), X = fake2$url()))
+
+  lib <- tempfile()
+  lock <- tempfile()
+  on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
+
+  p <- suppressMessages(new_pkg_installation_proposal(
+    c("pkg1"),
+    config = list(
+      dependencies = TRUE,
+      library = lib
+    )
+  ))
+  suppressMessages(p$solve())
+  expect_equal(p$get_solution()$data$version, "1.0.0")
+})

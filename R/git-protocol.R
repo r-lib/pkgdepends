@@ -504,9 +504,32 @@ async_git_download_repo_sha <- function(url, sha, output) {
     then(function(packfile) unpack_packfile_repo(packfile, output))
 }
 
+filter_hashes <- function(leaf) {
+  out <- list()
+  obs <- leaf$object
+  obs <- obs[obs$type == "tree", "hash"]
+  out[["hashes"]] <- obs
+  out$hash <- leaf$hash
+  out
+}
+
+sort_trees <- function(trees){
+  hashes_tree <- lapply(trees, filter_hashes)
+  flat_hashes <- character()
+  for(i in seq_along(hashes_tree)){
+    flat_hashes <- append(flat_hashes, hashes_tree[[i]]$hash)
+    flat_hashes <- append(flat_hashes, hashes_tree[[i]]$hashes)
+  }
+  flat_hashes_df <- as.data.frame(table(flat_hashes))
+  new_idx <- as.character(flat_hashes_df[order(flat_hashes_df$Freq),
+                                         "flat_hashes"])
+  trees[new_idx]
+}
+
 unpack_packfile_repo <- function(parsed, output) {
   types <- unname(vcapply(parsed, "[[", "type"))
   trees <- parsed[types == "tree"]
+  trees <- sort_trees(trees)
   done <- logical(length(trees))
   idx <- 1L
   wd <- character()

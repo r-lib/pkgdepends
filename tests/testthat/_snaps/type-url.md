@@ -119,7 +119,8 @@
 
     Code
       get_pkg_dir_from_archive_dir(tmp)
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Package archive at '<tempdir>/<tempfile>' should contain exactly one directory.
       i It has 2 files/directories: 'pkg1' and 'pkg2'
 

@@ -247,7 +247,8 @@
     Code
       synchronize(async_parse_installed(library = .libPaths()[1], packages = c("foo",
         "bar", "baz")))
-    Warning <simpleWarning>
+    Condition
+      Warning in `async_parse_installed()`:
       Ignored 1 package that is not installed: baz.
     Output
       # A data frame: 2 x 1
@@ -431,7 +432,8 @@
 
     Code
       sysreqs_resolve("java", "foobar-11")
-    Error <async_rejected>
+    Condition
+      Error:
       ! Failed to look up system requirements for OS foobar-11.
       i HTTP error 400 for <<server>/__api__/repos/1/sysreqs?distribution=foobar&release=11>.
       i Response: "{\"code\":14,\"error\":\"Unsupported system\",\"payload\":null}".
@@ -440,7 +442,7 @@
 
     Code
       sysreqs_install(srq)
-    Message <cliMessage>
+    Message
       i Installing system requirements
       i Executing `sh -c echo apt-get install -y libssl-dev libcurl4-openssl-dev`
 
@@ -448,7 +450,7 @@
 
     Code
       sysreqs_install(srq)
-    Message <cliMessage>
+    Message
       i Installing system requirements
       i Executing `sh -c echo apt-get install -y default-jdk`
       i Executing `sh -c echo apt-get install -y libcurl4-openssl-dev`
@@ -458,7 +460,7 @@
 
     Code
       sysreqs_install(srq)
-    Message <cliMessage>
+    Message
       i Installing system requirements
       i Executing `sh -c echo apt-get install -y default-jdk`
       apt-get install -y default-jdk

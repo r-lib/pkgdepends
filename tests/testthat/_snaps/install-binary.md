@@ -84,7 +84,8 @@
 
     Code
       add_metadata(tmp, c(foo = "bar"))
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Could not find 'DESCRIPTION' file when installing package into '<tempdir>/<tempfile>'.
       i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
 

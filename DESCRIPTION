@@ -52,7 +52,7 @@ Suggests:
     rstudioapi,
     spelling,
     svglite,
-    testthat,
+    testthat (>= 3.2.0),
     tibble,
     webfakes (>= 1.1.5.9000),
     withr (>= 2.1.1),

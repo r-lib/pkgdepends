@@ -1,7 +1,7 @@
 # git_list_refs
 
     Code
-      git_list_refs("https://github.com/gaborcsardi/pak-test.git")$refs
+      git_list_refs(fake_git$url("/pak-test.git"))$refs
     Output
       # A data frame: 4 x 2
         ref               hash                                    
@@ -14,8 +14,7 @@
 ---
 
     Code
-      git_list_refs_v2("https://github.com/gaborcsardi/pak-test.git", "refs/heads/")$
-        refs
+      git_list_refs_v2(fake_git$url("/pak-test.git"), "refs/heads/")$refs
     Output
       # A data frame: 2 x 2
         ref               hash                                    
@@ -26,8 +25,8 @@
 # git_list_files
 
     Code
-      git_list_files("https://github.com/gaborcsardi/pak-test.git",
-        "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e")
+      git_list_files(fake_git$url("/pak-test.git"),
+      "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e")
     Output
       $ref
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
@@ -67,7 +66,7 @@
       # i 14 more rows
       
     Code
-      git_list_files("https://github.com/gaborcsardi/pak-test.git", "refs/tags/v1")
+      git_list_files(fake_git$url("/pak-test.git"), "refs/tags/v1")
     Output
       $ref
       [1] "refs/tags/v1"
@@ -112,8 +111,8 @@
 # git_download_file
 
     Code
-      out <- git_download_file("https://github.com/gaborcsardi/pak-test.git",
-        "a1e2d6741374d1f32ec138ee2020eae36b859e99", tmp)
+      out <- git_download_file(fake_git$url("/pak-test.git"),
+      "a1e2d6741374d1f32ec138ee2020eae36b859e99", tmp)
       out
     Output
       $type
@@ -198,7 +197,7 @@
 # git_list_refs_v1
 
     Code
-      git_list_refs_v1("https://github.com/gaborcsardi/pak-test.git")$refs
+      git_list_refs_v1(fake_git$url("/pak-test.git"))$refs
     Output
       # A data frame: 4 x 2
         ref               hash                                    
@@ -211,8 +210,8 @@
 # git_list_refs_v1_process_1
 
     Code
-      git_list_refs_v1_process_1(resp, "https://github.com/gaborcsardi/pak-test.git",
-        "refs/tags/v1")$refs
+      git_list_refs_v1_process_1(resp, fake_git$url("/pak-test.git"), "refs/tags/v1")$
+        refs
     Output
       # A data frame: 1 x 2
         ref          hash                                    
@@ -222,8 +221,8 @@
 # async_git_list_refs_v2_process_1
 
     Code
-      sy(async_git_list_refs_v2_process_1(resp,
-        "https://github.com/gaborcsardi/pak-test.git", "refs/tags/v1"))$refs
+      sy(async_git_list_refs_v2_process_1(resp, fake_git$url("/pak-test.git"),
+      "refs/tags/v1"))$refs
     Output
       # A data frame: 1 x 2
         ref          hash                                    
@@ -626,7 +625,7 @@
 # async_git_resolve_ref
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git", "main"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "main"))
     Output
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
@@ -635,7 +634,7 @@
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git", "v1"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "v1"))
     Output
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
       attr(,"protocol")
@@ -644,8 +643,7 @@
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
-        "3f3b0b4ee8a0ff"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "3f3b0b4ee8a0ff"))
     Output
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
@@ -654,8 +652,7 @@
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
-        "badcafe"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "badcafe"))
     Condition
       Error:
       ! Unknown git ref: "badcafe".
@@ -663,8 +660,7 @@
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
-        "badcafe"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "badcafe"))
     Condition
       Error:
       ! Found multiple git refs with prefix "badcafe", it is ambiguous.

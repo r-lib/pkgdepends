@@ -627,3 +627,10 @@ transform_installed_in_temp <- function(x) {
   regmatches(x, m) <- paste0("installed::.../", long_basename(regmatches(x, m)))
   x
 }
+
+fake_git <- local({
+  dir.create(tmp <- tempfile())
+  untar(testthat::test_path("fixtures/git-repo.tar.gz"), exdir = tmp)
+  app <- git_app(file.path(tmp, "repo"))
+  webfakes::local_app_process(app)
+})

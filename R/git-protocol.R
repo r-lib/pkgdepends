@@ -176,10 +176,10 @@ async_git_list_files <- function(url, ref = "HEAD") {
   sha2 <- ref
   async_git_resolve_ref(url, ref)$
     then(function(sha) { sha2 <<- sha; async_git_fetch(url, sha) })$
-    then(function(pf) async_git_list_files_process(pf, ref, sha2))
+    then(function(pf) async_git_list_files_process(pf, ref, sha2, url))
 }
 
-async_git_list_files_process <- function(packfile, ref, sha) {
+async_git_list_files_process <- function(packfile, ref, sha, url) {
   names(packfile) <- vcapply(packfile, "[[", "hash")
   types <- unname(vcapply(packfile, "[[", "type"))
   tree_sizes <- viapply(packfile, function(x) nrow(x$object) %||% NA_integer_)
@@ -196,6 +196,9 @@ async_git_list_files_process <- function(packfile, ref, sha) {
   done <- logical(length(trees))
   idx <- 1L
   wd <- character()
+
+  commit <- parse_commit(packfile[[which(types == "commit")]]$object)
+  tree <- commit[["tree"]]
 
   process_tree <- function(i) {
     if (done[i]) return()
@@ -217,10 +220,20 @@ async_git_list_files_process <- function(packfile, ref, sha) {
     }
   }
 
-  for (i in seq_along(trees)) process_tree(i)
-
-  commit <- parse_commit(packfile[[which(types == "commit")]]$object)
-  tree <- commit[["tree"]]
+  # start with the root tree
+  root <- match(tree, names(trees))
+  if (is.na(root)) {
+    throw(pkg_error(
+      "Invalid git response from {.url {url}}, cannot find commit tree"
+    ))
+  }
+  process_tree(root)
+  if (any(!done)) {
+    warning(
+      "Some trees are unreachable when listing files from git repo from ",
+      url
+    )
+  }
 
   list(
     ref = ref,
@@ -501,10 +514,10 @@ async_git_download_repo <- function(url, ref = "HEAD", output = ref) {
 async_git_download_repo_sha <- function(url, sha, output) {
   url; sha; output
   async_git_fetch(url, sha, blobs = TRUE)$
-    then(function(packfile) unpack_packfile_repo(packfile, output))
+    then(function(packfile) unpack_packfile_repo(packfile, output, url))
 }
 
-unpack_packfile_repo <- function(parsed, output) {
+unpack_packfile_repo <- function(parsed, output, url) {
   types <- unname(vcapply(parsed, "[[", "type"))
   trees <- parsed[types == "tree"]
   done <- logical(length(trees))
@@ -537,6 +550,23 @@ unpack_packfile_repo <- function(parsed, output) {
       }
     }
   }
+
+  commit <- parse_commit(parsed[[which(types == "commit")]]$object)
+  tree <- commit[["tree"]]
+  root <- match(tree, names(trees))
+  if (is.na(root)) {
+    throw(pkg_error(
+      "Invalid git response from {.url {url}}, cannot find commit tree"
+    ))
+  }
+  process_tree(root)
+  if (any(!done)) {
+    warning(
+      "Some trees are unreachable when listing files from git repo from ",
+      url
+    )
+  }
+
 
   for (i in seq_along(trees)) process_tree(i)
 

@@ -108,6 +108,37 @@
       # i 14 more rows
       
 
+# async_git_list_files_process
+
+    Code
+      sort(async_git_list_files_process(pack, ref = ref, sha = ref, url = "url")$
+      files$path)
+    Output
+       [1] ".github"                              
+       [2] ".github/actions"                      
+       [3] ".github/actions/parameters"           
+       [4] ".github/actions/parameters/action.yml"
+       [5] ".github/workflows"                    
+       [6] ".github/workflows/check-standard.yaml"
+       [7] ".gitignore"                           
+       [8] "foo"                                  
+       [9] "subdir"                               
+      [10] "subdir/dotenv"                        
+      [11] "subdir/dotenv/.Rbuildignore"          
+      [12] "subdir/dotenv/.gitignore"             
+      [13] "subdir/dotenv/DESCRIPTION"            
+      [14] "subdir/dotenv/LICENSE"                
+      [15] "subdir/dotenv/NAMESPACE"              
+      [16] "subdir/dotenv/NEWS.md"                
+      [17] "subdir/dotenv/R"                      
+      [18] "subdir/dotenv/R/dotenv-package.r"     
+      [19] "subdir/dotenv/README.Rmd"             
+      [20] "subdir/dotenv/README.md"              
+      [21] "subdir/dotenv/man"                    
+      [22] "subdir/dotenv/man/dotenv-package.Rd"  
+      [23] "subdir/dotenv/man/load_dot_env.Rd"    
+      [24] "wipe.R"                               
+
 # git_download_file
 
     Code
@@ -699,4 +730,16 @@
        [9] "v1/subdir/dotenv/man/dotenv-package.Rd"
       [10] "v1/subdir/dotenv/man/load_dot_env.Rd"  
       [11] "v1/wipe.R"                             
+
+# unpack_packfile_repo
+
+    Code
+      sort(dir(output, recursive = TRUE))
+    Output
+       [1] "foo"                                 "subdir/dotenv/DESCRIPTION"          
+       [3] "subdir/dotenv/LICENSE"               "subdir/dotenv/NAMESPACE"            
+       [5] "subdir/dotenv/NEWS.md"               "subdir/dotenv/R/dotenv-package.r"   
+       [7] "subdir/dotenv/README.Rmd"            "subdir/dotenv/README.md"            
+       [9] "subdir/dotenv/man/dotenv-package.Rd" "subdir/dotenv/man/load_dot_env.Rd"  
+      [11] "wipe.R"                             
 

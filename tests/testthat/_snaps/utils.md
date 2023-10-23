@@ -94,13 +94,13 @@
 
     Code
       once_per_session(message("hello"))
-    Message <simpleMessage>
+    Message
       hello
     Code
       once_per_session(message("hello"))
       once_per_session(reset = TRUE)
       once_per_session(message("hello"))
-    Message <simpleMessage>
+    Message
       hello
     Code
       once_per_session(message("hello"))

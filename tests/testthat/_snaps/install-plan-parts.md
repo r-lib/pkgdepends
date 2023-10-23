@@ -2,14 +2,14 @@
 
     Code
       state <- start_task_build(state, task("build", pkgidx = 1))
-    Message <cliMessage>
+    Message
       i Building R6 2.2.2
 
 # handle_event, build process finished
 
     Code
       state <- start_task_build(state, task("build", pkgidx = 1))
-    Message <cliMessage>
+    Message
       i Building R6 2.2.2
 
 ---
@@ -20,7 +20,7 @@
         state <- handle_events(state, events)
         if (all(state$plan$build_done)) break
       }
-    Message <cliMessage>
+    Message
       v Built R6 2.2.2
 
 # handle event, build process finished, but failed
@@ -41,9 +41,10 @@
         state <- handle_events(state, events)
         if (all(state$plan$build_done)) break
       }
-    Message <cliMessage>
+    Message
       x Failed to install R6 2.2.2
-    Error <package_install_error>
+    Condition
+      Error:
       ! Failed to install binary package 'R6'.
 
 # handle_event, install process finished
@@ -55,7 +56,7 @@
         if (done) break
         if (!proc$is_alive()) done <- TRUE
       }
-    Message <cliMessage>
+    Message
       v Installed R6 2.2.2 
 
 # handle event, install process finished, but failed
@@ -68,16 +69,18 @@
         if (done) break
         if (!proc$is_alive()) done <- TRUE
       }
-    Message <cliMessage>
+    Message
       x Failed to install R6 2.2.2
-    Error <package_install_error>
+    Condition
+      Error:
       ! Failed to install binary package 'R6'.
 
 # deadlock detection
 
     Code
       install_package_plan(plan, lib = tempfile())
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Cannot select new package installation task.
       i 3 packages still waiting to install: p1, p2, and p3.
       i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
@@ -86,7 +89,7 @@
 
     Code
       install_package_plan(plan, lib = lib)
-    Message <cliMessage>
+    Message
       i Building foo 
       v Built foo 
       v Installed foo  (local)

@@ -44,7 +44,8 @@
 
     Code
       env_decode_difftime("", "PKG_UPDATE")
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Invalid time interval specification in `PKG_UPDATE` environment variable: ""
       i It must have the form `<number><unit>`.
       i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).
@@ -54,7 +55,8 @@
 
     Code
       env_decode_difftime("123", "PKG_UPDATE")
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Invalid time interval specification in `PKG_UPDATE` environment variable: "123"
       i It must have the form `<number><unit>`.
       i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).
@@ -64,7 +66,8 @@
 
     Code
       env_decode_difftime("1k", "PKG_UPDATE")
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Invalid time interval specification in `PKG_UPDATE` environment variable: "1k"
       i It must have the form `<number><unit>`.
       i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).
@@ -74,7 +77,8 @@
 
     Code
       env_decode_difftime("k1k", "PKG_UPDATE")
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Invalid time interval specification in `PKG_UPDATE` environment variable: "k1k"
       i It must have the form `<number><unit>`.
       i The unit must be a single letter: `s` (seconds), `m` (minutes), `h` (hours) or `d` (days).

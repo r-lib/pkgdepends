@@ -2,98 +2,98 @@
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i No downloads are needed
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i No downloads are needed, 1 pkg (10 kB) is cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i No downloads are needed, 2 pkgs (20 kB) are cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i No downloads are needed, 1 pkg is cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB)
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB), 1 cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB), 1 (20 kB) cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 1 pkg (20 kB) and 1 pkg with unknown size
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 1 pkg (10 kB) and 1 pkg with unknown size, 1 (30 kB) cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 1 pkg (10 kB) and 1 pkg with unknown size, 1 cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs with unknown sizes
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs with unknown sizes, 1 cached
 
 ---
 
     Code
       invisible(pkgplan__create_progress_bar(what))
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs with unknown sizes, 1 (30 kB) cached
 
 # data updates
 
     Code
       bar <- pkgplan__create_progress_bar(what = what)
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB), 1 (20 kB) cached
     Code
       pkgplan__update_progress_bar(bar, 1L, "data", list(current = 5000, total = 10000))
@@ -122,7 +122,7 @@
 
     Code
       do(1L)
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB), 1 (20 kB) cached
       v Got foo 1.0.0 (source) (7 B)
     Output
@@ -138,7 +138,7 @@
 
     Code
       do(1L, make_tempfile = FALSE)
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB), 1 (20 kB) cached
       v Got foo 1.0.0 (source)
     Output
@@ -154,7 +154,7 @@
 
     Code
       do(1L, event = "error")
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB), 1 (20 kB) cached
       x Failed to download foo 1.0.0 (source)
     Output
@@ -170,6 +170,6 @@
 
     Code
       bar <- pkgplan__create_progress_bar(what)
-    Message <cliMessage>
+    Message
       i Getting 2 pkgs (30 kB), 1 (20 kB) cached
 

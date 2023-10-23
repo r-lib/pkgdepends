@@ -2,7 +2,8 @@
 
     Code
       assert_that(assert())
-    Error <assertError>
+    Condition
+      Error:
       ! isTRUE(x = FALSE) is not true
 
 # assert_error
@@ -18,7 +19,8 @@
 
     Code
       assert_that(2 * 2)
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! `assert_that()`: assertion must return a logical value.
       i it returned a number instead.
 
@@ -26,7 +28,8 @@
 
     Code
       assert_that(c(TRUE, FALSE))
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! `assert_that()`: assertion must return a scalar.
       i it returned a vector of length 2.
 
@@ -34,7 +37,8 @@
 
     Code
       assert_that(NA)
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! `assert_that()`: assertion must not return `NA`.
 
 # default messages
@@ -257,21 +261,24 @@
 
     Code
       assert_that(has_attr(1L, "foobar"))
-    Error <assertError>
+    Condition
+      Error:
       ! `1L` must have attribute `foobar`.
 
 ---
 
     Code
       assert_that(1L %has_attr% "foobar")
-    Error <assertError>
+    Condition
+      Error:
       ! `1L` must have attribute `foobar`.
 
 # custom message
 
     Code
       fn(1:10)
-    Error <assertError>
+    Condition
+      Error:
       ! `name` must be a name (character scalar).
       i It is an integer vector.
 

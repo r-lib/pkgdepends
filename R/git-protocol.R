@@ -514,10 +514,10 @@ async_git_download_repo <- function(url, ref = "HEAD", output = ref) {
 async_git_download_repo_sha <- function(url, sha, output) {
   url; sha; output
   async_git_fetch(url, sha, blobs = TRUE)$
-    then(function(packfile) unpack_packfile_repo(packfile, output))
+    then(function(packfile) unpack_packfile_repo(packfile, output, url))
 }
 
-unpack_packfile_repo <- function(parsed, output) {
+unpack_packfile_repo <- function(parsed, output, url) {
   types <- unname(vcapply(parsed, "[[", "type"))
   trees <- parsed[types == "tree"]
   done <- logical(length(trees))

@@ -38,6 +38,24 @@ test_that("git_list_files", {
   })
 })
 
+test_that("async_git_list_files_process", {
+  # reordering objects in a PACK file does not matter
+  ref <- "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
+  pack <- git_fetch(fake_git$url("/pak-test.git"), ref, blobs = FALSE)
+
+  withr::local_seed(13L)
+  pack <- sample(pack)
+
+  expect_snapshot(
+    sort(async_git_list_files_process(
+      pack,
+      ref = ref,
+      sha = ref,
+      url = "url"
+    )$files$path)
+  )
+})
+
 test_that("git_download_file", {
   skip_on_cran()
   tmp <- tempfile()
@@ -346,4 +364,20 @@ test_that("git_download_repo", {
     output = file.path(tmp, "v1")
   )
   expect_snapshot(dir(tmp, recursive = TRUE))
+})
+
+test_that("unpack_packfile_repo", {
+  # reordering objects in a PACK file does not matter
+  ref <- "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
+  pack <- git_fetch(fake_git$url("/pak-test.git"), ref, blobs = TRUE)
+
+  withr::local_seed(13L)
+  pack <- sample(pack)
+
+  output <- tempfile()
+  on.exit(unlink(output, recursive = TRUE), add = TRUE)
+  unpack_packfile_repo(pack, output, url = "url")
+  expect_snapshot(
+    sort(dir(output, recursive=TRUE))
+  )
 })

@@ -1,4 +1,4 @@
-# pkgdepends (development version)
+# pkgdepends 0.7.0
 
 * pkgdepends now correctly supports the `@*release` suffix for GitHub
   repositories (#275, @pawelru).

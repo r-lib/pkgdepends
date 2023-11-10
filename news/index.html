@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pkgdepends</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,10 +48,18 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.7.0" id="pkgdepends-070">pkgdepends 0.7.0<a class="anchor" aria-label="anchor" href="#pkgdepends-070"></a></h2>
+<ul><li><p>pkgdepends now correctly supports the <code>@*release</code> suffix for GitHub repositories (<a href="https://github.com/r-lib/pkgdepends/issues/275" class="external-link">#275</a>, <a href="https://github.com/pawelru" class="external-link">@pawelru</a>).</p></li>
+<li><p>pkgdepends now correctly handles having multiple instances of the same package in the metadata, with different R version requirements (<a href="https://github.com/r-lib/pak/issues/534" class="external-link uri">https://github.com/r-lib/pak/issues/534</a>, <a href="https://github.com/r-lib/pkgdepends/issues/331" class="external-link">#331</a>, <a href="https://github.com/r-lib/pak/issues/538" class="external-link uri">https://github.com/r-lib/pak/issues/538</a>).</p></li>
+<li><p><code>git::</code> package reference work better now for Azure DevOps (<a href="https://github.com/jameslairdsmith" class="external-link">@jameslairdsmith</a>, <a href="https://github.com/r-lib/pkgdepends/issues/333" class="external-link">#333</a>, <a href="https://github.com/r-lib/pkgdepends/issues/342" class="external-link">#342</a>).</p></li>
+<li><p>pkgdepends now correctly resolves the latest GitHub release with the <code>@*release</code> notation (<a href="https://github.com/pawelru" class="external-link">@pawelru</a>, <a href="https://github.com/r-lib/pkgdepends/issues/321" class="external-link">#321</a>).</p></li>
+<li><p>pkgdepends now does a better job at accepting installed packages, and avoids reinstalling more packages than needed when using a lock file (<a href="https://github.com/r-lib/actions/issues/759" class="external-link uri">https://github.com/r-lib/actions/issues/759</a>, <a href="https://github.com/r-lib/pkgdepends/issues/338" class="external-link">#338</a>).</p></li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="pkgdepends-060">pkgdepends 0.6.0<a class="anchor" aria-label="anchor" href="#pkgdepends-060"></a></h2><p class="text-muted">CRAN release: 2023-07-18</p>
 <ul><li>
 <p>Many system requirements improvements:</p>
-<ul><li>New sysreqs functions:
+<ul><li>New functions:
 <ul><li>
 <code><a href="../reference/sysreqs_check_installed.html">sysreqs_check_installed()</a></code>: check if all required system packages are installed,</li>
 <li>
@@ -75,10 +83,11 @@
 <li>The output of <code>$show_solution()</code> now includes system requirements.</li>
 <li>New <code>sysreqs_platform</code> configuration option.</li>
 <li>pkgdepends now looks up system requirements asynchronously, during dependency resolution.</li>
-<li>pkgdepends now does not reinstall system requirements by default, if they are already installed. (You can force a reinstallation/upgrade wtih the <code>sysreqs_update</code> configuration option.)</li>
+<li>pkgdepends now does not reinstall system requirements by default, if they are already installed. (You can force a reinstall/upgrade with the <code>sysreqs_update</code> configuration option.)</li>
 </ul></li>
 <li><p>New <code>gitlab::</code> package source to install packages from GitLab (<a href="https://github.com/r-lib/pkgdepends/issues/315" class="external-link">#315</a>).</p></li>
 <li><p>pkgdepends now correctly parses multiple <code>git::</code> packages at once (<a href="https://github.com/r-lib/pkgdepends/issues/318" class="external-link">#318</a>).</p></li>
+<li><p>Fix <code>@*release</code> reference for the latest release.</p></li>
 <li><p><code>git::</code> package sources now support version 1 of the git protocol. E.g. the Bioconductor git repositories now work: <code>git::https://git.bioconductor.org/packages/limma</code> (<a href="https://github.com/r-lib/pkgdepends/issues/314" class="external-link">#314</a>).</p></li>
 <li><p>The <code>platforms</code> config parameter now works correctly with <code>deps::</code> package sources (<a href="https://github.com/r-lib/pak/issues/522" class="external-link uri">https://github.com/r-lib/pak/issues/522</a>).</p></li>
 <li><p>New <code>include_linkingto</code> config parameter to always include <code>LinkingTo</code> packages in the solution, even for binaries (<a href="https://github.com/r-lib/pkgdepends/issues/485" class="external-link">#485</a>).</p></li>

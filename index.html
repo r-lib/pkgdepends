@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="index.html">pkgdepends</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,38 +114,41 @@
 <div class="section level1">
 <h1 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h1>
-<p>Once on CRAN, install the package with:</p>
+<p>Install the package with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pkgdepends"</span><span class="op">)</span></span></code></pre></div>
+<p>If you need the development version, install it with</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"r-lib/pkgdepends"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level1">
 <h1 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h1>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/pkgdepends/">pkgdepends</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="package-references">Package references<a class="anchor" aria-label="anchor" href="#package-references"></a>
 </h2>
 <p>A package reference (ref) specifies a location from which an R package can be obtained from. Examples:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>devtools</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cran<span class="sc">::</span>devtools</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>bioc<span class="sc">::</span>Biobase</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>local<span class="sc">::</span><span class="er">~/</span>works<span class="sc">/</span>shiny</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>devtools</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cran<span class="sc">::</span>devtools</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>bioc<span class="sc">::</span>Biobase</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>r<span class="sc">-</span>lib<span class="sc">/</span>pkgdepends</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>local<span class="sc">::</span><span class="er">~/</span>works<span class="sc">/</span>shiny</span></code></pre></div>
 <p>See <a href="https://r-lib.github.io/pkgdepends/reference/pkg_refs.html">“Package references”</a> for details.</p>
 </div>
 <div class="section level2">
 <h2 id="package-dependencies">Package dependencies<a class="anchor" aria-label="anchor" href="#package-dependencies"></a>
 </h2>
 <p>Dependencies of the development version of the cli package:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pkg_deps.html">new_pkg_deps</a></span><span class="op">(</span><span class="st">"r-lib/pkgcache"</span><span class="op">)</span></span>
 <span><span class="va">pd</span><span class="op">$</span><span class="fu">solve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
 <pre>
-## <span style="color: #859900;">✔</span> Updated metadata database: 2.81 MB in 8 files.                                
+## <span style="color: #859900;">✔</span> Updated metadata database: 2.82 MB in 8 files.                                
 ## <span style="color: #859900;">✔</span> Updating metadata database ... done                                           
 ## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.2.0.9000</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(unknown size)</span>                    
 ## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(97.81 kB)</span>                                         
@@ -171,7 +174,7 @@
 <h2 id="package-downloads">Package downloads<a class="anchor" aria-label="anchor" href="#package-downloads"></a>
 </h2>
 <p>Downloading all dependencies of a package:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pkg_download_proposal.html">new_pkg_download_proposal</a></span><span class="op">(</span><span class="st">"r-lib/cli"</span><span class="op">)</span></span>
 <span><span class="va">pdl</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -187,7 +190,7 @@
 <h2 id="package-installation">Package installation<a class="anchor" aria-label="anchor" href="#package-installation"></a>
 </h2>
 <p>Installing or updating a set of package:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">lib</span><span class="op">)</span></span>
 <span><span class="va">pdi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pkg_installation_proposal.html">new_pkg_installation_proposal</a></span><span class="op">(</span></span>
@@ -202,11 +205,11 @@
 ## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                               
 ## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.6.1.9000 (source) is the latest build                    
 ## <span style="color: #2AA198;">ℹ</span> Packaging <span style="color: #268BD2;">cli</span> 3.6.1.9000                                                      
-## <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(986ms)</span>                                               
+## <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(949ms)</span>                                               
 ## <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">cli</span> 3.6.1.9000                                                       
-## <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(7.7s)</span>                                                   
+## <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(7.3s)</span>                                                   
 ## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.6.1.9000 (github::r-lib/cli@eeeb260) <span style="color: #a3a3a3;">(1s)</span>                     
-## <span style="color: #859900;">✔</span> Summary:   1 new  in 8.8s                                                     
+## <span style="color: #859900;">✔</span> Summary:   1 new  in 8.4s                                                     
 </pre>
 </div>
 </div>

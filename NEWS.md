@@ -2,8 +2,8 @@
 
 # pkgdepends 0.7.0
 
-* pkgdepends now correctly supports the `@*release` suffix for GitHub
-  repositories (#275, @pawelru).
+* pkgdepends now correctly resolves the latest GitHub release with
+  the `@*release` notation (@pawelru, #321, #275).
 
 * pkgdepends now correctly handles having multiple instances of the same
   package in the metadata, with different R version requirements
@@ -12,9 +12,6 @@
 
 * `git::` package reference work better now for Azure DevOps
   (@jameslairdsmith, #333, #342).
-
-* pkgdepends now correctly resolves the latest GitHub release with
-  the `@*release` notation (@pawelru, #321).
 
 * pkgdepends now does a better job at accepting installed packages, and
   avoids reinstalling more packages than needed when using a lock file

@@ -33,7 +33,6 @@ Imports:
     processx (>= 3.4.2),
     ps,
     R6,
-    rprojroot,
     stats,
     utils,
     zip (>= 2.3.0)

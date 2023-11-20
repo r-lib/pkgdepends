@@ -1115,11 +1115,9 @@ pkgplan_install_plan <- function(self, private, downloads) {
   sol
 }
 
-#' @importFrom rprojroot find_package_root_file
 #' @importFrom jsonlite unbox
 
 pkgplan_export_install_plan <- function(self, private, plan_file, version) {
-  plan_file <- plan_file %||% find_package_root_file("resolution.json")
   pkgs <- pkgplan_install_plan(self, private, downloads = FALSE)
   cols <- unique(c(
     "ref", "package", "version", "type", "direct", "binary",

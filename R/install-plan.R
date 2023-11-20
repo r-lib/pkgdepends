@@ -583,7 +583,7 @@ stop_task_package_uncompress <- function(state, worker) {
     pkg <- state$plan$package[pkgidx]
     version <- state$plan$version[pkgidx]
     time <- Sys.time() - state$plan$package_time[[pkgidx]]
-    ptime <- pretty_sec(as.numeric(time, units = "secs"))
+    ptime <- format_time$pretty_sec(as.numeric(time, units = "secs"))
     alert("danger", "Failed to uncompress {.pkg {pkg}} {.version {version}}")
     update_progress_bar(state, 1L)
 
@@ -616,7 +616,7 @@ stop_task_package_build <- function(state, worker) {
   pkg <- state$plan$package[pkgidx]
   version <- state$plan$version[pkgidx]
   time <- Sys.time() - state$plan$package_time[[pkgidx]]
-  ptime <- pretty_sec(as.numeric(time, units = "secs"))
+  ptime <- format_time$pretty_sec(as.numeric(time, units = "secs"))
 
   if (success) {
     alert("success", paste0(
@@ -675,8 +675,6 @@ stop_task_package_build <- function(state, worker) {
   state
 }
 
-#' @importFrom prettyunits pretty_sec
-
 stop_task_build <- function(state, worker) {
 
   ## TODO: make sure exit status is non-zero on build error!
@@ -686,7 +684,7 @@ stop_task_build <- function(state, worker) {
   pkg <- state$plan$package[pkgidx]
   version <- state$plan$version[pkgidx]
   time <- Sys.time() - state$plan$build_time[[pkgidx]]
-  ptime <- pretty_sec(as.numeric(time, units = "secs"))
+  ptime <- format_time$pretty_sec(as.numeric(time, units = "secs"))
 
   if (success) {
     alert("success", paste0(
@@ -779,8 +777,6 @@ installed_note <- function(pkg) {
   )
 }
 
-#' @importFrom prettyunits pretty_sec
-
 stop_task_install <- function(state, worker) {
 
   ## TODO: make sure the install status is non-zero on exit
@@ -790,7 +786,7 @@ stop_task_install <- function(state, worker) {
   pkg <- state$plan$package[pkgidx]
   version <- state$plan$version[pkgidx]
   time <- Sys.time() - state$plan$install_time[[pkgidx]]
-  ptime <- pretty_sec(as.numeric(time, units = "secs"))
+  ptime <- format_time$pretty_sec(as.numeric(time, units = "secs"))
   note <- installed_note(state$plan[pkgidx,])
 
   if (success) {
@@ -829,7 +825,6 @@ create_install_result <-  function(state) {
 }
 
 #' @export
-#' @importFrom prettyunits pretty_sec
 
 print.pkginstall_result <- function(x, ...) {
   newly <- sum(x$lib_status == "new" & x$type != "deps")
@@ -846,7 +841,7 @@ print.pkginstall_result <- function(x, ...) {
     if (upd)   paste0(emoji("rocket", ""), " ", upd, " updated"),
     if (noupd + curr) paste0(emoji("hand", ""), " ", noupd + curr, " kept"),
     if (! tolower(Sys.getenv("PKG_OMIT_TIMES")) == "true") {
-      paste0("in ", pretty_sec(build_time + inst_time))
+      paste0("in ", format_time$pretty_sec(build_time + inst_time))
     }
   )
 

@@ -18,7 +18,6 @@
 #' @aliases pkg_download_result
 NULL
 
-#' @importFrom prettyunits pretty_bytes
 #' @importFrom cli ansi_hide_cursor ansi_show_cursor
 
 pkgplan_download_resolution <- function(self, private) {

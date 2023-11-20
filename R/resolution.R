@@ -54,8 +54,6 @@
 #' @aliases pkg_resolution_result
 NULL
 
-#' @importFrom prettyunits pretty_dt
-
 pkgplan_resolve <- function(self, private) {
   "!DEBUG pkgplan_resolve (sync)"
   synchronise(self$async_resolve())

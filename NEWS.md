@@ -10,7 +10,7 @@
   (https://github.com/r-lib/pak/issues/534, #331,
   https://github.com/r-lib/pak/issues/538).
 
-* `git::` package reference work better now for Azure DevOps
+* `git::` package references work better now for Azure DevOps
   (@jameslairdsmith, #333, #342).
 
 * pkgdepends now does a better job at accepting installed packages, and

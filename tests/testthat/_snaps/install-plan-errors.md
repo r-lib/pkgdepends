@@ -7,5 +7,5 @@
       x Failed to uncompress foo 
     Condition
       Error:
-      ! Failed to uncompress .../foo-t.zip'.
+      ! Failed to uncompress foo from .../foo-t.zip'.
 

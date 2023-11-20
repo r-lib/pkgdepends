@@ -48,7 +48,7 @@ local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
     })
   }
 
-  filename <- file.path(d, glue("{pkgname}.tgz"))
+  filename <- file.path(d, paste0(pkgname, ".tgz"))
   withr::with_dir(
     dirname(filename),
     utils::tar(basename(filename), pkgname, compression = "gzip")

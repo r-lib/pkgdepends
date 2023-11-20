@@ -366,7 +366,7 @@ test_that("format_error_with_stdout", {
   err <- new_error("message")
   expect_snapshot(format_error_with_stdout(err))
 
-  err$data <- list(stdout = c("this is", "the", "standard output"))
+  err$stdout <- c("this is", "the", "standard output")
   expect_snapshot(format_error_with_stdout(err))
 })
 

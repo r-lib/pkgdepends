@@ -20,9 +20,7 @@ describe("verify_extracted_package", {
 
   it("errors if archive DESCRIPTION is not in the root directory", {
     f2 <- local_binary_package("test2", "foo/DESCRIPTION" = character())
-    expect_error(run(f2),
-      "'.*test2[.]tgz' is not a valid binary, it does not contain 'test2/Meta/package.rds' and 'test2/DESCRIPTION'.",
-      class = "install_input_error")
+    expect_snapshot(error = TRUE, run(f2), transform = transform_tempdir)
   })
 
   it("can handle multiple DESCRIPTION files", {
@@ -35,23 +33,17 @@ describe("verify_extracted_package", {
     f4 <- local_binary_package("test4",
       "pkgdir/DESCRIPTION" = c("Package: test4", "Built: 2017-01-01"),
       "Meta/package.rds" = character())
-    expect_error(run(f4),
-      "'.*test4[.]tgz' is not a valid binary, it does not contain 'test4/DESCRIPTION'.",
-      class = "install_input_error")
+    expect_snapshot(error = TRUE, run(f4), transform = transform_tempdir)
   })
 
   it("fails if the binary does not contain package.rds", {
     f5 <- local_binary_package("test5", "DESCRIPTION" = character())
-    expect_error(run(f5),
-      "'.*test5[.]tgz' is not a valid binary, it does not contain 'test5/Meta/package[.]rds'",
-      class = "install_input_error")
+    expect_snapshot(error = TRUE, run(f5), transform = transform_tempdir)
   })
 
   it("fails if the DESCRIPTION file is empty", {
     f6 <- local_binary_package("test6", "DESCRIPTION" = character(), "Meta/package.rds" = character())
-    expect_error(run(f6),
-      "'.*test6[.]tgz' is not a valid binary, 'test6/DESCRIPTION' is empty",
-      class = "install_input_error")
+    expect_snapshot(error = TRUE, run(f6), transform = transform_tempdir)
   })
 
   it("fails if the DESCRIPTION file has no 'Built' entry", {

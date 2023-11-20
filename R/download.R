@@ -93,8 +93,7 @@ pkgplan_stop_for_solution_download_error <- function(self, private) {
       which(bad),
       function(i) {
         urls <- format_items(dl$sources[[i]])
-        glue("Failed to download {dl$package[i]} \\
-              from {urls}.")
+        sprintf("Failed to download %s from %s.", dl$package[i], urls)
       }
     )
     msg <- paste(msgs, collapse = "\n")
@@ -112,8 +111,7 @@ pkgplan_stop_for_resolution_download_error <- function(self, private) {
       which(bad),
       function(i) {
         urls <- format_items(dl$sources[[i]])
-        glue("Failed to download {dl$package[i]} \\
-              from {urls}.")
+        sprintf("Failed to download %s from %s.", dl$package[i], urls)
       }
     )
     msg <- paste(msgs, collapse = "\n")

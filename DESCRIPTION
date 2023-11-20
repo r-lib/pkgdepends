@@ -17,7 +17,7 @@ License: MIT + file LICENSE
 URL: https://r-lib.github.io/pkgdepends/,
     https://github.com/r-lib/pkgdepends#readme
 BugReports: https://github.com/r-lib/pkgdepends/issues
-Depends: 
+Depends:
     R (>= 3.5)
 Imports:
     callr (>= 3.3.1),
@@ -25,7 +25,6 @@ Imports:
     curl,
     desc (>= 1.2.0),
     filelock (>= 1.0.2),
-    glue,
     jsonlite,
     lpSolve,
     pkgbuild (>= 1.0.2),
@@ -44,6 +43,7 @@ Suggests:
     debugme,
     fansi,
     fs,
+    glue,
     htmlwidgets,
     mockery,
     pak,

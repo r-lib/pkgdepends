@@ -255,7 +255,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 #' @param bar The progress bar object.
 #'
 #' @noRd
-#' @importFrom glue glue_collapse
+
 #' @importFrom prettyunits pretty_bytes pretty_dt
 
 pkgplan__show_progress_bar <- function(bar) {
@@ -348,7 +348,7 @@ calculate_progress_parts <- function(bar) {
     pkgs <- bar$what$package[bar$what$idx %in% bar$events$data]
     parts$msg <- paste0(
       "Getting ",
-      glue_collapse(pkgs, sep = ", ", last = " and ")
+      cli::ansi_collapse(pkgs, sep = ", ", last = " and ")
     )
     bar$lastmsg <- parts$msg
   }

@@ -202,7 +202,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@main")))
     Condition
       Error:
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad`
+      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
       Caused by error:
       ! Line starting 'this is not ...' is malformed!
 
@@ -212,7 +212,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad#100")))
     Condition
       Error:
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad`
+      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
       Caused by error:
       ! Line starting 'this is not ...' is malformed!
 
@@ -222,7 +222,7 @@
       synchronize(type_github_get_data(parse_pkg_ref("r-lib/bad/bin@main")))
     Condition
       Error:
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad`, in directory `bin`
+      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad, in directory `bin`
 
 # http error
 

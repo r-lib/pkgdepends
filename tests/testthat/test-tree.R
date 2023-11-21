@@ -160,10 +160,10 @@ test_that("update", {
 })
 
 test_that("has_emoji", {
-  mockery::stub(has_emoji, "is_utf8_output", FALSE)
+  mockery::stub(has_emoji, "cli::is_utf8_output", FALSE)
   expect_false(has_emoji())
 
-  mockery::stub(has_emoji, "is_utf8_output", TRUE)
+  mockery::stub(has_emoji, "cli::is_utf8_output", TRUE)
   withr::local_options(pkg.emoji = TRUE)
   expect_true(has_emoji())
 

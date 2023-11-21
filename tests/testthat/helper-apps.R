@@ -553,7 +553,7 @@ transform_sysreqs_server <- function(x) {
 }
 
 show_request <- function(req) {
-  x <- fromJSON(rawToChar(req$content))
+  x <- jsonlite::fromJSON(rawToChar(req$content))
   cat(toupper(x$method), " ", x$type, sep = "", "\n")
   cat("Query string: ", x$query, sep = "", "\n")
   cat("Body: ", x$body, sep = "", "\n")

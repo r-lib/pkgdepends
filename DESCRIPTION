@@ -35,6 +35,8 @@ Imports:
     stats,
     utils,
     zip (>= 2.3.0)
+Remotes:
+    r-lib/desc
 Suggests:
     asciicast (>= 2.2.0.9000),
     covr,

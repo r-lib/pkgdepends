@@ -1,3 +1,21 @@
+test_that("tojson is standalone", {
+  stenv <- tojson$.envir
+  objs <- ls(stenv, all.names = TRUE)
+  funs <- Filter(function(x) is.function(stenv[[x]]), objs)
+  funobjs <- mget(funs, stenv)
+
+  orig <- parent.env(stenv)
+  parent.env(stenv) <- baseenv()
+  on.exit(parent.env(stenv) <- orig, add = TRUE)
+
+  expect_message(
+    mapply(codetools::checkUsage, funobjs, funs,
+      MoreArgs = list(report = message)
+    ),
+    NA
+  )
+})
+
 test_that("write_str vectors", {
   # empty vectors
   expect_snapshot({

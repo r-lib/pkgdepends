@@ -1,5 +1,11 @@
 # pkgdepends (development version)
 
+* pkgdepends now does not import the glue, rprojroot and prettyunits
+  packages.
+
+* pkgdepends can now handle the case when `Config/Needs/*` dependencies
+  are requested for package from a repository.
+
 # pkgdepends 0.7.0
 
 * pkgdepends now correctly resolves the latest GitHub release with

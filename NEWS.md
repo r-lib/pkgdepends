@@ -1,4 +1,4 @@
-# pkgdepends (development version)
+# pkgdepends 0.7.1
 
 * pkgdepends now does not import the glue, rprojroot and prettyunits
   packages.

@@ -23,7 +23,7 @@ Imports:
     callr (>= 3.3.1),
     cli (>= 3.6.0),
     curl,
-    desc (>= 1.2.0),
+    desc (>= 1.4.3),
     filelock (>= 1.0.2),
     jsonlite,
     lpSolve,
@@ -35,8 +35,6 @@ Imports:
     stats,
     utils,
     zip (>= 2.3.0)
-Remotes:
-    r-lib/desc
 Suggests:
     asciicast (>= 2.2.0.9000),
     codetools,

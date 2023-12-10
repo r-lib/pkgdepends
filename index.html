@@ -15,9 +15,9 @@
     pkgdepends is the workhorse of the pak package.">
 <title>Package Dependency Resolution and Downloads • pkgdepends</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
-<link href="deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.8/font.css" rel="stylesheet">
+<link href="deps/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Package Dependency Resolution and Downloads">
@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="index.html">pkgdepends</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,22 +148,20 @@
 <span><span class="va">pd</span><span class="op">$</span><span class="fu">draw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
 <pre>
-## <span style="color: #859900;">✔</span> Updated metadata database: 2.82 MB in 8 files.                                
+## <span style="color: #859900;">✔</span> Updated metadata database: 2.84 MB in 8 files.                                
 ## <span style="color: #859900;">✔</span> Updating metadata database ... done                                           
-## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.2.0.9000</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(unknown size)</span>                    
+## <span style="font-weight: bold;font-style: italic;color: #2AA198;">r-lib/pkgcache </span><span style="font-weight: bold;font-style: italic;color: #525252;">2.2.1.9000</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(unknown size)</span>                    
 ## ├─callr <span style="color: #525252;">3.7.3</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(97.81 kB)</span>                                         
-## │ ├─processx <span style="color: #525252;">3.8.2</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(163.56 kB)</span>                              
+## │ ├─processx <span style="color: #525252;">3.8.3</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(163.56 kB)</span>                              
 ## │ │ ├─ps <span style="color: #525252;">1.7.5</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(129.21 kB)</span>                                  
 ## │ │ └─R6 <span style="color: #525252;">2.5.1</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(63.42 kB)</span>                                        
 ## │ └─R6                                                                          
 ## ├─cli <span style="color: #525252;">3.6.1</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(567.29 kB)</span>                                     
-## ├─curl <span style="color: #525252;">5.1.0</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(714.16 kB)</span>                                    
+## ├─curl <span style="color: #525252;">5.2.0</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(715.88 kB)</span>                                    
 ## ├─filelock <span style="color: #525252;">1.0.2</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(12.38 kB)</span>                                 
-## ├─jsonlite <span style="color: #525252;">1.8.7</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(1.05 MB)</span>                                  
-## ├─prettyunits <span style="color: #525252;">1.2.0</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(97.50 kB)</span>                                   
+## ├─jsonlite <span style="color: #525252;">1.8.8</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(1.05 MB)</span>                                  
 ## ├─processx                                                                      
-## ├─R6                                                                            
-## └─rappdirs <span style="color: #525252;">0.3.3</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(12.29 kB)</span>                                 
+## └─R6                                                                            
 ##                                                                                 
 ## Key:  <span style="color: #859900;">[new]</span> new | <span style="color: #859900;">[dl]</span> download | <span style="color: #859900;">[bld]</span> build | <span style="color: #859900;">[cmp]</span> compile                   
 </pre>
@@ -181,7 +179,7 @@
 <div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
 <pre>
 ## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                               
-## <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">cli</span> 3.6.1.9000 (source) (768.10 kB)                                       
+## <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">cli</span> 3.6.1.9000 (source) (768.67 kB)                                       
 </pre>
 </div>
 <p>See the <a href="https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html"><code>pkg_download_proposal</code></a> class for details.</p>
@@ -205,11 +203,11 @@
 ## <span style="color: #2AA198;">ℹ</span> Getting 1 pkg with unknown size                                               
 ## <span style="color: #859900;">✔</span> Cached copy of <span style="color: #268BD2;">cli</span> 3.6.1.9000 (source) is the latest build                    
 ## <span style="color: #2AA198;">ℹ</span> Packaging <span style="color: #268BD2;">cli</span> 3.6.1.9000                                                      
-## <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(949ms)</span>                                               
+## <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(1s)</span>                                                  
 ## <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">cli</span> 3.6.1.9000                                                       
-## <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(7.3s)</span>                                                   
-## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.6.1.9000 (github::r-lib/cli@eeeb260) <span style="color: #a3a3a3;">(1s)</span>                     
-## <span style="color: #859900;">✔</span> Summary:   1 new  in 8.4s                                                     
+## <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">cli</span> 3.6.1.9000 <span style="color: #a3a3a3;">(7.8s)</span>                                                   
+## <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">cli</span> 3.6.1.9000 (github::r-lib/cli@cf6ece6) <span style="color: #a3a3a3;">(31ms)</span>                   
+## <span style="color: #859900;">✔</span> Summary:   1 new  in 7.8s                                                     
 </pre>
 </div>
 </div>

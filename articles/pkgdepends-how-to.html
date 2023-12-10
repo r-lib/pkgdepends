@@ -8,9 +8,9 @@
 <meta name="description" content="pkgdepends">
 <title>pkgdepends HOWTO • pkgdepends</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="pkgdepends HOWTO">
@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pkgdepends</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@
 #&gt;    <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>     <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
 #&gt; <span style="color: #c2c2c2;"> 1</span> cli    stan… FALSE  FALSE     OK     cli     3.6.1   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 2</span> color… stan… FALSE  FALSE     OK     colors… 2.1-0   BSD_3_… TRUE            
-#&gt; <span style="color: #c2c2c2;"> 3</span> fansi  stan… FALSE  FALSE     OK     fansi   1.0.5   GPL-2 … TRUE            
+#&gt; <span style="color: #c2c2c2;"> 3</span> fansi  stan… FALSE  FALSE     OK     fansi   1.0.6   GPL-2 … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 4</span> farver stan… FALSE  FALSE     OK     farver  2.1.1   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 5</span> ggplo… stan… TRUE   TRUE      OK     ggplot2 3.4.4   MIT + … FALSE           
 #&gt; <span style="color: #c2c2c2;"> 6</span> glue   stan… FALSE  FALSE     OK     glue    1.6.2   MIT + … TRUE            
@@ -136,13 +136,15 @@
 #&gt; ├─lifecycle                                                                     
 #&gt; ├─MASS <span style="color: #859900;">7.3-60 &lt; 7.3-60.1</span> <span style="color: #859900;">[old]</span>                                                  
 #&gt; ├─mgcv <span style="color: #525252;">1.9-0</span>                                                                    
-#&gt; │ ├─nlme <span style="color: #525252;">3.1-163</span>                                                                
+#&gt; │ ├─nlme <span style="color: #859900;">3.1-163 &lt; 3.1-164</span> <span style="color: #859900;">[old]</span>                                                
 #&gt; │ │ └─lattice <span style="color: #859900;">0.21-9 &lt; 0.22-5</span> <span style="color: #859900;">[old]</span>                                             
-#&gt; │ └─Matrix <span style="color: #859900;">1.6-1.1 &lt; 1.6-2</span> <span style="color: #859900;">[old]</span>                                                
+#&gt; │ └─Matrix <span style="color: #859900;">1.6-1.1 &lt; 1.6-4</span> <span style="color: #859900;">[old]</span>                                                
 #&gt; │   └─lattice                                                                   
 #&gt; ├─rlang                                                                         
-#&gt; ├─scales <span style="color: #525252;">1.2.1</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(270.61 kB)</span>                                       
+#&gt; ├─scales <span style="color: #525252;">1.3.0</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(302.54 kB)</span>                                  
+#&gt; │ ├─cli                                                                         
 #&gt; │ ├─farver <span style="color: #525252;">2.1.1</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(1.27 MB)</span>                                  
+#&gt; │ ├─glue                                                                        
 #&gt; │ ├─labeling <span style="color: #525252;">0.4.3</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(10.17 kB)</span>                                    
 #&gt; │ ├─lifecycle                                                                   
 #&gt; │ ├─munsell <span style="color: #525252;">0.5.0</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(182.65 kB)</span>                                    
@@ -152,7 +154,7 @@
 #&gt; │ ├─rlang                                                                       
 #&gt; │ └─viridisLite <span style="color: #525252;">0.4.2</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(1.27 MB)</span>                                  
 #&gt; ├─tibble <span style="color: #525252;">3.2.1</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(565.98 kB)</span>                                  
-#&gt; │ ├─fansi <span style="color: #525252;">1.0.5</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(482.38 kB)</span>                                 
+#&gt; │ ├─fansi <span style="color: #525252;">1.0.6</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(482.48 kB)</span>                                 
 #&gt; │ ├─lifecycle                                                                   
 #&gt; │ ├─magrittr <span style="color: #525252;">2.0.3</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(267.07 kB)</span>                              
 #&gt; │ ├─pillar <span style="color: #525252;">1.9.0</span> <span style="color: #859900;">[new][bld][dl] </span><span style="color: #525252;">(444.53 kB)</span>                                     
@@ -162,7 +164,7 @@
 #&gt; │ │ ├─lifecycle                                                                 
 #&gt; │ │ ├─rlang                                                                     
 #&gt; │ │ ├─utf8 <span style="color: #525252;">1.2.4</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(241.08 kB)</span>                                
-#&gt; │ │ └─vctrs <span style="color: #525252;">0.6.4</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(968.45 kB)</span>                               
+#&gt; │ │ └─vctrs <span style="color: #525252;">0.6.5</span> <span style="color: #859900;">[new][bld][cmp][dl] </span><span style="color: #525252;">(969.07 kB)</span>                               
 #&gt; │ │   ├─cli                                                                     
 #&gt; │ │   ├─glue                                                                    
 #&gt; │ │   ├─lifecycle                                                               
@@ -193,7 +195,7 @@
 #&gt; <span style="color: #c2c2c2;"> 1</span> tidyv… gith… TRUE   TRUE      OK     ggplot2 3.4.4.… MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 2</span> cli    stan… FALSE  FALSE     OK     cli     3.6.1   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 3</span> color… stan… FALSE  FALSE     OK     colors… 2.1-0   BSD_3_… TRUE            
-#&gt; <span style="color: #c2c2c2;"> 4</span> fansi  stan… FALSE  FALSE     OK     fansi   1.0.5   GPL-2 … TRUE            
+#&gt; <span style="color: #c2c2c2;"> 4</span> fansi  stan… FALSE  FALSE     OK     fansi   1.0.6   GPL-2 … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 5</span> farver stan… FALSE  FALSE     OK     farver  2.1.1   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 6</span> glue   stan… FALSE  FALSE     OK     glue    1.6.2   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 7</span> gtable stan… FALSE  FALSE     OK     gtable  0.3.4   MIT + … FALSE           
@@ -221,28 +223,23 @@
 <span><span class="va">prop</span><span class="op">$</span><span class="fu">get_solution</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span></code></pre></div>
 <div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
 <pre>
-#&gt; <span style="color: #999999;"># A data frame: 19 × 37</span>                                                         
+#&gt; <span style="color: #999999;"># A data frame: 14 × 37</span>                                                         
 #&gt;    ref    type  direct directpkg status package version license needscompilation
 #&gt;    <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>     <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;"> 1</span> local… local TRUE   TRUE      OK     pkgdep… 0.7.0   MIT + … <span style="color: #DC322F;">NA</span>              
+#&gt; <span style="color: #c2c2c2;"> 1</span> local… local TRUE   TRUE      OK     pkgdep… 0.7.1   MIT + … <span style="color: #DC322F;">NA</span>              
 #&gt; <span style="color: #c2c2c2;"> 2</span> callr  stan… FALSE  FALSE     OK     callr   3.7.3   MIT + … FALSE           
 #&gt; <span style="color: #c2c2c2;"> 3</span> cli    stan… FALSE  FALSE     OK     cli     3.6.1   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;"> 4</span> crayon stan… FALSE  FALSE     OK     crayon  1.5.2   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;"> 5</span> curl   stan… FALSE  FALSE     OK     curl    5.1.0   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;"> 6</span> desc   stan… FALSE  FALSE     OK     desc    1.4.2   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;"> 7</span> filel… stan… FALSE  FALSE     OK     filelo… 1.0.2   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;"> 8</span> glue   stan… FALSE  FALSE     OK     glue    1.6.2   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;"> 9</span> jsonl… stan… FALSE  FALSE     OK     jsonli… 1.8.7   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">10</span> lpSol… stan… FALSE  FALSE     OK     lpSolve 5.6.19  LGPL-2  TRUE            
-#&gt; <span style="color: #c2c2c2;">11</span> pkgbu… stan… FALSE  FALSE     OK     pkgbui… 1.4.2   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">12</span> pkgca… stan… FALSE  FALSE     OK     pkgcac… 2.2.0.1 MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">13</span> prett… stan… FALSE  FALSE     OK     pretty… 1.2.0   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">14</span> proce… stan… FALSE  FALSE     OK     proces… 3.8.2   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">15</span> ps     stan… FALSE  FALSE     OK     ps      1.7.5   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">16</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">17</span> rappd… stan… FALSE  FALSE     OK     rappdi… 0.3.3   MIT + … TRUE            
-#&gt; <span style="color: #c2c2c2;">18</span> rproj… stan… FALSE  FALSE     OK     rprojr… 2.0.4   MIT + … FALSE           
-#&gt; <span style="color: #c2c2c2;">19</span> zip    stan… FALSE  FALSE     OK     zip     2.3.0   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;"> 4</span> curl   stan… FALSE  FALSE     OK     curl    5.2.0   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;"> 5</span> desc   stan… FALSE  FALSE     OK     desc    1.4.3   MIT + … FALSE           
+#&gt; <span style="color: #c2c2c2;"> 6</span> filel… stan… FALSE  FALSE     OK     filelo… 1.0.2   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;"> 7</span> jsonl… stan… FALSE  FALSE     OK     jsonli… 1.8.8   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;"> 8</span> lpSol… stan… FALSE  FALSE     OK     lpSolve 5.6.20  LGPL-2  TRUE            
+#&gt; <span style="color: #c2c2c2;"> 9</span> pkgbu… stan… FALSE  FALSE     OK     pkgbui… 1.4.3   MIT + … FALSE           
+#&gt; <span style="color: #c2c2c2;">10</span> pkgca… stan… FALSE  FALSE     OK     pkgcac… 2.2.1   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">11</span> proce… stan… FALSE  FALSE     OK     proces… 3.8.3   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">12</span> ps     stan… FALSE  FALSE     OK     ps      1.7.5   MIT + … TRUE            
+#&gt; <span style="color: #c2c2c2;">13</span> R6     stan… FALSE  FALSE     OK     R6      2.5.1   MIT + … FALSE           
+#&gt; <span style="color: #c2c2c2;">14</span> zip    stan… FALSE  FALSE     OK     zip     2.3.0   MIT + … TRUE            
 #&gt; <span style="color: #999999;"># ℹ 28 more variables: priority &lt;chr&gt;, md5sum &lt;chr&gt;, sha256 &lt;chr&gt;,</span>              
 #&gt; <span style="color: #999999;">#   filesize &lt;int&gt;, built &lt;chr&gt;, platform &lt;chr&gt;, rversion &lt;chr&gt;,</span>                
 #&gt; <span style="color: #999999;">#   repotype &lt;chr&gt;, repodir &lt;chr&gt;, target &lt;chr&gt;, deps &lt;list&gt;, mirror &lt;chr&gt;,</span>     
@@ -271,41 +268,41 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="va">target_dir</span><span class="op">)</span></span></code></pre></div>
 <div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
 <pre>
-#&gt; <span style="color: #2AA198;">ℹ</span> Getting 28 pkgs (24.26 MB), 5 (1.60 MB) cached                                
+#&gt; <span style="color: #2AA198;">ℹ</span> Getting 28 pkgs (25.09 MB), 5 (1.60 MB) cached                                
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">labeling</span> 0.4.3 (source) (10.17 kB)                                        
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">fansi</span> 1.0.5 (source) (482.38 kB)                                          
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lifecycle</span> 1.0.4 (source) (107.66 kB)                                      
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">farver</span> 2.1.1 (source) (1.27 MB)                                           
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">scales</span> 1.2.1 (source) (270.61 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-163 (source) (848.98 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">utf8</span> 1.2.4 (source) (241.08 kB)                                           
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">mgcv</span> 1.9-0 (source) (1.11 MB)                                             
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">colorspace</span> 2.1-0 (source) (2.12 MB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">gtable</span> 0.3.4 (source) (130.10 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">RColorBrewer</span> 1.1-3 (source) (11.64 kB)                                    
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lattice</span> 0.22-5 (source) (599.04 kB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pillar</span> 1.9.0 (source) (444.53 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">magrittr</span> 2.0.3 (source) (267.07 kB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">MASS</span> 7.3-60.1 (source) (535.22 kB)                                        
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-1.1 (source) (2.07 MB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">fansi</span> 1.0.6 (source) (482.48 kB)                                          
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">tibble</span> 3.2.1 (source) (565.98 kB)                                         
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">munsell</span> 0.5.0 (source) (182.65 kB)                                        
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-164 (source) (836.83 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">farver</span> 2.1.1 (source) (1.27 MB)                                           
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">mgcv</span> 1.9-0 (source) (1.11 MB)                                             
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-2 (source) (2.88 MB)                                           
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lifecycle</span> 1.0.4 (source) (107.66 kB)                                      
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">MASS</span> 7.3-60.1 (source) (535.22 kB)                                        
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pkgconfig</span> 2.0.3 (source) (6.08 kB)                                        
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">vctrs</span> 0.6.4 (source) (968.45 kB)                                          
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">isoband</span> 0.2.7 (source) (1.59 MB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">munsell</span> 0.5.0 (source) (182.65 kB)                                        
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lattice</span> 0.22-5 (source) (599.04 kB)                                       
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">scales</span> 1.3.0 (source) (302.54 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">viridisLite</span> 0.4.2 (source) (1.27 MB)                                      
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">utf8</span> 1.2.4 (source) (241.08 kB)                                           
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">colorspace</span> 2.1-0 (source) (2.12 MB)                                       
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">RColorBrewer</span> 1.1-3 (source) (11.64 kB)                                    
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">gtable</span> 0.3.4 (source) (130.10 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">mgcv</span> 1.9-0 (source) (1.11 MB)                                             
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">MASS</span> 7.3-60 (source) (561.53 kB)                                          
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">lattice</span> 0.22-5 (source) (599.04 kB)                                       
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-163 (source) (848.98 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">isoband</span> 0.2.7 (source) (1.59 MB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">magrittr</span> 2.0.3 (source) (267.07 kB)                                       
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">ggplot2</span> 3.4.4 (source) (3.16 MB)                                          
-#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">viridisLite</span> 0.4.2 (source) (1.27 MB)                                      
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pillar</span> 1.9.0 (source) (444.53 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">vctrs</span> 0.6.5 (source) (969.07 kB)                                          
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">nlme</span> 3.1-164 (source) (836.83 kB)                                         
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-4 (source) (2.88 MB)                                           
+#&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">Matrix</span> 1.6-4 (source) (2.88 MB)                                           
 #&gt; <span style="color: #999999;"># A data frame: 33 × 39</span>                                                         
 #&gt;    ref    type  direct directpkg status package version license needscompilation
 #&gt;    <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>     <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>  <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
 #&gt; <span style="color: #c2c2c2;"> 1</span> cli    stan… FALSE  FALSE     OK     cli     3.6.1   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 2</span> color… stan… FALSE  FALSE     OK     colors… 2.1-0   BSD_3_… TRUE            
-#&gt; <span style="color: #c2c2c2;"> 3</span> fansi  stan… FALSE  FALSE     OK     fansi   1.0.5   GPL-2 … TRUE            
+#&gt; <span style="color: #c2c2c2;"> 3</span> fansi  stan… FALSE  FALSE     OK     fansi   1.0.6   GPL-2 … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 4</span> farver stan… FALSE  FALSE     OK     farver  2.1.1   MIT + … TRUE            
 #&gt; <span style="color: #c2c2c2;"> 5</span> ggplo… stan… TRUE   TRUE      OK     ggplot2 3.4.4   MIT + … FALSE           
 #&gt; <span style="color: #c2c2c2;"> 6</span> glue   stan… FALSE  FALSE     OK     glue    1.6.2   MIT + … TRUE            
@@ -344,13 +341,13 @@
 <pre>
 #&gt; <span style="color: #2AA198;">ℹ</span> No downloads are needed, 1 pkg (6.08 kB) is cached                            
 #&gt; <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">pkgconfig</span> 2.0.3                                                      
-#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(850ms)</span>                                                 
+#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(874ms)</span>                                                 
 #&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.3  <span style="color: #a3a3a3;">(1s)</span>                                               
 #&gt; <span style="color: #859900;">✔</span> Summary:   1 new  in 1.9s                                                     
 #&gt; <span style="color: #999999;"># A data frame: 1 × 31</span>                                                          
 #&gt;   library        package title version license imports suggests needscompilation
 #&gt;   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>          <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>    <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;">1</span> /tmp/Rtmpe6Bp… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+#&gt; <span style="color: #c2c2c2;">1</span> /tmp/RtmpdpZU… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
 #&gt; <span style="color: #999999;"># ℹ 23 more variables: repository &lt;chr&gt;, built &lt;chr&gt;, remotetype &lt;chr&gt;,</span>         
 #&gt; <span style="color: #999999;">#   remotepkgref &lt;chr&gt;, remoteref &lt;chr&gt;, remoterepos &lt;chr&gt;,</span>                     
 #&gt; <span style="color: #999999;">#   remotepkgplatform &lt;chr&gt;, remotesha &lt;chr&gt;, depends &lt;chr&gt;, linkingto &lt;chr&gt;,</span>   
@@ -378,15 +375,15 @@
 #&gt; <span style="color: #2AA198;">ℹ</span> No downloads are needed, 1 pkg is cached                                      
 #&gt; <span style="color: #859900;">✔</span> Got <span style="color: #268BD2;">pkgconfig</span> 2.0.2 (source) (13.22 kB)                                       
 #&gt; <span style="color: #2AA198;">ℹ</span> Packaging <span style="color: #268BD2;">pkgconfig</span> 2.0.2                                                     
-#&gt; <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(295ms)</span>                                              
+#&gt; <span style="color: #859900;">✔</span> Packaged <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(287ms)</span>                                              
 #&gt; <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">pkgconfig</span> 2.0.2                                                      
-#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(852ms)</span>                                                 
+#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.2 <span style="color: #a3a3a3;">(865ms)</span>                                                 
 #&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.2 (github::cran/pkgconfig@d892880) <span style="color: #a3a3a3;">(1s)</span>               
 #&gt; <span style="color: #859900;">✔</span> Summary:   1 new  in 1.9s                                                     
 #&gt; <span style="color: #999999;"># A data frame: 1 × 32</span>                                                          
 #&gt;   library        package title version license imports suggests needscompilation
 #&gt;   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>          <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>    <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;">1</span> /tmp/Rtmpe6Bp… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
+#&gt; <span style="color: #c2c2c2;">1</span> /tmp/RtmpdpZU… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
 #&gt; <span style="color: #999999;"># ℹ 24 more variables: repository &lt;chr&gt;, built &lt;chr&gt;, remotetype &lt;chr&gt;,</span>         
 #&gt; <span style="color: #999999;">#   remotehost &lt;chr&gt;, remoterepo &lt;chr&gt;, remoteusername &lt;chr&gt;,</span>                   
 #&gt; <span style="color: #999999;">#   remotepkgref &lt;chr&gt;, remoteref &lt;chr&gt;, remotesha &lt;chr&gt;, depends &lt;chr&gt;,</span>        
@@ -408,13 +405,13 @@
 <pre>
 #&gt; <span style="color: #2AA198;">ℹ</span> No downloads are needed, 1 pkg (6.08 kB) is cached                            
 #&gt; <span style="color: #2AA198;">ℹ</span> Building <span style="color: #268BD2;">pkgconfig</span> 2.0.3                                                      
-#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(844ms)</span>                                                 
+#&gt; <span style="color: #859900;">✔</span> Built <span style="color: #268BD2;">pkgconfig</span> 2.0.3 <span style="color: #a3a3a3;">(871ms)</span>                                                 
 #&gt; <span style="color: #859900;">✔</span> Installed <span style="color: #268BD2;">pkgconfig</span> 2.0.3  <span style="color: #a3a3a3;">(1s)</span>                                               
 #&gt; <span style="color: #859900;">✔</span> Summary:   1 updated  in 1.9s                                                 
 #&gt; <span style="color: #999999;"># A data frame: 1 × 31</span>                                                          
 #&gt;   library        package title version license imports suggests needscompilation
 #&gt;   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>          <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span> <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>   <span style="font-style: italic;color: #999999;">&lt;chr&gt;</span>    <span style="font-style: italic;color: #999999;">&lt;lgl&gt;</span>           
-#&gt; <span style="color: #c2c2c2;">1</span> /tmp/Rtmpe6Bp… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+#&gt; <span style="color: #c2c2c2;">1</span> /tmp/RtmpdpZU… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
 #&gt; <span style="color: #999999;"># ℹ 23 more variables: repository &lt;chr&gt;, built &lt;chr&gt;, remotetype &lt;chr&gt;,</span>         
 #&gt; <span style="color: #999999;">#   remotepkgref &lt;chr&gt;, remoteref &lt;chr&gt;, remoterepos &lt;chr&gt;,</span>                     
 #&gt; <span style="color: #999999;">#   remotepkgplatform &lt;chr&gt;, remotesha &lt;chr&gt;, depends &lt;chr&gt;, linkingto &lt;chr&gt;,</span>   

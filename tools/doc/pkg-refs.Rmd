@@ -258,7 +258,7 @@ A GitHub remote string can also be used instead of an URL, for example:
 For private GitHub repositories, the `gitcreds` package attempts to 
 retrieve the relevant credentials using 
 `gitcreds::gitcreds_get(url = "https://github.com")`. See the docs of
-`gitcreds::gitcreds_get` for full details. Briefly, you can run
+`gitcreds::gitcreds_get()` for full details. Briefly, you can run
 `gitcreds::gitcreds_get(url = "https://github.com")` manually yourself 
 to see if it finds anything. If it does not, get a GitHub 
 _personal access token_ (PAT) and then call 
@@ -290,7 +290,7 @@ branch is used.
 For private GitLab repositories, the `gitcreds` package attempts to 
 retrieve the relevant credentials using 
 `gitcreds::gitcreds_get(url = "https://gitlab.com")`. See the docs of
-`gitcreds::gitcreds_get` for full details. Briefly, you can run
+`gitcreds::gitcreds_get()` for full details. Briefly, you can run
 `gitcreds::gitcreds_get(url = "https://gitlab.com")` manually yourself 
 to see if it finds anything. If it does not, get a GitLab 
 _personal access token_ (PAT) and then call 

@@ -246,7 +246,7 @@ parse_pkg_ref <- function(ref, remote_types = NULL, ...) {
 
 param_rx <- function() {
   paste0(
-    "(?:(?<package>", package_name_rx(), ")=)",
+    "(?:(?<package>", package_name_rx(), "|[*])=)",
     "$"
   )
 }

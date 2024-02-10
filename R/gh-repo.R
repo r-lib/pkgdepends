@@ -235,7 +235,7 @@ ghrepo <- local({
       "-" = "->",
       "new" = inst$version,
       "build" = paste0("b", inst$buildnum),
-      "build time" = vcapply(inst$build_time, prettyunits::pretty_dt)
+      "build time" = vcapply(inst$build_time, format_time$pretty_dt)
     )
 
     print_table(cols)

@@ -27,6 +27,8 @@ ghrepo <- local({
 
     cli::cli_h2("Build binary packages")
     inst <- build_pkgs(inst, lib)
+    # drop the ones that failed to build
+    inst <- inst[!is.na(inst$built_path)]
 
     cli::cli_par()
     cli::cli_h2("Update package mirror at GH (if needed)")
@@ -192,15 +194,21 @@ ghrepo <- local({
   build_pkgs <- function(inst, library) {
     files <- rep(NA_character_, nrow(inst))
     for (i in seq_along(inst$package)) {
-      proc <- cli::cli_process_start(
-        "Building binary for package {.pkg {inst$package[[i]]}}."
-      )
-      files[i] <- pkg_build(
-        inst$package[[i]],
-        library = library,
-        build_number = inst$buildnum[[i]]
-      )
-      cli::cli_process_done(proc)
+      if (length(inst$build_error[[i]])) {
+        cli::cli_alert_warning(
+          "Failed to build package {.pkg {inst$package[[i]]}}."
+        )
+      } else {
+        proc <- cli::cli_process_start(
+          "Building binary for package {.pkg {inst$package[[i]]}}."
+        )
+        files[i] <- pkg_build(
+          inst$package[[i]],
+          library = library,
+          build_number = inst$buildnum[[i]]
+        )
+        cli::cli_process_done(proc)
+      }
     }
     inst$built_path <- files
     inst

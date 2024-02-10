@@ -3,7 +3,7 @@ ghrepo <- local({
 
   ghrepo_update <- function(repo, subdir, release_org = "cran",
                             source_repo = "https://cran.r-project.org",
-                            packages = NULL) {
+                            ignore_build_errors = TRUE, packages = NULL) {
 
     subdir <- sub("/+$", "", subdir)
     if (endsWith(subdir, "src/contrib")) {
@@ -19,8 +19,13 @@ ghrepo <- local({
 
     cli::cli_h2("Install packages")
     dir.create(lib <- tempfile("pkgdepends-lib-"))
-    inst <- install_pkgs(to_build, library = lib, source_repo = source_repo,
-                         repo = repo, subdir = subdir)
+    inst <- install_pkgs(
+      c(to_build, if (ignore_build_errors) "*=?ignore-build-errors"),
+      library = lib,
+      source_repo = source_repo,
+      repo = repo,
+      subdir = subdir
+    )
     inst <- keep_updated(inst, mirror_pkgs)
     # I don't think this can happen....
     if (nrow(inst) == 0) return(invisible(character()))

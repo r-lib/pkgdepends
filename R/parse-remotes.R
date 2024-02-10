@@ -87,11 +87,13 @@ github_url_pull_rx <- function() "(?:pull/(?<pull>.+$))"
 github_url_release_rx <- function() "(?:releases/)(?<release>.+$)"
 
 github_url_detail_rx <- function() {
-  glue("(?:/(?:",
-       "{github_url_commitish_rx()}",
-       "|{github_url_pull_rx()}",
-       "|{github_url_release_rx()}",
-       "))?")
+  paste0(
+    "(?:/(?:",
+    github_url_commitish_rx(),
+    "|", github_url_pull_rx(),
+    "|", github_url_release_rx(),
+    "))?"
+  )
 }
 
 ## We need to select the shortest match here, to avoid matching a
@@ -244,7 +246,7 @@ parse_pkg_ref <- function(ref, remote_types = NULL, ...) {
 
 param_rx <- function() {
   paste0(
-    "(?:(?<package>", package_name_rx(), ")=)",
+    "(?:(?<package>", package_name_rx(), "|[*])=)",
     "$"
   )
 }
@@ -270,8 +272,8 @@ add_ref_params <- function(res, params) {
   res
 }
 
-known_query_params <- c("ignore", "ignore-before-r", "nocache",
-                        "reinstall", "source")
+known_query_params <- c("ignore", "ignore-before-r", "ignore-build-errors",
+                        "nocache", "reinstall", "source")
 
 parse_query <- function(ref) {
   query <- sub("^[^?]*(\\?|$)", "", ref)
@@ -285,7 +287,7 @@ parse_query <- function(ref) {
   })
 
   if (length(bad <- unique(setdiff(keys, known_query_params)))) {
-    cli_alert_warning(c(
+    cli::cli_alert_warning(c(
       "Unknown package{cli::qty(bad)} parameter{?s}: ",
       "{.val {bad}} in {.val {ref}}."
     ))

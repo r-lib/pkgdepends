@@ -28,7 +28,7 @@ package manager, see [pak](https://github.com/r-lib/pak).
 - Install downloaded packages.
 - Includes a dependency solver to find a consistent set of dependencies.
 - Supports CRAN and Bioconductor packages automatically.
-- Supports packages on GitHub.
+- Supports packages on GitHub and GitLab.
 - Supports packages in git repositories.
 - Supports package bundles or files on the web.
 - Supports local package file and trees.
@@ -40,10 +40,16 @@ package manager, see [pak](https://github.com/r-lib/pak).
 
 # Install
 
-Once on CRAN, install the package with:
+Install the package with:
 
 ``` r
 install.packages("pkgdepends")
+```
+
+If you need the development version, install it with
+
+``` r
+pak::pak("r-lib/pkgdepends")
 ```
 
 # Usage

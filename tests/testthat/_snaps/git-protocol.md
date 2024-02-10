@@ -1,7 +1,7 @@
 # git_list_refs
 
     Code
-      git_list_refs("https://github.com/gaborcsardi/pak-test.git")$refs
+      git_list_refs(fake_git$url("/pak-test.git"))$refs
     Output
       # A data frame: 4 x 2
         ref               hash                                    
@@ -14,8 +14,7 @@
 ---
 
     Code
-      git_list_refs_v2("https://github.com/gaborcsardi/pak-test.git", "refs/heads/")$
-        refs
+      git_list_refs_v2(fake_git$url("/pak-test.git"), "refs/heads/")$refs
     Output
       # A data frame: 2 x 2
         ref               hash                                    
@@ -26,8 +25,8 @@
 # git_list_files
 
     Code
-      git_list_files("https://github.com/gaborcsardi/pak-test.git",
-        "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e")
+      git_list_files(fake_git$url("/pak-test.git"),
+      "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e")
     Output
       $ref
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
@@ -67,7 +66,7 @@
       # i 14 more rows
       
     Code
-      git_list_files("https://github.com/gaborcsardi/pak-test.git", "refs/tags/v1")
+      git_list_files(fake_git$url("/pak-test.git"), "refs/tags/v1")
     Output
       $ref
       [1] "refs/tags/v1"
@@ -109,11 +108,42 @@
       # i 14 more rows
       
 
+# async_git_list_files_process
+
+    Code
+      sort(async_git_list_files_process(pack, ref = ref, sha = ref, url = "url")$
+      files$path)
+    Output
+       [1] ".github"                              
+       [2] ".github/actions"                      
+       [3] ".github/actions/parameters"           
+       [4] ".github/actions/parameters/action.yml"
+       [5] ".github/workflows"                    
+       [6] ".github/workflows/check-standard.yaml"
+       [7] ".gitignore"                           
+       [8] "foo"                                  
+       [9] "subdir"                               
+      [10] "subdir/dotenv"                        
+      [11] "subdir/dotenv/.Rbuildignore"          
+      [12] "subdir/dotenv/.gitignore"             
+      [13] "subdir/dotenv/DESCRIPTION"            
+      [14] "subdir/dotenv/LICENSE"                
+      [15] "subdir/dotenv/NAMESPACE"              
+      [16] "subdir/dotenv/NEWS.md"                
+      [17] "subdir/dotenv/R"                      
+      [18] "subdir/dotenv/R/dotenv-package.r"     
+      [19] "subdir/dotenv/README.Rmd"             
+      [20] "subdir/dotenv/README.md"              
+      [21] "subdir/dotenv/man"                    
+      [22] "subdir/dotenv/man/dotenv-package.Rd"  
+      [23] "subdir/dotenv/man/load_dot_env.Rd"    
+      [24] "wipe.R"                               
+
 # git_download_file
 
     Code
-      out <- git_download_file("https://github.com/gaborcsardi/pak-test.git",
-        "a1e2d6741374d1f32ec138ee2020eae36b859e99", tmp)
+      out <- git_download_file(fake_git$url("/pak-test.git"),
+      "a1e2d6741374d1f32ec138ee2020eae36b859e99", tmp)
       out
     Output
       $type
@@ -158,21 +188,24 @@
 
     Code
       git_parse_message(raw(3))
-    Error <git_proto_error_invalid_data>
+    Condition
+      Error:
       ! Invalid pkt-line at the enf of message from git.
 
 ---
 
     Code
       git_parse_message(charToRaw("foobvar"))
-    Error <git_proto_error_invalid_data>
+    Condition
+      Error:
       ! Invalid pkt-len field in message from git, must be four hexa digits.
 
 ---
 
     Code
       git_parse_message(charToRaw("00bbnoteonugh"))
-    Error <git_proto_error_invalid_data>
+    Condition
+      Error:
       ! Invalid pkt-payload in message from git.
       i Need 187 bytes, found 13.
 
@@ -180,20 +213,22 @@
 
     Code
       git_create_message_v1(character())
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Invalid git protocol (v1) message, must have at least one argument
 
 # pkt_line
 
     Code
       pkt_line(raw(70000))
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! packet line longer than 65516 bytes is not implemented yet.
 
 # git_list_refs_v1
 
     Code
-      git_list_refs_v1("https://github.com/gaborcsardi/pak-test.git")$refs
+      git_list_refs_v1(fake_git$url("/pak-test.git"))$refs
     Output
       # A data frame: 4 x 2
         ref               hash                                    
@@ -206,8 +241,8 @@
 # git_list_refs_v1_process_1
 
     Code
-      git_list_refs_v1_process_1(resp, "https://github.com/gaborcsardi/pak-test.git",
-        "refs/tags/v1")$refs
+      git_list_refs_v1_process_1(resp, fake_git$url("/pak-test.git"), "refs/tags/v1")$
+        refs
     Output
       # A data frame: 1 x 2
         ref          hash                                    
@@ -217,8 +252,8 @@
 # async_git_list_refs_v2_process_1
 
     Code
-      sy(async_git_list_refs_v2_process_1(resp,
-        "https://github.com/gaborcsardi/pak-test.git", "refs/tags/v1"))$refs
+      sy(async_git_list_refs_v2_process_1(resp, fake_git$url("/pak-test.git"),
+      "refs/tags/v1"))$refs
     Output
       # A data frame: 1 x 2
         ref          hash                                    
@@ -229,21 +264,24 @@
 
     Code
       async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Invalid git protocol message from <http://localhost:3000/git/cli>.
 
 ---
 
     Code
       async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
-    Error <git_proto_error_not_implemented>
+    Condition
+      Error:
       ! Only git protocol version 2 is supported, not version 10.
 
 ---
 
     Code
       async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
-    Error <git_proto_error_unexpected_response>
+    Condition
+      Error:
       ! Response from git server does not have a closing `flush-pkt`.
 
 ---
@@ -251,14 +289,16 @@
     Code
       async_git_list_refs_v2_process_3(list(list(type = "data-pkt")), character(),
       url)
-    Error <git_proto_error_unexpected_response>
+    Condition
+      Error:
       ! Response from git server does not have a closing `flush-pkt`.
 
 # check_initial_response
 
     Code
       check_initial_response(list(), "http://localhost:3000/git/cli")
-    Error <git_proto_error_unexpected_response>
+    Condition
+      Error:
       ! Unexpected response from git server, no `data-pkt` line.
 
 # git_unpack
@@ -548,45 +588,75 @@
       
       
 
+# git_list_pack_index
+
+    Code
+      git_list_pack_index(path)
+    Output
+      $objects
+                                             hash        crc offset
+      1  cefdc0eebcd7f757efb9a80652fd8aaf1a87508e 3597296333     12
+      2  aac34e05a0cb9852aa425757dc8480fa29c6c783  585558493    175
+      3  61102a589aeef025b8c11015d5de4fd6f91b0fdb 3679009946    343
+      4  0784f430fc5830e1b26ceb5fa9a22551fbe9a400  125079169    420
+      5  c3117c75084ec688a9bf82ce11789e0295f01ca3  706758901    466
+      6  23b72b52356f0a1ac89925f5431e44a0ab23bab6 3850203054    515
+      7  5ba9d25318eacd311bb9f73cf83f859b0bfb7235 3361408054    573
+      8  75210921adb3ebdf805d8b01691e2d4b3915d096 2355823347    615
+      9  9a09c0540f29a3f0e0cd0bf9acd7303e1fa9bff2 2235782520    938
+      10 d4ef766204f3087d32148d714df664ae66eece82   23708622    993
+      
+      $data_chksum
+      [1] "775021fe2c99a033831f23b73d3a1176c9c4e435"
+      
+      $idx_chksum
+      [1] "8037ebb73a48b7d4a7d18250fda6bb8370160158"
+      
+
 # git_unpack errors
 
     Code
       git_unpack(pack[1:30])
-    Error <git_proto_error_invalid_data>
+    Condition
+      Error:
       ! Invalid packfile from git, too short.
 
 ---
 
     Code
       git_unpack(charToRaw("nope and some more so we have enough bytes"))
-    Error <git_proto_error_invalid_data>
+    Condition
+      Error:
       ! Not a git packfile, it does not have a `PACK` header.
 
 ---
 
     Code
       git_unpack(pack2)
-    Error <git_proto_error_unexpected_response>
+    Condition
+      Error:
       ! Unexpected packfile version, must be version 2.
 
 ---
 
     Code
       git_unpack(pack2)
-    Error <git_proto_error_invalid_data>
+    Condition
+      Error:
       ! Checksum mismatch in git packfile.
 
 # parse_int32_nwb
 
     Code
       parse_int32_nwb(raw(3))
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Cannot parse integer, not raw or number of bytes is wrong.
 
 # async_git_resolve_ref
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git", "main"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "main"))
     Output
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
@@ -595,7 +665,7 @@
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git", "v1"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "v1"))
     Output
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
       attr(,"protocol")
@@ -604,8 +674,7 @@
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
-        "3f3b0b4ee8a0ff"))
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "3f3b0b4ee8a0ff"))
     Output
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
@@ -614,17 +683,17 @@
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
-        "badcafe"))
-    Error <async_rejected>
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "badcafe"))
+    Condition
+      Error:
       ! Unknown git ref: "badcafe".
 
 ---
 
     Code
-      sy(async_git_resolve_ref("https://github.com/gaborcsardi/pak-test.git",
-        "badcafe"))
-    Error <async_rejected>
+      sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "badcafe"))
+    Condition
+      Error:
       ! Found multiple git refs with prefix "badcafe", it is ambiguous.
       i Matching git refs: "badcafe1" and "badcafe2".
       i Specify a longer prefix to choose a single git ref.
@@ -633,14 +702,16 @@
 
     Code
       git_fetch_process_v1(list(), url, "badcafe")
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Empty reply from git server (protocol v1) at <https://<auth>@example.com>.
 
 ---
 
     Code
       git_fetch_process_v1(list(list(type = "boo")), url, "badcafe")
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! No PACK in git server response (protocol v1) from <https://<auth>@example.com>.
 
 # git_download_repo
@@ -659,4 +730,16 @@
        [9] "v1/subdir/dotenv/man/dotenv-package.Rd"
       [10] "v1/subdir/dotenv/man/load_dot_env.Rd"  
       [11] "v1/wipe.R"                             
+
+# unpack_packfile_repo
+
+    Code
+      sort(dir(output, recursive = TRUE))
+    Output
+       [1] "foo"                                 "subdir/dotenv/DESCRIPTION"          
+       [3] "subdir/dotenv/LICENSE"               "subdir/dotenv/NAMESPACE"            
+       [5] "subdir/dotenv/NEWS.md"               "subdir/dotenv/R/dotenv-package.r"   
+       [7] "subdir/dotenv/README.Rmd"            "subdir/dotenv/README.md"            
+       [9] "subdir/dotenv/man/dotenv-package.Rd" "subdir/dotenv/man/load_dot_env.Rd"  
+      [11] "wipe.R"                             
 

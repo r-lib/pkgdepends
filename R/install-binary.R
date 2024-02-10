@@ -1,6 +1,4 @@
 
-#' @importFrom filelock lock unlock
-
 install_extracted_binary <- function(filename, lib_cache, pkg_cache, lib,
                                      metadata, now) {
 
@@ -9,7 +7,7 @@ install_extracted_binary <- function(filename, lib_cache, pkg_cache, lib,
   pkg_name <- pkg$name
 
   lockfile <- lock_cache(lib_cache, pkg_name, getOption("install.lock"))
-  on.exit(unlock(lockfile), add = TRUE)
+  on.exit(filelock::unlock(lockfile), add = TRUE)
 
   installed_path <- file.path(lib, pkg_name)
   if (file.exists(installed_path)) {
@@ -29,31 +27,41 @@ install_extracted_binary <- function(filename, lib_cache, pkg_cache, lib,
       dir.create(dirname(move_to), showWarnings = FALSE, recursive = TRUE)
       ret <- file.rename(installed_path, move_to)
       if (!ret) {
-        throw(new_fs_error(
-          "Failed to move installed package at {installed_path}",
-          package = pkg_name))
+        throw(pkg_error(
+          "Failed to move installed package {.pkg {pkg_name}} at
+          {.path {installed_path}}.",
+          .data = list(package = pkg_name),
+          .class = "install_filesystem_error"
+        ))
       }
       ret <- unlink(move_to, recursive = TRUE, force = TRUE)
       if (ret != 0) {
-        throw(new_fs_warning(
-          "Failed to remove installed package at {move_to}",
-          package = pkg_name))
+        throw(pkg_warning(
+          "Failed to remove installed package at {.path {move_to}}.",
+          .data = list(package = pkg_name),
+          .class = "install_filesystem_warning"
+        ))
       }
     } else {
       # On Unix we are fine with just deleting the old package
       ret <- unlink(installed_path, recursive = TRUE, force = TRUE)
       if (ret != 0) {
-        throw(new_fs_warning(
-          "Failed to remove installed package at {installed_path}",
-          package = pkg_name))
+        throw(pkg_warning(
+          "Failed to remove installed package at {.path {installed_path}}.",
+          .data = list(package = pkg_name),
+          .class = "install_filesystem_warning"
+        ))
       }
     }
   }
   ret <- file.rename(pkg$path, installed_path)
   if (!ret) {
-    throw(new_fs_error(
-      "Unable to move package from {pkg$path} to {installed_path}",
-      package = pkg_name))
+    throw(pkg_error(
+      "Unable to move package from {.path {pkg$path}} to
+      {.path {installed_path}}",
+      .data = list(package = pkg_name),
+      .class = "install_filesystem_error"
+    ))
   }
 
   installed_path
@@ -72,7 +80,10 @@ add_metadata <- function(pkg_path, metadata) {
   source_desc <- file.path(pkg_path, "DESCRIPTION")
   binary_desc <- file.path(pkg_path, "Meta", "package.rds")
   if (file.exists(source_desc)) {
-    do.call(desc::desc_set, c(as.list(metadata), list(file = source_desc)))
+    do.call(
+      desc::desc_set,
+      c(as.list(metadata), list(file = source_desc, check = FALSE))
+    )
   }
 
   if (file.exists(binary_desc)) {
@@ -116,8 +127,10 @@ make_install_process <- function(filename, lib = .libPaths()[[1L]],
 
   type <- detect_package_archive_type(filename)
   if (type == "unknown") {
-    throw(new_input_error(
-      "Cannot extract {filename}, unknown archive type?"))
+    throw(pkg_error(
+      "Cannot extract {.path {filename}}, unknown archive type.",
+      .class = "install_input_error"
+    ))
   }
 
   lib_cache <- library_cache(lib)

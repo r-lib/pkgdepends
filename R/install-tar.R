@@ -141,7 +141,6 @@ external_untar_process <- R6::R6Class(
 #' @description
 #' Uses [utils::untar()], in a background process.
 #'
-#' @importFrom callr r_process_options
 #' @noRd
 
 r_untar_process <- R6::R6Class(
@@ -176,7 +175,7 @@ r_untar_process <- R6::R6Class(
         tar = tar,
         post_process = post_process)
 
-      process_options <- r_process_options(stdout = stdout, stderr = stderr)
+      process_options <- callr::r_process_options(stdout = stdout, stderr = stderr)
       process_options$func <- function(options) {
         # nocov start
         ret <- utils::untar(
@@ -281,8 +280,10 @@ make_uncompress_process <- function(archive, exdir = ".", ...) {
   type <- detect_package_archive_type(archive)
 
   if (type == "unknown") {
-    throw(new_input_error(
-      "Cannot extract {archive}, unknown archive type?"))
+    throw(pkg_error(
+      "Cannot extract {.path {archive}}, unknown archive type.",
+      .class = "install_input_error"
+    ))
   }
 
   if (type == "zip") {
@@ -297,8 +298,9 @@ make_uncompress_process <- function(archive, exdir = ".", ...) {
 run_uncompress_process <- function(archive, exdir = ".", ...) {
   type <- detect_package_archive_type(archive)
   if (type == "unknown") {
-    throw(new_input_error(
-      "Cannot extract {.path {archive}}, unknown archive type?"
+    throw(pkg_error(
+      "Cannot extract {.path {archive}}, unknown archive type.",
+      .class = "install_input_error"
     ))
   }
 

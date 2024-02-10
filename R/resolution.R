@@ -54,8 +54,6 @@
 #' @aliases pkg_resolution_result
 NULL
 
-#' @importFrom prettyunits pretty_dt
-
 pkgplan_resolve <- function(self, private) {
   "!DEBUG pkgplan_resolve (sync)"
   synchronise(self$async_resolve())
@@ -277,7 +275,7 @@ res_push <- function(self, private, ..., direct, .list = .list) {
   params <- new[new_types == "param"]
   new <- new[new_types != "param"]
 
-  if (length(params)) {
+  if (length(params) + length(private$params)) {
     private$params <- c(private$params, params)
     update_params(self, private, private$params)
   }
@@ -508,7 +506,7 @@ resolve_remote <- function(remote, direct, config, cache, dependencies,
 
 update_params <- function(self, private, params) {
   for (par in params) {
-    if (par$package == "" && length(self$result$params)) {
+    if (par$package %in% c("", "*") && length(self$result$params)) {
       self$result$params <- lapply(self$result$params, function(p) {
         p[names(par$params)] <- par$params
         p
@@ -566,7 +564,7 @@ update_dep_types <- function(self, private) {
 resolve_from_description <- function(path, sources, remote, direct,
                                      config, cache, dependencies) {
 
-  dsc <- desc(file = path)
+  dsc <- desc::desc(file = path)
   deps <- resolve_ref_deps(
     dsc$get_deps(),
     dsc$get("Remotes")[[1]],
@@ -633,12 +631,20 @@ resolve_from_description <- function(path, sources, remote, direct,
   )
 }
 
+drop_config_needs <- function(x) {
+  x[!grepl("^config/needs", x, ignore.case = TRUE)]
+}
+
 # TODO: Parse remotes and Config/Needs/* fields
 
 resolve_from_metadata <- function(remotes, direct, config, cache,
                                   dependencies) {
 
   remotes; direct; config; cache; dependencies
+  if (is.list(dependencies)) {
+    dependencies$direct <- drop_config_needs(dependencies$direct)
+    dependencies$indirect <- drop_config_needs(dependencies$indirect)
+  }
 
   ## Single remote, or a list of remotes
   if ("ref" %in% names(remotes)) {

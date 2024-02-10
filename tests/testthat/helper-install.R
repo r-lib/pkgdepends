@@ -25,7 +25,7 @@ install_binary <- function(filename, lib = .libPaths()[[1L]],
     stop("Package installation failed\n", stdout)
   }
 
-  cli_alert_success(paste0("Installed ", filename))
+  cli::cli_alert_success(paste0("Installed ", filename))
 
   invisible(px$get_result())
 }
@@ -48,7 +48,7 @@ local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
     })
   }
 
-  filename <- file.path(d, glue("{pkgname}.tgz"))
+  filename <- file.path(d, paste0(pkgname, ".tgz"))
   withr::with_dir(
     dirname(filename),
     utils::tar(basename(filename), pkgname, compression = "gzip")
@@ -79,8 +79,6 @@ source_test_package <- function(name) {
   pkgbuild::build(file.path(tmp, name), binary = FALSE, quiet = TRUE)
 }
 
-#' @importFrom callr r_process r_process_options
-
 dummy_worker_process <- R6::R6Class(
   "dummy_worker_process",
   inherit = callr::r_process,
@@ -95,7 +93,7 @@ dummy_worker_process <- R6::R6Class(
 make_dummy_worker_process <- function(n_iter = 10, sleep = 1, status = 0) {
   n_iter; sleep; status
   function(...) {
-    dummy_worker_process$new(r_process_options(
+    dummy_worker_process$new(callr::r_process_options(
       func = function(n_iter, sleep, status) {
                                         # nocov start
         for (i in seq_len(n_iter)) {

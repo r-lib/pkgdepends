@@ -12,6 +12,9 @@ test_that("type_github_get_data, sha, description", {
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@v0.1.2")))
   )
   expect_snapshot(
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@*release")))
+  )
+  expect_snapshot(
     synchronise(type_github_get_data(parse_pkg_ref(
       "r-lib/pak@e65de1e9630d"
     )))
@@ -171,6 +174,15 @@ test_that("no such ref error", {
   expect_snapshot(
     error = TRUE,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@bad-ref-no-no-no"))),
+    transform = transform_no_srcref
+  )
+})
+
+test_that("no release error", {
+  setup_fake_gh_app()
+  expect_snapshot(
+    error = TRUE,
+    synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@*release"))),
     transform = transform_no_srcref
   )
 })

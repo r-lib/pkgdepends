@@ -85,7 +85,7 @@
 
     Code
       prop$show_solution()
-    Message <cliMessage>
+    Message
       + pkg1   1.0.0 [bld][dl] (<size>)
       + pkg2   1.0.0 [bld][dl] (<size>)
       + pkg3   1.0.0 [bld][dl] (<size>)
@@ -187,7 +187,7 @@
 
     Code
       prop$show_sysreqs()
-    Message <cliMessage>
+    Message
       * libcurl4-openssl-dev  - curl
       * libssl-dev            - curl
 
@@ -195,7 +195,7 @@
 
     Code
       prop$install_sysreqs()
-    Message <cliMessage>
+    Message
       i Installing system requirements
       i Executing `sh -c echo apt-get -y update`
       i Executing `sh -c echo apt-get -y install libcurl4-openssl-dev libssl-dev`

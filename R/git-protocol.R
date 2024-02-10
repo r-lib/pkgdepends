@@ -3,6 +3,8 @@
 #'
 #' Assumptions, they might be relaxed or checked for later:
 #' - The server must speak the smart protocol, version 1 or 2.
+#'   (Although I added some functions specifically for the dumb protocol,
+#'   but they are pretty limited.)
 #' - We use HTTP transport, not SSH.
 #' - The server should have the `shallow` capability.
 #' - The server should have the `filter` capability if protocol version 2.
@@ -174,10 +176,10 @@ async_git_list_files <- function(url, ref = "HEAD") {
   sha2 <- ref
   async_git_resolve_ref(url, ref)$
     then(function(sha) { sha2 <<- sha; async_git_fetch(url, sha) })$
-    then(function(pf) async_git_list_files_process(pf, ref, sha2))
+    then(function(pf) async_git_list_files_process(pf, ref, sha2, url))
 }
 
-async_git_list_files_process <- function(packfile, ref, sha) {
+async_git_list_files_process <- function(packfile, ref, sha, url) {
   names(packfile) <- vcapply(packfile, "[[", "hash")
   types <- unname(vcapply(packfile, "[[", "type"))
   tree_sizes <- viapply(packfile, function(x) nrow(x$object) %||% NA_integer_)
@@ -194,6 +196,9 @@ async_git_list_files_process <- function(packfile, ref, sha) {
   done <- logical(length(trees))
   idx <- 1L
   wd <- character()
+
+  commit <- parse_commit(packfile[[which(types == "commit")]]$object)
+  tree <- commit[["tree"]]
 
   process_tree <- function(i) {
     if (done[i]) return()
@@ -215,10 +220,20 @@ async_git_list_files_process <- function(packfile, ref, sha) {
     }
   }
 
-  for (i in seq_along(trees)) process_tree(i)
-
-  commit <- parse_commit(packfile[[which(types == "commit")]]$object)
-  tree <- commit[["tree"]]
+  # start with the root tree
+  root <- match(tree, names(trees))
+  if (is.na(root)) {
+    throw(pkg_error(
+      "Invalid git response from {.url {url}}, cannot find commit tree"
+    ))
+  }
+  process_tree(root)
+  if (any(!done)) {
+    warning(
+      "Some trees are unreachable when listing files from git repo from ",
+      url
+    )
+  }
 
   list(
     ref = ref,
@@ -340,7 +355,7 @@ async_git_fetch_v1 <- function(url, sha, blobs) {
       "done",
       ""
     ),
-    caps = c("no-done", "no-progress", paste0("agent=", git_ua()))
+    caps = c("multi_ack" ,"no-done", "no-progress", paste0("agent=", git_ua()))
   )$then(function(reply) git_fetch_process_v1(reply, url, sha))
 }
 
@@ -499,10 +514,10 @@ async_git_download_repo <- function(url, ref = "HEAD", output = ref) {
 async_git_download_repo_sha <- function(url, sha, output) {
   url; sha; output
   async_git_fetch(url, sha, blobs = TRUE)$
-    then(function(packfile) unpack_packfile_repo(packfile, output))
+    then(function(packfile) unpack_packfile_repo(packfile, output, url))
 }
 
-unpack_packfile_repo <- function(parsed, output) {
+unpack_packfile_repo <- function(parsed, output, url) {
   types <- unname(vcapply(parsed, "[[", "type"))
   trees <- parsed[types == "tree"]
   done <- logical(length(trees))
@@ -535,6 +550,23 @@ unpack_packfile_repo <- function(parsed, output) {
       }
     }
   }
+
+  commit <- parse_commit(parsed[[which(types == "commit")]]$object)
+  tree <- commit[["tree"]]
+  root <- match(tree, names(trees))
+  if (is.na(root)) {
+    throw(pkg_error(
+      "Invalid git response from {.url {url}}, cannot find commit tree"
+    ))
+  }
+  process_tree(root)
+  if (any(!done)) {
+    warning(
+      "Some trees are unreachable when listing files from git repo from ",
+      url
+    )
+  }
+
 
   for (i in seq_along(trees)) process_tree(i)
 
@@ -1156,14 +1188,19 @@ git_unpack <- function(pack) {
 
   idx <- 13L
   objects <- vector("list", n_obj)
+  object_starts <- integer()
 
   types <- c("commit", "tree", "blob", "tag", "reserved", "ofs_delta", "ref_delta")
 
   unpack_object <- function() {
+    start <- idx
     type <- bitwShiftR(bitwAnd(as.integer(pack[idx]), 0x7f), 4L)
     size <- parse_size(pack, idx)
     idx <<- size$idx + 1
-    if (type == 7L) {
+    if (type == 6L) {
+      offset <- parse_ofs_delta_offset(pack, idx)
+      idx <<- offset$idx + 1
+    } else if (type == 7L) {
       if (idx + 19 > length(pack)) {
         # nocov start
         throw(pkg_error(
@@ -1176,8 +1213,11 @@ git_unpack <- function(pack) {
     }
     obj <- zip::inflate(pack, idx, size$size)
     idx <<- idx + obj$bytes_read
-    if (type == 7L) {
-      deltified_object(obj$output, base)
+    if (type == 6L) {
+      baseidx <- object_starts[[as.character(start - offset$size)]]
+      deltified_object(obj$output, baseidx = baseidx)
+    } else if (type == 7L) {
+      deltified_object(obj$output, base = base)
     } else {
       list(
         type = types[type],
@@ -1188,14 +1228,15 @@ git_unpack <- function(pack) {
     }
   }
 
-  deltified_object <- function(delta, base) {
-    baseidx <- match(base, names(objects))
-    if (is.na(baseidx)) {
-      # nocov start
-      throw(pkg_error(
-        "Invalid git packfile, cannot find base of ref-delta"
+  deltified_object <- function(delta, base = NULL, baseidx = NULL) {
+    baseidx <- baseidx %||% match(base, names(objects))
+    if (is.na(baseidx) || objects[[baseidx]]$type == "delta") {
+      return(list(
+        type = "delta",
+        data = delta,
+        base = base,
+        baseidx = if (is.na(baseidx)) NULL else baseidx
       ))
-      # nocov end
     }
     baseobj <- objects[[baseidx]]$raw
     didx <- 1L
@@ -1229,33 +1270,135 @@ git_unpack <- function(pack) {
     )
   }
 
-  for (i in seq_len(n_obj)) {
-    objects[[i]] <- unpack_object()
-    if (objects[[i]]$type == "commit") {
-      objects[[i]]$object <- rawToChar(objects[[i]]$raw)
-    } else if (objects[[i]]$type == "tree") {
-      objects[[i]]$object <- parse_tree(objects[[i]]$raw)
+  finalize_object <- function(x) {
+    if (x$type == "commit") {
+      x$object <- rawToChar(x$raw)
+    } else if (x$type == "tree") {
+      x$object <- parse_tree(x$raw)
     }
-    if (objects[[i]]$type %in% c("commit", "tree", "blob", "tag")) {
+
+    if (x$type %in% c("commit", "tree", "blob", "tag")) {
       raw2 <- c(
-        charToRaw(paste0(objects[[i]]$type, " ", length(objects[[i]]$raw))),
+        charToRaw(paste0(x$type, " ", length(x$raw))),
         as.raw(0L),
-        objects[[i]]$raw
+        x$raw
       )
-      objects[[i]]$hash <- cli::hash_raw_sha1(raw2)
-      names(objects)[i] <- objects[[i]]$hash
+      x$hash <- cli::hash_raw_sha1(raw2)
+    } else if (x$type == "delta") {
+      # do nothing
     } else {
       # nocov start
       throw(pkg_error(
-        "git packfile object type {.cls {objects[[i]]$type}} is not
+        "git packfile object type {.cls {x$type}} is not
          implemented yet.",
         .class = "git_proto_error_not_implemented"
       ))
       # nocov end
     }
+    x
+  }
+
+  for (i in seq_len(n_obj)) {
+    object_starts[[as.character(idx)]] <- i
+    objects[[i]] <- unpack_object()
+    objects[[i]] <- finalize_object(objects[[i]])
+    if (!is.null(objects[[i]]$hash)) names(objects)[i] <- objects[[i]]$hash
+  }
+
+  # now need to resolve the deltas
+  n_delta <- sum(sapply(objects, "[[", "type") == "delta")
+  while (n_delta > 0) {
+    for (i in seq_len(n_obj)) {
+      if (objects[[i]]$type == "delta") {
+        objects[[i]] <- deltified_object(
+          objects[[i]]$data,
+          objects[[i]]$base,
+          objects[[i]]$baseidx
+        )
+        objects[[i]] <- finalize_object(objects[[i]])
+        if (!is.null(objects[[i]]$hash)) names(objects)[i] <- objects[[i]]$hash
+      }
+    }
+    n_delta2 <- sum(sapply(objects, "[[", "type") == "delta")
+    if (n_delta2 == n_delta) {
+      throw(pkg_error(
+        "Found circular references while resolving deltas in git pack file."
+      ))
+    }
+    n_delta <- n_delta2
   }
 
   objects
+}
+
+git_list_pack_index <- function(idx) {
+  if (is.character(idx)) {
+    idx <- readBin(idx, "raw", file.size(idx))
+  }
+
+  if (length(idx) < 4 + 4 + 256) {
+    throw(pkg_error(
+      "Invalid pack index file, too short: {length(idx)} byte{?s}."
+    ))
+  }
+
+  if (any(idx[1:4] != c(0xff, 0x74, 0x4f, 0x63))) {
+    throw(pkg_error(
+      "Invalid pack index file, no {.code \\377tOc} header."
+    ))
+  }
+  if (any(idx[5:8] != c(0, 0, 0, 2))) {
+    throw(pkg_error(
+      "Only version 2 pack index files are supported"
+    ))
+  }
+
+  tab <- matrix(as.integer(idx[9L:(9L + (256L * 4L) - 1L)]), nrow = 4)
+  tab <- tab[1,] * 256**3 + tab[2,] * 256**2 + tab[3,] * 256 + tab[4,]
+  n_obj <- tab[256]
+
+  hash_off <- 256L * 4L + 9L
+  hash_len <- n_obj * 20L
+  hash <- matrix(
+    as.character(idx[hash_off:(hash_off + hash_len - 1L)]),
+    nrow = 20
+  )
+  hash <- apply(hash, 2, paste, collapse = "")
+
+  crc_off <- hash_off + hash_len
+  crc_len <- n_obj * 4
+  crc <- matrix(as.integer(idx[crc_off:(crc_off + crc_len - 1L)]), nrow = 4)
+  crc <- crc[1,] * 256**3 + crc[2,] * 256**2 + crc[3,] * 256 + crc[4,]
+
+  off_off <- crc_off + crc_len
+  off_len <- n_obj * 4
+  off <- matrix(as.integer(idx[off_off:(off_off + off_len - 1L)]), nrow = 4)
+  off <- off[1,] * 256**3 + off[2,] * 256**2 + off[3,] * 256 + off[4,]
+
+  data_chksum <- idx[(off_off + off_len): (off_off + off_len + 20L - 1L)]
+  data_chksum <- paste(as.character(data_chksum), collapse = "")
+
+  idx_chksum <- idx[(off_off + off_len): (off_off + off_len + 20L - 1L) + 20L]
+  idx_chksum <- paste(as.character(idx_chksum), collapse = "")
+
+  if (length(idx) > off_off + off_len + 40L) {
+    warning("Ignored 8 byte offsets in git pack file")
+  }
+
+  objects <- data.frame(
+    stringsAsFactors = FALSE,
+    hash = hash,
+    crc = crc,
+    offset = off
+  )
+  objects <- objects[order(objects$offset), ]
+  rownames(objects) <- NULL
+
+  list(
+    objects = objects,
+    data_chksum = data_chksum,
+    idx_chksum = idx_chksum
+  )
 }
 
 #' Parse a four byte integer in network byte order
@@ -1317,6 +1460,10 @@ parse_size <- function(x, idx) {
   list(size = size, idx = idx)
 }
 
+parse_ofs_size <- function(x, idx) {
+
+}
+
 parse_delta_size <- function(x, idx) {
   c <- as.integer(x[idx])
   size <- bitwAnd(c, 0x7f)
@@ -1334,6 +1481,19 @@ parse_delta_size <- function(x, idx) {
     c <- as.integer(x[idx])
     size <- size + bitwShiftL(bitwAnd(c, 0x7f), shft)
     shft <- shft + 7L
+  }
+
+  list(size = size, idx = idx)
+}
+
+parse_ofs_delta_offset <- function(x, idx) {
+  c <- as.integer(x[idx])
+  size <- bitwAnd(c, 0x7f)
+  while (c >= 128) {
+    idx <- idx + 1L
+    c <- as.integer(x[idx])
+    size <- size + 1L
+    size <- bitwShiftL(size, 7) + (bitwAnd(c, 0x7f))
   }
 
   list(size = size, idx = idx)
@@ -1483,11 +1643,11 @@ redact_url <- function(x) {
   sub("://[^/]+@", "://<auth>@", x)
 }
 
-git_dummy_list_refs <- function(url) {
-  synchronize(async_git_dummy_list_refs(url))
+git_dumb_list_refs <- function(url) {
+  synchronize(async_git_dumb_list_refs(url))
 }
 
-async_git_dummy_list_refs <- function(url) {
+async_git_dumb_list_refs <- function(url) {
   url
 
   url1 <- paste0(url, "/info/refs")
@@ -1501,10 +1661,10 @@ async_git_dummy_list_refs <- function(url) {
     http_get(url2, headers = headers)$
       then(http_stop_for_status)
   )$
-    then(function(res) async_git_dummy_list_refs_process(res, url))
+    then(function(res) async_git_dumb_list_refs_process(res, url))
 }
 
-async_git_dummy_list_refs_process <- function(res, url) {
+async_git_dumb_list_refs_process <- function(res, url) {
   res_refs <- res[[1]]
   res_head <- res[[2]]
   lines <- strsplit(rawToChar(res_refs$content), "\n", fixed = TRUE)[[1]]
@@ -1514,7 +1674,8 @@ async_git_dummy_list_refs_process <- function(res, url) {
 
   head <- trimws(rawToChar(res_head$content))
   head <- sub("^[^ ]* ", "", head)
-  if (! head %in% ref) {
+  has_head <- head != ""
+  if (has_head && ! head %in% ref) {
     throw(pkg_error(
       "HEAD does not refer to a ref in git repo at {.url {url}}.",
       "i" = "HEAD is {.val {head}}."
@@ -1523,23 +1684,25 @@ async_git_dummy_list_refs_process <- function(res, url) {
 
   list(
     refs = data_frame(
-      ref = c("HEAD", ref),
-      hash = c(hash[match(head, ref)], hash)
+      ref = c(if (has_head) "HEAD", ref),
+      hash = c(if (has_head) hash[match(head, ref)], hash)
     ),
     caps = character()
   )
 }
 
-git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
-  invisible(synchronize(async_git_dummy_download_file(url, sha, path, output)))
+git_dumb_download_file <- function(url, sha, path, output = basename(path)) {
+  invisible(synchronize(async_git_dumb_download_file(url, sha, path, output)))
 }
 
 # This only works for blobs at the root of the tree currently!
+# Also, it only works if the object with sha is not in a pack file!
+# So it is pretty limited, and can only be used with a fallback.
 
-async_git_dummy_download_file <- function(url, sha, path, output = basename(path)) {
-  async_git_dummy_get_commit(url, sha)$
+async_git_dumb_download_file <- function(url, sha, path, output = basename(path)) {
+  async_git_dumb_get_commit(url, sha)$
     then(function(cmt) {
-      async_git_dummy_get_tree(url, cmt[["tree"]])
+      async_git_dumb_get_tree(url, cmt[["tree"]])
     })$
     then(function(tree) {
       wh <- match(path, tree$path)
@@ -1556,7 +1719,7 @@ async_git_dummy_download_file <- function(url, sha, path, output = basename(path
       tree$hash[wh]
     })$
     then(function(blob) {
-      async_git_dummy_get_blob(url, blob)
+      async_git_dumb_get_blob(url, blob)
     })$
     then(function(bytes) {
       if (!is.null(output)) {
@@ -1567,7 +1730,7 @@ async_git_dummy_download_file <- function(url, sha, path, output = basename(path
     })
 }
 
-async_git_dummy_get_commit <- function(url, sha) {
+async_git_dumb_get_commit <- function(url, sha) {
   url1 <- paste0(
     url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
   )
@@ -1596,7 +1759,7 @@ async_git_dummy_get_commit <- function(url, sha) {
     })
 }
 
-async_git_dummy_get_tree <- function(url, sha) {
+async_git_dumb_get_tree <- function(url, sha) {
   url1 <- paste0(
     url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
   )
@@ -1625,7 +1788,7 @@ async_git_dummy_get_tree <- function(url, sha) {
     })
 }
 
-async_git_dummy_get_blob <- function(url, sha) {
+async_git_dumb_get_blob <- function(url, sha) {
   url1 <- paste0(
     url, "/objects/", substr(sha, 1, 2), "/", substr(sha, 3, nchar(sha))
   )

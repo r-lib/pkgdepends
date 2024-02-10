@@ -2,8 +2,6 @@
 ## ------------------------------------------------------------------------
 ## API
 
-#' @importFrom glue glue_data
-
 parse_remote_bioc <- function(specs, config, ...) {
 
   ## BioC is the same as CRAN, except for cran:: -> bioc::
@@ -96,8 +94,7 @@ installedok_remote_bioc <- function(installed, solution, config, ...) {
     # that we are installing the same build.
     identical(installed$package, solution$package) &&
       identical(installed$version, solution$version) &&
-      (identical(installed[["platform"]], solution[["platform"]]) ||
-       identical(installed[["platform"]], "*")) &&
+      installedok_remote_standard_platform(installed, solution, config, ...) &&
       identical(installed[["built"]], solution[["built"]])
 
   } else {

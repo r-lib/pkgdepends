@@ -83,8 +83,6 @@
 #' @noRd
 NULL
 
-#' @importFrom cli get_spinner cli_status qty
-
 pkgplan__create_progress_bar <- function(what) {
   bar <- new.env(parent = emptyenv())
 
@@ -136,25 +134,25 @@ pkgplan__initial_pb_message <- function(bar) {
   cbt <- sum(bar$what$filesize[bar$what$cache_status %in% "hit"], na.rm = TRUE)
 
   if (num == 0) {
-    cli_alert_info(c(
+    cli::cli_alert_info(c(
       "No downloads are needed",
       if (nch > 0) ", {nch} pkg{?s} ",
-      if (cbt > 0) "{.size ({pretty_bytes(cbt)})} ",
-      if (nch > 0) "{qty(nch)}{?is/are} cached"
+      if (cbt > 0) "{.size ({format_bytes$pretty_bytes(cbt)})} ",
+      if (nch > 0) "{cli::qty(nch)}{?is/are} cached"
     ))
   } else {
-    cli_alert_info(c(
+    cli::cli_alert_info(c(
       "Getting",
-      if (bts > 0) " {num-unk} pkg{?s} {.size ({pretty_bytes(bts)})}",
+      if (bts > 0) " {num-unk} pkg{?s} {.size ({format_bytes$pretty_bytes(bts)})}",
       if (bts > 0 && unk > 0) " and",
       if (unk > 0) " {unk} pkg{?s} with unknown size{?s}",
       if (nch > 0) ", {nch} ",
-      if (cbt > 0) "{.size ({pretty_bytes(cbt)})} ",
+      if (cbt > 0) "{.size ({format_bytes$pretty_bytes(cbt)})} ",
       if (nch > 0) "cached"
     ))
   }
   if (should_show_progress_bar()) {
-    bar$status <- cli_status("", .auto_close = FALSE)
+    bar$status <-cli::cli_status("", .auto_close = FALSE)
   }
 }
 
@@ -170,7 +168,6 @@ pkgplan__initial_pb_message <- function(bar) {
 #'   `"done"`, and on error `"error"`.
 #'
 #' @noRd
-#' @importFrom cli cli_alert_success cli_alert_danger
 
 pkgplan__update_progress_bar <- function(bar, idx, event, data) {
   # Record the time here, and use it in this function, so that this
@@ -189,10 +186,10 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
       bar$what$status[idx] <- "got"
       sz <- na.omit(file.size(c(data$fulltarget, data$fulltarget_tree)))[1]
       if (!is.na(sz)) bar$what$filesize[idx] <- sz
-      cli_alert_success(c(
+      cli::cli_alert_success(c(
         "Got {.pkg {data$package}} ",
         "{.version {data$version}} ({data$platform})",
-        if (!is.na(sz) && bar$show_size) " {.size ({pretty_bytes(sz)})}"
+        if (!is.na(sz) && bar$show_size) " {.size ({format_bytes$pretty_bytes(sz)})}"
       ))
       if (!is.na(bar$what$filesize[idx])) {
         bar$chunks[[sec]] <- (bar$chunks[[sec]] %||% 0) -
@@ -204,13 +201,13 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
       bar$what$current[idx] <- 0L
       bar$what$need[idx] <- 0L
       if (identical(data$cache_status, "miss") && data$type != "deps") {
-        cli_alert_success(c(
+        cli::cli_alert_success(c(
           "Cached copy of {.pkg {data$package}} ",
           "{.version {data$version}} ({data$platform}) is the latest build"
         ))
       }
     } else if (data$download_status == "Failed") {
-      cli_alert_danger(c(
+      cli::cli_alert_danger(c(
         "Failed to download {.pkg {data$package}} ",
         "{.version {data$version}} ({data$platform})"
       ))
@@ -225,7 +222,7 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
   }
 
   if (event == "error") {
-    cli_alert_danger(c(
+    cli::cli_alert_danger(c(
       "Failed to download {.pkg {data$package}} ",
       "{.version {data$version}} ({data$platform})"
     ))
@@ -255,8 +252,6 @@ pkgplan__update_progress_bar <- function(bar, idx, event, data) {
 #' @param bar The progress bar object.
 #'
 #' @noRd
-#' @importFrom glue glue_collapse
-#' @importFrom prettyunits pretty_bytes pretty_dt
 
 pkgplan__show_progress_bar <- function(bar) {
   if (is.null(bar$status)) return()
@@ -275,7 +270,7 @@ pkgplan__show_progress_bar <- function(bar) {
   )
 
   bar$events <- list()
-  cli_status_update(bar$status, str)
+  cli::cli_status_update(bar$status, str)
 }
 
 calculate_rate <- function(start, now, chunks) {
@@ -290,7 +285,7 @@ calculate_rate <- function(start, now, chunks) {
   if (rate == 0 && time_at < 4) {
     rstr <- strrep(" ", 8)
   } else {
-    rstr <- paste0(pretty_bytes(rate, style = "6"), "/s")
+    rstr <- paste0(format_bytes$pretty_bytes(rate, style = "6"), "/s")
   }
   list(rate = rate, rstr = rstr)
 }
@@ -305,7 +300,7 @@ calculate_eta <- function(total, current, rate) {
     if (etas < 1) {
       estr <- "<1s   "
     } else {
-      estr <- format(pretty_dt(etas, compact = TRUE), width = 6)
+      estr <- format(format_time$pretty_dt(etas, compact = TRUE), width = 6)
     }
   }
   list(etas = etas, estr = estr)
@@ -348,7 +343,7 @@ calculate_progress_parts <- function(bar) {
     pkgs <- bar$what$package[bar$what$idx %in% bar$events$data]
     parts$msg <- paste0(
       "Getting ",
-      glue_collapse(pkgs, sep = ", ", last = " and ")
+      cli::ansi_collapse(pkgs, sep = ", ", last = " and ")
     )
     bar$lastmsg <- parts$msg
   }
@@ -368,12 +363,12 @@ pkgplan__done_progress_bar <- function(bar) {
   if (is.null(bar$status)) return()
 
   end_at <- Sys.time()
-  dt <- pretty_dt(Sys.time() - bar$start_at)
+  dt <- format_time$pretty_dt(Sys.time() - bar$start_at)
 
-  cli_status_clear(bar$status)
+  cli::cli_status_clear(bar$status)
   bar$status <- NULL
 
-  bts <- pretty_bytes(sum(bar$what$current))
+  bts <- format_bytes$pretty_bytes(sum(bar$what$current))
   dld <- sum(bar$what$status == "got")
   cch <- sum(bar$what$status == "had")
   err <- sum(bar$what$status == "error")
@@ -381,16 +376,16 @@ pkgplan__done_progress_bar <- function(bar) {
   if (sum(!bar$what$skip) == 0) {
     # Print nothing, we already printed that no downloads are needed
   } else if (err == 0 && dld == 0) {
-    cli_alert_success("No downloads needed, all packages are cached")
+    cli::cli_alert_success("No downloads needed, all packages are cached")
   } else if (err == 0) {
-    cli_alert_success(
+    cli::cli_alert_success(
       paste0(
         "Downloaded {dld} package{?s} {.size ({bts})}",
-        if (bar$show_time) "in {.time {dt}}"
+        if (bar$show_time) " in {.time {dt}}"
       )
     )
   } else {
-    cli_alert_danger(
+    cli::cli_alert_danger(
       "Failed to download {err} package{?s}. "
     )
   }

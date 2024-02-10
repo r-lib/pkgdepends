@@ -124,6 +124,34 @@ test_that("add_recursive_dependencies", {
   expect_snapshot(add_recursive_dependencies(plan)$dependencies)
 })
 
+test_that("ignore-build-errors parameter", {
+  setup_fake_apps()
+  local_cli_config()
+  dir.create(tmplib <- tempfile())
+  on.exit(rimraf(tmplib), add = TRUE)
+  pkgdir1 <- test_path("fixtures", "packages", "badbuild")
+  pkgdir2 <- test_path("fixtures", "packages", "goodbuild")
+  inst <- new_pkg_installation_proposal(
+    paste0("local::", c(pkgdir1, pkgdir2), "?nocache"),
+    config = list(library = tmplib, platforms = "source")
+  )
+  expect_snapshot({
+    suppressMessages(inst$solve())
+    suppressMessages(inst$download())
+    inst$install()
+  }, error = TRUE)
+
+  inst <- new_pkg_installation_proposal(
+    paste0("local::", c(pkgdir1, pkgdir2), "?nocache&ignore-build-errors"),
+    config = list(library = tmplib, platforms = "source")
+  )
+  expect_snapshot({
+    suppressMessages(inst$solve())
+    suppressMessages(inst$download())
+    inst$install()
+  })
+})
+
 test_that("install package from GH", {
   setup_fake_apps()
   setup_fake_gh_app()

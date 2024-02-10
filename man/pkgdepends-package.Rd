@@ -31,9 +31,14 @@ package manager, see \href{https://github.com/r-lib/pak}{pak}.
 }
 
 \section{Install}{
-Once on CRAN, install the package with:
+Install the package with:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("pkgdepends")
+}\if{html}{\out{</div>}}
+
+If you need the development version, install it with
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pak::pak("r-lib/pkgdepends")
 }\if{html}{\out{</div>}}
 }
 
@@ -209,7 +214,8 @@ MIT (c) RStudio
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/r-lib/pkgdepends#readme}
+  \item \url{https://r-lib.github.io/pkgdepends/}
+  \item \url{https://github.com/r-lib/pkgdepends}
   \item Report bugs at \url{https://github.com/r-lib/pkgdepends/issues}
 }
 
@@ -219,7 +225,7 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item RStudio [copyright holder, funder]
+  \item Posit Software, PBC [copyright holder, funder]
 }
 
 }

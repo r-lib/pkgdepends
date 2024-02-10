@@ -2,7 +2,8 @@
 
     Code
       p$stop_for_solution_error()
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Could not solve package dependencies:
       * local::./pkg1: ! pkgdepends resolution error for local::./pkg1.
       Caused by error:
@@ -30,7 +31,8 @@
 
     Code
       p$stop_for_solution_error()
-    Error <rlib_error_3_0>
+    Condition
+      Error:
       ! Could not solve package dependencies:
       * local::./pkg2: ! pkgdepends resolution error for local::./pkg2.
       Caused by error:

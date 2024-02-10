@@ -19,10 +19,16 @@
 
 # Install
 
-Once on CRAN, install the package with:
+Install the package with:
 
 ```{r eval = FALSE}
 install.packages("pkgdepends")
+```
+
+If you need the development version, install it with
+
+```{r eval = FALSE}
+pak::pak("r-lib/pkgdepends")
 ```
 
 # Usage

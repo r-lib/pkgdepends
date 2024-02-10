@@ -40,6 +40,19 @@
 ---
 
     Code
+      synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@*release")))
+    Output
+      $sha
+      [1] "b001d6ddeab1589ad367b62baabbeeb2af3b0ebac2e61d239df660c1d63e3232"
+      
+      $description
+      Package: pak
+      Version: 1.0.0
+      
+
+---
+
+    Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@e65de1e9630d")))
     Output
       $sha
@@ -95,136 +108,161 @@
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find GitHub repo r-lib-xxx-xxx/pak.
 
 ---
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak#90")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find GitHub repo r-lib-xxx-xxx/pak.
 
 # type_github_get_data, no such repo
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find GitHub repo r-lib/pak-xxx-xxx.
 
 ---
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find GitHub repo r-lib/pak-xxx-xxx.
 
 # github_query, invalid PAT
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Bad GitHub credentials, make sure that your GitHub token is valid.
-      Caused by error in `stop(http_error(resp))`:
+      Caused by error:
       ! Unauthorized (HTTP 401).
 
 ---
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Bad GitHub credentials, make sure that your GitHub token is valid.
-      Caused by error in `stop(http_error(resp))`:
+      Caused by error:
       ! Unauthorized (HTTP 401).
 
 # github_query, no internet
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Cannot query GitHub, are you offline?
 
 # github_query, access denied
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("gaborcsardi/secret-test")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find GitHub repo gaborcsardi/secret-test.
 
 # cannot find R package on GitHub, no DESCRIPTION
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("tidyverse/tidyverse.org")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find R package in GitHub repo tidyverse/tidyverse.org
 
 ---
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/cranyon/R")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find GitHub repo r-lib/cranyon.
 
 ---
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/crayon/R#79")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find R package in GitHub repo r-lib/crayon in directory 'R'
 
 # cannot parse DESCRIPTION on GH
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@main")))
-    Error <async_rejected>
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad`
-      Caused by error in `read.dcf(con)`:
+    Condition
+      Error:
+      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
+      Caused by error:
       ! Line starting 'this is not ...' is malformed!
 
 ---
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad#100")))
-    Error <async_rejected>
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad`
-      Caused by error in `read.dcf(con)`:
+    Condition
+      Error:
+      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
+      Caused by error:
       ! Line starting 'this is not ...' is malformed!
 
 ---
 
     Code
       synchronize(type_github_get_data(parse_pkg_ref("r-lib/bad/bin@main")))
-    Error <async_rejected>
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad`, in directory `bin`
+    Condition
+      Error:
+      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad, in directory `bin`
 
 # http error
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("foo/bar")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! GitHub HTTP error
-      Caused by error in `stop(http_error(resp))`:
+      Caused by error:
       ! Not Found (HTTP 404).
 
 # no such PR error
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak#89")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find PR #89 in GitHub repo r-lib/pak
 
 # no such ref error
 
     Code
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@bad-ref-no-no-no")))
-    Error <async_rejected>
+    Condition
+      Error:
       ! Can't find reference @bad-ref-no-no-no in GitHub repo r-lib/pak.
+
+# no release error
+
+    Code
+      synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@*release")))
+    Condition
+      Error:
+      ! Can't find any release in GitHub repo r-lib/bad.
 
 # builtin token messages once per session
 
     Code
       type_github_builtin_token()
-    Message <cliMessage>
+    Message
       ! Using bundled GitHub PAT. Please add your own PAT using `gitcreds::gitcreds_set()`.
     Output
       [1] "builtin-token"

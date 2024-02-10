@@ -176,6 +176,12 @@ gh_app_repos <- list(
               branch = "somebranch",
               pull = 90,
               files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+            ),
+            list(
+              sha = "b001d6ddeab1589ad367b62baabbeeb2af3b0ebac2e61d239df660c1d63e3232",
+              latestRelease = TRUE,
+              tagName = "v1.2.3",
+              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
             )
           )
         ),
@@ -547,7 +553,7 @@ transform_sysreqs_server <- function(x) {
 }
 
 show_request <- function(req) {
-  x <- fromJSON(rawToChar(req$content))
+  x <- jsonlite::fromJSON(rawToChar(req$content))
   cat(toupper(x$method), " ", x$type, sep = "", "\n")
   cat("Query string: ", x$query, sep = "", "\n")
   cat("Body: ", x$body, sep = "", "\n")
@@ -621,3 +627,10 @@ transform_installed_in_temp <- function(x) {
   regmatches(x, m) <- paste0("installed::.../", long_basename(regmatches(x, m)))
   x
 }
+
+fake_git <- local({
+  dir.create(tmp <- tempfile())
+  untar(testthat::test_path("fixtures/git-repo.tar.gz"), exdir = tmp)
+  app <- git_app(file.path(tmp, "repo"))
+  webfakes::local_app_process(app)
+})

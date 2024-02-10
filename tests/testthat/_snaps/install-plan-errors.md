@@ -2,9 +2,10 @@
 
     Code
       install_package_plan(plan, lib = tempdir())
-    Message <cliMessage>
+    Message
       i Packaging foo 
       x Failed to uncompress foo 
-    Error <package_uncompress_error>
-      ! Failed to uncompress .../foo-t.zip'.
+    Condition
+      Error:
+      ! Failed to uncompress foo from .../foo-t.zip'.
 

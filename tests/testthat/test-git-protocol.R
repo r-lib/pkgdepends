@@ -1,14 +1,16 @@
 
+withr::local_envvar(GITHUB_PAT="FAIL")
+
 test_that("git_list_refs", {
   skip_on_cran()
   expect_snapshot(
-    git_list_refs("https://github.com/gaborcsardi/pak-test.git")$refs
+    git_list_refs(fake_git$url("/pak-test.git"))$refs
   )
 
   # filter
   expect_snapshot(
     git_list_refs_v2(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "refs/heads/"
     )$refs
   )
@@ -18,7 +20,7 @@ test_that("git_list_files", {
   skip_on_cran()
   expect_error(
     git_list_files(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "foobar"
     ),
     "Unknown git ref"
@@ -26,14 +28,32 @@ test_that("git_list_files", {
   if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
   expect_snapshot({
     git_list_files(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
     )
     git_list_files(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "refs/tags/v1"
     )
   })
+})
+
+test_that("async_git_list_files_process", {
+  # reordering objects in a PACK file does not matter
+  ref <- "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
+  pack <- git_fetch(fake_git$url("/pak-test.git"), ref, blobs = FALSE)
+
+  withr::local_seed(13L)
+  pack <- sample(pack)
+
+  expect_snapshot(
+    sort(async_git_list_files_process(
+      pack,
+      ref = ref,
+      sha = ref,
+      url = "url"
+    )$files$path)
+  )
 })
 
 test_that("git_download_file", {
@@ -42,7 +62,7 @@ test_that("git_download_file", {
   on.exit(unlink(tmp), add = TRUE)
   expect_snapshot({
     out <- git_download_file(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "a1e2d6741374d1f32ec138ee2020eae36b859e99",
       tmp
     )
@@ -56,7 +76,7 @@ test_that("git_fetch", {
 
   # force v1
   pack <- git_fetch(
-    "https://github.com/gaborcsardi/pak-test.git",
+    fake_git$url("/pak-test.git"),
     structure("cefdc0eebcd7f757efb9a80652fd8aaf1a87508e", protocol = "1")
   )
 
@@ -111,7 +131,7 @@ test_that("pkt_line", {
 test_that("git_list_refs_v1", {
   skip_on_cran()
   expect_snapshot(
-    git_list_refs_v1("https://github.com/gaborcsardi/pak-test.git")$refs
+    git_list_refs_v1(fake_git$url("/pak-test.git"))$refs
   )
 })
 
@@ -121,19 +141,20 @@ test_that("git_list_refs_v1_process_1", {
   expect_snapshot(
     git_list_refs_v1_process_1(
       resp,
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "refs/tags/v1"
     )$refs
   )
 })
 
 test_that("async_git_list_refs_v2_process_1", {
+  skip_on_cran()
   # works with a v1 response as well
   resp <- readRDS(test_path("fixtures", "git-response-v1.rds"))
   expect_snapshot(
     sy(async_git_list_refs_v2_process_1(
       resp,
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "refs/tags/v1"
     ))$refs
   )
@@ -203,6 +224,11 @@ test_that("git_unpack", {
   expect_snapshot(git_unpack(path))
 })
 
+test_that("git_list_pack_index", {
+  path <- test_path("fixtures/git-test-1.idx")
+  expect_snapshot(git_list_pack_index(path))
+})
+
 test_that("git_unpack errors", {
   path <- test_path("fixtures/git-test-1.pack")
   pack <- readBin(path, "raw", file.size(path))
@@ -264,7 +290,7 @@ test_that("async_git_resolve_ref", {
   # branches w/o refs/heads/ prefix
   expect_snapshot(
     sy(async_git_resolve_ref(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "main"
     ))
   )
@@ -272,7 +298,7 @@ test_that("async_git_resolve_ref", {
   # tags w/o refs/rags/ prefix
   expect_snapshot(
     sy(async_git_resolve_ref(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "v1"
     ))
   )
@@ -280,7 +306,7 @@ test_that("async_git_resolve_ref", {
   # sha prefix
   expect_snapshot(
     sy(async_git_resolve_ref(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "3f3b0b4ee8a0ff"
     ))
   )
@@ -289,7 +315,7 @@ test_that("async_git_resolve_ref", {
   expect_snapshot(
     error = TRUE,
     sy(async_git_resolve_ref(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "badcafe"
     ))
   )
@@ -308,7 +334,7 @@ test_that("async_git_resolve_ref", {
   expect_snapshot(
     error = TRUE,
     sy(async_git_resolve_ref(
-      "https://github.com/gaborcsardi/pak-test.git",
+      fake_git$url("/pak-test.git"),
       "badcafe"
     ))
   )
@@ -333,9 +359,25 @@ test_that("git_download_repo", {
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
   git_download_repo(
-    "https://github.com/gaborcsardi/pak-test.git",
+    fake_git$url("/pak-test.git"),
     ref = "v1",
     output = file.path(tmp, "v1")
   )
   expect_snapshot(dir(tmp, recursive = TRUE))
+})
+
+test_that("unpack_packfile_repo", {
+  # reordering objects in a PACK file does not matter
+  ref <- "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
+  pack <- git_fetch(fake_git$url("/pak-test.git"), ref, blobs = TRUE)
+
+  withr::local_seed(13L)
+  pack <- sample(pack)
+
+  output <- tempfile()
+  on.exit(unlink(output, recursive = TRUE), add = TRUE)
+  unpack_packfile_repo(pack, output, url = "url")
+  expect_snapshot(
+    sort(dir(output, recursive=TRUE))
+  )
 })

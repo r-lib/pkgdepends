@@ -7,6 +7,8 @@
 Assumptions, they might be relaxed or checked for later:
 \itemize{
 \item The server must speak the smart protocol, version 1 or 2.
+(Although I added some functions specifically for the dumb protocol,
+but they are pretty limited.)
 \item We use HTTP transport, not SSH.
 \item The server should have the \code{shallow} capability.
 \item The server should have the \code{filter} capability if protocol version 2.

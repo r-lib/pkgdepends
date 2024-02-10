@@ -1,6 +1,74 @@
 # pkgdepends (development version)
 
+# pkgdepends 0.7.1
+
+* pkgdepends now does not import the glue, rprojroot and prettyunits
+  packages.
+
+* pkgdepends can now handle the case when `Config/Needs/*` dependencies
+  are requested for package from a repository.
+
+# pkgdepends 0.7.0
+
+* pkgdepends now correctly resolves the latest GitHub release with
+  the `@*release` notation (@pawelru, #321, #275).
+
+* pkgdepends now correctly handles having multiple instances of the same
+  package in the metadata, with different R version requirements
+  (https://github.com/r-lib/pak/issues/534, #331,
+  https://github.com/r-lib/pak/issues/538).
+
+* `git::` package references work better now for Azure DevOps
+  (@jameslairdsmith, #333, #342).
+
+* pkgdepends now does a better job at accepting installed packages, and
+  avoids reinstalling more packages than needed when using a lock file
+  (https://github.com/r-lib/actions/issues/759, #338).
+
+# pkgdepends 0.6.0
+
+* Many system requirements improvements:
+  - New functions:
+    - `sysreqs_check_installed()`: check if all required system packages
+      are installed,
+    - `sysreqs_fix_installed()`: install missing system packages,
+    - `sysreqs_db_list()`: list system requirements database,
+    - `sysreqs_db_match()`: match `SystemRrequirements` field(s) to database,
+    - `sysreqs_db_update()`: update system requirements database,
+    - `sysreqs_install_plan()`: look up system requirements for a package and
+      its dependencies,
+    - `sysreqs_is_supported()`: check if pkgdepends supports system
+      requirements on your platform,
+    - `sysreqs_list_system_packages()`: list installed system packages,
+    - `sysreqs_platforms()`: list supported platforms.
+    - New `pkg_installation_proposal` methods: `get_sysreqs()`, `show_sysreqs()`
+      and `update_sysreqs()`.
+  - The output of `$show_solution()` now includes system requirements.
+  - New `sysreqs_platform` configuration option.
+  - pkgdepends now looks up system requirements asynchronously, during
+    dependency resolution.
+  - pkgdepends now does not reinstall system requirements by default,
+    if they are already installed. (You can force a reinstall/upgrade
+    with the `sysreqs_update` configuration option.)
+
+* New `gitlab::` package source to install packages from GitLab (#315).
+
 * pkgdepends now correctly parses multiple `git::` packages at once (#318).
+
+* Fix `@*release` reference for the latest release.
+
+* `git::` package sources now support version 1 of the git protocol.
+  E.g. the Bioconductor git repositories now work:
+  `git::https://git.bioconductor.org/packages/limma` (#314).
+
+* The `platforms` config parameter now works correctly with `deps::`
+  package sources (https://github.com/r-lib/pak/issues/522).
+
+* New `include_linkingto` config parameter to always include `LinkingTo`
+  packages in the solution, even for binaries (#485).
+
+* `pkg_name_check()` now does not include Acromine results, because the web
+  site was unstable.
 
 # pkgdepends 0.5.0
 

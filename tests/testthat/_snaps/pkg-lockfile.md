@@ -32,11 +32,11 @@
 
     Code
       plan$show_solution()
-    Message <cliMessage>
+    Message
       + curl   1.0.0 [bld][dl] (<size>) + libcurl4-openssl-dev, libssl-dev
     Code
       plan$show_sysreqs()
-    Message <cliMessage>
+    Message
       * libcurl4-openssl-dev  - curl
       * libssl-dev            - curl
 
@@ -44,13 +44,13 @@
 
     Code
       plan$show_sysreqs()
-    Message <cliMessage>
+    Message
       + libcurl4-openssl-dev  - curl
 
 # update_sysreqs with old lock file
 
     Code
       plan$show_sysreqs()
-    Message <cliMessage>
+    Message
         
 

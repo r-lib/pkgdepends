@@ -172,14 +172,14 @@ ghr <- local({
                                generate_release_notes = FALSE) {
     prepo <- parse_slug(repo)
     ep <- glue::glue("/repos/{prepo$owner}/{prepo$repo}/releases")
-    data <- toJSON(list(
+    data <- tojson$write_str(list(
       tag_name = tag,
       name = paste0(prepo$repo, " ", tag),
       body = description,
       draft = draft,
       prerelease = prerelease,
       generate_release_notes = generate_release_notes
-    ), auto_unbox = TRUE)
+    ), list(auto_unbox = TRUE))
 
     async_github_v3_query(
       ep,

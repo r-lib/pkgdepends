@@ -9,7 +9,7 @@ ghr <- local({
 
   async_ghr_list <- function(repo) {
     repo <- parse_slug(repo)
-    query <- glue("{
+    query <- glue::glue("{
     rateLimit {
       cost
       remaining
@@ -46,7 +46,7 @@ ghr <- local({
 
   async_ghr_get <- function(repo, tag) {
     prepo <- parse_slug(repo)
-    ep <- glue("/repos/{prepo$owner}/{prepo$repo}/releases/tags/{tag}")
+    ep <- glue::glue("/repos/{prepo$owner}/{prepo$repo}/releases/tags/{tag}")
     async_github_v3_query(ep)$
       then(function(resp) {
         jsonlite::fromJSON(rawToChar(resp$content), simplifyVector = FALSE)
@@ -62,7 +62,7 @@ ghr <- local({
   async_ghr_list_assets <- function(repo, tag) {
 
     repo <- parse_slug(repo)
-    query <- glue("{
+    query <- glue::glue("{
     rateLimit {
       cost
       remaining
@@ -147,7 +147,7 @@ ghr <- local({
         asset_names <- vcapply(res$assets, "[[", "name")
         if (name %in% asset_names) {
           asset_id <- res$assets[[match(name, asset_names)]]$id
-          ep <- glue("/repos/{prepo$user}/{prepo$repo}/releases/assets/{asset_id}")
+          ep <- glue::glue("/repos/{prepo$user}/{prepo$repo}/releases/assets/{asset_id}")
           async_github_v3_query(ep, method = "DELETE")$
             then(function(resp) {
               list(
@@ -171,7 +171,7 @@ ghr <- local({
                                prerelease = FALSE,
                                generate_release_notes = FALSE) {
     prepo <- parse_slug(repo)
-    ep <- glue("/repos/{prepo$owner}/{prepo$repo}/releases")
+    ep <- glue::glue("/repos/{prepo$owner}/{prepo$repo}/releases")
     data <- toJSON(list(
       tag_name = tag,
       name = paste0(prepo$repo, " ", tag),
@@ -210,7 +210,7 @@ ghr <- local({
 
     base <- url %||% Sys.getenv("R_PKG_GITHUB_API_URL", "https://api.github.com")
     query_str <- paste(
-      glue("{curl::curl_escape(names(query))}={curl::curl_escape(query)}"),
+      glue::glue("{curl::curl_escape(names(query))}={curl::curl_escape(query)}"),
       collapse = "&"
     )
     url <- paste0(base, endpoint, "?", query_str)

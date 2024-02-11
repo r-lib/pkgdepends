@@ -33,7 +33,7 @@ ghrepo <- local({
     cli::cli_h2("Build binary packages")
     inst <- build_pkgs(inst, lib)
     # drop the ones that failed to build
-    inst <- inst[!is.na(inst$built_path)]
+    inst <- inst[!is.na(inst$built_path), ]
 
     cli::cli_par()
     cli::cli_h2("Update package mirror at GH (if needed)")

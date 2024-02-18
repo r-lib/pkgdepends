@@ -716,7 +716,8 @@ stop_task_build <- function(state, worker) {
   state$plan$worker_id[[pkgidx]] <- NA_character_
 
   if (success) {
-    # do nothing
+    # a bit silly, but for compatibility...
+    state$plan$build_error[[pkgidx]] <- FALSE
   } else {
     build_error <- list(
       package = pkg,

@@ -1,4 +1,3 @@
-
 ghrepo <- local({
 
   ghrepo_update <- function(repo, subdir, release_org = "cran",
@@ -199,7 +198,8 @@ ghrepo <- local({
   build_pkgs <- function(inst, library) {
     files <- rep(NA_character_, nrow(inst))
     for (i in seq_along(inst$package)) {
-      if (length(inst$build_error[[i]])) {
+      if (length(inst$build_error[[i]]) &&
+          !identical(inst$build_error[[i]], FALSE)) {
         cli::cli_alert_warning(
           "Failed to build package {.pkg {inst$package[[i]]}}."
         )

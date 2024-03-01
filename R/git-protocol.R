@@ -788,10 +788,22 @@ async_git_send_message_v2 <- function(
     "git-protocol" = "version=2",
     "content-length" = as.character(length(msg))
   )
+
+  options <- list()
+  tryCatch(
+    {
+      creds <- gitcreds_get(url)
+      options$username <- creds$username
+      options$password <- creds$password
+    },
+    error = function(e) NULL
+  )
+
   http_post(
     url2,
     data = msg,
-    headers = headers
+    headers = headers,
+    options = options
   )$then(http_stop_for_status)$
     then(function(res) git_parse_message(res$content))
 }
@@ -1006,11 +1018,24 @@ async_git_list_refs_v2 <- function(url, prefixes = character()) {
   url; prefixes
 
   url1 <- paste0(url, "/info/refs?service=git-upload-pack")
+
   headers <- c(
     "User-Agent" = git_ua(),
     "git-protocol" = "version=2"
   )
-  http_get(url1, headers = headers)$
+
+  # headers from tracing action with GIT_CURL_VERBOSE=1 GIT_TRACE=1
+  options <- list()
+  tryCatch(
+    {
+      creds <- gitcreds_get(url)
+      options$username <- creds$username
+      options$password <- creds$password
+    },
+    error = function(e) NULL
+  )
+
+  http_get(url1, headers = headers, options = options)$
     then(http_stop_for_status)$
     then(function(res) async_git_list_refs_v2_process_1(res, url, prefixes))
 }

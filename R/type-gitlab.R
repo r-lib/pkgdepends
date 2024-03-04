@@ -7,11 +7,11 @@ parse_remote_gitlab <- function(specs, config, ...) {
   pds$path <- paste0("/", pds$projectpath, "/", pds$project)
   pds$dotgit <- ""
   pds$commitish[pds$commitish == ""] <- "HEAD"
-  pds$url <- paste0(pds$protocol, "://", pds$host, pds$path, pds$repo, ".git")
+  pds$url <- paste0(pds$protocol, "://", pds$host, pds$path, ".git")
   cn <- setdiff(colnames(pds), c(".match", ".text"))
   pds <- pds[, cn]
   pds$type <- "gitlab"
-  pds$package <- ifelse(nzchar(pds$package), pds$package, pds$repo)
+  pds$package <- ifelse(nzchar(pds$package), pds$package, pds$project)
   lapply(
     seq_len(nrow(pds)),
     function(i) as.list(pds[i,])
@@ -23,8 +23,8 @@ resolve_remote_gitlab <- function(remote, direct, config, cache,
   resolve_remote_git(remote, direct, config, cache, dependencies, ...)$
     then(function(res) {
       res$metadata["RemoteHost"] <- remote$host
-      res$metadata["RemoteRepo"] <- remote$repo
-      res$metadata["RemoteUsername"] <- remote$username
+      res$metadata["RemoteRepo"] <- remote$project
+      res$metadata["RemoteUsername"] <- remote$projectpath
       res$metadata["RemoteType"] <- "gitlab"
       if (!is.null(remote$subdir) && remote$subdir != "") {
         res$metadata["RemoteSubdir"] <- remote$subdir

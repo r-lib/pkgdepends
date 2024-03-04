@@ -130,7 +130,7 @@
                                          RemoteUrl 
       "https://gitlab.com/gaborcsardi/feather.git" 
                                       RemotePkgRef 
-                   "gitlab::gaborcsardi/feather/R" 
+                 "gitlab::gaborcsardi/feather/-/R" 
                                          RemoteRef 
                                             "HEAD" 
                                          RemoteSha 

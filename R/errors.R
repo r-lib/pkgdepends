@@ -239,7 +239,7 @@ err <- local({
     cond <- process_call(cond)
 
     if (!is.null(parent)) {
-      cond$parents <- process_call(parent)
+      cond$parent <- process_call(parent)
     }
 
     # We can set an option to always add the trace to the thrown
@@ -723,23 +723,23 @@ err <- local({
 
     c(
       paste0(if (add_exp) exp, msg),
-      if (inherits(cond$parents, "condition")) {
-        msg <- if (full && inherits(cond$parents, "rlib_error_3_0")) {
-          format(cond$parents,
+      if (inherits(cond$parent, "condition")) {
+        msg <- if (full && inherits(cond$parent, "rlib_error_3_0")) {
+          format(cond$parent,
                  trace = FALSE,
                  full = TRUE,
                  class = FALSE,
                  header = FALSE,
                  advice = FALSE
           )
-        } else if (inherits(cond$parents, "interrupt")) {
+        } else if (inherits(cond$parent, "interrupt")) {
           "interrupt"
         } else {
-          conditionMessage(cond$parents)
+          conditionMessage(cond$parent)
         }
         add_exp <- substr(cli::ansi_strip(msg[1]), 1, 1) != "!"
         if (add_exp) msg[1] <- paste0(exp, msg[1])
-        c(format_header_line_cli(cond$parents, prefix = "Caused by error"),
+        c(format_header_line_cli(cond$parent, prefix = "Caused by error"),
           msg
         )
       }
@@ -753,25 +753,25 @@ err <- local({
     add_exp <- is.null(names(cond$message))
     c(
       paste0(if (add_exp) exp, cnd_message_robust(cond)),
-      if (inherits(cond$parents, "condition")) {
-        msg <- if (full && inherits(cond$parents, "rlib_error_3_0")) {
-          format(cond$parents,
+      if (inherits(cond$parent, "condition")) {
+        msg <- if (full && inherits(cond$parent, "rlib_error_3_0")) {
+          format(cond$parent,
                  trace = FALSE,
                  full = TRUE,
                  class = FALSE,
                  header = FALSE,
                  advice = FALSE
           )
-        } else if (inherits(cond$parents, "interrupt")) {
+        } else if (inherits(cond$parent, "interrupt")) {
           "interrupt"
         } else {
-          conditionMessage(cond$parents)
+          conditionMessage(cond$parent)
         }
         add_exp <- substr(msg[1], 1, 1) != "!"
         if (add_exp) {
           msg[1] <- paste0(exp, msg[1])
         }
-        c(format_header_line_plain(cond$parents, prefix = "Caused by error"),
+        c(format_header_line_plain(cond$parent, prefix = "Caused by error"),
           msg
         )
       }

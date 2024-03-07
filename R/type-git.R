@@ -93,9 +93,63 @@ download_remote_git <- function(resolution, target, target_tree,
   pkgdir <- file.path(target_tree, resolution$package)
   mkdirp(pkgdir)
   async_git_download_repo(url, ref = sha, output = pkgdir)$
+    then(function(files) {
+      check_git_download_missing_files(
+        resolution$remote[[1]],
+        files = files,
+        output = pkgdir
+      )
+    })$
     then(function() {
       "Got"
     })
+}
+
+
+#' Check Downloaded git Repo for Missing Files
+#'
+#' Throws a warning if any files failed to download which are necessary for the
+#' building of the package from source. Will ignore the failure to download
+#' files outside a specified remote sub-directory or omitted using a
+#' `.Rbuildignore` file.
+#'
+#' @param remote A git remote
+#' @param files A named logical vector with names corresponding to relative
+#'   file paths to each file in the git repository, and a logical value
+#'   indicating whether the file was successfully downloaded.
+#' @param output The directory containing downloaded repository files
+#'
+#' @return NULL, function used for its side-effects
+#'
+
+check_git_download_missing_files <- function(remote, files, output) {
+  # ignore reporting files outside of subdirectory
+  subdir <- remote$subdir %||% ""
+  in_subdir <- startsWith(names(files), subdir)
+  files <- files | !in_subdir
+
+  # ignore reporting files that would be ignored using `.Rbuildignore`
+  ignore_path_parts <- c(output, remote$subdir, ".Rbuildignore")
+  ignore_path <- do.call(file.path, as.list(ignore_path_parts))
+  if (file.exists(ignore_path)) {
+    subdir_path <- character(length(files))
+    subdir_path[in_subdir] <- substring(names(files), nchar(subdir) + 1)
+    ignore <- readLines(ignore_path, warn = FALSE)
+    for (pattern in ignore[nzchar(ignore)]) {
+      is_ignored <- grepl(pattern, subdir_path, perl = TRUE, ignore.case = TRUE)
+      files <- files | (in_subdir & is_ignored)
+    }
+  }
+
+  # warn if any files are necessary, but missing
+  if (any(!files)) {
+    warning(
+      "Files were unable to be fetched from the git remote: ",
+      paste("'", names(files)[!files], "'", collapse = ", ")
+    )
+  }
+
+  invisible(files)
 }
 
 satisfy_remote_git <- function(resolution, candidate,

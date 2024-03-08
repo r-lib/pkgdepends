@@ -7,6 +7,7 @@ test_that("is_character", {
 })
 
 test_that("is_character errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     fn <- function(x) assert_that(is_character(x)),
     fn(1:2),
@@ -19,6 +20,7 @@ test_that("is_character errors", {
 })
 
 test_that("is_character errors, noninteractive", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
@@ -57,6 +59,7 @@ test_that("is_string", {
 })
 
 test_that("is_string errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_string(x)),
@@ -76,6 +79,7 @@ test_that("is_optional_string", {
 })
 
 test_that("is_optional_string errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_optional_string(x)),
@@ -93,6 +97,7 @@ test_that("is_flag", {
 })
 
 test_that("is_flag errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_flag(x)),
@@ -110,6 +115,7 @@ test_that("is_path", {
 })
 
 test_that("is_path errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_path(x)),
@@ -128,6 +134,7 @@ test_that("is_optional_path", {
 })
 
 test_that("is_optional path errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_optional_path(x)),
@@ -145,6 +152,7 @@ test_that("all_named", {
 })
 
 test_that("all_named errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(all_named(x)),
@@ -164,6 +172,7 @@ test_that("is_existing_file", {
 })
 
 test_that("is_existing_file errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = function(x) transform_no_links(transform_show_cursor(x)),
     fn <- function(x) assert_that(is_existing_file(x)),
@@ -181,6 +190,7 @@ test_that("is_platform_list", {
 })
 
 test_that("is_platform_list errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_platform_list(x)),
@@ -201,6 +211,7 @@ test_that("is_dependencies", {
 })
 
 test_that("is_dependencies errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_dependencies(x)),
@@ -218,6 +229,7 @@ test_that("is_r_version_list", {
 })
 
 test_that("is_r_version_list errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = function(x) transform_show_cursor(transform_no_srcref(x)),
     fn <- function(x) assert_that(is_r_version_list(x)),
@@ -233,6 +245,7 @@ test_that("is_difftime", {
 })
 
 test_that("is_difftime errors", {
+  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_difftime(x)),

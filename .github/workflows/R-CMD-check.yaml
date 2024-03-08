@@ -54,9 +54,17 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        if: runner.os != 'Windows'
         with:
           extra-packages: any::rcmdcheck
           needs: check
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        if: runner.os == 'Windows'
+        with:
+          extra-packages: any::rcmdcheck, asciicast=?ignore-before-r=4.0.0
+          needs: check
+
 
       - name: "Set environmental variables"
         run: |

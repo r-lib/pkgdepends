@@ -123,8 +123,14 @@ download_remote_git <- function(resolution, target, target_tree,
 #'
 
 check_git_download_missing_files <- function(remote, files, output) {
-  # ignore reporting files outside of subdirectory
+  # subdir consistently trailing in path separator
+  sep <- .Platform$file.sep
   subdir <- remote$subdir %||% ""
+  if (nchar(subdir) && !endsWith(subdir, sep)) {
+    subdir <- paste0(subdir, sep)
+  }
+
+  # ignore reporting files outside of subdirectory
   in_subdir <- startsWith(names(files), subdir)
   files <- files | !in_subdir
 
@@ -133,7 +139,11 @@ check_git_download_missing_files <- function(remote, files, output) {
   ignore_path <- do.call(file.path, as.list(ignore_path_parts))
   if (file.exists(ignore_path)) {
     subdir_path <- character(length(files))
-    subdir_path[in_subdir] <- substring(names(files), nchar(subdir) + 1)
+    subdir_path[in_subdir] <- substring(
+      names(files)[in_subdir],
+      nchar(subdir) + 1
+    )
+
     ignore <- readLines(ignore_path, warn = FALSE)
     for (pattern in ignore[nzchar(ignore)]) {
       is_ignored <- grepl(pattern, subdir_path, perl = TRUE, ignore.case = TRUE)
@@ -143,10 +153,11 @@ check_git_download_missing_files <- function(remote, files, output) {
 
   # warn if any files are necessary, but missing
   if (any(!files)) {
-    warning(
-      "Files were unable to be fetched from the git remote: ",
-      paste("'", names(files)[!files], "'", collapse = ", ")
-    )
+    throw(pkg_error(
+      "{sum(!files)} necessary file{?s} {?was/were} unable to be fetched",
+      paste0("'", names(files)[!files], "'", collapse = ", "),
+      .class = "pkgdepends_git_fetch"
+    ))
   }
 
   invisible(files)

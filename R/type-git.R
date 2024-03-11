@@ -161,6 +161,7 @@ git_rx <- function() {
   )
 }
 
+#' @importFrom utils URLencode
 git_auth_url <- function(remote) {
   url <- remote$url
   auth <- tryCatch(gitcreds_get(url), error = function(err) NULL)
@@ -170,9 +171,9 @@ git_auth_url <- function(remote) {
     paste0(
       remote$protocol,
       "://",
-      auth$username,
+      URLencode(auth$username, reserved = TRUE, repeated = TRUE),
       ":",
-      auth$password,
+      URLencode(auth$password, reserved = TRUE, repeated = TRUE),
       "@",
       sub(paste0("^", remote$protocol, "://"), "", remote$url)
     )

@@ -53,9 +53,11 @@ ghrepo <- local({
       # unfortunate name collision
       repo_slug <- repo
       rm(repo)
+      pkg_type <- if (Sys.info()[["sysname"]] == "Linux") "source" else "binary"
+      contrib_url <- utils::contrib.url(repos = "", type = pkg_type)
       repo$update_gh(
         repo_slug,
-        paste0(subdir, "/src/contrib"),
+        paste0(subdir, contrib_url),
         inst$built_path,
         release_org = release_org
       )

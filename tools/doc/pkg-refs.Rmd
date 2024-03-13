@@ -255,16 +255,29 @@ https://github.com/r-lib/withr/releases/tag/v2.1.0
 A GitHub remote string can also be used instead of an URL, for example:
 `git@github.com:r-lib/pak.git`
 
+For private GitHub repositories, the `gitcreds` package attempts to 
+retrieve the relevant credentials using 
+`gitcreds::gitcreds_get(url = "https://github.com")`. See the docs of
+`gitcreds::gitcreds_get()` for full details. Briefly, you can run
+`gitcreds::gitcreds_get(url = "https://github.com")` manually yourself 
+to see if it finds anything. If it does not, get a GitHub 
+_personal access token_ (PAT) and then call 
+`gitcreds::gitcreds_set(url = "https://github.com")` and follow the
+instructions. Alternatively (less secure), set the 
+`r gitcreds::gitcreds_cache_envvar("https://github.com")` environment
+variable to the PAT in your `~/.Renviron` file.
+
 ### GitLab packages (`gitlab::`)
 
 Packages from a GitLab repository. Full syntax:
 
 ```
-[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
+[<package>=][gitlab::]<username>/<repository>[/<subdir>][<detail>]
 ```
 
 - `<package>` is the name of the package. If this is missing, then
-  the name of the repository is used.
+  the name of the repository is used, unless a `subdir` is specified,
+  in which case that is used.
 - `<username>` is a GitLab username or group name.
 - `<repository>` is the name of the repository.
 - `<subdir>` optional subdirectory, if the package is within a
@@ -273,6 +286,18 @@ Packages from a GitLab repository. Full syntax:
 
 If `<detail>` is missing, then the latest commit of the _default_
 branch is used.
+
+For private GitLab repositories, the `gitcreds` package attempts to 
+retrieve the relevant credentials using 
+`gitcreds::gitcreds_get(url = "https://gitlab.com")`. See the docs of
+`gitcreds::gitcreds_get()` for full details. Briefly, you can run
+`gitcreds::gitcreds_get(url = "https://gitlab.com")` manually yourself 
+to see if it finds anything. If it does not, get a GitLab 
+_personal access token_ (PAT) and then call 
+`gitcreds::gitcreds_set(url = "https://gitlab.com")` and follow the
+instructions. Alternatively (less secure), set the 
+`r gitcreds::gitcreds_cache_envvar("https://gitlab.com")` environment
+variable to the PAT in your `~/.Renviron` file.
 
 Examples:
 ```

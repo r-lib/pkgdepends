@@ -53,8 +53,7 @@ ghrepo <- local({
       # unfortunate name collision
       repo_slug <- repo
       rm(repo)
-      pkg_type <- if (Sys.info()[["sysname"]] == "Linux") "source" else "binary"
-      contrib_url <- utils::contrib.url(repos = "", type = pkg_type)
+      contrib_url <- utils::contrib.url(repos = "", type = .Platform$pkgType)
       repo$update_gh(
         repo_slug,
         paste0(subdir, contrib_url),
@@ -111,8 +110,9 @@ ghrepo <- local({
     proc <- cli::cli_process_start(
       "Getting packages from {.emph {repo}/{subdir}}."
     )
+    platform <- if (.Platform$pkgType == "source") "source" else pkgcache::current_r_platform()
     r_mirror <- suppressMessages(pkgcache::cranlike_metadata_cache$new(
-      platforms = "source",
+      platforms = platform,
       bioc = FALSE,
       cran_mirror = get_mirror_repo_url(repo, subdir),
       repos = NULL,

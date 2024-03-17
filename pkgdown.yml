@@ -1,9 +1,9 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   pkgdepends-how-to: pkgdepends-how-to.html
-last_built: 2023-12-10T23:42Z
+last_built: 2024-03-17T18:08Z
 urls:
   reference: https://r-lib.github.io/pkgdepends/reference
   article: https://r-lib.github.io/pkgdepends/articles

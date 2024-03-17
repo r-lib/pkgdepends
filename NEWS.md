@@ -1,5 +1,9 @@
 # pkgdepends (development version)
 
+* pkgdepends now supports the `*` wildcard for parameter specifications,
+  for paramrters applied to all packages. E.g. `*=?source` means
+  compiling all packages from source.
+
 # pkgdepends 0.7.1
 
 * pkgdepends now does not import the glue, rprojroot and prettyunits

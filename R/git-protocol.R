@@ -523,6 +523,7 @@ unpack_packfile_repo <- function(parsed, output, url) {
   done <- logical(length(trees))
   idx <- 1L
   wd <- character()
+  paths <- logical(0L)  # named vector of (path, success)
 
   mkdirp(output)
 
@@ -532,7 +533,9 @@ unpack_packfile_repo <- function(parsed, output, url) {
     tr <- trees[[i]]$object
     for (l in seq_len(nrow(tr))) {
       idx <<- idx + 1L
-      opath <- file.path(output, paste(c(wd, tr$path[l]), collapse = "/"))
+      rpath <- paste(c(wd, tr$path[l]), collapse = "/")
+      opath <- file.path(output, rpath)
+      paths[[rpath]] <<- FALSE
       if (tr$type[l] == "tree") {
         tidx <- which(tr$hash[l] == names(trees))[1]
         if (is.na(tidx)) {
@@ -543,10 +546,12 @@ unpack_packfile_repo <- function(parsed, output, url) {
         }
         wd <<- c(wd, tr$path[l])
         mkdirp(opath)
+        paths[[rpath]] <<- TRUE
         process_tree(tidx)
         wd <<- utils::head(wd, -1)
-      } else if (tr$type[l] == "blob") {
+      } else if (tr$type[l] == "blob" && !is.null(parsed[[tr$hash[l]]])) {
         writeBin(parsed[[tr$hash[l]]]$raw, opath)
+        paths[[rpath]] <<- TRUE
       }
     }
   }
@@ -567,10 +572,9 @@ unpack_packfile_repo <- function(parsed, output, url) {
     )
   }
 
-
   for (i in seq_along(trees)) process_tree(i)
 
-  invisible()
+  invisible(paths)
 }
 
 # -------------------------------------------------------------------------

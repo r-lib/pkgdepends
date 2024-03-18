@@ -197,3 +197,52 @@ test_that("type_git_make_resolution", {
   # TODO
   expect_true(TRUE)
 })
+
+test_that("check_git_download_missing_files warns when missing required files", {
+  packfile <- test_path("fixtures", "git-test-submod-req.pack")
+  pack <- git_unpack(packfile)
+
+  url <- "https://website.org/repo.git"
+  output <- tempfile("pkgdepends-test-git-submod-req")
+  dir.create(output)
+  on.exit(unlink(output, recursive = TRUE))
+
+  # fixture successfully unpacks and produces expected file contents
+  files <- expect_silent(unpack_packfile_repo(pack, output, url = url))
+  expect_vector(files, logical())
+  expect_named(files)
+
+  # files required for build
+  expect_true("inst/generics" %in% names(files))
+  expect_false(files[["inst/generics"]])  # submodule "file" missing
+
+  expect_error(class = "pkgdepends_git_fetch", {
+    check_git_download_missing_files(list(), files, output)
+  })
+})
+
+test_that("check_git_download_missing_files is silent when missing files are unnecessary", {
+  packfile <- test_path("fixtures", "git-test-submod-opt.pack")
+  pack <- git_unpack(packfile)
+
+  url <- "https://website.org/repo.git"
+  output <- tempfile("pkgdepends-test-git-submod-req")
+  dir.create(output)
+  on.exit(unlink(output, recursive = TRUE))
+
+  # fixture successfully unpacks and produces expected file contents
+  files <- expect_silent(unpack_packfile_repo(pack, output, url = url))
+  expect_vector(files, logical())
+  expect_named(files)
+  expect_true("generics" %in% names(files))
+  expect_true("pkgdepends.test.002/inst/generics" %in% names(files))
+
+  # submodule "files" unnecessary for build
+  expect_false(files[["pkgdepends.test.002/inst/generics"]])  # .Rbuildignore'd
+  expect_false(files[["generics"]])  # outside subdir
+
+  expect_silent({
+    remote <- list(subdir = "pkgdepends.test.002")
+    check_git_download_missing_files(remote, files, output)
+  })
+})

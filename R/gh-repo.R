@@ -236,9 +236,11 @@ ghrepo <- local({
         ghr$add_asset(slug, inst$built_path[i], ver),
         error = function(err) {
           cli::cli_alert_info("Try adding release asset again.")
+          Sys.sleep(5)
           ghr$add_asset(slug, inst$built_path[i], ver)
         }
       )
+      Sys.sleep(1)
     }
   }
 

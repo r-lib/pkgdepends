@@ -244,6 +244,7 @@ ghrepo <- local({
       ""
     )
 
+    inst$build_time <- inst$build_time %||% NA_real_
     cols <- data_frame(
       package = inst$package,
       "old" = oldver,

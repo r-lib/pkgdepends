@@ -226,7 +226,11 @@ ghrepo <- local({
     for (i in seq_along(inst$package)) {
       slug <- paste0(release_org, "/", inst$package[[i]])
       ver <- inst$version[[i]]
-      rels <- ghr$list(slug)
+      rels <- try(ghr$list(slug))
+      if (inherits(rels, "try-error")) {
+        Sys.sleep(5)
+        rels <- ghr$list(slug)
+      }
       if (!ver %in% rels$tag_name) {
         cli::cli_alert_info("Creating GH release {slug} {ver}.")
         ghr$create(slug, ver)

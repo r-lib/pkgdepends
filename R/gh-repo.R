@@ -253,6 +253,8 @@ ghrepo <- local({
     )
 
     inst$build_time <- inst$build_time %||% NA_real_
+    inst$build_time <- as.double(inst$build_time)
+    inst$build_time <- as.difftime(inst$build_time, units = "secs")
     cols <- data_frame(
       package = inst$package,
       "old" = oldver,

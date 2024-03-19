@@ -232,7 +232,13 @@ ghrepo <- local({
         ghr$create(slug, ver)
       }
       cli::cli_alert_info("Adding release asset for {slug} {ver}.")
-      ghr$add_asset(slug, inst$built_path[i], ver)
+      tryCatch(
+        ghr$add_asset(slug, inst$built_path[i], ver),
+        error = function(err) {
+          cli::cli_alert_info("Try adding release asset again.")
+          ghr$add_asset(slug, inst$built_path[i], ver)
+        }
+      )
     }
   }
 

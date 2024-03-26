@@ -47,7 +47,7 @@ test_that("resolve", {
 
   # subdirectory
   p <- suppressMessages(new_pkg_installation_proposal(
-    "gitlab::gaborcsardi/feather/R",
+    "gitlab::gaborcsardi/feather/-/R",
     config = list(library = tmp, dependencies = FALSE)
   ))
   suppressMessages(p$resolve())
@@ -67,7 +67,7 @@ test_that("download", {
 
   # subdirectory
   p <- suppressMessages(new_pkg_installation_proposal(
-    "gitlab::gaborcsardi/feather/R",
+    "gitlab::gaborcsardi/feather/-/R",
     config = list(library = tmp, dependencies = FALSE)
   ))
   suppressMessages(p$resolve())

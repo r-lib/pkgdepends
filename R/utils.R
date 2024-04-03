@@ -315,6 +315,10 @@ new_async_timer <- function(...) {
   asNamespace("pkgcache")$async_timer$new(...)
 }
 
+async_delay <- function(...) {
+  asNamespace("pkgcache")$delay(...)
+}
+
 external_process <- function(...) {
   asNamespace("pkgcache")$external_process(...)
 }

@@ -99,14 +99,18 @@ fill <- function(x) {
 }
 
 update_submodule <- function(url, path, branch) {
-  synchronize(async_update_submodule(url, path, branch))
+  synchronize(async_update_submodule(url, path, branch)) # nocov
 }
 
 async_update_submodule <- function(url, path, branch) {
   url; path; branch
   # if the directory already exists and not empty, we assume that
   # it was already downloaded. We still to update the submodules
-  # recursively
+  # recursively. This is problematic if a git download is interrupted
+  # and then stated again with the same output, but that does not happen
+  # during normal operation of pkgdepends, I think. A better solution
+  # would be to download the submodule to a temporary directory, and if
+  # successful, then move the temporary directory to the correct place.
   if (file.exists(path) &&
     length(dir(path, all.files = TRUE, no.. = TRUE)) > 0) {
     # message(path, " exists")
@@ -147,7 +151,7 @@ git_auth_url <- function(url) {
 }
 
 update_git_submodules_r <- function(path, subdir) {
-  synchronize(async_update_git_submodules_r(path))
+  synchronize(async_update_git_submodules_r(path, subdir))           # nocov
 }
 
 async_update_git_submodules_r <- function(path, subdir) {
@@ -160,7 +164,7 @@ async_update_git_submodules_r <- function(path, subdir) {
 
   to_ignore <- in_r_build_ignore(info$path, file.path(path, subdir, ".Rbuildignore"))
   info <- info[!to_ignore, ]
-  if (length(info) == 0) return()
+  if (nrow(info) == 0) return()
 
   async_map(seq_len(nrow(info)), function(i) {
     async_update_submodule(
@@ -182,7 +186,7 @@ async_update_git_submodules <- function(path) {
   if (!file.exists(smfile)) return()
 
   info <- parse_submodules(smfile)
-  if (length(info) == 0) return()
+  if (nrow(info) == 0) return()
 
   async_map(seq_len(nrow(info)), function(i) {
     async_update_submodule(

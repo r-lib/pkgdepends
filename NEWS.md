@@ -3,6 +3,10 @@
 * pkgdepends now supports `gitlab::` package sources better, by adding
   explicit syntax to specify subdirectories (#353, @dgkf).
 
+* `gitlab::` and `git::` package sources now support git submodules if
+  the `git-submodules` configuration option is set to `TRUE`. See
+  `?"pkgdepends-config"` (#354).
+
 # pkgdepends 0.7.2
 
 * pkgdepends now supports the `*` wildcard for parameter specifications,

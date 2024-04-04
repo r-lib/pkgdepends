@@ -143,27 +143,6 @@
        [9] "v1/README.md"                            
       [10] "v1/wipe.R"                               
 
-# git_auth_url
-
-    Code
-      git_auth_url("https://github.com/r-lib/pak")
-    Output
-      [1] "https://github.com/r-lib/pak"
-
----
-
-    Code
-      git_auth_url("https://github.com/r-lib/pak")
-    Output
-      [1] "https://user:pass@github.com/r-lib/pak"
-
----
-
-    Code
-      git_auth_url("https://gitlab.com/gaborcsardi/vli")
-    Output
-      [1] "https://user:pass@gitlab.com/gaborcsardi/vli.git"
-
 # directories
 
     Code

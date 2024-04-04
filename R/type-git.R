@@ -88,7 +88,7 @@ download_remote_git <- function(resolution, target, target_tree,
 
   ## 4. Need to download the repo
 
-  url <- type_git_auth_url(resolution$remote[[1]])
+  url <- resolution$remote[[1]]$url
   sha <- resolution$metadata[[1]][["RemoteSha"]]
   pkgdir <- file.path(target_tree, resolution$package)
   mkdirp(pkgdir)
@@ -168,36 +168,18 @@ git_rx <- function() {
   )
 }
 
-type_git_auth_url <- function(remote) {
-  url <- remote$url
-  auth <- tryCatch(gitcreds_get(url), error = function(err) NULL)
-  if (is.null(auth)) {
-    url
-  } else {
-    paste0(
-      remote$protocol,
-      "://",
-      auth$username,
-      ":",
-      auth$password,
-      "@",
-      sub(paste0("^", remote$protocol, "://"), "", remote$url)
-    )
-  }
-}
-
 type_git_get_data <- function(remote) {
   remote
+  url <- remote$url
   sha <- NULL
   dsc <- NULL
-  auth_url <- type_git_auth_url(remote)
   desc_path <- if (is.null(remote$subdir) || remote$subdir == "") {
     "DESCRIPTION"
   } else {
     paste0(remote$subdir, "/", "DESCRIPTION")
   }
 
-  async_git_list_files(auth_url, remote$commitish)$
+  async_git_list_files(url, remote$commitish)$
     catch(error = function(err) {
       throw(pkg_error(
         "Failed to download {.path {desc_path}} from git repo at {.url {remote$url}}."
@@ -219,7 +201,7 @@ type_git_get_data <- function(remote) {
       files$files$hash[desc_idx]
     })$
     then(function(desc_hash) {
-      async_git_download_file(auth_url, desc_hash, output = NULL)$
+      async_git_download_file(url, desc_hash, output = NULL)$
       catch(error = function(err) {
         throw(pkg_error(
           "Failed to download {.path {desc_path}} from git repo at {.url {remote$url}}."

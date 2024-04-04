@@ -122,32 +122,10 @@ async_update_submodule <- function(url, path, branch) {
     if (is.null(branch) || is.na(branch)) branch <- "HEAD"
     # message("getting ", path)
     async_git_download_repo(
-      git_auth_url(url),
+      url,
       ref = branch,
       output = path,
       submodules = TRUE
-    )
-  }
-}
-
-git_auth_url <- function(url) {
-  parsed <- parse_url(url)
-  auth <- tryCatch(gitcreds_get(url), error = function(err) NULL)
-  if (is.null(auth)) {
-    url
-  } else {
-    paste0(
-      parsed$protocol,
-      "://",
-      auth$username,
-      ":",
-      auth$password,
-      "@",
-      sub(paste0("^", parsed$protocol, "://"), "", parsed$url),
-      # gitlab needs .git suffix
-      if (parsed$host == "gitlab.com" && !endsWith(parsed$url, ".git")) {
-        ".git"
-      }
     )
   }
 }

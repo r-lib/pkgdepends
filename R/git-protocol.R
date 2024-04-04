@@ -39,10 +39,17 @@ NULL
 # -------------------------------------------------------------------------
 
 git_creds_for_url <- function(url) {
-  tryCatch(
+  creds <- tryCatch(
     gitcreds_get(url)[c("username", "password")],
     error = function(e) NULL
   )
+  if (is.null(creds)) {
+    do.call(
+      Sys.setenv,
+      structure(list("FAIL"), names = gitcreds_cache_envvar(url))
+    )
+  }
+  creds
 }
 
 git_http_get <- function(url, options = list(), ...) {
@@ -52,7 +59,7 @@ git_http_get <- function(url, options = list(), ...) {
 
 git_http_post <- function(url, options = list(), ...) {
   options <- c(options, git_creds_for_url(url))
-  http_post( url, options = options, ...)
+  http_post(url, options = options, ...)
 }
 
 #' List references in a remote git repository

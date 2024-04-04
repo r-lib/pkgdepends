@@ -7,6 +7,9 @@ $cache_dir
 $cran_mirror
 [1] "CRAN mirror to use. Defaults to the \\code{repos} option\n(see \\code{\\link[base:options]{base::options()}}), if that's not set then\n\\verb{https://cran.rstudio.com}. See also \\code{\\link[pak:repo_add]{pak::repo_add()}} and\n\\code{\\link[pak:repo_get]{pak::repo_get()}}"
 
+$git_submodules
+[1] "Whether or not to update submodules in git repositories. This\naffects \\verb{git::} and \\verb{gitlab::} package sources only.\nIf the R package is in a subdirectory then only the submodules\nwithin that directory are updated. If a submodule appears in\n\\code{.Rbuildignore}, then it is skipped."
+
 $include_linkingto
 [1] "Whether to always include \\code{LinkingTo} dependencies in the solution\nof and installation, even if they are needed because the packages\nare installed from binaries. This is sometimes useful, see e.g.\n\\url{https://github.com/r-lib/pak/issues/485} for an example use case."
 

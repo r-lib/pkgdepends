@@ -3,7 +3,7 @@
 # pkgdepends 0.7.2
 
 * pkgdepends now supports the `*` wildcard for parameter specifications,
-  for paramrters applied to all packages. E.g. `*=?source` means
+  for parameters applied to all packages. E.g. `*=?source` means
   compiling all packages from source.
 
 # pkgdepends 0.7.1

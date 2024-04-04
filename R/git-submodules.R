@@ -1,6 +1,8 @@
 # From remotes
 parse_submodules <- function(file) {
   if (grepl("\n", file)) {
+    # fix windows line endings
+    file <- sub("\r\n", "\n", file, fixed = TRUE)
     x <- strsplit(file, "\n")[[1]]
   } else {
     x <- readLines(file)

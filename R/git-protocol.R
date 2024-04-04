@@ -133,6 +133,7 @@ async_git_resolve_ref <- function(url, ref) {
       paste0(c("", "refs/heads/", "refs/tags/"), ref)
     }
     async_git_list_refs(url, filt)$
+      catch(error = function(e) async_git_list_refs_v1(url))$
       then(function(refs) {
         result <- if (ref %in% refs$refs$ref) {
           refs$refs$hash[refs$refs$ref == ref]
@@ -501,20 +502,30 @@ git_fetch_process <- function(reply, url, sha) {
 
 # -------------------------------------------------------------------------
 
-git_download_repo <- function(url, ref = "HEAD", output = ref) {
-  synchronize(async_git_download_repo(url, ref, output))
+git_download_repo <- function(url, ref = "HEAD", output = ref,
+                              submodules = FALSE) {
+  synchronize(async_git_download_repo(url, ref, output, submodules))
 }
 
-async_git_download_repo <- function(url, ref = "HEAD", output = ref) {
+async_git_download_repo <- function(url, ref = "HEAD", output = ref,
+                                    submodules = FALSE) {
   url; ref
   async_git_resolve_ref(url, ref)$
-    then(function(sha) async_git_download_repo_sha(url, sha, output))
+    then(function(sha) {
+      async_git_download_repo_sha(url, sha, output, submodules)
+    })
 }
 
-async_git_download_repo_sha <- function(url, sha, output) {
+async_git_download_repo_sha <- function(url, sha, output,
+                                        submodules = FALSE) {
   url; sha; output
-  async_git_fetch(url, sha, blobs = TRUE)$
+  p <- async_git_fetch(url, sha, blobs = TRUE)$
     then(function(packfile) unpack_packfile_repo(packfile, output, url))
+  if (!submodules) {
+    p
+  } else {
+    p$then(function() async_update_git_submodules(output))
+  }
 }
 
 unpack_packfile_repo <- function(parsed, output, url) {
@@ -546,7 +557,10 @@ unpack_packfile_repo <- function(parsed, output, url) {
         process_tree(tidx)
         wd <<- utils::head(wd, -1)
       } else if (tr$type[l] == "blob") {
-        writeBin(parsed[[tr$hash[l]]]$raw, opath)
+        # for submodules this is NULL
+        if (!is.null(parsed[[tr$hash[l]]])) {
+          writeBin(parsed[[tr$hash[l]]]$raw, opath)
+        }
       }
     }
   }

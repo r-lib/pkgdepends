@@ -77,8 +77,8 @@ download_remote_git <- function(resolution, target, target_tree,
   ## 3. Check if we have a repo snapshot in the cache.
 
   rel_target <- resolution$target
+  subdir <- resolution$remote[[1]]$subdir
   if (!nocache) {
-    subdir <- resolution$remote[[1]]$subdir
     hit <- cache$package$copy_to(
       target_tree, package = package, sha256 = sha, built = FALSE)
     if (nrow(hit)) {
@@ -88,14 +88,21 @@ download_remote_git <- function(resolution, target, target_tree,
 
   ## 4. Need to download the repo
 
-  url <- git_auth_url(resolution$remote[[1]])
+  url <- type_git_auth_url(resolution$remote[[1]])
   sha <- resolution$metadata[[1]][["RemoteSha"]]
   pkgdir <- file.path(target_tree, resolution$package)
   mkdirp(pkgdir)
-  async_git_download_repo(url, ref = sha, output = pkgdir)$
-    then(function() {
-      "Got"
-    })
+  p <- async_git_download_repo(url, ref = sha, output = pkgdir)
+
+  # submodules?
+  submodules <- config$get("git-submodules")
+  if (submodules) {
+    p <- p$then(function(x) async_update_git_submodules_r(pkgdir, subdir))
+  }
+
+  p$then(function() {
+    "Got"
+  })
 }
 
 satisfy_remote_git <- function(resolution, candidate,
@@ -161,7 +168,7 @@ git_rx <- function() {
   )
 }
 
-git_auth_url <- function(remote) {
+type_git_auth_url <- function(remote) {
   url <- remote$url
   auth <- tryCatch(gitcreds_get(url), error = function(err) NULL)
   if (is.null(auth)) {
@@ -183,7 +190,7 @@ type_git_get_data <- function(remote) {
   remote
   sha <- NULL
   dsc <- NULL
-  auth_url <- git_auth_url(remote)
+  auth_url <- type_git_auth_url(remote)
   desc_path <- if (is.null(remote$subdir) || remote$subdir == "") {
     "DESCRIPTION"
   } else {

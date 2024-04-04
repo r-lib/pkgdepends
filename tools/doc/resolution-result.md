@@ -40,7 +40,21 @@ It is a zero length vector for \verb{installed::} refs.
 \item \code{target}: path where this package should be saved in a CRAN-repository.
 \item \code{type}: ref type.
 \item \code{version}: package version.
+\item \code{fulltarget}: absolute path to the downloaded file. At most one of
+\code{fulltarget} and \code{fulltarget_tree} must exist on the disk.
+\item \code{fulltarget_tree}: absolute path to a package tree directory. At most
+one of \code{fulltarget} and \code{fulltarget_tree} must exist on the disk.
+\item \code{download_status}: \code{"Had"} or \code{"Got"}, depending on whether the file
+was obtained from the cache.
+\item \code{download_error}: error object for failed downloads.
+\item \code{file_size}: Size of the file, or \code{NA}. For \verb{installed::} refs, it is
+\code{NA}, and it is also \code{NA} for refs that created \code{fulltarget_tree}
+instead of \code{fulltarget}.
 }
+
+\code{fulltarget}, if it exists, contains a packaged (via \verb{R CMD build})
+source R package. If \code{fulltarget_tree} exists, it is a package tree
+directory, that still needs an \verb{R CMD build} call.
 
 Additional columns might be present. They are either used internally or
 they are experimental. They might be removed or changed at any time.

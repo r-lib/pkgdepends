@@ -96,6 +96,11 @@ supported in the <code>PKG_DEPENDENCIES</code> environment variable:
 <code>"TRUE"</code>, <code>"FALSE"</code>, <code>"NA"</code>, or a semicolon separated list of
 dependency types. See <code><a href="as_pkg_dependencies.html">as_pkg_dependencies()</a></code> for
 details.</p></li>
+<li><p><code>git_submodules</code>: Whether or not to update submodules in git repositories. This
+affects <code>git::</code> and <code>gitlab::</code> package sources only.
+If the R package is in a subdirectory then only the submodules
+within that directory are updated. If a submodule appears in
+<code>.Rbuildignore</code>, then it is skipped.</p></li>
 <li><p><code>include_linkingto</code>: Whether to always include <code>LinkingTo</code> dependencies in the solution
 of and installation, even if they are needed because the packages
 are installed from binaries. This is sometimes useful, see e.g.

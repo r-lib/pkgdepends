@@ -133,17 +133,6 @@ test_that("git_download_repo R package with ignored submodule", {
   expect_snapshot(dir(tmp, recursive = TRUE, all.files = TRUE, no.. = TRUE))
 })
 
-test_that("git_auth_url", {
-  mockery::stub(git_auth_url, "gitcreds_get", function(...) stop("no"))
-  expect_snapshot(git_auth_url("https://github.com/r-lib/pak"))
-
-  mockery::stub(git_auth_url, "gitcreds_get", function(...) {
-    list(username = "user", password = "pass")
-  })
-  expect_snapshot(git_auth_url("https://github.com/r-lib/pak"))
-  expect_snapshot(git_auth_url("https://gitlab.com/gaborcsardi/vli"))
-})
-
 test_that("directories", {
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)

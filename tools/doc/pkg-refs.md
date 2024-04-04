@@ -256,25 +256,32 @@ A GitHub remote string can also be used instead of an URL, for example:
 
 Packages from a GitLab repository. Full syntax:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=][github::]<username>/<repository>[/<subdir>][<detail>]
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=][github::]<project-path>/<repository>[/-/<subdir>][<detail>]
 }\if{html}{\out{</div>}}
 \itemize{
 \item \verb{<package>} is the name of the package. If this is missing, then
 the name of the repository is used.
-\item \verb{<username>} is a GitLab username or group name.
-\item \verb{<repository>} is the name of the repository.
+\item \verb{<project-path>} is a typically the GitLab username or group name, but
+it may contain subgroups.
+\item \verb{<repository>} is the name of the repository, or the project in GitLab
+terminology.
 \item \verb{<subdir>} optional subdirectory, if the package is within a
-subdirectory in the repository.
+subdirectory in the repository. Note that for GitLab, this must come
+after a \verb{/-} prefix, to be able to distinguish it from subgroups.
 \item \verb{<detail>} may specify a git branch, tag or (prefix of) a commit hash.
 }
 
 If \verb{<detail>} is missing, then the latest commit of the \emph{default}
 branch is used.
 
+\verb{gitlab::} supports git submodules, see the \code{git-submodules} configuration
+entry.
+
 Examples:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{gitlab::gaborcsardi/cli
 gitlab::r-hub/filelock@main
+gitlab::group/subgroup/subsubgroup/project/-/subdir@ref
 }\if{html}{\out{</div>}}
 }
 
@@ -295,6 +302,9 @@ a git branch, tag or (prefix of) a commit hash: \verb{@<commitish>}.
 
 If \verb{<detail>} is missing, then the latest commit of the \emph{default}
 branch is used.
+
+\verb{git::} supports git submodules, see the \code{git-submodules} configuration
+entry.
 
 Examples:
 

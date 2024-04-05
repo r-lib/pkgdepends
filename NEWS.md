@@ -7,6 +7,10 @@
   the `git-submodules` configuration option is set to `TRUE`. See
   `?"pkgdepends-config"` (#354).
 
+* The new `?ignore-unavailable` parameter makes it easy to ignore soft
+  dependencies that are unavailable
+  (https://github.com/r-lib/pak/issues/606).
+
 # pkgdepends 0.7.2
 
 * pkgdepends now supports the `*` wildcard for parameter specifications,

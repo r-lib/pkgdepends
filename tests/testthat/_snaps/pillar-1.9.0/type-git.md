@@ -166,6 +166,9 @@
       $sysreqs
       [1] ""
       
+      $os_type
+      [1] NA
+      
       $cache_status
       [1] "miss"
       

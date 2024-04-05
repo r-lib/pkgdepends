@@ -11,6 +11,10 @@
   dependencies that are unavailable
   (https://github.com/r-lib/pak/issues/606).
 
+* pkgdepends now automatically ignores soft dependencies that have an
+  incompatible OS type (`OS_type` entry in `DESCRIPTION`) when installing
+  packages.
+
 # pkgdepends 0.7.2
 
 * pkgdepends now supports the `*` wildcard for parameter specifications,

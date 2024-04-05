@@ -495,3 +495,7 @@ backtick <- function(x) {
 collapse <- function(x, ...) {
   cli::ansi_collapse(x, ...)
 }
+
+na_omit <- function(x) {
+  x[!is.na(x)]
+}

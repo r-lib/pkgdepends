@@ -121,4 +121,7 @@
       $sysreqs
       [1] NA
       
+      $os_type
+      [1] NA
+      
 

@@ -621,6 +621,7 @@ pkgplan_i_lp_dependencies <- function(lp, config) {
   num_candidates <- lp$num_candidates
   ruled_out <- lp$ruled_out
   base <- base_packages()
+
   ignored <- vlapply(pkgs$params, is_true_param, "ignore")
   ignore_rver <- vcapply(pkgs$params, get_param_value, "ignore-before-r")
   if (any(!is.na(ignore_rver))) {
@@ -629,12 +630,21 @@ pkgplan_i_lp_dependencies <- function(lp, config) {
     ignored2 <- package_version(ignore_rver) > current
     ignored <- ignored | ignored2
   }
+  ignore_unavail <- vlapply(
+    pkgs$params,
+    is_true_param,
+    "ignore-unavailable"
+  )
+  failed <- pkgs$status == "FAILED"
+  ignored <- ignored | (ignore_unavail & failed)
+
   # ignore packages with the wrong OS type
   if (config$get("goal") == "install") {
     os <- os_type()
     bad <- which(!is.na(pkgs$os_type) & pkgs$os_type != os)
     if (length(bad) > 0) ignored[bad] <- TRUE
   }
+
   soft_deps <- tolower(pkg_dep_types_soft())
 
   ## 4. Package dependencies must be satisfied

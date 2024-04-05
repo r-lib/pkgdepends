@@ -7,6 +7,10 @@
   the `git-submodules` configuration option is set to `TRUE`. See
   `?"pkgdepends-config"` (#354).
 
+* The new `?ignore-unavailable` parameter makes it easy to ignore soft
+  dependencies that are unavailable
+  (https://github.com/r-lib/pak/issues/606).
+
 * pkgdepends now automatically ignores soft dependencies that have an
   incompatible OS type (`OS_type` entry in `DESCRIPTION`) when installing
   packages.

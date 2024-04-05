@@ -145,6 +145,10 @@ ignored on R versions that are older than the specified one. E.g.
 \verb{Matrix=?ignore-before-r=4.1.2} will ignore the Matrix package on R versions
 that are older than 4.1.2. This parameter really only makes sense in the
 \code{packgename=?ignore} form.
+\item \code{ignore-unavailable} is a flag. It can only be specified for soft
+dependencies. If specified and the package is not available, it will be
+ignored. This parameter really only makes sense in the
+\code{packagename=?ignore-unavailable} form.
 \item \code{source} is a flag parameter. If specified, then a source R package
 is requested from a CRAN-like repository. For package installations
 \code{source} always triggers a re-install. In other words, \code{source} implies the

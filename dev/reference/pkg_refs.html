@@ -187,6 +187,10 @@ ignored on R versions that are older than the specified one. E.g.
 <code>Matrix=?ignore-before-r=4.1.2</code> will ignore the Matrix package on R versions
 that are older than 4.1.2. This parameter really only makes sense in the
 <code>packgename=?ignore</code> form.</p></li>
+<li><p><code>ignore-unavailable</code> is a flag. It can only be specified for soft
+dependencies. If specified and the package is not available, it will be
+ignored. This parameter really only makes sense in the
+<code>packagename=?ignore-unavailable</code> form.</p></li>
 <li><p><code>source</code> is a flag parameter. If specified, then a source R package
 is requested from a CRAN-like repository. For package installations
 <code>source</code> always triggers a re-install. In other words, <code>source</code> implies the

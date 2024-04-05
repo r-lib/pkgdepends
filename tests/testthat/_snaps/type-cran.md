@@ -3,7 +3,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 1 x 30
+      # A data frame: 1 x 31
         ref   type     direct directpkg status package version license
         <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
       1 pkg1  standard TRUE   TRUE      OK     pkg1    1.0.0   <NA>   
@@ -16,9 +16,9 @@
         mirror                  sources   remote         error      metadata 
         <chr>                   <list>    <list>         <list>     <list>   
       1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-        extra      dep_types params    sysreqs cache_status
-        <list>     <list>    <list>    <chr>   <chr>       
-      1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
+        extra      dep_types params    sysreqs os_type cache_status
+        <list>     <list>    <list>    <chr>   <chr>   <chr>       
+      1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
@@ -35,7 +35,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 3 x 30
+      # A data frame: 3 x 31
         ref        type     direct directpkg status package version license
         <chr>      <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
       1 pkg2       standard FALSE  FALSE     OK     pkg2    1.0.0   <NA>   
@@ -56,11 +56,11 @@
       1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
       2 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>
       3 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-        extra      dep_types params    sysreqs cache_status
-        <list>     <list>    <list>    <chr>   <chr>       
-      1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
-      2 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
-      3 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
+        extra      dep_types params    sysreqs os_type cache_status
+        <list>     <list>    <list>    <chr>   <chr>   <chr>       
+      1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
+      2 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
+      3 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
       http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
@@ -87,7 +87,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 3 x 30
+      # A data frame: 3 x 31
         ref   type     direct directpkg status package version license
         <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
       1 pkg1  standard FALSE  FALSE     OK     pkg1    1.0.0   <NA>   
@@ -108,11 +108,11 @@
       1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
       2 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
       3 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-        extra      dep_types params    sysreqs cache_status
-        <list>     <list>    <list>    <chr>   <chr>       
-      1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
-      2 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
-      3 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
+        extra      dep_types params    sysreqs os_type cache_status
+        <list>     <list>    <list>    <chr>   <chr>   <chr>       
+      1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
+      2 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
+      3 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
@@ -139,7 +139,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 1 x 30
+      # A data frame: 1 x 31
         ref                      type  direct directpkg status package           
         <chr>                    <chr> <lgl>  <lgl>     <chr>  <chr>             
       1 cran::xxyyzzqwertyqwerty cran  TRUE   TRUE      FAILED xxyyzzqwertyqwerty
@@ -155,9 +155,9 @@
         remote         error   metadata   extra      dep_types params    sysreqs
         <list>         <list>  <list>     <list>     <list>    <list>    <chr>  
       1 <rmt_rf_c [6]> <error> <list [0]> <list [0]> <chr [3]> <chr [0]> <NA>   
-        cache_status
-        <chr>       
-      1 miss        
+        os_type cache_status
+        <chr>   <chr>       
+      1 <NA>    miss        
       + sources:
       NA
       + remote:
@@ -174,7 +174,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 2 x 30
+      # A data frame: 2 x 31
         ref                      type  direct directpkg status package           
         <chr>                    <chr> <lgl>  <lgl>     <chr>  <chr>             
       1 cran::pkg1               cran  TRUE   TRUE      OK     pkg1              
@@ -195,10 +195,10 @@
         <list>    <list>         <list>     <list>     <list>     <list>    <list>   
       1 <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>  <list [0]> <chr [3]> <chr [0]>
       2 <chr [1]> <rmt_rf_c [6]> <error>    <list [0]> <list [0]> <chr [3]> <chr [0]>
-        sysreqs cache_status
-        <chr>   <chr>       
-      1 <NA>    miss        
-      2 <NA>    miss        
+        sysreqs os_type cache_status
+        <chr>   <chr>   <chr>       
+      1 <NA>    <NA>    miss        
+      2 <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       NA
@@ -220,7 +220,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 1 x 30
+      # A data frame: 1 x 31
         ref                type  direct directpkg status package version license
         <chr>              <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
       1 cran::pkg1@current cran  TRUE   TRUE      OK     pkg1    1.0.0   <NA>   
@@ -233,9 +233,9 @@
         mirror                  sources   remote         error      metadata 
         <chr>                   <list>    <list>         <list>     <list>   
       1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>
-        extra      dep_types params    sysreqs cache_status
-        <list>     <list>    <list>    <chr>   <chr>       
-      1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
+        extra      dep_types params    sysreqs os_type cache_status
+        <list>     <list>    <list>    <chr>   <chr>   <chr>       
+      1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
@@ -252,7 +252,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 2 x 30
+      # A data frame: 2 x 31
         ref        type     direct directpkg status package version license
         <chr>      <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
       1 pkg1@0.9.0 standard TRUE   TRUE      OK     pkg1    0.9.0   <NA>   
@@ -269,10 +269,10 @@
         <chr>                   <list>    <list>         <list>     <list>   
       1 <NA>                    <chr [1]> <rmt_rf_s [8]> <list [0]> <chr [8]>
       2 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-        extra            dep_types params    sysreqs cache_status
-        <list>           <list>    <list>    <chr>   <chr>       
-      1 <named list [1]> <chr [3]> <chr [0]> ""      miss        
-      2 <list [0]>       <chr [3]> <chr [0]> <NA>    miss        
+        extra            dep_types params    sysreqs os_type cache_status
+        <list>           <list>    <list>    <chr>   <chr>   <chr>       
+      1 <named list [1]> <chr [3]> <chr [0]> ""      <NA>    miss        
+      2 <list [0]>       <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz
       http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
@@ -294,7 +294,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 1 x 30
+      # A data frame: 1 x 31
         ref        type     direct directpkg status package version license
         <chr>      <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
       1 pkg1@1.0.0 standard TRUE   TRUE      OK     pkg1    1.0.0   <NA>   
@@ -307,9 +307,9 @@
         mirror                  sources   remote         error      metadata 
         <chr>                   <list>    <list>         <list>     <list>   
       1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-        extra      dep_types params    sysreqs cache_status
-        <list>     <list>    <list>    <chr>   <chr>       
-      1 <list [0]> <chr [3]> <chr [0]> <NA>    miss        
+        extra      dep_types params    sysreqs os_type cache_status
+        <list>     <list>    <list>    <chr>   <chr>   <chr>       
+      1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
@@ -326,7 +326,7 @@
     Code
       snapshot(res, extra = "all")
     Output
-      # A data frame: 1 x 30
+      # A data frame: 1 x 31
         ref          type     direct directpkg status package version license
         <chr>        <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
       1 pkg1@>=0.9.0 standard TRUE   TRUE      FAILED pkg1    <NA>    <NA>   
@@ -339,9 +339,9 @@
         remote         error      metadata   extra      dep_types params    sysreqs
         <list>         <list>     <list>     <list>     <list>    <list>    <chr>  
       1 <rmt_rf_s [6]> <async_rj> <list [0]> <list [0]> <chr [3]> <chr [0]> <NA>   
-        cache_status
-        <chr>       
-      1 miss        
+        os_type cache_status
+        <chr>   <chr>       
+      1 <NA>    miss        
       + sources:
       NA
       + remote:

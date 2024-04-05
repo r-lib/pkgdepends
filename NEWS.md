@@ -7,6 +7,10 @@
   the `git-submodules` configuration option is set to `TRUE`. See
   `?"pkgdepends-config"` (#354).
 
+* pkgdepends now automatically ignores soft dependencies that have an
+  incompatible OS type (`OS_type` entry in `DESCRIPTION`) when installing
+  packages.
+
 # pkgdepends 0.7.2
 
 * pkgdepends now supports the `*` wildcard for parameter specifications,

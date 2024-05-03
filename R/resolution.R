@@ -232,6 +232,10 @@ res_init <- function(self, private, config, cache, library,
       wh <- which(id == private$state$async_id)
       private$state$status[wh] <- "FAILED"
       rec <- private$state[wh,]
+      print(value)
+      print(private$state)
+      print(rec)
+      browser()
       fail_val <- list(
         ref = rec$ref,
         type = rec$remote[[1]]$type,

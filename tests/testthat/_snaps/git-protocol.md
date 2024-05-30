@@ -77,6 +77,8 @@
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
       
       $commit
                                                           tree 
@@ -664,6 +666,8 @@
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
 
 ---
 
@@ -673,6 +677,8 @@
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
 
 ---
 
@@ -682,6 +688,8 @@
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
 
 ---
 

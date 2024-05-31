@@ -29,7 +29,7 @@
       [33m![39m [1m[22m`x` must be a character vector without `NA`, but it is an integer vector
       ---
       Backtrace:
-      [90m1. [39mglobal [36mfn[39m[33m([39m[34m1[39m[32m:[39m[34m2[39m[33m)[39m
+      [90m1. [39mglobal [1mfn[22m[38;5;178m([38;5;169m1[38;5;178m:[38;5;169m2[38;5;178m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
       [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), ...[39m
       Execution halted
@@ -46,7 +46,7 @@
       [33m![39m [1m[22m`x` must be a character vector without `NA`, but it has 1 `NA` value.
       ---
       Backtrace:
-      [90m1. [39mglobal [36mfn[39m[33m([39m[36mc[39m[34m([39m[33m""[39m, [34mNA_character_)[39m[33m)[39m
+      [90m1. [39mglobal [1mfn[22m[38;5;178m([39m[1mc[22m[33m([39m[38;5;37m""[39m, [38;5;169mNA_character_[39m[33m)[39m[38;5;178m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
       [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), ...[39m
       Execution halted
@@ -63,7 +63,7 @@
       [33m![39m [1m[22m`x` must be a character vector without `NA`, but it has 5 `NA` values.
       ---
       Backtrace:
-      [90m1. [39mglobal [36mfn[39m[33m([39m[36mrep[39m[34m(NA_character_[39m, [34m5)[39m[33m)[39m
+      [90m1. [39mglobal [1mfn[22m[38;5;178m([39m[1mrep[22m[33m([39m[38;5;169mNA_character_[39m, [38;5;169m5[39m[33m)[39m[38;5;178m)[39m
       [90m2. | pkgdepends:::assert_that(is_character(x))[39m
       [90m3. | pkgdepends:::throw(assert_error(assertion, res, msg, call. = sys.call(-1), ...[39m
       Execution halted

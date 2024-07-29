@@ -42,6 +42,8 @@ Suggests:
     debugme,
     fansi,
     fs,
+    gh,
+    gitcreds,
     glue,
     htmlwidgets,
     mockery,
@@ -54,6 +56,12 @@ Suggests:
     testthat (>= 3.2.0),
     tibble,
     webfakes (>= 1.1.5.9000),
+    withr (>= 2.1.1),
+Remotes:
+    r-lib/pkgcache
+Config/Needs/builder:
+    gh,
+    pkgsearch,
     withr (>= 2.1.1)
 Config/Needs/coverage:
     r-lib/asciicast,

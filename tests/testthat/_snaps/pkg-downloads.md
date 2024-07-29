@@ -22,17 +22,17 @@
     Output
        [1] "build_vignettes"           "cache_dir"                
        [3] "cran_mirror"               "dependencies"             
-       [5] "goal"                      "include_linkingto"        
-       [7] "library"                   "metadata_cache_dir"       
-       [9] "metadata_update_after"     "package_cache_dir"        
-      [11] "platforms"                 "r_versions"               
-      [13] "sysreqs"                   "sysreqs_db_update"        
-      [15] "sysreqs_db_update_timeout" "sysreqs_dry_run"          
-      [17] "sysreqs_lookup_system"     "sysreqs_platform"         
-      [19] "sysreqs_rspm_repo_id"      "sysreqs_rspm_url"         
-      [21] "sysreqs_sudo"              "sysreqs_update"           
-      [23] "sysreqs_verbose"           "use_bioconductor"         
-      [25] "windows_archs"            
+       [5] "git_submodules"            "goal"                     
+       [7] "include_linkingto"         "library"                  
+       [9] "metadata_cache_dir"        "metadata_update_after"    
+      [11] "package_cache_dir"         "platforms"                
+      [13] "r_versions"                "sysreqs"                  
+      [15] "sysreqs_db_update"         "sysreqs_db_update_timeout"
+      [17] "sysreqs_dry_run"           "sysreqs_lookup_system"    
+      [19] "sysreqs_platform"          "sysreqs_rspm_repo_id"     
+      [21] "sysreqs_rspm_url"          "sysreqs_sudo"             
+      [23] "sysreqs_update"            "sysreqs_verbose"          
+      [25] "use_bioconductor"          "windows_archs"            
 
 ---
 

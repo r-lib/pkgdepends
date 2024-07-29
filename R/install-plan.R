@@ -358,14 +358,7 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
   if (is_windows()) {
     zip_tool_path <- asNamespace("zip")$get_tool("zip")
     rtools <- get_rtools_path()
-    withr_local_path(
-      paste0(
-        dirname(zip_tool_path),
-        .Platform$path.sep,
-        if (!is.null(rtools)) paste0(rtools, .Platform$path.sep),
-        Sys.getenv("PATH")
-      )
-    )
+    withr_local_path(c(dirname(zip_tool_path), rtools))
   }
   # nocov end
 
@@ -667,7 +660,7 @@ stop_task_package_build <- function(state, worker) {
       state$cache$add(state$plan$file[pkgidx], state$plan$target[pkgidx],
                       package = pkg, version = version, built = TRUE,
                       sha256 = state$plan$extra[[pkgidx]]$remotesha,
-                      vignettes = state$plan$vignette[pkgidx],
+                      vignettes = state$plan$vignettes[pkgidx],
                       platform = "source"),
       error = function(err) {
         alert("warning", "Failed to add {.pkg {pkg}} \\
@@ -748,7 +741,7 @@ stop_task_build <- function(state, worker) {
       state$cache$add(state$plan$file[pkgidx], target,
                       package = pkg, version = version, built = TRUE,
                       sha256 = state$plan$extra[[pkgidx]]$remotesha,
-                      vignettes = state$plan$vignette[pkgidx],
+                      vignettes = state$plan$vignettes[pkgidx],
                       platform = ptfm, rversion = rv),
       error = function(err) {
         alert("warning", "Failed to add {.pkg {pkg}} \\

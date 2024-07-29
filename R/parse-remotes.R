@@ -210,7 +210,7 @@ parse_pkg_refs <- function(refs, remote_types = NULL, ...) {
 
   if (length(bad <- setdiff(unique_types, names(remote_types)))) {
     throw(pkg_error(
-      "Unknown package source{?}: {.val {bad}}.",
+      "Unknown package source{?s}: {.val {bad}}.",
       i = msg_package_sources()
     ))
   }
@@ -272,8 +272,15 @@ add_ref_params <- function(res, params) {
   res
 }
 
-known_query_params <- c("ignore", "ignore-before-r", "ignore-build-errors",
-                        "nocache", "reinstall", "source")
+known_query_params <- c(
+  "ignore",
+  "ignore-before-r",
+  "ignore-build-errors",
+  "ignore-unavailable",
+  "nocache",
+  "reinstall",
+  "source"
+)
 
 parse_query <- function(ref) {
   query <- sub("^[^?]*(\\?|$)", "", ref)

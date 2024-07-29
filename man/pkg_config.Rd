@@ -54,6 +54,11 @@ supported in the \code{PKG_DEPENDENCIES} environment variable:
 \code{"TRUE"}, \code{"FALSE"}, \code{"NA"}, or a semicolon separated list of
 dependency types. See \code{\link[=as_pkg_dependencies]{as_pkg_dependencies()}} for
 details.
+\item \code{git_submodules}: Whether or not to update submodules in git repositories. This
+affects \verb{git::} and \verb{gitlab::} package sources only.
+If the R package is in a subdirectory then only the submodules
+within that directory are updated. If a submodule appears in
+\code{.Rbuildignore}, then it is skipped.
 \item \code{include_linkingto}: Whether to always include \code{LinkingTo} dependencies in the solution
 of and installation, even if they are needed because the packages
 are installed from binaries. This is sometimes useful, see e.g.

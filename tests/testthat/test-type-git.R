@@ -167,27 +167,6 @@ test_that("installedok_remote_git", {
   )
 })
 
-test_that("git_auth_url", {
-  mockery::stub(git_auth_url, "gitcreds_get", function(...) stop("oops"))
-  expect_equal(
-    git_auth_url(list(url = "https://github.com/r-lib/cli.git")),
-    "https://github.com/r-lib/cli.git"
-  )
-
-  mockery::stub(
-    git_auth_url,
-    "gitcreds_get",
-    list(username = "user", password = "secret")
-  )
-  expect_equal(
-    git_auth_url(list(
-      protocol = "https",
-      url = "https://github.com/r-lib/cli.git"
-    )),
-    "https://user:secret@github.com/r-lib/cli.git"
-  )
-})
-
 test_that("type_git_get_data", {
   # TODO
   expect_true(TRUE)

@@ -3,24 +3,26 @@
     Code
       git_list_refs(fake_git$url("/pak-test.git"))$refs
     Output
-      # A data frame: 4 x 2
-        ref               hash                                    
-        <chr>             <chr>                                   
-      1 HEAD              3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
-      2 refs/heads/main   3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
-      3 refs/heads/subdir cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
-      4 refs/tags/v1      cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+      # A data frame: 5 x 2
+        ref                     hash                                    
+        <chr>                   <chr>                                   
+      1 HEAD                    3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
+      2 refs/heads/build-ignore a9ffc55f59e0567ecdc67fb3f0333eca49be8d03
+      3 refs/heads/main         3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
+      4 refs/heads/subdir       cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+      5 refs/tags/v1            cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
 
 ---
 
     Code
       git_list_refs_v2(fake_git$url("/pak-test.git"), "refs/heads/")$refs
     Output
-      # A data frame: 2 x 2
-        ref               hash                                    
-        <chr>             <chr>                                   
-      1 refs/heads/main   3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
-      2 refs/heads/subdir cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+      # A data frame: 3 x 2
+        ref                     hash                                    
+        <chr>                   <chr>                                   
+      1 refs/heads/build-ignore a9ffc55f59e0567ecdc67fb3f0333eca49be8d03
+      2 refs/heads/main         3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
+      3 refs/heads/subdir       cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
 
 # git_list_files
 
@@ -75,6 +77,8 @@
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
       
       $commit
                                                           tree 
@@ -230,13 +234,14 @@
     Code
       git_list_refs_v1(fake_git$url("/pak-test.git"))$refs
     Output
-      # A data frame: 4 x 2
-        ref               hash                                    
-        <chr>             <chr>                                   
-      1 HEAD              3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
-      2 refs/heads/main   3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
-      3 refs/heads/subdir cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
-      4 refs/tags/v1      cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+      # A data frame: 5 x 2
+        ref                     hash                                    
+        <chr>                   <chr>                                   
+      1 HEAD                    3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
+      2 refs/heads/build-ignore a9ffc55f59e0567ecdc67fb3f0333eca49be8d03
+      3 refs/heads/main         3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b
+      4 refs/heads/subdir       cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
+      5 refs/tags/v1            cefdc0eebcd7f757efb9a80652fd8aaf1a87508e
 
 # git_list_refs_v1_process_1
 
@@ -661,6 +666,8 @@
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
 
 ---
 
@@ -670,6 +677,8 @@
       [1] "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
 
 ---
 
@@ -679,6 +688,8 @@
       [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
       [1] 2
+      attr(,"filter")
+      [1] TRUE
 
 ---
 

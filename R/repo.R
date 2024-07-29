@@ -216,7 +216,7 @@ repo <- local({
   canonize_arch <- function(platform) {
     if (platform == "") return(NA_character_)
     arch <- strsplit(platform, "-", fixed = TRUE)[[1]][1]
-    c("aarch64" = "arm64", "x86_64" = "amd64")[[arch]]
+    c("aarch64" = "arm64", "x86_64" = "amd64", "s390x" = "s390x")[[arch]]
   }
 
   canonize_os <- function(platform) {

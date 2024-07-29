@@ -183,7 +183,7 @@ ghcr_push_oci_repo <- function(oci_path, ghcr_tag = NULL) {
 
 ghcr_canonize_arch <- function(platform) {
   arch <- strsplit(platform, "-", fixed = TRUE)[[1]][1]
-  c("aarch64" = "arm64", "x86_64" = "amd64")[[arch]]
+  c("aarch64" = "arm64", "x86_64" = "amd64", "s390x" = "s390s")[[arch]]
 }
 
 ghcr_canonize_os <- function(platform) {

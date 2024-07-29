@@ -10,6 +10,8 @@
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/as_pkg_dependencies.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/config.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/default_platforms.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/dev/reference/ghr.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/dev/reference/ghrepo.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/git-protocol.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/git_download_file.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/git_fetch.html</loc></url>
@@ -21,6 +23,7 @@
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/is_valid_package_name.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/lib_status.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/parse_pkg_refs.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/dev/reference/pkg_build.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/pkg_config.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/pkg_dep_types.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/pkg_deps.html</loc></url>
@@ -34,6 +37,7 @@
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/pkg_rx.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/pkg_solution.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/pkgdepends-package.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/dev/reference/repo.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/sysreqs_check_installed.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/sysreqs_db_list.html</loc></url>
 <url><loc>https://r-lib.github.io/pkgdepends/dev/reference/sysreqs_db_match.html</loc></url>

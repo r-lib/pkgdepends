@@ -350,7 +350,7 @@ get_rtools_path <- function() {
 # nocov end
 
 make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
-                               needscompilation, binary, cmd_args) {
+                               needscompilation, binary, cmd_args, metadata = NULL) {
 
   # For windows, we need ensure the zip.exe bundled with the zip package is on the PATH
   # TODO: test this on Windows
@@ -387,6 +387,8 @@ make_build_process <- function(path, pkg, tmp_dir, lib, vignettes,
   loadNamespace("cli")
   loadNamespace("ps")
   # loadNamespace("R6") # not needed, built time dependency
+
+  add_metadata(path, metadata)
 
   withr_with_libpaths(c(tmplib, lib), action = "prefix",
     pkgbuild::pkgbuild_process$new(
@@ -481,11 +483,12 @@ start_task_package_build <- function(state, task) {
   vignettes <- state$plan$vignettes[pkgidx]
   needscompilation <- !identical(state$plan$needscompilation[pkgidx], "no")
   lib <- state$config$lib
+  metadata <- state$plan$metadata[[pkgidx]]
 
   task$args$phase <- "build"
   px <- make_build_process(pkg_dir, pkg, create_temp_dir(), lib, vignettes,
                            needscompilation, binary = FALSE,
-                           cmd_args = NULL)
+                           cmd_args = NULL, metadata = metadata)
   worker <- list(id = get_worker_id(), task = task, process = px,
                  stdout = character())
   state$workers <- c(

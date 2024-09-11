@@ -347,8 +347,7 @@ parse_sysreqs_platform <- function(x) {
     osplt$distribution <- restpcs[1]
     osplt$version <- paste0(restpcs[-1], collapse = "-")
   }
-  if (osplt$distribution == "rhel") {
-    osplt$distribution = "redhat"
+  if (osplt$distribution == "rhel" || osplt$distribution == "redhat") {
     osplt$version = strsplit(osplt$version, "[.]")[[1]][1]
   }
   osplt

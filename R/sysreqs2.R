@@ -18,6 +18,7 @@ sysreqs2_cmds <- utils::read.table(
    'Red Hat Enterprise Linux' linux   redhat       6         NA                  'yum install -y'                    rpm
    'Red Hat Enterprise Linux' linux   redhat       7         NA                  'yum install -y'                    rpm
    'Red Hat Enterprise Linux' linux   redhat       *         NA                  'dnf install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   rhel         *         NA                  'dnf install -y'                    rpm
    'Fedora Linux'             linux   fedora       *         NA                  'dnf install -y'                    rpm
    'openSUSE Linux'           linux   opensuse     *         NA                  'zypper --non-interactive install'  rpm
    'SUSE Linux Enterprise'    linux   sle          *         NA                  'zypper --non-interactive install'  rpm
@@ -26,9 +27,6 @@ sysreqs2_cmds <- utils::read.table(
 find_sysreqs_platform <- function(sysreqs_platform = NULL) {
   sysreqs_platform <- sysreqs_platform %||% current_config()$get("sysreqs_platform")
   plt <- parse_sysreqs_platform(sysreqs_platform)
-  if (plt$distribution == "rhel") {
-    plt$distribution = "redhat"
-  }
   idx <- which(
     sysreqs2_cmds$os == plt$os &
     sysreqs2_cmds$distribution == plt$distribution &

@@ -1,6 +1,6 @@
 
 test_that("sysreqs_platforms", {
-  expect_snapshot(sysreqs_platforms())
+  expect_snapshot(print(sysreqs_platforms(), n = Inf))
 })
 
 test_that("sysreqs_db_list", {

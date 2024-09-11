@@ -1,9 +1,9 @@
 # sysreqs_platforms
 
     Code
-      sysreqs_platforms()
+      print(sysreqs_platforms(), n = Inf)
     Output
-      # A data frame: 11 x 7
+      # A data frame: 22 x 7
          name  os    distribution version update_command install_command query_command
          <chr> <chr> <chr>        <chr>   <chr>          <chr>           <chr>        
        1 Ubun~ linux ubuntu       *       apt-get -y up~ apt-get -y ins~ dpkg-query   
@@ -13,10 +13,21 @@
        5 Red ~ linux redhat       6       <NA>           yum install -y  rpm          
        6 Red ~ linux redhat       7       <NA>           yum install -y  rpm          
        7 Red ~ linux redhat       *       <NA>           dnf install -y  rpm          
-       8 Fedo~ linux fedora       *       <NA>           dnf install -y  rpm          
-       9 open~ linux opensuse     *       <NA>           zypper --non-i~ rpm          
-      10 SUSE~ linux sle          *       <NA>           zypper --non-i~ rpm          
-      11 Alpi~ linux alpine       *       <NA>           apk add --no-c~ apk          
+       8 Red ~ linux rhel         7.0     <NA>           yum install -y  rpm          
+       9 Red ~ linux rhel         7.1     <NA>           yum install -y  rpm          
+      10 Red ~ linux rhel         7.2     <NA>           yum install -y  rpm          
+      11 Red ~ linux rhel         7.3     <NA>           yum install -y  rpm          
+      12 Red ~ linux rhel         7.4     <NA>           yum install -y  rpm          
+      13 Red ~ linux rhel         7.5     <NA>           yum install -y  rpm          
+      14 Red ~ linux rhel         7.6     <NA>           yum install -y  rpm          
+      15 Red ~ linux rhel         7.7     <NA>           yum install -y  rpm          
+      16 Red ~ linux rhel         7.8     <NA>           yum install -y  rpm          
+      17 Red ~ linux rhel         7.9     <NA>           yum install -y  rpm          
+      18 Red ~ linux rhel         *       <NA>           dnf install -y  rpm          
+      19 Fedo~ linux fedora       *       <NA>           dnf install -y  rpm          
+      20 open~ linux opensuse     *       <NA>           zypper --non-i~ rpm          
+      21 SUSE~ linux sle          *       <NA>           zypper --non-i~ rpm          
+      22 Alpi~ linux alpine       *       <NA>           apk add --no-c~ apk          
 
 # sysreqs_db_list
 

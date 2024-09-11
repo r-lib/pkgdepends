@@ -3,7 +3,7 @@
     Code
       sysreqs_platforms()
     Output
-      # A data frame: 10 x 7
+      # A data frame: 11 x 7
          name  os    distribution version update_command install_command query_command
          <chr> <chr> <chr>        <chr>   <chr>          <chr>           <chr>        
        1 Ubun~ linux ubuntu       *       apt-get -y up~ apt-get -y ins~ dpkg-query   
@@ -16,6 +16,7 @@
        8 Fedo~ linux fedora       *       <NA>           dnf install -y  rpm          
        9 open~ linux opensuse     *       <NA>           zypper --non-i~ rpm          
       10 SUSE~ linux sle          *       <NA>           zypper --non-i~ rpm          
+      11 Alpi~ linux alpine       *       <NA>           apk add         apk          
 
 # sysreqs_db_list
 

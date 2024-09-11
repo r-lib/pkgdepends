@@ -16,7 +16,7 @@
        8 Fedo~ linux fedora       *       <NA>           dnf install -y  rpm          
        9 open~ linux opensuse     *       <NA>           zypper --non-i~ rpm          
       10 SUSE~ linux sle          *       <NA>           zypper --non-i~ rpm          
-      11 Alpi~ linux alpine       *       <NA>           apk add         apk          
+      11 Alpi~ linux alpine       *       <NA>           apk add --no-c~ apk          
 
 # sysreqs_db_list
 

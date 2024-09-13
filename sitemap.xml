@@ -1,135 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/404.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/articles/pkgdepends-how-to.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/index.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/as_pkg_dependencies.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/config.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/default_platforms.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/git-protocol.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/git_download_file.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/git_fetch.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/git_list_files.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/git_list_refs.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/install_package_plan.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/install_plans.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/is_valid_package_name.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/lib_status.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/parse_pkg_refs.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_config.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_dep_types.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_deps.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_downloads.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_installation_plan.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_installation_proposal.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_name_check.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_refs.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_resolution.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_rx.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkg_solution.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/pkgdepends-package.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_check_installed.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_list.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_match.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_update.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_install_plan.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_is_supported.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_list_system_packages.html</loc>
-  </url>
-  <url>
-    <loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_platforms.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://r-lib.github.io/pkgdepends/404.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/LICENSE-text.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/LICENSE.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/articles/index.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/articles/pkgdepends-how-to.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/authors.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/index.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/news/index.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/as_pkg_dependencies.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/config.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/default_platforms.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/ghr.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/ghrepo.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/git-protocol.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/git_download_file.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/git_fetch.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/git_list_files.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/git_list_refs.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/index.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/install_package_plan.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/install_plans.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/is_valid_package_name.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/lib_status.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/parse_pkg_refs.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_build.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_config.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_dep_types.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_deps.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_downloads.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_installation_plan.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_installation_proposal.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_name_check.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_refs.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_resolution.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_rx.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkg_solution.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/pkgdepends-package.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/repo.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_check_installed.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_list.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_match.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_db_update.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_install_plan.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_is_supported.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_list_system_packages.html</loc></url>
+<url><loc>https://r-lib.github.io/pkgdepends/reference/sysreqs_platforms.html</loc></url>
 </urlset>
+

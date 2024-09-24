@@ -11,27 +11,27 @@ knitr::opts_chunk$set(
 # Package references
 
 Many pkgdepends and pak functions take package names as arguments.
-E.g. `pak::pkg_install()` takes the names of the packages to install,
+E.g. `pak::pkg_install()` takes the names of the packages to install and
 `pak::pkg_deps_tree()` takes the names of the packages to draw dependency
 trees for.
 
-Most of these function can also take a more generic _package reference_
-instead of a package name.
+Most of these functions can also take more generic _package references_
+instead of package names.
 A package reference also tells `r pak_or_pkgdepends()` where to find the
-package, the package source.
+package source.
 
 To specify a package source, use its name as a prefix, with a `::`
 separator.
 E.g. `cran::mypkg` means the `mypkg` package from CRAN.
 
-A package name is a special package reference, that implicitly specifies
-the configured CRAN(-like) repositories as the package source.
-(We call this the `standard` package source.)
-So `mypkg` is equivalent to `standard::mypkg` and pak look for mypkg in
-any of the configured CRAN-like repositories.
+A package name is a special package reference that implicitly specifies
+the configured CRAN(-like) repositories as the package source
+(we call this the `standard` package source).
+So `mypkg` is equivalent to `standard::mypkg` and `r pak_or_pkgdepends()`
+looks for mypkg in any of the configured CRAN-like repositories.
 If you did not explicitly specify any CRAN-like repositories (e.g. with
-`options("repos")`), then pak uses the CRAN and Bioconductor repositories
-by default.
+`options("repos")`), then `r pak_or_pkgdepends()` uses the CRAN and
+Bioconductor repositories by default.
 
 This is the list of the currently supported package sources.
 We will discuss each in detail below.
@@ -41,14 +41,14 @@ We will discuss each in detail below.
 - `standard`: a package from a configured CRAN-like repository.
 - `github`: a package from GitHub.
 - `gitlab`: a package from GitLab.
-- `git`: a package in a git repository.
+- `git`: a package in a Git repository.
 - `local`: a local package file or directory.
 - `url`: an URL that points to a package archive.
-- `installed` an installed package.
-- `deps` the dependencies of a local package file or directory.
-- `any` a special reference type that accepts a package from any source.
+- `installed`: an installed package.
+- `deps`: the dependencies of a local package file or directory.
+- `any`: a special reference type that accepts a package from any source.
   See below.
-- `param` a special reference to change how other references are downloaded
+- `param`: a special reference to change how other references are downloaded
   or installed. See "Parameters" below.
 
 ## Shorthands
@@ -60,20 +60,22 @@ package source.
 Here are the complete rules for such shorthands, in the order they are
 applied:
 
-- If the ref is a valid package name, or a package name with a `@` version
-  specification, the `standard` package source is used. E.g. `pkg` is
+If the package reference is
+
+- a valid package name, or a package name with an `@`
+  version specification, the `standard` package source is used. E.g. `pkg` is
   equivalent to `standard::pkg` and `pkg@1.0` is equivalent to
   `standard::pkg@1.0`.
-- If the ref is a valid `github` ref type without the `github::` prefix,
+- a valid `github` ref type without the `github::` prefix,
   then `github` is used. E.g. `user/repo` is equivalent to
   `github::user/repo` and `user/repo@tag` is equivalent to
   `github::user/repo@tag`, etc.
-- If the ref is a GitHub URL (see below) without the `github::` prefix,
+- a GitHub URL (see below) without the `github::` prefix,
   then `github` is used.
-- If the ref is a path that starts with `.` or `/` or `\` or `~` then
+- a path that starts with `.` or `/` or `\` or `~`, then
   `local` is used. (`r pak_or_pkgdepends()` does not check if the path
   exists.)
-- If a package reference if of the form `<package-name>=?<parameters>`,
+- of the form `<package-name>=?<parameters>`,
   then it will be the special `param` type. See "Parameters" below.
 
 If the package reference does not have an explicit package source,
@@ -90,8 +92,8 @@ This is sometimes not easy for dependencies in `Remotes` (or similar) fields.
 * For `github::` and `gitlab::` dependencies `r pak_or_pkgdepends()` assumes
   that the package name is the same as the name of the repository. If this
   does not hold, then you need to specify the package name explicitly, using
-  a `<package>=` prefix. E.g. `pins=rstudio/pins-r`. If you specify both the
-  package source type and the package name, the package name comes first:
+  a `<package>=` prefix. E.g. `pins=rstudio/pins-r`. To specify both the
+  package source type and the package name at the same time, write it like this:
   `pins=github::rstudio/pins-r`.
 * For `git::` dependencies, `r pak_or_pkgdepends()` assumes that the package
   name is the same as the last component of the repository. If this does not
@@ -111,8 +113,8 @@ Different parameters are separated by an ampersand (`&`) character.
 
 Parameters may be flags that turn on some behavior, or they can have a
 string value, assigned with an equal sign (`=`).
-If no value is assigned, then we assume the `true` value. For example
-these two package refs are equivalent:
+If no value is assigned, then a `true` value is assumed. For example,
+these two package references are equivalent:
 
 ```
 cran::testthat?source&nocache
@@ -127,7 +129,7 @@ the name of the package, and `<params>` are the parameters, as above.
 This is useful if you want to add a parameter to a downstream dependency.
 
 For example, to install ggplot2, and always reinstall its cli package
-dependency you could use the `ggplot2` and `cli=?reinstall` package
+dependency, you could use the `ggplot2` and `cli=?reinstall` package
 references.
 The latter tells `r pak_or_pkgdepends()` to always reinstall cli, even if
 it is already installed.
@@ -142,13 +144,13 @@ it is already installed.
   ignored on R versions that are older than the specified one. E.g.
   `Matrix=?ignore-before-r=4.1.2` will ignore the Matrix package on R versions
   that are older than 4.1.2. This parameter really only makes sense in the
-  `packgename=?ignore` form.
+  `packgename=?ignore-before-r` form.
 - `ignore-unavailable` is a flag. It can only be specified for soft
   dependencies. If specified and the package is not available, it will be
   ignored. This parameter really only makes sense in the
   `packagename=?ignore-unavailable` form.
 - `source` is a flag parameter. If specified, then a source R package
-  is requested from a CRAN-like repository. For package installations
+  is requested from a CRAN-like repository. For package installations,
   `source` always triggers a re-install. In other words, `source` implies the
   `reinstall` parameter. This parameter is supported for `bioc::`, `cran::`
   and `standard::` remote types, and it is ignored for others.
@@ -174,6 +176,7 @@ A package from CRAN. Full syntax:
 - `<version>` is a version or a version requirement.
 
 Examples:
+
 ```
 forecast
 forecast@8.8
@@ -216,13 +219,13 @@ Packages from a GitHub repository. Full syntax:
   the name of the repository is used.
 - `<username>` is a GitHub username or organization name.
 - `<repository>` is the name of the repository.
-- `<subdir>` optional subdirectory, if the package is within a
+- `<subdir>` specifies an optional subdirectory, if the package is within a
   subdirectory in the repository.
 - `<detail>` specifies a certain version of the package, see below.
 
 `<detail>` may specify:
 
-- a git branch, tag or (prefix of) a commit hash: `@<commitish>`;
+- a Git branch, tag or (prefix of) a commit hash: `@<commitish>`;
 - a pull request: `#<pull-request>`; or
 - the latest release: `@*release`.
 
@@ -230,6 +233,7 @@ If `<detail>` is missing, then the latest commit of the _default_
 branch is used.
 
 Examples:
+
 ```
 r-lib/crayon
 github::r-lib/crayon
@@ -239,7 +243,7 @@ r-lib/crayon#41
 r-lib/crayon@release
 ```
 
-For convenience GitHub HTTP URLs can also be used to specify a
+For convenience, GitHub HTTP URLs can also be used to specify a
 package from GitHub. Examples:
 
 ```
@@ -256,7 +260,7 @@ https://github.com/r-lib/withr/pull/76
 https://github.com/r-lib/withr/releases/tag/v2.1.0
 ```
 
-A GitHub remote string can also be used instead of an URL, for example:
+A GitHub remote string can also be used instead of a URL, for example:
 `git@github.com:r-lib/pak.git`
 
 ### GitLab packages (`gitlab::`)
@@ -264,34 +268,37 @@ A GitHub remote string can also be used instead of an URL, for example:
 Packages from a GitLab repository. Full syntax:
 
 ```
-[<package>=][github::]<project-path>/<repository>[/-/<subdir>][<detail>]
+[<package>=][gitlab::]<project-path>/<repository>[/-/<subdir>][<detail>]
 ```
 
 - `<package>` is the name of the package. If this is missing, then
   the name of the repository is used.
-- `<project-path>` is a typically the GitLab username or group name, but
+- `<project-path>` is typically the GitLab user or group name, but
   it may contain subgroups.
 - `<repository>` is the name of the repository, or the project in GitLab
-  terminology.
-- `<subdir>` optional subdirectory, if the package is within a
+  terminology. GitLab
+  [subgroups](https://docs.gitlab.com/ee/user/group/subgroups/) are
+  fully supported.
+- `<subdir>` specifies an optional subdirectory, if the package is within a
   subdirectory in the repository. Note that for GitLab, this must come
   after a `/-` prefix, to be able to distinguish it from subgroups.
-- `<detail>` may specify a git branch, tag or (prefix of) a commit hash.
+- `<detail>` may specify a Git branch, tag or (prefix of) a commit hash.
 
 If `<detail>` is missing, then the latest commit of the _default_
 branch is used.
 
-`gitlab::` supports git submodules, see the `git-submodules` configuration
+`gitlab::` supports Git submodules, see the `git-submodules` configuration
 entry.
 
 Examples:
+
 ```
 gitlab::gaborcsardi/cli
 gitlab::r-hub/filelock@main
 gitlab::group/subgroup/subsubgroup/project/-/subdir@ref
 ```
 
-### Packages in git repositories (`git::`)
+### Packages in Git repositories (`git::`)
 
 Full syntax:
 
@@ -301,18 +308,19 @@ Full syntax:
 
 - `<package>` is the name of the package. If this is missing, then
   the last component of the `<host>` is used.
-- `<host>` host name and path of the git repository. Some git repositories
-  need the `.git` suffix here, others are more forgiving.
+- `<host>` is the host name and path of the Git repository. Some Git
+  repositories need the `.git` suffix here, others are more forgiving.
 - `<detail>` specifies a certain version of the package:
-  a git branch, tag or (prefix of) a commit hash: `@<commitish>`.
+  a Git branch, tag or (prefix of) a commit hash: `@<commitish>`.
 
 If `<detail>` is missing, then the latest commit of the _default_
 branch is used.
 
-`git::` supports git submodules, see the `git-submodules` configuration
+`git::` supports Git submodules, see the `git-submodules` configuration
 entry.
 
 Examples:
+
 ```
 git::https://github.com/r-lib/crayon
 git::https://github.com/r-lib/crayon.git
@@ -321,11 +329,11 @@ git::https://github.com/r-lib/crayon.git@branch
 git::https://gitlab.com/gaborcsardi/cli.git
 ```
 
-Note that `r pak_or_pkgdepends()` has a built-in git client, and does
-**not** require a system git installation.
+Note that `r pak_or_pkgdepends()` has a built-in Git client, and does
+**not** require a system Git installation.
 
-If the system has git installed, then `r pak_or_pkgdepends()` will use the
-credentials stored in the configured git credential store, automatically,
+If the system has Git installed, then `r pak_or_pkgdepends()` will use the
+credentials stored in the configured Git credential store, automatically,
 via the gitcreds package.
 
 ### Local packages (`local::`)
@@ -345,6 +353,7 @@ A single dot (`"."`) is considered to be a local package in the current
 working directory.
 
 Examples:
+
 ```
 local::/foo/bar/package_1.0.0.tar.gz
 local::/foo/bar/pkg
@@ -374,12 +383,13 @@ it puts the package file in the cache, so no further downloads are
 needed when installing the package later.
 
 Examples:
+
 ```
 url::https://cloud.r-project.org/src/contrib/Archive/cli/cli_1.0.0.tar.gz
 url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 ```
 
-If you specify a package from an URL in a dependency (i.e. in `DESCRIPTION`),
+If you specify a package from a URL in a dependency (i.e. in `DESCRIPTION`),
 then you also need to specify the name of the package, see "Package names"
 above.
 
@@ -396,6 +406,7 @@ installed::<path>/<package>
 - `<package>` is the package name.
 
 Example:
+
 ```
 installed::~/R/3.6/crayon
 ```
@@ -412,6 +423,7 @@ deps::<path>
 ```
 
 Examples:
+
 ```
 deps::/foo/bar/package_1.0.0.tar.gz
 deps::/foo/bar/pkg
@@ -457,16 +469,16 @@ dependency defined in the `Depends`, `Imports`, `Suggests` or `Enhances`
 fields as being installed from a non-standard package source by adding
 a package reference to a `Remotes` entry.
 `r pak_or_pkgdepends()` will download and install the package from the
-from the specified location, instead of a CRAN-like repository.
+specified location, instead of a CRAN-like repository.
 
-The remote dependencies specified in `Remotes` is a comma separated
+The remote dependencies specified in `Remotes` are a comma separated
 list of package sources:
 
 ```
 Remotes: <pkg-source-1>, <pkg-source-2>, [ ... ]
 ```
 
-Note that you will still need add the package to one of the regular
+Note that you will still need to add the package to one of the regular
 dependency fields, i.e. `Imports`, `Suggests`, etc. Here is a concrete
 example that specifies the `r-lib/glue` package:
 

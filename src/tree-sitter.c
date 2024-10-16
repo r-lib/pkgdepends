@@ -13,15 +13,17 @@ static void r_free(void *data) {
 bool pred_ok_eq(const TSQuery *query, const TSQueryMatch *match,
                 uint32_t pattern_index, const TSQueryPredicateStep *preds,
                 const char *text, uint32_t length,
-                uint32_t *matched_capture_starts,
-                uint32_t *matched_capture_lengths) {
+                uint32_t *capture_map) {
   // first one is a capture, get that
   if (preds->type != TSQueryPredicateStepTypeCapture) {
     Rf_error("First argument of an #eq? predicate must be a capture");
   }
   uint32_t first_id = preds->value_id;
-  uint32_t first_start = matched_capture_starts[first_id];
-  uint32_t first_length = matched_capture_lengths[first_id];
+  uint32_t first_idx = capture_map[first_id];
+  TSNode first_node = match->captures[first_idx].node;
+  uint32_t first_start = ts_node_start_byte(first_node);
+  uint32_t first_length = ts_node_end_byte(first_node) - first_start;
+  // TODO: this capture may match multiple nodes, if quantified
   preds++;
 
   // now compare the rest to that
@@ -41,8 +43,11 @@ bool pred_ok_eq(const TSQuery *query, const TSQueryMatch *match,
           next_id
         );
         REprintf("CAPTURE %u (%u): %s\n", next_id, next_quant, cn);
-        uint32_t next_start = matched_capture_starts[next_id];
-        uint32_t next_length = matched_capture_lengths[next_id];
+        uint32_t next_idx = capture_map[next_id];
+        TSNode next_node = match->captures[next_idx].node;
+        uint32_t next_start = ts_node_start_byte(next_node);
+        uint32_t next_length = ts_node_end_byte(next_node) - next_start;
+        // TODO: this capture may match multiple nodes, if quantified
         if (first_length != next_length) {
           return false;
         }
@@ -79,8 +84,7 @@ bool pred_ok_eq(const TSQuery *query, const TSQueryMatch *match,
 bool pred_ok_not_eq(const TSQuery *query, const TSQueryMatch *match,
                     const TSQueryPredicateStep *preds,
                     const char *text, uint32_t length,
-                    uint32_t *matched_capture_starts,
-                    uint32_t *matched_capture_lengths) {
+                    uint32_t *capture_map) {
   if (preds->type != TSQueryPredicateStepTypeCapture) {
     Rf_error("First argument of an #eq? predicate must be a capture");
   }
@@ -90,8 +94,7 @@ bool pred_ok_not_eq(const TSQuery *query, const TSQueryMatch *match,
 bool pred_ok_any_eq(const TSQuery *query, const TSQueryMatch *match,
                     const TSQueryPredicateStep *preds,
                     const char *text, uint32_t length,
-                    uint32_t *matched_capture_starts,
-                    uint32_t *matched_capture_lengths) {
+                    uint32_t *capture_map) {
   if (preds[0].type != TSQueryPredicateStepTypeCapture) {
     Rf_error("First argument of an #eq? predicate must be a capture");
   }
@@ -101,8 +104,7 @@ bool pred_ok_any_eq(const TSQuery *query, const TSQueryMatch *match,
 bool pred_ok_any_not_eq(const TSQuery *query, const TSQueryMatch *match,
                         const TSQueryPredicateStep *preds,
                         const char *text, uint32_t length,
-                        uint32_t *matched_capture_starts,
-                        uint32_t *matched_capture_lengths) {
+                        uint32_t *capture_map) {
   if (preds[0].type != TSQueryPredicateStepTypeCapture) {
     Rf_error("First argument of an #eq? predicate must be a capture");
   }
@@ -112,8 +114,7 @@ bool pred_ok_any_not_eq(const TSQuery *query, const TSQueryMatch *match,
 bool pred_ok(const TSQuery *query, const TSQueryMatch *match,
              uint32_t pattern_index, const TSQueryPredicateStep *preds,
              uint32_t num_steps, const char *text, uint32_t length,
-             uint32_t *matched_capture_starts,
-             uint32_t *matched_capture_lengths) {
+             uint32_t *capture_map) {
   for (uint32_t st = 0; st < num_steps; st++) {
     if (preds[st].type != TSQueryPredicateStepTypeString) {
       Rf_error("First predicate must be a string");
@@ -128,23 +129,22 @@ bool pred_ok(const TSQuery *query, const TSQueryMatch *match,
 
     if (!strncasecmp(op, "eq?", l)) {
       if (!pred_ok_eq(query, match, pattern_index, preds + st, text, length,
-                      matched_capture_starts, matched_capture_lengths)) {
+                      capture_map)) {
         return false;
       }
     } else if (!strncasecmp(op, "not-eq?", l)) {
       if (!pred_ok_not_eq(query, match, preds+st, text, length,
-                          matched_capture_starts, matched_capture_lengths)) {
+                          capture_map)) {
         return false;
       }
     } else if (!strncasecmp(op, "any-eq?", l)) {
       if (!pred_ok_any_eq(query, match, preds+st, text, length,
-                          matched_capture_starts, matched_capture_lengths)) {
+                          capture_map)) {
         return false;
       }
     } else if (!strncasecmp(op, "any-not-eq?", l)) {
       if (!pred_ok_any_not_eq(query, match, preds+st, text, length,
-                              matched_capture_starts,
-                              matched_capture_lengths)) {
+                              capture_map)) {
         return false;
       }
     } else {
@@ -199,18 +199,11 @@ SEXP code_query(SEXP input, SEXP pattern) {
   }
 
   uint32_t capture_count = ts_query_capture_count(query);
-  uint32_t *matched_capture_starts =
-    malloc(sizeof(uint32_t) *capture_count);
-  if (!matched_capture_starts) {
+  uint32_t *capture_map = malloc(sizeof(uint32_t) *capture_count);
+  if (!capture_map) {
     Rf_error("Out of memory");
   }
-  r_call_on_exit(r_free, matched_capture_starts);
-  uint32_t *matched_capture_lengths =
-    malloc(sizeof(uint32_t) *capture_count);
-  if (!matched_capture_lengths) {
-    Rf_error("Out of memory");
-  }
-  r_call_on_exit(r_free, matched_capture_lengths);
+  r_call_on_exit(r_free, capture_map);
 
   const char *c_input = (const char*) RAW(input);
   uint32_t length = Rf_length(input);
@@ -230,22 +223,19 @@ SEXP code_query(SEXP input, SEXP pattern) {
   TSQueryMatch match;
   uint32_t match_idx = 0;
   while (ts_query_cursor_next_match(cursor, &match)) {
-    // fill in the captures, so the predicates are ready to evaluate
+    // Create a capture id -> capture_idx in match mapping
+    // We point to the last node that has this capture id, and then we can
+    // work backwards
     for (uint16_t cc = 0; cc < match.capture_count; cc++) {
-      TSNode node = match.captures[cc].node;
       uint32_t cidx = match.captures[cc].index;
-      REprintf("FILL IN %u\n", cidx);
-      matched_capture_starts[cidx] = ts_node_start_byte(node);
-      matched_capture_lengths[cidx] =
-        ts_node_end_byte(node) - matched_capture_starts[cidx];
+      capture_map[cidx] = cc;
     }
 
     // evaluate the predicates
     const TSQueryPredicateStep *mpreds = preds[match.pattern_index];
     uint32_t mnum_steps = num_steps[match.pattern_index];
     if (!pred_ok(query, &match, match.pattern_index, mpreds, mnum_steps,
-                 c_input, length, matched_capture_starts,
-                 matched_capture_lengths)) {
+                 c_input, length, capture_map)) {
       continue;
     }
 

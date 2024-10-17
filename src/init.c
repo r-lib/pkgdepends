@@ -5,10 +5,12 @@
 #include "cleancall.h"
 
 SEXP code_query(SEXP input, SEXP pattern);
+SEXP s_expr(SEXP input);
 
 static const R_CallMethodDef callMethods[]  = {
   CLEANCALL_METHOD_RECORD,
-  {"code_query", (DL_FUNC) &code_query, 2},
+  { "code_query", (DL_FUNC) &code_query, 2 },
+  { "s_expr",     (DL_FUNC) &s_expr,     1 },
   { NULL, NULL, 0 }
 };
 

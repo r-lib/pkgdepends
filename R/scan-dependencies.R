@@ -1,5 +1,5 @@
 code_query <- function(code, query) {
-  if (is.character(code)) code <- charToRaw(code)
+  if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
   res <- call_with_cleanup(c_code_query, code, query)
   list(
     patterns = data_frame(
@@ -19,6 +19,6 @@ code_query <- function(code, query) {
 }
 
 s_expr <- function(code) {
-  if (is.character(code)) code <- charToRaw(code)
+  if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
   call_with_cleanup(c_s_expr, code)
 }

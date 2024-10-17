@@ -35,7 +35,7 @@ SEXP s_expr(SEXP input) {
 }
 
 typedef enum {
-  EQ,
+  EQ = 0,
   NOT_EQ,
   ANY_EQ,
   ANY_NOT_EQ,
@@ -47,152 +47,273 @@ typedef enum {
   NOT_ANY_OF
 } predicate_type;
 
-bool check_predicates(const TSQuery *query, const TSQueryMatch *match,
-                      uint32_t pattern_index,
-                      const TSQueryPredicateStep *preds,
-                      uint32_t num_steps, const char *text,
-                      uint32_t length, uint32_t *capture_map,
-                      uint32_t *capture_map_pattern) {
+struct query_match_t {
+  const TSQuery *query;
+  const TSQueryMatch *match;
+  uint32_t pattern_index;
+  const TSQueryPredicateStep *preds;
+  uint32_t num_pred_steps;
+  const char *text;
+  uint32_t text_length;
+  const uint32_t *capture_map;
+  const uint32_t *capture_map_pattern;
+};
 
-  for (uint32_t st = 0; st < num_steps; st++) {
+#define CODEEQ(s1, l1, s2, l2) \
+  (((l1) == (l2)) && !strncmp(qm->text + (s1), qm->text + (s2), (l1)))
 
+bool check_predicate_eq(const struct query_match_t *qm, predicate_type op,
+                        uint32_t st, uint32_t first_id,
+                        uint32_t first_nodes_count) {
+
+  if (qm->preds[st].type == TSQueryPredicateStepTypeCapture) {
+    uint32_t second_id = qm->preds[st].value_id;
+    uint32_t second_nodes_count = 0;
+    if (qm->capture_map_pattern[second_id] == qm->pattern_index + 1) {
+      second_nodes_count++;
+      uint32_t second_idx = qm->capture_map[second_id];
+      for (uint32_t i = second_idx + 1; i < qm->match->capture_count; i++) {
+        if (qm->match->captures[i].index != second_id) break;
+        second_nodes_count++;
+      }
+    }
+    // Need to compare two sets of nodes
+    uint32_t first_idx = qm->capture_map[first_id];
+    uint32_t second_idx = qm->capture_map[second_id];
+    // TODO: this is simpler for EQ etc., no need to cross-compare all
+    for (uint32_t i = first_idx; i < first_idx + first_nodes_count; i++) {
+      TSNode first_node = qm->match->captures[i].node;
+      uint32_t first_start = ts_node_start_byte(first_node);
+      uint32_t first_end = ts_node_end_byte(first_node);
+      uint32_t first_length = first_end - first_start;
+      for (uint32_t j = second_idx; j < second_idx + second_nodes_count; j++) {
+        TSNode second_node = qm->match->captures[j].node;
+        uint32_t second_start = ts_node_start_byte(second_node);
+        uint32_t second_end = ts_node_end_byte(second_node);
+        uint32_t second_length = second_end - second_start;
+        bool eq = CODEEQ(first_start, first_length, second_start, second_length);
+        if (op == EQ) {
+          if (!eq) return false;
+        } else if (op == NOT_EQ) {
+          if (eq) return false;
+        } else if (op == ANY_EQ) {
+          if (eq) return true;
+        } else if (op == ANY_NOT_EQ) {
+          if (!eq) return true;
+        }
+      }
+    }
+    // all combinarions checked, no evidence found against
+    if (op == EQ || op == NOT_EQ) {
+      return true;
+    } else { // op == ANY_EQ || op == ANY_NOT_EQ
+      return false;
+    }
+
+  } else if (qm->preds[st].type == TSQueryPredicateStepTypeString) {
+    uint32_t str_length;
+    const char *str = ts_query_string_value_for_id(
+      qm->query,
+      qm->preds[st].value_id,
+      &str_length
+    );
+    uint32_t first_idx = qm->capture_map[first_id];
+    for (uint32_t i = first_idx; i < first_idx + first_nodes_count; i++) {
+      TSNode first_node = qm->match->captures[i].node;
+      uint32_t first_start = ts_node_start_byte(first_node);
+      uint32_t first_end = ts_node_end_byte(first_node);
+      uint32_t first_length = first_end - first_start;
+      bool eq = first_length == str_length &&
+        !strncmp(qm->text + first_start, str, first_length);
+      if (op == EQ) {
+        if (!eq) return false;
+      } else if (op == NOT_EQ) {
+        if (eq) return false;
+      } else if (op == ANY_EQ) {
+        if (eq) return true;
+      } else if (op == ANY_NOT_EQ) {
+        if (!eq) return true;
+      }
+    }
+    // all combinarions checked, no evidence found against
+    if (op == EQ || op == NOT_EQ) {
+      return true;
+    } else { // op == ANY_EQ || op == ANY_NOT_EQ
+      return false;
+    }
+
+  } else {
+    // this should not happen
+    Rf_error("Missing second argument for tree-sitter query");
+  }
+}
+
+bool r_grepl(const char *text, uint32_t text_length, const char *pattern,
+             uint32_t pattern_length) {
+  SEXP rtext = PROTECT(Rf_ScalarString(Rf_mkCharLenCE(
+    text, text_length, CE_UTF8)));
+  SEXP rpattern = PROTECT(Rf_ScalarString(Rf_mkCharLenCE(
+    pattern, pattern_length, CE_UTF8)));
+  SEXP f = PROTECT(Rf_ScalarLogical(0));
+  SEXP t = PROTECT(Rf_ScalarLogical(1));
+  SEXP call = PROTECT(Rf_lang5(Rf_install("grepl"), rpattern, rtext, f, t));
+  SEXP ans = PROTECT(Rf_eval(call, R_BaseEnv));
+  bool cans = LOGICAL(ans)[0];
+  UNPROTECT(6);
+  return cans;
+}
+
+bool check_predicate_match(const struct query_match_t *qm,
+                           predicate_type op, uint32_t st,
+                           uint32_t first_id,
+                           uint32_t first_nodes_count) {
+  uint32_t pattern_length;
+  const char *pattern = ts_query_string_value_for_id(
+    qm->query,
+    qm->preds[st].value_id,
+    &pattern_length
+  );
+
+  uint32_t first_idx = qm->capture_map[first_id];
+  for (uint32_t i = first_idx; i < first_idx + first_nodes_count; i++) {
+    TSNode first_node = qm->match->captures[i].node;
+    uint32_t first_start = ts_node_start_byte(first_node);
+    uint32_t first_end = ts_node_end_byte(first_node);
+    uint32_t first_length = first_end - first_start;
+    bool eq = r_grepl(
+      qm->text + first_start, first_length, pattern, pattern_length);
+    if (op == MATCH) {
+      if (!eq) return false;
+    } else if (op == NOT_MATCH) {
+      if (eq) return false;
+    } else if (op == ANY_MATCH) {
+      if (eq) return true;
+    } else if (op == ANY_NOT_MATCH) {
+      if (!eq) return true;
+    }
+  }
+  // all combinarions checked, no evidence found against
+  if (op == MATCH || op == NOT_MATCH) {
+    return true;
+  } else { // op == ANY_MATCH || op == ANY_NOT_MATCH
+    return false;
+  }
+}
+
+bool check_predicate_any_of(const struct query_match_t *qm,
+                            predicate_type op, uint32_t st,
+                            uint32_t first_id,
+                            uint32_t first_nodes_count) {
+
+  uint32_t first_idx = qm->capture_map[first_id];
+  for (uint32_t i = first_idx; i < first_idx + first_nodes_count; i++) {
+    TSNode first_node = qm->match->captures[i].node;
+    uint32_t first_start = ts_node_start_byte(first_node);
+    uint32_t first_end = ts_node_end_byte(first_node);
+    uint32_t first_length = first_end - first_start;
+    bool ifound = false;
+    for (uint32_t sti = st;
+         qm->preds[sti].type != TSQueryPredicateStepTypeDone;
+         sti++) {
+      uint32_t str_length;
+      const char *str = ts_query_string_value_for_id(
+        qm->query,
+        qm->preds[sti].value_id,
+        &str_length
+      );
+
+      bool eq = first_length == str_length &&
+        !strncmp(qm->text + first_start, str, first_length);
+      if (eq) {
+        ifound = true;
+        break;
+      }
+    }
+    if (op == ANY_OF) {
+      if (!ifound) return false;
+    } else { // op == NOT_ANY_OF
+      if (ifound) return false;
+    }
+  }
+  // all nodes are ok
+  return true;
+}
+
+bool check_predicates(const struct query_match_t *qm) {
+  for (uint32_t st = 0; st < qm->num_pred_steps; st++) {
     // Operation, like #eq? etc. ------------------------------------------
-    if (preds[st].type != TSQueryPredicateStepTypeString) {
-      Rf_error("First predicate must be a string");
+    if (qm->preds[st].type != TSQueryPredicateStepTypeString) {
+      Rf_error("First predicate step must be a string");
     }
     uint32_t l;
     const char *ops = ts_query_string_value_for_id(
-      query,
-      preds[st].value_id,
+      qm->query,
+      qm->preds[st].value_id,
       &l
     );
     st++;
     predicate_type op;
-    if (strcasecmp("eq?", ops)) {
+    if (!strcasecmp("eq?", ops)) {
       op = EQ;
-    } else if (strcasecmp("not-eq?", ops)) {
+    } else if (!strcasecmp("not-eq?", ops)) {
       op = NOT_EQ;
-    } else if (strcasecmp("any-eq?", ops)) {
+    } else if (!strcasecmp("any-eq?", ops)) {
       op = ANY_EQ;
-    } else if (strcasecmp("any-not-eq?", ops)) {
+    } else if (!strcasecmp("any-not-eq?", ops)) {
       op = ANY_NOT_EQ;
-    } else if (strcasecmp("match?", ops)) {
+    } else if (!strcasecmp("match?", ops)) {
       op = MATCH;
-    } else if (strcasecmp("not-match?", ops)) {
+    } else if (!strcasecmp("not-match?", ops)) {
       op = NOT_MATCH;
-    } else if (strcasecmp("any-match?", ops)) {
+    } else if (!strcasecmp("any-match?", ops)) {
       op = ANY_MATCH;
-    } else if (strcasecmp("any-not-match", ops)) {
+    } else if (!strcasecmp("any-not-match", ops)) {
       op = ANY_NOT_MATCH;
-    } else if (strcasecmp("any-of?", ops)) {
+    } else if (!strcasecmp("any-of?", ops)) {
       op = ANY_OF;
-    } else if (strcasecmp("not-any-of?", ops)) {
+    } else if (!strcasecmp("not-any-of?", ops)) {
       op = NOT_ANY_OF;
     } else {
       Rf_error("Unknown predicate: #%s", ops);
     }
 
     // First argument must be a capture. ----------------------------------
-    // Possibly 1-n nodes
-    uint32_t first_id = preds[st].value_id;
-    uint32_t first_quant = ts_query_capture_quantifier_for_id(
-      query, pattern_index, first_id);
-    if (capture_map_pattern[first_id] != pattern_index + 1) {
-      REprintf("!MATCHING NOTHING!\n");
+    // Possibly 0-n nodes
+    if (qm->preds[st].type != TSQueryPredicateStepTypeCapture) {
+      Rf_error("First argument of a predicate must be a capture");
     }
-    uint32_t first_idx = capture_map[first_id];
-    TSNode first_node = match->captures[first_idx].node;
-    uint32_t first_start = ts_node_start_byte(first_node);
-    uint32_t first_length = ts_node_end_byte(first_node) - first_start;
-    // check the nodes that were captured with this one
-    uint32_t first_nodes_count = 1;
-    while (first_idx > 0) {
-      first_idx--;
-      if (match->captures[first_idx].index != first_id) break;
+    uint32_t first_id = qm->preds[st].value_id;
+    uint32_t first_nodes_count = 0;
+    if (qm->capture_map_pattern[first_id] == qm->pattern_index + 1) {
       first_nodes_count++;
+      uint32_t first_idx = qm->capture_map[first_id];
+      for (uint32_t i = first_idx + 1; i < qm->match->capture_count; i++) {
+        if (qm->match->captures[i].index != first_id) break;
+        first_nodes_count++;
+      }
     }
-    REprintf("found %u first nodes\n", first_nodes_count);
     st++;
 
-    // second argument
-    if (preds[st].type == TSQueryPredicateStepTypeCapture) {
-
-    } else if (preds[st].type == TSQueryPredicateStepTypeString) {
-
-    } else if (preds[st].type == TSQueryPredicateStepTypeDone) {
-        if (!strcasecmp("any-of?", ops)) {
-          return false;
-        } else if (!strcasecmp("not-any-of?", ops)) {
-          // this predicate is ok
-          continue;
-        } else {
-          Rf_error("Second argument missing for #%s predicate", ops);
-        }
-    }
-
-    // now compare the rest to these
-    while (preds[st].type != TSQueryPredicateStepTypeDone) {
-      switch (preds[st].type) {
-        case TSQueryPredicateStepTypeCapture: {
-          uint32_t next_id = preds[st].value_id;
-          uint32_t cnl;
-          const char *cn = ts_query_capture_name_for_id(
-            query,
-            next_id,
-            &cnl
-          );
-          TSQuantifier next_quant = ts_query_capture_quantifier_for_id(
-            query,
-            pattern_index,
-            next_id
-          );
-          REprintf("CAPTURE %u (%u): %s\n", next_id, next_quant, cn);
-          if (capture_map_pattern[next_id] != pattern_index + 1) {
-            REprintf("!MATCHING NOTHING!\n");
-          }
-          uint32_t next_idx = capture_map[next_id];
-          TSNode next_node = match->captures[next_idx].node;
-          uint32_t next_start = ts_node_start_byte(next_node);
-          uint32_t next_length = ts_node_end_byte(next_node) - next_start;
-          // TODO: this capture may match multiple nodes, if quantified
-          uint32_t next_nodes_count = 1;
-          while (next_idx > 0) {
-            next_idx--;
-            if (match->captures[next_idx].index != next_id) break;
-            next_nodes_count++;
-          }
-          REprintf("found %u next nodes\n", next_nodes_count);
-          if (first_length != next_length) {
-            return false;
-          }
-          if (strncmp(text + first_start, text + next_start, first_length)) {
-            return false;
-          }
-          break;
-        }
-        case TSQueryPredicateStepTypeString: {
-          uint32_t next_length;
-          const char *str = ts_query_string_value_for_id(
-            query,
-            preds->value_id,
-            &next_length
-          );
-          if (first_length != next_length) {
-            return false;
-          }
-          if (strncmp(text + first_start, str, first_length)) {
-            return false;
-          }
-          break;
-        }
-        default:
-          Rf_error("Unknown predicate step, this should not happen");
-          break;
+    if (op == ANY_OF || op == NOT_ANY_OF) {
+      if (! check_predicate_any_of(qm, op, st, first_id, first_nodes_count)) {
+        return false;
       }
-      st++;
-    }
-  }
 
+    } else if (op == MATCH || op == NOT_MATCH ||
+               op == ANY_MATCH || op == ANY_NOT_MATCH) {
+      if (!check_predicate_match(qm, op, st, first_id, first_nodes_count)) {
+        return false;
+      }
+
+    } else {
+      if (!check_predicate_eq(qm, op, st, first_id, first_nodes_count)) {
+        return false;
+      }
+    }
+    // move to the next predicate;
+    while (st < qm->num_pred_steps &&
+           qm->preds[st].type != TSQueryPredicateStepTypeDone) st++;
+  }
   return true;
 }
 
@@ -287,21 +408,23 @@ SEXP code_query(SEXP input, SEXP pattern) {
     // Create a capture id -> capture_idx in match mapping
     // We point to the last node that has this capture id, and then we can
     // work backwards
-    REprintf("Potential match, pattern %u (%u captures)\n", match.pattern_index, match.capture_count);
     for (uint16_t cc = 0; cc < match.capture_count; cc++) {
       uint32_t cidx = match.captures[cc].index;
-      capture_map_pattern[cidx] = match.pattern_index + 1;
-      capture_map[cidx] = cc;
+      // point to the first node
+      if (capture_map_pattern[cidx] != match.pattern_index + 1) {
+        capture_map_pattern[cidx] = match.pattern_index + 1;
+        capture_map[cidx] = cc;
+      }
     }
 
     // evaluate the predicates
     const TSQueryPredicateStep *mpreds = preds[match.pattern_index];
     uint32_t mnum_steps = num_steps[match.pattern_index];
-    if (!check_predicates(
-         query, &match, match.pattern_index, mpreds, mnum_steps,
-         c_input, length, capture_map, capture_map_pattern)) {
-      continue;
-    }
+    struct query_match_t qm = {
+      query, &match, match.pattern_index, mpreds, mnum_steps, c_input,
+      length, capture_map, capture_map_pattern
+    };
+    if (!check_predicates(&qm)) continue;
 
     match_idx++;
     INTEGER(VECTOR_ELT(result_matches, 1))[match.pattern_index] += 1;

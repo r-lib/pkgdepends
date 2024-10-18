@@ -271,7 +271,7 @@ bool check_predicates(const struct query_match_t *qm) {
       op = NOT_MATCH;
     } else if (!strcasecmp("any-match?", ops)) {
       op = ANY_MATCH;
-    } else if (!strcasecmp("any-not-match", ops)) {
+    } else if (!strcasecmp("any-not-match?", ops)) {
       op = ANY_NOT_MATCH;
     } else if (!strcasecmp("any-of?", ops)) {
       op = ANY_OF;

@@ -24,6 +24,20 @@ test_that("code_query, multiple patterns", {
   })
 })
 
+test_that("pattern names", {
+  expect_snapshot({
+    code_query("f('x')", c("(call) (call)", "(call)"))[["patterns"]]
+    code_query("f('x')", c(a = "(call) (call)", "(call)"))[["patterns"]]
+    code_query("f('x')", c("(call) (call)", b = "(call)"))[["patterns"]]
+    code_query("f('x')", c(a = "(call) (call)", b = "(call)"))[["patterns"]]
+  })
+})
+
+test_that("syntax error is handled", {
+  expect_snapshot({
+    code_query("f(1); g(1,2); 1+; h(3)", "(call) @call-code")
+  })
+})
 test_that("code_query, field names", {
   expect_snapshot({
     code_query(
@@ -134,66 +148,481 @@ test_that("code_query, anchors", {
   })
 })
 
-test_that("code_query, predicates, eq capture(1) x capture(1)", {
+test_that("code_query, predicates, #eq?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program
+      (call function: (identifier) @fn-1) %s
+      (comment)
+      (call function: (identifier) @fn-2) %s
+      (#eq? @fn-1 @fn-2)
+    )"
+  do <- function(q1, q2, code) {
+    q_ <- sprintf(q, q1, q2)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    # repeated function call
-    code_query(
-      "f(x); f(y); g()",
-      paste0(
-        "((call function: (identifier) @fun-name) ",
-        "(call function: (identifier) @fun-name2) ",
-        "(#eq? @fun-name @fun-name2))"
-      )
-    )
+    # no auantification
+    do("", "", c("f()", "# c", "f()"))
+    do("", "", c("f()", "# c", "g()"))
+    # *
+    do("*", "*", c("f()", "# c", "f()"))
+    do("*", "*", c("f()", "# c", "g()"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "g(5)"))
+    do("*", "*", c("f()", "# c"))
+    do("*", "*", c("# c", "f()"))
+    # +
+    do("+", "+", c("f()", "# c", "f()"))
+    do("+", "+", c("f()", "# c", "g()"))
+    do("+", "+", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
+    do("+", "+", c("f()", "f(1)", "f(2)", "# c", "f()", "g(5)"))
+    do("+", "+", c("f()", "# c"))
+    do("+", "+", c("# c", "f()"))
+    # ?
+    do("?", "?", c("f()", "# c", "f()"))
+    do("?", "?", c("f()", "# c", "g()"))
+    do("?", "?", c("f()", "f(1)", "f(2)", "# c", "f(5)"))
+    do("?", "?", c("f()", "# c", "f(5)", "f()"))
+    do("?", "?", c("f()", "# c"))
+    do("?", "?", c("# c", "f()"))
   })
 })
 
-test_that("code_query, predicates, eq capture(1) x capture(0)", {
+test_that("code_query, predicates, #not-eq?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program
+      (call function: (identifier) @fn-1) %s
+      (comment)
+      (call function: (identifier) @fn-2) %s
+      (#not-eq? @fn-1 @fn-2)
+    )"
+  do <- function(q1, q2, code) {
+    q_ <- sprintf(q, q1, q2)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    # TODO
-    NULL
+    # no auantification
+    do("", "", c("f()", "# c", "f()"))
+    do("", "", c("f()", "# c", "g()"))
+    # *
+    do("*", "*", c("f()", "# c", "f()"))
+    do("*", "*", c("f()", "# c", "g()"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "h()", "g(5)"))
+    do("*", "*", c("f()", "# c"))
+    do("*", "*", c("# c", "f()"))
+    # +
+    do("+", "+", c("f()", "# c", "f()"))
+    do("+", "+", c("f()", "# c", "g()"))
+    do("+", "+", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
+    do("+", "+", c("f()", "f(1)", "f(2)", "# c", "h()", "g(5)"))
+    do("+", "+", c("f()", "# c"))
+    do("+", "+", c("# c", "f()"))
+    # ?
+    do("?", "?", c("f()", "# c", "f()"))
+    do("?", "?", c("f()", "# c", "g()"))
+    do("?", "?", c("f()", "f(1)", "f(2)", "# c", "g(5)"))
+    do("?", "?", c("f()", "# c", "g(5)", "g()"))
+    do("?", "?", c("f()", "# c"))
+    do("?", "?", c("# c", "f()"))
   })
 })
 
-test_that("code_query, predicates, eq capture(1) x capture(n)", {
+test_that("code_query, predicates, #any-eq?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program
+      (call function: (identifier) @fn-1) %s
+      (comment)
+      (call function: (identifier) @fn-2) %s
+      (#any-eq? @fn-1 @fn-2)
+    )"
+  do <- function(q1, q2, code) {
+    q_ <- sprintf(q, q1, q2)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    # TODO
-    NULL
+    # no auantification
+    do("", "", c("f()", "# c", "f()"))
+    do("", "", c("f()", "# c", "g()"))
+    # *
+    do("*", "*", c("f()", "# c", "f()"))
+    do("*", "*", c("f()", "# c", "g()"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
+    do("*", "*", c("f()", "# c"))
+    do("*", "*", c("# c", "f()"))
+    # +
+    do("+", "+", c("f()", "# c", "f()"))
+    do("+", "+", c("f()", "# c", "g()"))
+    do("+", "+", c("f()", "f(1)", "g(2)", "# c", "f()", "f(5)"))
+    do("+", "+", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
+    do("+", "+", c("f()", "# c"))
+    do("+", "+", c("# c", "f()"))
+    # ?
+    do("?", "?", c("f()", "# c", "f()"))
+    do("?", "?", c("f()", "# c", "g()"))
+    do("?", "?", c("f()", "f(1)", "g(2)", "# c", "f(5)"))
+    do("?", "?", c("g()", "# c", "f(5)", "f()"))
+    do("?", "?", c("f()", "# c"))
+    do("?", "?", c("# c", "f()"))
   })
 })
 
-test_that("code_query, predicates, eq capture(0) x capture(1)", {
+test_that("code_query, predicates, #any-not-eq?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program
+      (call function: (identifier) @fn-1) %s
+      (comment)
+      (call function: (identifier) @fn-2) %s
+      (#any-not-eq? @fn-1 @fn-2)
+    )"
+  do <- function(q1, q2, code) {
+    q_ <- sprintf(q, q1, q2)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    # TODO
-    NULL
+    # no auantification
+    do("", "", c("f()", "# c", "f()"))
+    do("", "", c("f()", "# c", "g()"))
+    # *
+    do("*", "*", c("f()", "# c", "f()"))
+    do("*", "*", c("f()", "# c", "g()"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
+    do("*", "*", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
+    do("*", "*", c("f()", "# c"))
+    do("*", "*", c("# c", "f()"))
+    # +
+    do("+", "+", c("f()", "# c", "f()"))
+    do("+", "+", c("f()", "# c", "g()"))
+    do("+", "+", c("f()", "f(1)", "g(2)", "# c", "f()", "f(5)"))
+    do("+", "+", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
+    do("+", "+", c("f()", "# c"))
+    do("+", "+", c("# c", "f()"))
+    # ?
+    do("?", "?", c("f()", "# c", "f()"))
+    do("?", "?", c("f()", "# c", "g()"))
+    do("?", "?", c("f()", "f(1)", "g(2)", "# c", "f(5)"))
+    do("?", "?", c("g()", "# c", "f(5)", "f()"))
+    do("?", "?", c("f()", "# c"))
+    do("?", "?", c("# c", "f()"))
   })
 })
 
-test_that("code_query, predicates, eq capture(n) x capture(1)", {
+test_that("code_query, predicates, #eq? vs string", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#eq? @fn \"f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    # TODO
-    NULL
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("f()", "g()"))
   })
 })
 
-test_that("code_query, predicates, eq capture(n) x capture(n)", {
+test_that("code_query, predicates, #not-eq? vs string", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#not-eq? @fn \"f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    # TODO
-    NULL
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("g()", "h()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("g()", "h()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("g()", "h()"))
+    do("?", c("f()", "g()"))
   })
 })
 
-test_that("pattern names", {
+test_that("code_query, predicates, #any-eq? vs string", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#any-eq? @fn \"f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    code_query("f('x')", c("(call) (call)", "(call)"))[["patterns"]]
-    code_query("f('x')", c(a = "(call) (call)", "(call)"))[["patterns"]]
-    code_query("f('x')", c("(call) (call)", b = "(call)"))[["patterns"]]
-    code_query("f('x')", c(a = "(call) (call)", b = "(call)"))[["patterns"]]
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("f()", "g()"))
   })
 })
 
-test_that("syntax error is handled", {
+test_that("code_query, predicates, #any-not-eq? vs string", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#any-not-eq? @fn \"f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
   expect_snapshot({
-    code_query("f(1); g(1,2); 1+; h(3)", "(call) @call-code")
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("g()", "h()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("g()", "h()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("g()", "h()"))
+    do("?", c("f()", "g()"))
+  })
+})
+
+test_that("code_query, predicates, #match?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#match? @fn \"^f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
+  expect_snapshot({
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("f()", "g()"))
+  })
+})
+
+test_that("code_query, predicates, #not-match?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#not-match? @fn \"^f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
+  expect_snapshot({
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("g()", "h()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("g()", "h()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("g()", "h()"))
+    do("?", c("f()", "g()"))
+  })
+})
+
+test_that("code_query, predicates, #any-match?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#any-match? @fn \"^f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
+  expect_snapshot({
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("f()", "g()"))
+  })
+})
+
+test_that("code_query, predicates, #any-not-match?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#any-not-match? @fn \"^f\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
+  expect_snapshot({
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f()"))
+    do("*", c("g()", "h()"))
+    do("*", c("f()", "g()", "f()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f()"))
+    do("+", c("g()", "h()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f()"))
+    do("?", c("g()", "h()"))
+    do("?", c("f()", "g()"))
+  })
+})
+
+test_that("code_query, predicates, #any-of?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#any-of? @fn \"f\" \"f2\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
+  expect_snapshot({
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f2()"))
+    do("*", c("f()", "g()", "f2()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f2()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f2()"))
+    do("?", c("f()", "g()"))
+  })
+})
+
+test_that("code_query, predicates, #not-any-of?", {
+  # multiple calls to the same function, from before and after comment
+  q <- "
+    (program .
+      (call function: (identifier) @fn) %s
+      (#not-any-of? @fn \"f\" \"f2\")
+    . )"
+  do <- function(q1, code) {
+    q_ <- sprintf(q, q1)
+    code_query(code, q_)
+  }
+  expect_snapshot({
+    # no auantification
+    do("", "f()")
+    do("", "g()")
+    # *
+    do("*", "")
+    do("*", c("f()", "f2()"))
+    do("*", c("g()", "h()"))
+    do("*", c("f()", "g()", "f2()"))
+    # +
+    do("+", "")
+    do("+", c("f()", "f2()"))
+    do("+", c("g()", "h()"))
+    do("+", c("f()", "g(1)"))
+    # ?
+    do("?", "")
+    do("?", c("f()", "f2()"))
+    do("?", c("g()", "h()"))
+    do("?", c("f()", "g()"))
   })
 })

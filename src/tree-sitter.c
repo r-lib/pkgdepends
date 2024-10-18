@@ -12,12 +12,14 @@ static void r_free(void *data) {
   free(data);
 }
 
-SEXP s_expr(SEXP input) {
-  const TSLanguage *rlang = NULL;
-  TSParser *parser = NULL;
+static const TSLanguage *rlang = NULL;
 
-  rlang = tree_sitter_r();
-  r_call_on_exit((cleanup_fn_t) ts_language_delete, (cleanup_data_t) rlang);
+SEXP s_expr(SEXP input) {
+  if (rlang == NULL) {
+    rlang = tree_sitter_r();
+  }
+
+  TSParser *parser = NULL;
   parser = ts_parser_new();
   if (!ts_parser_set_language(parser, rlang)) {
     Rf_error("Failed to set R language, internal error.");
@@ -320,11 +322,11 @@ bool check_predicates(const struct query_match_t *qm) {
 }
 
 SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern) {
-  const TSLanguage *rlang = NULL;
-  TSParser *parser = NULL;
+  if (rlang == NULL) {
+    rlang = tree_sitter_r();
+  }
 
-  rlang = tree_sitter_r();
-  r_call_on_exit((cleanup_fn_t) ts_language_delete, (cleanup_data_t) rlang);
+  TSParser *parser = NULL;
   parser = ts_parser_new();
   if (!ts_parser_set_language(parser, rlang)) {
     Rf_error("Failed to set R language, internal error.");

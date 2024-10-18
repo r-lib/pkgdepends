@@ -426,3 +426,23 @@
       2     2 a     "(call)\n"           1
       3     3 b     "(call)\n"           1
 
+# syntax error is handled
+
+    Code
+      code_query("f(1); g(1,2); 1+; h(3)", "(call) @call-code")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern               match_count
+        <int> <chr> <chr>                       <int>
+      1     1 <NA>  "(call) @call-code\n"           3
+      
+      $matched_captures
+      # A data frame: 3 x 8
+           id pattern match start_byte start_row start_column name      code  
+        <int>   <int> <int>      <int>     <int>        <int> <chr>     <chr> 
+      1     1       1     1          1         1            1 call-code f(1)  
+      2     1       1     2          7         1            7 call-code g(1,2)
+      3     1       1     3         19         1           19 call-code h(3)  
+      
+

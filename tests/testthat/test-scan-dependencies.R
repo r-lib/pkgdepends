@@ -191,3 +191,9 @@ test_that("pattern names", {
     code_query("f('x')", c(a = "(call) (call)", b = "(call)"))[["patterns"]]
   })
 })
+
+test_that("syntax error is handled", {
+  expect_snapshot({
+    code_query("f(1); g(1,2); 1+; h(3)", "(call) @call-code")
+  })
+})

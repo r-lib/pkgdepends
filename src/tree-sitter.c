@@ -376,9 +376,10 @@ SEXP code_query(SEXP input, SEXP pattern) {
   TSNode root = ts_tree_root_node(tree);
 
   uint32_t pattern_count = ts_query_pattern_count(query);
-  SEXP result_matches = PROTECT(Rf_allocVector(VECSXP, 2));
+  SEXP result_matches = PROTECT(Rf_allocVector(VECSXP, 3));
   SET_VECTOR_ELT(result_matches, 0, Rf_allocVector(STRSXP, pattern_count));
   SET_VECTOR_ELT(result_matches, 1, Rf_allocVector(INTSXP, pattern_count));
+  SET_VECTOR_ELT(result_matches, 2, Rf_allocVector(INTSXP, pattern_count));
   for (uint32_t i = 0; i < pattern_count; i++) {
     uint32_t start = ts_query_start_byte_for_pattern(query, i);
     uint32_t end = ts_query_end_byte_for_pattern(query, i);
@@ -386,6 +387,7 @@ SEXP code_query(SEXP input, SEXP pattern) {
       VECTOR_ELT(result_matches, 0), i,
       Rf_mkCharLenCE(cpattern + start, end - start, CE_UTF8)
     );
+    INTEGER(VECTOR_ELT(result_matches, 2))[i] = start + 1;
   }
   memset(
     INTEGER(VECTOR_ELT(result_matches, 1)),
@@ -435,7 +437,7 @@ SEXP code_query(SEXP input, SEXP pattern) {
 
     // collect the results
     for (uint16_t cc = 0; cc < match.capture_count; cc++) {
-      SEXP res1 = PROTECT(Rf_allocVector(VECSXP, 6));
+      SEXP res1 = PROTECT(Rf_allocVector(VECSXP, 8));
       SET_VECTOR_ELT(result_captures, residx++, res1);
       UNPROTECT(1);
 
@@ -464,6 +466,9 @@ SEXP code_query(SEXP input, SEXP pattern) {
         CE_UTF8
       )));
       SET_VECTOR_ELT(res1, 5, Rf_ScalarInteger(start_byte + 1));
+      TSPoint start_point = ts_node_start_point(node);
+      SET_VECTOR_ELT(res1, 6, Rf_ScalarInteger(start_point.row + 1));
+      SET_VECTOR_ELT(res1, 7, Rf_ScalarInteger(start_point.column + 1));
     }
   }
 

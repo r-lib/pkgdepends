@@ -1,0 +1,428 @@
+# s_expr
+
+    Code
+      s_expr("f(arg, arg2 = 2); 1:100")
+    Output
+      [1] "(program (call function: (identifier) arguments: (arguments argument: (argument value: (identifier)) (comma) argument: (argument name: (identifier) value: (float)))) (binary_operator lhs: (float) rhs: (float)))"
+
+# code_query
+
+    Code
+      code_query("f(arg, arg2)", "(call(arguments))")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern               match_count
+        <int> <chr> <chr>                       <int>
+      1     1 <NA>  "(call(arguments))\n"           1
+      
+      $matched_captures
+      # A data frame: 0 x 8
+      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
+      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      
+    Code
+      code_query("f(arg, arg2)", "(call(arguments)) @call")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                     match_count
+        <int> <chr> <chr>                             <int>
+      1     1 <NA>  "(call(arguments)) @call\n"           1
+      
+      $matched_captures
+      # A data frame: 1 x 8
+           id pattern match start_byte start_row start_column name  code        
+        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>       
+      1     1       1     1          1         1            1 call  f(arg, arg2)
+      
+
+# code_query, multiple patterns
+
+    Code
+      code_query("f(arg, arg2)", "(call(arguments)) @call (arguments) @args")
+    Output
+      $patterns
+      # A data frame: 2 x 4
+           id name  pattern                    match_count
+        <int> <chr> <chr>                            <int>
+      1     1 <NA>  "(call(arguments)) @call "           1
+      2     2 <NA>  "(arguments) @args\n"                1
+      
+      $matched_captures
+      # A data frame: 2 x 8
+           id pattern match start_byte start_row start_column name  code        
+        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>       
+      1     1       1     1          1         1            1 call  f(arg, arg2)
+      2     2       2     2          2         1            2 args  (arg, arg2) 
+      
+    Code
+      code_query("f(arg, arg2)", c("(call(arguments)) @call", "(arguments) @args"))
+    Output
+      $patterns
+      # A data frame: 2 x 4
+           id name  pattern                     match_count
+        <int> <chr> <chr>                             <int>
+      1     1 <NA>  "(call(arguments)) @call\n"           1
+      2     2 <NA>  "(arguments) @args\n"                 1
+      
+      $matched_captures
+      # A data frame: 2 x 8
+           id pattern match start_byte start_row start_column name  code        
+        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>       
+      1     1       1     1          1         1            1 call  f(arg, arg2)
+      2     2       2     2          2         1            2 args  (arg, arg2) 
+      
+
+# code_query, field names
+
+    Code
+      code_query("f(arg, x = arg2)",
+        "(argument name: (identifier) @name value: (identifier) @value)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                                match_count
+        <int> <chr> <chr>                                                        <int>
+      1     1 <NA>  "(argument name: (identifier) @name value: (identifie~           1
+      
+      $matched_captures
+      # A data frame: 2 x 8
+           id pattern match start_byte start_row start_column name  code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
+      1     1       1     1          8         1            8 name  x    
+      2     2       1     1         12         1           12 value arg2 
+      
+
+# code_query, negated fields
+
+    Code
+      code_query("f(arg1, x = arg2); g(); a",
+        "((call (arguments !argument)) @call-name)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                       match_count
+        <int> <chr> <chr>                                               <int>
+      1     1 <NA>  "((call (arguments !argument)) @call-name)\n"           1
+      
+      $matched_captures
+      # A data frame: 1 x 8
+           id pattern match start_byte start_row start_column name      code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr>     <chr>
+      1     1       1     1         20         1           20 call-name g()  
+      
+
+# code_query, anonymous nodes
+
+    Code
+      code_query("1 + 2", "((float) @lhs \"+\" @op (float)) @rhs")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                   match_count
+        <int> <chr> <chr>                                           <int>
+      1     1 <NA>  "((float) @lhs \"+\" @op (float)) @rhs\n"           1
+      
+      $matched_captures
+      # A data frame: 3 x 8
+           id pattern match start_byte start_row start_column name  code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
+      1     1       1     1          1         1            1 lhs   1    
+      2     3       1     1          1         1            1 rhs   1    
+      3     2       1     1          3         1            3 op    +    
+      
+
+# code_query, capturing nodes
+
+    Code
+      code_query("library(testthat); foo(bar); library(pak); bar(baz)",
+        "(call function: (identifier) @fun-name)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                     match_count
+        <int> <chr> <chr>                                             <int>
+      1     1 <NA>  "(call function: (identifier) @fun-name)\n"           4
+      
+      $matched_captures
+      # A data frame: 4 x 8
+           id pattern match start_byte start_row start_column name     code   
+        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>  
+      1     1       1     1          1         1            1 fun-name library
+      2     1       1     2         20         1           20 fun-name foo    
+      3     1       1     3         30         1           30 fun-name library
+      4     1       1     4         44         1           44 fun-name bar    
+      
+
+# code_query, quantification operators
+
+    Code
+      code_query("# comment\n#comment 2\n1 + 5\n#comment 3\n", "(comment)+ @comments")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                  match_count
+        <int> <chr> <chr>                          <int>
+      1     1 <NA>  "(comment)+ @comments\n"           2
+      
+      $matched_captures
+      # A data frame: 3 x 8
+           id pattern match start_byte start_row start_column name     code      
+        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>     
+      1     1       1     1          1         1            1 comments # comment 
+      2     1       1     1         11         2            1 comments #comment 2
+      3     1       1     2         28         4            1 comments #comment 3
+      
+
+---
+
+    Code
+      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n",
+        "((comment)* @comments (call function: (identifier)) @call)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                                match_count
+        <int> <chr> <chr>                                                        <int>
+      1     1 <NA>  "((comment)* @comments (call function: (identifier)) ~           4
+      
+      $matched_captures
+      # A data frame: 8 x 8
+           id pattern match start_byte start_row start_column name     code       
+        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>      
+      1     2       1     1          1         1            1 call     f()        
+      2     1       1     2          5         2            1 comments # comment  
+      3     2       1     2         15         3            1 call     g()        
+      4     1       1     3          5         2            1 comments # comment  
+      5     2       1     3         41         5            1 call     h()        
+      6     1       1     4         18         3            4 comments # comment1 
+      7     1       1     4         29         4            1 comments # comment 2
+      8     2       1     4         41         5            1 call     h()        
+      
+
+---
+
+    Code
+      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n",
+        "((comment)? @comment (call function: (identifier)) @call)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                                match_count
+        <int> <chr> <chr>                                                        <int>
+      1     1 <NA>  "((comment)? @comment (call function: (identifier)) @~           5
+      
+      $matched_captures
+      # A data frame: 9 x 8
+           id pattern match start_byte start_row start_column name    code       
+        <int>   <int> <int>      <int>     <int>        <int> <chr>   <chr>      
+      1     2       1     1          1         1            1 call    f()        
+      2     1       1     2          5         2            1 comment # comment  
+      3     2       1     2         15         3            1 call    g()        
+      4     1       1     3          5         2            1 comment # comment  
+      5     2       1     3         41         5            1 call    h()        
+      6     1       1     4         18         3            4 comment # comment1 
+      7     2       1     4         41         5            1 call    h()        
+      8     1       1     5         29         4            1 comment # comment 2
+      9     2       1     5         41         5            1 call    h()        
+      
+
+# code_query, grouping sibling nodes
+
+    Code
+      code_query("f(); g(); h()", "((call) @call-1 (call) @call-2 (call) @call-3)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                            match_count
+        <int> <chr> <chr>                                                    <int>
+      1     1 <NA>  "((call) @call-1 (call) @call-2 (call) @call-3)\n"           1
+      
+      $matched_captures
+      # A data frame: 3 x 8
+           id pattern match start_byte start_row start_column name   code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr>  <chr>
+      1     1       1     1          1         1            1 call-1 f()  
+      2     2       1     1          6         1            6 call-2 g()  
+      3     3       1     1         11         1           11 call-3 h()  
+      
+
+# code_query, alternations
+
+    Code
+      code_query("f(x=1); f(1)", paste0(
+        "(call function: (identifier) arguments: (arguments argument: [",
+        "  (argument value: (_)) ",
+        "  (argument name: (identifier) @arg-name value: (_))", "]))"))
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                                match_count
+        <int> <chr> <chr>                                                        <int>
+      1     1 <NA>  "(call function: (identifier) arguments: (arguments a~           2
+      
+      $matched_captures
+      # A data frame: 1 x 8
+           id pattern match start_byte start_row start_column name     code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>
+      1     1       1     1          3         1            3 arg-name x    
+      
+
+# code_query, wildcard node
+
+    Code
+      code_query("for (i in 1:10) foo", "(for_statement sequence: (_) @seq)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                match_count
+        <int> <chr> <chr>                                        <int>
+      1     1 <NA>  "(for_statement sequence: (_) @seq)\n"           1
+      
+      $matched_captures
+      # A data frame: 1 x 8
+           id pattern match start_byte start_row start_column name  code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
+      1     1       1     1         11         1           11 seq   1:10 
+      
+
+# code_query, anchors
+
+    Code
+      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n",
+        "((comment)? @comment . (call function: (identifier)) @call)")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                                match_count
+        <int> <chr> <chr>                                                        <int>
+      1     1 <NA>  "((comment)? @comment . (call function: (identifier))~           3
+      
+      $matched_captures
+      # A data frame: 5 x 8
+           id pattern match start_byte start_row start_column name    code       
+        <int>   <int> <int>      <int>     <int>        <int> <chr>   <chr>      
+      1     2       1     1          1         1            1 call    f()        
+      2     1       1     2          5         2            1 comment # comment  
+      3     2       1     2         15         3            1 call    g()        
+      4     1       1     3         29         4            1 comment # comment 2
+      5     2       1     3         41         5            1 call    h()        
+      
+
+---
+
+    Code
+      code_query("f(); f(x); f(x,y,z); f(x = 1, 2)",
+        "(call arguments: (arguments . (argument) @arg))")
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                             match_count
+        <int> <chr> <chr>                                                     <int>
+      1     1 <NA>  "(call arguments: (arguments . (argument) @arg))\n"           3
+      
+      $matched_captures
+      # A data frame: 3 x 8
+           id pattern match start_byte start_row start_column name  code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
+      1     1       1     1          8         1            8 arg   x    
+      2     1       1     2         14         1           14 arg   x    
+      3     1       1     3         24         1           24 arg   x = 1
+      
+
+# code_query, predicates, eq capture(1) x capture(1)
+
+    Code
+      code_query("f(x); f(y); g()", paste0(
+        "((call function: (identifier) @fun-name) ",
+        "(call function: (identifier) @fun-name2) ", "(#eq? @fun-name @fun-name2))"))
+    Output
+      $patterns
+      # A data frame: 1 x 4
+           id name  pattern                                                match_count
+        <int> <chr> <chr>                                                        <int>
+      1     1 <NA>  "((call function: (identifier) @fun-name) (call funct~           1
+      
+      $matched_captures
+      # A data frame: 2 x 8
+           id pattern match start_byte start_row start_column name      code 
+        <int>   <int> <int>      <int>     <int>        <int> <chr>     <chr>
+      1     1       1     1          1         1            1 fun-name  f    
+      2     2       1     1          7         1            7 fun-name2 f    
+      
+
+# code_query, predicates, eq capture(1) x capture(0)
+
+    Code
+      NULL
+    Output
+      NULL
+
+# code_query, predicates, eq capture(1) x capture(n)
+
+    Code
+      NULL
+    Output
+      NULL
+
+# code_query, predicates, eq capture(0) x capture(1)
+
+    Code
+      NULL
+    Output
+      NULL
+
+# code_query, predicates, eq capture(n) x capture(1)
+
+    Code
+      NULL
+    Output
+      NULL
+
+# code_query, predicates, eq capture(n) x capture(n)
+
+    Code
+      NULL
+    Output
+      NULL
+
+# pattern names
+
+    Code
+      code_query("f('x')", c("(call) (call)", "(call)"))[["patterns"]]
+    Output
+      # A data frame: 3 x 4
+           id name  pattern    match_count
+        <int> <chr> <chr>            <int>
+      1     1 <NA>  "(call) "            1
+      2     2 <NA>  "(call)\n"           1
+      3     3 <NA>  "(call)\n"           1
+    Code
+      code_query("f('x')", c(a = "(call) (call)", "(call)"))[["patterns"]]
+    Output
+      # A data frame: 3 x 4
+           id name  pattern    match_count
+        <int> <chr> <chr>            <int>
+      1     1 "a"   "(call) "            1
+      2     2 "a"   "(call)\n"           1
+      3     3 ""    "(call)\n"           1
+    Code
+      code_query("f('x')", c("(call) (call)", b = "(call)"))[["patterns"]]
+    Output
+      # A data frame: 3 x 4
+           id name  pattern    match_count
+        <int> <chr> <chr>            <int>
+      1     1 ""    "(call) "            1
+      2     2 ""    "(call)\n"           1
+      3     3 "b"   "(call)\n"           1
+    Code
+      code_query("f('x')", c(a = "(call) (call)", b = "(call)"))[["patterns"]]
+    Output
+      # A data frame: 3 x 4
+           id name  pattern    match_count
+        <int> <chr> <chr>            <int>
+      1     1 a     "(call) "            1
+      2     2 a     "(call)\n"           1
+      3     3 b     "(call)\n"           1
+

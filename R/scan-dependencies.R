@@ -1,11 +1,18 @@
-code_query <- function(code, query) {
-  if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
+code_query <- function(code = NULL, query, file = NULL) {
   qlen <- nchar(query, type = "bytes") + 1L # + \n
   qbeg <- c(1L, cumsum(qlen))
   qnms <- names(query) %||% rep(NA_character_, length(query))
   query1 <- paste0(query, "\n", collapse = "")
-  res <- call_with_cleanup(c_code_query, code, query1)
+
+  if (!is.null(code)) {
+    if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
+    res <- call_with_cleanup(c_code_query, code, query1)
+  } else {
+    res <- call_with_cleanup(c_code_query_path, file, query1)
+  }
+
   qorig <- as.integer(cut(res[[1]][[3]], breaks = qbeg, include.lowest = TRUE))
+
   list(
     patterns = data_frame(
       id = seq_along(res[[1]][[1]]),

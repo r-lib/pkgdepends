@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #define R_NO_REMAP
 #include "R.h"
 #include "Rinternals.h"
@@ -317,7 +319,7 @@ bool check_predicates(const struct query_match_t *qm) {
   return true;
 }
 
-SEXP code_query(SEXP input, SEXP pattern) {
+SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern) {
   const TSLanguage *rlang = NULL;
   TSParser *parser = NULL;
 
@@ -369,8 +371,6 @@ SEXP code_query(SEXP input, SEXP pattern) {
   r_call_on_exit(r_free, capture_map_pattern);
   memset(capture_map_pattern, 0, sizeof(uint32_t) * capture_count);
 
-  const char *c_input = (const char*) RAW(input);
-  uint32_t length = Rf_length(input);
   TSTree *tree = ts_parser_parse_string(parser, NULL, c_input, length);
   r_call_on_exit((cleanup_fn_t) ts_tree_delete, tree);
   TSNode root = ts_tree_root_node(tree);
@@ -478,4 +478,37 @@ SEXP code_query(SEXP input, SEXP pattern) {
   SET_VECTOR_ELT(result, 1, result_captures);
   UNPROTECT(3);
   return result;
+}
+
+SEXP code_query(SEXP input, SEXP pattern) {
+  const char *c_input = (const char*) RAW(input);
+  uint32_t length = Rf_length(input);
+  return code_query_c(c_input, length, pattern);
+}
+
+SEXP code_query_path(SEXP path, SEXP pattern) {
+  const char *cpath = CHAR(STRING_ELT(path, 0));
+  FILE *fp = fopen(cpath, "rb");
+  if (fp == NULL) {
+    Rf_error("Cannot open path %s", cpath);
+  }
+
+  fseek(fp, 0, SEEK_END);       // seek to end of file
+  size_t file_size = ftell(fp); // get current file pointer
+  rewind(fp);
+
+  char *buf = malloc(file_size);
+  if (!buf) {
+    fclose(fp);
+    Rf_error("Cannot allocate memory for file %s", cpath);
+  }
+  r_call_on_exit(r_free, buf);
+
+  if ((fread(buf, 1, file_size, fp)) != file_size) {
+    fclose(fp);
+    Rf_error("Error reading file: %s", cpath);
+  }
+  fclose(fp);
+
+  return code_query_c(buf, file_size, pattern);
 }

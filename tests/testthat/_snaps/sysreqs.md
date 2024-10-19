@@ -38,7 +38,7 @@
       [1] "libcairo2-dev"
       
       [[2]]
-      NULL
+      [1] "chromium"
       
       [[3]]
       [1] "libcurl4-openssl-dev"
@@ -50,9 +50,9 @@
       NULL
       
       [[2]]
-      [1] "[ $(which google-chrome) ] || apt-get install -y gnupg curl"                                                                                 
-      [2] "[ $(which google-chrome) ] || curl -fsSL -o /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-      [3] "[ $(which google-chrome) ] || DEBIAN_FRONTEND='noninteractive' apt-get install -y /tmp/google-chrome.deb"                                    
+      [1] "apt-get install -y software-properties-common"
+      [2] "add-apt-repository -y ppa:xtradeb/apps"       
+      [3] "apt-get update"                               
       
       [[3]]
       NULL
@@ -64,7 +64,7 @@
       NULL
       
       [[2]]
-      [1] "rm -f /tmp/google-chrome.deb"
+      NULL
       
       [[3]]
       NULL
@@ -227,7 +227,6 @@
       system package       installed required by
       --------------       --        -----------
       gsfonts              v         magick     
-      imagemagick          x         magick     
       libcurl4-openssl-dev v         curl       
       libmagick++-dev      x         magick     
       libssl-dev           x         curl       
@@ -237,14 +236,13 @@
     Code
       res[]
     Output
-      # A data frame: 5 x 5
+      # A data frame: 4 x 5
         system_package       installed packages  pre_install post_install
         <chr>                <lgl>     <list>    <list>      <list>      
       1 gsfonts              TRUE      <chr [1]> <NULL>      <NULL>      
-      2 imagemagick          FALSE     <chr [1]> <NULL>      <NULL>      
-      3 libcurl4-openssl-dev TRUE      <chr [1]> <NULL>      <NULL>      
-      4 libmagick++-dev      FALSE     <chr [1]> <NULL>      <NULL>      
-      5 libssl-dev           FALSE     <chr [1]> <NULL>      <NULL>      
+      2 libcurl4-openssl-dev TRUE      <chr [1]> <NULL>      <NULL>      
+      3 libmagick++-dev      FALSE     <chr [1]> <NULL>      <NULL>      
+      4 libssl-dev           FALSE     <chr [1]> <NULL>      <NULL>      
 
 ---
 

@@ -51,34 +51,34 @@
       # A data frame: 3 x 8
            id pattern match start_byte start_row start_column name     code        
         <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>       
-      1     3       1     1          1         1            1 dep-code library(pkg)
+      1     4       1     1          1         1            1 dep-code library(pkg)
       2     1       1     1          1         1            1 fn-name  library     
-      3     2       1     1          9         1            9 pkg-name pkg         
+      3     3       1     1          9         1            9 pkg-name pkg         
     Code
       code_query("library('pkg')", q_library_1())[["matched_captures"]]
     Output
       # A data frame: 3 x 8
            id pattern match start_byte start_row start_column name     code          
         <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>         
-      1     3       1     1          1         1            1 dep-code library('pkg')
+      1     4       1     1          1         1            1 dep-code library('pkg')
       2     1       1     1          1         1            1 fn-name  library       
-      3     2       1     1         10         1           10 pkg-name pkg           
+      3     3       1     1         10         1           10 pkg-name pkg           
     Code
       code_query("require(pkg)", q_library_1())[["matched_captures"]]
     Output
       # A data frame: 3 x 8
            id pattern match start_byte start_row start_column name     code        
         <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>       
-      1     3       1     1          1         1            1 dep-code require(pkg)
+      1     4       1     1          1         1            1 dep-code require(pkg)
       2     1       1     1          1         1            1 fn-name  require     
-      3     2       1     1          9         1            9 pkg-name pkg         
+      3     3       1     1          9         1            9 pkg-name pkg         
     Code
       code_query("require('pkg')", q_library_1())[["matched_captures"]]
     Output
       # A data frame: 3 x 8
            id pattern match start_byte start_row start_column name     code          
         <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>         
-      1     3       1     1          1         1            1 dep-code require('pkg')
+      1     4       1     1          1         1            1 dep-code require('pkg')
       2     1       1     1          1         1            1 fn-name  require       
-      3     2       1     1         10         1           10 pkg-name pkg           
+      3     3       1     1         10         1           10 pkg-name pkg           
 

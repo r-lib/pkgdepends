@@ -1,16 +1,12 @@
+scan_deps <- function(path = ".") {
+  paths <- dir(path, pattern = "[.]R$", recursive = TRUE)
+  do.call("rbind", lapply(paths, scan_path_deps))
+}
+
 scan_path_deps <- function(path) {
   code <- readBin(path, "raw", file.size(path))
-  has_library <- length(grepRaw("library", code, fixed = TRUE)) > 0
-  has_require <- length(grepRaw("require", code, fixed = TRUE)) > 0
-  has_colon <- length(grepRaw("::", code, fixed = TRUE)) > 0
-
-  deps <- if (has_library || has_require || has_colon) {
-    scan_path_deps_do(code, path)
-  } else {
-    scan_path_deps_empty()
-  }
-
-  deps
+  has_deps <- length(grepRaw("library|require|loadNamespace|::", code)) > 0
+  if (has_deps) scan_path_deps_do(code, path)
 }
 
 scan_path_deps_empty <- function() {
@@ -28,9 +24,8 @@ scan_path_deps_do <- function(code, path) {
   hits <- code_query(code, q_deps())
   # q_library_0 hits are generic ones, only use them if they are not hit
   gen_pat <- hits$patterns$id[hits$patterns$name == "q_library_0"]
-  gen_hits <- hits$matched_captures[hits$matched_captures$pattern == gen_pat, ]
-  ok_hits <- hits$matched_captures[hits$matched_captures$pattern != gen_pat, ]
-  gen_hits <- gen_hits[! gen_hits$start_byte %in% ok_hits$start_byte, ]
+  gen_hits <- hits$matched_captures[hits$matched_captures$pattern %in% gen_pat, ]
+  ok_hits <- hits$matched_captures[! hits$matched_captures$pattern %in% gen_pat, ]
   rbind(
     scan_path_deps_empty(),
     if (nrow(ok_hits) > 0) scan_path_deps_do_ok_hits(ok_hits, path),
@@ -70,7 +65,9 @@ parse_pkg_from_library_call <- function(fn, code) {
   expr <- parse(text= code, keep.source = FALSE)
   fun <- switch(fn,
     "library" = base::library,
-    "require" = base::require
+    "require" = base::require,
+    "loadNamespace" = base::loadNamespace,
+    "requireNamespace" = base::requireNamespace
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
 
@@ -79,15 +76,10 @@ parse_pkg_from_library_call <- function(fn, code) {
     return(pkg)
   }
 
-  if (is.symbol(pkg) &&
+  if (fn %in% c("library", "require") && is.symbol(pkg) &&
       identical(matched[["character.only"]] %||% FALSE, FALSE)) {
     return(as.character(pkg))
   }
 
   NA_character_
-}
-
-scan_deps <- function(path = ".") {
-  paths <- dir(path, pattern = "[.]R$", recursive = TRUE)
-  do.call("rbind", lapply(paths, scan_path_deps))
 }

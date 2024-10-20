@@ -28,7 +28,9 @@ scan_path_deps <- function(path) {
   cache <- get_deps_cache_path(hash)
   if (file.exists(cache)) {
     deps <- readRDS(cache)
-    deps$path <- path
+    if (!is.null(deps) && nrow(deps) > 0) {
+      deps$path <- path
+    }
     return(deps)
   }
 
@@ -38,7 +40,9 @@ scan_path_deps <- function(path) {
 
   # save it to the cache, but anonimize it first. If no deps, save NULL
   deps_no_path <- deps
-  if (!i.snull(deps_no_path)) deps_no_path$path <- ""
+  if (!is.null(deps_no_path) && nrow(deps_no_path) > 0) {
+    deps_no_path$path <- ""
+  }
   dir.create(dirname(cache), showWarnings = FALSE, recursive = TRUE)
   saveRDS(deps_no_path, cache)
 

@@ -1,10 +1,12 @@
 test_that("s_expr", {
+  local_reproducible_output(width = 500)
   expect_snapshot(
     s_expr("f(arg, arg2 = 2); 1:100")
   )
 })
 
 test_that("code_query", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     code_query("f(arg, arg2)", "(call(arguments))")
     code_query("f(arg, arg2)", "(call(arguments)) @call")
@@ -12,6 +14,7 @@ test_that("code_query", {
 })
 
 test_that("code_query, multiple patterns", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     code_query(
       "f(arg, arg2)",
@@ -25,6 +28,7 @@ test_that("code_query, multiple patterns", {
 })
 
 test_that("pattern names", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     code_query("f('x')", c("(call) (call)", "(call)"))[["patterns"]]
     code_query("f('x')", c(a = "(call) (call)", "(call)"))[["patterns"]]
@@ -34,11 +38,13 @@ test_that("pattern names", {
 })
 
 test_that("syntax error is handled", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     code_query("f(1); g(1,2); 1+; h(3)", "(call) @call-code")
   })
 })
 test_that("code_query, field names", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     code_query(
       "f(arg, x = arg2)",
@@ -48,6 +54,7 @@ test_that("code_query, field names", {
 })
 
 test_that("code_query, negated fields", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     # function calls without arguments
     code_query(
@@ -58,12 +65,14 @@ test_that("code_query, negated fields", {
 })
 
 test_that("code_query, anonymous nodes", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     code_query("1 + 2", '((float) @lhs "+" @op (float)) @rhs')
   })
 })
 
 test_that("code_query, capturing nodes", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     # function calls
     code_query(
@@ -74,6 +83,7 @@ test_that("code_query, capturing nodes", {
 })
 
 test_that("code_query, quantification operators", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     # blocks of comments
     code_query(
@@ -98,6 +108,7 @@ test_that("code_query, quantification operators", {
 })
 
 test_that("code_query, grouping sibling nodes", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     code_query(
       "f(); g(); h()",
@@ -107,6 +118,7 @@ test_that("code_query, grouping sibling nodes", {
 })
 
 test_that("code_query, alternations", {
+  local_reproducible_output(width = 500)
   # named or unnamed argument, capture the arg name if any
   expect_snapshot({
     code_query(
@@ -122,6 +134,7 @@ test_that("code_query, alternations", {
 })
 
 test_that("code_query, wildcard node", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     # anything in a loop sequence
     code_query(
@@ -132,6 +145,7 @@ test_that("code_query, wildcard node", {
 })
 
 test_that("code_query, anchors", {
+  local_reproducible_output(width = 500)
   expect_snapshot({
     # single optional comment _right_ before function call
     code_query(
@@ -149,6 +163,7 @@ test_that("code_query, anchors", {
 })
 
 test_that("code_query, predicates, #eq?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program
@@ -190,6 +205,7 @@ test_that("code_query, predicates, #eq?", {
 })
 
 test_that("code_query, predicates, #not-eq?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program
@@ -231,6 +247,7 @@ test_that("code_query, predicates, #not-eq?", {
 })
 
 test_that("code_query, predicates, #any-eq?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program
@@ -272,6 +289,7 @@ test_that("code_query, predicates, #any-eq?", {
 })
 
 test_that("code_query, predicates, #any-not-eq?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program
@@ -313,6 +331,7 @@ test_that("code_query, predicates, #any-not-eq?", {
 })
 
 test_that("code_query, predicates, #eq? vs string", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -343,6 +362,7 @@ test_that("code_query, predicates, #eq? vs string", {
 })
 
 test_that("code_query, predicates, #not-eq? vs string", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -376,6 +396,7 @@ test_that("code_query, predicates, #not-eq? vs string", {
 })
 
 test_that("code_query, predicates, #any-eq? vs string", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -406,6 +427,7 @@ test_that("code_query, predicates, #any-eq? vs string", {
 })
 
 test_that("code_query, predicates, #any-not-eq? vs string", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -439,6 +461,7 @@ test_that("code_query, predicates, #any-not-eq? vs string", {
 })
 
 test_that("code_query, predicates, #match?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -469,6 +492,7 @@ test_that("code_query, predicates, #match?", {
 })
 
 test_that("code_query, predicates, #not-match?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -502,6 +526,7 @@ test_that("code_query, predicates, #not-match?", {
 })
 
 test_that("code_query, predicates, #any-match?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -532,6 +557,7 @@ test_that("code_query, predicates, #any-match?", {
 })
 
 test_that("code_query, predicates, #any-not-match?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -565,6 +591,7 @@ test_that("code_query, predicates, #any-not-match?", {
 })
 
 test_that("code_query, predicates, #any-of?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .
@@ -595,6 +622,7 @@ test_that("code_query, predicates, #any-of?", {
 })
 
 test_that("code_query, predicates, #not-any-of?", {
+  local_reproducible_output(width = 500)
   # multiple calls to the same function, from before and after comment
   q <- "
     (program .

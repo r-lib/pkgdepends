@@ -6,22 +6,51 @@
 #include "cleancall.h"
 
 #include "tree_sitter/api.h"
-extern const TSLanguage* tree_sitter_r(void);
+extern const TSLanguage *tree_sitter_r(void);
+extern const TSLanguage *tree_sitter_markdown(void);
+extern const TSLanguage *tree_sitter_markdown_inline(void);
 
 static void r_free(void *data) {
   free(data);
 }
 
-static const TSLanguage *rlang = NULL;
+static const TSLanguage *r_lang = NULL;
+static const TSLanguage *markdown_lang = NULL;
+static const TSLanguage *markdown_inline_lang = NULL;
 
-SEXP s_expr(SEXP input) {
-  if (rlang == NULL) {
-    rlang = tree_sitter_r();
+enum ts_language_t {
+  TS_LANGUAGE_R = 0,
+  TS_LANGUAGE_MARKDOWN,
+  TS_LANGUAGE_MARKDOWN_INLINE
+};
+
+static const TSLanguage *get_language(int code) {
+  switch (code) {
+  case TS_LANGUAGE_R:
+    if (r_lang == NULL) {
+      r_lang = tree_sitter_r();
+    }
+    return r_lang;
+  case TS_LANGUAGE_MARKDOWN:
+    if (markdown_lang == NULL) {
+      markdown_lang = tree_sitter_markdown();
+    }
+    return markdown_lang;
+  case TS_LANGUAGE_MARKDOWN_INLINE:
+    if (markdown_inline_lang == NULL) {
+      markdown_inline_lang = tree_sitter_markdown_inline();
+    }
+    return markdown_inline_lang;
+  default:
+    Rf_error("Unknonwn tree-sitter language code");
   }
+}
 
+SEXP s_expr(SEXP input, SEXP rlanguage) {
+  const TSLanguage *language = get_language(INTEGER(rlanguage)[0]);
   TSParser *parser = NULL;
   parser = ts_parser_new();
-  if (!ts_parser_set_language(parser, rlang)) {
+  if (!ts_parser_set_language(parser, language)) {
     Rf_error("Failed to set R language, internal error.");
   }
   r_call_on_exit((cleanup_fn_t) ts_parser_delete, parser);
@@ -321,14 +350,11 @@ bool check_predicates(const struct query_match_t *qm) {
   return true;
 }
 
-SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern) {
-  if (rlang == NULL) {
-    rlang = tree_sitter_r();
-  }
-
+SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern, SEXP rlanguage) {
+  const TSLanguage *language = get_language(INTEGER(rlanguage)[0]);
   TSParser *parser = NULL;
   parser = ts_parser_new();
-  if (!ts_parser_set_language(parser, rlang)) {
+  if (!ts_parser_set_language(parser, language)) {
     Rf_error("Failed to set R language, internal error.");
   }
   r_call_on_exit((cleanup_fn_t) ts_parser_delete, parser);
@@ -337,7 +363,7 @@ SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern) {
   uint32_t error_offset;
   TSQueryError error_type;
   TSQuery *query = ts_query_new(
-    rlang,
+    language,
     cpattern,
     strlen(cpattern),
     &error_offset,
@@ -439,7 +465,7 @@ SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern) {
 
     // collect the results
     for (uint16_t cc = 0; cc < match.capture_count; cc++) {
-      SEXP res1 = PROTECT(Rf_allocVector(VECSXP, 8));
+      SEXP res1 = PROTECT(Rf_allocVector(VECSXP, 11));
       SET_VECTOR_ELT(result_captures, residx++, res1);
       UNPROTECT(1);
 
@@ -468,9 +494,13 @@ SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern) {
         CE_UTF8
       )));
       SET_VECTOR_ELT(res1, 5, Rf_ScalarInteger(start_byte + 1));
+      SET_VECTOR_ELT(res1, 6, Rf_ScalarInteger(end_byte + 1));
       TSPoint start_point = ts_node_start_point(node);
-      SET_VECTOR_ELT(res1, 6, Rf_ScalarInteger(start_point.row + 1));
-      SET_VECTOR_ELT(res1, 7, Rf_ScalarInteger(start_point.column + 1));
+      SET_VECTOR_ELT(res1, 7, Rf_ScalarInteger(start_point.row + 1));
+      SET_VECTOR_ELT(res1, 8, Rf_ScalarInteger(start_point.column + 1));
+      TSPoint end_point = ts_node_end_point(node);
+      SET_VECTOR_ELT(res1, 9, Rf_ScalarInteger(end_point.row + 1));
+      SET_VECTOR_ELT(res1, 10, Rf_ScalarInteger(end_point.column + 1));
     }
   }
 
@@ -482,13 +512,13 @@ SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern) {
   return result;
 }
 
-SEXP code_query(SEXP input, SEXP pattern) {
+SEXP code_query(SEXP input, SEXP pattern, SEXP rlanguage) {
   const char *c_input = (const char*) RAW(input);
   uint32_t length = Rf_length(input);
-  return code_query_c(c_input, length, pattern);
+  return code_query_c(c_input, length, pattern, rlanguage);
 }
 
-SEXP code_query_path(SEXP path, SEXP pattern) {
+SEXP code_query_path(SEXP path, SEXP pattern, SEXP rlanguage) {
   const char *cpath = CHAR(STRING_ELT(path, 0));
   FILE *fp = fopen(cpath, "rb");
   if (fp == NULL) {
@@ -512,5 +542,5 @@ SEXP code_query_path(SEXP path, SEXP pattern) {
   }
   fclose(fp);
 
-  return code_query_c(buf, file_size, pattern);
+  return code_query_c(buf, file_size, pattern, rlanguage);
 }

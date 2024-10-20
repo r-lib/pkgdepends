@@ -1,9 +1,14 @@
-s_expr <- function(code) {
+ts_languages <- c(R = 0L, markdown = 1L, "markdown-inline" = 2L)
+
+s_expr <- function(code, language = c("R", "markdown", "markdown-inline")) {
+  language <- ts_languages[match.arg(language)]
   if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
-  call_with_cleanup(c_s_expr, code)
+  call_with_cleanup(c_s_expr, code, language)
 }
 
-code_query <- function(code = NULL, query, file = NULL) {
+code_query <- function(code = NULL, query, file = NULL,
+                       language = c("R", "markdown", "markdown-inline")) {
+  language <- ts_languages[match.arg(language)]
   qlen <- nchar(query, type = "bytes") + 1L # + \n
   qbeg <- c(1L, cumsum(qlen))
   qnms <- names(query) %||% rep(NA_character_, length(query))
@@ -11,9 +16,9 @@ code_query <- function(code = NULL, query, file = NULL) {
 
   if (!is.null(code)) {
     if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
-    res <- call_with_cleanup(c_code_query, code, query1)
+    res <- call_with_cleanup(c_code_query, code, query1, language)
   } else {
-    res <- call_with_cleanup(c_code_query_path, file, query1)
+    res <- call_with_cleanup(c_code_query_path, file, query1, language)
   }
 
   qorig <- as.integer(cut(res[[1]][[3]], breaks = qbeg, include.lowest = TRUE))
@@ -30,8 +35,11 @@ code_query <- function(code = NULL, query, file = NULL) {
       pattern = viapply(res[[2]], "[[", 1L),
       match = viapply(res[[2]], "[[", 2L),
       start_byte = viapply(res[[2]], "[[", 6L),
-      start_row = viapply(res[[2]], "[[", 7L),
-      start_column = viapply(res[[2]], "[[", 8L),
+      end_byte = viapply(res[[2]], "[[", 7L),
+      start_row = viapply(res[[2]], "[[", 8L),
+      start_column = viapply(res[[2]], "[[", 9L),
+      end_row = viapply(res[[2]], "[[", 10L),
+      end_column = viapply(res[[2]], "[[", 11L),
       name = vcapply(res[[2]], "[[", 4L),
       code = vcapply(res[[2]], "[[", 5L)
     )

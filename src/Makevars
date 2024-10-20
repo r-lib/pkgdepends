@@ -5,7 +5,11 @@ PKG_CFLAGS = \
 tree-sitter-files = \
         tree-sitter/lib/src/lib.o \
         tree-sitter/r/parser.o \
-        tree-sitter/r/scanner.o
+        tree-sitter/r/scanner.o \
+	tree-sitter/markdown/parser.o \
+	tree-sitter/markdown/scanner.o \
+	tree-sitter/markdown-inline/parser.o \
+	tree-sitter/markdown-inline/scanner.o
 
 lib-files = \
         init.o cleancall.o tree-sitter.o

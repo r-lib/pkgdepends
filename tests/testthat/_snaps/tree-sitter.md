@@ -17,9 +17,8 @@
       1     1 <NA>  "(call(arguments))\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       code_query("f(arg, arg2)", "(call(arguments)) @call")
@@ -31,10 +30,10 @@
       1     1 <NA>  "(call(arguments)) @call\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code        
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>       
-      1     1       1     1          1         1            1 call  f(arg, arg2)
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code        
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>       
+      1     1       1     1          1       13         1            1       1         13 call  f(arg, arg2)
       
 
 # code_query, multiple patterns
@@ -50,11 +49,11 @@
       2     2 <NA>  "(arguments) @args\n"                1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code        
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>       
-      1     1       1     1          1         1            1 call  f(arg, arg2)
-      2     2       2     2          2         1            2 args  (arg, arg2) 
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code        
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>       
+      1     1       1     1          1       13         1            1       1         13 call  f(arg, arg2)
+      2     2       2     2          2       13         1            2       1         13 args  (arg, arg2) 
       
     Code
       code_query("f(arg, arg2)", c("(call(arguments)) @call", "(arguments) @args"))
@@ -67,11 +66,11 @@
       2     2 <NA>  "(arguments) @args\n"                 1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code        
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>       
-      1     1       1     1          1         1            1 call  f(arg, arg2)
-      2     2       2     2          2         1            2 args  (arg, arg2) 
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code        
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>       
+      1     1       1     1          1       13         1            1       1         13 call  f(arg, arg2)
+      2     2       2     2          2       13         1            2       1         13 args  (arg, arg2) 
       
 
 # pattern names
@@ -125,39 +124,37 @@
       1     1 <NA>  "(call) @call-code\n"           3
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name      code  
-        <int>   <int> <int>      <int>     <int>        <int> <chr>     <chr> 
-      1     1       1     1          1         1            1 call-code f(1)  
-      2     1       1     2          7         1            7 call-code g(1,2)
-      3     1       1     3         19         1           19 call-code h(3)  
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name      code  
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>     <chr> 
+      1     1       1     1          1        5         1            1       1          5 call-code f(1)  
+      2     1       1     2          7       13         1            7       1         13 call-code g(1,2)
+      3     1       1     3         19       23         1           19       1         23 call-code h(3)  
       
 
 # code_query, field names
 
     Code
-      code_query("f(arg, x = arg2)",
-        "(argument name: (identifier) @name value: (identifier) @value)")
+      code_query("f(arg, x = arg2)", "(argument name: (identifier) @name value: (identifier) @value)")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(argument name: (identifier) @name value: (identifie~           1
+           id name  pattern                                                            match_count
+        <int> <chr> <chr>                                                                    <int>
+      1     1 <NA>  "(argument name: (identifier) @name value: (identifier) @value)\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          8         1            8 name  x    
-      2     2       1     1         12         1           12 value arg2 
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          8        9         1            8       1          9 name  x    
+      2     2       1     1         12       16         1           12       1         16 value arg2 
       
 
 # code_query, negated fields
 
     Code
-      code_query("f(arg1, x = arg2); g(); a",
-        "((call (arguments !argument)) @call-name)")
+      code_query("f(arg1, x = arg2); g(); a", "((call (arguments !argument)) @call-name)")
     Output
       $patterns
       # A data frame: 1 x 4
@@ -166,10 +163,10 @@
       1     1 <NA>  "((call (arguments !argument)) @call-name)\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name      code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr>     <chr>
-      1     1       1     1         20         1           20 call-name g()  
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name      code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>     <chr>
+      1     1       1     1         20       23         1           20       1         23 call-name g()  
       
 
 # code_query, anonymous nodes
@@ -184,19 +181,18 @@
       1     1 <NA>  "((float) @lhs \"+\" @op (float)) @rhs\n"           1
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 lhs   1    
-      2     3       1     1          1         1            1 rhs   1    
-      3     2       1     1          3         1            3 op    +    
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 lhs   1    
+      2     3       1     1          1        2         1            1       1          2 rhs   1    
+      3     2       1     1          3        4         1            3       1          4 op    +    
       
 
 # code_query, capturing nodes
 
     Code
-      code_query("library(testthat); foo(bar); library(pak); bar(baz)",
-        "(call function: (identifier) @fun-name)")
+      code_query("library(testthat); foo(bar); library(pak); bar(baz)", "(call function: (identifier) @fun-name)")
     Output
       $patterns
       # A data frame: 1 x 4
@@ -205,13 +201,13 @@
       1     1 <NA>  "(call function: (identifier) @fun-name)\n"           4
       
       $matched_captures
-      # A data frame: 4 x 8
-           id pattern match start_byte start_row start_column name     code   
-        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>  
-      1     1       1     1          1         1            1 fun-name library
-      2     1       1     2         20         1           20 fun-name foo    
-      3     1       1     3         30         1           30 fun-name library
-      4     1       1     4         44         1           44 fun-name bar    
+      # A data frame: 4 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name     code   
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>    <chr>  
+      1     1       1     1          1        8         1            1       1          8 fun-name library
+      2     1       1     2         20       23         1           20       1         23 fun-name foo    
+      3     1       1     3         30       37         1           30       1         37 fun-name library
+      4     1       1     4         44       47         1           44       1         47 fun-name bar    
       
 
 # code_query, quantification operators
@@ -226,65 +222,63 @@
       1     1 <NA>  "(comment)+ @comments\n"           2
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name     code      
-        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>     
-      1     1       1     1          1         1            1 comments # comment 
-      2     1       1     1         11         2            1 comments #comment 2
-      3     1       1     2         28         4            1 comments #comment 3
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name     code      
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>    <chr>     
+      1     1       1     1          1       10         1            1       1         10 comments # comment 
+      2     1       1     1         11       21         2            1       2         11 comments #comment 2
+      3     1       1     2         28       38         4            1       4         11 comments #comment 3
       
 
 ---
 
     Code
-      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n",
-        "((comment)* @comments (call function: (identifier)) @call)")
+      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n", "((comment)* @comments (call function: (identifier)) @call)")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "((comment)* @comments (call function: (identifier)) ~           4
+           id name  pattern                                                        match_count
+        <int> <chr> <chr>                                                                <int>
+      1     1 <NA>  "((comment)* @comments (call function: (identifier)) @call)\n"           4
       
       $matched_captures
-      # A data frame: 8 x 8
-           id pattern match start_byte start_row start_column name     code       
-        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>      
-      1     2       1     1          1         1            1 call     f()        
-      2     1       1     2          5         2            1 comments # comment  
-      3     2       1     2         15         3            1 call     g()        
-      4     1       1     3          5         2            1 comments # comment  
-      5     2       1     3         41         5            1 call     h()        
-      6     1       1     4         18         3            4 comments # comment1 
-      7     1       1     4         29         4            1 comments # comment 2
-      8     2       1     4         41         5            1 call     h()        
+      # A data frame: 8 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name     code       
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>    <chr>      
+      1     2       1     1          1        4         1            1       1          4 call     f()        
+      2     1       1     2          5       14         2            1       2         10 comments # comment  
+      3     2       1     2         15       18         3            1       3          4 call     g()        
+      4     1       1     3          5       14         2            1       2         10 comments # comment  
+      5     2       1     3         41       44         5            1       5          4 call     h()        
+      6     1       1     4         18       28         3            4       3         14 comments # comment1 
+      7     1       1     4         29       40         4            1       4         12 comments # comment 2
+      8     2       1     4         41       44         5            1       5          4 call     h()        
       
 
 ---
 
     Code
-      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n",
-        "((comment)? @comment (call function: (identifier)) @call)")
+      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n", "((comment)? @comment (call function: (identifier)) @call)")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "((comment)? @comment (call function: (identifier)) @~           5
+           id name  pattern                                                       match_count
+        <int> <chr> <chr>                                                               <int>
+      1     1 <NA>  "((comment)? @comment (call function: (identifier)) @call)\n"           5
       
       $matched_captures
-      # A data frame: 9 x 8
-           id pattern match start_byte start_row start_column name    code       
-        <int>   <int> <int>      <int>     <int>        <int> <chr>   <chr>      
-      1     2       1     1          1         1            1 call    f()        
-      2     1       1     2          5         2            1 comment # comment  
-      3     2       1     2         15         3            1 call    g()        
-      4     1       1     3          5         2            1 comment # comment  
-      5     2       1     3         41         5            1 call    h()        
-      6     1       1     4         18         3            4 comment # comment1 
-      7     2       1     4         41         5            1 call    h()        
-      8     1       1     5         29         4            1 comment # comment 2
-      9     2       1     5         41         5            1 call    h()        
+      # A data frame: 9 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name    code       
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>   <chr>      
+      1     2       1     1          1        4         1            1       1          4 call    f()        
+      2     1       1     2          5       14         2            1       2         10 comment # comment  
+      3     2       1     2         15       18         3            1       3          4 call    g()        
+      4     1       1     3          5       14         2            1       2         10 comment # comment  
+      5     2       1     3         41       44         5            1       5          4 call    h()        
+      6     1       1     4         18       28         3            4       3         14 comment # comment1 
+      7     2       1     4         41       44         5            1       5          4 call    h()        
+      8     1       1     5         29       40         4            1       4         12 comment # comment 2
+      9     2       1     5         41       44         5            1       5          4 call    h()        
       
 
 # code_query, grouping sibling nodes
@@ -299,33 +293,30 @@
       1     1 <NA>  "((call) @call-1 (call) @call-2 (call) @call-3)\n"           1
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name   code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr>  <chr>
-      1     1       1     1          1         1            1 call-1 f()  
-      2     2       1     1          6         1            6 call-2 g()  
-      3     3       1     1         11         1           11 call-3 h()  
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name   code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>  <chr>
+      1     1       1     1          1        4         1            1       1          4 call-1 f()  
+      2     2       1     1          6        9         1            6       1          9 call-2 g()  
+      3     3       1     1         11       14         1           11       1         14 call-3 h()  
       
 
 # code_query, alternations
 
     Code
-      code_query("f(x=1); f(1)", paste0(
-        "(call function: (identifier) arguments: (arguments argument: [",
-        "  (argument value: (_)) ",
-        "  (argument name: (identifier) @arg-name value: (_))", "]))"))
+      code_query("f(x=1); f(1)", paste0("(call function: (identifier) arguments: (arguments argument: [", "  (argument value: (_)) ", "  (argument name: (identifier) @arg-name value: (_))", "]))"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(call function: (identifier) arguments: (arguments a~           2
+           id name  pattern                                                                                                                                           match_count
+        <int> <chr> <chr>                                                                                                                                                   <int>
+      1     1 <NA>  "(call function: (identifier) arguments: (arguments argument: [  (argument value: (_))   (argument name: (identifier) @arg-name value: (_))]))\n"           2
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name     code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr>    <chr>
-      1     1       1     1          3         1            3 arg-name x    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name     code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>    <chr>
+      1     1       1     1          3        4         1            3       1          4 arg-name x    
       
 
 # code_query, wildcard node
@@ -340,40 +331,38 @@
       1     1 <NA>  "(for_statement sequence: (_) @seq)\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1         11         1           11 seq   1:10 
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1         11       15         1           11       1         15 seq   1:10 
       
 
 # code_query, anchors
 
     Code
-      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n",
-        "((comment)? @comment . (call function: (identifier)) @call)")
+      code_query("f()\n# comment\ng()# comment1\n# comment 2\nh()\n", "((comment)? @comment . (call function: (identifier)) @call)")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "((comment)? @comment . (call function: (identifier))~           3
+           id name  pattern                                                         match_count
+        <int> <chr> <chr>                                                                 <int>
+      1     1 <NA>  "((comment)? @comment . (call function: (identifier)) @call)\n"           3
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name    code       
-        <int>   <int> <int>      <int>     <int>        <int> <chr>   <chr>      
-      1     2       1     1          1         1            1 call    f()        
-      2     1       1     2          5         2            1 comment # comment  
-      3     2       1     2         15         3            1 call    g()        
-      4     1       1     3         29         4            1 comment # comment 2
-      5     2       1     3         41         5            1 call    h()        
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name    code       
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr>   <chr>      
+      1     2       1     1          1        4         1            1       1          4 call    f()        
+      2     1       1     2          5       14         2            1       2         10 comment # comment  
+      3     2       1     2         15       18         3            1       3          4 call    g()        
+      4     1       1     3         29       40         4            1       4         12 comment # comment 2
+      5     2       1     3         41       44         5            1       5          4 call    h()        
       
 
 ---
 
     Code
-      code_query("f(); f(x); f(x,y,z); f(x = 1, 2)",
-        "(call arguments: (arguments . (argument) @arg))")
+      code_query("f(); f(x); f(x,y,z); f(x = 1, 2)", "(call arguments: (arguments . (argument) @arg))")
     Output
       $patterns
       # A data frame: 1 x 4
@@ -382,12 +371,12 @@
       1     1 <NA>  "(call arguments: (arguments . (argument) @arg))\n"           3
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          8         1            8 arg   x    
-      2     1       1     2         14         1           14 arg   x    
-      3     1       1     3         24         1           24 arg   x = 1
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          8        9         1            8       1          9 arg   x    
+      2     1       1     2         14       15         1           14       1         15 arg   x    
+      3     1       1     3         24       29         1           24       1         29 arg   x = 1
       
 
 # code_query, predicates, #eq?
@@ -397,312 +386,304 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                match_count
+        <int> <chr> <chr>                                                                                                                                                        <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("", "", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                match_count
+        <int> <chr> <chr>                                                                                                                                                        <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("*", "*", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  f    
-      4     2       1     1         19         5            1 fn-2  f    
-      5     2       1     1         23         6            1 fn-2  f    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  f    
+      4     2       1     1         19       20         5            1       5          2 fn-2  f    
+      5     2       1     1         23       24         6            1       6          2 fn-2  f    
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
       
     Code
       do("*", "*", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     2       1     1          5         2            1 fn-2  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     2       1     1          5        6         2            1       2          2 fn-2  f    
       
     Code
       do("+", "+", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("+", "+", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  f    
-      4     2       1     1         19         5            1 fn-2  f    
-      5     2       1     1         23         6            1 fn-2  f    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  f    
+      4     2       1     1         19       20         5            1       5          2 fn-2  f    
+      5     2       1     1         23       24         6            1       6          2 fn-2  f    
       
     Code
       do("+", "+", c("f()", "f(1)", "f(2)", "# c", "f()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("?", "?", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "f(1)", "f(2)", "# c", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           3
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#eq? @fn-1 @fn-2)\n    )\n"           3
       
       $matched_captures
-      # A data frame: 6 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1         19         5            1 fn-2  f    
-      3     1       1     2          5         2            1 fn-1  f    
-      4     2       1     2         19         5            1 fn-2  f    
-      5     1       1     3         10         3            1 fn-1  f    
-      6     2       1     3         19         5            1 fn-2  f    
+      # A data frame: 6 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1         19       20         5            1       5          2 fn-2  f    
+      3     1       1     2          5        6         2            1       2          2 fn-1  f    
+      4     2       1     2         19       20         5            1       5          2 fn-2  f    
+      5     1       1     3         10       11         3            1       3          2 fn-1  f    
+      6     2       1     3         19       20         5            1       5          2 fn-2  f    
       
     Code
       do("?", "?", c("f()", "# c", "f(5)", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           2
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#eq? @fn-1 @fn-2)\n    )\n"           2
       
       $matched_captures
-      # A data frame: 4 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
-      3     1       1     2          1         1            1 fn-1  f    
-      4     2       1     2         14         4            1 fn-2  f    
+      # A data frame: 4 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
+      3     1       1     2          1        2         1            1       1          2 fn-1  f    
+      4     2       1     2         14       15         4            1       4          2 fn-2  f    
       
     Code
       do("?", "?", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
       
     Code
       do("?", "?", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                                                                          <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     2       1     1          5         2            1 fn-2  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     2       1     1          5        6         2            1       2          2 fn-2  f    
       
 
 # code_query, predicates, #not-eq?
@@ -712,312 +693,304 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                    match_count
+        <int> <chr> <chr>                                                                                                                                                            <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("", "", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                    match_count
+        <int> <chr> <chr>                                                                                                                                                            <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("*", "*", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "h()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  f    
-      4     2       1     1         19         5            1 fn-2  h    
-      5     2       1     1         23         6            1 fn-2  g    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  f    
+      4     2       1     1         19       20         5            1       5          2 fn-2  h    
+      5     2       1     1         23       24         6            1       6          2 fn-2  g    
       
     Code
       do("*", "*", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
       
     Code
       do("*", "*", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     2       1     1          5         2            1 fn-2  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     2       1     1          5        6         2            1       2          2 fn-2  f    
       
     Code
       do("+", "+", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("+", "+", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "f(1)", "f(2)", "# c", "h()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  f    
-      4     2       1     1         19         5            1 fn-2  h    
-      5     2       1     1         23         6            1 fn-2  g    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  f    
+      4     2       1     1         19       20         5            1       5          2 fn-2  h    
+      5     2       1     1         23       24         6            1       6          2 fn-2  g    
       
     Code
       do("+", "+", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("?", "?", c("f()", "f(1)", "f(2)", "# c", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           3
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           3
       
       $matched_captures
-      # A data frame: 6 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1         19         5            1 fn-2  g    
-      3     1       1     2          5         2            1 fn-1  f    
-      4     2       1     2         19         5            1 fn-2  g    
-      5     1       1     3         10         3            1 fn-1  f    
-      6     2       1     3         19         5            1 fn-2  g    
+      # A data frame: 6 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1         19       20         5            1       5          2 fn-2  g    
+      3     1       1     2          5        6         2            1       2          2 fn-1  f    
+      4     2       1     2         19       20         5            1       5          2 fn-2  g    
+      5     1       1     3         10       11         3            1       3          2 fn-1  f    
+      6     2       1     3         19       20         5            1       5          2 fn-2  g    
       
     Code
       do("?", "?", c("f()", "# c", "g(5)", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           2
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           2
       
       $matched_captures
-      # A data frame: 4 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
-      3     1       1     2          1         1            1 fn-1  f    
-      4     2       1     2         14         4            1 fn-2  g    
+      # A data frame: 4 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
+      3     1       1     2          1        2         1            1       1          2 fn-1  f    
+      4     2       1     2         14       15         4            1       4          2 fn-2  g    
       
     Code
       do("?", "?", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
       
     Code
       do("?", "?", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     2       1     1          5         2            1 fn-2  f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     2       1     1          5        6         2            1       2          2 fn-2  f    
       
 
 # code_query, predicates, #any-eq?
@@ -1027,302 +1000,289 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                    match_count
+        <int> <chr> <chr>                                                                                                                                                            <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#any-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("", "", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                    match_count
+        <int> <chr> <chr>                                                                                                                                                            <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("*", "*", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  f    
-      4     2       1     1         19         5            1 fn-2  f    
-      5     2       1     1         23         6            1 fn-2  f    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  f    
+      4     2       1     1         19       20         5            1       5          2 fn-2  f    
+      5     2       1     1         23       24         6            1       6          2 fn-2  f    
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("+", "+", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "f(1)", "g(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  g    
-      4     2       1     1         19         5            1 fn-2  f    
-      5     2       1     1         23         6            1 fn-2  f    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  g    
+      4     2       1     1         19       20         5            1       5          2 fn-2  f    
+      5     2       1     1         23       24         6            1       6          2 fn-2  f    
       
     Code
       do("+", "+", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
       
     Code
       do("?", "?", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "f(1)", "g(2)", "# c", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           2
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           2
       
       $matched_captures
-      # A data frame: 4 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1         19         5            1 fn-2  f    
-      3     1       1     2          5         2            1 fn-1  f    
-      4     2       1     2         19         5            1 fn-2  f    
+      # A data frame: 4 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1         19       20         5            1       5          2 fn-2  f    
+      3     1       1     2          5        6         2            1       2          2 fn-1  f    
+      4     2       1     2         19       20         5            1       5          2 fn-2  f    
       
     Code
       do("?", "?", c("g()", "# c", "f(5)", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                      match_count
+        <int> <chr> <chr>                                                                                                                                                              <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
 
 # code_query, predicates, #any-not-eq?
@@ -1332,309 +1292,298 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                        match_count
+        <int> <chr> <chr>                                                                                                                                                                <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("", "", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                        match_count
+        <int> <chr> <chr>                                                                                                                                                                <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) \n      (comment)\n      (call function: (identifier) @fn-2) \n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("*", "*", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  f    
-      4     2       1     1         19         5            1 fn-2  g    
-      5     2       1     1         23         6            1 fn-2  g    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  f    
+      4     2       1     1         19       20         5            1       5          2 fn-2  g    
+      5     2       1     1         23       24         6            1       6          2 fn-2  g    
       
     Code
       do("*", "*", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "*", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) *\n      (comment)\n      (call function: (identifier) @fn-2) *\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("+", "+", c("f()", "f(1)", "g(2)", "# c", "f()", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  g    
-      4     2       1     1         19         5            1 fn-2  f    
-      5     2       1     1         23         6            1 fn-2  f    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  g    
+      4     2       1     1         19       20         5            1       5          2 fn-2  f    
+      5     2       1     1         23       24         6            1       6          2 fn-2  f    
       
     Code
       do("+", "+", c("f()", "f(1)", "f(2)", "# c", "g()", "g(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 5 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     1       1     1          5         2            1 fn-1  f    
-      3     1       1     1         10         3            1 fn-1  f    
-      4     2       1     1         19         5            1 fn-2  g    
-      5     2       1     1         23         6            1 fn-2  g    
+      # A data frame: 5 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     1       1     1          5        6         2            1       2          2 fn-1  f    
+      3     1       1     1         10       11         3            1       3          2 fn-1  f    
+      4     2       1     1         19       20         5            1       5          2 fn-2  g    
+      5     2       1     1         23       24         6            1       6          2 fn-2  g    
       
     Code
       do("+", "+", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "+", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) +\n      (comment)\n      (call function: (identifier) @fn-2) +\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("f()", "# c", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  f    
-      2     2       1     1          9         3            1 fn-2  g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  f    
+      2     2       1     1          9       10         3            1       3          2 fn-2  g    
       
     Code
       do("?", "?", c("f()", "f(1)", "g(2)", "# c", "f(5)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           1
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1         10         3            1 fn-1  g    
-      2     2       1     1         19         5            1 fn-2  f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1         10       11         3            1       3          2 fn-1  g    
+      2     2       1     1         19       20         5            1       5          2 fn-2  f    
       
     Code
       do("?", "?", c("g()", "# c", "f(5)", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           2
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           2
       
       $matched_captures
-      # A data frame: 4 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn-1  g    
-      2     2       1     1          9         3            1 fn-2  f    
-      3     1       1     2          1         1            1 fn-1  g    
-      4     2       1     2         14         4            1 fn-2  f    
+      # A data frame: 4 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn-1  g    
+      2     2       1     1          9       10         3            1       3          2 fn-2  f    
+      3     1       1     2          1        2         1            1       1          2 fn-1  g    
+      4     2       1     2         14       15         4            1       4          2 fn-2  f    
       
     Code
       do("?", "?", c("f()", "# c"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "?", c("# c", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ~           0
+           id name  pattern                                                                                                                                                          match_count
+        <int> <chr> <chr>                                                                                                                                                                  <int>
+      1     1 <NA>  "(program\n      (call function: (identifier) @fn-1) ?\n      (comment)\n      (call function: (identifier) @fn-2) ?\n      (#any-not-eq? @fn-1 @fn-2)\n    )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
 
 # code_query, predicates, #eq? vs string
@@ -1644,161 +1593,155 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                   match_count
+        <int> <chr> <chr>                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                   match_count
+        <int> <chr> <chr>                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                    match_count
+        <int> <chr> <chr>                                                                                            <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
 
 # code_query, predicates, #not-eq? vs string
@@ -1808,202 +1751,192 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                       match_count
+        <int> <chr> <chr>                                                                                               <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                       match_count
+        <int> <chr> <chr>                                                                                               <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
 
 # code_query, predicates, #any-eq? vs string
@@ -2013,166 +1946,162 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                       match_count
+        <int> <chr> <chr>                                                                                               <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                       match_count
+        <int> <chr> <chr>                                                                                               <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
-      3     1       1     1          9         3            1 fn    f    
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
+      3     1       1     1          9       10         3            1       3          2 fn    f    
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
 
 # code_query, predicates, #any-not-eq? vs string
@@ -2182,207 +2111,199 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                           match_count
+        <int> <chr> <chr>                                                                                                   <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                           match_count
+        <int> <chr> <chr>                                                                                                   <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
-      3     1       1     1          9         3            1 fn    f    
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
+      3     1       1     1          9       10         3            1       3          2 fn    f    
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
 
 # code_query, predicates, #match?
@@ -2392,161 +2313,155 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                       match_count
+        <int> <chr> <chr>                                                                                               <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                       match_count
+        <int> <chr> <chr>                                                                                               <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                        match_count
+        <int> <chr> <chr>                                                                                                <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
 
 # code_query, predicates, #not-match?
@@ -2556,202 +2471,192 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                           match_count
+        <int> <chr> <chr>                                                                                                   <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                           match_count
+        <int> <chr> <chr>                                                                                                   <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
 
 # code_query, predicates, #any-match?
@@ -2761,166 +2666,162 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                           match_count
+        <int> <chr> <chr>                                                                                                   <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                           match_count
+        <int> <chr> <chr>                                                                                                   <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
-      3     1       1     1          9         3            1 fn    f    
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
+      3     1       1     1          9       10         3            1       3          2 fn    f    
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    f    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                            match_count
+        <int> <chr> <chr>                                                                                                    <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
 
 # code_query, predicates, #any-not-match?
@@ -2930,207 +2831,199 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("*", c("f()", "g()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 3 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
-      3     1       1     1          9         3            1 fn    f    
+      # A data frame: 3 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
+      3     1       1     1          9       10         3            1       3          2 fn    f    
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    g    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        6         2            1       2          2 fn    g    
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                match_count
+        <int> <chr> <chr>                                                                                                        <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
 
 # code_query, predicates, #any-of?
@@ -3140,161 +3033,155 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                              match_count
+        <int> <chr> <chr>                                                                                                      <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                              match_count
+        <int> <chr> <chr>                                                                                                      <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f2   
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        7         2            1       2          3 fn    f2   
       
     Code
       do("*", c("f()", "g()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
-      2     1       1     1          5         2            1 fn    f2   
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
+      2     1       1     1          5        7         2            1       2          3 fn    f2   
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                               match_count
+        <int> <chr> <chr>                                                                                                       <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    f    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    f    
       
 
 # code_query, predicates, #not-any-of?
@@ -3304,201 +3191,191 @@
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                          <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("", "g()")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                  match_count
+        <int> <chr> <chr>                                                                                                          <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("*", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("f()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("*", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("*", c("f()", "g()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("f()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("+", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 2 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
-      2     1       1     1          5         2            1 fn    h    
+      # A data frame: 2 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
+      2     1       1     1          5        6         2            1       2          2 fn    h    
       
     Code
       do("+", c("f()", "g(1)"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", "")
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("f()", "f2()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
     Code
       do("?", c("g()", "h()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           1
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
       
       $matched_captures
-      # A data frame: 1 x 8
-           id pattern match start_byte start_row start_column name  code 
-        <int>   <int> <int>      <int>     <int>        <int> <chr> <chr>
-      1     1       1     1          1         1            1 fn    g    
+      # A data frame: 1 x 11
+           id pattern match start_byte end_byte start_row start_column end_row end_column name  code 
+        <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>
+      1     1       1     1          1        2         1            1       1          2 fn    g    
       
     Code
       do("?", c("f()", "g()"))
     Output
       $patterns
       # A data frame: 1 x 4
-           id name  pattern                                                match_count
-        <int> <chr> <chr>                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ~           0
+           id name  pattern                                                                                                   match_count
+        <int> <chr> <chr>                                                                                                           <int>
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
       
       $matched_captures
-      # A data frame: 0 x 8
-      # i 8 variables: id <int>, pattern <int>, match <int>, start_byte <int>,
-      #   start_row <int>, start_column <int>, name <chr>, code <chr>
+      # A data frame: 0 x 11
+      # i 11 variables: id <int>, pattern <int>, match <int>, start_byte <int>, end_byte <int>, start_row <int>, start_column <int>, end_row <int>, end_column <int>, name <chr>, code <chr>
       
 

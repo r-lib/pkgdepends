@@ -503,3 +503,7 @@ collapse <- function(x, ...) {
 na_omit <- function(x) {
   x[!is.na(x)]
 }
+
+file_ext <- function(x) {
+  re_match(x, "[.]([[:alnum:]]+)$")[[".match"]]
+}

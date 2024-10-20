@@ -1,7 +1,18 @@
+#' Scan R code for dependent packages
+#'
+#' @keywords internal
+
 scan_deps <- function(path = ".") {
-  paths <- dir(path, pattern = "[.]R$", recursive = TRUE)
-  do.call("rbind", lapply(paths, scan_path_deps))
+  paths <- dir(path, pattern = "[.](R|r|Rmd|rmd)$", recursive = TRUE)
+  full_paths <- normalizePath(file.path(path, paths))
+  deps_list <- lapply(full_paths, scan_path_deps)
+  deps <- do.call("rbind", c(list(scan_path_deps_empty()), deps_list))
+  # write back the relative paths
+  deps$path <- paths[match(deps$path, full_paths)]
+  deps
 }
+
+# -------------------------------------------------------------------------
 
 # needs to increase as the deps discovry code changes, otherwise we don't
 # apply the new discovery code
@@ -61,13 +72,25 @@ scan_path_deps_empty <- function() {
 }
 
 scan_path_deps_do <- function(code, path) {
+  ext <- tolower(file_ext(path))
+  switch(
+    ext,
+    ".r" = scan_path_deps_do_r(code, path),
+    ".qmd" = ,
+    ".rmd" = scan_path_deps_do_rmd(code, path),
+    stop("Cannot parse ", ext, " file for dependencies, internal error")
+  )
+}
+
+# -------------------------------------------------------------------------
+
+scan_path_deps_do_r <- function(code, path) {
   hits <- code_query(code, q_deps())
   # q_library_0 hits are generic ones, only use them if they are not hit
   gen_pat <- hits$patterns$id[hits$patterns$name == "q_library_0"]
   gen_hits <- hits$matched_captures[hits$matched_captures$pattern %in% gen_pat, ]
   ok_hits <- hits$matched_captures[! hits$matched_captures$pattern %in% gen_pat, ]
   rbind(
-    scan_path_deps_empty(),
     if (nrow(ok_hits) > 0) scan_path_deps_do_ok_hits(ok_hits, path),
     if (nrow(gen_hits) > 0) scan_path_deps_do_gen_hits(gen_hits, path)
   )
@@ -122,4 +145,10 @@ parse_pkg_from_library_call <- function(fn, code) {
   }
 
   NA_character_
+}
+
+# -------------------------------------------------------------------------
+
+scan_path_deps_do_rmd <- function(code, path) {
+  # TODO
 }

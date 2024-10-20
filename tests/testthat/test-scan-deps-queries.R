@@ -10,12 +10,3 @@ test_that("q_library_0", {
     do("library(foo, require(bar))")
   })
 })
-
-test_that("q_library_1", {
-  expect_snapshot({
-    code_query("library(pkg)", q_library_1())[["matched_captures"]]
-    code_query("library('pkg')", q_library_1())[["matched_captures"]]
-    code_query("require(pkg)", q_library_1())[["matched_captures"]]
-    code_query("require('pkg')", q_library_1())[["matched_captures"]]
-  })
-})

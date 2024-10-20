@@ -3,10 +3,46 @@ scan_deps <- function(path = ".") {
   do.call("rbind", lapply(paths, scan_path_deps))
 }
 
+# needs to increase as the deps discovry code changes, otherwise we don't
+# apply the new discovery code
+deps_cache_version <- 1L
+
+get_deps_cache_path <- function(hash = NULL) {
+  root <- file.path(get_user_cache_dir()$root, "deps", deps_cache_version)
+  if (is.null(hash)) {
+    root
+  } else {
+    file.path(root, substr(hash, 1, 2), hash)
+  }
+}
+
+clear_deps_cache <- function() {
+  unlink(dirname(get_deps_cache_path()), recursive = TRUE)
+}
+
 scan_path_deps <- function(path) {
   code <- readBin(path, "raw", file.size(path))
+
+  # check if already known, set path
+  hash <- cli::hash_raw_xxhash(code)
+  cache <- get_deps_cache_path(hash)
+  if (file.exists(cache)) {
+    deps <- readRDS(cache)
+    deps$path <- path
+    return(deps)
+  }
+
+  # scan it if it is worth it, based on a quick check
   has_deps <- length(grepRaw("library|require|loadNamespace|::", code)) > 0
-  if (has_deps) scan_path_deps_do(code, path)
+  deps <- if (has_deps) scan_path_deps_do(code, path)
+
+  # save it to the cache, but anonimize it first. If no deps, save NULL
+  deps_no_path <- deps
+  if (!i.snull(deps_no_path)) deps_no_path$path <- ""
+  dir.create(dirname(cache), showWarnings = FALSE, recursive = TRUE)
+  saveRDS(deps_no_path, cache)
+
+  deps
 }
 
 scan_path_deps_empty <- function() {

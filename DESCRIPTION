@@ -68,6 +68,8 @@ Config/Needs/website:
     r-lib/asciicast,
     pkgdown (>= 2.0.2),
     tidyverse/tidytemplate
+Remotes:
+    r-lib/cli
 Config/testthat/edition: 3
 Encoding: UTF-8
 RoxygenNote: 7.3.2

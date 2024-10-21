@@ -46,7 +46,35 @@ static const TSLanguage *get_language(int code) {
   }
 }
 
-SEXP s_expr(SEXP input, SEXP rlanguage) {
+static TSRange *get_ranges(SEXP rranges, uint32_t *count) {
+  TSRange *ranges = NULL;
+  *count = 0;
+  if (!Rf_isNull(rranges)) {
+    *count = Rf_length(VECTOR_ELT(rranges, 0));
+    ranges = malloc(sizeof(TSRange) * (*count));
+    int *start_row = INTEGER(VECTOR_ELT(rranges, 0));
+    int *start_col = INTEGER(VECTOR_ELT(rranges, 1));
+    int *end_row = INTEGER(VECTOR_ELT(rranges, 2));
+    int *end_col = INTEGER(VECTOR_ELT(rranges, 3));
+    int *start_byte = INTEGER(VECTOR_ELT(rranges, 4));
+    int *end_byte = INTEGER(VECTOR_ELT(rranges, 5));
+    if (!ranges) {
+      Rf_error("Out of memory");
+    }
+    r_call_on_exit(r_free, ranges);
+    for (uint32_t i = 0; i < *count; i++) {
+      ranges[i].start_point.row = start_row[i] - 1;
+      ranges[i].start_point.column = start_col[i] - 1;
+      ranges[i].end_point.row = end_row[i] - 1;
+      ranges[i].end_point.column = end_col[i];    // no -1!
+      ranges[i].start_byte = start_byte[i] - 1;
+      ranges[i].end_byte = end_byte[i];           // no -1!
+    }
+  }
+  return ranges;
+}
+
+SEXP s_expr(SEXP input, SEXP rlanguage, SEXP rranges) {
   const TSLanguage *language = get_language(INTEGER(rlanguage)[0]);
   TSParser *parser = NULL;
   parser = ts_parser_new();
@@ -54,6 +82,14 @@ SEXP s_expr(SEXP input, SEXP rlanguage) {
     Rf_error("Failed to set R language, internal error.");
   }
   r_call_on_exit((cleanup_fn_t) ts_parser_delete, parser);
+
+  uint32_t count;
+  TSRange *ranges = get_ranges(rranges, &count);
+  if (ranges) {
+    if (!ts_parser_set_included_ranges(parser, ranges, count)) {
+      Rf_error("Invalid ranges for tree-sitter parser");
+    }
+  }
 
   const char *c_input = (const char*) RAW(input);
   uint32_t length = Rf_length(input);
@@ -350,7 +386,8 @@ bool check_predicates(const struct query_match_t *qm) {
   return true;
 }
 
-SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern, SEXP rlanguage) {
+SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern,
+                  SEXP rlanguage, SEXP rranges) {
   const TSLanguage *language = get_language(INTEGER(rlanguage)[0]);
   TSParser *parser = NULL;
   parser = ts_parser_new();
@@ -358,6 +395,14 @@ SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern, SEXP rlang
     Rf_error("Failed to set R language, internal error.");
   }
   r_call_on_exit((cleanup_fn_t) ts_parser_delete, parser);
+
+  uint32_t count;
+  TSRange *ranges = get_ranges(rranges, &count);
+  if (ranges) {
+    if (!ts_parser_set_included_ranges(parser, ranges, count)) {
+      Rf_error("Invalid ranges for tree-sitter parser");
+    }
+  }
 
   const char *cpattern = CHAR(STRING_ELT(pattern, 0));
   uint32_t error_offset;
@@ -512,13 +557,13 @@ SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern, SEXP rlang
   return result;
 }
 
-SEXP code_query(SEXP input, SEXP pattern, SEXP rlanguage) {
+SEXP code_query(SEXP input, SEXP pattern, SEXP rlanguage, SEXP rranges) {
   const char *c_input = (const char*) RAW(input);
   uint32_t length = Rf_length(input);
-  return code_query_c(c_input, length, pattern, rlanguage);
+  return code_query_c(c_input, length, pattern, rlanguage, rranges);
 }
 
-SEXP code_query_path(SEXP path, SEXP pattern, SEXP rlanguage) {
+SEXP code_query_path(SEXP path, SEXP pattern, SEXP rlanguage, SEXP rranges) {
   const char *cpath = CHAR(STRING_ELT(path, 0));
   FILE *fp = fopen(cpath, "rb");
   if (fp == NULL) {
@@ -542,5 +587,5 @@ SEXP code_query_path(SEXP path, SEXP pattern, SEXP rlanguage) {
   }
   fclose(fp);
 
-  return code_query_c(buf, file_size, pattern, rlanguage);
+  return code_query_c(buf, file_size, pattern, rlanguage, rranges);
 }

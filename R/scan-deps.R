@@ -84,8 +84,8 @@ scan_path_deps_do <- function(code, path) {
 
 # -------------------------------------------------------------------------
 
-scan_path_deps_do_r <- function(code, path) {
-  hits <- code_query(code, q_deps())
+scan_path_deps_do_r <- function(code, path, ranges = NULL) {
+  hits <- code_query(code, q_deps(), ranges = ranges)
   # q_library_0 hits are generic ones, only use them if they are not hit
   gen_pat <- hits$patterns$id[hits$patterns$name == "q_library_0"]
   gen_hits <- hits$matched_captures[hits$matched_captures$pattern %in% gen_pat, ]

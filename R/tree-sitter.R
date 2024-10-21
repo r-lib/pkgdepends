@@ -1,13 +1,17 @@
-ts_languages <- c(R = 0L, markdown = 1L, "markdown-inline" = 2L)
+ts_languages <- c(r = 0L, markdown = 1L, "markdown-inline" = 2L)
 
-s_expr <- function(code, language = c("R", "markdown", "markdown-inline")) {
+s_expr <- function(code, language = c("r", "markdown", "markdown-inline"),
+                   ranges = NULL) {
+  language <- tolower(language)
   language <- ts_languages[match.arg(language)]
   if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
-  call_with_cleanup(c_s_expr, code, language)
+  call_with_cleanup(c_s_expr, code, language, ranges)
 }
 
 code_query <- function(code = NULL, query, file = NULL,
-                       language = c("R", "markdown", "markdown-inline")) {
+                       language = c("r", "markdown", "markdown-inline"),
+                       ranges = NULL) {
+  language <- tolower(language)
   language <- ts_languages[match.arg(language)]
   qlen <- nchar(query, type = "bytes") + 1L # + \n
   qbeg <- c(1L, cumsum(qlen))
@@ -16,9 +20,9 @@ code_query <- function(code = NULL, query, file = NULL,
 
   if (!is.null(code)) {
     if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
-    res <- call_with_cleanup(c_code_query, code, query1, language)
+    res <- call_with_cleanup(c_code_query, code, query1, language, ranges)
   } else {
-    res <- call_with_cleanup(c_code_query_path, file, query1, language)
+    res <- call_with_cleanup(c_code_query_path, file, query1, language, ranges)
   }
 
   qorig <- as.integer(cut(res[[1]][[3]], breaks = qbeg, include.lowest = TRUE))

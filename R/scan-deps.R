@@ -31,6 +31,8 @@ clear_deps_cache <- function() {
   unlink(dirname(get_deps_cache_path()), recursive = TRUE)
 }
 
+re_r_dep <- "library|require|loadNamespace|::"
+
 scan_path_deps <- function(path) {
   code <- readBin(path, "raw", file.size(path))
 
@@ -46,7 +48,7 @@ scan_path_deps <- function(path) {
   }
 
   # scan it if it is worth it, based on a quick check
-  has_deps <- length(grepRaw("library|require|loadNamespace|::", code)) > 0
+  has_deps <- length(grepRaw(re_r_dep, code)) > 0
   deps <- if (has_deps) scan_path_deps_do(code, path)
 
   # save it to the cache, but anonimize it first. If no deps, save NULL
@@ -150,5 +152,61 @@ parse_pkg_from_library_call <- function(fn, code) {
 # -------------------------------------------------------------------------
 
 scan_path_deps_do_rmd <- function(code, path) {
-  # TODO
+  hits <- code_query(code, language = "markdown", query = q_deps_rmd())
+  inl_pat <- hits$patterns$id[hits$patterns$name == "inline"]
+  inl_hits <- hits$matched_captures[
+    hits$matched_captures$pattern %in% inl_pat, ]
+  blk_hits <- hits$matched_captures[
+    ! hits$matched_captures$pattern %in% inl_pat, ]
+  rbind(
+    if (nrow(inl_hits)) scan_path_deps_do_inline_hits(code, inl_hits, path),
+    if (nrow(blk_hits)) scan_path_deps_do_block_hits(code, blk_hits, path)
+  )
+}
+
+range_cols <- c(
+  "start_row", "start_column", "end_row", "end_column",
+  "start_byte", "end_byte"
+)
+
+scan_path_deps_do_inline_hits <- function(code, inl_hits, path) {
+  wcnd <- which(inl_hits$name == "inline")
+  wcnd <- wcnd[grepl("`", inl_hits$code[wcnd], fixed = TRUE)]
+  wcnd <- wcnd[grepl(re_r_dep, inl_hits$code[wcnd])]
+  if (length(wcnd) == 0) {
+    return(NULL)
+  }
+
+  inl_ranges <- inl_hits[wcnd, range_cols]
+  r_hits <- code_query(
+    code,
+    language = "markdown-inline",
+    ranges = inl_ranges,
+    query = q_deps_rmd_inline()
+  )
+  cpt <- r_hits$matched_captures
+  pre_drop <- nchar(cpt$code[cpt$name == "csd1"])
+  post_drop <- nchar(cpt$code[cpt$name == "csd2"])
+  r_code <- omit_pre_post(cpt$code[cpt$name == "code"], pre_drop, post_drop)
+  wcnd2 <- substr(r_code, 1, 2) == "r " & grepl(re_r_dep, r_code)
+  if (!any(wcnd2)) {
+    return(NULL)
+  }
+  # need to adjust the ranges for the _ASCII_ (!) delimiters
+  r_ranges <- cpt[cpt$name == "code", ][wcnd2, range_cols]
+  r_ranges$start_byte <- r_ranges$start_byte + pre_drop[wcnd2] + 2L   # 'r '
+  r_ranges$start_column <- r_ranges$start_column + pre_drop[wcnd2] + 2L
+  r_ranges$end_byte <- r_ranges$end_byte - post_drop[wcnd2]
+  scan_path_deps_do_r(code, path = path, ranges = r_ranges)
+}
+
+scan_path_deps_do_block_hits <- function(code, blk_hits, path) {
+  wcnd <- which(blk_hits$name == "content")
+  wcnd <- wcnd[grepl(re_r_dep, blk_hits$code[wcnd])]
+  if (length(wcnd) == 0) {
+    return(NULL)
+  }
+
+  r_ranges <- blk_hits[wcnd, range_cols]
+  scan_path_deps_do_r(code, path = path, ranges = r_ranges)
 }

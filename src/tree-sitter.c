@@ -494,7 +494,7 @@ SEXP code_query_c(const char *c_input, uint32_t length, SEXP pattern, SEXP rlang
         CE_UTF8
       )));
       SET_VECTOR_ELT(res1, 5, Rf_ScalarInteger(start_byte + 1));
-      SET_VECTOR_ELT(res1, 6, Rf_ScalarInteger(end_byte + 1));
+      SET_VECTOR_ELT(res1, 6, Rf_ScalarInteger(end_byte)); // this is + 1
       TSPoint start_point = ts_node_start_point(node);
       SET_VECTOR_ELT(res1, 7, Rf_ScalarInteger(start_point.row + 1));
       SET_VECTOR_ELT(res1, 8, Rf_ScalarInteger(start_point.column + 1));

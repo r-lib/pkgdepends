@@ -9,6 +9,7 @@ scan_deps <- function(path = ".") {
   deps <- do.call("rbind", c(list(scan_path_deps_empty()), deps_list))
   # write back the relative paths
   deps$path <- paths[match(deps$path, full_paths)]
+  deps$type <- get_dep_type_from_path(deps$path)
   deps
 }
 
@@ -43,6 +44,7 @@ scan_path_deps <- function(path) {
     deps <- readRDS(cache)
     if (!is.null(deps) && nrow(deps) > 0) {
       deps$path <- path
+      deps$type <- get_dep_type_from_path(path)
     }
     return(deps)
   }
@@ -55,6 +57,7 @@ scan_path_deps <- function(path) {
   deps_no_path <- deps
   if (!is.null(deps_no_path) && nrow(deps_no_path) > 0) {
     deps_no_path$path <- ""
+    deps_no_path$type <- NA_character_
   }
   dir.create(dirname(cache), showWarnings = FALSE, recursive = TRUE)
   saveRDS(deps_no_path, cache)
@@ -66,6 +69,7 @@ scan_path_deps_empty <- function() {
   data_frame(
     path = character(),
     package = character(),
+    type = character(),
     code = character(),
     start_row = integer(),
     start_column = integer(),
@@ -102,6 +106,7 @@ scan_path_deps_do_ok_hits <- function(hits, path) {
   data_frame(
     path = path,
     package = hits$code[hits$name == "pkg-name"],
+    type = get_dep_type_from_path(path),
     code = hits$code[hits$name == "dep-code"],
     start_row = hits$start_row[hits$name == "dep-code"],
     start_column = hits$start_column[hits$name == "dep-code"],
@@ -119,6 +124,7 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
   data_frame(
     path = path,
     package = pkgs[ok],
+    type = get_dep_type_from_path(path),
     code = code[ok],
     start_row = hits$start_row[hits$name == "dep-code"][ok],
     start_column = hits$start_column[hits$name == "dep-code"][ok],

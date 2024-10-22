@@ -33,7 +33,13 @@ clear_deps_cache <- function() {
   unlink(dirname(get_deps_cache_path()), recursive = TRUE)
 }
 
-re_r_dep <- "library|require|loadNamespace|::|setClass|setGeneric"
+re_r_dep <- paste0(collapse = "|", c(
+  "library", "require", "loadNamespace",
+  "::",
+  "setClass", "setGeneric",
+  "pkg_attach",
+  "p_load"
+))
 
 scan_path_deps <- function(path) {
   code <- readBin(path, "raw", file.size(path))
@@ -142,7 +148,7 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
   code <- hits$code[hits$name == "dep-code"]
   fn <- hits$code[hits$name == "fn-name"]
   pkgs <- lapply(seq_along(code), function(i) {
-    safe_parse_pkg_from_library_call(fn[i], code[i])
+    safe_parse_pkg_from_call(fn[i], code[i])
   })
   pkgs_count <- lengths(pkgs)
   data_frame(
@@ -158,15 +164,16 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
 
 fake_xfun_pkg_attach <- function(..., install, message) { }
 fake_xfun_pkg_attach2 <- function(...) { }
+fake_pacman_p_load <- function(..., char, install, update, character.only) { }
 
-safe_parse_pkg_from_library_call <- function(fn, code) {
+safe_parse_pkg_from_call <- function(fn, code) {
   tryCatch(
-    parse_pkg_from_library_call(fn, code),
+    parse_pkg_from_call(fn, code),
     error = function(...) NULL
   )
 }
 
-parse_pkg_from_library_call <- function(fn, code) {
+parse_pkg_from_call <- function(fn, code) {
   expr <- parse(text = code, keep.source = FALSE)
   fun <- switch(fn,
     "library" = base::library,
@@ -174,41 +181,69 @@ parse_pkg_from_library_call <- function(fn, code) {
     "loadNamespace" = base::loadNamespace,
     "requireNamespace" = base::requireNamespace,
     "pkg_attach" = fake_xfun_pkg_attach,
-    "pkg_attach2" = fake_xfun_pkg_attach2
+    "pkg_attach2" = fake_xfun_pkg_attach2,
+    "p_load" = fake_pacman_p_load,
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
+  switch(fn,
+    "library" = , "require" =
+      parse_pkg_from_call_library(matched),
+    "loadNamespace" = , "requireNamespace" =
+      parse_pkg_from_call_loadNamespace(matched),
+    "pkg_attache" = , "pkg_attach2" =
+      parse_pkg_from_call_xfun(matched),
+    "p_load" =
+      parse_pkg_from_call_pacman(matched)
+  )
+}
 
-  # have a 'package' argument
+parse_pkg_from_call_library <- function(matched) {
   pkg <- matched[["package"]]
-  switch(fn,
-    "library" = , "require" = , "loadNamespace" = , "requireNamespace" = {
-      if (is.character(pkg) && length(pkg) == 1) {
-        return(pkg)
-      }
-    }
-  )
+  if (is.character(pkg) && length(pkg) == 1) {
+    return(pkg)
+  }
+  if (is.symbol(pkg) &&
+      identical(matched[["character.only"]] %||% FALSE, FALSE)) {
+    return(as.character(pkg))
+  }
+  NULL
+}
 
-  # 'package' can be a symbol, there is 'character.only'
-  switch(fn,
-    "library" = , "require" = {
-      if (fn %in% c("library", "require") && is.symbol(pkg) &&
-        identical(matched[["character.only"]] %||% FALSE, FALSE)) {
-        return(as.character(pkg))
-      }
-    }
-  )
+parse_pkg_from_call_loadNamespace <- function(matched) {
+  pkg <- matched[["package"]]
+  if (is.character(pkg) && length(pkg) == 1) {
+    return(pkg)
+  }
+  NULL
+}
 
-  # character vectors in ...
-  switch(fn,
-    "pkg_attach" = , "pkg_attach2" = {
-      pkgs <- unlist(lapply(
-        matched[["..."]],
-        function(x) if (is.character(x)) x
-      ))
-      if (length(pkgs) > 0) return(pkgs) else return(NULL)
-    }
-  )
+parse_pkg_from_call_xfun <- function(matched) {
+  pkgs <- unlist(lapply(
+    matched[["..."]],
+    function(x) if (is.character(x)) x
+  ))
+  if (length(pkgs) > 0) return(pkgs)
+  NULL
+}
 
+parse_pkg_from_call_pacman <- function(matched) {
+  # list of characters and symbols
+  pkgs <- as.list(matched[["..."]])
+
+  # character vector or scalar
+  char <- matched[["char"]]
+  if (char[[1]] == quote(c)) {
+    pkgs <- c(pkgs, as.list(char[-1]))
+  } else if (is.character(char)) {
+    pkgs <- c(pkgs, as.list(char))
+  }
+  if (matched[["character.only"]] %||% FALSE) {
+    pkgs <- pkgs[vlapply(pkgs, function(x) is.character(x))]
+  } else {
+    pkgs <- pkgs[vlapply(pkgs, function(x) is.symbol(x) || is.character(x))]
+  }
+  pkgs <- vcapply(pkgs, as.character)
+  if (length(pkgs) > 0) return(pkgs)
   NULL
 }
 

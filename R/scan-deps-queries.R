@@ -6,17 +6,19 @@ q_library_0 <- function() {
     '((call function: (identifier) @fn-name) @dep-code
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
-       "pkg_attach" "pkg_attach2"))',
+       "pkg_attach" "pkg_attach2"
+       "p_load"))',
     '((call function:
        (namespace_operator
         lhs: (identifier) @ns-name
         rhs: (identifier) @fn-name
        )
       ) @dep-code
-      (#any-of? @ns-name "base" "xfun")
+      (#any-of? @ns-name "base" "xfun" "pacman")
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
-       "pkg_attach" "pkg_attach2"))'
+       "pkg_attach" "pkg_attach2"
+       "p_load"))'
   ), names = rep("q_library_0", 2))
 }
 

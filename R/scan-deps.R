@@ -33,7 +33,7 @@ clear_deps_cache <- function() {
   unlink(dirname(get_deps_cache_path()), recursive = TRUE)
 }
 
-re_r_dep <- "library|require|loadNamespace|::"
+re_r_dep <- "library|require|loadNamespace|::|setClass|setGeneric"
 
 scan_path_deps <- function(path) {
   code <- readBin(path, "raw", file.size(path))
@@ -93,20 +93,43 @@ scan_path_deps_do <- function(code, path) {
 
 scan_path_deps_do_r <- function(code, path, ranges = NULL) {
   hits <- code_query(code, q_deps(), ranges = ranges)
+  mct <- hits$matched_captures
+
   # q_library_0 hits are generic ones, only use them if they are not hit
   gen_pat <- hits$patterns$id[hits$patterns$name == "q_library_0"]
-  gen_hits <- hits$matched_captures[hits$matched_captures$pattern %in% gen_pat, ]
-  ok_hits <- hits$matched_captures[! hits$matched_captures$pattern %in% gen_pat, ]
+  gen_hits <- mct[mct$pattern %in% gen_pat, ]
+
+  # for these patterns we need to work from the function names
+  fn_patterns <- "methods"
+  fn_pat <- hits$patterns$id[hits$patterns$name %in% fn_patterns]
+  fn_hits <- mct[mct$pattern %in% fn_pat, ]
+
+  pkg_hits <- mct[! mct$pattern %in% c(gen_pat, fn_pat), ]
   rbind(
-    if (nrow(ok_hits) > 0) scan_path_deps_do_ok_hits(ok_hits, path),
+    if (nrow(pkg_hits) > 0) scan_path_deps_do_pkg_hits(pkg_hits, path),
+    if (nrow(fn_hits) > 0) scan_path_deps_do_fn_hits(fn_hits, path),
     if (nrow(gen_hits) > 0) scan_path_deps_do_gen_hits(gen_hits, path)
   )
 }
 
-scan_path_deps_do_ok_hits <- function(hits, path) {
+scan_path_deps_do_pkg_hits <- function(hits, path) {
   data_frame(
     path = path,
     package = hits$code[hits$name == "pkg-name"],
+    type = get_dep_type_from_path(path),
+    code = hits$code[hits$name == "dep-code"],
+    start_row = hits$start_row[hits$name == "dep-code"],
+    start_column = hits$start_column[hits$name == "dep-code"],
+    start_byte = hits$start_byte[hits$name == "dep-code"]
+  )
+}
+
+scan_path_deps_do_fn_hits <- function(hits, path) {
+  fn_pkg_map <- c(setClass = "methods", setGeneric = "methods")
+  fn_names <- hits$code[hits$name == "fn-name"]
+  data_frame(
+    path = path,
+    package = fn_pkg_map[fn_names],
     type = get_dep_type_from_path(path),
     code = hits$code[hits$name == "dep-code"],
     start_row = hits$start_row[hits$name == "dep-code"],

@@ -23,10 +23,19 @@ q_colon <- function() {
   )'
 }
 
+q_methods <- function() {
+  structure(
+    '((call function: (identifier) @fn-name) @dep-code
+      (#any-of? @fn-name "setClass" "setGeneric"))',
+    names = "methods"
+  )
+}
+
 q_deps <- function() {
   c(
     q_library_0(),
     q_colon(),
+    q_methods(),
     NULL
   )
 }

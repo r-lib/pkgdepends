@@ -4,15 +4,19 @@
 q_library_0 <- function() {
   structure(c(
     '((call function: (identifier) @fn-name) @dep-code
-      (#any-of? @fn-name "library" "require" "loadNamespace" "requireNamespace"))',
+      (#any-of? @fn-name
+       "library" "require" "loadNamespace" "requireNamespace"
+       "pkg_attach" "pkg_attach2"))',
     '((call function:
        (namespace_operator
         lhs: (identifier) @ns-name
         rhs: (identifier) @fn-name
        )
       ) @dep-code
-      (#eq? @ns-name "base")
-      (#any-of? @fn-name "library" "require" "loadNamespace" "requireNamespace"))'
+      (#any-of? @ns-name "base" "xfun")
+      (#any-of? @fn-name
+       "library" "require" "loadNamespace" "requireNamespace"
+       "pkg_attach" "pkg_attach2"))'
   ), names = rep("q_library_0", 2))
 }
 

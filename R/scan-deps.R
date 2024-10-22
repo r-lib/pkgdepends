@@ -141,42 +141,75 @@ scan_path_deps_do_fn_hits <- function(hits, path) {
 scan_path_deps_do_gen_hits <- function(hits, path) {
   code <- hits$code[hits$name == "dep-code"]
   fn <- hits$code[hits$name == "fn-name"]
-  pkgs <- vcapply(seq_along(code), function(i) {
-    parse_pkg_from_library_call(fn[i], code[i])
+  pkgs <- lapply(seq_along(code), function(i) {
+    safe_parse_pkg_from_library_call(fn[i], code[i])
   })
-  ok <- !is.na(pkgs)
+  pkgs_count <- lengths(pkgs)
   data_frame(
     path = path,
-    package = pkgs[ok],
+    package = unlist(pkgs),
     type = get_dep_type_from_path(path),
-    code = code[ok],
-    start_row = hits$start_row[hits$name == "dep-code"][ok],
-    start_column = hits$start_column[hits$name == "dep-code"][ok],
-    start_byte = hits$start_byte[hits$name == "dep-code"][ok]
+    code = rep(code, pkgs_count),
+    start_row = rep(hits$start_row[hits$name == "dep-code"], pkgs_count),
+    start_column = rep(hits$start_column[hits$name == "dep-code"], pkgs_count),
+    start_byte = rep(hits$start_byte[hits$name == "dep-code"], pkgs_count)
+  )
+}
+
+fake_xfun_pkg_attach <- function(..., install, message) { }
+fake_xfun_pkg_attach2 <- function(...) { }
+
+safe_parse_pkg_from_library_call <- function(fn, code) {
+  tryCatch(
+    parse_pkg_from_library_call(fn, code),
+    error = function(...) NULL
   )
 }
 
 parse_pkg_from_library_call <- function(fn, code) {
-  expr <- parse(text= code, keep.source = FALSE)
+  expr <- parse(text = code, keep.source = FALSE)
   fun <- switch(fn,
     "library" = base::library,
     "require" = base::require,
     "loadNamespace" = base::loadNamespace,
-    "requireNamespace" = base::requireNamespace
+    "requireNamespace" = base::requireNamespace,
+    "pkg_attach" = fake_xfun_pkg_attach,
+    "pkg_attach2" = fake_xfun_pkg_attach2
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
 
+  # have a 'package' argument
   pkg <- matched[["package"]]
-  if (is.character(pkg) && length(pkg) == 1) {
-    return(pkg)
-  }
+  switch(fn,
+    "library" = , "require" = , "loadNamespace" = , "requireNamespace" = {
+      if (is.character(pkg) && length(pkg) == 1) {
+        return(pkg)
+      }
+    }
+  )
 
-  if (fn %in% c("library", "require") && is.symbol(pkg) &&
-      identical(matched[["character.only"]] %||% FALSE, FALSE)) {
-    return(as.character(pkg))
-  }
+  # 'package' can be a symbol, there is 'character.only'
+  switch(fn,
+    "library" = , "require" = {
+      if (fn %in% c("library", "require") && is.symbol(pkg) &&
+        identical(matched[["character.only"]] %||% FALSE, FALSE)) {
+        return(as.character(pkg))
+      }
+    }
+  )
 
-  NA_character_
+  # character vectors in ...
+  switch(fn,
+    "pkg_attach" = , "pkg_attach2" = {
+      pkgs <- unlist(lapply(
+        matched[["..."]],
+        function(x) if (is.character(x)) x
+      ))
+      if (length(pkgs) > 0) return(pkgs) else return(NULL)
+    }
+  )
+
+  NULL
 }
 
 # -------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #' @keywords internal
 
 scan_deps <- function(path = ".") {
+  path <- find_project_root(path)
   paths <- dir(path, pattern = "[.](R|r|Rmd|rmd)$", recursive = TRUE)
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)

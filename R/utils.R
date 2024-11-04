@@ -7,6 +7,8 @@ pkgd_data <- new.env(parent = emptyenv())
 
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
+`%|0|%` <- function(l, r) if (length(l) == 0) r else l
+
 `%|z|%` <- function(l, r) if (is.null(l) || identical(l, "")) r else l
 
 `%&z&%` <- function(l, r) if (length(l) > 0 && l != "") r else ""

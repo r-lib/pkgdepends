@@ -38,7 +38,8 @@ re_r_dep <- paste0(collapse = "|", c(
   "::",
   "setClass", "setGeneric",
   "pkg_attach",
-  "p_load"
+  "p_load",
+  "module"
 ))
 
 scan_path_deps <- function(path) {
@@ -147,8 +148,16 @@ scan_path_deps_do_fn_hits <- function(hits, path) {
 scan_path_deps_do_gen_hits <- function(hits, path) {
   code <- hits$code[hits$name == "dep-code"]
   fn <- hits$code[hits$name == "fn-name"]
+  match_count <- max(c(hits$match, 0))
+  ns <- vcapply(
+    seq_len(match_count),
+    function(m) {
+      hits[hits$match == m & hits$name == "ns-name", ]$code %|0|%
+        NA_character_
+    }
+  )
   pkgs <- lapply(seq_along(code), function(i) {
-    safe_parse_pkg_from_call(fn[i], code[i])
+    safe_parse_pkg_from_call(ns[i], fn[i], code[i])
   })
   pkgs_count <- lengths(pkgs)
   data_frame(
@@ -162,42 +171,51 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
   )
 }
 
-fake_xfun_pkg_attach <- function(..., install, message) { }
-fake_xfun_pkg_attach2 <- function(...) { }
-fake_pacman_p_load <- function(..., char, install, update, character.only) { }
+prot_xfun_pkg_attach <- function(..., install, message) { }
+prot_xfun_pkg_attach2 <- function(...) { }
+prot_pacman_p_load <- function(..., char, install, update, character.only) { }
+prot_modules_import <- function(from, ..., attach = TRUE, where = parent.frame()) { }
+prot_modules_module <- function(expr = {}, topEncl = NULL, envir = parent.frame()) { }
 
-safe_parse_pkg_from_call <- function(fn, code) {
+safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
-    parse_pkg_from_call(fn, code),
+    parse_pkg_from_call(ns, fn, code),
     error = function(...) NULL
   )
 }
 
-parse_pkg_from_call <- function(fn, code) {
+parse_pkg_from_call <- function(ns, fn, code) {
   expr <- parse(text = code, keep.source = FALSE)
   fun <- switch(fn,
     "library" = base::library,
     "require" = base::require,
     "loadNamespace" = base::loadNamespace,
     "requireNamespace" = base::requireNamespace,
-    "pkg_attach" = fake_xfun_pkg_attach,
-    "pkg_attach2" = fake_xfun_pkg_attach2,
-    "p_load" = fake_pacman_p_load,
+    "pkg_attach" = prot_xfun_pkg_attach,
+    "pkg_attach2" = prot_xfun_pkg_attach2,
+    "p_load" = prot_pacman_p_load,
+    "import" = prot_modules_import,
+    "module" = prot_modules_module
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
     "library" = , "require" =
-      parse_pkg_from_call_library(matched),
+      parse_pkg_from_call_library(ns, fs, matched),
     "loadNamespace" = , "requireNamespace" =
-      parse_pkg_from_call_loadNamespace(matched),
+      parse_pkg_from_call_loadNamespace(ns, fn, matched),
     "pkg_attache" = , "pkg_attach2" =
-      parse_pkg_from_call_xfun(matched),
+      parse_pkg_from_call_xfun(ns, fn, matched),
     "p_load" =
-      parse_pkg_from_call_pacman(matched)
+      parse_pkg_from_call_pacman(ns, fn, matched),
+    "import" =
+      parse_pkg_from_call_modules_import(ns, fn, matched),
+    "module" =
+      parse_pkg_from_call_modules_module(ns, fn, matched)
   )
 }
 
-parse_pkg_from_call_library <- function(matched) {
+parse_pkg_from_call_library <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "base") return(NULL)
   pkg <- matched[["package"]]
   if (is.character(pkg) && length(pkg) == 1) {
     return(pkg)
@@ -209,7 +227,8 @@ parse_pkg_from_call_library <- function(matched) {
   NULL
 }
 
-parse_pkg_from_call_loadNamespace <- function(matched) {
+parse_pkg_from_call_loadNamespace <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "base") return(NULL)
   pkg <- matched[["package"]]
   if (is.character(pkg) && length(pkg) == 1) {
     return(pkg)
@@ -217,7 +236,8 @@ parse_pkg_from_call_loadNamespace <- function(matched) {
   NULL
 }
 
-parse_pkg_from_call_xfun <- function(matched) {
+parse_pkg_from_call_xfun <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "xfun") return(NULL)
   pkgs <- unlist(lapply(
     matched[["..."]],
     function(x) if (is.character(x)) x
@@ -226,7 +246,8 @@ parse_pkg_from_call_xfun <- function(matched) {
   NULL
 }
 
-parse_pkg_from_call_pacman <- function(matched) {
+parse_pkg_from_call_pacman <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "pacman") return(NULL)
   # list of characters and symbols
   pkgs <- as.list(matched[["..."]])
 
@@ -244,6 +265,25 @@ parse_pkg_from_call_pacman <- function(matched) {
   }
   pkgs <- vcapply(pkgs, as.character)
   if (length(pkgs) > 0) return(pkgs)
+  NULL
+}
+
+parse_pkg_from_call_modules_import <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "modules") return(NULL)
+  pkgs <- as.character(matched[["from"]])
+  if (length(pkgs) > 0) return(pkgs)
+  NULL
+}
+
+parse_pkg_from_call_modules_module <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "modules") return(NULL)
+  expr <- as.character(matched[["expr"]])
+  hits <- code_query(expr, q_import())[["matched_captures"]]
+  code <- hits$code[hits$name == "dep-code"]
+  pkgs <- lapply(seq_along(code), function(i) {
+    safe_parse_pkg_from_call(ns, "import", code[i])
+  })
+  if (length(pkgs) > 0) return(unlist(pkgs))
   NULL
 }
 

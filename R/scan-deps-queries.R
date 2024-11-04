@@ -7,19 +7,36 @@ q_library_0 <- function() {
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
        "pkg_attach" "pkg_attach2"
-       "p_load"))',
+       "p_load"
+       "module"))',
     '((call function:
        (namespace_operator
         lhs: (identifier) @ns-name
         rhs: (identifier) @fn-name
        )
       ) @dep-code
-      (#any-of? @ns-name "base" "xfun" "pacman")
+      (#any-of? @ns-name "base" "xfun" "pacman" "modules")
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
        "pkg_attach" "pkg_attach2"
-       "p_load"))'
+       "p_load"
+       "module" "import"))'
   ), names = rep("q_library_0", 2))
+}
+
+q_import <- function() {
+  c(
+    '((call function: (identifier) @fn-name) @dep-code
+      (#any-of? @fn-name "import"))',
+    '((call function:
+       (namespace_operator
+        lhs: (identifier) @ns-name
+        rhs: (identifier) @fn-name
+       )
+      ) @dep-code
+      (#any-of? @ns-name "modules")
+      (#any-of? @fn-name "import"))'
+  )
 }
 
 # pkg::fun, pkg:::fun

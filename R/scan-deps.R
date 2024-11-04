@@ -40,7 +40,8 @@ re_r_dep <- paste0(collapse = "|", c(
   "pkg_attach",
   "p_load",
   "module",
-  "import"
+  "import",
+  "box"
 ))
 
 scan_path_deps <- function(path) {
@@ -149,9 +150,8 @@ scan_path_deps_do_fn_hits <- function(hits, path) {
 scan_path_deps_do_gen_hits <- function(hits, path) {
   code <- hits$code[hits$name == "dep-code"]
   fn <- hits$code[hits$name == "fn-name"]
-  match_count <- max(c(hits$match, 0))
   ns <- vcapply(
-    seq_len(match_count),
+    unique(hits$match),
     function(m) {
       hits[hits$match == m & hits$name == "ns-name", ]$code %|0|%
         NA_character_
@@ -184,6 +184,7 @@ prot_import_into <- function(
   .except = character(), .chdir = TRUE, .character_only = FALSE,
   .S3 = FALSE) {
 }
+prot_box_use <- function(...) { }
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -206,7 +207,8 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "module" = prot_modules_module,
     "from" = prot_import_from,
     "here" = prot_import_here,
-    "into" = prot_import_into
+    "into" = prot_import_into,
+    "use" = prot_box_use
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
@@ -223,7 +225,9 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "module" =
       parse_pkg_from_call_modules_module(ns, fn, matched),
     "from" = , "here" = , "into" =
-      parse_pkg_from_call_import(ns, fn, matched)
+      parse_pkg_from_call_import(ns, fn, matched),
+    "use" =
+      parse_pkg_from_call_box(ns, fn, matched)
   )
 }
 
@@ -319,6 +323,31 @@ parse_pkg_from_call_import <- function(ns, fn, matched) {
   }
 
   from
+}
+
+parse_pkg_from_call_box <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "box") return(NULL)
+  args <- as.list(matched[["..."]])
+  pkgs <- na.omit(vcapply(args, function(arg) {
+    if (!is.symbol(arg) && identical(arg[[1]], quote(`/`))) {
+      return(NA_character_)
+    }
+    name <- if (is.symbol(arg) && !identical(arg, quote(expr = ))) {
+      as.character(arg)
+    } else if (
+      identical(arg[[1]], quote(`[`)) &&
+        length(arg) > 1L &&
+        is.symbol(arg[[2L]])) {
+      as.character(arg[[2L]])
+    }
+    if (is.null(name) || name == "." || name == "..") {
+      return(NA_character_)
+    }
+    name
+  }))
+
+  if (length(pkgs) > 0) return(pkgs)
+  NULL
 }
 
 # -------------------------------------------------------------------------

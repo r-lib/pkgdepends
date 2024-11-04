@@ -42,7 +42,8 @@ re_r_dep <- paste0(collapse = "|", c(
   "module",
   "import",
   "box",
-  "tar_option_set"
+  "tar_option_set",
+  "glue"
 ))
 
 scan_path_deps <- function(path) {
@@ -159,7 +160,7 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
     }
   )
   pkgs <- lapply(seq_along(code), function(i) {
-    safe_parse_pkg_from_call(ns[i], fn[i], code[i])
+    parse_pkg_from_call(ns[i], fn[i], code[i])
   })
   pkgs_count <- lengths(pkgs)
   data_frame(
@@ -187,6 +188,9 @@ prot_import_into <- function(
 }
 prot_box_use <- function(...) { }
 prot_targets_tar_option_set <- function(tidy_eval = NULL, packages = NULL, ...) { }
+prot_glue_glue <- function(
+  ..., .sep = "", .envir = parent.frame(), .open = "{", .close = "}") {
+}
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -211,7 +215,8 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "here" = prot_import_here,
     "into" = prot_import_into,
     "use" = prot_box_use,
-    "tar_option_set" = prot_targets_tar_option_set
+    "tar_option_set" = prot_targets_tar_option_set,
+    "glue" = prot_glue_glue
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
@@ -232,7 +237,9 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "use" =
       parse_pkg_from_call_box(ns, fn, matched),
     "tar_option_set" =
-      parse_pkg_from_call_targets(ns, fn, matched)
+      parse_pkg_from_call_targets(ns, fn, matched),
+    "glue" =
+      parse_pkg_from_call_glue(ns, fn, matched)
   )
 }
 
@@ -373,6 +380,31 @@ dependencies_eval <- function(expr) {
   vals <- mget(syms, envir = baseenv())
   envir <- list2env(vals, parent = emptyenv())
   eval(expr, envir = envir)
+}
+
+parse_pkg_from_call_glue <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "glue") return(NULL)
+  args <- as.list(matched[["..."]])
+  nm <- names(args) %||% rep.int("", length(args))
+  str <- args[!nzchar(nm) & vlapply(args, is.character)]
+  code <- character()
+  for (s in str) {
+    asNamespace("cli")$glue(
+      s,
+      .open = matched[[".open"]] %||% "{",
+      .close = matched[[".close"]] %||% "}",
+      .transformer = function(x, envir) { code <<- c(code, x) }
+    )
+  }
+
+  pkgs <- unlist(lapply(
+    code,
+    function(x) scan_path_deps_do_r(x, path = "")[["package"]]
+  ))
+  if (length(pkgs) > 0) {
+    return(pkgs)
+  }
+  NULL
 }
 
 # -------------------------------------------------------------------------

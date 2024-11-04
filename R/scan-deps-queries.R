@@ -9,7 +9,8 @@ q_library_0 <- function() {
        "pkg_attach" "pkg_attach2"
        "p_load"
        "module"
-       "tar_option_set"))',
+       "tar_option_set"
+       "glue"))',
     '((call function:
        (namespace_operator
         lhs: (identifier) @ns-name
@@ -17,7 +18,7 @@ q_library_0 <- function() {
        )
       ) @dep-code
       (#any-of? @ns-name
-       "base" "xfun" "pacman" "modules" "import" "box" "targets")
+       "base" "xfun" "pacman" "modules" "import" "box" "targets" "glue")
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
        "pkg_attach" "pkg_attach2"
@@ -25,7 +26,8 @@ q_library_0 <- function() {
        "module" "import"
        "from" "here" "into"
        "use"
-       "tar_option_set"))'
+       "tar_option_set"
+       "glue"))'
   ), names = rep("q_library_0", 2))
 }
 

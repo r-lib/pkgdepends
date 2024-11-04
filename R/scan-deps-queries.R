@@ -15,12 +15,13 @@ q_library_0 <- function() {
         rhs: (identifier) @fn-name
        )
       ) @dep-code
-      (#any-of? @ns-name "base" "xfun" "pacman" "modules")
+      (#any-of? @ns-name "base" "xfun" "pacman" "modules" "import")
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
        "pkg_attach" "pkg_attach2"
        "p_load"
-       "module" "import"))'
+       "module" "import"
+       "from" "here" "into"))'
   ), names = rep("q_library_0", 2))
 }
 

@@ -39,7 +39,8 @@ re_r_dep <- paste0(collapse = "|", c(
   "setClass", "setGeneric",
   "pkg_attach",
   "p_load",
-  "module"
+  "module",
+  "import"
 ))
 
 scan_path_deps <- function(path) {
@@ -176,6 +177,13 @@ prot_xfun_pkg_attach2 <- function(...) { }
 prot_pacman_p_load <- function(..., char, install, update, character.only) { }
 prot_modules_import <- function(from, ..., attach = TRUE, where = parent.frame()) { }
 prot_modules_module <- function(expr = {}, topEncl = NULL, envir = parent.frame()) { }
+prot_import_from <- function(.from, ..., .character_only = FALSE) { }
+prot_import_here <- function(.from, ..., .character_only = FALSE) { }
+prot_import_into <- function(
+  .into, ..., .from, .library = NULL, .directory = ".", .all = NULL,
+  .except = character(), .chdir = TRUE, .character_only = FALSE,
+  .S3 = FALSE) {
+}
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -195,7 +203,10 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "pkg_attach2" = prot_xfun_pkg_attach2,
     "p_load" = prot_pacman_p_load,
     "import" = prot_modules_import,
-    "module" = prot_modules_module
+    "module" = prot_modules_module,
+    "from" = prot_import_from,
+    "here" = prot_import_here,
+    "into" = prot_import_into
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
@@ -210,7 +221,9 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "import" =
       parse_pkg_from_call_modules_import(ns, fn, matched),
     "module" =
-      parse_pkg_from_call_modules_module(ns, fn, matched)
+      parse_pkg_from_call_modules_module(ns, fn, matched),
+    "from" = , "here" = , "into" =
+      parse_pkg_from_call_import(ns, fn, matched)
   )
 }
 
@@ -285,6 +298,27 @@ parse_pkg_from_call_modules_module <- function(ns, fn, matched) {
   })
   if (length(pkgs) > 0) return(unlist(pkgs))
   NULL
+}
+
+parse_pkg_from_call_import <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "import") return(NULL)
+  from <- matched[[".from"]]
+  if (is.symbol(from)) {
+    if (!identical(matched[[".character_only"]], TRUE)) {
+      from <- as.character(from)
+    }
+  }
+  if (!is.character(from) || length(from) != 1) {
+    return(NULL)
+  }
+
+  # '.from' can also be an R script; if it appears to be a path, then ignore it
+  # https://github.com/rstudio/renv/issues/1743
+  if (grepl("\\.[rR]$", from, perl = TRUE) && grepl("[/\\]", from)) {
+    return(NULL)
+  }
+
+  from
 }
 
 # -------------------------------------------------------------------------

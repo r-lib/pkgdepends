@@ -44,7 +44,8 @@ re_r_dep <- paste0(collapse = "|", c(
   "box",
   "tar_option_set",
   "glue",
-  "ggsave"
+  "ggsave",
+  "set_engine"
 ))
 
 scan_path_deps <- function(path) {
@@ -161,7 +162,7 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
     }
   )
   pkgs <- lapply(seq_along(code), function(i) {
-    parse_pkg_from_call(ns[i], fn[i], code[i])
+    safe_parse_pkg_from_call(ns[i], fn[i], code[i])
   })
   pkgs_count <- lengths(pkgs)
   data_frame(
@@ -193,6 +194,7 @@ prot_glue_glue <- function(
   ..., .sep = "", .envir = parent.frame(), .open = "{", .close = "}") {
 }
 prot_ggplot2_ggsave <- function(filename, ...) { }
+prot_parsnip_set_engine <- function(object, engine, ...) { }
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -219,7 +221,8 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "use" = prot_box_use,
     "tar_option_set" = prot_targets_tar_option_set,
     "glue" = prot_glue_glue,
-    "ggsave" = prot_ggplot2_ggsave
+    "ggsave" = prot_ggplot2_ggsave,
+    "set_engine" = prot_parsnip_set_engine
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
@@ -244,7 +247,9 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "glue" =
       parse_pkg_from_call_glue(ns, fn, matched),
     "ggsave" =
-      parse_pkg_from_call_ggplot2(ns, fn, matched)
+      parse_pkg_from_call_ggplot2(ns, fn, matched),
+    "set_engine" =
+      parse_pkg_from_call_parsnip(ns, fn, matched)
   )
 }
 
@@ -422,6 +427,36 @@ parse_pkg_from_call_ggplot2 <- function(ns, fn, matched) {
   # required in this scenario.
   if (any(endsWith(fn, ".svg"))) {
     return("svglite")
+  }
+  NULL
+}
+
+parse_pkg_from_call_parsnip <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "parsnip") return(NULL)
+  engine <- matched[["engine"]]
+  if (!is.character(engine) || length(engine) != 1L) {
+    return(NULL)
+  }
+
+  map <- getOption("renv.parsnip.engines", default = list(
+    glm    = "stats",
+    glmnet = "glmnet",
+    keras  = "keras",
+    kknn   = "kknn",
+    nnet   = "nnet",
+    rpart  = "rpart",
+    spark  = "sparklyr",
+    stan   = "rstanarm"
+  ))
+
+  pkgs <- if (is.function(map)) {
+    map(engine)
+  } else {
+    map[[engine]]
+  }
+
+  if (length(pkgs) > 0) {
+    return(pkgs)
   }
   NULL
 }

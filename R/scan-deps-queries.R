@@ -12,7 +12,8 @@ q_library_0 <- function() {
        "tar_option_set"
        "glue"
        "ggsave"
-       "set_engine"))',
+       "set_engine"
+       "R6Class" "test_package" "test_dir" "test_file"))',
     '((call function:
        (namespace_operator
         lhs: (identifier) @ns-name
@@ -21,7 +22,7 @@ q_library_0 <- function() {
       ) @dep-code
       (#any-of? @ns-name
        "base" "xfun" "pacman" "modules" "import" "box" "targets" "glue"
-       "ggplot2" "parsnip")
+       "ggplot2" "parsnip" "R6" "testthat")
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
        "pkg_attach" "pkg_attach2"
@@ -32,7 +33,8 @@ q_library_0 <- function() {
        "tar_option_set"
        "glue"
        "ggsave"
-       "set_engine"))'
+       "set_engine"
+       "R6Class" "test_package" "test_dir" "test_file"))'
   ), names = rep("q_library_0", 2))
 }
 
@@ -66,11 +68,36 @@ q_methods <- function() {
   )
 }
 
+q_junit_reporter <- function() {
+  structure(c(
+    '((call function:
+      (extract_operator
+       lhs: (identifier) @class-name
+       rhs: (identifier) @method-name
+      )
+     ) @dep-code
+     (#eq? @class-name "JunitReporter")
+     (#eq? @method-name "new"))',
+    '((call function:
+      (extract_operator
+       lhs: (namespace_operator
+             lhs: (identifier) @pkg-name
+             rhs: (identifier) @class-name)
+       rhs: (identifier) @method-name
+      )
+     ) @dep-code
+     (#eq? @pkg-name "testthat")
+     (#eq? @class-name "JunitReporter")
+     (#eq? @method-name "new"))'
+  ), names = rep("junit_reporter", 2))
+}
+
 q_deps <- function() {
   c(
     q_library_0(),
     q_colon(),
     q_methods(),
+    q_junit_reporter(),
     NULL
   )
 }

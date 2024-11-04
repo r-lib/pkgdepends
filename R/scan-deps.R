@@ -117,11 +117,17 @@ scan_path_deps_do_r <- function(code, path, ranges = NULL) {
   fn_pat <- hits$patterns$id[hits$patterns$name %in% fn_patterns]
   fn_hits <- mct[mct$pattern %in% fn_pat, ]
 
-  pkg_hits <- mct[! mct$pattern %in% c(gen_pat, fn_pat), ]
+  # junit reporter needs xml2
+  jr_patterns <- "junit_reporter"
+  jr_pat <- hits$patterns$id[hits$patterns$name %in% jr_patterns]
+  jr_hits <- mct[mct$pattern %in% jr_pat, ]
+
+  pkg_hits <- mct[! mct$pattern %in% c(gen_pat, fn_pat, jr_pat), ]
   rbind(
     if (nrow(pkg_hits) > 0) scan_path_deps_do_pkg_hits(pkg_hits, path),
     if (nrow(fn_hits) > 0) scan_path_deps_do_fn_hits(fn_hits, path),
-    if (nrow(gen_hits) > 0) scan_path_deps_do_gen_hits(gen_hits, path)
+    if (nrow(gen_hits) > 0) scan_path_deps_do_gen_hits(gen_hits, path),
+    if (nrow(jr_hits) > 0) scan_path_deps_do_jr_hits(jr_hits, path)
   )
 }
 
@@ -176,6 +182,19 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
   )
 }
 
+scan_path_deps_do_jr_hits <- function(hits, path) {
+  code <- hits$code[hits$name == "dep-code"]
+  data_frame(
+    path = path,
+    package = "xml2",
+    type = get_dep_type_from_path(path),
+    code = code,
+    start_row = hits$start_row[hits$name == "dep-code"],
+    start_column = hits$start_column[hits$name == "dep-code"],
+    start_byte = hits$start_byte[hits$name == "dep-code"]
+  )
+}
+
 prot_xfun_pkg_attach <- function(..., install, message) { }
 prot_xfun_pkg_attach2 <- function(...) { }
 prot_pacman_p_load <- function(..., char, install, update, character.only) { }
@@ -195,6 +214,12 @@ prot_glue_glue <- function(
 }
 prot_ggplot2_ggsave <- function(filename, ...) { }
 prot_parsnip_set_engine <- function(object, engine, ...) { }
+prot_r6_r6class <- function(
+  classname = NULL, public = list(), private = NULL, active = NULL,
+  inherit = NULL, ...) { }
+prot_testthat_test_package <- function(package, reporter = NULL, ...) { }
+prot_testthat_test_dir <- function(path, filter = NULL, reporter = NULL, ...) { }
+prot_testthat_test_file <- function(path, reporter = NULL, ...) { }
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -222,7 +247,11 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "tar_option_set" = prot_targets_tar_option_set,
     "glue" = prot_glue_glue,
     "ggsave" = prot_ggplot2_ggsave,
-    "set_engine" = prot_parsnip_set_engine
+    "set_engine" = prot_parsnip_set_engine,
+    "R6Class" = prot_r6_r6class,
+    "test_package" = prot_testthat_test_package,
+    "test_dir" = prot_testthat_test_dir,
+    "test_file" = prot_testthat_test_file
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
@@ -249,7 +278,11 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "ggsave" =
       parse_pkg_from_call_ggplot2(ns, fn, matched),
     "set_engine" =
-      parse_pkg_from_call_parsnip(ns, fn, matched)
+      parse_pkg_from_call_parsnip(ns, fn, matched),
+    "R6Class" =
+      parse_pkg_from_call_testthat_r6class(ns, fn, matched),
+    "test_package" = , "test_dir" = , "test_file" =
+      parse_pkg_from_call_testthat_test(ns, fn, matched)
   )
 }
 
@@ -457,6 +490,28 @@ parse_pkg_from_call_parsnip <- function(ns, fn, matched) {
 
   if (length(pkgs) > 0) {
     return(pkgs)
+  }
+  NULL
+}
+
+parse_pkg_from_call_testthat_r6class <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "R6") return(NULL)
+  inherit <- matched[["inherit"]]
+  if (identical(inherit, quote(JunitReporter)) ||
+      identical(inherit, quote(testthat::JunitReporter))) {
+    return("xml2")
+  }
+  NULL
+}
+
+parse_pkg_from_call_testthat_test <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "testthat") return(NULL)
+  reporter <- matched[["reporter"]]
+  if (identical(reporter, "Junit") ||
+      identical(reporter, "junit") ||
+      identical(reporter, quote(JunitReporter)) ||
+      identical(reporter, quote(JunitReporter))) {
+    return("xml2")
   }
   NULL
 }

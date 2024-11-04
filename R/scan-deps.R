@@ -278,7 +278,7 @@ parse_pkg_from_call_modules_import <- function(ns, fn, matched) {
 parse_pkg_from_call_modules_module <- function(ns, fn, matched) {
   if (!is.na(ns) && ns != "modules") return(NULL)
   expr <- as.character(matched[["expr"]])
-  hits <- code_query(expr, q_import())[["matched_captures"]]
+  hits <- code_query(expr, q_module_import())[["matched_captures"]]
   code <- hits$code[hits$name == "dep-code"]
   pkgs <- lapply(seq_along(code), function(i) {
     safe_parse_pkg_from_call(ns, "import", code[i])

@@ -24,7 +24,7 @@ q_library_0 <- function() {
   ), names = rep("q_library_0", 2))
 }
 
-q_import <- function() {
+q_module_import <- function() {
   c(
     '((call function: (identifier) @fn-name) @dep-code
       (#any-of? @fn-name "import"))',

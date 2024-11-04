@@ -43,7 +43,8 @@ re_r_dep <- paste0(collapse = "|", c(
   "import",
   "box",
   "tar_option_set",
-  "glue"
+  "glue",
+  "ggsave"
 ))
 
 scan_path_deps <- function(path) {
@@ -191,6 +192,7 @@ prot_targets_tar_option_set <- function(tidy_eval = NULL, packages = NULL, ...) 
 prot_glue_glue <- function(
   ..., .sep = "", .envir = parent.frame(), .open = "{", .close = "}") {
 }
+prot_ggplot2_ggsave <- function(filename, ...) { }
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -216,7 +218,8 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "into" = prot_import_into,
     "use" = prot_box_use,
     "tar_option_set" = prot_targets_tar_option_set,
-    "glue" = prot_glue_glue
+    "glue" = prot_glue_glue,
+    "ggsave" = prot_ggplot2_ggsave
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
@@ -239,7 +242,9 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "tar_option_set" =
       parse_pkg_from_call_targets(ns, fn, matched),
     "glue" =
-      parse_pkg_from_call_glue(ns, fn, matched)
+      parse_pkg_from_call_glue(ns, fn, matched),
+    "ggsave" =
+      parse_pkg_from_call_ggplot2(ns, fn, matched)
   )
 }
 
@@ -403,6 +408,20 @@ parse_pkg_from_call_glue <- function(ns, fn, matched) {
   ))
   if (length(pkgs) > 0) {
     return(pkgs)
+  }
+  NULL
+}
+
+parse_pkg_from_call_ggplot2 <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "ggplot2") return(NULL)
+  fn <- matched[["filename"]]
+  if (!is.character(fn)) {
+    return(NULL)
+  }
+  # check for attempts to save to '.svg', and assume svglite is
+  # required in this scenario.
+  if (any(endsWith(fn, ".svg"))) {
+    return("svglite")
   }
   NULL
 }

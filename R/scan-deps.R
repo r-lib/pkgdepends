@@ -41,7 +41,8 @@ re_r_dep <- paste0(collapse = "|", c(
   "p_load",
   "module",
   "import",
-  "box"
+  "box",
+  "tar_option_set"
 ))
 
 scan_path_deps <- function(path) {
@@ -185,6 +186,7 @@ prot_import_into <- function(
   .S3 = FALSE) {
 }
 prot_box_use <- function(...) { }
+prot_targets_tar_option_set <- function(tidy_eval = NULL, packages = NULL, ...) { }
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -208,7 +210,8 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "from" = prot_import_from,
     "here" = prot_import_here,
     "into" = prot_import_into,
-    "use" = prot_box_use
+    "use" = prot_box_use,
+    "tar_option_set" = prot_targets_tar_option_set
   )
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
@@ -227,7 +230,9 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "from" = , "here" = , "into" =
       parse_pkg_from_call_import(ns, fn, matched),
     "use" =
-      parse_pkg_from_call_box(ns, fn, matched)
+      parse_pkg_from_call_box(ns, fn, matched),
+    "tar_option_set" =
+      parse_pkg_from_call_targets(ns, fn, matched)
   )
 }
 
@@ -348,6 +353,26 @@ parse_pkg_from_call_box <- function(ns, fn, matched) {
 
   if (length(pkgs) > 0) return(pkgs)
   NULL
+}
+
+parse_pkg_from_call_targets <- function(ns, fn, matched) {
+  if (!is.na(ns) && ns != "targets") return(NULL)
+  pkgs <- matched[["packages"]]
+  pkgs <- dependencies_eval(pkgs)
+  if (is.character(pkgs) && length(pkgs) > 0) {
+    return(pkgs)
+  }
+  NULL
+}
+
+# from renv:::renv_dependencies_eval
+dependencies_eval <- function(expr) {
+  syms <- c("list", "c", "T", "F", "{", "(", "[", "[[", "::",
+    ":::", "$", "@", ":", "+", "-", "*", "/", "<", ">", "<=",
+    ">=", "==", "!=", "!", "&", "&&", "|", "||")
+  vals <- mget(syms, envir = baseenv())
+  envir <- list2env(vals, parent = emptyenv())
+  eval(expr, envir = envir)
 }
 
 # -------------------------------------------------------------------------

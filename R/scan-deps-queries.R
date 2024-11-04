@@ -8,21 +8,24 @@ q_library_0 <- function() {
        "library" "require" "loadNamespace" "requireNamespace"
        "pkg_attach" "pkg_attach2"
        "p_load"
-       "module"))',
+       "module"
+       "tar_option_set"))',
     '((call function:
        (namespace_operator
         lhs: (identifier) @ns-name
         rhs: (identifier) @fn-name
        )
       ) @dep-code
-      (#any-of? @ns-name "base" "xfun" "pacman" "modules" "import" "box")
+      (#any-of? @ns-name
+       "base" "xfun" "pacman" "modules" "import" "box" "targets")
       (#any-of? @fn-name
        "library" "require" "loadNamespace" "requireNamespace"
        "pkg_attach" "pkg_attach2"
        "p_load"
        "module" "import"
        "from" "here" "into"
-       "use"))'
+       "use"
+       "tar_option_set"))'
   ), names = rep("q_library_0", 2))
 }
 

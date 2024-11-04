@@ -33,21 +33,28 @@ clear_deps_cache <- function() {
   unlink(dirname(get_deps_cache_path()), recursive = TRUE)
 }
 
-re_r_dep <- paste0(collapse = "|", c(
-  "library", "require", "loadNamespace",
-  "::",
-  "setClass", "setGeneric",
-  "pkg_attach",
-  "p_load",
-  "module",
-  "import",
-  "box::",
-  "tar_option_set",
-  "glue",
-  "ggsave",
-  "set_engine",
-  "opts_chunk"
-))
+re_r_dep <- function() {
+  db <- renv_dependencies_database()
+  fns <- as.character(unlist(lapply(db, names)))
+  paste0(collapse = "|", c(
+    "library", "require", "loadNamespace",
+    "::",
+    "setClass", "setGeneric",
+    "pkg_attach",
+    "p_load",
+    "module",
+    "import",
+    "box::",
+    "tar_option_set",
+    "glue",
+    "ggsave",
+    "set_engine",
+    "opts_chunk",
+    "geom_hex",
+    "JunitReporter",
+    fns
+  ))
+}
 
 scan_path_deps <- function(path) {
   code <- readBin(path, "raw", file.size(path))
@@ -65,7 +72,7 @@ scan_path_deps <- function(path) {
   }
 
   # scan it if it is worth it, based on a quick check
-  has_deps <- length(grepRaw(re_r_dep, code)) > 0
+  has_deps <- length(grepRaw(re_r_dep(), code)) > 0
   deps <- if (has_deps) scan_path_deps_do(code, path)
 
   # save it to the cache, but anonimize it first. If no deps, save NULL
@@ -128,13 +135,19 @@ scan_path_deps_do_r <- function(code, path, ranges = NULL) {
   ragg_pat <- hits$patterns$id[hits$patterns$name %in% ragg_patterns]
   ragg_hits <- mct[mct$pattern %in% ragg_pat, ]
 
-  pkg_hits <- mct[! mct$pattern %in% c(gen_pat, fn_pat, jr_pat, ragg_pat), ]
+  # database that matches symbols to packages
+  db_patterns <- "database"
+  db_pat <- hits$patterns$id[hits$patterns$name %in% db_patterns]
+  db_hits <- mct[mct$pattern %in% db_pat, ]
+
+  pkg_hits <- mct[! mct$pattern %in% c(gen_pat, fn_pat, jr_pat, ragg_pat, db_hits), ]
   rbind(
     if (nrow(pkg_hits) > 0) scan_path_deps_do_pkg_hits(pkg_hits, path),
     if (nrow(fn_hits) > 0) scan_path_deps_do_fn_hits(fn_hits, path),
     if (nrow(gen_hits) > 0) scan_path_deps_do_gen_hits(gen_hits, path),
     if (nrow(jr_hits) > 0) scan_path_deps_do_jr_hits(jr_hits, path),
-    if (nrow(ragg_hits) > 0) scan_pat_deps_do_ragg_hits(ragg_hits, path)
+    if (nrow(ragg_hits) > 0) scan_pat_deps_do_ragg_hits(ragg_hits, path),
+    if (nrow(db_hits) > 0) scan_pat_deps_do_db_hits(db_hits, path)
   )
 }
 
@@ -221,6 +234,22 @@ scan_pat_deps_do_ragg_hits <- function(hits, path) {
     }
   }
   NULL
+}
+
+scan_pat_deps_do_db_hits <- function(hits, path) {
+  db <- renv_dependencies_database()
+  fns <- unlist(lapply(db, names))
+  map <- unlist(unname(db), recursive = FALSE)
+  pkgs <- unlist(map[hits$code])
+  data_frame(
+    path = path,
+    package = pkgs,
+    type = get_dep_type_from_path(path),
+    code = hits$code,
+    start_row = hits$start_row,
+    start_column = hits$start_column,
+    start_byte = hits$start_byte
+  )
 }
 
 prot_xfun_pkg_attach <- function(..., install, message) { }
@@ -577,7 +606,7 @@ range_cols <- c(
 scan_path_deps_do_inline_hits <- function(code, inl_hits, path) {
   wcnd <- which(inl_hits$name == "inline")
   wcnd <- wcnd[grepl("`", inl_hits$code[wcnd], fixed = TRUE)]
-  wcnd <- wcnd[grepl(re_r_dep, inl_hits$code[wcnd])]
+  wcnd <- wcnd[grepl(re_r_dep(), inl_hits$code[wcnd])]
   if (length(wcnd) == 0) {
     return(NULL)
   }
@@ -593,7 +622,7 @@ scan_path_deps_do_inline_hits <- function(code, inl_hits, path) {
   pre_drop <- nchar(cpt$code[cpt$name == "csd1"])
   post_drop <- nchar(cpt$code[cpt$name == "csd2"])
   r_code <- omit_pre_post(cpt$code[cpt$name == "code"], pre_drop, post_drop)
-  wcnd2 <- substr(r_code, 1, 2) == "r " & grepl(re_r_dep, r_code)
+  wcnd2 <- substr(r_code, 1, 2) == "r " & grepl(re_r_dep(), r_code)
   if (!any(wcnd2)) {
     return(NULL)
   }
@@ -607,7 +636,7 @@ scan_path_deps_do_inline_hits <- function(code, inl_hits, path) {
 
 scan_path_deps_do_block_hits <- function(code, blk_hits, path) {
   wcnd <- which(blk_hits$name == "content")
-  wcnd <- wcnd[grepl(re_r_dep, blk_hits$code[wcnd])]
+  wcnd <- wcnd[grepl(re_r_dep(), blk_hits$code[wcnd])]
   if (length(wcnd) == 0) {
     return(NULL)
   }

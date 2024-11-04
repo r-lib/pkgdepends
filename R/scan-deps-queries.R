@@ -116,6 +116,24 @@ q_knitr_dev <- function() {
   ), names = rep("knitr_dev", 2))
 }
 
+renv_dependencies_database <- function() {
+  db <- getOption("renv.dependencies.database", default = list())
+  db$ggplot2$geom_hex <- "hexbin"
+  db$testthat$JunitReporter <- "xml2"
+  db
+}
+
+q_database <- function() {
+  db <- renv_dependencies_database()
+  fns <- unlist(lapply(db, names))
+  if (length(fns) == 0) return(NULL)
+  structure(sprintf(
+    '((identifier) @id
+      (#any-of? @id %s))',
+    paste0('"', fns, '"', collapse = " ")
+  ), names = "database")
+}
+
 q_deps <- function() {
   c(
     q_library_0(),
@@ -123,6 +141,7 @@ q_deps <- function() {
     q_methods(),
     q_junit_reporter(),
     q_knitr_dev(),
+    q_database(),
     NULL
   )
 }

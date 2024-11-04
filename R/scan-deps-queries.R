@@ -92,12 +92,37 @@ q_junit_reporter <- function() {
   ), names = rep("junit_reporter", 2))
 }
 
+q_knitr_dev <- function() {
+  structure(c(
+    '((call function:
+      (extract_operator
+       lhs: (identifier) @object-name
+       rhs: (identifier) @method-name
+      )
+     ) @dep-code
+     (#eq? @object-name "opts_chunk")
+     (#eq? @method-name "set"))',
+    '((call function:
+      (extract_operator
+       lhs: (namespace_operator
+             lhs: (identifier) @pkg-name
+             rhs: (identifier) @object-name)
+       rhs: (identifier) @method-name
+      )
+     ) @dep-code
+     (#eq? @pkg-name "knitr")
+     (#eq? @object-name "opts_chunk")
+     (#eq? @method-name "set"))'
+  ), names = rep("knitr_dev", 2))
+}
+
 q_deps <- function() {
   c(
     q_library_0(),
     q_colon(),
     q_methods(),
     q_junit_reporter(),
+    q_knitr_dev(),
     NULL
   )
 }

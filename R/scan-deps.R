@@ -41,11 +41,12 @@ re_r_dep <- paste0(collapse = "|", c(
   "p_load",
   "module",
   "import",
-  "box",
+  "box::",
   "tar_option_set",
   "glue",
   "ggsave",
-  "set_engine"
+  "set_engine",
+  "opts_chunk"
 ))
 
 scan_path_deps <- function(path) {
@@ -122,12 +123,18 @@ scan_path_deps_do_r <- function(code, path, ranges = NULL) {
   jr_pat <- hits$patterns$id[hits$patterns$name %in% jr_patterns]
   jr_hits <- mct[mct$pattern %in% jr_pat, ]
 
-  pkg_hits <- mct[! mct$pattern %in% c(gen_pat, fn_pat, jr_pat), ]
+  # knit ragg_png device needs ragg
+  ragg_patterns <- "knitr_dev"
+  ragg_pat <- hits$patterns$id[hits$patterns$name %in% ragg_patterns]
+  ragg_hits <- mct[mct$pattern %in% ragg_pat, ]
+
+  pkg_hits <- mct[! mct$pattern %in% c(gen_pat, fn_pat, jr_pat, ragg_pat), ]
   rbind(
     if (nrow(pkg_hits) > 0) scan_path_deps_do_pkg_hits(pkg_hits, path),
     if (nrow(fn_hits) > 0) scan_path_deps_do_fn_hits(fn_hits, path),
     if (nrow(gen_hits) > 0) scan_path_deps_do_gen_hits(gen_hits, path),
-    if (nrow(jr_hits) > 0) scan_path_deps_do_jr_hits(jr_hits, path)
+    if (nrow(jr_hits) > 0) scan_path_deps_do_jr_hits(jr_hits, path),
+    if (nrow(ragg_hits) > 0) scan_pat_deps_do_ragg_hits(ragg_hits, path)
   )
 }
 
@@ -195,11 +202,38 @@ scan_path_deps_do_jr_hits <- function(hits, path) {
   )
 }
 
+scan_pat_deps_do_ragg_hits <- function(hits, path) {
+  wcodes <- which(hits$name == "dep-code")
+  for (wc in wcodes) {
+    expr <- parse(text = hits$code[wc], keep.source = FALSE)
+    matched <- match.call(function(...) { }, expr, expand.dots=FALSE)
+    args <- matched[["..."]]
+    if ("dev" %in% names(args) && args[["dev"]] == "ragg_png") {
+      return(data_frame(
+        path = path,
+        package = "ragg",
+        type = get_dep_type_from_path(path),
+        code = hits$code[wc],
+        start_row = hits$start_row[wc],
+        start_column = hits$start_column[wc],
+        start_byte = hits$start_byte[wc]
+      ))
+    }
+  }
+  NULL
+}
+
 prot_xfun_pkg_attach <- function(..., install, message) { }
 prot_xfun_pkg_attach2 <- function(...) { }
-prot_pacman_p_load <- function(..., char, install, update, character.only) { }
-prot_modules_import <- function(from, ..., attach = TRUE, where = parent.frame()) { }
-prot_modules_module <- function(expr = {}, topEncl = NULL, envir = parent.frame()) { }
+prot_pacman_p_load <- function(
+  ..., char, install, update, character.only) {
+}
+prot_modules_import <- function(
+  from, ..., attach = TRUE, where = parent.frame()) {
+}
+prot_modules_module <- function(
+  expr = {}, topEncl = NULL, envir = parent.frame()) {
+}
 prot_import_from <- function(.from, ..., .character_only = FALSE) { }
 prot_import_here <- function(.from, ..., .character_only = FALSE) { }
 prot_import_into <- function(
@@ -208,7 +242,9 @@ prot_import_into <- function(
   .S3 = FALSE) {
 }
 prot_box_use <- function(...) { }
-prot_targets_tar_option_set <- function(tidy_eval = NULL, packages = NULL, ...) { }
+prot_targets_tar_option_set <- function(
+  tidy_eval = NULL, packages = NULL, ...) {
+}
 prot_glue_glue <- function(
   ..., .sep = "", .envir = parent.frame(), .open = "{", .close = "}") {
 }
@@ -218,7 +254,9 @@ prot_r6_r6class <- function(
   classname = NULL, public = list(), private = NULL, active = NULL,
   inherit = NULL, ...) { }
 prot_testthat_test_package <- function(package, reporter = NULL, ...) { }
-prot_testthat_test_dir <- function(path, filter = NULL, reporter = NULL, ...) { }
+prot_testthat_test_dir <- function(
+  path, filter = NULL, reporter = NULL, ...) {
+}
 prot_testthat_test_file <- function(path, reporter = NULL, ...) { }
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {

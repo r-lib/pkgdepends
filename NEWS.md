@@ -1,5 +1,9 @@
 # pkgdepends (development version)
 
+* New function `scan_deps()` to auto-detect package dependencies from
+  R code. `deps::.` automatically uses detected dependencies now if no
+  `DESCRIPTION` file is found.
+
 # pkgdepends 0.8.0
 
 * pkgdepends now supports `gitlab::` package sources better, by adding

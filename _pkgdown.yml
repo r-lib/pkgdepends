@@ -3,7 +3,7 @@ url: https://r-lib.github.io/pkgdepends
 template:
   package: tidytemplate
   bootstrap: 5
-  
+
   includes:
     in_header: |
       <script defer data-domain="https://r-lib.github.io/pkgdepends,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
@@ -19,14 +19,14 @@ navbar:
   - text: Reference
     href: reference/index.html
   - text: News
-    href: news/index.html  
+    href: news/index.html
 
 reference:
 
 - title: Configuration
   contents:
   - pkgdepends-config
-  
+
 - title: Package names and references
   contents:
   - pkg_refs
@@ -34,13 +34,14 @@ reference:
   - parse_pkg_refs
   - pkg_name_check
   - pkg_rx
-  
+
 - title: Package dependencies
   contents:
   - pkg_resolution
   - pkg_solution
   - new_pkg_deps
   - pkg_deps
+  - scan_deps
 
 - title: Package downloads
   contents:
@@ -62,7 +63,7 @@ reference:
 - title: System requirements
   contents:
   - starts_with("sysreqs_")
-  
+
 - title: Utility functions
   contents:
   - as_pkg_dependencies
@@ -72,7 +73,7 @@ reference:
   - pkg_dep_types
   - pkg_dep_types_hard
   - pkg_dep_types_soft
-  
+
 - title: internal
   contents:
   - pkgdepends-package

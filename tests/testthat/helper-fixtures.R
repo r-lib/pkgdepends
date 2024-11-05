@@ -36,7 +36,7 @@ fixture <- local({
   }
 
   rstudio_tickle <- function() {
-    if (!requireNamespace("rstudioapi", quietly = TRUE)) {
+    if (!base::requireNamespace("rstudioapi", quietly = TRUE)) {
       return()
     }
 

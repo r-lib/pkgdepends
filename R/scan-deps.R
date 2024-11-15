@@ -402,7 +402,7 @@ parse_pkg_from_call <- function(ns, fn, code) {
   matched <- match.call(fun, expr, expand.dots = FALSE)
   switch(fn,
     "library" = , "require" =
-      parse_pkg_from_call_library(ns, fs, matched),
+      parse_pkg_from_call_library(ns, fn, matched),
     "loadNamespace" = , "requireNamespace" =
       parse_pkg_from_call_loadNamespace(ns, fn, matched),
     "pkg_attache" = , "pkg_attach2" =

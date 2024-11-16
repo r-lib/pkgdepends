@@ -4,7 +4,7 @@ test_that("scan_deps", {
   on.exit(unlink(tmp), add = TRUE)
 
   project <- test_path("fixtures/scan/project-1")
-  expect_snapshot({
+  expect_snapshot(variant = .Platform$OS.type, {
     scan_deps(project)
   })
 })
@@ -51,13 +51,13 @@ test_that("scan_path_deps", {
   on.exit(unlink(tmp), add = TRUE)
 
   rfile <- test_path("fixtures/scan/project-1/R/code.R")
-  expect_snapshot({
+  expect_snapshot(variant = .Platform$OS.type, {
     scan_path_deps(rfile)
   })
 
   # now from the cache
   fake(scan_path_deps, "re_r_dep", function(...) stop("no"))
-  expect_snapshot({
+  expect_snapshot(variant = .Platform$OS.type, {
     scan_path_deps(rfile)
   })
 })

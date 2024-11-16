@@ -261,7 +261,7 @@
 ---
 
     Code
-      code_query(file = test_path("fixtures/scan/inline-chunks.Rmd"), query = q_deps_rmd(), language = "markdown")[["matched_captures"]]
+      code_query(readLines(test_path("fixtures/scan/inline-chunks.Rmd")), query = q_deps_rmd(), language = "markdown")[["matched_captures"]]
     Output
       # A data frame: 3 x 11
            id pattern match start_byte end_byte start_row start_column end_row end_column name   code                                                                                                                           
@@ -273,7 +273,7 @@
 # q_deps_rmd_inline
 
     Code
-      code_query(file = test_path("fixtures/scan/inline-chunks.Rmd"), query = q_deps_rmd_inline(), language = "markdown-inline", ranges = code[, range_cols])[["matched_captures"]]
+      code_query(readLines(test_path("fixtures/scan/inline-chunks.Rmd")), query = q_deps_rmd_inline(), language = "markdown-inline", ranges = code[, range_cols])[["matched_captures"]]
     Output
       # A data frame: 9 x 11
            id pattern match start_byte end_byte start_row start_column end_row end_column name  code                  

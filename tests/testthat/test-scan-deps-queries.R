@@ -132,7 +132,7 @@ test_that("q_deps_rmd", {
 
   expect_snapshot({
     code_query(
-      file = test_path("fixtures/scan/inline-chunks.Rmd"),
+      readLines(test_path("fixtures/scan/inline-chunks.Rmd")),
       query = q_deps_rmd(),
       language = "markdown"
     )[["matched_captures"]]
@@ -150,7 +150,7 @@ test_that("q_deps_rmd_inline", {
 
   expect_snapshot({
     code_query(
-      file = test_path("fixtures/scan/inline-chunks.Rmd"),
+      readLines(test_path("fixtures/scan/inline-chunks.Rmd")),
       query = q_deps_rmd_inline(),
       language = "markdown-inline",
       ranges = code[, range_cols]

@@ -124,7 +124,7 @@ test_that("q_deps_rmd", {
 
   expect_snapshot({
     code_query(
-      file = test_path("fixtures/scan/chunk-errors.Rmd"),
+      readLines(test_path("fixtures/scan/chunk-errors.Rmd")),
       query = q_deps_rmd(),
       language = "markdown"
     )[["matched_captures"]]

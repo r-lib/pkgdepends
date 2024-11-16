@@ -238,7 +238,7 @@
 # q_deps_rmd
 
     Code
-      code_query(file = test_path("fixtures/scan/chunk-errors.Rmd"), query = q_deps_rmd(), language = "markdown")[["matched_captures"]]
+      code_query(readLines(test_path("fixtures/scan/chunk-errors.Rmd")), query = q_deps_rmd(), language = "markdown")[["matched_captures"]]
     Output
       # A data frame: 14 x 11
             id pattern match start_byte end_byte start_row start_column end_row end_column name     code                                                                                      
@@ -256,7 +256,7 @@
       11     3       1     5        182      204        16            1      17          1 content  "and so does this chunk\n"                                                                
       12     2       1     6        213      215        19            4      19          7 header   "{r}"                                                                                     
       13     1       1     6        214      214        19            5      19          6 language "r"                                                                                       
-      14     3       1     6        217      246        20            1      21          1 content  "we forgot to close this chunk\n"                                                         
+      14     3       1     6        217      245        20            1      20         30 content  "we forgot to close this chunk"                                                           
 
 ---
 

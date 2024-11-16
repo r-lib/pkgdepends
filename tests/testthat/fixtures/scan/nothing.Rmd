@@ -1,0 +1,10 @@
+No dependencies here at all `foo library + not + r`.
+
+```{bar}
+another language
+```
+
+```{r}
+# R, but no dependencies
+just + normal + code
+```

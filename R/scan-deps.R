@@ -83,7 +83,7 @@
 
 scan_deps <- function(path = ".") {
   path <- tryCatch(find_project_root(path), error = function(...) path)
-  paths <- dir(path, pattern = "[.](R|r|Rmd|rmd)$", recursive = TRUE)
+  paths <- dir(path, pattern = "[.](R|r|Rmd|rmd|qmd)$", recursive = TRUE)
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)
   deps <- do.call("rbind", c(list(scan_path_deps_empty()), deps_list))
@@ -331,6 +331,7 @@ scan_pat_deps_do_db_hits <- function(hits, path) {
   )
 }
 
+# nocov start
 prot_xfun_pkg_attach <- function(..., install, message) { }
 prot_xfun_pkg_attach2 <- function(...) { }
 prot_pacman_p_load <- function(
@@ -366,6 +367,7 @@ prot_testthat_test_dir <- function(
   path, filter = NULL, reporter = NULL, ...) {
 }
 prot_testthat_test_file <- function(path, reporter = NULL, ...) { }
+# nocov end
 
 safe_parse_pkg_from_call <- function(ns, fn, code) {
   tryCatch(
@@ -374,7 +376,7 @@ safe_parse_pkg_from_call <- function(ns, fn, code) {
   )
 }
 
-parse_pkg_from_call <- function(ns, fn, code) {
+parse_pkg_from_call_match <- function(fn, code) {
   expr <- parse(text = code, keep.source = FALSE)
   fun <- switch(fn,
     "library" = base::library,
@@ -399,13 +401,17 @@ parse_pkg_from_call <- function(ns, fn, code) {
     "test_dir" = prot_testthat_test_dir,
     "test_file" = prot_testthat_test_file
   )
-  matched <- match.call(fun, expr, expand.dots = FALSE)
+  match.call(fun, expr, expand.dots = FALSE)
+}
+
+parse_pkg_from_call <- function(ns, fn, code) {
+  matched <- parse_pkg_from_call_match(fn, code)
   switch(fn,
     "library" = , "require" =
       parse_pkg_from_call_library(ns, fn, matched),
     "loadNamespace" = , "requireNamespace" =
-      parse_pkg_from_call_loadNamespace(ns, fn, matched),
-    "pkg_attache" = , "pkg_attach2" =
+      parse_pkg_from_call_loadnamespace(ns, fn, matched),
+    "pkg_attach" = , "pkg_attach2" =
       parse_pkg_from_call_xfun(ns, fn, matched),
     "p_load" =
       parse_pkg_from_call_pacman(ns, fn, matched),
@@ -445,7 +451,7 @@ parse_pkg_from_call_library <- function(ns, fn, matched) {
   NULL
 }
 
-parse_pkg_from_call_loadNamespace <- function(ns, fn, matched) {
+parse_pkg_from_call_loadnamespace <- function(ns, fn, matched) {
   if (!is.na(ns) && ns != "base") return(NULL)
   pkg <- matched[["package"]]
   if (is.character(pkg) && length(pkg) == 1) {
@@ -471,7 +477,7 @@ parse_pkg_from_call_pacman <- function(ns, fn, matched) {
 
   # character vector or scalar
   char <- matched[["char"]]
-  if (char[[1]] == quote(c)) {
+  if (length(char) > 0 && char[[1]] == quote(c)) {
     pkgs <- c(pkgs, as.list(char[-1]))
   } else if (is.character(char)) {
     pkgs <- c(pkgs, as.list(char))

@@ -90,6 +90,7 @@ scan_deps <- function(path = ".") {
   # write back the relative paths
   deps$path <- paths[match(deps$path, full_paths)]
   deps$type <- get_dep_type_from_path(deps$path)
+  class(deps) <- c("pkg_scan_deps", class(deps))
   deps
 }
 

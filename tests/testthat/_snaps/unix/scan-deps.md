@@ -1,7 +1,7 @@
 # scan_deps
 
     Code
-      scan_deps(project)
+      scan_deps(project)[]
     Output
       # A data frame: 6 x 7
         path      package type  code              start_row start_column start_byte
@@ -12,6 +12,20 @@
       4 doc.qmd   pkgload prod  pkgload::load_all        12            1        174
       5 index.Rmd ST      prod  ST::fun                  10            1         97
       6 index.Rmd RS      prod  library(RS)               9            1         85
+
+---
+
+    Code
+      scan_deps(project)
+    Output
+      
+      Dependencies:
+      + AB      @ R/code.R
+      + BC      @ R/code.R
+      + CD      @ R/code.R
+      + RS      @ index.Rmd
+      + ST      @ index.Rmd
+      + pkgload @ doc.qmd
 
 # scan_path_deps
 

@@ -5,6 +5,9 @@ test_that("scan_deps", {
 
   project <- test_path("fixtures/scan/project-1")
   expect_snapshot(variant = .Platform$OS.type, {
+    scan_deps(project)[]
+  })
+  expect_snapshot(variant = .Platform$OS.type, {
     scan_deps(project)
   })
 })

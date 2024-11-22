@@ -1,0 +1,11 @@
+---
+title: pkgdepends
+output:
+  github_document:
+always_allow_html: yes
+---
+
+```{r}
+library(RS)
+ST::fun()
+```

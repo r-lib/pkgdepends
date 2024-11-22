@@ -1,0 +1,13 @@
+---
+project:
+  type: website
+  resources:
+    - "manifest.json"
+execute:
+  cache: false
+title: Docker containers for R developers
+---
+
+```{r include = FALSE, cache = FALSE}
+pkgload::load_all()
+```

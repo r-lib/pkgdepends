@@ -1,0 +1,10 @@
+---
+need:
+  this:
+    package: p1::fun
+params:
+  param1: Something
+  param2: !r '{ foo + bar; library(p2) }'
+---
+
+Nothing to see here at all.

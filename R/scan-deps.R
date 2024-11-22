@@ -676,11 +676,15 @@ scan_path_deps_do_rmd <- function(code, path) {
   inl_pat <- hits$patterns$id[hits$patterns$name == "inline"]
   inl_hits <- hits$matched_captures[
     hits$matched_captures$pattern %in% inl_pat, ]
+  hdr_pat <- hits$patterns$id[hits$patterns$name == "header"]
+  hdr_hits <- hits$matched_captures[
+    hits$matched_captures$pattern %in% hdr_pat, ]
   blk_hits <- hits$matched_captures[
-    ! hits$matched_captures$pattern %in% inl_pat, ]
+    ! hits$matched_captures$pattern %in% c(inl_pat, hdr_pat), ]
   rbind(
     if (nrow(inl_hits)) scan_path_deps_do_inline_hits(code, inl_hits, path),
-    if (nrow(blk_hits)) scan_path_deps_do_block_hits(code, blk_hits, path)
+    if (nrow(blk_hits)) scan_path_deps_do_block_hits(code, blk_hits, path),
+    if (nrow(hdr_hits)) scan_path_deps_do_header_hits(code, hdr_hits, path)
   )
 }
 
@@ -729,4 +733,76 @@ scan_path_deps_do_block_hits <- function(code, blk_hits, path) {
 
   r_ranges <- blk_hits[wcnd, range_cols]
   scan_path_deps_do_r(code, path = path, ranges = r_ranges)
+}
+
+scan_path_deps_do_header_hits <- function(code, hdr_hits, path) {
+  browser()
+  code <- hdr_hits$code
+  code <- trimws(code)
+  code <- sub("^---", "", code)
+  code <- sub("---$", "", code)
+  code <- trimws(code)
+  hdr <- yaml::yaml.load(code, handlers = list(r = function(yaml) {
+    attr(yaml, "type") <- "r"
+    yaml
+  }))
+  pkgs <- character()
+  # shiny runtime
+  runtime <- hdr[["runtime"]]
+  server <- hdr[["server"]]
+  if (grepl("shiny", runtime %||% "") || identical(server, "shiny") ||
+      (is.list(server) && identical(server[["type"]], "shiny"))) {
+    pkgs <- c(pkgs, "shiny")
+  }
+
+  # find pkg::fun entries anywhere, including names
+  strs <- character()
+  chk <- function(x) {
+    if (!is.null(names(x))) {
+      strs <<- c(strs, names(x))
+    }
+    if (is.list(x)) {
+      lapply(x, chk)
+    } else if (is.character(x)) {
+      strs <<- c(strs, x)
+    }
+  }
+  chk(hdr)
+  for (s in strs) {
+    expr <- tryCatch(
+      parse(text = s, keep.source = FALSE)[[1]],
+      error = function(e) NULL
+    )
+    if (length(expr) == 3 && is.call(expr) &&
+        (identical(expr[[1]], quote(`::`)) ||
+         identical(expr[[1]], quote(`:::`)))) {
+     pkgs <- c(pkgs, as.character(expr[[2]]))
+    }
+  }
+
+  # bslib
+  tryCatch({
+    theme <- hdr[[c("output", "html_document", "theme")]]
+    if (is.list(theme)) {
+      pkgs <- c(pkgs, "bslib")
+    }
+  }, error = function(...) NULL)
+
+  # parameterized documents
+  params <- hdr[["params"]]
+  if (is.list(params)) {
+    # shiny is always needed, apparently
+    pkgs <- c(pkgs, "shiny")
+    for (p in params) {
+      if (identical(attr(p, "type", exact = TRUE),"r")) {
+        r_deps <- scan_path_deps_do_r(p, path)
+        pkgs <- c(pkgs, r_deps[["package"]])
+      }
+    }
+  }
+
+  if (length(pkgs) > 0) {
+    return(unique(pkgs))
+  }
+  NULL
 }

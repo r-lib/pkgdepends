@@ -436,3 +436,11 @@ test_that("scan_path_deps_do_rmd #3", {
 
 # test_that("scan_path_deps_do_inline_hits", { })
 # test_that("scan_path_deps_do_block_hits", { })
+
+test_that("scan_path_deps_do_header_hits", {
+  local_reproducible_output(width = 500)
+  path <- test_path("fixtures/scan/header.Rmd")
+  expect_snapshot({
+    scan_path_deps_do_rmd(readLines(path), basename(path))
+  })
+})

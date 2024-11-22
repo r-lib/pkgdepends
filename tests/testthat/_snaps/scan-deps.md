@@ -271,3 +271,10 @@
     Output
       NULL
 
+# scan_path_deps_do_header_hits
+
+    Code
+      scan_path_deps_do_rmd(readLines(path), basename(path))
+    Output
+      NULL
+

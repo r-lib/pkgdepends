@@ -9,7 +9,9 @@ tree-sitter-files = \
 	tree-sitter/markdown/parser.o \
 	tree-sitter/markdown/scanner.o \
 	tree-sitter/markdown-inline/parser.o \
-	tree-sitter/markdown-inline/scanner.o
+	tree-sitter/markdown-inline/scanner.o \
+        tree-sitter/yaml/parser.o \
+        tree-sitter/yaml/scanner.o
 
 lib-files = \
         init.o cleancall.o tree-sitter.o

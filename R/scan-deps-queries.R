@@ -156,7 +156,9 @@ q_deps_rmd <- function() {
       (#match? @header "^[{]")
     )',
     inline =
-      '(inline) @inline'
+      '(inline) @inline',
+    header =
+      '(minus_metadata) @metadata'
   )
 }
 

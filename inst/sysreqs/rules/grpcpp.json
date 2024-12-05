@@ -39,6 +39,21 @@
       ]
     },
     {
+      "pre_install": [
+        { "command": "yum install -y epel-release" },
+        { "command": "dnf install -y dnf-plugins-core" },
+        { "command": "dnf config-manager --set-enabled powertools" }
+      ],
+      "packages": ["grpc-devel", "pkgconf"],
+      "constraints": [
+        {
+          "os": "linux",
+          "distribution": "rockylinux",
+          "versions": ["8"]
+        }
+      ]
+    },
+    {
       "packages": ["grpc-devel"],
       "constraints": [
         {

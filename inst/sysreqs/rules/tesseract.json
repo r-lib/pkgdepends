@@ -48,7 +48,7 @@
         {
           "os": "linux",
           "distribution": "centos",
-          "versions": ["8"],
+          "versions": ["8"]
         },
         {
           "os": "linux",

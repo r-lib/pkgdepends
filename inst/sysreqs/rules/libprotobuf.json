@@ -82,20 +82,6 @@
       ]
     },
     {
-      "packages": ["protobuf-devel"],
-      "pre_install": [
-        { "command": "dnf install -y dnf-plugins-core" },
-        { "command": "dnf config-manager --set-enabled powertools" }
-      ],
-      "constraints": [
-        {
-          "os": "linux",
-          "distribution": "rockylinux",
-          "versions": ["8"]
-        }
-      ]
-    },
-    {
       "packages": ["protobuf"],
       "constraints": [
         {

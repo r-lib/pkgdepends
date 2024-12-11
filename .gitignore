@@ -15,3 +15,6 @@ Meta
 /man/_cache
 /man/macros/eval2.Rd
 /revdep
+/src/*.gcda
+*.gcda
+*.gcno

@@ -1,13 +1,13 @@
 # get_deps_cache_path
 
     Code
-      get_deps_cache_path()
+      writeLines(get_deps_cache_path())
     Output
-      [1] "<tempdir>/<tempfile>/R/pkgcache/deps/1"
+      <tempdir>/<tempfile>/R/pkgcache/deps/1
     Code
-      get_deps_cache_path("badcafe")
+      writeLines(get_deps_cache_path("badcafe"))
     Output
-      [1] "<tempdir>/<tempfile>/R/pkgcache/deps/1/ba/badcafe"
+      <tempdir>/<tempfile>/R/pkgcache/deps/1/ba/badcafe
 
 # clear_deps_cache
 

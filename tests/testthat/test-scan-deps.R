@@ -18,8 +18,8 @@ test_that("get_deps_cache_path", {
   on.exit(unlink(tmp), add = TRUE)
 
   expect_snapshot(transform = transform_tempdir, {
-    get_deps_cache_path()
-    get_deps_cache_path("badcafe")
+    writeLines(get_deps_cache_path())
+    writeLines(get_deps_cache_path("badcafe"))
   })
 })
 

@@ -143,7 +143,7 @@ test_that("q_deps_rmd_inline", {
   local_reproducible_output(width = 500)
 
   code <- code_query(
-    file = test_path("fixtures/scan/inline-chunks.Rmd"),
+    readLines(test_path("fixtures/scan/inline-chunks.Rmd")),
     query = q_deps_rmd(),
     language = "markdown"
   )[["matched_captures"]]

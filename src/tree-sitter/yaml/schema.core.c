@@ -144,7 +144,9 @@ static int8_t adv_sch_stt(int8_t sch_stt, int32_t cur_chr, ResultSchema *rlt_sch
           ('a' <= cur_chr && cur_chr <= 'f')) {*rlt_sch = RS_INT; return 40;}
       break;
     case 34:
-      abort();
+      // Abort is not allowed in an R package. No clue why we are aborting
+      // here, of course, or what the consequences of this change are.
+      // abort();
       break;
     case 35:
       *rlt_sch = RS_NULL;

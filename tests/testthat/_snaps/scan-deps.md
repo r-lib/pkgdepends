@@ -276,5 +276,45 @@
     Code
       scan_path_deps_do_rmd(readLines(path), basename(path))
     Output
-      NULL
+      # A data frame: 2 x 7
+        path       package type  code        start_row start_column start_byte
+        <chr>      <chr>   <chr> <chr>           <int>        <int>      <int>
+      1 header.Rmd p1      prod  p1::fun             4           14         32
+      2 header.Rmd p2      prod  library(p2)         7           14         81
+
+# scan_path_deps_do_header_shiny_hits
+
+    Code
+      scan_path_deps_do_rmd(readLines(path), basename(path))
+    Output
+      # A data frame: 4 x 7
+        path             package type  code         start_row start_column start_byte
+        <chr>            <chr>   <chr> <chr>            <int>        <int>      <int>
+      1 header-shiny.Rmd shiny   prod  "shiny"              4           11         26
+      2 header-shiny.Rmd shiny   prod  "'shiny'"            5            9         40
+      3 header-shiny.Rmd shiny   prod  "\"shiny\""          6           11         58
+      4 header-shiny.Rmd shiny   prod  "|\n  shiny"         7            9         74
+
+---
+
+    Code
+      scan_path_deps_do_rmd(readLines(path), basename(path))
+    Output
+      # A data frame: 4 x 7
+        path              package type  code           start_row start_column start_byte
+        <chr>             <chr>   <chr> <chr>              <int>        <int>      <int>
+      1 header-shiny2.Rmd shiny   prod  "shiny"                5            9         32
+      2 header-shiny2.Rmd shiny   prod  "'shiny'"              7            9         56
+      3 header-shiny2.Rmd shiny   prod  "\"shiny\""            9           11         82
+      4 header-shiny2.Rmd shiny   prod  ">\n    shiny"        11            9        106
+
+# scan_path_deps_do_header_bslib_hits
+
+    Code
+      scan_path_deps_do_rmd(readLines(path), basename(path))
+    Output
+      # A data frame: 1 x 7
+        path             package type  code                                                              start_row start_column start_byte
+        <chr>            <chr>   <chr> <chr>                                                                 <int>        <int>      <int>
+      1 header-bslib.Rmd bslib   prod  "output:\n  html_document:\n    toc: true\n    theme: some theme"         4            1         16
 

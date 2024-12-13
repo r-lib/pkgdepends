@@ -735,74 +735,132 @@ scan_path_deps_do_block_hits <- function(code, blk_hits, path) {
   scan_path_deps_do_r(code, path = path, ranges = r_ranges)
 }
 
+# Crossref: https://github.com/r-lib/pkgdepends/issues/399
+# This is pretty difficult, unfortunately, but could not come up with a
+# simpler solution.
+# * We use tree-sitter to parse and search the YAML, so that we can have
+#   coordinates, and also the search is much simpler than when using a YAML
+#   parser.
+# * The tree-sitter parser cannot scan the actual values of the scalars, so
+#   we use a YAML parser for that (libyaml). (No, it is not better to scan
+#   them manually, they are quite involved.)
+# * Scanning the scalars is a transformation, not just a subsetting, so
+#   we lose the correct coordinates for the things (e.g. R code) _within_
+#   the values. We still have the coordinates for the values, though.
+# * We don't handle references correctly, because the tree-sitter parser
+#   does not help with that. For that we'd need to parse the whole YAML
+#   with libyaml. Maybe we'll do that in the future.
+
 scan_path_deps_do_header_hits <- function(code, hdr_hits, path) {
-  browser()
-  code <- hdr_hits$code
-  code <- trimws(code)
-  code <- sub("^---", "", code)
-  code <- sub("---$", "", code)
-  code <- trimws(code)
-  hdr <- yaml::yaml.load(code, handlers = list(r = function(yaml) {
-    attr(yaml, "type") <- "r"
-    yaml
-  }))
-  pkgs <- character()
-  # shiny runtime
-  runtime <- hdr[["runtime"]]
-  server <- hdr[["server"]]
-  if (grepl("shiny", runtime %||% "") || identical(server, "shiny") ||
-      (is.list(server) && identical(server[["type"]], "shiny"))) {
-    pkgs <- c(pkgs, "shiny")
-  }
+  hits <- code_query(
+    code,
+    language = "yaml",
+    query = q_deps_yaml_header(),
+    ranges = hdr_hits[, range_cols]
+  )
 
-  # find pkg::fun entries anywhere, including names
-  strs <- character()
-  chk <- function(x) {
-    if (!is.null(names(x))) {
-      strs <<- c(strs, names(x))
-    }
-    if (is.list(x)) {
-      lapply(x, chk)
-    } else if (is.character(x)) {
-      strs <<- c(strs, x)
-    }
-  }
-  chk(hdr)
-  for (s in strs) {
-    expr <- tryCatch(
-      parse(text = s, keep.source = FALSE)[[1]],
-      error = function(e) NULL
-    )
-    if (length(expr) == 3 && is.call(expr) &&
-        (identical(expr[[1]], quote(`::`)) ||
-         identical(expr[[1]], quote(`:::`)))) {
-     pkgs <- c(pkgs, as.character(expr[[2]]))
-    }
-  }
+  shiny_pat <- hits$patterns$id[hits$patterns$name == "shiny"]
+  shiny_hits <- hits$matched_captures[
+    hits$matched_captures$pattern %in% shiny_pat, ]
+  pkgstr_pat <- hits$patterns$id[hits$patterns$name == "pkgstring"]
+  pkgstr_hits <- hits$matched_captures[
+    hits$matched_captures$pattern %in% pkgstr_pat, ]
+  bslib_pat <- hits$patterns$id[hits$patterns$name == "bslib"]
+  bslib_hits <- hits$matched_captures[
+    hits$matched_captures$pattern %in% bslib_pat, ]
+  tag_pat <- hits$patterns$id[hits$patterns$name == "tag"]
+  tag_hits <- hits$matched_captures[
+    hits$matched_captures$pattern %in% tag_pat, ]
 
-  # bslib
-  tryCatch({
-    theme <- hdr[[c("output", "html_document", "theme")]]
-    if (is.list(theme)) {
-      pkgs <- c(pkgs, "bslib")
+  rbind(
+    if (nrow(shiny_hits)) {
+      scan_path_deps_do_header_shiny_hits(code, shiny_hits, path)
+    },
+    if (nrow(pkgstr_hits)) {
+      scan_path_deps_do_header_pkgstr_hits(code, pkgstr_hits, path)
+    },
+    if (nrow(bslib_hits)) {
+      scan_path_deps_do_header_bslib_hits(code, bslib_hits, path)
+    },
+    if (nrow(tag_hits)) {
+      scan_path_deps_do_header_tag_hits(code, tag_hits, path)
     }
-  }, error = function(...) NULL)
+  )
+}
 
-  # parameterized documents
-  params <- hdr[["params"]]
-  if (is.list(params)) {
-    # shiny is always needed, apparently
-    pkgs <- c(pkgs, "shiny")
-    for (p in params) {
-      if (identical(attr(p, "type", exact = TRUE),"r")) {
-        r_deps <- scan_path_deps_do_r(p, path)
-        pkgs <- c(pkgs, r_deps[["package"]])
+scan_path_deps_do_header_shiny_hits <- function(code, hits, path) {
+  hits <- hits[hits$name == "value", ]
+  vals <- yaml_parse_scalar(hits$code)
+  shiny <- vals == "shiny"
+  data_frame(
+    path = path,
+    package = "shiny",
+    type = get_dep_type_from_path(path),
+    code = hits$code[shiny],
+    start_row = hits$start_row[shiny],
+    start_column = hits$start_column[shiny],
+    start_byte = hits$start_byte[shiny]
+  )
+}
+
+scan_path_deps_do_header_pkgstr_hits <- function(code, hits, path) {
+  vals <- yaml_parse_scalar(hits$code)
+  pkg <- vapply(vals, FUN.VALUE = character(1), function(x) {
+    tryCatch({
+      expr <- parse(text = x, keep.source = FALSE)[[1]]
+      if (length(expr) == 3 && is.call(expr) &&
+          (identical(expr[[1]], quote(`::`)) ||
+           identical(expr[[1]], quote(`:::`)))) {
+        as.character(expr[[2]])
+      } else {
+        NA_character_
       }
-    }
-  }
+    }, error = function(...) NA_character_)
+  })
+  if (all(is.na(pkg))) return(NULL)
+  hits <- hits[!is.na(pkg), ]
+  pkg <- na.omit(pkg)
+  data_frame(
+    path = path,
+    package = pkg,
+    type = get_dep_type_from_path(path),
+    code = hits$code,
+    start_row = hits$start_row,
+    start_column = hits$start_column,
+    start_byte = hits$start_byte
+  )
+}
 
-  if (length(pkgs) > 0) {
-    return(unique(pkgs))
-  }
-  NULL
+scan_path_deps_do_header_bslib_hits <- function(code, hits, path) {
+  data_frame(
+    path = path,
+    package = "bslib",
+    type = get_dep_type_from_path(path),
+    code = hits$code[hits$name == "code"],
+    start_row = hits$start_row[hits$name == "code"],
+    start_column = hits$start_column[hits$name == "code"],
+    start_byte = hits$start_byte[hits$name == "code"]
+  )
+}
+
+scan_path_deps_do_header_tag_hits <- function(code, hits, path) {
+  hits <- hits[hits[["name"]] == "code", ]
+  vals <- yaml_parse_scalar(hits$code)
+  res <- lapply(seq_along(vals), function(vi) {
+    r1 <- scan_path_deps_do_r(vals[vi], path = path)
+    # need to replace the positions with the ones from the YAML file
+    # we cannot use ranges here, because the R code is a a transformation
+    # of the text in the YAML file, not merely a subset. So we just mark
+    # the beginning of the R code in the YAML, instead of the real position
+    # of the `library()` etc. calls.
+    r1[["start_row"]][] <- hits[vi, "start_row"]
+    r1[["start_column"]][] <- hits[vi, "start_column"]
+    r1[["start_byte"]][] <- hits[vi, "start_byte"]
+    r1
+  })
+  do.call(rbind, res)
+}
+
+yaml_parse_scalar <- function(x) {
+  vcapply(x, function(x) .Call(c_yaml_parse_scalar, x), USE.NAMES = FALSE)
 }

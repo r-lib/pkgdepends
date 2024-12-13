@@ -288,3 +288,46 @@
       8     1       1     3        157      157         6            9       6         10 csd1  `                     
       9     2       1     3        178      178         6           30       6         31 csd2  `                     
 
+# q_deps_yaml_header
+
+    Code
+      print(n = Inf, code_query(readLines(test_path("fixtures/scan/header-shiny.Rmd")), query = q_deps_yaml_header(), language = "yaml")[["matched_captures"]])
+    Output
+      # A data frame: 12 x 11
+            id pattern match start_byte end_byte start_row start_column end_row end_column name  code                   
+         <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>                  
+       1     3       1     1         16       30         4            1       4         16 code  "'server': shiny"      
+       2     1       1     1         16       23         4            1       4          9 key   "'server'"             
+       3     2       1     1         26       30         4           11       4         16 value "shiny"                
+       4     3       1     2         32       46         5            1       5         16 code  "server: 'shiny'"      
+       5     1       1     2         32       37         5            1       5          7 key   "server"               
+       6     2       1     2         40       46         5            9       5         16 value "'shiny'"              
+       7     3       1     3         48       64         6            1       6         18 code  "\"server\": \"shiny\""
+       8     1       1     3         48       55         6            1       6          9 key   "\"server\""           
+       9     2       1     3         58       64         6           11       6         18 value "\"shiny\""            
+      10     3       1     4         66       82         7            1       8          8 code  "server: |\n  shiny"   
+      11     1       1     4         66       71         7            1       7          7 key   "server"               
+      12     2       1     4         74       82         7            9       8          8 value "|\n  shiny"           
+    Code
+      print(n = Inf, code_query(readLines(test_path("fixtures/scan/header-shiny2.Rmd")), query = q_deps_yaml_header(), language = "yaml")[["matched_captures"]])
+    Output
+      # A data frame: 16 x 11
+            id pattern match start_byte end_byte start_row start_column end_row end_column name  code                           
+         <int>   <int> <int>      <int>    <int>     <int>        <int>   <int>      <int> <chr> <chr>                          
+       1     3       2     1         16       36         4            1       5         14 code  "server:\n  type: shiny"       
+       2     1       2     1         16       21         4            1       4          7 key   "server"                       
+       3     4       2     1         26       29         5            3       5          7 key2  "type"                         
+       4     2       2     1         32       36         5            9       5         14 value "shiny"                        
+       5     3       2     2         38       62         6            1       7         16 code  "'server':\n  type: 'shiny'"   
+       6     1       2     2         38       45         6            1       6          9 key   "'server'"                     
+       7     4       2     2         50       53         7            3       7          7 key2  "type"                         
+       8     2       2     2         56       62         7            9       7         16 value "'shiny'"                      
+       9     3       2     3         64       88         8            1       9         18 code  "server:\n  'type': \"shiny\"" 
+      10     1       2     3         64       69         8            1       8          7 key   "server"                       
+      11     4       2     3         74       79         9            3       9          9 key2  "'type'"                       
+      12     2       2     3         82       88         9           11       9         18 value "\"shiny\""                    
+      13     3       2     4         90      116        10            1      12         10 code  "server:\n  type: >\n    shiny"
+      14     1       2     4         90       95        10            1      10          7 key   "server"                       
+      15     4       2     4        100      103        11            3      11          7 key2  "type"                         
+      16     2       2     4        106      116        11            9      12         10 value ">\n    shiny"                 
+

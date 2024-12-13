@@ -1,0 +1,15 @@
+---
+foo:
+  bar
+server:
+  type: shiny
+'server':
+  type: 'shiny'
+server:
+  'type': "shiny"
+server:
+  type: >
+    shiny
+---
+
+Nothing to see here at all.

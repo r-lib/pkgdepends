@@ -1,0 +1,11 @@
+---
+foo:
+  bar
+output:
+  html_document:
+    toc: true
+    theme: some theme
+not: 'this has :: but it is not a package'
+---
+
+Nothing to see here at all.

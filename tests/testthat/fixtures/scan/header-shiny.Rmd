@@ -1,0 +1,11 @@
+---
+foo:
+  bar
+'server': shiny
+server: 'shiny'
+"server": "shiny"
+server: |
+  shiny
+---
+
+Nothing to see here at all.

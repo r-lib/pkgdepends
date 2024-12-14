@@ -3,18 +3,18 @@
     Code
       writeLines(get_deps_cache_path())
     Output
-      <tempdir>/<tempfile>/R/pkgcache/deps/1
+      <tempdir>/<tempfile>/R/pkgcache/deps/2
     Code
       writeLines(get_deps_cache_path("badcafe"))
     Output
-      <tempdir>/<tempfile>/R/pkgcache/deps/1/ba/badcafe
+      <tempdir>/<tempfile>/R/pkgcache/deps/2/ba/badcafe
 
 # clear_deps_cache
 
     Code
       dir(tmp, recursive = TRUE)
     Output
-      [1] "R/pkgcache/deps/1/ba/badcafe"
+      [1] "R/pkgcache/deps/2/ba/badcafe"
 
 ---
 
@@ -30,26 +30,27 @@
     Output
       [1] "library|require|loadNamespace|::|setClass|setGeneric|pkg_attach|p_load|module|import|box::|tar_option_set|glue|ggsave|set_engine|opts_chunk|geom_hex|JunitReporter|geom_hex|JunitReporter"
 
-# scan_path_deps_empty
+# scan_deps_df
 
     Code
-      scan_path_deps_empty()
+      scan_deps_df()
     Output
-      # A data frame: 0 x 7
-      # i 7 variables: path <chr>, package <chr>, type <chr>, code <chr>,
-      #   start_row <int>, start_column <int>, start_byte <int>
+      # A data frame: 0 x 9
+      # i 9 variables: path <chr>, ref <chr>, package <chr>, version <chr>,
+      #   type <chr>, code <chr>, start_row <int>, start_column <int>,
+      #   start_byte <int>
 
 # scan_path_deps_do
 
     Code
       scan_path_deps_do(readLines(rfile), basename(rfile))
     Output
-      # A data frame: 3 x 7
-        path   package type  code        start_row start_column start_byte
-        <chr>  <chr>   <chr> <chr>           <int>        <int>      <int>
-      1 code.R CD      prod  CD::pkg             4            1         26
-      2 code.R AB      prod  library(AB)         1            1          1
-      3 code.R BC      prod  require(BC)         2            1         13
+      # A data frame: 3 x 9
+        path   ref   package version type  code      start_row start_column start_byte
+        <chr>  <chr> <chr>   <chr>   <chr> <chr>         <int>        <int>      <int>
+      1 code.R CD    CD      *       prod  CD::pkg           4            1         26
+      2 code.R AB    AB      *       prod  library(~         1            1          1
+      3 code.R BC    BC      *       prod  require(~         2            1         13
 
 ---
 
@@ -64,60 +65,60 @@
     Code
       scan_path_deps_do_r(readLines(rfile), rfile)
     Output
-      # A data frame: 3 x 7
-        path                             package type  code        start_row start_column start_byte
-        <chr>                            <chr>   <chr> <chr>           <int>        <int>      <int>
-      1 fixtures/scan/project-1/R/code.R CD      prod  CD::pkg             4            1         26
-      2 fixtures/scan/project-1/R/code.R AB      prod  library(AB)         1            1          1
-      3 fixtures/scan/project-1/R/code.R BC      prod  require(BC)         2            1         13
+      # A data frame: 3 x 9
+        path                             ref   package version type  code        start_row start_column start_byte
+        <chr>                            <chr> <chr>   <chr>   <chr> <chr>           <int>        <int>      <int>
+      1 fixtures/scan/project-1/R/code.R CD    CD      *       prod  CD::pkg             4            1         26
+      2 fixtures/scan/project-1/R/code.R AB    AB      *       prod  library(AB)         1            1          1
+      3 fixtures/scan/project-1/R/code.R BC    BC      *       prod  require(BC)         2            1         13
 
 # scan_path_deps_do_fn_hits
 
     Code
       scan_path_deps_do_r(readLines(rfile), rfile)
     Output
-      # A data frame: 2 x 7
-        path                    package type  code                                                           start_row start_column start_byte
-        <chr>                   <chr>   <chr> <chr>                                                              <int>        <int>      <int>
-      1 fixtures/scan/methods.R methods prod  "setClass(\"track\", slots = c(x=\"numeric\", y=\"numeric\"))"         2           10         43
-      2 fixtures/scan/methods.R methods prod  "setGeneric(\"plot\")"                                                 6            1        171
+      # A data frame: 2 x 9
+        path                    ref     package version type  code                                                           start_row start_column start_byte
+        <chr>                   <chr>   <chr>   <chr>   <chr> <chr>                                                              <int>        <int>      <int>
+      1 fixtures/scan/methods.R methods methods *       prod  "setClass(\"track\", slots = c(x=\"numeric\", y=\"numeric\"))"         2           10         43
+      2 fixtures/scan/methods.R methods methods *       prod  "setGeneric(\"plot\")"                                                 6            1        171
 
 # scan_path_deps_do_jr_hits
 
     Code
       scan_path_deps_do_r(readLines(rfile), rfile)
     Output
-      # A data frame: 6 x 7
-        path                  package  type  code                          start_row start_column start_byte
-        <chr>                 <chr>    <chr> <chr>                             <int>        <int>      <int>
-      1 fixtures/scan/junit.R testthat prod  testthat::JunitReporter               1            8          8
-      2 fixtures/scan/junit.R testthat prod  library(testthat)                     3            1         39
-      3 fixtures/scan/junit.R xml2     prod  testthat::JunitReporter$new()         1            8          8
-      4 fixtures/scan/junit.R xml2     prod  JunitReporter$new()                   5            9         66
-      5 fixtures/scan/junit.R xml2     prod  JunitReporter                         1           18         18
-      6 fixtures/scan/junit.R xml2     prod  JunitReporter                         5            9         66
+      # A data frame: 6 x 9
+        path                  ref      package  version type  code                          start_row start_column start_byte
+        <chr>                 <chr>    <chr>    <chr>   <chr> <chr>                             <int>        <int>      <int>
+      1 fixtures/scan/junit.R testthat testthat *       prod  testthat::JunitReporter               1            8          8
+      2 fixtures/scan/junit.R testthat testthat *       prod  library(testthat)                     3            1         39
+      3 fixtures/scan/junit.R xml2     xml2     *       prod  testthat::JunitReporter$new()         1            8          8
+      4 fixtures/scan/junit.R xml2     xml2     *       prod  JunitReporter$new()                   5            9         66
+      5 fixtures/scan/junit.R xml2     xml2     *       prod  JunitReporter                         1           18         18
+      6 fixtures/scan/junit.R xml2     xml2     *       prod  JunitReporter                         5            9         66
 
 # scan_pat_deps_do_ragg_hits
 
     Code
       scan_path_deps_do_rmd(readLines(rfile), rfile)
     Output
-      # A data frame: 3 x 7
-        path                    package type  code                                        start_row start_column start_byte
-        <chr>                   <chr>   <chr> <chr>                                           <int>        <int>      <int>
-      1 fixtures/scan/knitr.Rmd knitr   prod  "knitr::opts_chunk"                                 3            1          9
-      2 fixtures/scan/knitr.Rmd knitr   prod  "knitr::opts_chunk"                                 7            1         61
-      3 fixtures/scan/knitr.Rmd ragg    prod  "knitr::opts_chunk$set(dev = \"ragg_png\")"         3            1          9
+      # A data frame: 3 x 9
+        path                    ref   package version type  code                                        start_row start_column start_byte
+        <chr>                   <chr> <chr>   <chr>   <chr> <chr>                                           <int>        <int>      <int>
+      1 fixtures/scan/knitr.Rmd knitr knitr   *       prod  "knitr::opts_chunk"                                 3            1          9
+      2 fixtures/scan/knitr.Rmd knitr knitr   *       prod  "knitr::opts_chunk"                                 7            1         61
+      3 fixtures/scan/knitr.Rmd ragg  ragg    *       prod  "knitr::opts_chunk$set(dev = \"ragg_png\")"         3            1          9
 
 ---
 
     Code
       scan_path_deps_do_rmd(readLines(rfile), rfile)
     Output
-      # A data frame: 1 x 7
-        path                     package type  code              start_row start_column start_byte
-        <chr>                    <chr>   <chr> <chr>                 <int>        <int>      <int>
-      1 fixtures/scan/noragg.Rmd knitr   prod  knitr::opts_chunk         2            1          8
+      # A data frame: 1 x 9
+        path                     ref   package version type  code              start_row start_column start_byte
+        <chr>                    <chr> <chr>   <chr>   <chr> <chr>                 <int>        <int>      <int>
+      1 fixtures/scan/noragg.Rmd knitr knitr   *       prod  knitr::opts_chunk         2            1          8
 
 # safe_parse_pkg_from_call
 
@@ -247,22 +248,22 @@
     Code
       scan_path_deps_do_rmd(readLines(path), "chunk-errors.Rmd")
     Output
-      # A data frame: 1 x 7
-        path             package type  code           start_row start_column start_byte
-        <chr>            <chr>   <chr> <chr>              <int>        <int>      <int>
-      1 chunk-errors.Rmd dplyr   prod  library(dplyr)         8            1        115
+      # A data frame: 1 x 9
+        path             ref   package version type  code           start_row start_column start_byte
+        <chr>            <chr> <chr>   <chr>   <chr> <chr>              <int>        <int>      <int>
+      1 chunk-errors.Rmd dplyr dplyr   *       prod  library(dplyr)         8            1        115
 
 # scan_path_deps_do_rmd #2
 
     Code
       scan_path_deps_do_rmd(readLines(path), "inline-chunks.Rmd")
     Output
-      # A data frame: 3 x 7
-        path              package  type  code             start_row start_column start_byte
-        <chr>             <chr>    <chr> <chr>                <int>        <int>      <int>
-      1 inline-chunks.Rmd inline   prod  inline::chunks           4           49         68
-      2 inline-chunks.Rmd multiple prod  multiple::calls          4           92        111
-      3 inline-chunks.Rmd separate prod  separate::chunks         6           12        160
+      # A data frame: 3 x 9
+        path              ref      package  version type  code             start_row start_column start_byte
+        <chr>             <chr>    <chr>    <chr>   <chr> <chr>                <int>        <int>      <int>
+      1 inline-chunks.Rmd inline   inline   *       prod  inline::chunks           4           49         68
+      2 inline-chunks.Rmd multiple multiple *       prod  multiple::calls          4           92        111
+      3 inline-chunks.Rmd separate separate *       prod  separate::chunks         6           12        160
 
 # scan_path_deps_do_rmd #3
 
@@ -276,45 +277,65 @@
     Code
       scan_path_deps_do_rmd(readLines(path), basename(path))
     Output
-      # A data frame: 2 x 7
-        path       package type  code        start_row start_column start_byte
-        <chr>      <chr>   <chr> <chr>           <int>        <int>      <int>
-      1 header.Rmd p1      prod  p1::fun             4           14         32
-      2 header.Rmd p2      prod  library(p2)         7           14         81
+      # A data frame: 2 x 9
+        path       ref   package version type  code        start_row start_column start_byte
+        <chr>      <chr> <chr>   <chr>   <chr> <chr>           <int>        <int>      <int>
+      1 header.Rmd p1    p1      *       prod  p1::fun             4           14         32
+      2 header.Rmd p2    p2      *       prod  library(p2)         7           14         81
 
 # scan_path_deps_do_header_shiny_hits
 
     Code
       scan_path_deps_do_rmd(readLines(path), basename(path))
     Output
-      # A data frame: 4 x 7
-        path             package type  code         start_row start_column start_byte
-        <chr>            <chr>   <chr> <chr>            <int>        <int>      <int>
-      1 header-shiny.Rmd shiny   prod  "shiny"              4           11         26
-      2 header-shiny.Rmd shiny   prod  "'shiny'"            5            9         40
-      3 header-shiny.Rmd shiny   prod  "\"shiny\""          6           11         58
-      4 header-shiny.Rmd shiny   prod  "|\n  shiny"         7            9         74
+      # A data frame: 4 x 9
+        path             ref   package version type  code         start_row start_column start_byte
+        <chr>            <chr> <chr>   <chr>   <chr> <chr>            <int>        <int>      <int>
+      1 header-shiny.Rmd shiny shiny   *       prod  "shiny"              4           11         26
+      2 header-shiny.Rmd shiny shiny   *       prod  "'shiny'"            5            9         40
+      3 header-shiny.Rmd shiny shiny   *       prod  "\"shiny\""          6           11         58
+      4 header-shiny.Rmd shiny shiny   *       prod  "|\n  shiny"         7            9         74
 
 ---
 
     Code
       scan_path_deps_do_rmd(readLines(path), basename(path))
     Output
-      # A data frame: 4 x 7
-        path              package type  code           start_row start_column start_byte
-        <chr>             <chr>   <chr> <chr>              <int>        <int>      <int>
-      1 header-shiny2.Rmd shiny   prod  "shiny"                5            9         32
-      2 header-shiny2.Rmd shiny   prod  "'shiny'"              7            9         56
-      3 header-shiny2.Rmd shiny   prod  "\"shiny\""            9           11         82
-      4 header-shiny2.Rmd shiny   prod  ">\n    shiny"        11            9        106
+      # A data frame: 4 x 9
+        path              ref   package version type  code           start_row start_column start_byte
+        <chr>             <chr> <chr>   <chr>   <chr> <chr>              <int>        <int>      <int>
+      1 header-shiny2.Rmd shiny shiny   *       prod  "shiny"                5            9         32
+      2 header-shiny2.Rmd shiny shiny   *       prod  "'shiny'"              7            9         56
+      3 header-shiny2.Rmd shiny shiny   *       prod  "\"shiny\""            9           11         82
+      4 header-shiny2.Rmd shiny shiny   *       prod  ">\n    shiny"        11            9        106
 
 # scan_path_deps_do_header_bslib_hits
 
     Code
       scan_path_deps_do_rmd(readLines(path), basename(path))
     Output
-      # A data frame: 1 x 7
-        path             package type  code                                                              start_row start_column start_byte
-        <chr>            <chr>   <chr> <chr>                                                                 <int>        <int>      <int>
-      1 header-bslib.Rmd bslib   prod  "output:\n  html_document:\n    toc: true\n    theme: some theme"         4            1         16
+      # A data frame: 1 x 9
+        path             ref   package version type  code                                                              start_row start_column start_byte
+        <chr>            <chr> <chr>   <chr>   <chr> <chr>                                                                 <int>        <int>      <int>
+      1 header-bslib.Rmd bslib bslib   *       prod  "output:\n  html_document:\n    toc: true\n    theme: some theme"         4            1         16
+
+# scan_path_deps_do_dsc
+
+    Code
+      scan_path_deps_do_dsc(readLines(path), basename(path))
+    Output
+      # A data frame: 42 x 9
+         path        ref       package  version type  code      start_row start_column start_byte
+         <chr>       <chr>     <chr>    <chr>   <chr> <chr>         <int>        <int>      <int>
+       1 DESCRIPTION callr     callr    >=3.3.1 prod  callr             1            1          1
+       2 DESCRIPTION r-lib/cli cli      >=3.6.0 prod  r-lib/cli         1            1          1
+       3 DESCRIPTION curl      curl     *       prod  curl              1            1          1
+       4 DESCRIPTION desc      desc     >=1.4.3 prod  desc              1            1          1
+       5 DESCRIPTION filelock  filelock >=1.0.2 prod  filelock          1            1          1
+       6 DESCRIPTION jsonlite  jsonlite *       prod  jsonlite          1            1          1
+       7 DESCRIPTION lpSolve   lpSolve  *       prod  lpSolve           1            1          1
+       8 DESCRIPTION pkgbuild  pkgbuild >=1.0.2 prod  pkgbuild          1            1          1
+       9 DESCRIPTION pkgcache  pkgcache >=2.2.0 prod  pkgcache          1            1          1
+      10 DESCRIPTION processx  processx >=3.4.2 prod  processx          1            1          1
+      # i 32 more rows
 

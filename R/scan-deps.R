@@ -84,12 +84,15 @@
 scan_deps <- function(path = ".") {
   path <- tryCatch(find_project_root(path), error = function(...) path)
   paths <- dir(path, pattern = "[.](R|r|Rmd|rmd|qmd)$", recursive = TRUE)
+  if (file.exists(file.path(path, "DESCRIPTION"))) {
+    paths <- c(paths, "DESCRIPTION")
+  }
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)
-  deps <- do.call("rbind", c(list(scan_path_deps_empty()), deps_list))
+  deps <- do.call("rbind", c(list(scan_deps_df()), deps_list))
   # write back the relative paths
   deps$path <- paths[match(deps$path, full_paths)]
-  deps$type <- get_dep_type_from_path(deps$path)
+  deps$type <- get_dep_type_from_path(deps$path, deps$type)
   class(deps) <- c("pkg_scan_deps", class(deps))
   deps
 }
@@ -98,7 +101,7 @@ scan_deps <- function(path = ".") {
 
 # needs to increase as the deps discovry code changes, otherwise we don't
 # apply the new discovery code
-deps_cache_version <- 1L
+deps_cache_version <- 2L
 
 get_deps_cache_path <- function(hash = NULL) {
   root <- file.path(get_user_cache_dir()$root, "deps", deps_cache_version)
@@ -146,20 +149,22 @@ scan_path_deps <- function(path) {
     deps <- readRDS(cache)
     if (!is.null(deps) && nrow(deps) > 0) {
       deps$path <- path
-      deps$type <- get_dep_type_from_path(path)
+      deps$type <- get_dep_type_from_path(path, deps$type)
     }
     return(deps)
   }
 
   # scan it if it is worth it, based on a quick check
-  has_deps <- length(grepRaw(re_r_dep(), code)) > 0
-  deps <- if (has_deps) scan_path_deps_do(code, path)
+  maybe_has_deps <- file_extx(path) != "r" ||
+    length(grepRaw(re_r_dep(), code)) > 0
+  deps <- if (maybe_has_deps) {
+    scan_path_deps_do(code, path)
+  }
 
   # save it to the cache, but anonimize it first. If no deps, save NULL
   deps_no_path <- deps
   if (!is.null(deps_no_path) && nrow(deps_no_path) > 0) {
     deps_no_path$path <- ""
-    deps_no_path$type <- NA_character_
   }
   dir.create(dirname(cache), showWarnings = FALSE, recursive = TRUE)
   saveRDS(deps_no_path, cache)
@@ -167,25 +172,38 @@ scan_path_deps <- function(path) {
   deps
 }
 
-scan_path_deps_empty <- function() {
+scan_deps_df <- function(
+  path = character(),
+  ref = package,
+  package = character(),
+  version = "*",
+  type = get_dep_type_from_path(path),
+  code = character(),
+  start_row = 1L,
+  start_column = 1L,
+  start_byte = 1L
+) {
   data_frame(
-    path = character(),
-    package = character(),
-    type = character(),
-    code = character(),
-    start_row = integer(),
-    start_column = integer(),
-    start_byte = integer()
+    path = path,
+    ref = ref,
+    package = package,
+    version = version,
+    type = type,
+    code = code,
+    start_row = start_row,
+    start_column = start_column,
+    start_byte = start_byte
   )
 }
 
 scan_path_deps_do <- function(code, path) {
-  ext <- tolower(file_ext(path))
+  ext <- file_extx(path)
   switch(
     ext,
     ".r" = scan_path_deps_do_r(code, path),
     ".qmd" = ,
     ".rmd" = scan_path_deps_do_rmd(code, path),
+    "DESCRIPTION" = scan_path_deps_do_dsc(code, path),
     stop("Cannot parse ", ext, " file for dependencies, internal error")
   )
 }
@@ -232,10 +250,10 @@ scan_path_deps_do_r <- function(code, path, ranges = NULL) {
 }
 
 scan_path_deps_do_pkg_hits <- function(hits, path) {
-  data_frame(
+  pkg <- hits$code[hits$name == "pkg-name"]
+  scan_deps_df(
     path = path,
-    package = hits$code[hits$name == "pkg-name"],
-    type = get_dep_type_from_path(path),
+    package = pkg,
     code = hits$code[hits$name == "dep-code"],
     start_row = hits$start_row[hits$name == "dep-code"],
     start_column = hits$start_column[hits$name == "dep-code"],
@@ -246,10 +264,9 @@ scan_path_deps_do_pkg_hits <- function(hits, path) {
 scan_path_deps_do_fn_hits <- function(hits, path) {
   fn_pkg_map <- c(setClass = "methods", setGeneric = "methods")
   fn_names <- hits$code[hits$name == "fn-name"]
-  data_frame(
+  scan_deps_df(
     path = path,
     package = fn_pkg_map[fn_names],
-    type = get_dep_type_from_path(path),
     code = hits$code[hits$name == "dep-code"],
     start_row = hits$start_row[hits$name == "dep-code"],
     start_column = hits$start_column[hits$name == "dep-code"],
@@ -271,10 +288,9 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
     safe_parse_pkg_from_call(ns[i], fn[i], code[i])
   })
   pkgs_count <- lengths(pkgs)
-  data_frame(
+  scan_deps_df(
     path = path,
     package = unlist(pkgs),
-    type = get_dep_type_from_path(path),
     code = rep(code, pkgs_count),
     start_row = rep(hits$start_row[hits$name == "dep-code"], pkgs_count),
     start_column = rep(hits$start_column[hits$name == "dep-code"], pkgs_count),
@@ -284,10 +300,9 @@ scan_path_deps_do_gen_hits <- function(hits, path) {
 
 scan_path_deps_do_jr_hits <- function(hits, path) {
   code <- hits$code[hits$name == "dep-code"]
-  data_frame(
+  scan_deps_df(
     path = path,
     package = "xml2",
-    type = get_dep_type_from_path(path),
     code = code,
     start_row = hits$start_row[hits$name == "dep-code"],
     start_column = hits$start_column[hits$name == "dep-code"],
@@ -302,10 +317,9 @@ scan_pat_deps_do_ragg_hits <- function(hits, path) {
     matched <- match.call(function(...) { }, expr, expand.dots=FALSE)
     args <- matched[["..."]]
     if ("dev" %in% names(args) && args[["dev"]] == "ragg_png") {
-      return(data_frame(
+      return(scan_deps_df(
         path = path,
         package = "ragg",
-        type = get_dep_type_from_path(path),
         code = hits$code[wc],
         start_row = hits$start_row[wc],
         start_column = hits$start_column[wc],
@@ -321,10 +335,9 @@ scan_pat_deps_do_db_hits <- function(hits, path) {
   fns <- unlist(lapply(db, names))
   map <- unlist(unname(db), recursive = FALSE)
   pkgs <- unlist(map[hits$code])
-  data_frame(
+  scan_deps_df(
     path = path,
     package = pkgs,
-    type = get_dep_type_from_path(path),
     code = hits$code,
     start_row = hits$start_row,
     start_column = hits$start_column,
@@ -792,10 +805,9 @@ scan_path_deps_do_header_shiny_hits <- function(code, hits, path) {
   hits <- hits[hits$name == "value", ]
   vals <- yaml_parse_scalar(hits$code)
   shiny <- vals == "shiny"
-  data_frame(
+  scan_deps_df(
     path = path,
     package = "shiny",
-    type = get_dep_type_from_path(path),
     code = hits$code[shiny],
     start_row = hits$start_row[shiny],
     start_column = hits$start_column[shiny],
@@ -820,10 +832,9 @@ scan_path_deps_do_header_pkgstr_hits <- function(code, hits, path) {
   if (all(is.na(pkg))) return(NULL)
   hits <- hits[!is.na(pkg), ]
   pkg <- na.omit(pkg)
-  data_frame(
+  scan_deps_df(
     path = path,
     package = pkg,
-    type = get_dep_type_from_path(path),
     code = hits$code,
     start_row = hits$start_row,
     start_column = hits$start_column,
@@ -832,10 +843,9 @@ scan_path_deps_do_header_pkgstr_hits <- function(code, hits, path) {
 }
 
 scan_path_deps_do_header_bslib_hits <- function(code, hits, path) {
-  data_frame(
+  scan_deps_df(
     path = path,
     package = "bslib",
-    type = get_dep_type_from_path(path),
     code = hits$code[hits$name == "code"],
     start_row = hits$start_row[hits$name == "code"],
     start_column = hits$start_column[hits$name == "code"],
@@ -863,4 +873,26 @@ scan_path_deps_do_header_tag_hits <- function(code, hits, path) {
 
 yaml_parse_scalar <- function(x) {
   vcapply(x, function(x) .Call(c_yaml_parse_scalar, x), USE.NAMES = FALSE)
+}
+
+# -------------------------------------------------------------------------
+
+scan_path_deps_do_dsc <- function(code, path) {
+  code <- if (is.raw(code)) rawToChar(code)
+  dsc <- desc::desc(text = code)
+  deps <- resolve_ref_deps(
+    dsc$get_deps(),
+    dsc$get("Remotes")[[1]],
+    dsc$get(extra_config_fields(dsc$fields()))
+  )
+  deps <- deps[deps$package != "R", ]
+  version <- ifelse(deps$op == "", "*", paste0(deps$op, deps$version))
+  scan_deps_df(
+    path = path,
+    ref = deps$ref,
+    package = deps$package,
+    version = version,
+    type = get_dep_type_from_description_field(deps$type),
+    code = deps$ref
+  )
 }

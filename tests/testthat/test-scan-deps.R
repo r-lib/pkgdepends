@@ -469,6 +469,17 @@ test_that("scan_path_deps_do_dsc", {
   local_reproducible_output(width = 500)
   path <- test_path("fixtures/scan/DESCRIPTION")
   expect_snapshot({
-    scan_path_deps_do_dsc(readLines(path), basename(path))
+    print(scan_path_deps_do_dsc(readLines(path), basename(path)), n = Inf)
+  })
+})
+
+test_that("scan_path_deps_do_namespace", {
+  local_reproducible_output(width = 500)
+  path <- test_path("fixtures/scan/NAMESPACE")
+  expect_snapshot({
+    print(scan_path_deps_do_namespace(
+      readBin(path, "raw", 10000),
+      path
+    ), n = Inf)
   })
 })

@@ -87,6 +87,9 @@ scan_deps <- function(path = ".") {
   if (file.exists(file.path(path, "DESCRIPTION"))) {
     paths <- c(paths, "DESCRIPTION")
   }
+  if (file.exists(file.path(path, "NAMESPACE"))) {
+    paths <- c(paths, "NAMESPACE")
+  }
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)
   deps <- do.call("rbind", c(list(scan_deps_df()), deps_list))
@@ -149,7 +152,7 @@ scan_path_deps <- function(path) {
     deps <- readRDS(cache)
     if (!is.null(deps) && nrow(deps) > 0) {
       deps$path <- path
-      deps$type <- get_dep_type_from_path(path, deps$type)
+      deps$type <- get_dep_type_from_path(deps$path, deps$type)
     }
     return(deps)
   }
@@ -204,6 +207,7 @@ scan_path_deps_do <- function(code, path) {
     ".qmd" = ,
     ".rmd" = scan_path_deps_do_rmd(code, path),
     "DESCRIPTION" = scan_path_deps_do_dsc(code, path),
+    "NAMESPACE" = scan_path_deps_do_namespace(code, path),
     stop("Cannot parse ", ext, " file for dependencies, internal error")
   )
 }
@@ -894,5 +898,26 @@ scan_path_deps_do_dsc <- function(code, path) {
     version = version,
     type = get_dep_type_from_description_field(deps$type),
     code = deps$ref
+  )
+}
+
+# -------------------------------------------------------------------------
+
+scan_path_deps_do_namespace <- function(code, path) {
+  tmp <- tempfile()
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  mkdirp(file.path(tmp, "pkg"))
+  if (is.raw(code)) {
+    writeBin(code, file.path(tmp, "pkg", "NAMESPACE"))
+  } else {
+    writeLines(code, file.path(tmp, "pkg", "NAMESPACE"))
+  }
+  info <- parseNamespaceFile(package = "pkg", package.lib = tmp)
+  pkg <- unique(vcapply(info$imports, "[[", 1))
+  scan_deps_df(
+    path = path,
+    package = pkg,
+    type = "prod",
+    code = pkg
   )
 }

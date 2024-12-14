@@ -65,9 +65,9 @@ test_that("scan_path_deps", {
   })
 })
 
-test_that("scan_path_deps_empty", {
+test_that("scan_deps_df", {
   expect_snapshot({
-    scan_path_deps_empty()
+    scan_deps_df()
   })
 })
 
@@ -462,5 +462,13 @@ test_that("scan_path_deps_do_header_bslib_hits", {
   path <- test_path("fixtures/scan/header-bslib.Rmd")
   expect_snapshot({
     scan_path_deps_do_rmd(readLines(path), basename(path))
+  })
+})
+
+test_that("scan_path_deps_do_dsc", {
+  local_reproducible_output(width = 500)
+  path <- test_path("fixtures/scan/DESCRIPTION")
+  expect_snapshot({
+    scan_path_deps_do_dsc(readLines(path), basename(path))
   })
 })

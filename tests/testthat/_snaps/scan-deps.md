@@ -381,3 +381,14 @@
       1 fixtures/scan/NAMESPACE stats stats   *       prod  stats         1            1          1
       2 fixtures/scan/NAMESPACE utils utils   *       prod  utils         1            1          1
 
+# scan_path_deps_do_{bookdown,pkgdown,quarto}
+
+    Code
+      scan_deps(project)[]
+    Output
+      # A data frame: 2 x 9
+        path                   ref      package  version type  code  start_row start_column start_byte
+        <chr>                  <chr>    <chr>    <chr>   <chr> <chr>     <int>        <int>      <int>
+      1 bookdown/_bookdown.yml bookdown bookdown *       prod  <NA>          1            1          1
+      2 _pkgdown.yml           pkgdown  pkgdown  *       prod  <NA>          1            1          1
+

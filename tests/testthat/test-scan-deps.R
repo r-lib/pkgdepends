@@ -483,3 +483,11 @@ test_that("scan_path_deps_do_namespace", {
     ), n = Inf)
   })
 })
+
+test_that("scan_path_deps_do_{bookdown,pkgdown,quarto}", {
+  local_reproducible_output(width = 500)
+  project <- test_path("fixtures/scan/project-2")
+  expect_snapshot({
+    scan_deps(project)[]
+  })
+})

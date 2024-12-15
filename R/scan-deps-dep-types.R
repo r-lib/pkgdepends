@@ -5,12 +5,7 @@ get_dep_type_from_path <- function(paths, orig = NULL) {
   if (!is.null(orig)) {
     # for DESCRIPTION we detect the type from the file itself
     dsc <- basename(paths) == "DESCRIPTION"
-    if (sum(dsc) > 0) {
-      withCallingHandlers(
-        tps[dsc] <- orig[dsc],
-        warning = function(w) browser()
-      )
-    }
+    tps[dsc] <- orig[dsc]
   }
   tps
 }

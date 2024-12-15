@@ -96,6 +96,9 @@ scan_deps <- function(path = ".") {
   if (file.exists(file.path(path, "renv.lock"))) {
     paths <- c(paths, "renv.lock")
   }
+  if (file.exists(file.path(path, "rsconnect"))) {
+    paths <- c(paths, "rsconnect")
+  }
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)
   deps <- do.call("rbind", c(list(scan_deps_df()), deps_list))
@@ -187,7 +190,11 @@ re_r_dep <- function() {
 }
 
 scan_path_deps <- function(path) {
-  code <- readBin(path, "raw", file.size(path))
+  code <- if (file.info(path)$isdir) {
+    NULL
+  } else {
+    readBin(path, "raw", file.size(path))
+  }
 
   # check if already known, set path
   should_cache <- scan_path_should_cache(path)
@@ -255,7 +262,9 @@ scan_path_should_cache <- function(paths) {
     "_bookdown.yml",
     "_pkgdown.yml",
     "_quarto.yml",
-    "renv.lock"
+    "renv.lock",
+    "rsconnect",
+    NULL
   )
 }
 
@@ -272,6 +281,7 @@ scan_path_deps_do <- function(code, path) {
     "_pkgdown.yml" = scan_path_deps_do_pkgdown(code, path),
     "_quarto.yml" = scan_path_deps_do_quarto(code, path),
     "renv.lock" = scan_path_deps_do_renv_lock(code, path),
+    "rsconnect" = scan_path_deps_do_rsconnect(code, path),
     stop("Cannot parse ", ext, " file for dependencies, internal error")
   )
 }
@@ -1014,6 +1024,14 @@ scan_path_deps_do_renv_lock <- function(code, path) {
   scan_deps_df(
     path = path,
     package = "renv",
+    code = NA_character_
+  )
+}
+
+scan_path_deps_do_rsconnect <- function(code, path) {
+  scan_deps_df(
+    path = path,
+    package = "rsconnect",
     code = NA_character_
   )
 }

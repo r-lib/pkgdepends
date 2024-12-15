@@ -484,7 +484,7 @@ test_that("scan_path_deps_do_namespace", {
   })
 })
 
-test_that("scan_path_deps_do_{bookdown,pkgdown,quarto,renv_lock}", {
+test_that("scan_path_deps_do_{bookdown,pkgdown,quarto,renv_lock,rsconnect}", {
   local_reproducible_output(width = 500)
   project <- test_path("fixtures/scan/project-2")
   expect_snapshot({

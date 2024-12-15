@@ -73,8 +73,10 @@ test_that("scan_deps_df", {
 
 test_that("scan_path_deps_do", {
   rfile <- test_path("fixtures/scan/project-1/R/code.R")
+  nsfile <- test_path("fixtures/scan/NAMESPACE")
   expect_snapshot({
     scan_path_deps_do(readLines(rfile), basename(rfile))
+    scan_path_deps_do(readLines(nsfile), basename(nsfile))
   })
 
   expect_snapshot(error = TRUE, {

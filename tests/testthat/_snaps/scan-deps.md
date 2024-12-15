@@ -51,6 +51,14 @@
       1 code.R CD    CD      *       prod  CD::pkg           4            1         26
       2 code.R AB    AB      *       prod  library(~         1            1          1
       3 code.R BC    BC      *       prod  require(~         2            1         13
+    Code
+      scan_path_deps_do(readLines(nsfile), basename(nsfile))
+    Output
+      # A data frame: 2 x 9
+        path      ref   package version type  code  start_row start_column start_byte
+        <chr>     <chr> <chr>   <chr>   <chr> <chr>     <int>        <int>      <int>
+      1 NAMESPACE stats stats   *       prod  stats         1            1          1
+      2 NAMESPACE utils utils   *       prod  utils         1            1          1
 
 ---
 

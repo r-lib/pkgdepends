@@ -394,3 +394,14 @@
       3 renv.lock              renv      renv      *       prod  <NA>          1            1          1
       4 rsconnect              rsconnect rsconnect *       prod  <NA>          1            1          1
 
+# .Rproj file
+
+    Code
+      scan_deps(project)[]
+    Output
+      # A data frame: 2 x 9
+        path             ref      package  version type  code                    start_row start_column start_byte
+        <chr>            <chr>    <chr>    <chr>   <chr> <chr>                       <int>        <int>      <int>
+      1 pkgdepends.Rproj devtools devtools *       prod  PackageUseDevtools: Yes         1            1          1
+      2 pkgdepends.Rproj roxygen2 roxygen2 *       prod  PackageUseDevtools: Yes         1            1          1
+

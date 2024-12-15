@@ -93,6 +93,9 @@ scan_deps <- function(path = ".") {
   if (file.exists(file.path(path, "_pkgdown.yml"))) {
     paths <- c(paths, "_pkgdown.yml")
   }
+  if (file.exists(file.path(path, "renv.lock"))) {
+    paths <- c(paths, "renv.lock")
+  }
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)
   deps <- do.call("rbind", c(list(scan_deps_df()), deps_list))
@@ -253,7 +256,8 @@ scan_path_should_cache <- function(paths) {
   ! basename(paths) %in% c(
     "_bookdown.yml",
     "_pkgdown.yml",
-    "_quarto.yml"
+    "_quarto.yml",
+    "renv.lock"
   )
 }
 
@@ -270,6 +274,7 @@ scan_path_deps_do <- function(code, path) {
     "_bookdown.yml" = scan_path_deps_do_bookdown(code, path),
     "_pkgdown.yml" = scan_path_deps_do_pkgdown(code, path),
     "_quarto.yml" = scan_path_deps_do_quarto(code, path),
+    "renv.lock" = scan_path_deps_do_renv_lock(code, path),
     stop("Cannot parse ", ext, " file for dependencies, internal error")
   )
 }
@@ -1006,6 +1011,14 @@ scan_path_deps_do_quarto <- function(code, path) {
   # renv does not include anything for quarto
   # Do we want a 'dev' dependency for the quarto package?
   # Maybe that's too opinionated?
+}
+
+scan_path_deps_do_renv_lock <- function(code, path) {
+  scan_deps_df(
+    path = path,
+    package = "renv",
+    code = NA_character_
+  )
 }
 
 # -------------------------------------------------------------------------

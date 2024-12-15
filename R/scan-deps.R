@@ -83,12 +83,15 @@
 
 scan_deps <- function(path = ".") {
   path <- tryCatch(find_project_root(path), error = function(...) path)
-  paths <- dir(path, pattern = "[.](R|r|Rmd|rmd|qmd)$", recursive = TRUE)
+  paths <- dir(path, pattern = scan_deps_pattern(), recursive = TRUE)
   if (file.exists(file.path(path, "DESCRIPTION"))) {
     paths <- c(paths, "DESCRIPTION")
   }
   if (file.exists(file.path(path, "NAMESPACE"))) {
     paths <- c(paths, "NAMESPACE")
+  }
+  if (file.exists(file.path(path, "_pkgdown.yml"))) {
+    paths <- c(paths, "_pkgdown.yml")
   }
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)
@@ -98,6 +101,44 @@ scan_deps <- function(path = ".") {
   deps$type <- get_dep_type_from_path(deps$path, deps$type)
   class(deps) <- c("pkg_scan_deps", class(deps))
   deps
+}
+
+scan_deps_pattern <- function() {
+  ptrns <- c(
+    "[.]R$",
+    "[.]r$",
+    "[.]Rmd$",
+    "[.]rmd$",
+    "[.]qmd$",
+    "^_bookdown[.]yml$",
+    "^_quarto[.]yml$",
+    NULL
+  )
+  paste0("(", paste0(collapse = "|", ptrns), ")")
+}
+
+scan_deps_file_type_use_basename <- function() {
+  # for these we don't use the extension but the basename
+  # to decide which parser to use
+  c(
+    "DESCRIPTION",
+    "NAMESPACE",
+    "_bookdown.yml",
+    "_pkgdown.yml",
+    "_quarto.yml",
+    "renv.lock",
+    NULL
+  )
+}
+
+scan_deps_file_type <- function(paths) {
+  ext <- tolower(file_ext(paths))
+  bsn <- basename(paths)
+  ifelse(
+    bsn %in% scan_deps_file_type_use_basename() | is.na(ext),
+    bsn,
+    ext
+  )
 }
 
 # -------------------------------------------------------------------------
@@ -146,31 +187,36 @@ scan_path_deps <- function(path) {
   code <- readBin(path, "raw", file.size(path))
 
   # check if already known, set path
-  hash <- cli::hash_raw_xxhash(code)
-  cache <- get_deps_cache_path(hash)
-  if (file.exists(cache)) {
-    deps <- readRDS(cache)
-    if (!is.null(deps) && nrow(deps) > 0) {
-      deps$path <- path
-      deps$type <- get_dep_type_from_path(deps$path, deps$type)
+  should_cache <- scan_path_should_cache(path)
+  if (should_cache) {
+    hash <- cli::hash_raw_xxhash(code)
+    cache <- get_deps_cache_path(hash)
+    if (file.exists(cache)) {
+      deps <- readRDS(cache)
+      if (!is.null(deps) && nrow(deps) > 0) {
+        deps$path <- path
+        deps$type <- get_dep_type_from_path(deps$path, deps$type)
+      }
+      return(deps)
     }
-    return(deps)
   }
 
   # scan it if it is worth it, based on a quick check
-  maybe_has_deps <- file_extx(path) != "r" ||
+  maybe_has_deps <- scan_deps_file_type(path) != "r" ||
     length(grepRaw(re_r_dep(), code)) > 0
   deps <- if (maybe_has_deps) {
     scan_path_deps_do(code, path)
   }
 
   # save it to the cache, but anonimize it first. If no deps, save NULL
-  deps_no_path <- deps
-  if (!is.null(deps_no_path) && nrow(deps_no_path) > 0) {
-    deps_no_path$path <- ""
+  if (should_cache) {
+    deps_no_path <- deps
+    if (!is.null(deps_no_path) && nrow(deps_no_path) > 0) {
+      deps_no_path$path <- ""
+    }
+    dir.create(dirname(cache), showWarnings = FALSE, recursive = TRUE)
+    saveRDS(deps_no_path, cache)
   }
-  dir.create(dirname(cache), showWarnings = FALSE, recursive = TRUE)
-  saveRDS(deps_no_path, cache)
 
   deps
 }
@@ -199,8 +245,18 @@ scan_deps_df <- function(
   )
 }
 
+scan_path_should_cache <- function(paths) {
+  # we don't want to cache the ones that depend on the file
+  # name, because caching is content-based.
+  ! basename(paths) %in% c(
+    "_bookdown.yml",
+    "_pkgdown.yml",
+    "_quarto.yml"
+  )
+}
+
 scan_path_deps_do <- function(code, path) {
-  ext <- file_extx(path)
+  ext <- scan_deps_file_type(path)
   switch(
     ext,
     ".r" = scan_path_deps_do_r(code, path),
@@ -208,6 +264,9 @@ scan_path_deps_do <- function(code, path) {
     ".rmd" = scan_path_deps_do_rmd(code, path),
     "DESCRIPTION" = scan_path_deps_do_dsc(code, path),
     "NAMESPACE" = scan_path_deps_do_namespace(code, path),
+    "_bookdown.yml" = scan_path_deps_do_bookdown(code, path),
+    "_pkgdown.yml" = scan_path_deps_do_pkgdown(code, path),
+    "_quarto.yml" = scan_path_deps_do_quarto(code, path),
     stop("Cannot parse ", ext, " file for dependencies, internal error")
   )
 }
@@ -921,3 +980,29 @@ scan_path_deps_do_namespace <- function(code, path) {
     code = pkg
   )
 }
+
+# -------------------------------------------------------------------------
+
+scan_path_deps_do_bookdown <- function(code, path) {
+  scan_deps_df(
+    path = path,
+    package = "bookdown",
+    code = NA_character_
+  )
+}
+
+scan_path_deps_do_pkgdown <- function(code, path) {
+  scan_deps_df(
+    path = path,
+    package = "pkgdown",
+    code = NA_character_
+  )
+}
+
+scan_path_deps_do_quarto <- function(code, path) {
+  # renv does not include anything for quarto
+  # Do we want a 'dev' dependency for the quarto package?
+  # Maybe that's too opinionated?
+}
+
+# -------------------------------------------------------------------------

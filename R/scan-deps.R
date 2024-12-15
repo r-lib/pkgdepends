@@ -83,22 +83,10 @@
 
 scan_deps <- function(path = ".") {
   path <- tryCatch(find_project_root(path), error = function(...) path)
-  paths <- dir(path, pattern = scan_deps_pattern(), recursive = TRUE)
-  if (file.exists(file.path(path, "DESCRIPTION"))) {
-    paths <- c(paths, "DESCRIPTION")
-  }
-  if (file.exists(file.path(path, "NAMESPACE"))) {
-    paths <- c(paths, "NAMESPACE")
-  }
-  if (file.exists(file.path(path, "_pkgdown.yml"))) {
-    paths <- c(paths, "_pkgdown.yml")
-  }
-  if (file.exists(file.path(path, "renv.lock"))) {
-    paths <- c(paths, "renv.lock")
-  }
-  if (file.exists(file.path(path, "rsconnect"))) {
-    paths <- c(paths, "rsconnect")
-  }
+  paths <- c(
+    dir(path, pattern = scan_deps_pattern(), recursive = TRUE),
+    dir(path, pattern = scan_deps_pattern_root(), recursive = FALSE)
+  )
   full_paths <- normalizePath(file.path(path, paths))
   deps_list <- lapply(full_paths, scan_path_deps)
   deps <- do.call("rbind", c(list(scan_deps_df()), deps_list))
@@ -118,8 +106,21 @@ scan_deps_pattern <- function() {
     "[.]rmarkdown",
     "[.]Rmarkdown",
     "[.]qmd$",
+    "[.]Rproj$",
     "^_bookdown[.]yml$",
     "^_quarto[.]yml$",
+    NULL
+  )
+  paste0("(", paste0(collapse = "|", ptrns), ")")
+}
+
+scan_deps_pattern_root <- function() {
+  ptrns <- c(
+    "^DESCRIPTION$",
+    "^NAMESPACE$",
+    "^_pkgdown.yml$",
+    "^renv[.]lock$",
+    "^rsconnect$",
     NULL
   )
   paste0("(", paste0(collapse = "|", ptrns), ")")
@@ -285,6 +286,7 @@ scan_path_deps_do <- function(code, path) {
     "_quarto.yml" = scan_path_deps_do_quarto(code, path),
     "renv.lock" = scan_path_deps_do_renv_lock(code, path),
     "rsconnect" = scan_path_deps_do_rsconnect(code, path),
+    ".rproj" = scan_path_deps_do_rproj(code, path),
     stop("Cannot parse ", ext, " file for dependencies, internal error")
   )
 }
@@ -1040,3 +1042,16 @@ scan_path_deps_do_rsconnect <- function(code, path) {
 }
 
 # -------------------------------------------------------------------------
+
+scan_path_deps_do_rproj <- function(code, path) {
+  con <- if (is.raw(code)) rawConnection(code) else textConnection(code)
+  on.exit(close(con), add = TRUE)
+  if ("yes" %in% tolower(read.dcf(con, fields = "PackageUseDevtools"))) {
+    scan_deps_df(
+      path = path,
+      package = c("devtools", "roxygen2"),
+      type = "dev",
+      code = "PackageUseDevtools: Yes"
+    )
+  }
+}

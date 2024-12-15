@@ -491,3 +491,11 @@ test_that("scan_path_deps_do_{bookdown,pkgdown,quarto,renv_lock,rsconnect}", {
     scan_deps(project)[]
   })
 })
+
+test_that(".Rproj file", {
+  local_reproducible_output(width = 500)
+  project <- test_path("fixtures/scan/project-3")
+  expect_snapshot({
+    scan_deps(project)[]
+  })
+})

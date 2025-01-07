@@ -545,3 +545,11 @@ test_that("Ignored chunks in .Rnw file", {
     )
   })
 })
+
+test_that("IPython notebook", {
+  local_reproducible_output(width = 500)
+  path <- test_path("fixtures/scan/notebook.ipynb")
+  expect_snapshot({
+    scan_path_deps_do(readLines(path), basename(path))
+  })
+})

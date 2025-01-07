@@ -281,6 +281,7 @@ scan_path_deps_do <- function(code, path) {
     ".rmarkdown" = ,
     ".rmd" = scan_path_deps_do_rmd(code, path),
     ".rnw" = scan_path_deps_do_rnw(code, path),
+    ".ipynb" = scan_path_deps_do_ipynb(code, path),
     "DESCRIPTION" = scan_path_deps_do_dsc(code, path),
     "NAMESPACE" = scan_path_deps_do_namespace(code, path),
     "_bookdown.yml" = scan_path_deps_do_bookdown(code, path),
@@ -1230,4 +1231,31 @@ scan_path_deps_do_rnw_ranges <- function(code) {
     }
     c(bmx, emx)
   })
+}
+
+# -------------------------------------------------------------------------
+
+scan_path_deps_do_ipynb <- function(code, path) {
+  ipynb <- jsonlite::fromJSON(code, simplifyVector = FALSE)
+  if (!identical(ipynb$metadata$kernelspec$language, "R")) {
+    return(NULL)
+  }
+  ir <- if (identical(ipynb$metadata$kernelspec$name, "ir")) {
+    scan_deps_df(
+      path = path,
+      package = "IRkernel",
+      code = NA_character_
+    )
+  }
+
+  deps <- lapply(ipynb$cells, function(cell) {
+    if (identical(cell$cell_type, "code")) {
+      c1 <- paste(unlist(cell$source), collapse = "")
+      scan_path_deps_do_r(c1, path)
+    }
+  })
+
+  adeps <- drop_nulls(c(list(ir), deps))
+
+  do.call("rbind", adeps)
 }

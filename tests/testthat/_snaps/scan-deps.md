@@ -499,3 +499,16 @@
       5 ignore-test.Rnw good          good          *       prod  library(good)                  1            1          1
       6 ignore-test.Rnw good          good          *       prod  library(good)                  1            1          1
 
+# IPython notebook
+
+    Code
+      scan_path_deps_do(readLines(path), basename(path))
+    Output
+      # A data frame: 4 x 9
+        path           ref      package  version type  code            start_row start_column start_byte
+        <chr>          <chr>    <chr>    <chr>   <chr> <chr>               <int>        <int>      <int>
+      1 notebook.ipynb IRkernel IRkernel *       prod  <NA>                    1            1          1
+      2 notebook.ipynb MASS     MASS     *       prod  library(MASS)           1            1          1
+      3 notebook.ipynb stats    stats    *       prod  stats::setNames         1            1          1
+      4 notebook.ipynb cli      cli      *       prod  cli::cli_text           2            1         19
+

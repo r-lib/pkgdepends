@@ -501,3 +501,47 @@ test_that(".Rproj file", {
     scan_deps(project)[]
   })
 })
+
+test_that("scan_path_deps_do_rnw_ranges", {
+  path <- test_path("fixtures/scan/test.Rnw")
+  code <- readLines(path)
+  expect_snapshot({
+    scan_path_deps_do_rnw_ranges(code)
+  })
+})
+
+test_that("scan_path_deps_do_rnw_parse_chunk_header", {
+  expect_snapshot({
+    scan_path_deps_do_rnw_parse_chunk_header("")
+    scan_path_deps_do_rnw_parse_chunk_header("name")
+    scan_path_deps_do_rnw_parse_chunk_header(
+      "name, foo = 1, bar = TRUE, this = that"
+    )
+  })
+})
+
+test_that(".Rnw file", {
+  local_reproducible_output(width = 500)
+  path <- test_path("fixtures/scan/test.Rnw")
+  expect_snapshot({
+    scan_path_deps_do_rnw(
+      readBin(path, "raw", file.size(path)),
+      basename(path)
+    )
+    scan_path_deps_do(
+      readBin(path, "raw", file.size(path)),
+      basename(path)
+    )
+  })
+})
+
+test_that("Ignored chunks in .Rnw file", {
+  local_reproducible_output(width = 500)
+  path <- test_path("fixtures/scan/ignore-test.Rnw")
+  expect_snapshot({
+    scan_path_deps_do(
+      readBin(path, "raw", file.size(path)),
+      basename(path)
+    )
+  })
+})

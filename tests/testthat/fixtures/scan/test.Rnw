@@ -1,0 +1,35 @@
+\documentclass{article}
+\begin{document}
+\title{Test}
+
+Reprehenderit duis proident laboris Lorem ex laborum laborum culpa anim
+commodo et. Ullamco commodo incididunt et aliquip sint officia ipsum. Non
+id exercitation sit magna ad Lorem. Ipsum sunt in sunt nisi est commodo
+anim pariatur ipsum exercitation amet. Eu tempor nostrud proident commodo
+aute quis.
+
+<<chunk1>>=
+library(cli)
+@
+
+<<chunk2>>=
+filelock::lock()
+@
+
+<<chunk3>>=
+# This is not closed properly
+
+<<chunk4>>=
+# But we should still find pak correctly.
+library(pak)
+@
+
+<<chunk4>>=
+# if double closed, but never mind
+@
+
+# This is ignored.
+library(shouldnotbefound)
+@
+
+\end{document}

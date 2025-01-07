@@ -1,0 +1,67 @@
+\documentclass{article}
+\begin{document}
+\title{Test}
+
+Reprehenderit duis proident laboris Lorem ex laborum laborum culpa anim
+commodo et. Ullamco commodo incididunt et aliquip sint officia ipsum. Non
+id exercitation sit magna ad Lorem. Ipsum sunt in sunt nisi est commodo
+anim pariatur ipsum exercitation amet. Eu tempor nostrud proident commodo
+aute quis.
+
+<<>>=
+library(good)
+@
+
+<<chunk1, renv.ignore = TRUE>>=
+library(notthis)
+@
+
+<<engine = "python">>=
+library(notthis)
+@
+
+<<eval = FALSE>>=
+library(notthis)
+@
+
+<<exercise = TRUE>>=
+library(notthis)
+@
+
+<<only-display>>=
+library(notthis)
+@
+
+Invalid chunk option syntax is ignored, but deps are picked up:
+
+<<this is not good eval = FALSE>>=
+library(butthisisgood)
+@
+
+<<this,also,not,good>>=
+library(butthisisgood)
+@
+
+Some more chunk header parsing tests:
+
+<<label = 1+1+1, eval = FALSE>>=
+library(notthis)
+@
+
+<<label = 1+1+1, eval = TRUE>>=
+library(good)
+@
+
+<<eval = FALSE, label>>=
+library(notthis)
+@
+
+<<eval = TRUE, label>>=
+library(good)
+@
+
+<<label,>>=
+library(good)
+@
+
+\end{document}

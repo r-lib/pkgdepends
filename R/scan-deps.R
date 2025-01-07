@@ -105,6 +105,7 @@ scan_deps_pattern <- function() {
     "[.]rmd$",
     "[.]rmarkdown",
     "[.]Rmarkdown",
+    "[.][Rr]nw",
     "[.]qmd$",
     "[.]Rproj$",
     "^_bookdown[.]yml$",
@@ -279,6 +280,7 @@ scan_path_deps_do <- function(code, path) {
     ".qmd" = ,
     ".rmarkdown" = ,
     ".rmd" = scan_path_deps_do_rmd(code, path),
+    ".rnw" = scan_path_deps_do_rnw(code, path),
     "DESCRIPTION" = scan_path_deps_do_dsc(code, path),
     "NAMESPACE" = scan_path_deps_do_namespace(code, path),
     "_bookdown.yml" = scan_path_deps_do_bookdown(code, path),
@@ -1054,4 +1056,178 @@ scan_path_deps_do_rproj <- function(code, path) {
       code = "PackageUseDevtools: Yes"
     )
   }
+}
+
+# -------------------------------------------------------------------------
+
+# knitr::all_patterns$rnw
+re_rnw <- list(
+  chunk.begin = "^\\s*<<(.*)>>=.*$",
+  chunk.end = "^\\s*@\\s*(%+.*|)$",
+  inline.code = "\\\\Sexpr\\{([^}]+)\\}",
+  inline.comment = "^\\s*%.*",
+  ref.chunk = "^\\s*<<(.+)>>\\s*$",
+  header.begin = "(^|\n)\\s*\\\\documentclass[^}]+\\}",
+  document.begin = "\\s*\\\\begin\\{document\\}"
+)
+
+scan_path_deps_do_rnw <- function(code, path) {
+  if (is.raw(code)) {
+    code <- rawToChar(code)
+    Encoding(code) <- "UTF-8"
+  }
+  code <- unlist(strsplit(code, "\n", fixed = TRUE))
+  chunks <- scan_path_deps_do_rnw_chunks(code)
+
+  do.call(
+    "rbind",
+    lapply(chunks, function(c) scan_path_deps_do_r(c$code, path))
+  )
+}
+
+# along renv_dependencies_discover_chunks_ignore
+scan_path_deps_rnw_chunk_is_ignored <- function(chunk) {
+  # renv.ignore = TRUE
+  if (is_truthy(chunk$params[["renv.ignore"]])) {
+    return(TRUE)
+  }
+
+  # engine is not R / Rscript
+  engine <- chunk$params[["engine"]] %||% "R"
+  if (!is.character(engine) || ! tolower(engine) %in% c("r", "rscript")) {
+    return(TRUE)
+  }
+
+  # eval = FALSE
+  eval <- chunk$params[["eval"]]
+  if (!is.null(eval) && !is_truthy(eval)) {
+    return(TRUE)
+  }
+
+  # skip learnr exercises
+  if (is_truthy(chunk$params[["exercise"]])) {
+    return(TRUE)
+  }
+
+  # skip chunks whose labels end in '-display'
+  if (endsWith(chunk$params[["label"]] %||% "", "-display")) {
+    return(TRUE)
+  }
+
+  FALSE
+}
+
+scan_path_deps_do_rnw_del_placeholders <- function(chunk) {
+  mch <- gregexpr("<<[^>]+>>", chunk$code)
+  repl <- lapply(
+    mch,
+    function(x) strrep(" ", pmax(0, attr(x, "match.length")))
+  )
+  regmatches(chunk$code, mch) <- repl
+  chunk
+}
+
+scan_path_deps_do_rnw_chunks <- function(code) {
+  ranges <- scan_path_deps_do_rnw_ranges(code)
+  from <- viapply(ranges, "[[", 1L)
+  to <- viapply(ranges, "[[", 2L)
+  chunks <- .mapply(function(from, to) {
+    cheader <- code[from]
+    ccode <- code[(from+1):to]
+    if (ccode[[length(ccode)]] == "@") {
+      ccode <- ccode[-length(ccode)]
+    }
+    scan_path_deps_do_rnw_parse_chunk(cheader, ccode)
+  }, list(from, to), NULL)
+
+  # some chunks are ignored
+  ignored <- vlapply(chunks, scan_path_deps_rnw_chunk_is_ignored)
+  chunks <- chunks[!ignored]
+
+  # remove reused chunk placeholders
+  chunks <- lapply(chunks, scan_path_deps_do_rnw_del_placeholders)
+
+  chunks
+}
+
+# along xfun::csv_options
+scan_path_deps_do_rnw_parse_chunk_header <- function(header) {
+  opts <- sub(re_rnw$chunk.begin, "\\1", header)
+  # Note: this is not a "real" eval, because we are in an 'alist'
+  tryCatch(
+    res <- eval(parse(
+      text = paste("alist(", xfun_quote_label(opts), ")"),
+      keep.source = FALSE
+    )),
+    error = function(e) {
+      stop("Invalid syntax for chunk options: ", opts, "\n", conditionMessage(e))
+    }
+  )
+
+  idx <- which(names(res) == "")
+  j <- NULL
+  for (i in idx) if (identical(res[[i]], alist(, )[[1]])) {
+    j <- c(j, i)
+  }
+  if (length(j)) {
+    res[j] <- NULL
+  }
+  idx <- if (is.null(names(res)) && length(res) == 1L) {
+    1L
+  } else {
+    which(names(res) == "")
+  }
+  if ((n <- length(idx)) > 1L || (length(res) > 1L && is.null(names(res)))) {
+    stop(
+      "Invalid chunk options: ", x,
+      "\n\nAll options must be of the form 'tag=value' except for the chunk label."
+    )
+  }
+  if (is.null(res$label)) {
+    if (n == 0L) {
+      res$label <- ""
+    } else {
+      names(res)[idx] <- "label"
+    }
+  }
+  if (!is.character(res$label)) {
+    res$label <- gsub(" ", "", as.character(as.expression(res$label)))
+  }
+  if (res$label == "") {
+    res$label <- NULL
+  }
+  res
+}
+
+xfun_quote_label <- function(x) {
+  x <- gsub("^\\s*,?", "", x)
+  if (grepl("^\\s*[^'\"](,|\\s*$)", x)) {
+    x <- gsub("^\\s*([^'\"])(,|\\s*$)", "'\\1'\\2", x)
+  } else if (grepl("^\\s*[^'\"](,|[^=]*(,|\\s*$))", x)) {
+    x <- gsub("^\\s*([^'\"][^=]*)(,|\\s*$)", "'\\1'\\2", x)
+  }
+  x
+}
+
+scan_path_deps_do_rnw_parse_chunk <- function(header, code) {
+  params <- tryCatch(
+    scan_path_deps_do_rnw_parse_chunk_header(header),
+    error = function(...) list(a=1)[0]
+  )
+  list(params = params, code = code)
+}
+
+scan_path_deps_do_rnw_ranges <- function(code) {
+  beg <- grep(re_rnw$chunk.begin, code)
+  end <- c(grep(re_rnw$chunk.end, code), length(code) + 1L)
+  lapply(seq_along(beg), function(bx) {
+    # for every start we find its end. The end is the next end marker,
+    # except when there is another begin marker before
+    bmx <- beg[bx]
+    emx <- end[end > bmx][1]
+    if (bx < length(beg) && beg[bx + 1L] < emx) {
+      emx <- beg[bx + 1L] - 1L
+    }
+    c(bmx, emx)
+  })
 }

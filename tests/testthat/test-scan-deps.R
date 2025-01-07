@@ -525,11 +525,11 @@ test_that(".Rnw file", {
   path <- test_path("fixtures/scan/test.Rnw")
   expect_snapshot({
     scan_path_deps_do_rnw(
-      readBin(path, "raw", file.size(path)),
+      readLines(path),
       basename(path)
     )
     scan_path_deps_do(
-      readBin(path, "raw", file.size(path)),
+      readLines(path),
       basename(path)
     )
   })

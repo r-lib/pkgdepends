@@ -466,7 +466,7 @@
 # .Rnw file
 
     Code
-      scan_path_deps_do_rnw(readBin(path, "raw", file.size(path)), basename(path))
+      scan_path_deps_do_rnw(readLines(path), basename(path))
     Output
       # A data frame: 3 x 9
         path     ref      package  version type  code           start_row start_column start_byte
@@ -475,7 +475,7 @@
       2 test.Rnw filelock filelock *       prod  filelock::lock         1            1          1
       3 test.Rnw pak      pak      *       prod  library(pak)           2            1         43
     Code
-      scan_path_deps_do(readBin(path, "raw", file.size(path)), basename(path))
+      scan_path_deps_do(readLines(path), basename(path))
     Output
       # A data frame: 3 x 9
         path     ref      package  version type  code           start_row start_column start_byte

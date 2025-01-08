@@ -512,3 +512,11 @@
       3 notebook.ipynb stats    stats    *       prod  stats::setNames         1            1          1
       4 notebook.ipynb cli      cli      *       prod  cli::cli_text           2            1         19
 
+# find_common_root
+
+    Code
+      find_common_root(c("d2/sd1", "d2/sd2"))
+    Condition
+      Error:
+      ! Cannot find common project root directory for paths
+

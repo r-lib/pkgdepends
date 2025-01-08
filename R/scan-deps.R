@@ -60,7 +60,20 @@
 #' * Test dependencies: `"test"`.
 #' * Development dependencies: `"dev"`.
 #'
-#' @param path Path to the directory of the project.
+#' @param path Files and/or directories to scan. Directories
+#'   are scanned recursively. If you list files or folders from multiple
+#'   projects, then you need to specify `root` explicitly.
+#' @param root The root directory of the project. It is used to find the
+#'   `.gitignore` and `.renvignore` files. Set it to `NA` if the files do
+#'   not belong to any project or you want to ignore the project
+#'   configuration. By default it is detected automatically by finding the
+#'   first parent directory that contains a file or directory called
+#'   `r cli::format_inline("{.or {pkgdepends:::project_root_anchors}}")`,
+#'   for each path in `path`. If the automatic detection does not work,
+#'   and `path` is a single directory, then `path` is used as `root`.
+#'   Otherwise, if the automatic detection fails or detects different
+#'   projects for different paths, an error is thrown, and the user will
+#'   need to provide `root` explicitly.
 #' @return Data frame with columns:
 #'   * `path`: Path to the file in which the dependencies was found.
 #'   * `package`: Detected package dependency. Typically a package name,
@@ -81,13 +94,14 @@
 #'
 #' @export
 
-scan_deps <- function(path = ".") {
-  path <- tryCatch(find_project_root(path), error = function(...) path)
+scan_deps <- function(path = ".", root = NULL) {
+  path <- normalizePath(path, winslash = "/")
+  root <- root %||% find_common_root(path)
   paths <- c(
     dir(path, pattern = scan_deps_pattern(), recursive = TRUE),
     dir(path, pattern = scan_deps_pattern_root(), recursive = FALSE)
   )
-  full_paths <- normalizePath(file.path(path, paths))
+  full_paths <- normalizePath(file.path(path, paths), winslash = "/")
   deps_list <- lapply(full_paths, scan_path_deps)
   deps <- do.call("rbind", c(list(scan_deps_df()), deps_list))
   # write back the relative paths
@@ -95,6 +109,26 @@ scan_deps <- function(path = ".") {
   deps$type <- get_dep_type_from_path(deps$path, deps$type)
   class(deps) <- c("pkg_scan_deps", class(deps))
   deps
+}
+
+find_common_root <- function(paths) {
+  paths <- normalizePath(paths, winslash = "/", mustWork = TRUE)
+  roots <- vcapply(paths, USE.NAMES = FALSE, function(path) {
+    tryCatch(find_project_root(path), error = function(e) NA_character_)
+  })
+  if (length(paths) == 1) {
+    if (!is.na(roots)) {
+      roots
+    } else {
+      paths
+    }
+  } else {
+    uroot <- unique(roots)
+    if (anyNA(roots) || length(uroot) > 1) {
+      stop("Cannot find common project root directory for paths")
+    }
+    uroot
+  }
 }
 
 scan_deps_pattern <- function() {

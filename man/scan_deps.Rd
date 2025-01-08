@@ -4,10 +4,24 @@
 \alias{scan_deps}
 \title{Scan R code for dependent packages}
 \usage{
-scan_deps(path = ".")
+scan_deps(path = ".", root = NULL)
 }
 \arguments{
-\item{path}{Path to the directory of the project.}
+\item{path}{Files and/or directories to scan. Directories
+are scanned recursively. If you list files or folders from multiple
+projects, then you need to specify \code{root} explicitly.}
+
+\item{root}{The root directory of the project. It is used to find the
+\code{.gitignore} and \code{.renvignore} files. Set it to \code{NA} if the files do
+not belong to any project or you want to ignore the project
+configuration. By default it is detected automatically by finding the
+first parent directory that contains a file or directory called
+DESCRIPTION, .git, .Rproj.user, renv.lock, or renv,
+for each path in \code{path}. If the automatic detection does not work,
+and \code{path} is a single directory, then \code{path} is used as \code{root}.
+Otherwise, if the automatic detection fails or detects different
+projects for different paths, an error is thrown, and the user will
+need to provide \code{root} explicitly.}
 }
 \value{
 Data frame with columns:

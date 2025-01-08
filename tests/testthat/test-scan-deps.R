@@ -553,3 +553,48 @@ test_that("IPython notebook", {
     scan_path_deps_do(readLines(path), basename(path))
   })
 })
+
+test_that("find_common_root", {
+  local_temp_dir()
+
+  # simple, common case
+  mkdirp("foo")
+  file.create("foo/DESCRIPTION")
+  expect_equal(
+    find_common_root("foo"),
+    normalizePath("foo",  winslash = "/")
+  )
+
+  # common root
+  mkdirp("d1")
+  file.create("d1/renv.lock")
+  mkdirp("d1/sd1")
+  mkdirp("d1/sd2/ssd1")
+  expect_equal(
+    find_common_root(c("d1/sd1", "d1/sd2/ssd1")),
+    normalizePath("d1", winslash = "/")
+  )
+
+  # no project, single path
+  mkdirp("bar")
+  fake(find_common_root, "find_project_root", function(...) stop("no"))
+  expect_equal(
+    find_common_root("bar"),
+    normalizePath("bar", winslash = "/")
+  )
+
+  # no project for one path
+  mkdirp("d2/sd1")
+  file.create("d2/sd1/DESCRIPTION")
+  mkdirp("d2/sd2")
+  fake(find_common_root, "find_project_root", function(path) {
+    if (path == normalizePath("d2/sd1")) {
+      find_project_root(path)
+    } else {
+      stop("no")
+    }
+  })
+  expect_snapshot(error = TRUE, {
+    find_common_root(c("d2/sd1", "d2/sd2"))
+  })
+})

@@ -31,6 +31,13 @@ test_temp_dir <- function(pattern = "test-dir-", envir = parent.frame()) {
   normalizePath(tmp)
 }
 
+# Create a temporary directory and switch the working directory to it
+local_temp_dir <- function(..., .local_envir = parent.frame()) {
+  tmp <- withr::local_tempdir(..., .local_envir = .local_envir)
+  withr::local_dir(tmp, .local_envir = .local_envir)
+  invisible(tmp)
+}
+
 test_package_root <- function() {
   x <- tryCatch(
     find_package_root(),

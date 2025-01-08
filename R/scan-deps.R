@@ -95,13 +95,13 @@
 #' @export
 
 scan_deps <- function(path = ".", root = NULL) {
-  path <- normalizePath(path)
+  path <- normalizePath(path, winslash = "/")
   root <- root %||% find_common_root(path)
   paths <- c(
     dir(path, pattern = scan_deps_pattern(), recursive = TRUE),
     dir(path, pattern = scan_deps_pattern_root(), recursive = FALSE)
   )
-  full_paths <- normalizePath(file.path(path, paths))
+  full_paths <- normalizePath(file.path(path, paths), winslash = "/")
   deps_list <- lapply(full_paths, scan_path_deps)
   deps <- do.call("rbind", c(list(scan_deps_df()), deps_list))
   # write back the relative paths
@@ -112,7 +112,7 @@ scan_deps <- function(path = ".", root = NULL) {
 }
 
 find_common_root <- function(paths) {
-  paths <- normalizePath(paths, mustWork = TRUE)
+  paths <- normalizePath(paths, winslash = "/", mustWork = TRUE)
   roots <- vcapply(paths, USE.NAMES = FALSE, function(path) {
     tryCatch(find_project_root(path), error = function(e) NA_character_)
   })

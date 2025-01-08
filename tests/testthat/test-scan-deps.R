@@ -560,7 +560,10 @@ test_that("find_common_root", {
   # simple, common case
   mkdirp("foo")
   file.create("foo/DESCRIPTION")
-  expect_equal(find_common_root("foo"), normalizePath("foo"))
+  expect_equal(
+    find_common_root("foo"),
+    normalizePath("foo",  winslash = "/")
+  )
 
   # common root
   mkdirp("d1")
@@ -569,13 +572,16 @@ test_that("find_common_root", {
   mkdirp("d1/sd2/ssd1")
   expect_equal(
     find_common_root(c("d1/sd1", "d1/sd2/ssd1")),
-    normalizePath("d1")
+    normalizePath("d1", winslash = "/")
   )
 
   # no project, single path
   mkdirp("bar")
   fake(find_common_root, "find_project_root", function(...) stop("no"))
-  expect_equal(find_common_root("bar"), normalizePath("bar"))
+  expect_equal(
+    find_common_root("bar"),
+    normalizePath("bar", winslash = "/")
+  )
 
   # no project for one path
   mkdirp("d2/sd1")

@@ -1,3 +1,41 @@
+# scan_deps errors
+
+    Code
+      scan_deps(1:10)
+    Condition
+      Error:
+      ! `path` must be a character vector without `NA`, but it is an integer vector
+    Code
+      scan_deps(root = mtcars)
+    Condition
+      Error:
+      ! `root` must be a string (character scalar), but it is a data frame.
+    Code
+      scan_deps(root = "sdfssdfsdf")
+    Condition
+      Error:
+      ! Project root 'sdfssdfsdf' does not exist.
+    Code
+      scan_deps("sdfssdfsdf")
+    Condition
+      Error:
+      ! Path does not exist: 'sdfssdfsdf'.
+    Code
+      scan_deps(c("sdfssdfsdf-1", "sdfssdfsdf-2"))
+    Condition
+      Error:
+      ! Paths do not exist: 'sdfssdfsdf-1' and 'sdfssdfsdf-2'.
+    Code
+      scan_deps("foo", "bar")
+    Condition
+      Error:
+      ! 'foo' is outside of project root 'bar'.
+    Code
+      scan_deps(c("foo", "foobar"), "bar")
+    Condition
+      Error:
+      ! 'foo' and 'foobar' are outside of project root 'bar'.
+
 # get_deps_cache_path
 
     Code
@@ -392,7 +430,7 @@
 # scan_path_deps_do_{bookdown,pkgdown,quarto,renv_lock,rsconnect}
 
     Code
-      scan_deps(project)[]
+      scan_deps()[]
     Output
       # A data frame: 4 x 9
         path                   ref       package   version type  code  start_row start_column start_byte
@@ -511,12 +549,4 @@
       2 notebook.ipynb MASS     MASS     *       prod  library(MASS)           1            1          1
       3 notebook.ipynb stats    stats    *       prod  stats::setNames         1            1          1
       4 notebook.ipynb cli      cli      *       prod  cli::cli_text           2            1         19
-
-# find_common_root
-
-    Code
-      find_common_root(c("d2/sd1", "d2/sd2"))
-    Condition
-      Error:
-      ! Cannot find common project root directory for paths
 

@@ -12,6 +12,27 @@ test_that("scan_deps", {
   })
 })
 
+test_that("scan_deps errors", {
+  mkdirp(tmp <- tempfile())
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  withr::local_dir(tmp)
+  writeLines(c("Package: foo", "Version: 1.0.0"), "DESCRIPTION")
+  mkdirp(c("foo", "bar", "foobar"))
+  expect_snapshot(error = TRUE, {
+    # invalid types
+    scan_deps(1:10)
+    scan_deps(root = mtcars)
+    # root does not exist
+    scan_deps(root = "sdfssdfsdf")
+    # path does not exist
+    scan_deps("sdfssdfsdf")
+    scan_deps(c("sdfssdfsdf-1", "sdfssdfsdf-2"))
+    # path are not inside root
+    scan_deps("foo", "bar")
+    scan_deps(c("foo", "foobar"), "bar")
+  })
+})
+
 test_that("get_deps_cache_path", {
   local_reproducible_output(width = 500)
   withr::local_envvar(R_PKG_CACHE_DIR = tmp <- tempfile())
@@ -488,9 +509,9 @@ test_that("scan_path_deps_do_namespace", {
 
 test_that("scan_path_deps_do_{bookdown,pkgdown,quarto,renv_lock,rsconnect}", {
   local_reproducible_output(width = 500)
-  project <- test_path("fixtures/scan/project-2")
+  withr::local_dir(test_path("fixtures/scan/project-2"))
   expect_snapshot({
-    scan_deps(project)[]
+    scan_deps()[]
   })
 })
 
@@ -551,50 +572,5 @@ test_that("IPython notebook", {
   path <- test_path("fixtures/scan/notebook.ipynb")
   expect_snapshot({
     scan_path_deps_do(readLines(path), basename(path))
-  })
-})
-
-test_that("find_common_root", {
-  local_temp_dir()
-
-  # simple, common case
-  mkdirp("foo")
-  file.create("foo/DESCRIPTION")
-  expect_equal(
-    find_common_root("foo"),
-    normalizePath("foo",  winslash = "/")
-  )
-
-  # common root
-  mkdirp("d1")
-  file.create("d1/renv.lock")
-  mkdirp("d1/sd1")
-  mkdirp("d1/sd2/ssd1")
-  expect_equal(
-    find_common_root(c("d1/sd1", "d1/sd2/ssd1")),
-    normalizePath("d1", winslash = "/")
-  )
-
-  # no project, single path
-  mkdirp("bar")
-  fake(find_common_root, "find_project_root", function(...) stop("no"))
-  expect_equal(
-    find_common_root("bar"),
-    normalizePath("bar", winslash = "/")
-  )
-
-  # no project for one path
-  mkdirp("d2/sd1")
-  file.create("d2/sd1/DESCRIPTION")
-  mkdirp("d2/sd2")
-  fake(find_common_root, "find_project_root", function(path) {
-    if (path == normalizePath("d2/sd1")) {
-      find_project_root(path)
-    } else {
-      stop("no")
-    }
-  })
-  expect_snapshot(error = TRUE, {
-    find_common_root(c("d2/sd1", "d2/sd2"))
   })
 })

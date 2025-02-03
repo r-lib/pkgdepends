@@ -4,24 +4,27 @@
 \alias{scan_deps}
 \title{Scan R code for dependent packages}
 \usage{
-scan_deps(path = ".", root = NULL)
+scan_deps(path = NULL, root = NULL)
 }
 \arguments{
-\item{path}{Files and/or directories to scan. Directories
-are scanned recursively. If you list files or folders from multiple
-projects, then you need to specify \code{root} explicitly.}
+\item{path}{Files and/or directories to scan. Defaults to the current
+project, detected by finding the first parent directory of the current
+working directory, that contains a file or directory called
+DESCRIPTION, .git, .Rproj.user, renv.lock, or renv.
+(Note that this is different from \code{renv::dependencies()}, which only
+scans the current working directory by default!)
+
+If \code{path} is not \code{NULL}, then only the specified files and directories
+are scanned, the directories recursively. In this case the \code{root}
+argument is used as the project root, to find \code{.gitignore} and
+\code{.renvignore} files. All entries of \code{path} must be within the \code{root},
+the project root.}
 
 \item{root}{The root directory of the project. It is used to find the
-\code{.gitignore} and \code{.renvignore} files. Set it to \code{NA} if the files do
-not belong to any project or you want to ignore the project
-configuration. By default it is detected automatically by finding the
-first parent directory that contains a file or directory called
-DESCRIPTION, .git, .Rproj.user, renv.lock, or renv,
-for each path in \code{path}. If the automatic detection does not work,
-and \code{path} is a single directory, then \code{path} is used as \code{root}.
-Otherwise, if the automatic detection fails or detects different
-projects for different paths, an error is thrown, and the user will
-need to provide \code{root} explicitly.}
+\code{.gitignore} and \code{.renvignore} files. By default the same algorithm
+is used to detect this as for \code{path}. If \code{path} is specified and it is
+not within the detected or specified \code{root}, \code{scan_path()} throws an
+error.}
 }
 \value{
 Data frame with columns:

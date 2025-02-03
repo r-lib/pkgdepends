@@ -60,20 +60,23 @@
 #' * Test dependencies: `"test"`.
 #' * Development dependencies: `"dev"`.
 #'
-#' @param path Files and/or directories to scan. Directories
-#'   are scanned recursively. If you list files or folders from multiple
-#'   projects, then you need to specify `root` explicitly.
+#' @param path Files and/or directories to scan. Defaults to the current
+#'   project, detected by finding the first parent directory of the current
+#'   working directory, that contains a file or directory called
+#'   `r cli::format_inline("{.or {pkgdepends:::project_root_anchors}}")`.
+#'   (Note that this is different from `renv::dependencies()`, which only
+#'   scans the current working directory by default!)
+#'
+#'   If `path` is not `NULL`, then only the specified files and directories
+#'   are scanned, the directories recursively. In this case the `root`
+#'   argument is used as the project root, to find `.gitignore` and
+#'   `.renvignore` files. All entries of `path` must be within the `root`,
+#'   the project root.
 #' @param root The root directory of the project. It is used to find the
-#'   `.gitignore` and `.renvignore` files. Set it to `NA` if the files do
-#'   not belong to any project or you want to ignore the project
-#'   configuration. By default it is detected automatically by finding the
-#'   first parent directory that contains a file or directory called
-#'   `r cli::format_inline("{.or {pkgdepends:::project_root_anchors}}")`,
-#'   for each path in `path`. If the automatic detection does not work,
-#'   and `path` is a single directory, then `path` is used as `root`.
-#'   Otherwise, if the automatic detection fails or detects different
-#'   projects for different paths, an error is thrown, and the user will
-#'   need to provide `root` explicitly.
+#'   `.gitignore` and `.renvignore` files. By default the same algorithm
+#'   is used to detect this as for `path`. If `path` is specified and it is
+#'   not within the detected or specified `root`, `scan_path()` throws an
+#'   error.
 #' @return Data frame with columns:
 #'   * `path`: Path to the file in which the dependencies was found.
 #'   * `package`: Detected package dependency. Typically a package name,
@@ -94,12 +97,29 @@
 #'
 #' @export
 
-scan_deps <- function(path = ".", root = NULL) {
-  path <- normalizePath(path, winslash = "/")
-  root <- root %||% find_common_root(path)
+scan_deps <- function(path = NULL, root = NULL) {
+  if (is.null(path)) {
+    path <- find_project_root()
+    root <- root %||% path
+  } else {
+    root <- root %||% find_project_root()
+  }
+  assert_that(
+    is_string(root),
+    is_character(path)
+  )
+  if (!file.exists(root)) {
+    throw(pkg_error("Project root {.path {root}} does not exist."))
+  }
+  if (any(bad <- !file.exists(path))) {
+    throw(pkg_error("Path{?s} do{?es/} not exist: {.path {path[bad]}}."))
+  }
+  check_inside_dir(root, path)
   paths <- c(
     dir(path, pattern = scan_deps_pattern(), recursive = TRUE),
-    dir(path, pattern = scan_deps_pattern_root(), recursive = FALSE)
+    if (root %in% path) {
+      dir(root, pattern = scan_deps_pattern_root(), recursive = FALSE)
+    }
   )
   full_paths <- normalizePath(file.path(path, paths), winslash = "/")
   deps_list <- lapply(full_paths, scan_path_deps)
@@ -109,26 +129,6 @@ scan_deps <- function(path = ".", root = NULL) {
   deps$type <- get_dep_type_from_path(deps$path, deps$type)
   class(deps) <- c("pkg_scan_deps", class(deps))
   deps
-}
-
-find_common_root <- function(paths) {
-  paths <- normalizePath(paths, winslash = "/", mustWork = TRUE)
-  roots <- vcapply(paths, USE.NAMES = FALSE, function(path) {
-    tryCatch(find_project_root(path), error = function(e) NA_character_)
-  })
-  if (length(paths) == 1) {
-    if (!is.na(roots)) {
-      roots
-    } else {
-      paths
-    }
-  } else {
-    uroot <- unique(roots)
-    if (anyNA(roots) || length(uroot) > 1) {
-      stop("Cannot find common project root directory for paths")
-    }
-    uroot
-  }
 }
 
 scan_deps_pattern <- function() {

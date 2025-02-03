@@ -14,8 +14,8 @@ parse_remote_deps <- function(specs, config, ...) {
 resolve_remote_deps <- function(remote, direct, config, cache,
                                      dependencies, ...) {
 
-  in_pkg <- tryCatch(find_package_root(remote$path), error = function(x) NULL)
-  if (!is.null(in_pkg)) {
+  in_pkg <- is_project_root(remote$path)
+  if (in_pkg) {
     ret <- resolve_remote_local(remote, direct, config, cache,
                                 dependencies, ...)
   } else {
@@ -62,7 +62,12 @@ resolve_remote_deps <- function(remote, direct, config, cache,
 
 resolve_remote_local_autodeps <- function(remote, direct, config, cache,
                                           dependencies, ...) {
-  deps <- scan_deps(remote$path)
+  proc <- cli::cli_process_start(
+    "Scanning dependencies in {.path {remote$path}}."
+  )
+  deps <- scan_deps(remote$path, root = remote$path)
+  cli::cli_process_done(proc)
+  print(deps)
   tmpdesc <- tempfile()
   on.exit(unlink(tmpdesc), add = TRUE)
   dsc <- desc::desc("!new")

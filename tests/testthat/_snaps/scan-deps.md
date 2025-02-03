@@ -149,22 +149,24 @@
     Code
       scan_path_deps_do_rmd(readLines(rfile), rfile)
     Output
-      # A data frame: 3 x 9
-        path                    ref   package version type  code                                        start_row start_column start_byte
-        <chr>                   <chr> <chr>   <chr>   <chr> <chr>                                           <int>        <int>      <int>
-      1 fixtures/scan/knitr.Rmd knitr knitr   *       prod  "knitr::opts_chunk"                                 3            1          9
-      2 fixtures/scan/knitr.Rmd knitr knitr   *       prod  "knitr::opts_chunk"                                 7            1         61
-      3 fixtures/scan/knitr.Rmd ragg  ragg    *       prod  "knitr::opts_chunk$set(dev = \"ragg_png\")"         3            1          9
+      # A data frame: 4 x 9
+        path                    ref       package   version type  code                                        start_row start_column start_byte
+        <chr>                   <chr>     <chr>     <chr>   <chr> <chr>                                           <int>        <int>      <int>
+      1 fixtures/scan/knitr.Rmd knitr     knitr     *       prod  "knitr::opts_chunk"                                 3            1          9
+      2 fixtures/scan/knitr.Rmd knitr     knitr     *       prod  "knitr::opts_chunk"                                 7            1         61
+      3 fixtures/scan/knitr.Rmd ragg      ragg      *       prod  "knitr::opts_chunk$set(dev = \"ragg_png\")"         3            1          9
+      4 fixtures/scan/knitr.Rmd rmarkdown rmarkdown *       prod  "r"                                                 2            5          6
 
 ---
 
     Code
       scan_path_deps_do_rmd(readLines(rfile), rfile)
     Output
-      # A data frame: 1 x 9
-        path                     ref   package version type  code              start_row start_column start_byte
-        <chr>                    <chr> <chr>   <chr>   <chr> <chr>                 <int>        <int>      <int>
-      1 fixtures/scan/noragg.Rmd knitr knitr   *       prod  knitr::opts_chunk         2            1          8
+      # A data frame: 2 x 9
+        path                     ref       package   version type  code              start_row start_column start_byte
+        <chr>                    <chr>     <chr>     <chr>   <chr> <chr>                 <int>        <int>      <int>
+      1 fixtures/scan/noragg.Rmd knitr     knitr     *       prod  knitr::opts_chunk         2            1          8
+      2 fixtures/scan/noragg.Rmd rmarkdown rmarkdown *       prod  r                         1            5          5
 
 # safe_parse_pkg_from_call
 
@@ -294,10 +296,11 @@
     Code
       scan_path_deps_do_rmd(readLines(path), "chunk-errors.Rmd")
     Output
-      # A data frame: 1 x 9
-        path             ref   package version type  code           start_row start_column start_byte
-        <chr>            <chr> <chr>   <chr>   <chr> <chr>              <int>        <int>      <int>
-      1 chunk-errors.Rmd dplyr dplyr   *       prod  library(dplyr)         8            1        115
+      # A data frame: 2 x 9
+        path             ref       package   version type  code           start_row start_column start_byte
+        <chr>            <chr>     <chr>     <chr>   <chr> <chr>              <int>        <int>      <int>
+      1 chunk-errors.Rmd dplyr     dplyr     *       prod  library(dplyr)         8            1        115
+      2 chunk-errors.Rmd rmarkdown rmarkdown *       prod  r                      7            5        112
 
 # scan_path_deps_do_rmd #2
 
@@ -316,7 +319,10 @@
     Code
       scan_path_deps_do_rmd(readLines(path), "nothing.Rmd")
     Output
-      NULL
+      # A data frame: 1 x 9
+        path        ref       package   version type  code  start_row start_column start_byte
+        <chr>       <chr>     <chr>     <chr>   <chr> <chr>     <int>        <int>      <int>
+      1 nothing.Rmd rmarkdown rmarkdown *       prod  r             7            5         90
 
 # scan_path_deps_do_header_hits
 

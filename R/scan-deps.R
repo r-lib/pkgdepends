@@ -817,7 +817,8 @@ scan_path_deps_do_rmd <- function(code, path) {
   rbind(
     if (nrow(inl_hits)) scan_path_deps_do_inline_hits(code, inl_hits, path),
     if (nrow(blk_hits)) scan_path_deps_do_block_hits(code, blk_hits, path),
-    if (nrow(hdr_hits)) scan_path_deps_do_header_hits(code, hdr_hits, path)
+    if (nrow(hdr_hits)) scan_path_deps_do_header_hits(code, hdr_hits, path),
+    if (nrow(blk_hits)) scan_path_deps_do_rmarkdown(code, blk_hits, path)
   )
 }
 
@@ -866,6 +867,23 @@ scan_path_deps_do_block_hits <- function(code, blk_hits, path) {
 
   r_ranges <- blk_hits[wcnd, range_cols]
   scan_path_deps_do_r(code, path = path, ranges = r_ranges)
+}
+
+scan_path_deps_do_rmarkdown <- function(code, blk_hits, path) {
+  blk_hits <- blk_hits[blk_hits$name == "language", ]
+  rchk <- tolower(blk_hits$code) %in% c("r", "rscript")
+  if (any(rchk)) {
+    # only add the first chunk, adding all R chunks seems too much
+    rchk <- which(rchk)[1]
+    scan_deps_df(
+      path = path,
+      package = "rmarkdown",
+      code = blk_hits$code[rchk],
+      start_row = blk_hits$start_row[rchk],
+      start_column = blk_hits$start_column[rchk],
+      start_byte = blk_hits$start_byte[rchk]
+    )
+  }
 }
 
 # Crossref: https://github.com/r-lib/pkgdepends/issues/399

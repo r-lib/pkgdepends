@@ -5,8 +5,8 @@ find_package_root <- function(path = ".") {
   find_project_root(path = path, anchors = "DESCRIPTION")
 }
 
-is_project_root <- function(path = ".") {
-  any(file.exists(file.path(path, project_root_anchors)))
+is_package_root <- function(path = ".") {
+  file.exists(file.path(path, "DESCRIPTION"))
 }
 
 find_project_root <- function(path = ".", anchors = project_root_anchors) {

@@ -64,4 +64,16 @@ library(good)
 library(good)
 @
 
+<<chunk1, renv.ignore = "t">>=
+library(notthis)
+@
+
+<<chunk1, eval = "off">>=
+library(notthis)
+@
+
+<<chunk1, exercise = "yes">>=
+library(notthis)
+@
+
 \end{document}

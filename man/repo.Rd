@@ -48,6 +48,7 @@ columns, possibly more if there are other entries in the metadata:
 \item \code{Platform}
 \item \code{GraphicsAPIVersion}
 \item \code{InternalsId}
+\item \code{SystemRequirements}
 }
 }
 

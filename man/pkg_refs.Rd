@@ -10,27 +10,27 @@ can be obtained from. The full syntax of a reference is \code{type::ref}, but
 }
 \section{Package references}{
 Many pkgdepends and pak functions take package names as arguments.
-E.g. \code{pak::pkg_install()} takes the names of the packages to install,
+E.g. \code{pak::pkg_install()} takes the names of the packages to install and
 \code{pak::pkg_deps_tree()} takes the names of the packages to draw dependency
 trees for.
 
-Most of these function can also take a more generic \emph{package reference}
-instead of a package name.
+Most of these functions can also take more generic \emph{package references}
+instead of package names.
 A package reference also tells pkgdepends where to find the
-package, the package source.
+package source.
 
 To specify a package source, use its name as a prefix, with a \code{::}
 separator.
 E.g. \code{cran::mypkg} means the \code{mypkg} package from CRAN.
 
-A package name is a special package reference, that implicitly specifies
-the configured CRAN(-like) repositories as the package source.
-(We call this the \code{standard} package source.)
-So \code{mypkg} is equivalent to \code{standard::mypkg} and pak look for mypkg in
-any of the configured CRAN-like repositories.
+A package name is a special package reference that implicitly specifies
+the configured CRAN(-like) repositories as the package source
+(we call this the \code{standard} package source).
+So \code{mypkg} is equivalent to \code{standard::mypkg} and pkgdepends
+looks for mypkg in any of the configured CRAN-like repositories.
 If you did not explicitly specify any CRAN-like repositories (e.g. with
-\code{options("repos")}), then pak uses the CRAN and Bioconductor repositories
-by default.
+\code{options("repos")}), then pkgdepends uses the CRAN and
+Bioconductor repositories by default.
 
 This is the list of the currently supported package sources.
 We will discuss each in detail below.
@@ -40,14 +40,14 @@ We will discuss each in detail below.
 \item \code{standard}: a package from a configured CRAN-like repository.
 \item \code{github}: a package from GitHub.
 \item \code{gitlab}: a package from GitLab.
-\item \code{git}: a package in a git repository.
+\item \code{git}: a package in a Git repository.
 \item \code{local}: a local package file or directory.
 \item \code{url}: an URL that points to a package archive.
-\item \code{installed} an installed package.
-\item \code{deps} the dependencies of a local package file or directory.
-\item \code{any} a special reference type that accepts a package from any source.
+\item \code{installed}: an installed package.
+\item \code{deps}: the dependencies of a local package file or directory.
+\item \code{any}: a special reference type that accepts a package from any source.
 See below.
-\item \code{param} a special reference to change how other references are downloaded
+\item \code{param}: a special reference to change how other references are downloaded
 or installed. See "Parameters" below.
 }
 \subsection{Shorthands}{
@@ -58,21 +58,23 @@ You have seen before that a package name implicitly has a \code{standard}
 package source.
 Here are the complete rules for such shorthands, in the order they are
 applied:
+
+If the package reference is
 \itemize{
-\item If the ref is a valid package name, or a package name with a \code{@} version
-specification, the \code{standard} package source is used. E.g. \code{pkg} is
+\item a valid package name, or a package name with an \code{@}
+version specification, the \code{standard} package source is used. E.g. \code{pkg} is
 equivalent to \code{standard::pkg} and \verb{pkg@1.0} is equivalent to
 \verb{standard::pkg@1.0}.
-\item If the ref is a valid \code{github} ref type without the \verb{github::} prefix,
+\item a valid \code{github} ref type without the \verb{github::} prefix,
 then \code{github} is used. E.g. \code{user/repo} is equivalent to
 \code{github::user/repo} and \code{user/repo@tag} is equivalent to
 \code{github::user/repo@tag}, etc.
-\item If the ref is a GitHub URL (see below) without the \verb{github::} prefix,
+\item a GitHub URL (see below) without the \verb{github::} prefix,
 then \code{github} is used.
-\item If the ref is a path that starts with \code{.} or \code{/} or \verb{\\} or \code{~} then
+\item a path that starts with \code{.} or \code{/} or \verb{\\} or \code{~}, then
 \code{local} is used. (pkgdepends does not check if the path
 exists.)
-\item If a package reference if of the form \verb{<package-name>=?<parameters>},
+\item of the form \verb{<package-name>=?<parameters>},
 then it will be the special \code{param} type. See "Parameters" below.
 }
 
@@ -91,8 +93,8 @@ This is sometimes not easy for dependencies in \code{Remotes} (or similar) field
 \item For \verb{github::} and \verb{gitlab::} dependencies pkgdepends assumes
 that the package name is the same as the name of the repository. If this
 does not hold, then you need to specify the package name explicitly, using
-a \verb{<package>=} prefix. E.g. \code{pins=rstudio/pins-r}. If you specify both the
-package source type and the package name, the package name comes first:
+a \verb{<package>=} prefix. E.g. \code{pins=rstudio/pins-r}. To specify both the
+package source type and the package name at the same time, write it like this:
 \code{pins=github::rstudio/pins-r}.
 \item For \verb{git::} dependencies, pkgdepends assumes that the package
 name is the same as the last component of the repository. If this does not
@@ -114,8 +116,8 @@ Different parameters are separated by an ampersand (\code{&}) character.
 
 Parameters may be flags that turn on some behavior, or they can have a
 string value, assigned with an equal sign (\code{=}).
-If no value is assigned, then we assume the \code{true} value. For example
-these two package refs are equivalent:
+If no value is assigned, then a \code{true} value is assumed. For example,
+these two package references are equivalent:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{cran::testthat?source&nocache
 cran::testthat?source=true&nocache=true
@@ -128,7 +130,7 @@ the name of the package, and \verb{<params>} are the parameters, as above.
 This is useful if you want to add a parameter to a downstream dependency.
 
 For example, to install ggplot2, and always reinstall its cli package
-dependency you could use the \code{ggplot2} and \code{cli=?reinstall} package
+dependency, you could use the \code{ggplot2} and \code{cli=?reinstall} package
 references.
 The latter tells pkgdepends to always reinstall cli, even if
 it is already installed.
@@ -144,13 +146,13 @@ ignored that will lead to a solution error.
 ignored on R versions that are older than the specified one. E.g.
 \verb{Matrix=?ignore-before-r=4.1.2} will ignore the Matrix package on R versions
 that are older than 4.1.2. This parameter really only makes sense in the
-\code{packgename=?ignore} form.
+\code{packgename=?ignore-before-r} form.
 \item \code{ignore-unavailable} is a flag. It can only be specified for soft
 dependencies. If specified and the package is not available, it will be
 ignored. This parameter really only makes sense in the
 \code{packagename=?ignore-unavailable} form.
 \item \code{source} is a flag parameter. If specified, then a source R package
-is requested from a CRAN-like repository. For package installations
+is requested from a CRAN-like repository. For package installations,
 \code{source} always triggers a re-install. In other words, \code{source} implies the
 \code{reinstall} parameter. This parameter is supported for \verb{bioc::}, \verb{cran::}
 and \verb{standard::} remote types, and it is ignored for others.
@@ -221,14 +223,14 @@ Packages from a GitHub repository. Full syntax:
 the name of the repository is used.
 \item \verb{<username>} is a GitHub username or organization name.
 \item \verb{<repository>} is the name of the repository.
-\item \verb{<subdir>} optional subdirectory, if the package is within a
+\item \verb{<subdir>} specifies an optional subdirectory, if the package is within a
 subdirectory in the repository.
 \item \verb{<detail>} specifies a certain version of the package, see below.
 }
 
 \verb{<detail>} may specify:
 \itemize{
-\item a git branch, tag or (prefix of) a commit hash: \verb{@<commitish>};
+\item a Git branch, tag or (prefix of) a commit hash: \verb{@<commitish>};
 \item a pull request: \verb{#<pull-request>}; or
 \item the latest release: \verb{@*release}.
 }
@@ -246,7 +248,7 @@ r-lib/crayon#41
 r-lib/crayon@release
 }\if{html}{\out{</div>}}
 
-For convenience GitHub HTTP URLs can also be used to specify a
+For convenience, GitHub HTTP URLs can also be used to specify a
 package from GitHub. Examples:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{https://github.com/r-lib/withr
@@ -262,7 +264,7 @@ https://github.com/r-lib/withr/pull/76
 https://github.com/r-lib/withr/releases/tag/v2.1.0
 }\if{html}{\out{</div>}}
 
-A GitHub remote string can also be used instead of an URL, for example:
+A GitHub remote string can also be used instead of a URL, for example:
 \code{git@github.com:r-lib/pak.git}
 }
 
@@ -270,25 +272,27 @@ A GitHub remote string can also be used instead of an URL, for example:
 
 Packages from a GitLab repository. Full syntax:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=][github::]<project-path>/<repository>[/-/<subdir>][<detail>]
+\if{html}{\out{<div class="sourceCode">}}\preformatted{[<package>=][gitlab::]<project-path>/<repository>[/-/<subdir>][<detail>]
 }\if{html}{\out{</div>}}
 \itemize{
 \item \verb{<package>} is the name of the package. If this is missing, then
 the name of the repository is used.
-\item \verb{<project-path>} is a typically the GitLab username or group name, but
+\item \verb{<project-path>} is typically the GitLab user or group name, but
 it may contain subgroups.
 \item \verb{<repository>} is the name of the repository, or the project in GitLab
-terminology.
-\item \verb{<subdir>} optional subdirectory, if the package is within a
+terminology. GitLab
+\href{https://docs.gitlab.com/ee/user/group/subgroups/}{subgroups} are
+fully supported.
+\item \verb{<subdir>} specifies an optional subdirectory, if the package is within a
 subdirectory in the repository. Note that for GitLab, this must come
 after a \verb{/-} prefix, to be able to distinguish it from subgroups.
-\item \verb{<detail>} may specify a git branch, tag or (prefix of) a commit hash.
+\item \verb{<detail>} may specify a Git branch, tag or (prefix of) a commit hash.
 }
 
 If \verb{<detail>} is missing, then the latest commit of the \emph{default}
 branch is used.
 
-\verb{gitlab::} supports git submodules, see the \code{git-submodules} configuration
+\verb{gitlab::} supports Git submodules, see the \code{git-submodules} configuration
 entry.
 
 Examples:
@@ -299,7 +303,7 @@ gitlab::group/subgroup/subsubgroup/project/-/subdir@ref
 }\if{html}{\out{</div>}}
 }
 
-\subsection{Packages in git repositories (\verb{git::})}{
+\subsection{Packages in Git repositories (\verb{git::})}{
 
 Full syntax:
 
@@ -308,16 +312,16 @@ Full syntax:
 \itemize{
 \item \verb{<package>} is the name of the package. If this is missing, then
 the last component of the \verb{<host>} is used.
-\item \verb{<host>} host name and path of the git repository. Some git repositories
-need the \code{.git} suffix here, others are more forgiving.
+\item \verb{<host>} is the host name and path of the Git repository. Some Git
+repositories need the \code{.git} suffix here, others are more forgiving.
 \item \verb{<detail>} specifies a certain version of the package:
-a git branch, tag or (prefix of) a commit hash: \verb{@<commitish>}.
+a Git branch, tag or (prefix of) a commit hash: \verb{@<commitish>}.
 }
 
 If \verb{<detail>} is missing, then the latest commit of the \emph{default}
 branch is used.
 
-\verb{git::} supports git submodules, see the \code{git-submodules} configuration
+\verb{git::} supports Git submodules, see the \code{git-submodules} configuration
 entry.
 
 Examples:
@@ -329,11 +333,11 @@ git::https://github.com/r-lib/crayon.git@branch
 git::https://gitlab.com/gaborcsardi/cli.git
 }\if{html}{\out{</div>}}
 
-Note that pkgdepends has a built-in git client, and does
-\strong{not} require a system git installation.
+Note that pkgdepends has a built-in Git client, and does
+\strong{not} require a system Git installation.
 
-If the system has git installed, then pkgdepends will use the
-credentials stored in the configured git credential store, automatically,
+If the system has Git installed, then pkgdepends will use the
+credentials stored in the configured Git credential store, automatically,
 via the gitcreds package.
 }
 
@@ -388,7 +392,7 @@ Examples:
 url::https://github.com/tidyverse/stringr/archive/HEAD.zip
 }\if{html}{\out{</div>}}
 
-If you specify a package from an URL in a dependency (i.e. in \code{DESCRIPTION}),
+If you specify a package from a URL in a dependency (i.e. in \code{DESCRIPTION}),
 then you also need to specify the name of the package, see "Package names"
 above.
 }
@@ -470,15 +474,15 @@ dependency defined in the \code{Depends}, \code{Imports}, \code{Suggests} or \co
 fields as being installed from a non-standard package source by adding
 a package reference to a \code{Remotes} entry.
 pkgdepends will download and install the package from the
-from the specified location, instead of a CRAN-like repository.
+specified location, instead of a CRAN-like repository.
 
-The remote dependencies specified in \code{Remotes} is a comma separated
+The remote dependencies specified in \code{Remotes} are a comma separated
 list of package sources:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{Remotes: <pkg-source-1>, <pkg-source-2>, [ ... ]
 }\if{html}{\out{</div>}}
 
-Note that you will still need add the package to one of the regular
+Note that you will still need to add the package to one of the regular
 dependency fields, i.e. \code{Imports}, \code{Suggests}, etc. Here is a concrete
 example that specifies the \code{r-lib/glue} package:
 

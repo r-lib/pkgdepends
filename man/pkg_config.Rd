@@ -97,7 +97,8 @@ configured for the current user.
 GitHub. If the update fails, then the cached or the build-in
 database if used. Defaults to TRUE.
 \item \code{sysreqs_db_update_timeout}: Timeout for the system requirements database update.
-Defaults to five seconds.
+Defaults to five seconds, except if the \code{CI} environment variable
+is set, then it is one minute.
 \item \code{sysreqs_dry_run}: If \code{TRUE}, then pkgdepends only prints the system commands to
 install system requirements, but does not execute them.
 \item \code{sysreqs_platform}: The platform to use for system requirements lookup. On Linux, where

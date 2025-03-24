@@ -38,7 +38,7 @@ $sysreqs_db_update
 [1] "Whether to try to update the system requirements database from\nGitHub. If the update fails, then the cached or the build-in\ndatabase if used. Defaults to TRUE."
 
 $sysreqs_db_update_timeout
-[1] "Timeout for the system requirements database update.\nDefaults to five seconds."
+[1] "Timeout for the system requirements database update.\nDefaults to five seconds, except if the \\code{CI} environment variable\nis set, then it is one minute."
 
 $sysreqs_dry_run
 [1] "If \\code{TRUE}, then pak only prints the system commands to\ninstall system requirements, but does not execute them."

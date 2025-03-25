@@ -1016,7 +1016,7 @@ yaml_parse_scalar <- function(x) {
 # -------------------------------------------------------------------------
 
 scan_path_deps_do_dsc <- function(code, path) {
-  code <- if (is.raw(code)) rawToChar(code)
+  if (is.raw(code)) code <- rawToChar(code)
   dsc <- desc::desc(text = code)
   deps <- resolve_ref_deps(
     dsc$get_deps(),

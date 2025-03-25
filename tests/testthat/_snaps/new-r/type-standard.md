@@ -51,16 +51,16 @@
       $deps[[1]]
       # A data frame: 9 x 5
         ref          type     package      op    version 
-      * <chr>        <chr>    <chr>        <chr> <chr>   
-      1 R            depends  R            ">="  "2.10"  
+        <chr>        <chr>    <chr>        <chr> <chr>   
+      1 ALL          suggests ALL          ""    ""      
       2 BiocGenerics depends  BiocGenerics ">="  "0.27.1"
-      3 utils        depends  utils        ""    ""      
-      4 methods      imports  methods      ""    ""      
-      5 tools        suggests tools        ""    ""      
-      6 tkWidgets    suggests tkWidgets    ""    ""      
-      7 ALL          suggests ALL          ""    ""      
-      8 RUnit        suggests RUnit        ""    ""      
-      9 golubEsets   suggests golubEsets   ""    ""      
+      3 R            depends  R            ">="  "2.10"  
+      4 RUnit        suggests RUnit        ""    ""      
+      5 golubEsets   suggests golubEsets   ""    ""      
+      6 methods      imports  methods      ""    ""      
+      7 tkWidgets    suggests tkWidgets    ""    ""      
+      8 tools        suggests tools        ""    ""      
+      9 utils        depends  utils        ""    ""      
       
       
       $built

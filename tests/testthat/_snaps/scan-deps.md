@@ -380,14 +380,14 @@
          path        ref                    package      version      type  code                   start_row start_column start_byte
          <chr>       <chr>                  <chr>        <chr>        <chr> <chr>                      <int>        <int>      <int>
        1 DESCRIPTION callr                  callr        >=3.3.1      prod  callr                          1            1          1
-       2 DESCRIPTION r-lib/cli              cli          >=3.6.0      prod  r-lib/cli                      1            1          1
+       2 DESCRIPTION cli                    cli          >=3.6.0      prod  cli                            1            1          1
        3 DESCRIPTION curl                   curl         *            prod  curl                           1            1          1
        4 DESCRIPTION desc                   desc         >=1.4.3      prod  desc                           1            1          1
        5 DESCRIPTION filelock               filelock     >=1.0.2      prod  filelock                       1            1          1
        6 DESCRIPTION jsonlite               jsonlite     *            prod  jsonlite                       1            1          1
        7 DESCRIPTION lpSolve                lpSolve      *            prod  lpSolve                        1            1          1
        8 DESCRIPTION pkgbuild               pkgbuild     >=1.0.2      prod  pkgbuild                       1            1          1
-       9 DESCRIPTION pkgcache               pkgcache     >=2.2.0      prod  pkgcache                       1            1          1
+       9 DESCRIPTION r-lib/pkgcache         pkgcache     >=2.2.0      prod  r-lib/pkgcache                 1            1          1
       10 DESCRIPTION processx               processx     >=3.4.2      prod  processx                       1            1          1
       11 DESCRIPTION ps                     ps           *            prod  ps                             1            1          1
       12 DESCRIPTION R6                     R6           *            prod  R6                             1            1          1

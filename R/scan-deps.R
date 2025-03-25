@@ -1232,7 +1232,7 @@ scan_path_deps_do_rnw_parse_chunk_header <- function(header) {
   }
   if ((n <- length(idx)) > 1L || (length(res) > 1L && is.null(names(res)))) {
     stop(
-      "Invalid chunk options: ", x,
+      "Invalid chunk options: ", res,
       "\n\nAll options must be of the form 'tag=value' except for the chunk label."
     )
   }

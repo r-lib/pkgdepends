@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   pkgdepends-how-to: pkgdepends-how-to.html
-last_built: 2025-03-25T12:22Z
+last_built: 2025-03-25T13:04Z
 urls:
   reference: https://r-lib.github.io/pkgdepends/reference
   article: https://r-lib.github.io/pkgdepends/articles

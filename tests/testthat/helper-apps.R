@@ -316,7 +316,7 @@ gh_app_repos <- list(
 )
 
 fake_gh <- webfakes::local_app_process(
-  gh_app(gh_app_repos),
+  asNamespace("pkgdepends")$gh_app(gh_app_repos),
   opts = webfakes::server_opts(num_threads = 3)
 )
 
@@ -636,6 +636,6 @@ transform_installed_in_temp <- function(x) {
 fake_git <- local({
   dir.create(tmp <- tempfile())
   untar(testthat::test_path("fixtures/git-repo.tar.gz"), exdir = tmp)
-  app <- git_app(file.path(tmp, "repo"))
+  app <- asNamespace("pkgdepends")$git_app(file.path(tmp, "repo"))
   webfakes::local_app_process(app)
 })

@@ -1,7 +1,7 @@
 # scan_deps
 
     Code
-      scan_deps(project)[]
+      scan_deps(project, root = project)[]
     Output
       # A data frame: 11 x 9
          path            ref       package   version type  code              start_row start_column start_byte
@@ -21,7 +21,7 @@
 ---
 
     Code
-      scan_deps(project)
+      scan_deps(project, root = project)
     Output
       
       Dependencies:

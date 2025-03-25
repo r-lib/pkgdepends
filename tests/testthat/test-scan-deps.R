@@ -5,10 +5,10 @@ test_that("scan_deps", {
 
   project <- test_path("fixtures/scan/project-1")
   expect_snapshot(variant = .Platform$OS.type, {
-    scan_deps(project)[]
+    scan_deps(project, root = project)[]
   })
   expect_snapshot(variant = .Platform$OS.type, {
-    scan_deps(project)
+    scan_deps(project, root = project)
   })
 })
 
@@ -519,7 +519,7 @@ test_that(".Rproj file", {
   local_reproducible_output(width = 500)
   project <- test_path("fixtures/scan/project-3")
   expect_snapshot({
-    scan_deps(project)[]
+    scan_deps(project, root = project)[]
   })
 })
 

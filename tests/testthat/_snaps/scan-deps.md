@@ -449,7 +449,7 @@
 # .Rproj file
 
     Code
-      scan_deps(project)[]
+      scan_deps(project, root = project)[]
     Output
       # A data frame: 2 x 9
         path             ref      package  version type  code                    start_row start_column start_byte

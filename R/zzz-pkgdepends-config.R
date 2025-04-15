@@ -7,14 +7,14 @@ default_windows_archs <- function() {
 
 default_update_after <- function() as.difftime(24, units = "hours")
 
-env_decode_dependencies <- function(x, name) {
+env_decode_dependencies <- function(x, name, ...) {
   if (tolower(x) %in% c("yes", "true", "1", "on")) return(TRUE)
   if (tolower(x) %in% c("no", "false", "0", "off")) return(FALSE)
   if (tolower(x) == "na") return(NA)
   strsplit(x, ";", fixed = TRUE)[[1]]
 }
 
-env_decode_difftime <- function(x, name) {
+env_decode_difftime <- function(x, name, ...) {
   if (nchar(x) >= 2) {
     unit <- substr(x, nchar(x), nchar(x))
     unit <- c(s = "secs", m = "mins", h = "hours", d = "days")[unit]

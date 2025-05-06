@@ -1,4 +1,3 @@
-
 test_that("format_items", {
   cases <- list(
     list(c("1", "2", "3"), "`1`, `2` and `3`"),

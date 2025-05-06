@@ -1,4 +1,3 @@
-
 test_that("type_github_get_data, sha, description", {
   setup_fake_gh_app()
 
@@ -36,20 +35,24 @@ test_that("type_github_get_data, sha, description", {
 
 test_that("type_github_get_data, no such user", {
   setup_fake_gh_app()
-  expect_snapshot(error = TRUE,
+  expect_snapshot(
+    error = TRUE,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak")))
   )
-  expect_snapshot(error = TRUE,
+  expect_snapshot(
+    error = TRUE,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak#90")))
   )
 })
 
 test_that("type_github_get_data, no such repo", {
   setup_fake_gh_app()
-  expect_snapshot(error = TRUE,
+  expect_snapshot(
+    error = TRUE,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
   )
-  expect_snapshot(error = TRUE,
+  expect_snapshot(
+    error = TRUE,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
   )
 })
@@ -64,10 +67,14 @@ test_that("github_query, invalid PAT", {
     CI_GITHUB_TOKEN = "invalid"
   ))
 
-  expect_snapshot(error = TRUE, transform = transform_no_srcref,
+  expect_snapshot(
+    error = TRUE,
+    transform = transform_no_srcref,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
   )
-  expect_snapshot(error = TRUE, transform = transform_no_srcref,
+  expect_snapshot(
+    error = TRUE,
+    transform = transform_no_srcref,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
   )
 })
@@ -95,9 +102,11 @@ test_that("github_query, rate limited", {
 test_that("github_query, access denied", {
   setup_fake_gh_app()
   withr::local_envvar(
-    c(GITHUB_PAT_GITHUB_COM = NA_character_,
+    c(
+      GITHUB_PAT_GITHUB_COM = NA_character_,
       GITHUB_TOKEN = NA_character_,
-      GITHUB_PAT = NA_character_)
+      GITHUB_PAT = NA_character_
+    )
   )
 
   expect_snapshot(
@@ -173,7 +182,9 @@ test_that("no such ref error", {
   setup_fake_gh_app()
   expect_snapshot(
     error = TRUE,
-    synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@bad-ref-no-no-no"))),
+    synchronise(type_github_get_data(parse_pkg_ref(
+      "r-lib/pak@bad-ref-no-no-no"
+    ))),
     transform = transform_no_srcref
   )
 })

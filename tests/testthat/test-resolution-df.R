@@ -1,4 +1,3 @@
-
 test_that("res_make_empty_df", {
   df <- res_make_empty_df()
   expect_true(inherits(df, "tbl"))

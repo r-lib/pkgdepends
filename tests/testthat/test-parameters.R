@@ -1,4 +1,3 @@
-
 test_that("reinstall, standard", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
@@ -12,37 +11,49 @@ test_that("reinstall, standard", {
 
   p <- new_pkg_installation_proposal("pkg1", config = config)
   suppressMessages(p$solve())
-  expect_snapshot({
-    "pkg1 is already installed"
-    p$get_solution()
-  }, transform = transform_installed_in_temp)
-  
+  expect_snapshot(
+    {
+      "pkg1 is already installed"
+      p$get_solution()
+    },
+    transform = transform_installed_in_temp
+  )
+
   p <- new_pkg_installation_proposal("pkg3?reinstall", config = config)
   suppressMessages(p$solve())
-  expect_snapshot({
-    "request a reinstall"
-    p$get_solution()
-  }, transform = transform_installed_in_temp)
+  expect_snapshot(
+    {
+      "request a reinstall"
+      p$get_solution()
+    },
+    transform = transform_installed_in_temp
+  )
 
   p <- new_pkg_installation_proposal(
     c("pkg3", "pkg1=?reinstall"),
     config = config
   )
   suppressMessages(p$solve())
-  expect_snapshot({
-    "request a reinstall of a dependency"
-    p$get_solution()
-  }, transform = transform_installed_in_temp)
+  expect_snapshot(
+    {
+      "request a reinstall of a dependency"
+      p$get_solution()
+    },
+    transform = transform_installed_in_temp
+  )
 
   p <- new_pkg_installation_proposal(
     c("pkg3", "pkg1?reinstall"),
     config = config
   )
   suppressMessages(p$solve())
-  expect_snapshot({
-    "one reinstall, one not"
-    p$get_solution()
-  }, transform = transform_installed_in_temp)
+  expect_snapshot(
+    {
+      "one reinstall, one not"
+      p$get_solution()
+    },
+    transform = transform_installed_in_temp
+  )
 })
 
 test_that("reinstsll from URL", {
@@ -65,29 +76,37 @@ test_that("reinstsll from URL", {
     config = config
   )
   suppressMessages(p$solve())
-  expect_snapshot({
-    "reinstall from direct URL"
-    p$get_solution()
-  }, transform = function(x) transform_local_port(transform_installed_in_temp(x)))
+  expect_snapshot(
+    {
+      "reinstall from direct URL"
+      p$get_solution()
+    },
+    transform = function(x) transform_local_port(transform_installed_in_temp(x))
+  )
 
   p <- new_pkg_installation_proposal(
     c("pkg1=?reinstall", paste0("url::", url)),
     config = config
   )
   suppressMessages(p$solve())
-  expect_snapshot({
-    "reinstall from URL, extra parameters"
-    p$get_solution()
-  }, transform = function(x) transform_local_port(transform_installed_in_temp(x)))
+  expect_snapshot(
+    {
+      "reinstall from URL, extra parameters"
+      p$get_solution()
+    },
+    transform = function(x) transform_local_port(transform_installed_in_temp(x))
+  )
 })
 
 test_that("source", {
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg
     Imports: pkg2
 
     Package: pkg2
-  ")
+  "
+  )
 
   setup_fake_apps(
     cran_repo = repo,
@@ -110,12 +129,14 @@ test_that("source", {
 })
 
 test_that("source for dependency", {
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg
     Imports: pkg2
 
     Package: pkg2
-  ")
+  "
+  )
 
   setup_fake_apps(
     cran_repo = repo,
@@ -142,14 +163,16 @@ test_that("?ignore is ignored", {
   lock <- tempfile()
   on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
 
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg
     Suggests: pkg2
 
     Package: pkg2
 
     Package: pkg3
-  ")
+  "
+  )
 
   setup_fake_apps(cran_repo = repo)
 
@@ -179,14 +202,16 @@ test_that("?ignore-before-r is ignored", {
   lock <- tempfile()
   on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
 
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg
     Suggests: pkg2
 
     Package: pkg2
 
     Package: pkg3
-  ")
+  "
+  )
 
   setup_fake_apps(cran_repo = repo)
 

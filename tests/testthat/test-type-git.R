@@ -1,14 +1,19 @@
-
 test_that("parse_remote_git", {
   expect_snapshot(parse_remote_git("git::https://github.com/r-lib/cli"))
   expect_snapshot(parse_remote_git("git::https://github.com/r-lib/cli.git"))
   expect_snapshot(parse_remote_git("git::https://github.com/r-lib/cli@branch"))
-  expect_snapshot(parse_remote_git("git::https://github.com/r-lib/cli.git@branch"))
+  expect_snapshot(parse_remote_git(
+    "git::https://github.com/r-lib/cli.git@branch"
+  ))
 
   expect_snapshot(parse_remote_git("pkg=git::https://github.com/r-lib/cli"))
   expect_snapshot(parse_remote_git("pkg=git::https://github.com/r-lib/cli.git"))
-  expect_snapshot(parse_remote_git("pkg=git::https://github.com/r-lib/cli@branch"))
-  expect_snapshot(parse_remote_git("pkg=git::https://github.com/r-lib/cli.git@branch"))
+  expect_snapshot(parse_remote_git(
+    "pkg=git::https://github.com/r-lib/cli@branch"
+  ))
+  expect_snapshot(parse_remote_git(
+    "pkg=git::https://github.com/r-lib/cli.git@branch"
+  ))
 
   expect_snapshot(parse_pkg_refs(c(
     "git::https://github.com/cran/falsy.git",
@@ -36,7 +41,9 @@ test_that("resolve_remote_git", {
 test_that("download_remote_git", {
   skip_on_cran()
   setup_fake_apps()
-  prop <- new_pkg_installation_proposal("git::https://github.com/r-lib/cli@v3.6.0")
+  prop <- new_pkg_installation_proposal(
+    "git::https://github.com/r-lib/cli@v3.6.0"
+  )
   suppressMessages(prop$solve())
   suppressMessages(prop$download())
   expect_snapshot(
@@ -60,7 +67,7 @@ test_that("satisfy_remote_git", {
 
   expect_equal(
     satisfy_remote_git(
-      list(package = "foo", params = list(c("reinstall"=""))),
+      list(package = "foo", params = list(c("reinstall" = ""))),
       list(type = "installed", package = "foo")
     ),
     structure(FALSE, reason = "Re-install requested")

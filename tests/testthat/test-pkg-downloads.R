@@ -1,4 +1,3 @@
-
 test_that("new_pkg_download_proposal", {
   setup_fake_apps()
 
@@ -15,7 +14,6 @@ test_that("new_pkg_download_proposal", {
   expect_snapshot(
     dl$get_resolution()[, c("ref", "type", "directpkg", "package", "error")]
   )
-
 })
 
 test_that("async_resolve", {
@@ -27,8 +25,7 @@ test_that("async_resolve", {
   )
   expect_snapshot(
     synchronize(
-      dl$async_resolve()$
-      then(function() "done")
+      dl$async_resolve()$then(function() "done")
     )
   )
   expect_snapshot(

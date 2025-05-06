@@ -1,4 +1,3 @@
-
 test_that("resolve", {
   skip_on_cran()
   tmp <- tempfile()

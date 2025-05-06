@@ -1,4 +1,3 @@
-
 test_that("local dep needs name", {
   setup_fake_apps()
 
@@ -6,21 +5,27 @@ test_that("local dep needs name", {
 
   mkdirp("pkg1")
   file.create("pkg1/NAMESPACE")
-  writeLines(c(
-    "Package: pkg1",
-    "Version: 1.0.0",
-    "License: MIT",
-    "Imports: pkg2",
-    "Remotes: local::./pkg2"
-  ), "pkg1/DESCRIPTION")
+  writeLines(
+    c(
+      "Package: pkg1",
+      "Version: 1.0.0",
+      "License: MIT",
+      "Imports: pkg2",
+      "Remotes: local::./pkg2"
+    ),
+    "pkg1/DESCRIPTION"
+  )
 
   mkdirp("pkg2")
   file.create("pkg2/NAMESPACE")
-  writeLines(c(
-    "Package: pkg2",
-    "Version: 1.0.0",
-    "License: MIT"
-  ), "pkg2/DESCRIPTION")
+  writeLines(
+    c(
+      "Package: pkg2",
+      "Version: 1.0.0",
+      "License: MIT"
+    ),
+    "pkg2/DESCRIPTION"
+  )
 
   mkdirp("lib")
   config <- list(library = file.path(tmp, "lib"))
@@ -50,13 +55,16 @@ test_that("url dep needs name", {
     fake_cran$url(),
     "/src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz"
   )
-  writeLines(c(
-    "Package: pkg2",
-    "Version: 1.0.0",
-    "License: MIT",
-    "Imports: pkg1",
-    paste0("Remotes: url::", url)
-  ), "pkg2/DESCRIPTION")
+  writeLines(
+    c(
+      "Package: pkg2",
+      "Version: 1.0.0",
+      "License: MIT",
+      "Imports: pkg1",
+      paste0("Remotes: url::", url)
+    ),
+    "pkg2/DESCRIPTION"
+  )
 
   mkdirp("lib")
   config <- list(library = file.path(tmp, "lib"))

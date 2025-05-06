@@ -1,6 +1,4 @@
-
 fixture <- local({
-
   get_test_data <- function(expr) {
     code <- enc2utf8(paste0(deparse(expr, backtick = TRUE), collapse = "\n"))
     hash <- cli::hash_md5(code)
@@ -113,10 +111,15 @@ fixture <- local({
         },
 
         add_fixture = function(hash, code) {
-          value <- paste(collapse = "\n", c(
-            "Hash", paste0("  ", hash),
-            "Code", paste0("  ", strsplit(code, "\n", fixed = TRUE)[[1]])
-          ))
+          value <- paste(
+            collapse = "\n",
+            c(
+              "Hash",
+              paste0("  ", hash),
+              "Code",
+              paste0("  ", strsplit(code, "\n", fixed = TRUE)[[1]])
+            )
+          )
           self$hashes_seen <- c(self$hashes_seen, hash)
           self$cur_fixs <- self$fix_append(self$cur_fixs, value)
         },
@@ -208,7 +211,6 @@ fixture <- local({
       mkdirp(dirname(fxpath))
       saveRDS(value, fxpath, version = 2L)
       value
-
     } else {
       tryCatch(
         suppressWarnings(readRDS(fxpath)),

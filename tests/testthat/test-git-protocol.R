@@ -1,5 +1,4 @@
-
-withr::local_envvar(GITHUB_PAT="FAIL")
+withr::local_envvar(GITHUB_PAT = "FAIL")
 
 test_that("git_list_refs", {
   skip_on_cran()
@@ -47,12 +46,14 @@ test_that("async_git_list_files_process", {
   pack <- sample(pack)
 
   expect_snapshot(
-    sort(async_git_list_files_process(
-      pack,
-      ref = ref,
-      sha = ref,
-      url = "url"
-    )$files$path)
+    sort(
+      async_git_list_files_process(
+        pack,
+        ref = ref,
+        sha = ref,
+        url = "url"
+      )$files$path
+    )
   )
 })
 
@@ -202,7 +203,6 @@ test_that("async_git_list_refs_v2_process_2", {
       url
     )
   )
-
 })
 
 test_that("git_parse_okt_line_refs", {
@@ -321,14 +321,16 @@ test_that("async_git_resolve_ref", {
   )
 
   mockery::stub(
-    async_git_resolve_ref, "async_git_list_refs",
-    function(...) async_constant(list(
-      refs = data_frame(
-        ref = c("one", "two"),
-        hash = c("badcafe1", "badcafe2")
-      ),
-      caps = character()
-    ))
+    async_git_resolve_ref,
+    "async_git_list_refs",
+    function(...)
+      async_constant(list(
+        refs = data_frame(
+          ref = c("one", "two"),
+          hash = c("badcafe1", "badcafe2")
+        ),
+        caps = character()
+      ))
   )
 
   expect_snapshot(
@@ -378,6 +380,6 @@ test_that("unpack_packfile_repo", {
   on.exit(unlink(output, recursive = TRUE), add = TRUE)
   unpack_packfile_repo(pack, output, url = "url")
   expect_snapshot(
-    sort(dir(output, recursive=TRUE))
+    sort(dir(output, recursive = TRUE))
   )
 })

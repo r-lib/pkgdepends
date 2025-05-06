@@ -1,6 +1,4 @@
-
 fixtures <- list(
-
   "resolution-simple.rds" = function() {
     r <- pkg_plan$new("pkgconfig", lib = tempfile())
     r$resolve()
@@ -24,7 +22,8 @@ fixtures <- list(
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
     r <- pkg_plan$new(
       c("cran::pkgconfig", "github::r-lib/pkgconfig"),
-      lib = tmp)
+      lib = tmp
+    )
     r$resolve()
   },
 

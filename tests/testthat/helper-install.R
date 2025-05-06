@@ -1,7 +1,9 @@
-
-install_binary <- function(filename, lib = .libPaths()[[1L]],
-                           metadata = NULL, quiet = FALSE) {
-
+install_binary <- function(
+  filename,
+  lib = .libPaths()[[1L]],
+  metadata = NULL,
+  quiet = FALSE
+) {
   assert_that(
     is_existing_file(filename),
     is_string(lib),
@@ -32,7 +34,6 @@ install_binary <- function(filename, lib = .libPaths()[[1L]],
 
 
 local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
-
   # All arguments must be named
   args <- list(...)
   stopifnot(length(args) == 0 || all_named(args))
@@ -42,10 +43,17 @@ local_binary_package <- function(pkgname, ..., envir = parent.frame()) {
   dir.create(pkgdir)
   nms <- names(args)
   for (i in seq_along(args)) {
-    dir.create(file.path(pkgdir, dirname(nms[[i]])), showWarnings = FALSE, recursive = TRUE)
-    withr::with_connection(list(con = file(file.path(pkgdir, nms[[i]]), open = "wb")), {
-      writeLines(args[[i]], con, sep = "\n")
-    })
+    dir.create(
+      file.path(pkgdir, dirname(nms[[i]])),
+      showWarnings = FALSE,
+      recursive = TRUE
+    )
+    withr::with_connection(
+      list(con = file(file.path(pkgdir, nms[[i]]), open = "wb")),
+      {
+        writeLines(args[[i]], con, sep = "\n")
+      }
+    )
   }
 
   filename <- file.path(d, paste0(pkgname, ".tgz"))
@@ -91,11 +99,13 @@ dummy_worker_process <- R6::R6Class(
 )
 
 make_dummy_worker_process <- function(n_iter = 10, sleep = 1, status = 0) {
-  n_iter; sleep; status
+  n_iter
+  sleep
+  status
   function(...) {
     dummy_worker_process$new(callr::r_process_options(
       func = function(n_iter, sleep, status) {
-                                        # nocov start
+        # nocov start
         for (i in seq_len(n_iter)) {
           cat("out ", i, "\n", sep = "")
           message("err ", i)
@@ -106,7 +116,7 @@ make_dummy_worker_process <- function(n_iter = 10, sleep = 1, status = 0) {
           rm(list = ".Last", envir = .GlobalEnv)
           quit(save = "no", status = status)
         }
-                                        # nocov end
+        # nocov end
       },
       args = list(n_iter = n_iter, sleep = sleep, status = status),
       stderr = "2>&1"

@@ -1,6 +1,4 @@
-
 test_that("satisfies_remote", {
-
   res <- make_fake_resolution(`cran::crayon@>=1.0.0` = list())
 
   ## GitHub type is never good
@@ -15,9 +13,12 @@ test_that("satisfies_remote", {
 
   ## installed, but not from CRAN
   fake_desc <- desc::desc("!new")
-  fake_desc$set(Repository ="Not CRAN")
-  bad3 <- make_fake_resolution(`installed::foobar` = list(
-    extra = list(list(description = fake_desc))))
+  fake_desc$set(Repository = "Not CRAN")
+  bad3 <- make_fake_resolution(
+    `installed::foobar` = list(
+      extra = list(list(description = fake_desc))
+    )
+  )
   expect_false(ans <- satisfy_remote_cran(res, bad3))
   expect_match(attr(ans, "reason"), "not from CRAN")
 
@@ -27,9 +28,12 @@ test_that("satisfies_remote", {
   expect_match(attr(ans, "reason"), "names differ")
 
   ## installed type, but package name does not match
-  bad5 <- make_fake_resolution(`installed::foobar` = list(
-    package = "crayon2",
-    extra = list(list(repotype = "cran"))))
+  bad5 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "crayon2",
+      extra = list(list(repotype = "cran"))
+    )
+  )
   expect_false(ans <- satisfy_remote_cran(res, bad5))
   expect_match(attr(ans, "reason"), "names differ")
 
@@ -47,28 +51,39 @@ test_that("satisfies_remote", {
   expect_true(satisfy_remote_cran(res, ok2))
 
   ## Same version, installed
-  ok3 <- make_fake_resolution(`installed::foobar` = list(
-    package = "crayon",
-    extra = list(list(repotype = "cran"))))
+  ok3 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "crayon",
+      extra = list(list(repotype = "cran"))
+    )
+  )
   expect_true(satisfy_remote_cran(res, ok3))
 
   ## Newer version, installed
-  ok4 <- make_fake_resolution(`installed::foobar` = list(
-    package = "crayon",
-    version = "2.0.0",
-    extra = list(list(repotype = "cran"))))
+  ok4 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "crayon",
+      version = "2.0.0",
+      extra = list(list(repotype = "cran"))
+    )
+  )
   expect_true(satisfy_remote_cran(res, ok4))
 
   # direct ref is slightly different
-  res <- make_fake_resolution(`cran::crayon@>=1.0.0` = list(
-    direct = TRUE
-  ))
+  res <- make_fake_resolution(
+    `cran::crayon@>=1.0.0` = list(
+      direct = TRUE
+    )
+  )
 
   ## Installed, but old
-  bad6 <- make_fake_resolution(`installed::foobar` = list(
-    package = "crayon",
-    version = "0.0.1",
-    extra = list(list(repotype = "cran"))))
+  bad6 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "crayon",
+      version = "0.0.1",
+      extra = list(list(repotype = "cran"))
+    )
+  )
   expect_false(ans <- satisfy_remote_cran(res, bad6))
   expect_match(attr(ans, "reason"), "Direct ref needs update")
 
@@ -80,7 +95,6 @@ test_that("satisfies_remote", {
 })
 
 test_that("installedok", {
-
   sol <- list(
     package = "pkg1",
     version = "1.0.0",

@@ -1,4 +1,3 @@
-
 test_that("installed preferred over download", {
   setup_fake_apps()
 

@@ -1,4 +1,3 @@
-
 test_that("new_pkg_installation_plan", {
   setup_fake_apps()
   pkgcache::pkg_cache_delete_files()
@@ -72,7 +71,8 @@ test_that("install package from GH, in subdir", {
   # install from cache, no binary, source package is selected
   remove.packages("feather", lib = lib)
   pkgcache::pkg_cache_delete_files(
-    built = TRUE, platform = current_r_platform()
+    built = TRUE,
+    platform = current_r_platform()
   )
   plan <- new_pkg_installation_plan(lock, config = config)
   suppressMessages(plan$download())
@@ -140,10 +140,13 @@ test_that("install_sysreqs", {
   prop$create_lockfile(path = lock)
 
   plan <- new_pkg_installation_plan(lock)
-  expect_snapshot({
-    plan$show_solution()
-    plan$show_sysreqs()
-  }, transform = transform_bytes)
+  expect_snapshot(
+    {
+      plan$show_solution()
+      plan$show_sysreqs()
+    },
+    transform = transform_bytes
+  )
 })
 
 test_that("update_sysreqs", {

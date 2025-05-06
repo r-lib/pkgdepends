@@ -1,4 +1,4 @@
-withr::local_envvar(GITHUB_PAT="FAIL")
+withr::local_envvar(GITHUB_PAT = "FAIL")
 
 test_that("parse_submodules", {
   sm <- test_path("fixtures/submodules.ini")
@@ -20,7 +20,6 @@ test_that("parse_submodules", {
     parse_submodules(sm2)
     parse_submodules(sm3)
   })
-
 })
 
 test_that("git_download_repo with submodules", {
@@ -37,12 +36,15 @@ test_that("git_download_repo with submodules", {
   )
 
   # tag
-  writeLines(c(
-    "[submodule \"submod\"]",
-    "\tpath = submod",
-    paste0("\turl = ", fake_git$url("/submod")),
-    "\tbranch = v2"
-  ), file.path(output, ".gitmodules"))
+  writeLines(
+    c(
+      "[submodule \"submod\"]",
+      "\tpath = submod",
+      paste0("\turl = ", fake_git$url("/submod")),
+      "\tbranch = v2"
+    ),
+    file.path(output, ".gitmodules")
+  )
 
   update_git_submodules(output)
   expect_snapshot(dir(tmp, recursive = TRUE))
@@ -50,11 +52,14 @@ test_that("git_download_repo with submodules", {
 
   # HEAD
   unlink(file.path(output, "submod"), recursive = TRUE)
-  writeLines(c(
-    "[submodule \"submod\"]",
-    "\tpath = submod",
-    paste0("\turl = ", fake_git$url("/submod"))
-  ), file.path(output, ".gitmodules"))
+  writeLines(
+    c(
+      "[submodule \"submod\"]",
+      "\tpath = submod",
+      paste0("\turl = ", fake_git$url("/submod"))
+    ),
+    file.path(output, ".gitmodules")
+  )
 
   update_git_submodules(output)
   # it will skip existing ones
@@ -77,12 +82,15 @@ test_that("git_download_repo R package with submodules", {
   )
 
   # tag
-  writeLines(c(
-    "[submodule \"submod\"]",
-    "\tpath = submod",
-    paste0("\turl = ", fake_git$url("/submod")),
-    "\tbranch = v2"
-  ), file.path(output, ".gitmodules"))
+  writeLines(
+    c(
+      "[submodule \"submod\"]",
+      "\tpath = submod",
+      paste0("\turl = ", fake_git$url("/submod")),
+      "\tbranch = v2"
+    ),
+    file.path(output, ".gitmodules")
+  )
 
   update_git_submodules_r(output, ".")
   expect_snapshot(dir(tmp, recursive = TRUE))
@@ -90,11 +98,14 @@ test_that("git_download_repo R package with submodules", {
 
   # HEAD
   unlink(file.path(output, "submod"), recursive = TRUE)
-  writeLines(c(
-    "[submodule \"submod\"]",
-    "\tpath = submod",
-    paste0("\turl = ", fake_git$url("/submod"))
-  ), file.path(output, ".gitmodules"))
+  writeLines(
+    c(
+      "[submodule \"submod\"]",
+      "\tpath = submod",
+      paste0("\turl = ", fake_git$url("/submod"))
+    ),
+    file.path(output, ".gitmodules")
+  )
 
   update_git_submodules_r(output, ".")
   # it will skip existing ones

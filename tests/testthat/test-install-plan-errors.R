@@ -1,4 +1,3 @@
-
 test_that("uncompress error", {
   skip_on_cran()
   local_cli_config()
@@ -31,20 +30,23 @@ test_that("build error", {
   withr::local_envvar(PKG_OMIT_TIMES = "true")
   pkg <- source_test_package("foo2")
 
-  quo <- substitute({
-    plan <- data.frame(
-      stringsAsFactors = FALSE,
-      type = "local",
-      binary = FALSE,
-      dependencies = I(list(character())),
-      file = pkg,
-      needscompilation = TRUE,
-      package = "foo"
-    )
+  quo <- substitute(
+    {
+      plan <- data.frame(
+        stringsAsFactors = FALSE,
+        type = "local",
+        binary = FALSE,
+        dependencies = I(list(character())),
+        file = pkg,
+        needscompilation = TRUE,
+        package = "foo"
+      )
 
-    lib <- withr::local_tempdir()
-    pkgdepends:::install_package_plan(plan, lib = lib)
-  }, list(pkg = pkg))
+      lib <- withr::local_tempdir()
+      pkgdepends:::install_package_plan(plan, lib = lib)
+    },
+    list(pkg = pkg)
+  )
 
   tmp <- tempfile(fileext = ".R")
   on.exit(unlink(tmp), add = TRUE)
@@ -72,21 +74,24 @@ test_that("packaging error", {
   pkgzip <- file.path(tmp, "foo3-t.zip")
   zip::zipr(pkgzip, test_path("fixtures", "foo3"))
 
-  quo <- substitute({
-    plan <- data.frame(
-      stringsAsFactors = FALSE,
-      type = "local",
-      binary = FALSE,
-      dependencies = I(list(character())),
-      file = pkgzip,
-      needscompilation = TRUE,
-      package = "foo3",
-      packaged = FALSE
-    )
+  quo <- substitute(
+    {
+      plan <- data.frame(
+        stringsAsFactors = FALSE,
+        type = "local",
+        binary = FALSE,
+        dependencies = I(list(character())),
+        file = pkgzip,
+        needscompilation = TRUE,
+        package = "foo3",
+        packaged = FALSE
+      )
 
-    lib <- withr::local_tempdir()
-    pkgdepends:::install_package_plan(plan, lib = lib)
-  }, list(pkgzip = pkgzip))
+      lib <- withr::local_tempdir()
+      pkgdepends:::install_package_plan(plan, lib = lib)
+    },
+    list(pkgzip = pkgzip)
+  )
 
   tmp <- tempfile(fileext = ".R")
   on.exit(unlink(tmp), add = TRUE)
@@ -104,7 +109,7 @@ test_that("packaging error", {
 
   expect_true(
     grepl("not in valid DCF format", res$stdout, fixed = TRUE) ||
-    grepl("Error in read.dcf", res$stdout, fixed = TRUE)
+      grepl("Error in read.dcf", res$stdout, fixed = TRUE)
   )
 })
 

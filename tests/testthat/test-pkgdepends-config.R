@@ -1,4 +1,3 @@
-
 test_that("windows_archs", {
   expect_snapshot(windows_archs())
 })
@@ -45,9 +44,9 @@ test_that("env_decode_difftime", {
     env_decode_difftime("1d")
   })
 
-  expect_snapshot(error = TRUE, env_decode_difftime("",    "PKG_UPDATE"))
+  expect_snapshot(error = TRUE, env_decode_difftime("", "PKG_UPDATE"))
   expect_snapshot(error = TRUE, env_decode_difftime("123", "PKG_UPDATE"))
-  expect_snapshot(error = TRUE, env_decode_difftime("1k",  "PKG_UPDATE"))
+  expect_snapshot(error = TRUE, env_decode_difftime("1k", "PKG_UPDATE"))
   expect_snapshot(error = TRUE, env_decode_difftime("k1k", "PKG_UPDATE"))
 })
 

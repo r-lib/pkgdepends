@@ -1,4 +1,3 @@
-
 test_that("url remote basics", {
   setup_fake_apps()
 
@@ -28,7 +27,8 @@ test_that("url remote basics", {
 test_that("url to an tree (not a source package), from a zip file", {
   setup_fake_gh_app()
   url <- paste0(
-    fake_gh$url(), "repos/r-lib/pak/zipball/",
+    fake_gh$url(),
+    "repos/r-lib/pak/zipball/",
     "111ef906acb58fe406370f7bc0a72cac55dbbb231ea687494c25742ca521255a"
   )
   r <- suppressMessages(new_pkg_installation_proposal(

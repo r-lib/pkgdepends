@@ -1,4 +1,3 @@
-
 test_that("package_name_rx", {
   good <- c("A1", "a1", "Z1", "z1", "foo.bar", "foo.bar.baz", "a1.b2")
 
@@ -21,20 +20,16 @@ test_that("package_name_rx", {
 })
 
 test_that("parse_pkg_refs, standard", {
-
   cases <- list(
-    list("pkg",
-         list(package = "pkg", atleast = "", version = "")),
-    list("pkg@0.1-2",
-         list(package = "pkg", atleast = "==", version = "0.1-2")),
-    list("pkg@>=2.9",
-         list(package = "pkg", atleast = ">=", version = "2.9")),
-    list("pkg@last",
-         list(package = "pkg", atleast = "==", version = "last")),
-    list("standard::pkg",
-         list(package = "pkg", atleast = "", version = "")),
-    list("standard::pkg@0.1-2",
-         list(package = "pkg", atleast = "==", version = "0.1-2"))
+    list("pkg", list(package = "pkg", atleast = "", version = "")),
+    list("pkg@0.1-2", list(package = "pkg", atleast = "==", version = "0.1-2")),
+    list("pkg@>=2.9", list(package = "pkg", atleast = ">=", version = "2.9")),
+    list("pkg@last", list(package = "pkg", atleast = "==", version = "last")),
+    list("standard::pkg", list(package = "pkg", atleast = "", version = "")),
+    list(
+      "standard::pkg@0.1-2",
+      list(package = "pkg", atleast = "==", version = "0.1-2")
+    )
   )
 
   expect_equal(
@@ -45,20 +40,22 @@ test_that("parse_pkg_refs, standard", {
   for (case in cases) {
     expect_equal_named_lists(
       p <- parse_pkg_refs(case[[1]])[[1]],
-      c(case[[2]], list(ref = case[[1]], type = "standard", params = character()))
+      c(
+        case[[2]],
+        list(ref = case[[1]], type = "standard", params = character())
+      )
     )
     expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
   }
-
 })
 
 test_that("parse_pkg_refs, cran", {
-
   cases <- list(
-    list("cran::pkg",
-         list(package = "pkg", atleast = "", version = "")),
-    list("cran::pkg@0.1-2",
-         list(package = "pkg", atleast = "==", version = "0.1-2"))
+    list("cran::pkg", list(package = "pkg", atleast = "", version = "")),
+    list(
+      "cran::pkg@0.1-2",
+      list(package = "pkg", atleast = "==", version = "0.1-2")
+    )
   )
 
   expect_equal(
@@ -73,7 +70,6 @@ test_that("parse_pkg_refs, cran", {
     )
     expect_s3_class(p, c("remote_ref_cran", "remote_ref"))
   }
-
 })
 
 test_that("github regexes", {
@@ -81,8 +77,10 @@ test_that("github regexes", {
     list("foobar", "foobar"),
     list("", NA_character_),
     list("-bad", NA_character_),
-    list("123456789012345678901234567890123456789",
-         "123456789012345678901234567890123456789"),
+    list(
+      "123456789012345678901234567890123456789",
+      "123456789012345678901234567890123456789"
+    ),
     list("1234567890123456789012345678901234567890", NA_character_)
   )
   for (c in username) {
@@ -139,16 +137,17 @@ test_that("github regexes", {
   }
 
   detail <- list(
-    list("@foobar",   c("foobar", "",    "")),
-    list("#123",       c("",       "123", "")),
-    list("@*release", c("",       "",    "*release")),
-    list("foobar",     c("",       "",    ""))
+    list("@foobar", c("foobar", "", "")),
+    list("#123", c("", "123", "")),
+    list("@*release", c("", "", "*release")),
+    list("foobar", c("", "", ""))
   )
   for (c in detail) {
     expect_equal(
       unlist(re_match(
         c[[1]],
-        github_detail_rx())[, c("commitish", "pull", "release")]),
+        github_detail_rx()
+      )[, c("commitish", "pull", "release")]),
       structure(c[[2]], names = c("commitish", "pull", "release"))
     )
   }
@@ -175,25 +174,35 @@ test_that("custom remote types", {
   )
   expect_identical(
     res,
-    list(structure(list(type = "foo", params = character()),
-                   class = c("remote_ref_foo", "remote_ref", "list")))
+    list(structure(
+      list(type = "foo", params = character()),
+      class = c("remote_ref_foo", "remote_ref", "list")
+    ))
   )
   expect_identical(xspecs, "foo::arbitrary_string/xxx")
   expect_identical(xargs, list(ex1 = "1", ex2 = "2"))
 
   res2 <- parse_pkg_refs(
-    "foo::arbitrary_string/xxx", ex1 = "1", ex2 = "2",
-    remote_types = list(foo = list(parse = parse_remote_foo)))
+    "foo::arbitrary_string/xxx",
+    ex1 = "1",
+    ex2 = "2",
+    remote_types = list(foo = list(parse = parse_remote_foo))
+  )
   expect_identical(res, res2)
 })
 
 test_that("type_default_parse", {
   res <- type_default_parse(c("foo::bar", "package=foo2::bar2"))
-  expect_identical(res,
+  expect_identical(
+    res,
     list(
       list(package = "", type = "foo", rest = "bar", ref = "foo::bar"),
-      list(package = "package", type = "foo2", rest = "bar2",
-           ref = "package=foo2::bar2")
+      list(
+        package = "package",
+        type = "foo2",
+        rest = "bar2",
+        ref = "package=foo2::bar2"
+      )
     )
   )
 })
@@ -203,25 +212,40 @@ test_that("default parse function", {
     list(pkg.remote_types = list(foo = list(), foo2 = list())),
     parse_pkg_refs(c("foo::bar", "package=foo2::bar2"))
   )
-  expect_identical(res,
+  expect_identical(
+    res,
     list(
-      structure(list(package = "", type = "foo", rest = "bar", ref = "foo::bar",
-                     params = character()),
-                class = c("remote_ref_foo", "remote_ref", "list")),
-      structure(list(package = "package", type = "foo2", rest = "bar2",
-                     ref = "package=foo2::bar2", params = character()),
-                class = c("remote_ref_foo2", "remote_ref", "list"))
+      structure(
+        list(
+          package = "",
+          type = "foo",
+          rest = "bar",
+          ref = "foo::bar",
+          params = character()
+        ),
+        class = c("remote_ref_foo", "remote_ref", "list")
+      ),
+      structure(
+        list(
+          package = "package",
+          type = "foo2",
+          rest = "bar2",
+          ref = "package=foo2::bar2",
+          params = character()
+        ),
+        class = c("remote_ref_foo2", "remote_ref", "list")
+      )
     )
   )
 
   res2 <- parse_pkg_refs(
     c("foo::bar", "package=foo2::bar2"),
-    remote_types = list(foo = list(), foo2 = list()))
+    remote_types = list(foo = list(), foo2 = list())
+  )
   expect_identical(res, res2)
 })
 
 test_that("parse_pkg_refs, local", {
-
   cases <- list(
     list("local::path", "path"),
     list("local::/path", "/path"),
@@ -240,9 +264,13 @@ test_that("parse_pkg_refs, local", {
     expect_equal(
       parse_pkg_ref(c[[1]]),
       structure(
-        list(package = NA_character_, path = c[[2]],
-             ref = paste0("local::", c[[2]]), type = "local",
-             params = character()),
+        list(
+          package = NA_character_,
+          path = c[[2]],
+          ref = paste0("local::", c[[2]]),
+          type = "local",
+          params = character()
+        ),
         class = c("remote_ref_local", "remote_ref", "list")
       )
     )
@@ -308,7 +336,9 @@ test_that("gitlab", {
     parse_pkg_ref("gitlab::group/subgroup/project@ref")
     parse_pkg_ref("gitlab::group/subgroup/project/-/sub/dir")
     parse_pkg_ref("gitlab::group/subgroup/project/-/sub/dir@ref")
-    parse_pkg_ref("gitlab::https://acme.co/group/subgroup/project/-/sub/dir@ref")
+    parse_pkg_ref(
+      "gitlab::https://acme.co/group/subgroup/project/-/sub/dir@ref"
+    )
 
     parse_pkg_ref("pkg=gitlab::user/project")
     parse_pkg_ref("pkg=gitlab::user/project@ref")
@@ -318,6 +348,8 @@ test_that("gitlab", {
     parse_pkg_ref("pkg=gitlab::group/subgroup/project@ref")
     parse_pkg_ref("pkg=gitlab::group/subgroup/project/-/sub/dir")
     parse_pkg_ref("pkg=gitlab::group/subgroup/project/-/sub/dir@ref")
-    parse_pkg_ref("pkg=gitlab::https://acme.co/group/subgroup/project/-/sub/dir@ref")
+    parse_pkg_ref(
+      "pkg=gitlab::https://acme.co/group/subgroup/project/-/sub/dir@ref"
+    )
   })
 })

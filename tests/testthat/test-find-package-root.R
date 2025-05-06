@@ -12,14 +12,16 @@ test_that("find_package_root", {
 
   expect_equal(
     readLines(file.path(
-      find_package_root(file.path(tmp, "a")), "DESCRIPTION"
+      find_package_root(file.path(tmp, "a")),
+      "DESCRIPTION"
     )),
     lns
   )
 
   expect_equal(
     readLines(file.path(
-      find_package_root(file.path(tmp, "a", "b", "c", "d")), "DESCRIPTION"
+      find_package_root(file.path(tmp, "a", "b", "c", "d")),
+      "DESCRIPTION"
     )),
     lns
   )

@@ -1,4 +1,3 @@
-
 test_that("make_bar", {
   chars <- withr::with_options(list(cli.unicode = FALSE), progress_chars())
   lapply(
@@ -15,9 +14,18 @@ test_that("initial state", {
   # num = 0, nch = 0, cbt = 0
   # no downloads are needed, all installed
   what <- tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "installed",      10000, "foo",    NA_character_,
-    "installed",      10000, "foo2",   "miss",
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "installed",
+    10000,
+    "foo",
+    NA_character_,
+    "installed",
+    10000,
+    "foo2",
+    "miss",
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -26,9 +34,18 @@ test_that("initial state", {
   # num = 0, nch = 1, cbt > 0
   # no downloads needed, all cached or installed
   what <- tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "cran",           10000, "foo",    "hit",
-    "installed",      10000, "foo2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "hit",
+    "installed",
+    10000,
+    "foo2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -37,10 +54,22 @@ test_that("initial state", {
   # num = 0, nch = 1, cbt > 0
   # no downloads needed, but cached size known
   what <- tibble::tribble(
-    ~type,        ~filesize,       ~package, ~cache_status,
-    "cran",           10000,       "foo",    "hit",
-    "cran",           10000,       "foo2",   "hit",
-    "installed",      10000,       "foo3",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "hit",
+    "cran",
+    10000,
+    "foo2",
+    "hit",
+    "installed",
+    10000,
+    "foo3",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -49,9 +78,18 @@ test_that("initial state", {
   # num = 0, nch = 1, cbt = 0
   # no downloads needed, cached size unknown
   what <- tibble::tribble(
-    ~type,        ~filesize,       ~package, ~cache_status,
-    "cran",           NA_integer_, "foo",    "hit",
-    "installed",      10000,       "foo2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    NA_integer_,
+    "foo",
+    "hit",
+    "installed",
+    10000,
+    "foo2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -60,9 +98,18 @@ test_that("initial state", {
   # num > 0, bts > 0, unk = 0, nch = 0, cbt = 0
   # nothing is cached, sizes known
   what <- tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "cran",           10000, "foo",    "miss",
-    "cran",           20000, "bar",    "miss"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "cran",
+    20000,
+    "bar",
+    "miss"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -71,11 +118,26 @@ test_that("initial state", {
   # num > 0, bts > 0, unk = 0, nch = 1, cbt = 0
   # 1 package cached, 2 downloaded, cached size unknown
   what <- tibble::tribble(
-    ~type,         ~filesize, ~package, ~cache_status,
-    "cran",            10000, "foo",    "miss",
-    "cran",            20000, "bar",    "miss",
-    "installed",       10000, "foo2",   NA_character_,
-    "cran",      NA_integer_, "bar2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "cran",
+    20000,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_,
+    "cran",
+    NA_integer_,
+    "bar2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -84,11 +146,26 @@ test_that("initial state", {
   # num > 0, bts > 0, unk = 0, nch = 1, cbt > 0
   # 1 package cached, 2 downloaded, cached size known
   what <- tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "cran",           10000, "foo",    "miss",
-    "cran",           20000, "bar",    "miss",
-    "installed",      10000, "foo2",   NA_character_,
-    "cran",           20000, "bar2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "cran",
+    20000,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_,
+    "cran",
+    20000,
+    "bar2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -97,10 +174,22 @@ test_that("initial state", {
   # num > 0, bts > 0, unk > 0, nch = 0, cbt = 0
   # downloads with unknown sizes
   what <- tibble::tribble(
-    ~type,         ~filesize, ~package, ~cache_status,
-    "cran",            20000, "foo",    "miss",
-    "cran",      NA_integer_, "bar",    "miss",
-    "installed",       10000, "foo2",   NA_character_
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    20000,
+    "foo",
+    "miss",
+    "cran",
+    NA_integer_,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -109,11 +198,26 @@ test_that("initial state", {
   # num > 0, bts > 0, unk > 0, nch = 1, cbt > 0
   # downloads with known & unknown sizes, 1 cached with known size
   what <- tibble::tribble(
-    ~type,         ~filesize,       ~package, ~cache_status,
-    "cran",            10000,       "foo",    "miss",
-    "cran",      NA_integer_,       "bar",    "miss",
-    "installed",       10000,       "foo2",   NA_character_,
-    "cran",            30000,       "bar2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "cran",
+    NA_integer_,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_,
+    "cran",
+    30000,
+    "bar2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -122,11 +226,26 @@ test_that("initial state", {
   # num > 0, bts > 0, unk > 0, nch = 1, cbt = 0
   # downloads with known sizes, 1 cached with unknown size
   what <- tibble::tribble(
-    ~type,         ~filesize, ~package, ~cache_status,
-    "cran",            10000, "foo",    "miss",
-    "cran",      NA_integer_, "bar",    "miss",
-    "installed",       10000, "foo2",   NA_character_,
-    "cran",      NA_integer_, "bar2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "cran",
+    NA_integer_,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_,
+    "cran",
+    NA_integer_,
+    "bar2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -135,10 +254,22 @@ test_that("initial state", {
   # num > 0, bts = 0, unk > 0, nch = 0, cbt = 0
   # downloads with only unknown sizes, nothing cached
   what <- tibble::tribble(
-    ~type,         ~filesize, ~package, ~cache_status,
-    "cran",      NA_integer_, "foo",    "miss",
-    "cran",      NA_integer_, "bar",    "miss",
-    "installed",      10000,  "foo2",   NA_character_
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    NA_integer_,
+    "foo",
+    "miss",
+    "cran",
+    NA_integer_,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -147,11 +278,26 @@ test_that("initial state", {
   # num > 0, bts = 0, unk > 0, nch = 1, cbt = 0
   # downloads with unknown sizes, 1 cached with unknown size
   what <- tibble::tribble(
-    ~type,         ~filesize, ~package, ~cache_status,
-    "cran",      NA_integer_, "foo",    "miss",
-    "cran",      NA_integer_, "bar",    "miss",
-    "installed",       10000, "foo2",   NA_character_,
-    "cran",      NA_integer_, "bar2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    NA_integer_,
+    "foo",
+    "miss",
+    "cran",
+    NA_integer_,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_,
+    "cran",
+    NA_integer_,
+    "bar2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -160,11 +306,26 @@ test_that("initial state", {
   # num > 0, bts = 0, unk > 0, nch = 1, cbt > 0
   # downloads with unknown sizes, 1 cached
   what <- tibble::tribble(
-    ~type,         ~filesize, ~package, ~cache_status,
-    "cran",      NA_integer_, "foo",    "miss",
-    "cran",      NA_integer_, "bar",    "miss",
-    "installed",       10000, "foo2",   NA_character_,
-    "cran",            30000, "bar2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    NA_integer_,
+    "foo",
+    "miss",
+    "cran",
+    NA_integer_,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_,
+    "cran",
+    30000,
+    "bar2",
+    "hit"
   )
   expect_snapshot(invisible(
     pkgplan__create_progress_bar(what)
@@ -173,25 +334,54 @@ test_that("initial state", {
 
 test_that("data updates", {
   what <- tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "cran",           10000, "foo",    "miss",
-    "installed",      10000, "foo2",   "miss",    # no download, installed
-    "cran",           20000, "bar",    "hit",     # no download, cached
-    "cran",           20000, "bar2",   "miss"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    "miss", # no download, installed
+    "cran",
+    20000,
+    "bar",
+    "hit", # no download, cached
+    "cran",
+    20000,
+    "bar2",
+    "miss"
   )
 
   expect_snapshot({
     bar <- pkgplan__create_progress_bar(what = what)
-    pkgplan__update_progress_bar(bar, 1L, "data", list(current = 5000, total = 10000))
-    pkgplan__update_progress_bar(bar, 4L, "data", list(current = 20000, total = 20000))
+    pkgplan__update_progress_bar(
+      bar,
+      1L,
+      "data",
+      list(current = 5000, total = 10000)
+    )
+    pkgplan__update_progress_bar(
+      bar,
+      4L,
+      "data",
+      list(current = 20000, total = 20000)
+    )
     pkgplan__done_progress_bar(bar)
     bar$what
   })
 })
 
 test_that("all finish messages for updates", {
-  do <- function(idx, event = "done", download_status = "Got",
-                 make_tempfile = TRUE) {
+  do <- function(
+    idx,
+    event = "done",
+    download_status = "Got",
+    make_tempfile = TRUE
+  ) {
     bar <- pkgplan__create_progress_bar(what = what)
     tmp <- tempfile()
     if (make_tempfile) {
@@ -199,7 +389,9 @@ test_that("all finish messages for updates", {
       on.exit(unlink(tmp), add = TRUE)
     }
     pkgplan__update_progress_bar(
-      bar, idx, event,
+      bar,
+      idx,
+      event,
       list(
         download_status = download_status,
         package = "foo",
@@ -214,11 +406,26 @@ test_that("all finish messages for updates", {
   }
 
   what <- tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "cran",           10000, "foo",    "miss",
-    "installed",      10000, "foo2",   "miss",    # no download, installed
-    "cran",           20000, "bar",    "hit",     # no download, cached
-    "cran",           20000, "bar2",   "miss"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    "miss", # no download, installed
+    "cran",
+    20000,
+    "bar",
+    "hit", # no download, cached
+    "cran",
+    20000,
+    "bar2",
+    "miss"
   )
 
   expect_snapshot(do(1L))
@@ -255,11 +462,26 @@ test_that("eta", {
 test_that("parts are calculated properly", {
   local_cli_config()
   what <- tibble::tribble(
-    ~type,        ~filesize, ~package, ~cache_status,
-    "cran",           10000, "foo",    "miss",
-    "cran",           20000, "bar",    "miss",
-    "installed",      10000, "foo2",   NA_character_,
-    "cran",           20000, "bar2",   "hit"
+    ~type,
+    ~filesize,
+    ~package,
+    ~cache_status,
+    "cran",
+    10000,
+    "foo",
+    "miss",
+    "cran",
+    20000,
+    "bar",
+    "miss",
+    "installed",
+    10000,
+    "foo2",
+    NA_character_,
+    "cran",
+    20000,
+    "bar2",
+    "hit"
   )
 
   expect_snapshot(

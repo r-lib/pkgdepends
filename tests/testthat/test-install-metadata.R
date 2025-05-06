@@ -1,6 +1,4 @@
-
 test_that("install_binary metadata", {
-
   pkg <- binary_test_package("foo")
 
   libpath <- test_temp_dir()
@@ -29,7 +27,9 @@ test_that("install_package_plan metadata", {
 
   expect_snapshot({
     plan <- make_install_plan(
-      paste0("local::", pkg, "?nocache"), lib = libpath)
+      paste0("local::", pkg, "?nocache"),
+      lib = libpath
+    )
     plan$metadata[[1]] <- c("Foo" = "Bar", "Foobar" = "baz")
     plan$vignettes <- FALSE
     install_package_plan(plan, lib = libpath, num_workers = 1)

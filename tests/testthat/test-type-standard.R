@@ -1,11 +1,28 @@
-
 test_that("resolve_remote", {
   setup_fake_apps()
 
-  cols <- c("package", "version", "needscompilation",
-            "repodir", "rversion", "platform", "priority", "ref", "type",
-            "status", "target", "mirror", "sources", "sysreqs", "deps",
-            "built", "repotype", "direct", "params", "metadata")
+  cols <- c(
+    "package",
+    "version",
+    "needscompilation",
+    "repodir",
+    "rversion",
+    "platform",
+    "priority",
+    "ref",
+    "type",
+    "status",
+    "target",
+    "mirror",
+    "sources",
+    "sysreqs",
+    "deps",
+    "built",
+    "repotype",
+    "direct",
+    "params",
+    "metadata"
+  )
 
   conf <- current_config()
   cache <- list(
@@ -92,7 +109,7 @@ test_that("download_remote", {
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-t")
   dl <- synchronise(download_remote_standard(
-    res[1,],
+    res[1, ],
     target,
     tree,
     conf,
@@ -117,7 +134,7 @@ test_that("download_remote", {
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-t")
   dl <- synchronise(download_remote_standard(
-    res[1,],
+    res[1, ],
     target,
     tree,
     conf,
@@ -132,7 +149,7 @@ test_that("download_remote", {
   # caching ---------------------------------------------------------------
 
   dl2 <- synchronise(download_remote_standard(
-    res[1,],
+    res[1, ],
     target,
     tree,
     conf,
@@ -146,10 +163,12 @@ test_that("download_remote", {
 test_that("download cran-like repos", {
   setup_fake_apps()
 
-  x_app_pkgs <- dcf("
+  x_app_pkgs <- dcf(
+    "
     Package: foobar
     Version: 1.0.0
-  ")
+  "
+  )
 
   fake_cranlike <- webfakes::local_app_process(cran_app(x_app_pkgs))
   withr::local_options(
@@ -180,7 +199,7 @@ test_that("download cran-like repos", {
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-t")
   dl <- synchronise(download_remote_standard(
-    res[1,],
+    res[1, ],
     target,
     tree,
     conf,
@@ -193,7 +212,7 @@ test_that("download cran-like repos", {
   unlink(target)
 
   dl2 <- synchronise(download_remote_standard(
-    res[1,],
+    res[1, ],
     target,
     tree,
     conf,
@@ -205,18 +224,17 @@ test_that("download cran-like repos", {
 })
 
 test_that("satisfy_remote", {
-
   res <- make_fake_resolution(`crayon@>=1.0.0` = list(type = "standard"))
 
   ## Package names differ
   bad1 <- make_fake_resolution(`crayon2` = list())
   expect_false(ans <- satisfy_remote_standard(res, bad1))
-  expect_match(attr(ans, "reason"),  "Package names differ")
+  expect_match(attr(ans, "reason"), "Package names differ")
 
   ## Insufficient version
   bad2 <- make_fake_resolution(`crayon` = list(version = "0.0.1"))
   expect_false(ans <- satisfy_remote_standard(res, bad2))
-  expect_match(attr(ans, "reason"),  "Insufficient version")
+  expect_match(attr(ans, "reason"), "Insufficient version")
 
   ## Version is OK
   ok1 <- make_fake_resolution(`local::foobar` = list(package = "crayon"))
@@ -224,54 +242,70 @@ test_that("satisfy_remote", {
 
   ## No version req
   res <- make_fake_resolution(`crayon` = list(type = "standard"))
-  ok2 <- make_fake_resolution(`local::foobar` = list(
-    package = "crayon", version = "0.0.1"))
+  ok2 <- make_fake_resolution(
+    `local::foobar` = list(
+      package = "crayon",
+      version = "0.0.1"
+    )
+  )
   expect_true(satisfy_remote_standard(res, ok2))
 
   ## Direct package must be from CRAN(like), must update
-  res <- make_fake_resolution(`crayon` = list(
-    type = "standard",
-    package = "crayon",
-    direct = TRUE,
-    version = "1.1.1"
-  ))
+  res <- make_fake_resolution(
+    `crayon` = list(
+      type = "standard",
+      package = "crayon",
+      direct = TRUE,
+      version = "1.1.1"
+    )
+  )
 
-  bad3 <- make_fake_resolution(`installed::crayon` = list(
-    type = "installed",
-    package = "crayon",
-    extra = list(list(repotype = NA_character_, remotetype = NA_character_))
-  ))
+  bad3 <- make_fake_resolution(
+    `installed::crayon` = list(
+      type = "installed",
+      package = "crayon",
+      extra = list(list(repotype = NA_character_, remotetype = NA_character_))
+    )
+  )
   expect_false(satisfy_remote_standard(res, bad3))
 
-  bad4 <- make_fake_resolution(`installed::crayon` = list(
-    type = "installed",
-    package = "crayon",
-    extra = list(list())
-  ))
+  bad4 <- make_fake_resolution(
+    `installed::crayon` = list(
+      type = "installed",
+      package = "crayon",
+      extra = list(list())
+    )
+  )
   expect_false(satisfy_remote_standard(res, bad4))
 
-  bad5 <- make_fake_resolution(`installed::crayon` = list(
-    type = "installed",
-    package = "crayon",
-    extra = list(list(repotype = "cran", remotetype = "standard")),
-    version = "1.0.0"
-  ))
+  bad5 <- make_fake_resolution(
+    `installed::crayon` = list(
+      type = "installed",
+      package = "crayon",
+      extra = list(list(repotype = "cran", remotetype = "standard")),
+      version = "1.0.0"
+    )
+  )
   expect_false(satisfy_remote_standard(res, bad5))
 
-  bad6 <- make_fake_resolution(`installed::crayon` = list(
-    type = "local",
-    package = "crayon",
-    extra = list(list(repotype = "cran", remotetype = "standard")),
-    version = "1.0.0"
-  ))
+  bad6 <- make_fake_resolution(
+    `installed::crayon` = list(
+      type = "local",
+      package = "crayon",
+      extra = list(list(repotype = "cran", remotetype = "standard")),
+      version = "1.0.0"
+    )
+  )
   expect_false(satisfy_remote_standard(res, bad6))
 
-  ok3 <- make_fake_resolution(`installed::crayon` = list(
-    type = "installed",
-    package = "crayon",
-    extra = list(list(repotype = "cran", remotetype = "standard")),
-    version = "1.2.0"
-  ))
+  ok3 <- make_fake_resolution(
+    `installed::crayon` = list(
+      type = "installed",
+      package = "crayon",
+      extra = list(list(repotype = "cran", remotetype = "standard")),
+      version = "1.2.0"
+    )
+  )
   expect_true(satisfy_remote_standard(res, ok3))
 })
 

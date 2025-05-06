@@ -1,6 +1,4 @@
-
 test_that("parse_remote", {
-
   pr <- parse_pkg_refs("bioc::Biobase")[[1]]
   expect_equal(pr$package, "Biobase")
   expect_equal(pr$atleast, "")
@@ -15,8 +13,10 @@ test_that("resolve_remote", {
   setup_fake_apps()
 
   conf <- current_config()
-  cache <- list(package = NULL,
-                metadata = pkgcache::get_cranlike_metadata_cache())
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache()
+  )
 
   res <- suppressMessages(synchronise(resolve_remote_bioc(
     parse_pkg_ref("bioc::Biobase"),
@@ -40,7 +40,10 @@ test_that("failed resolution", {
   setup_fake_apps()
 
   conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache()
+  )
 
   res <- suppressMessages(synchronise(resolve_remote_bioc(
     parse_pkg_ref("bioc::nosuchpackageinbiocforsure"),
@@ -86,7 +89,7 @@ test_that("download_remote", {
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-t")
   dl <- synchronise(download_remote_bioc(
-    res[1,],
+    res[1, ],
     target,
     tree,
     conf,
@@ -99,7 +102,7 @@ test_that("download_remote", {
 
   unlink(target)
   dl2 <- synchronise(download_remote_bioc(
-    res[1,],
+    res[1, ],
     target,
     tree,
     conf,
@@ -111,7 +114,6 @@ test_that("download_remote", {
 })
 
 test_that("satisfies_remote", {
-
   res <- make_fake_resolution(`bioc::eisa@>=1.0.0` = list())
 
   ## GitHub type is never good
@@ -126,8 +128,11 @@ test_that("satisfies_remote", {
 
   ## installed, but not from BioC
   fake_desc <- desc::desc("!new")
-  bad3 <- make_fake_resolution(`installed::foobar` = list(
-    extra = list(list(description = fake_desc))))
+  bad3 <- make_fake_resolution(
+    `installed::foobar` = list(
+      extra = list(list(description = fake_desc))
+    )
+  )
   expect_false(ans <- satisfy_remote_bioc(res, bad3))
   expect_match(attr(ans, "reason"), "not from BioC")
 
@@ -137,9 +142,12 @@ test_that("satisfies_remote", {
   expect_match(attr(ans, "reason"), "names differ")
 
   ## installed type, but package name does not match
-  bad5 <- make_fake_resolution(`installed::foobar` = list(
-    package = "eisa2",
-    extra = list(list(repotype = "bioc"))))
+  bad5 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "eisa2",
+      extra = list(list(repotype = "bioc"))
+    )
+  )
   expect_false(ans <- satisfy_remote_bioc(res, bad5))
   expect_match(attr(ans, "reason"), "names differ")
 
@@ -157,36 +165,46 @@ test_that("satisfies_remote", {
   expect_true(satisfy_remote_bioc(res, ok2))
 
   ## Same version, installed
-  ok3 <- make_fake_resolution(`installed::foobar` = list(
-    package = "eisa",
-    extra = list(list(repotype = "bioc"))))
+  ok3 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "eisa",
+      extra = list(list(repotype = "bioc"))
+    )
+  )
   expect_true(satisfy_remote_bioc(res, ok3))
 
   ## Newer version, installed
-  ok4 <- make_fake_resolution(`installed::foobar` = list(
-    package = "eisa",
-    version = "2.0.0",
-    extra = list(list(repotype = "bioc"))))
+  ok4 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "eisa",
+      version = "2.0.0",
+      extra = list(list(repotype = "bioc"))
+    )
+  )
   expect_true(satisfy_remote_bioc(res, ok4))
 })
 
 test_that("satisfies_remote 2", {
   res <- make_fake_resolution(`bioc::eisa@>=1.0.0` = list(direct = TRUE))
 
-  bad1 <- make_fake_resolution(`installed::foobar` = list(
-    package = "eisa",
-    version = "0.0.1",
-    extra = list(list(repotype = "bioc"))
-  ))
+  bad1 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "eisa",
+      version = "0.0.1",
+      extra = list(list(repotype = "bioc"))
+    )
+  )
   expect_false(satisfy_remote_bioc(res, bad1))
 
   res2 <- make_fake_resolution(`bioc::eisa` = list())
 
-  ok1 <- make_fake_resolution(`installed::foobar` = list(
-    package = "eisa",
-    version = "0.0.1",
-    extra = list(list(repotype = "bioc"))
-  ))
+  ok1 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "eisa",
+      version = "0.0.1",
+      extra = list(list(repotype = "bioc"))
+    )
+  )
   expect_true(satisfy_remote_bioc(res2, ok1))
 })
 

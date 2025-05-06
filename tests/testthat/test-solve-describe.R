@@ -1,10 +1,13 @@
-
 test_that("conflicting dependencies", {
   pkgs <- make_fake_resolution(
-    `aa` = list(direct = TRUE,
-                deps = list(make_fake_deps(Imports = "cc", Remotes = "cran::cc"))),
-    `bb` = list(direct = TRUE,
-                deps = list(make_fake_deps(Imports = "cc", Remotes = "cc/cc"))),
+    `aa` = list(
+      direct = TRUE,
+      deps = list(make_fake_deps(Imports = "cc", Remotes = "cran::cc"))
+    ),
+    `bb` = list(
+      direct = TRUE,
+      deps = list(make_fake_deps(Imports = "cc", Remotes = "cc/cc"))
+    ),
     `cran::cc` = list(),
     `cc/cc` = list(extra = list(list(remotesha = "badcafe")))
   )
@@ -21,10 +24,14 @@ test_that("conflicting dependencies", {
 test_that("conflicting dependencies downstream", {
   pkgs <- make_fake_resolution(
     `a0` = list(direct = TRUE, deps = list(make_fake_deps(Imports = "aa, bb"))),
-    `aa` = list(direct = TRUE,
-                deps = list(make_fake_deps(Imports = "cc", Remotes = "cran::cc"))),
-    `bb` = list(direct = TRUE,
-                deps = list(make_fake_deps(Imports = "cc", Remotes = "cc/cc"))),
+    `aa` = list(
+      direct = TRUE,
+      deps = list(make_fake_deps(Imports = "cc", Remotes = "cran::cc"))
+    ),
+    `bb` = list(
+      direct = TRUE,
+      deps = list(make_fake_deps(Imports = "cc", Remotes = "cc/cc"))
+    ),
     `cran::cc` = list(),
     `cc/cc` = list(extra = list(list(sha = "badcafe")))
   )
@@ -39,7 +46,6 @@ test_that("conflicting dependencies downstream", {
 })
 
 test_that("conflicting dependencies and installed packages", {
-
   gh <- list(
     users = list(
       "cran" = list(
@@ -74,7 +80,8 @@ test_that("conflicting dependencies and installed packages", {
     )
   )
 
-  cran <- dcf("
+  cran <- dcf(
+    "
     Package: tidyr
     Version: 1.0.0
     Imports: dplyr (>= 1.0.10)
@@ -86,7 +93,8 @@ test_that("conflicting dependencies and installed packages", {
     Imports: bar
 
     Package: bar
-  ")
+  "
+  )
 
   fake_gh <- webfakes::local_app_process(gh_app(gh))
   withr::local_envvar(R_PKG_GITHUB_API_URL = fake_gh$url())
@@ -108,21 +116,26 @@ test_that("conflicting dependencies and installed packages", {
   # fake an installed package
 
   dir.create(file.path(lib, "tidyr"))
-  writeLines(c(
-    "Package: tidyr",
-    "Version: 1.0.0",
-    "Imports: dplyr (>= 1.0.10)",
-    "Repository: CRAN",
-    # need this on older windows, because pak matches archs on that
-    if (is_windows()) {
-      paste0(
-        "Built: R ", getRversion(), "; ",
-        "i386+x86_64-w64-mingw32; ",
-        "2023-02-06 08:15:41 UTC; ",
-        "windows"
-      )
-    }
-  ), file.path(lib, "tidyr", "DESCRIPTION"))
+  writeLines(
+    c(
+      "Package: tidyr",
+      "Version: 1.0.0",
+      "Imports: dplyr (>= 1.0.10)",
+      "Repository: CRAN",
+      # need this on older windows, because pak matches archs on that
+      if (is_windows()) {
+        paste0(
+          "Built: R ",
+          getRversion(),
+          "; ",
+          "i386+x86_64-w64-mingw32; ",
+          "2023-02-06 08:15:41 UTC; ",
+          "windows"
+        )
+      }
+    ),
+    file.path(lib, "tidyr", "DESCRIPTION")
+  )
   p <- new_pkg_installation_proposal(
     c("cran/dm@1.0.0", "cran/dplyr@1.0.9"),
     config = list(library = lib)
@@ -140,12 +153,15 @@ test_that("conflicting dependencies and installed packages", {
   # cannot install anything, accoridng to the solver...
 
   local <- withr::local_tempdir()
-  writeLines(c(
-    "Package: local123",
-    "Version: 1.0.0",
-    "Imports: dm, dplyr",
-    "Remotes: cran/dm@1.0.0, cran/dplyr@1.0.9"
-  ), file.path(local, "DESCRIPTION"))
+  writeLines(
+    c(
+      "Package: local123",
+      "Version: 1.0.0",
+      "Imports: dm, dplyr",
+      "Remotes: cran/dm@1.0.0, cran/dplyr@1.0.9"
+    ),
+    file.path(local, "DESCRIPTION")
+  )
 
   # First without installed packages
   p <- new_pkg_installation_proposal(

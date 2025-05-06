@@ -1,4 +1,3 @@
-
 test_that("sysreqs_is_supported", {
   expect_true(sysreqs_is_supported("ubuntu-22.04"))
   expect_true(sysreqs_is_supported("debian-unstable"))

@@ -1,4 +1,3 @@
-
 test_that("resolve", {
   setup_fake_apps()
 
@@ -8,12 +7,18 @@ test_that("resolve", {
   cache <- list(
     package = NULL,
     metadata = pkgcache::get_cranlike_metadata_cache(),
-    installed = make_installed_cache(dirname(tt)))
+    installed = make_installed_cache(dirname(tt))
+  )
 
   ref <- paste0("installed::", tt)
   res <- synchronise(
-    resolve_remote_installed(parse_pkg_refs(ref)[[1]], TRUE, conf, cache,
-                             dependencies = "Imports")
+    resolve_remote_installed(
+      parse_pkg_refs(ref)[[1]],
+      TRUE,
+      conf,
+      cache,
+      dependencies = "Imports"
+    )
   )
 
   unun <- function(x) {
@@ -22,10 +27,22 @@ test_that("resolve", {
   }
 
   expect_equal(
-    unun(as.list(res[c("ref", "type", "direct", "status", "package", "version")])),
-    list(ref = ref, type = "installed", direct = TRUE, status = "OK",
-         package = "testthat",
-         version = as.character(utils::packageVersion("testthat")))
+    unun(as.list(res[c(
+      "ref",
+      "type",
+      "direct",
+      "status",
+      "package",
+      "version"
+    )])),
+    list(
+      ref = ref,
+      type = "installed",
+      direct = TRUE,
+      status = "OK",
+      package = "testthat",
+      version = as.character(utils::packageVersion("testthat"))
+    )
   )
 
   expect_true("cli" %in% attr(res, "unknown_deps"))
@@ -44,8 +61,10 @@ test_that("download", {
   tt <- dirname(dirname(attr(packageDescription("testthat"), "file")))
   ref <- paste0("installed::", tt)
   r <- pkg_plan$new(
-    ref, library = dirname(tt),
-    config = list(dependencies = FALSE, cache_dir = tmp))
+    ref,
+    library = dirname(tt),
+    config = list(dependencies = FALSE, cache_dir = tmp)
+  )
   expect_error(suppressMessages(r$resolve()), NA)
   expect_error(suppressMessages(r$download_resolution()), NA)
   dl <- r$get_resolution_download()
@@ -73,5 +92,5 @@ test_that("make_installed_cache edge case", {
   expect_equal(nrow(cache$pkgs), 0)
   expect_equal(nrow(cache$deps), 0)
   expect_true(ncol(cache$pkgs) >= 20) # approx
-  expect_true(ncol(cache$deps) >= 5)  # approx
+  expect_true(ncol(cache$deps) >= 5) # approx
 })

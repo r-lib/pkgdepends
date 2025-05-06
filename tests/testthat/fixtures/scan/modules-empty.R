@@ -1,4 +1,3 @@
-
 example <- function() {
   module()
 }

@@ -1,4 +1,3 @@
-
 test_that("%|z|%", {
   expect_true("" %|z|% TRUE)
 
@@ -88,7 +87,7 @@ test_that("lapply_with_names", {
     list(a = 2, b = 4)
   )
   expect_equal(
-    lapply_with_names(c("a","b"), function(x) paste0(x, x)),
+    lapply_with_names(c("a", "b"), function(x) paste0(x, x)),
     list(a = "aa", b = "bb")
   )
 })
@@ -146,7 +145,7 @@ test_that("add_class", {
 test_that("cat0", {
   expect_snapshot({
     cat0("foo", "bar", "\n")
-    cat0("foo", "bar", "\n",  sep = " ")
+    cat0("foo", "bar", "\n", sep = " ")
   })
 })
 
@@ -163,7 +162,7 @@ test_that("lapply_rows", {
     list()
   )
   expect_snapshot(
-    lapply_rows(mtcars[1:3,], function(row) row)
+    lapply_rows(mtcars[1:3, ], function(row) row)
   )
 })
 
@@ -182,15 +181,15 @@ test_that("rbind_expand", {
     rbind_expand(data_frame(foo = 1:2), data_frame(foo = 3:4))
     rbind_expand(data_frame(foo = 1:2), data_frame(bar = 3:4))
     rbind_expand(
-      data_frame(foo = list(1,2), bar = letters[1:2]),
-      data_frame(foo = list(3,4), baz = list("x", "y"))
+      data_frame(foo = list(1, 2), bar = letters[1:2]),
+      data_frame(foo = list(3, 4), baz = list("x", "y"))
     )
   })
 })
 
 test_that("drop_nulls", {
   expect_equal(drop_nulls(list()), list())
-  expect_equal(drop_nulls(list(1,2,3)), list(1,2,3))
+  expect_equal(drop_nulls(list(1, 2, 3)), list(1, 2, 3))
   expect_equal(drop_nulls(list(NULL)), list())
   expect_equal(drop_nulls(list(NULL, NULL)), list())
   expect_equal(drop_nulls(list(NULL, 1, NULL)), list(1))
@@ -231,18 +230,18 @@ test_that("is_rcmd_check", {
 
 test_that("update_named_vector", {
   cases <- list(
-    list(c(a=1, b=2), c(a=2, c=5), c(a=2, b=2, c=5)),
-    list(double(), c(a=2), c(a=2)),
+    list(c(a = 1, b = 2), c(a = 2, c = 5), c(a = 2, b = 2, c = 5)),
+    list(double(), c(a = 2), c(a = 2)),
     list(character(), character(), character()),
-    list(c(a=1), double(), c(a=1))
+    list(c(a = 1), double(), c(a = 1))
   )
 
   for (c in cases) {
     expect_identical(update_named_vector(c[[1]], c[[2]]), c[[3]])
   }
 
-  expect_error(update_named_vector(1, c(a=1)), "must be named.")
-  expect_error(update_named_vector(c(a=1), 1), "must be named.")
+  expect_error(update_named_vector(1, c(a = 1)), "must be named.")
+  expect_error(update_named_vector(c(a = 1), 1), "must be named.")
 })
 
 test_that("make_dl_status", {
@@ -268,7 +267,6 @@ test_that("make_dl_status", {
     make_dl_status("Had", obj$url, obj$target, 100),
     update_named_vector(obj, list(status = "Had", bytes = 100))
   )
-
 })
 
 test_that("comma_wrap", {

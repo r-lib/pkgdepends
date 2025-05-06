@@ -1,5 +1,6 @@
 
-```{r include = FALSE}
+```{r}
+#| include: false
 options(
   pkg.show_progress = FALSE,
   cli.unicode = FALSE)

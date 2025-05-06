@@ -21,19 +21,22 @@
 
 Install the package with:
 
-```{r eval = FALSE}
+```{r}
+#| eval: false
 install.packages("pkgdepends")
 ```
 
 If you need the development version, install it with
 
-```{r eval = FALSE}
+```{r}
+#| eval: false
 pak::pak("r-lib/pkgdepends")
 ```
 
 # Usage
 
-```{r eval = FALSE}
+```{r}
+#| eval: false
 library(pkgdepends)
 ```
 
@@ -57,7 +60,8 @@ See ["Package references"][pkg_refs] for details.
 
 Dependencies of the development version of the cli package:
 
-```{asciicast deps}
+```{asciicast}
+#| label: deps
 pd <- new_pkg_deps("r-lib/pkgcache")
 pd$solve()
 pd$draw()
@@ -69,7 +73,8 @@ See the [`pkg_deps`][pkg_deps] class for details.
 
 Downloading all dependencies of a package:
 
-```{asciicast download}
+```{asciicast}
+#| label: download
 pdl <- new_pkg_download_proposal("r-lib/cli")
 pdl$resolve()
 pdl$download()
@@ -81,7 +86,8 @@ See the [`pkg_download_proposal`][pkg_download_proposal] class for details.
 
 Installing or updating a set of package:
 
-```{asciicast install}
+```{asciicast}
+#| label: install
 lib <- tempfile()
 dir.create(lib)
 pdi <- new_pkg_installation_proposal(

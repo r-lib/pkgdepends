@@ -41,7 +41,9 @@
 * `type`: ref type.
 * `version`: package version.
 
-```{r child="download-result.Rmd", eval = getOption("rx_downloads", FALSE)}
+```{r}
+#| child: download-result.Rmd
+#| eval: !expr getOption("rx_downloads", FALSE)
 ```
 
 Additional columns might be present. They are either used internally or

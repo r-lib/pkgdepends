@@ -6,7 +6,9 @@ output:
     toc_depth: 2
 ---
 
-```{r, include = FALSE, cache = FALSE}
+```{r}
+#| include: false
+#| cache: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -16,7 +18,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, include = FALSE, cache = FALSE}
+```{r}
+#| include: false
+#| cache: false
 # Turn on ANSI colors
 options(
     crayon.enabled = TRUE,

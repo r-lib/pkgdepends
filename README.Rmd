@@ -5,7 +5,8 @@ output:
 always_allow_html: yes
 ---
 
-```{r, include = FALSE}
+```{r}
+#| include: false
 knitr::opts_chunk$set(
   fig.path = file.path(getwd(), "man/figures/README"),
   cache.path = file.path(getwd(), "man/_cache/"),
@@ -38,5 +39,6 @@ pkgdepends is a toolkit for package dependencies, downloads and
 installations, to be used in other packages. If you are looking for a
 package manager, see [pak](https://github.com/r-lib/pak).
 
-```{r child = "tools/doc/README-body.Rmd"}
+```{r}
+#| child: tools/doc/README-body.Rmd
 ```

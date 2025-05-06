@@ -11,9 +11,9 @@ pkgdepends
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R build
 status](https://github.com/r-lib/pkgdepends/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/pkgdepends/actions)
-[![Codecov test
-coverage](https://codecov.io/gh/r-lib/pkgdepends/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/pkgdepends?branch=main)
 [![R-CMD-check](https://github.com/r-lib/pkgdepends/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/pkgdepends/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/r-lib/pkgdepends/graph/badge.svg)](https://app.codecov.io/gh/r-lib/pkgdepends)
 <!-- badges: end -->
 
 pkgdepends is a toolkit for package dependencies, downloads and
@@ -85,8 +85,8 @@ pd$draw()
 ```
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="man/figures/README/deps-dark.svg">
-<img src="man/figures/README/deps.svg" width="100%" />
+<source media="(prefers-color-scheme: dark)" srcset="/Users/gaborcsardi/works/pkgdepends/man/figures/README/deps-dark.svg">
+<img src="/Users/gaborcsardi/works/pkgdepends/man/figures/README/deps.svg" width="100%" />
 </picture>
 
 See the
@@ -104,8 +104,8 @@ pdl$download()
 ```
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="man/figures/README/download-dark.svg">
-<img src="man/figures/README/download.svg" width="100%" />
+<source media="(prefers-color-scheme: dark)" srcset="/Users/gaborcsardi/works/pkgdepends/man/figures/README/download-dark.svg">
+<img src="/Users/gaborcsardi/works/pkgdepends/man/figures/README/download.svg" width="100%" />
 </picture>
 
 See the
@@ -129,8 +129,8 @@ pdi$install()
 ```
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="man/figures/README/install-dark.svg">
-<img src="man/figures/README/install.svg" width="100%" />
+<source media="(prefers-color-scheme: dark)" srcset="/Users/gaborcsardi/works/pkgdepends/man/figures/README/install-dark.svg">
+<img src="/Users/gaborcsardi/works/pkgdepends/man/figures/README/install.svg" width="100%" />
 </picture>
 
 ## Dependency resolution

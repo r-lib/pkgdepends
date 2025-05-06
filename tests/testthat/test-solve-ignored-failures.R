@@ -1,4 +1,3 @@
-
 test_that("failure in non-needed package is ignored", {
   setup_fake_gh_app()
   setup_fake_apps()

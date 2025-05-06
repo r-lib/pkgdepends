@@ -1,4 +1,3 @@
-
 test_that("platform_is_ok", {
   ok <- list(
     list("*", "source", NULL),
@@ -9,18 +8,14 @@ test_that("platform_is_ok", {
     list("source", "source", NULL),
     list("source", "source", "prefer-x64"),
     list("source", "source", "both"),
-    list("i386+x86_64-w64-mingw32",
-         c("x86_64-w64-mingw32", "source"),
-         "prefer-x64"),
-    list("i386+x86_64-w64-mingw32",
-         c("i386-w64-mingw32", "source"),
-         NULL),
-    list("i386+x86_64-w64-mingw32",
-         "x86_64-w64-mingw32",
-         "prefer-x64"),
-    list("i386+x86_64-w64-mingw32",
-         "i386-w64-mingw32",
-         NULL),
+    list(
+      "i386+x86_64-w64-mingw32",
+      c("x86_64-w64-mingw32", "source"),
+      "prefer-x64"
+    ),
+    list("i386+x86_64-w64-mingw32", c("i386-w64-mingw32", "source"), NULL),
+    list("i386+x86_64-w64-mingw32", "x86_64-w64-mingw32", "prefer-x64"),
+    list("i386+x86_64-w64-mingw32", "i386-w64-mingw32", NULL),
     list("x86_64-w64-mingw32", "x86_64-w64-mingw32", "prefer-x64")
   )
   for (c in ok) {

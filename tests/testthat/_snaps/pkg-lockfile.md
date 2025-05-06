@@ -13,6 +13,32 @@
       (use `$draw()` to draw the dependency tree)
       (use `$download()` to download packages)
 
+---
+
+    Code
+      plan$resolve()
+    Condition
+      Error:
+      ! Cannot resolve an installation plan, it is already resolved.
+    Code
+      plan$async_resolve()
+    Condition
+      Error:
+      ! Cannot resolve an installation plan, it is already resolved.
+
+---
+
+    Code
+      plan$set_solve_policy()
+    Condition
+      Error:
+      ! Cannot solve an installation plan, it is already solved.
+    Code
+      plan$solve()
+    Condition
+      Error:
+      ! Cannot solve an installation plan, it is already solved.
+
 # sysreqs
 
     Code
@@ -27,6 +53,32 @@
       (use `$get_solution()` to see the full solution results)
       (use `$draw()` to draw the dependency tree)
       (use `$download()` to download packages)
+
+---
+
+    Code
+      plan$resolve()
+    Condition
+      Error:
+      ! Cannot resolve an installation plan, it is already resolved.
+    Code
+      plan$async_resolve()
+    Condition
+      Error:
+      ! Cannot resolve an installation plan, it is already resolved.
+
+---
+
+    Code
+      plan$set_solve_policy()
+    Condition
+      Error:
+      ! Cannot solve an installation plan, it is already solved.
+    Code
+      plan$solve()
+    Condition
+      Error:
+      ! Cannot solve an installation plan, it is already solved.
 
 # install_sysreqs
 

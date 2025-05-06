@@ -1,4 +1,3 @@
-
 test_that("dependencies", {
   pkgs <- "
     Package: pkg
@@ -94,10 +93,12 @@ test_that("self dependencies are OK", {
   lock <- tempfile()
   on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
 
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg
     Suggests: pkg
-  ")
+  "
+  )
 
   setup_fake_apps(cran_repo = repo)
 
@@ -127,7 +128,8 @@ test_that("circular soft-dependencies are OK", {
   lock <- tempfile()
   on.exit(unlink(c(lib, lock), recursive = TRUE), add = TRUE)
 
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg1
     Suggests: pkg2, pkg3
 
@@ -135,7 +137,8 @@ test_that("circular soft-dependencies are OK", {
     Suggests: pkg1
 
     Package: pkg3
-  ")
+  "
+  )
 
   setup_fake_apps(cran_repo = repo)
 

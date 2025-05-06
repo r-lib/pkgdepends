@@ -1,4 +1,3 @@
-
 test_that("parse_remote_deps", {
   expect_snapshot(parse_remote_deps("deps::/foo/bar"))
   expect_snapshot(parse_remote_deps("deps::foo/bar"))
@@ -10,11 +9,13 @@ test_that("resolve_remote_deps", {
   tmp <- withr::local_tempdir()
   withr::local_dir(tmp)
   writeLines(
-    c("Package: mypackage",
+    c(
+      "Package: mypackage",
       "Version: 1.0.0",
       "Depends: pkg2",
       "Imports: pkg3",
-      "Suggests: needspak"),
+      "Suggests: needspak"
+    ),
     "DESCRIPTION"
   )
 

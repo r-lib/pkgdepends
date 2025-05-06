@@ -1,4 +1,3 @@
-
 test_that("is_valid_package_name", {
   expect_snapshot({
     is_valid_package_name("foo")

@@ -1,4 +1,3 @@
-
 test_that("new_pkg_installation_proposal", {
   setup_fake_apps()
   pkgcache::pkg_cache_delete_files()

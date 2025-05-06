@@ -1,4 +1,3 @@
-
 test_that("new_pkg_installation_plan", {
   setup_fake_apps()
   pkgcache::pkg_cache_delete_files()
@@ -17,11 +16,15 @@ test_that("new_pkg_installation_plan", {
 
   plan$update()
 
-  expect_error(plan$resolve())
-  expect_error(plan$async_resolve())
+  expect_snapshot(error = TRUE, {
+    plan$resolve()
+    plan$async_resolve()
+  })
   expect_equal(plan$get_solve_policy(), NA_character_)
-  expect_error(plan$set_solve_policy())
-  expect_error(plan$solve())
+  expect_snapshot(error = TRUE, {
+    plan$set_solve_policy()
+    plan$solve()
+  })
 })
 
 test_that("install package from GH, in subdir", {
@@ -72,7 +75,8 @@ test_that("install package from GH, in subdir", {
   # install from cache, no binary, source package is selected
   remove.packages("feather", lib = lib)
   pkgcache::pkg_cache_delete_files(
-    built = TRUE, platform = current_r_platform()
+    built = TRUE,
+    platform = current_r_platform()
   )
   plan <- new_pkg_installation_plan(lock, config = config)
   suppressMessages(plan$download())
@@ -113,11 +117,15 @@ test_that("sysreqs", {
   plan$update()
   plan$update_sysreqs()
 
-  expect_error(plan$resolve())
-  expect_error(plan$async_resolve())
+  expect_snapshot(error = TRUE, {
+    plan$resolve()
+    plan$async_resolve()
+  })
   expect_equal(plan$get_solve_policy(), NA_character_)
-  expect_error(plan$set_solve_policy())
-  expect_error(plan$solve())
+  expect_snapshot(error = TRUE, {
+    plan$set_solve_policy()
+    plan$solve()
+  })
 })
 
 test_that("install_sysreqs", {
@@ -140,10 +148,13 @@ test_that("install_sysreqs", {
   prop$create_lockfile(path = lock)
 
   plan <- new_pkg_installation_plan(lock)
-  expect_snapshot({
-    plan$show_solution()
-    plan$show_sysreqs()
-  }, transform = transform_bytes)
+  expect_snapshot(
+    {
+      plan$show_solution()
+      plan$show_sysreqs()
+    },
+    transform = transform_bytes
+  )
 })
 
 test_that("update_sysreqs", {

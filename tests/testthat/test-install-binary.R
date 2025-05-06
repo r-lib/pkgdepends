@@ -1,5 +1,3 @@
-
-
 test_that("make_install_process error", {
   tmp <- tempfile()
   on.exit(unlink(tmp), add = TRUE)
@@ -7,7 +5,8 @@ test_that("make_install_process error", {
 
   expect_error(
     make_install_process(tmp, lib = tempdir()),
-    "Cannot extract", class = "install_input_error"
+    "Cannot extract",
+    class = "install_input_error"
   )
 })
 
@@ -36,10 +35,13 @@ test_that("install_extracted_binary, add_metadata", {
     metadata = c(Foo = "bar", Foobar = "baz")
   )
 
-  x <- callr::r(function(l) {
-    library("foo", lib.loc = l)
-    foo::foo()
-  }, list(lib))
+  x <- callr::r(
+    function(l) {
+      library("foo", lib.loc = l)
+      foo::foo()
+    },
+    list(lib)
+  )
   expect_null(x)
 
   expect_snapshot({

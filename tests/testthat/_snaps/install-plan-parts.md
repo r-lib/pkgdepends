@@ -75,6 +75,24 @@
       Error:
       ! Failed to install binary package R6.
 
+# start_task
+
+    Code
+      start_task(list(), task("foobar"))
+    Condition
+      Error:
+      ! Unknown task: "foobar".
+      i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
+
+# stop_task
+
+    Code
+      stop_task(list(), list(task = task("foobar")))
+    Condition
+      Error:
+      ! Unknown task: "foobar".
+      i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
+
 # deadlock detection
 
     Code

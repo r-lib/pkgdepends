@@ -1,4 +1,3 @@
-
 # -------------------------------------------------------------------------
 # Dummy CRAN app
 
@@ -18,7 +17,8 @@ fix_port <- function(...) {
   asNamespace("pkgcache")$fix_port(...)
 }
 
-cran_app_pkgs <- dcf("
+cran_app_pkgs <- dcf(
+  "
   Package: pkg1
   Version: 1.0.0
 
@@ -63,20 +63,23 @@ cran_app_pkgs <- dcf("
 
   Package: curl
   SystemRequirements: libcurl: libcurl-devel (rpm) or libcurl4-openssl-dev (deb).
-")
+"
+)
 
 fake_cran <- webfakes::local_app_process(
   cran_app(cran_app_pkgs),
   opts = webfakes::server_opts(num_threads = 3)
 )
 
-bioc_app_pkgs <- dcf("
+bioc_app_pkgs <- dcf(
+  "
   Package: Biobase
   Version: 1.2.3
   Depends: R (>= 2.10), BiocGenerics(>= 0.27.1), utils
   Imports: methods
   Suggests: tools, tkWidgets, ALL, RUnit, golubEsets
-")
+"
+)
 
 fake_bioc <- webfakes::local_app_process(
   bioc_app(bioc_app_pkgs),
@@ -90,35 +93,35 @@ setup_fake_apps <- function(
   bioc_repo = NULL,
   cran_options = NULL,
   bioc_options = NULL,
-  .local_envir = parent.frame()) {
-
+  .local_envir = parent.frame()
+) {
   cran_app <- if (!is.null(cran_app)) {
-                cran_app
-              } else if (!is.null(cran_repo)) {
-                app <- webfakes::local_app_process(
-                  cran_app(cran_repo, options = as.list(cran_options)),
-                  opts = webfakes::server_opts(num_threads = 3),
-                  .local_envir = .local_envir
-                )
-                assign(".cran_app", app, envir = .local_envir)
-                app
-              } else {
-                fake_cran
-              }
+    cran_app
+  } else if (!is.null(cran_repo)) {
+    app <- webfakes::local_app_process(
+      cran_app(cran_repo, options = as.list(cran_options)),
+      opts = webfakes::server_opts(num_threads = 3),
+      .local_envir = .local_envir
+    )
+    assign(".cran_app", app, envir = .local_envir)
+    app
+  } else {
+    fake_cran
+  }
 
   bioc_app <- if (!is.null(bioc_app)) {
-                bioc_app
-              } else if (!is.null(bioc_repo)) {
-                app <- webfakes::local_app_process(
-                  bioc_app(bioc_repo, options = as.list(bioc_options)),
-                  opts = webfakes::server_opts(num_threads = 3),
-                  .local_envir = .local_envir
-                )
-                assign(".bioc_app", app, envir = .local_envir)
-                app
-              } else {
-                fake_bioc
-              }
+    bioc_app
+  } else if (!is.null(bioc_repo)) {
+    app <- webfakes::local_app_process(
+      bioc_app(bioc_repo, options = as.list(bioc_options)),
+      opts = webfakes::server_opts(num_threads = 3),
+      .local_envir = .local_envir
+    )
+    assign(".bioc_app", app, envir = .local_envir)
+    app
+  } else {
+    fake_bioc
+  }
 
   withr::local_options(
     repos = c(CRAN = cran_app$url()),
@@ -231,7 +234,10 @@ gh_app_repos <- list(
               sha = "c9be9cde5e91ad771d1b5150781e6e8d32a7be0e9ab227bdf45cb41ad513004c",
               branch = "pr7",
               pull = 7,
-              files = list(DESCRIPTION = gh_app_desc("pkgconfig"), NAMESPACE = "")
+              files = list(
+                DESCRIPTION = gh_app_desc("pkgconfig"),
+                NAMESPACE = ""
+              )
             )
           )
         )
@@ -246,7 +252,10 @@ gh_app_repos <- list(
               sha = "ec40c1eae1ac83b86fc41bb2f5cd916152d19015649c3d209f2c08115dd993b1",
               tag = "HEAD",
               branch = "main",
-              files = list("R/DESCRIPTION" = gh_app_desc("feather"), NAMESPACE = "")
+              files = list(
+                "R/DESCRIPTION" = gh_app_desc("feather"),
+                NAMESPACE = ""
+              )
             )
           )
         )
@@ -262,7 +271,10 @@ gh_app_repos <- list(
               tag = "HEAD",
               branch = "main",
               token = "b9984750bea6a170081ca98255c3b43fe5fb0978",
-              files = list("DESCRIPTION" = gh_app_desc("secret"), NAMESPACE = "")
+              files = list(
+                "DESCRIPTION" = gh_app_desc("secret"),
+                NAMESPACE = ""
+              )
             )
           )
         ),
@@ -272,7 +284,10 @@ gh_app_repos <- list(
               sha = "7f9fb08e26015e05529cd4d7fc2a7edbd88c783d456ff83a96dcc58ace1d3ea5",
               tag = "HEAD",
               branch = "x",
-              files = list("DESCRIPTION" = gh_app_desc("secret"), NAMESPACE = "")
+              files = list(
+                "DESCRIPTION" = gh_app_desc("secret"),
+                NAMESPACE = ""
+              )
             )
           )
         )
@@ -311,7 +326,6 @@ gh_app_repos <- list(
         )
       )
     )
-
   )
 )
 
@@ -342,11 +356,14 @@ new_check_app <- function() {
   app$get("/crandb", function(req, res) {
     pkg <- sub("\"$", "", sub("^\"", "", req$query$key))
     if (pkg == "dbi") {
-      res$send_json(list(
-        total_rows = 20000,
-        offset = 14000,
-        rows = list(list(id = "DBI", key = "dbi", value = "DBI"))
-      ), auto_unbox = TRUE)
+      res$send_json(
+        list(
+          total_rows = 20000,
+          offset = 14000,
+          rows = list(list(id = "DBI", key = "dbi", value = "DBI"))
+        ),
+        auto_unbox = TRUE
+      )
     } else {
       res$send_json(list(
         total_rows = 20000,
@@ -359,14 +376,18 @@ new_check_app <- function() {
   app$post("/wikipedia", function(req, res) {
     titles <- strsplit(req$form$titles, "|", fixed = TRUE)[[1]]
     Titles <- tools::toTitleCase(titles)
-    ret <- list(query = list(
-      normalized = list(list(from = titles, to = Titles)),
-      pages = list(`11178` = list(
-        pageid = 11178,
-        title = Titles,
-        extract = "The terms foobar (), foo, bar, and others are used ..."
-      ))
-    ))
+    ret <- list(
+      query = list(
+        normalized = list(list(from = titles, to = Titles)),
+        pages = list(
+          `11178` = list(
+            pageid = 11178,
+            title = Titles,
+            extract = "The terms foobar (), foo, bar, and others are used ..."
+          )
+        )
+      )
+    )
     res$send_json(ret, auto_unbox = TRUE)
   })
 
@@ -386,37 +407,45 @@ new_check_app <- function() {
   })
 
   app$get("/bioc/a", function(req, res) {
-    res$send(paste0(collapse = "", c(
-      "hello nobody, this is httpd@ip-172-30-0-33 running gitolite3 v3.6.6-6-g7c8f0ab on git 2.28.0",
-      "",
-      " R  \tpackages/a4",
-      " R  \tpackages/a4Base",
-      " R  \tpackages/a4Classif",
-      " R  \tpackages/a4Core",
-      " R  \tpackages/a4Preproc",
-      " R  \tpackages/a4Reporting",
-      " R  \tpackages/aCGH",
-      " R  \tpackages/abseqR",
-      " R  \tpackages/ag.db"
-    ), "\n"))
+    res$send(paste0(
+      collapse = "",
+      c(
+        "hello nobody, this is httpd@ip-172-30-0-33 running gitolite3 v3.6.6-6-g7c8f0ab on git 2.28.0",
+        "",
+        " R  \tpackages/a4",
+        " R  \tpackages/a4Base",
+        " R  \tpackages/a4Classif",
+        " R  \tpackages/a4Core",
+        " R  \tpackages/a4Preproc",
+        " R  \tpackages/a4Reporting",
+        " R  \tpackages/aCGH",
+        " R  \tpackages/abseqR",
+        " R  \tpackages/ag.db"
+      ),
+      "\n"
+    ))
   })
 
   app$get("/bioc/A", function(req, res) {
-    res$send(paste0(collapse = "", c(
-      "hello nobody, this is httpd@ip-172-30-0-33 running gitolite3 v3.6.6-6-g7c8f0ab on git 2.28.0",
-      "",
-      " R  \tpackages/ABAData",
-      " R  \tpackages/ABAEnrichment",
-      " R  \tpackages/ABSSeq",
-      " R  \tpackages/AGDEX",
-      " R  \tpackages/AHPathbankDbs",
-      " R  \tpackages/AIMS",
-      " R  \tpackages/ALDEx2",
-      " R  \tpackages/ALL",
-      " R  \tpackages/ALLMLL",
-      " R  \tpackages/ALPS",
-      " R  \tpackages/AMARETTO"
-    ), "\n"))
+    res$send(paste0(
+      collapse = "",
+      c(
+        "hello nobody, this is httpd@ip-172-30-0-33 running gitolite3 v3.6.6-6-g7c8f0ab on git 2.28.0",
+        "",
+        " R  \tpackages/ABAData",
+        " R  \tpackages/ABAEnrichment",
+        " R  \tpackages/ABSSeq",
+        " R  \tpackages/AGDEX",
+        " R  \tpackages/AHPathbankDbs",
+        " R  \tpackages/AIMS",
+        " R  \tpackages/ALDEx2",
+        " R  \tpackages/ALL",
+        " R  \tpackages/ALLMLL",
+        " R  \tpackages/ALPS",
+        " R  \tpackages/AMARETTO"
+      ),
+      "\n"
+    ))
   })
 
   app$get("/biocann/src/contrib/PACKAGES.gz", function(req, res) {
@@ -457,9 +486,7 @@ new_check_app <- function() {
     # We don't use send_file, because of a webfakes bug on Windows
     # with absolute paths. Webfakes prepends '/' to 'c:/...'.
     blob <- readBin(tmp, what = "raw", n = 10000)
-    res$
-      set_type("application/gzip")$
-      send(blob)
+    res$set_type("application/gzip")$send(blob)
   })
 
   app
@@ -517,12 +544,11 @@ new_sysreqs_app <- function() {
       af <- unlist(lapply(srq, "[[", "post_install"), recursive = FALSE)
 
       res$send_json(list(
-            name = jsonlite::unbox("pkgdependssysreqs"),
-            pre_install = bf,
-            install_scripts = is,
-            post_install = af
-          ))
-
+        name = jsonlite::unbox("pkgdependssysreqs"),
+        pre_install = bf,
+        install_scripts = is,
+        post_install = af
+      ))
     } else {
       res$set_status(400)
       res$send_json(list(
@@ -610,7 +636,8 @@ transform_tempdir <- function(x) {
   x <- sub(normalizePath(tempdir()), "<tempdir>", x, fixed = TRUE)
   x <- sub(
     normalizePath(tempdir(), winslash = "/"),
-    "<tempdir>", x,
+    "<tempdir>",
+    x,
     fixed = TRUE
   )
   x <- sub("\\R\\", "/R/", x, fixed = TRUE)

@@ -1,4 +1,3 @@
-
 test_that("different versions required", {
   setup_fake_gh_app()
   setup_fake_apps()
@@ -22,39 +21,38 @@ test_that("different versions required", {
 })
 
 test_that("direct CRAN conflicts with downstream GH dep", {
-
   gh <- list(
     users = list(
       "r-lib" = list(
-         repos = list(
-           foo = list(
-             commits = list(
-               list(
-                 sha = "b69f0b34da3b538a666c02944d67ebae9535488fa9d29a010a79980822b56780",
-                 branch = "main",
-                 tag = "HEAD",
-                 files = list(
-                   DESCRIPTION = "Package: foo\nVersion: 1.0.0\nImports: crayon\nRemotes: r-lib/crayon\n",
-                   NAMESPACE = ""
-                 )
-               )
-             )
-           ),
-           crayon = list(
-             commits = list(
-               list(
-                 sha = "09ec8a1bbab45ba6a54f896f721fdf00798559ef71852063ea4934d9656101d0",
-                 branch = "main",
-                 tag = "HEAD",
-                 files = list(
-                   DESCRIPTION = gh_app_desc("crayon"),
-                   NAMESPACE = ""
-                 )
-               )
-             )
-           )
-         )
-       )
+        repos = list(
+          foo = list(
+            commits = list(
+              list(
+                sha = "b69f0b34da3b538a666c02944d67ebae9535488fa9d29a010a79980822b56780",
+                branch = "main",
+                tag = "HEAD",
+                files = list(
+                  DESCRIPTION = "Package: foo\nVersion: 1.0.0\nImports: crayon\nRemotes: r-lib/crayon\n",
+                  NAMESPACE = ""
+                )
+              )
+            )
+          ),
+          crayon = list(
+            commits = list(
+              list(
+                sha = "09ec8a1bbab45ba6a54f896f721fdf00798559ef71852063ea4934d9656101d0",
+                branch = "main",
+                tag = "HEAD",
+                files = list(
+                  DESCRIPTION = gh_app_desc("crayon"),
+                  NAMESPACE = ""
+                )
+              )
+            )
+          )
+        )
+      )
     )
   )
 
@@ -78,13 +76,15 @@ test_that("direct CRAN conflicts with downstream GH dep", {
 })
 
 test_that("no required version", {
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg1
     Depends: pkg2 (>= 2.0.0)
 
     Package: pkg2
     Version: 1.0.0
-  ")
+  "
+  )
   setup_fake_apps(cran_repo = repo)
 
   lib <- withr::local_tempdir()
@@ -113,16 +113,20 @@ test_that("ruled out direct dep", {
   # for the current R version, but the older vresion is fine.
 
   # pkgcache::cran_app cannot seem to do this with a single repo
-  repo1 <- dcf("
+  repo1 <- dcf(
+    "
     Package: pkg1
     Version: 1.0.0
-  ")
+  "
+  )
 
-  repo2 <- dcf("
+  repo2 <- dcf(
+    "
     Package: pkg1
     Version: 1.0.1
     Depends: R (>= 20000.0.0)
-  ")
+  "
+  )
 
   fake1 <- webfakes::new_app_process(cran_app(repo1))
   fake2 <- webfakes::new_app_process(cran_app(repo2))

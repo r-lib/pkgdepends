@@ -1,11 +1,9 @@
-
 test_that("is_gzip, is_bzip2, is_xz, iz_zip", {
-
   cases <- list(
-    list("is_gzip",  "xxx.gz",  3),
+    list("is_gzip", "xxx.gz", 3),
     list("is_bzip2", "xxx.bz2", 3),
-    list("is_xz",    "xxx.xz",  6),
-    list("is_zip",   "xxx.zip", 4)
+    list("is_xz", "xxx.xz", 6),
+    list("is_zip", "xxx.zip", 4)
   )
 
   lapply(cases, function(case) {
@@ -26,12 +24,11 @@ test_that("is_gzip, is_bzip2, is_xz, iz_zip", {
 })
 
 test_that("detect_package_archive_type", {
-
   cases <- list(
-    list("gzip",    "xxx.gz"),
-    list("bzip2",   "xxx.bz2"),
-    list("xz",      "xxx.xz"),
-    list("zip",     "xxx.zip"),
+    list("gzip", "xxx.gz"),
+    list("bzip2", "xxx.bz2"),
+    list("xz", "xxx.xz"),
+    list("zip", "xxx.zip"),
     list("unknown", "xxx")
   )
 
@@ -55,11 +52,16 @@ test_that("get_untar_decompress_arg", {
   })
 
   zip <- system.file(package = "pkgdepends", "tools", "xxx.zip")
-  expect_error(get_untar_decompress_arg(zip), "zip file")
+  expect_snapshot(
+    error = TRUE,
+    get_untar_decompress_arg(zip),
+    transform = function(x) {
+      sub("'.*xxx[.]zip'", "'<path>/xxx.zip'", x)
+    }
+  )
 })
 
 test_that("eup_get_args", {
-
   opts <- list(
     tarfile = system.file(package = "pkgdepends", "tools", "pkg_1.0.0.tgz"),
     files = NULL,
@@ -70,7 +72,15 @@ test_that("eup_get_args", {
 
   expect_equal(
     eup_get_args(opts),
-    c("-x", "-f", path_norm(opts$tarfile), "-C", path_norm(opts$exdir), "-o", "-z")
+    c(
+      "-x",
+      "-f",
+      path_norm(opts$tarfile),
+      "-C",
+      path_norm(opts$exdir),
+      "-o",
+      "-z"
+    )
   )
 
   ## No need to ungzip
@@ -84,19 +94,35 @@ test_that("eup_get_args", {
   opts$files <- c("this", "that")
   expect_equal(
     eup_get_args(opts),
-    c("-x", "-f", path_norm(opts$tarfile), "-C", path_norm(opts$exdir), "-o", opts$files)
+    c(
+      "-x",
+      "-f",
+      path_norm(opts$tarfile),
+      "-C",
+      path_norm(opts$exdir),
+      "-o",
+      opts$files
+    )
   )
 
   ## Do not restore times
   opts$restore_times <- FALSE
   expect_equal(
     eup_get_args(opts),
-    c("-x", "-f", path_norm(opts$tarfile), "-C", path_norm(opts$exdir), "-o", "-m", opts$files)
+    c(
+      "-x",
+      "-f",
+      path_norm(opts$tarfile),
+      "-C",
+      path_norm(opts$exdir),
+      "-o",
+      "-m",
+      opts$files
+    )
   )
 })
 
 test_that("external_untar_process", {
-
   if (need_internal_tar()) skip("external R does not work")
 
   tarfile <- system.file(package = "pkgdepends", "tools", "pkg_1.0.0.tgz")
@@ -112,7 +138,6 @@ test_that("external_untar_process", {
 })
 
 test_that("r_untar_process", {
-
   tarfile <- system.file(package = "pkgdepends", "tools", "pkg_1.0.0.tgz")
   mkdirp(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -126,7 +151,6 @@ test_that("r_untar_process", {
 })
 
 test_that("make_untar_process", {
-
   tarfile <- system.file(package = "pkgdepends", "tools", "pkg_1.0.0.tgz")
   mkdirp(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -140,7 +164,6 @@ test_that("make_untar_process", {
 })
 
 test_that("make_untar_process, internal tar", {
-
   mockery::stub(make_untar_process, "need_internal_tar", TRUE)
 
   tarfile <- system.file(package = "pkgdepends", "tools", "pkg_1.0.0.tgz")

@@ -94,8 +94,8 @@ test_that("q_database #2", {
 
 test_that("q_database #3", {
   local_reproducible_output(width = 500)
-  withr::local_options(renv.dependencies.database =
-    list(foopkg = list(foofun = "foodep"))
+  withr::local_options(
+    renv.dependencies.database = list(foopkg = list(foofun = "foodep"))
   )
   do <- function(code) {
     code_query(code, q_database())[["matched_captures"]]
@@ -161,15 +161,21 @@ test_that("q_deps_rmd_inline", {
 test_that("q_deps_yaml_header", {
   local_reproducible_output(width = 500)
   expect_snapshot({
-    print(n = Inf, code_query(
-      readLines(test_path("fixtures/scan/header-shiny.Rmd")),
-      query = q_deps_yaml_header(),
-      language = "yaml"
-    )[["matched_captures"]])
-    print(n = Inf, code_query(
-      readLines(test_path("fixtures/scan/header-shiny2.Rmd")),
-      query = q_deps_yaml_header(),
-      language = "yaml"
-    )[["matched_captures"]])
+    print(
+      n = Inf,
+      code_query(
+        readLines(test_path("fixtures/scan/header-shiny.Rmd")),
+        query = q_deps_yaml_header(),
+        language = "yaml"
+      )[["matched_captures"]]
+    )
+    print(
+      n = Inf,
+      code_query(
+        readLines(test_path("fixtures/scan/header-shiny2.Rmd")),
+        query = q_deps_yaml_header(),
+        language = "yaml"
+      )[["matched_captures"]]
+    )
   })
 })

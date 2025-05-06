@@ -1,4 +1,3 @@
-
 test_that("pkg_name_check", {
   mockery::stub(
     pkg_name_check,
@@ -9,11 +8,13 @@ test_that("pkg_name_check", {
 })
 
 test_that("async_pkg_name_check", {
-  expect_error(sy(async_pkg_name_check(11)))
-  expect_error(sy(async_pkg_name_check(c("a", "b"))))
-  expect_error(sy(async_pkg_name_check(NA_character_)))
-  expect_error(sy(async_pkg_name_check("x", 11)))
-  expect_error(sy(async_pkg_name_check("x", NA_character_)))
+  expect_snapshot(error = TRUE, {
+    sy(async_pkg_name_check(11))
+    sy(async_pkg_name_check(c("a", "b")))
+    sy(async_pkg_name_check(NA_character_))
+    sy(async_pkg_name_check("x", 11))
+    sy(async_pkg_name_check("x", NA_character_))
+  })
 
   calls <- 0L
   fun <- function(name) calls <<- calls + 1L
@@ -123,7 +124,9 @@ test_that("crandb_check", {
 })
 
 test_that("async_wikipedia_get", {
-  withr::local_envvar(PKG_NAME_CHECK_WIKIPEDIA_URL = check_app$url("/wikipedia"))
+  withr::local_envvar(
+    PKG_NAME_CHECK_WIKIPEDIA_URL = check_app$url("/wikipedia")
+  )
   ret <- synchronize(async_wikipedia_get("foobar"))
   expect_equal(ret$term, "foobar")
   expect_equal(ret$normalized, "Foobar")
@@ -350,7 +353,7 @@ test_that("format.pkg_name_check_urban", {
   expect_snapshot(writeLines(format(ans)))
   expect_snapshot(writeLines(format(ans2)))
 
-  ans <- ans[1,]
+  ans <- ans[1, ]
   ans$definition[1] <- paste(rep(ans$definition[1], 10), collapse = "\n")
   expect_snapshot(writeLines(format(ans)))
 })
@@ -362,15 +365,15 @@ test_that("clean_urban", {
 })
 
 test_that("async_pnc_bioc", {
-   expect_equal(sy(async_pnc_bioc("bim")), sy(pnc_bioc_false("bim")))
-   expect_equal(sy(async_pnc_bioc("yeast2")), sy(pnc_bioc_false("yeast2")))
+  expect_equal(sy(async_pnc_bioc("bim")), sy(pnc_bioc_false("bim")))
+  expect_equal(sy(async_pnc_bioc("yeast2")), sy(pnc_bioc_false("yeast2")))
 
-   mockery::stub(
-     async_pnc_bioc,
-     "async_pnc_bioc_web",
-     function(...) async_constant(pnc_bioc_false("Biobase"))
-   )
-   expect_equal(sy(async_pnc_bioc("Biobase")), sy(pnc_bioc_false("Biobase")))
+  mockery::stub(
+    async_pnc_bioc,
+    "async_pnc_bioc_web",
+    function(...) async_constant(pnc_bioc_false("Biobase"))
+  )
+  expect_equal(sy(async_pnc_bioc("Biobase")), sy(pnc_bioc_false("Biobase")))
 })
 
 # "pnc_bioc_false"
@@ -424,7 +427,9 @@ test_that("pnc_bioc_parse", {
   local_reproducible_output()
   withr::local_envvar(
     PKG_NAME_CHECK_BIOC_URL = check_app$url("/bioc/"),
-    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url("/biocann/src/contrib/PACKAGES.gz")
+    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url(
+      "/biocann/src/contrib/PACKAGES.gz"
+    )
   )
   pkg1 <- pnc_bioc_parse(sy(async_pnc_bioc_query("all"))[[1]])
   pkg2 <- pnc_bioc_parse(sy(async_pnc_bioc_query("all"))[[2]])
@@ -437,7 +442,9 @@ test_that("pnc_bioc_parse_pgz", {
   local_reproducible_output()
   withr::local_envvar(
     PKG_NAME_CHECK_BIOC_URL = check_app$url("/bioc/"),
-    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url("/biocann/src/contrib/PACKAGES.gz")
+    PKG_NAME_CHECK_BIOC_ANN_URL = check_app$url(
+      "/biocann/src/contrib/PACKAGES.gz"
+    )
   )
   pkg <- pnc_bioc_parse_pgz(sy(async_pnc_bioc_query("all"))[[3]])
   expect_snapshot(pkg)

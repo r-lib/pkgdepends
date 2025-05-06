@@ -1,4 +1,3 @@
-
 test_that("parse_remote", {
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
@@ -13,14 +12,18 @@ test_that("resolve_remote", {
   setup_fake_apps()
 
   conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache()
+  )
 
   ## Absolute path
   path <- get_fixture("foobar_1.0.0.tar.gz")
   ref <- paste0("local::", path)
   res <- synchronise(resolve_remote_local(
     parse_pkg_ref(ref),
-    TRUE, conf,
+    TRUE,
+    conf,
     cache,
     dependencies = FALSE
   ))
@@ -51,16 +54,26 @@ test_that("resolve_remote", {
 })
 
 test_that("resolution error", {
-
   conf <- current_config()
-  cache <- list(package = NULL, metadata = pkgcache::get_cranlike_metadata_cache())
+  cache <- list(
+    package = NULL,
+    metadata = pkgcache::get_cranlike_metadata_cache()
+  )
 
   path <- get_fixture("foobar_10.0.0.tar.gz")
   ref <- paste0("local::", path)
-  err <- tryCatch(synchronise(
-    resolve_remote_local(parse_pkg_ref(ref), TRUE, conf,
-                         cache, dependencies = FALSE)
-  ), error = function(x) x)
+  err <- tryCatch(
+    synchronise(
+      resolve_remote_local(
+        parse_pkg_ref(ref),
+        TRUE,
+        conf,
+        cache,
+        dependencies = FALSE
+      )
+    ),
+    error = function(x) x
+  )
 
   expect_s3_class(err, "error")
 })
@@ -95,7 +108,7 @@ test_that("download_remote", {
   download <- function(res) {
     download_remote_local(res, target, tree, conf, cache, on_progress = NULL)
   }
-  dl1 <- synchronise(download(res[1,]))
+  dl1 <- synchronise(download(res[1, ]))
   expect_equal(dl1, "Got")
   expect_true(file.exists(target))
 
@@ -112,7 +125,14 @@ test_that("download_remote", {
   target <- file.path(conf$cache_dir, res$target[1])
   tree <- paste0(target, "-tree")
   mkdirp(dirname(target))
-  dl1 <- download_remote_local(res, target, tree, conf, cache, on_progress = NULL)
+  dl1 <- download_remote_local(
+    res,
+    target,
+    tree,
+    conf,
+    cache,
+    on_progress = NULL
+  )
 
   expect_equal(dl1, "Got")
   expect_true(file.exists(target))
@@ -150,7 +170,7 @@ test_that("download_remote directory", {
   download <- function(res) {
     download_remote_local(res, target, tree, conf, cache, on_progress = NULL)
   }
-  dl1 <- synchronise(download(res[1,]))
+  dl1 <- synchronise(download(res[1, ]))
   expect_equal(dl1, "Got")
   expect_true(file.exists(tree))
   expect_true(is.dir(tree))
@@ -168,7 +188,9 @@ test_that("download_remote error", {
   file.copy(path, tmp2)
   ref <- paste0("local::", path2 <- file.path(tmp2, basename(path)), "?nocache")
   r <- pkg_plan$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
+    ref,
+    config = list(dependencies = FALSE, cache_dir = tmp)
+  )
   r$resolve()
   unlink(path2)
   expect_snapshot(invisible(r$download_resolution()))

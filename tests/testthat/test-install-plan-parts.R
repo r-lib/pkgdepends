@@ -1,13 +1,18 @@
-
 test_that("make_start_state", {
   plan <- readRDS(test_path("fixtures/sample_plan.rds"))
   state <- make_start_state(plan, list(foo = "bar"))
 
   expect_equal(names(state), c("plan", "workers", "config"))
   xcols <- c(
-    "build_done", "build_time", "build_error", "build_stdout",
-    "install_done", "install_time", "install_error",
-    "install_stdout")
+    "build_done",
+    "build_time",
+    "build_error",
+    "build_stdout",
+    "install_done",
+    "install_time",
+    "install_error",
+    "install_stdout"
+  )
   expect_true(all(xcols %in% colnames(state$plan)))
   eq_cols <- setdiff(colnames(plan), "deps_left")
   expect_identical(
@@ -62,8 +67,10 @@ test_that("handle_event, process still running", {
   state <- make_start_state(plan, list(num_workers = 2))
 
   mockery::stub(
-    start_task_build, "make_build_process",
-    make_dummy_worker_process())
+    start_task_build,
+    "make_build_process",
+    make_dummy_worker_process()
+  )
 
   ## Run a dummy worker that runs for 10s, writes to stdout & stderr
   expect_snapshot(
@@ -95,8 +102,10 @@ test_that("handle_event, build process finished", {
   state$plan$build_done[1] <- FALSE
 
   mockery::stub(
-    start_task_build, "make_build_process",
-    make_dummy_worker_process(n_iter = 2, sleep = 0))
+    start_task_build,
+    "make_build_process",
+    make_dummy_worker_process(n_iter = 2, sleep = 0)
+  )
 
   expect_snapshot(
     state <- start_task_build(state, task("build", pkgidx = 1))
@@ -105,15 +114,20 @@ test_that("handle_event, build process finished", {
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
 
-  expect_snapshot(repeat {
-    events <- poll_workers(state)
-    state <- handle_events(state, events)
-    if (all(state$plan$build_done)) break;
-  })
+  expect_snapshot(
+    repeat {
+      events <- poll_workers(state)
+      state <- handle_events(state, events)
+      if (all(state$plan$build_done)) break
+    }
+  )
 
   expect_false(proc$is_alive())
   expect_false(state$plan$build_error[[1]])
-  expect_equal(state$plan$build_stdout[[1]], c("out 1", "err 1", "out 2", "err 2"))
+  expect_equal(
+    state$plan$build_stdout[[1]],
+    c("out 1", "err 1", "out 2", "err 2")
+  )
   expect_identical(state$plan$worker_id[[1]], NA_character_)
   expect_equal(length(state$workers), 0)
 })
@@ -125,8 +139,10 @@ test_that("handle event, build process finished, but failed", {
   state$plan$build_done[1] <- FALSE
 
   mockery::stub(
-    start_task_install, "make_install_process",
-    make_dummy_worker_process(n_iter = 2, sleep = 0, status = 1))
+    start_task_install,
+    "make_install_process",
+    make_dummy_worker_process(n_iter = 2, sleep = 0, status = 1)
+  )
 
   expect_snapshot(
     state <- start_task_install(state, task("install", pkgidx = 1))
@@ -134,13 +150,14 @@ test_that("handle event, build process finished, but failed", {
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
 
-  expect_snapshot(error = TRUE, repeat {
+  expect_snapshot(
+    error = TRUE,
+    repeat {
       events <- poll_workers(state)
       state <- handle_events(state, events)
-      if (all(state$plan$build_done)) break;
+      if (all(state$plan$build_done)) break
     }
   )
-
 })
 
 test_that("handle_event, install process finished", {
@@ -148,24 +165,31 @@ test_that("handle_event, install process finished", {
   state <- make_start_state(plan, list(foo = "bar"))
 
   mockery::stub(
-    start_task_install, "make_install_process",
-    make_dummy_worker_process(n_iter = 2, sleep = 0))
+    start_task_install,
+    "make_install_process",
+    make_dummy_worker_process(n_iter = 2, sleep = 0)
+  )
 
   state <- start_task_install(state, task("install", pkgidx = 1))
   proc <- state$workers[[1]]$process
   on.exit(proc$kill(), add = TRUE)
 
   done <- FALSE
-  expect_snapshot(repeat {
-    events <- poll_workers(state)
-    state <- handle_events(state, events)
-    if (done) break
-    if (!proc$is_alive()) done <- TRUE
-  })
+  expect_snapshot(
+    repeat {
+      events <- poll_workers(state)
+      state <- handle_events(state, events)
+      if (done) break
+      if (!proc$is_alive()) done <- TRUE
+    }
+  )
 
   expect_false(proc$is_alive())
   expect_false(state$plan$install_error[[1]])
-  expect_equal(state$plan$install_stdout[[1]], c("out 1", "err 1", "out 2", "err 2"))
+  expect_equal(
+    state$plan$install_stdout[[1]],
+    c("out 1", "err 1", "out 2", "err 2")
+  )
   expect_identical(state$plan$worker_id[[1]], NA_character_)
   expect_equal(length(state$workers), 0)
 })
@@ -175,8 +199,10 @@ test_that("handle event, install process finished, but failed", {
   state <- make_start_state(plan, list(foo = "bar"))
 
   mockery::stub(
-    start_task_install, "make_install_process",
-    make_dummy_worker_process(n_iter = 2, sleep = 0, status = 1))
+    start_task_install,
+    "make_install_process",
+    make_dummy_worker_process(n_iter = 2, sleep = 0, status = 1)
+  )
 
   state <- start_task_install(state, task("install", pkgidx = 1))
   proc <- state$workers[[1]]$process
@@ -206,7 +232,8 @@ test_that("select_next_task", {
   state$plan$worker_id[-nrow(state$plan)] <- 42
   expect_equal(
     select_next_task(state),
-    task("install", pkgidx = nrow(state$plan)))
+    task("install", pkgidx = nrow(state$plan))
+  )
 
   ## An ongoing build task is not selected again
   state <- make_start_state(plan, list(num_workers = 2))
@@ -215,7 +242,8 @@ test_that("select_next_task", {
   state$plan$worker_id[-nrow(state$plan)] <- 42
   expect_equal(
     select_next_task(state),
-    task("build", pkgidx = nrow(state$plan)))
+    task("build", pkgidx = nrow(state$plan))
+  )
 
   ## Source is preferred over binary
   state <- make_start_state(plan, list(num_workers = 2))
@@ -223,7 +251,8 @@ test_that("select_next_task", {
   state$plan$deps_left[] <- rep_list(nrow(state$plan), character())
   expect_equal(
     select_next_task(state),
-    task("build", pkgidx = nrow(state$plan)))
+    task("build", pkgidx = nrow(state$plan))
+  )
 
   ## Source is selected only if dependencies are done
   state <- make_start_state(plan, list(num_workers = 2))
@@ -232,14 +261,16 @@ test_that("select_next_task", {
   state$plan$deps_left[[nrow(state$plan)]] <- character()
   expect_equal(
     select_next_task(state),
-    task("build", pkgidx = nrow(state$plan)))
+    task("build", pkgidx = nrow(state$plan))
+  )
 
   ## Binary is selected irrespectively of dependencies
   state <- make_start_state(plan, list(num_workers = 2))
   state$plan$deps_left[] <- rep_list(nrow(state$plan), "foobar")
   expect_equal(
     select_next_task(state),
-    task("install", pkgidx = 1L))
+    task("install", pkgidx = 1L)
+  )
 
   ## We cannot select anything, because of the dependencies
   state <- make_start_state(plan, list(num_workers = 2))
@@ -248,20 +279,18 @@ test_that("select_next_task", {
   state$plan$deps_left[] <- rep_list(nrow(state$plan), "foobar")
   expect_equal(
     select_next_task(state),
-    task("idle"))
-})
-
-test_that("start_task", {
-  expect_error(
-    start_task(list(), task("foobar")),
-    "Unknown task"
+    task("idle")
   )
 })
 
+test_that("start_task", {
+  expect_snapshot(error = TRUE, start_task(list(), task("foobar")))
+})
+
 test_that("stop_task", {
-  expect_error(
-    stop_task(list(), list(task = task("foobar"))),
-    "Unknown task"
+  expect_snapshot(
+    error = TRUE,
+    stop_task(list(), list(task = task("foobar")))
   )
 })
 
@@ -270,7 +299,6 @@ test_that("get_worker_id", {
 })
 
 test_that("kill_all_processes", {
-
   skip_on_os("windows")
 
   p1 <- processx::process$new("true", stdout = "|")
@@ -281,11 +309,13 @@ test_that("kill_all_processes", {
   p3 <- callr::r_process$new(opts)
   on.exit(p3$kill(), add = TRUE)
 
-  state <- list(workers = list(
-    list(process = p1),
-    list(process = p2),
-    list(process = p3)
-  ))
+  state <- list(
+    workers = list(
+      list(process = p1),
+      list(process = p2),
+      list(process = p3)
+    )
+  )
 
   kill_all_processes(state)
 
@@ -299,7 +329,6 @@ test_that("kill_all_processes", {
 })
 
 test_that("kill_all_processes that catch/ignore SIGINT", {
-
   skip_on_cran()
   skip_on_os("windows")
   if (Sys.which("bash") == "") skip("Needs 'bash'")
@@ -377,7 +406,8 @@ test_that("make_build_process", {
 
   p <- make_build_process(
     file.path(tmp, "subdir"),
-    "foo", tempdir(),
+    "foo",
+    tempdir(),
     .libPaths(),
     vignettes = FALSE,
     needscompilation = TRUE,
@@ -413,7 +443,6 @@ test_that("install_args are passed", {
 })
 
 test_that("built package is added to the cache", {
-
 })
 
 test_that("installed_note", {

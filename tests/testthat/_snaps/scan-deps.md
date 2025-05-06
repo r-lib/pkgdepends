@@ -124,10 +124,10 @@
       scan_path_deps_do_r(readLines(rfile), rfile)
     Output
       # A data frame: 2 x 9
-        path                    ref     package version type  code                                                           start_row start_column start_byte
-        <chr>                   <chr>   <chr>   <chr>   <chr> <chr>                                                              <int>        <int>      <int>
-      1 fixtures/scan/methods.R methods methods *       prod  "setClass(\"track\", slots = c(x=\"numeric\", y=\"numeric\"))"         2           10         43
-      2 fixtures/scan/methods.R methods methods *       prod  "setGeneric(\"plot\")"                                                 6            1        171
+        path                    ref     package version type  code                                                               start_row start_column start_byte
+        <chr>                   <chr>   <chr>   <chr>   <chr> <chr>                                                                  <int>        <int>      <int>
+      1 fixtures/scan/methods.R methods methods *       prod  "setClass(\"track\", slots = c(x = \"numeric\", y = \"numeric\"))"         2           10         43
+      2 fixtures/scan/methods.R methods methods *       prod  "setGeneric(\"plot\")"                                                     6            1        175
 
 # scan_path_deps_do_jr_hits
 

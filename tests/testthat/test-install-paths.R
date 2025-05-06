@@ -1,6 +1,4 @@
-
 test_that("folders with potentially problematic characters", {
-
   skip_on_cran()
   local_cli_config()
 
@@ -33,7 +31,10 @@ test_that("folders with potentially problematic characters", {
       warning = function(e) error <<- TRUE,
       error = function(e) error <<- TRUE
     )
-    if (error) { skipped <- skipped + 1; next }
+    if (error) {
+      skipped <- skipped + 1
+      next
+    }
 
     ## Reset this
     environment(need_internal_tar)$internal <- NULL
@@ -50,7 +51,8 @@ test_that("folders with potentially problematic characters", {
     dir.create(tmp)
     dir.create(libpath)
     environment(need_internal_tar)$internal <- NULL
-    withr::with_envvar(c(TAR = NA),
+    withr::with_envvar(
+      c(TAR = NA),
       withr::with_path("foobar", action = "replace", {
         suppressMessages(install_binary(pkg, lib = libpath, quiet = TRUE))
       })

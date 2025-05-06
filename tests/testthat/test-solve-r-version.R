@@ -1,4 +1,3 @@
-
 test_that("R version dependencies", {
   setup_fake_gh_app()
   setup_fake_apps()

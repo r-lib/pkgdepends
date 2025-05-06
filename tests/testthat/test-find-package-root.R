@@ -12,14 +12,16 @@ test_that("find_package_root", {
 
   expect_equal(
     readLines(file.path(
-      find_package_root(file.path(tmp, "a")), "DESCRIPTION"
+      find_package_root(file.path(tmp, "a")),
+      "DESCRIPTION"
     )),
     lns
   )
 
   expect_equal(
     readLines(file.path(
-      find_package_root(file.path(tmp, "a", "b", "c", "d")), "DESCRIPTION"
+      find_package_root(file.path(tmp, "a", "b", "c", "d")),
+      "DESCRIPTION"
     )),
     lns
   )
@@ -34,15 +36,9 @@ test_that("find_package_root", {
 })
 
 test_that("find_package_root errors", {
-  expect_error(
-    find_package_root(basename(tempfile())),
-    "Path does not exist"
-  )
+  expect_snapshot(error = TRUE, find_package_root("file1716b354e464b"))
 
   if (!file.exists("/DESCRIPTION")) {
-    expect_error(
-      find_package_root("/"),
-      "Could not find R package"
-    )
+    expect_snapshot(error = TRUE, find_package_root("/"))
   }
 })

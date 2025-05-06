@@ -7,6 +7,45 @@
        [6] "KernSmooth" "lattice"    "MASS"       "Matrix"     "mgcv"      
       [11] "nlme"       "nnet"       "rpart"      "spatial"    "survival"  
 
+# vlapply
+
+    Code
+      vlapply(l, identity)
+    Condition
+      Error in `vapply()`:
+      ! values must be length 1,
+       but FUN(X[[1]]) result is length 0
+    Code
+      vlapply(1:5, identity)
+    Condition
+      Error in `vapply()`:
+      ! values must be type 'logical',
+       but FUN(X[[1]]) result is type 'integer'
+
+# viapply
+
+    Code
+      viapply(c(a = 1L, b = 2L), function(x) 1)
+    Condition
+      Error in `vapply()`:
+      ! values must be type 'integer',
+       but FUN(X[[1]]) result is type 'double'
+
+# vdapply
+
+    Code
+      vdapply(l, identity)
+    Condition
+      Error in `vapply()`:
+      ! values must be length 1,
+       but FUN(X[[1]]) result is length 0
+    Code
+      vdapply(letters, identity)
+    Condition
+      Error in `vapply()`:
+      ! values must be type 'double',
+       but FUN(X[[1]]) result is type 'character'
+
 # cat0
 
     Code
@@ -89,6 +128,19 @@
       2 <dbl [1]> b     <lgl [1]>
       3 <dbl [1]> <NA>  <chr [1]>
       4 <dbl [1]> <NA>  <chr [1]>
+
+# update_named_vector
+
+    Code
+      update_named_vector(1, c(a = 1))
+    Condition
+      Error:
+      ! All elements in `old` must be named.
+    Code
+      update_named_vector(c(a = 1), 1)
+    Condition
+      Error:
+      ! All elements in `new` must be named.
 
 # once_per_session
 

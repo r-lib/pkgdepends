@@ -1,4 +1,3 @@
-
 test_that("resolve_remote", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()
@@ -8,9 +7,12 @@ test_that("resolve_remote", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = fix_port)
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = fix_port
+  )
 })
 
 test_that("resolve_remote, multiple", {
@@ -25,9 +27,12 @@ test_that("resolve_remote, multiple", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = fix_port)
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = fix_port
+  )
 })
 
 test_that("dependencies", {
@@ -39,9 +44,12 @@ test_that("dependencies", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = fix_port)
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = fix_port
+  )
 })
 
 test_that("failed resolution", {
@@ -56,9 +64,12 @@ test_that("failed resolution", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = fix_port)
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = fix_port
+  )
 })
 
 test_that("failed resolution, multiple", {
@@ -73,9 +84,12 @@ test_that("failed resolution, multiple", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = fix_port)
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = fix_port
+  )
 })
 
 test_that("resolve current version", {
@@ -90,9 +104,12 @@ test_that("resolve current version", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = fix_port)
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = fix_port
+  )
 })
 
 test_that("resolve an old version", {
@@ -104,20 +121,26 @@ test_that("resolve an old version", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = function(x) {
-    transform_etag(transform_hash(transform_no_srcref(fix_port(x))))
-  })
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = function(x) {
+      transform_etag(transform_hash(transform_no_srcref(fix_port(x))))
+    }
+  )
 
   config <- list(sysreqs_platform = "unknown")
   prop <- new_pkg_installation_proposal("pkg1@1.0.0", config = config)
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = function(x) transform_no_srcref(fix_port(x)))
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = function(x) transform_no_srcref(fix_port(x))
+  )
 })
 
 test_that("resolve a version range", {
@@ -129,9 +152,12 @@ test_that("resolve a version range", {
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
 
-  expect_snapshot({
-    snapshot(res, extra = "all")
-  }, transform = function(x) transform_no_srcref(fix_port(x)))
+  expect_snapshot(
+    {
+      snapshot(res, extra = "all")
+    },
+    transform = function(x) transform_no_srcref(fix_port(x))
+  )
 })
 
 test_that("download_remote", {

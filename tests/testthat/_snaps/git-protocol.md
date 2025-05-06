@@ -27,6 +27,14 @@
 # git_list_files
 
     Code
+      git_list_files(fake_git$url("/pak-test.git"), "foobar")
+    Condition
+      Error:
+      ! Unknown git ref: "foobar".
+
+---
+
+    Code
       git_list_files(fake_git$url("/pak-test.git"),
       "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e")
     Output

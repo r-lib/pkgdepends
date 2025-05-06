@@ -1,4 +1,3 @@
-
 test_that("should_show_progress_bar", {
   withr::local_options(pkg.show_progress = TRUE)
   expect_true(should_show_progress_bar())

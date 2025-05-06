@@ -1,16 +1,24 @@
-
 test_that("hard example, because easch package has many candidates", {
   skip("unfinished")
 
   lib <- test_temp_dir()
   install.packages(
     c("dplyr", "rcmdcheck", "qgraph", "usethis", "ggplot2", "knitr"),
-    lib = lib)
+    lib = lib
+  )
 
   r <- pkg_plan$new(
-    c("tidyverse/dplyr", "r-lib/rcmdcheck", "cran/qgraph", "r-lib/usethis",
-      "tidyverse/ggplot2", "yihui/knitr", "r-lib/rray"),
-    lib = lib)
+    c(
+      "tidyverse/dplyr",
+      "r-lib/rcmdcheck",
+      "cran/qgraph",
+      "r-lib/usethis",
+      "tidyverse/ggplot2",
+      "yihui/knitr",
+      "r-lib/rray"
+    ),
+    lib = lib
+  )
   r$resolve()
 
   pkgs <- r$get_resolution()

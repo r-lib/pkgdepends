@@ -24,3 +24,5 @@
 ^codecov\.yml$
 ^man/macros/eval2[.]Rd$
 ^LICENSE\.md$
+^[\.]?air\.toml$
+^\.vscode$

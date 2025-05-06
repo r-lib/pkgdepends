@@ -1,4 +1,3 @@
-
 test_that("sysreqs_platforms", {
   expect_snapshot(print(sysreqs_platforms(), n = Inf))
 })
@@ -67,12 +66,13 @@ test_that("sysreqs_check_installed", {
     package = c("gsfonts", "libcurl4-openssl-dev"),
     provides = list(
       character(),
-      c("libcurl-dev",
+      c(
+        "libcurl-dev",
         "libcurl-ssl-dev",
         "libcurl3-dev",
         "libcurl3-openssl-dev",
         "libcurl4-dev"
-        )
+      )
     )
   )
 
@@ -111,7 +111,8 @@ test_that("sysreqs_check_installed", {
 
 test_that("async_parse_installed", {
   mockery::stub(
-    async_parse_installed, "pkgcache::parse_installed",
+    async_parse_installed,
+    "pkgcache::parse_installed",
     data_frame(Package = c("foo", "bar"))
   )
 
@@ -165,31 +166,40 @@ test_that("can_sudo_without_pw", {
 test_that("query, post_install", {
   setup_fake_sysreqs_app()
   withr::local_envvar(R_PKG_SYSREQS2 = "false")
-  expect_snapshot({
-    srq <- sysreqs_resolve("java", "ubuntu-22.04")
-    srq$total <- 1/3
-    srq
-  }, transform = transform_sysreqs_server)
+  expect_snapshot(
+    {
+      srq <- sysreqs_resolve("java", "ubuntu-22.04")
+      srq$total <- 1 / 3
+      srq
+    },
+    transform = transform_sysreqs_server
+  )
 })
 
 test_that("pre_install", {
   setup_fake_sysreqs_app()
   withr::local_envvar(R_PKG_SYSREQS2 = "false")
-  expect_snapshot({
-    srq <- sysreqs_resolve("this needs geos please", "ubuntu-16.04")
-    srq$total <- 1/3
-    srq
-  }, transform = transform_sysreqs_server)
+  expect_snapshot(
+    {
+      srq <- sysreqs_resolve("this needs geos please", "ubuntu-16.04")
+      srq$total <- 1 / 3
+      srq
+    },
+    transform = transform_sysreqs_server
+  )
 })
 
 test_that("multiple sysreqs", {
   setup_fake_sysreqs_app()
   withr::local_envvar(R_PKG_SYSREQS2 = "false")
-  expect_snapshot({
-    srq <- sysreqs_resolve("java and also libcurl", "ubuntu-22.04")
-    srq$total <- 1/3
-    srq
-  }, transform = transform_sysreqs_server)
+  expect_snapshot(
+    {
+      srq <- sysreqs_resolve("java and also libcurl", "ubuntu-22.04")
+      srq$total <- 1 / 3
+      srq
+    },
+    transform = transform_sysreqs_server
+  )
 })
 
 test_that("error, unknown os", {

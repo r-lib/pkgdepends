@@ -1,7 +1,6 @@
-
 cli::test_that_cli("draw_solution_tree", {
-
-  cran_app_pkgs <- dcf("
+  cran_app_pkgs <- dcf(
+    "
     Package: pkgconfig
     Version: 2.0.3
     Suggests: covr, testthat, disposables (>= 1.0.3)
@@ -78,7 +77,8 @@ cli::test_that_cli("draw_solution_tree", {
     Version: 2.5.0
     Imports: graphics, grDevices, stats
     Suggests: callr, covr, DBI, knitr, lattice, methods, rlang, rmarkdown (>= 2.12), RSQLite, testthat (>= 3.0.0)
-  ")
+  "
+  )
 
   fake_cran <- webfakes::local_app_process(
     cran_app(cran_app_pkgs),
@@ -97,7 +97,8 @@ cli::test_that_cli("draw_solution_tree", {
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
 
   r <- pkg_plan$new(
-    c("pkgconfig", "dplyr"), library = lib,
+    c("pkgconfig", "dplyr"),
+    library = lib,
     config = list(use_bioconductor = FALSE)
   )
   suppressMessages(r$resolve())
@@ -197,7 +198,7 @@ test_that("no emoji", {
 # The rest is for UTF-8 systems only
 
 test_that("emoji", {
-  if (! l10n_info()$"UTF-8") skip("Not UTF-8")
+  if (!l10n_info()$"UTF-8") skip("Not UTF-8")
   mockery::stub(emoji, "has_emoji", TRUE)
   mockery::stub(emoji, "emo_builder", "\U1F477")
   expect_snapshot({
@@ -214,7 +215,7 @@ test_that("emoji", {
 })
 
 test_that("emo_builder", {
-  if (! l10n_info()$"UTF-8") skip("Not UTF-8")
+  if (!l10n_info()$"UTF-8") skip("Not UTF-8")
 
   # make it deterministic
   mockery::stub(

@@ -1,6 +1,4 @@
-
 test_that("can package a tree", {
-
   skip_on_cran()
   local_cli_config()
 
@@ -33,7 +31,6 @@ test_that("can package a tree", {
 })
 
 test_that("can package a compressed tree", {
-
   skip_on_cran()
   local_cli_config()
 
@@ -70,7 +67,6 @@ test_that("can package a compressed tree", {
 
 
 test_that("can package a source package", {
-
   skip_on_cran()
   local_cli_config()
 
@@ -135,11 +131,14 @@ test_that("ignore-build-errors parameter", {
     paste0("local::", c(pkgdir1, pkgdir2), "?nocache"),
     config = list(library = tmplib, platforms = "source")
   )
-  expect_snapshot({
-    suppressMessages(inst$solve())
-    suppressMessages(inst$download())
-    inst$install()
-  }, error = TRUE)
+  expect_snapshot(
+    {
+      suppressMessages(inst$solve())
+      suppressMessages(inst$download())
+      inst$install()
+    },
+    error = TRUE
+  )
 
   inst <- new_pkg_installation_proposal(
     paste0("local::", c(pkgdir1, pkgdir2), "?nocache&ignore-build-errors"),
@@ -197,7 +196,8 @@ test_that("install package from GH", {
   # install from cache, no binary, source package is selected
   remove.packages("crayon", lib = lib)
   pkgcache::pkg_cache_delete_files(
-    built = TRUE, platform = current_r_platform()
+    built = TRUE,
+    platform = current_r_platform()
   )
   pkg <- new_pkg_installation_proposal("r-lib/crayon", config = config)
   suppressMessages(pkg$solve())
@@ -265,7 +265,8 @@ test_that("install package from GH, in subdir", {
   # install from cache, no binary, source package is selected
   remove.packages("feather", lib = lib)
   pkgcache::pkg_cache_delete_files(
-    built = TRUE, platform = current_r_platform()
+    built = TRUE,
+    platform = current_r_platform()
   )
   pkg <- new_pkg_installation_proposal("wesm/feather/R", config = config)
   suppressMessages(pkg$solve())

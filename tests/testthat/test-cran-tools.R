@@ -1,6 +1,4 @@
-
 test_that("parse_deps", {
-
   expect_equal(
     parse_deps(character(), character()),
     list()
@@ -9,7 +7,9 @@ test_that("parse_deps", {
   expect_equal(
     parse_deps("", "Imports"),
     list(data_frame(
-      type = character(), package = character(), op = character(),
+      type = character(),
+      package = character(),
+      op = character(),
       version = character()
     ))
   )

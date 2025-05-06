@@ -1,4 +1,3 @@
-
 test_that("pkgplan_i_create_lp_init", {
   pkgs <- read_fixture("resolution-simple.rds")
   config <- current_config()
@@ -21,8 +20,10 @@ test_that("pkgplan_i_lp_objectives lazy policy", {
   lp0 <- pkgplan_i_lp_init(pkgs, config, policy = "lazy")
   lp <- pkgplan_i_lp_objectives(lp0)
   expect_equal(lp0[setdiff(names(lp0), "obj")], lp[setdiff(names(lp), "obj")])
-  expect_true(lp$obj[which(pkgs$platform != "source")] <
-              lp$obj[which(pkgs$platform == "source")])
+  expect_true(
+    lp$obj[which(pkgs$platform != "source")] <
+      lp$obj[which(pkgs$platform == "source")]
+  )
   expect_equal(lp$obj[3], solve_dummy_obj)
 })
 
@@ -37,21 +38,36 @@ test_that("pkgplan_i_lp_no_multiples", {
   lp <- pkgplan_i_lp_no_multiples(lp)
   expect_equal(
     vcapply(lp$conds, "[[", "type"),
-    c(rep("exactly-once", length(lp$direct_packages)),
-      rep("at-most-once", length(lp$indirect_packages)))
+    c(
+      rep("exactly-once", length(lp$direct_packages)),
+      rep("at-most-once", length(lp$indirect_packages))
+    )
   )
   prvar <- which(pkgs$package == "progress")
   expect_equal(
     lp$conds[[1]],
     structure(
-      list(vars = c(prvar, nrow(pkgs) + 1L), coef = c(1, 1, 1), op = "==",
-           rhs = 1, type = "exactly-once", note = NULL))
+      list(
+        vars = c(prvar, nrow(pkgs) + 1L),
+        coef = c(1, 1, 1),
+        op = "==",
+        rhs = 1,
+        type = "exactly-once",
+        note = NULL
+      )
+    )
   )
   prvar2 <- which(pkgs$package == "assertthat")
   expect_equal(
     lp$conds[[2]],
-    structure(list(vars = prvar2, coef = c(1, 1), op = "<=", rhs = 1,
-                   type = "at-most-once", note = NULL))
+    structure(list(
+      vars = prvar2,
+      coef = c(1, 1),
+      op = "<=",
+      rhs = 1,
+      type = "at-most-once",
+      note = NULL
+    ))
   )
 })
 
@@ -111,8 +127,8 @@ test_that("highlight_version", {
 
   cases <- list(
     list(
-      c("2.3.4",      "2.3.4",      "2.3.4",        "2.3.4"),
-      c("2.3.5",      "2.3.2",      "2.4.0",        "3.0.0"),
+      c("2.3.4", "2.3.4", "2.3.4", "2.3.4"),
+      c("2.3.5", "2.3.2", "2.4.0", "3.0.0"),
       c("2.3.{b(5)}", "2.3.{b(2)}", "2.{b('4.0')}", "{b('3.0.0')}")
     ),
     list(character(), character(), character()),

@@ -1,11 +1,12 @@
-
 test_that("binary preferred over source", {
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg
     Imports: pkg2
 
     Package: pkg2
-  ")
+  "
+  )
 
   setup_fake_apps(
     cran_repo = repo,
@@ -30,18 +31,22 @@ test_that("binary preferred over source", {
 test_that("but source is used if that version is required", {
   # we still need this to have a Bioc repo
   setup_fake_apps()
-  repo1 <- dcf("
+  repo1 <- dcf(
+    "
     Package: pkg
     Imports: pkg2 (>= 2.0.0)
 
     Package: pkg2
     Version: 1.0.0
-  ")
+  "
+  )
 
-  repo2 <- dcf("
+  repo2 <- dcf(
+    "
    Package: pkg2
    Version: 2.0.0
-  ")
+  "
+  )
 
   fake1 <- webfakes::new_app_process(
     cran_app(repo1, options = list(platforms = c("windows", "source")))
@@ -67,12 +72,14 @@ test_that("but source is used if that version is required", {
 })
 
 test_that("can opt in into including LinkingTo", {
-  repo <- dcf("
+  repo <- dcf(
+    "
     Package: pkg
     LinkingTo: pkg2
 
     Package: pkg2
-  ")
+  "
+  )
 
   setup_fake_apps(
     cran_repo = repo,

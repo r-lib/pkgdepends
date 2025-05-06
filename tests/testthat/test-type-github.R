@@ -1,6 +1,4 @@
-
 test_that("parse_pkg_refs, github", {
-
   cases <- list(
     list("user/repo"),
     list("github::user/repo"),
@@ -24,27 +22,45 @@ test_that("parse_pkg_refs, github", {
     list("git@github.ubc.ca:user/repo.git"),
     list("https://github.com/user/repo"),
     list("https://github.ubc.ca/user/repo"),
-    list("https://github.com/user/repo/tree/i-am-a-branch", commitish = "i-am-a-branch"),
+    list(
+      "https://github.com/user/repo/tree/i-am-a-branch",
+      commitish = "i-am-a-branch"
+    ),
     list("https://github.com/user/repo/commit/1234567", commitish = "1234567"),
     list("https://github.com/user/repo/pull/108", pull = "108"),
-    list("https://github.com/user/repo/releases/tag/1.0.0", commitish = "1.0.0"),
+    list(
+      "https://github.com/user/repo/releases/tag/1.0.0",
+      commitish = "1.0.0"
+    ),
     list("https://github.com/user/repo/releases/latest", release = "latest"),
     list("https://github.com/user/repo/releases/latest", release = "latest"),
     list("https://github.com/foo/bar", username = "foo", repo = "bar"),
     list("git@github.com:foo/bar.git", username = "foo", repo = "bar"),
 
     # Username and repo can have hyphens in them
-    list("git@github.com:foo-bar/baz-qux.git", username = "foo-bar", repo = "baz-qux")
+    list(
+      "git@github.com:foo-bar/baz-qux.git",
+      username = "foo-bar",
+      repo = "baz-qux"
+    )
   )
 
   for (case in cases) {
     expect_equal_named_lists(
       p <- parse_pkg_refs(case[[1]])[[1]],
       utils::modifyList(
-        list(package = case$repo %||% "repo", username = "user",
-             repo = "repo", subdir = "", commitish = "", pull = "",
-             release = "", ref = case[[1]], type = "github",
-             params = character()),
+        list(
+          package = case$repo %||% "repo",
+          username = "user",
+          repo = "repo",
+          subdir = "",
+          commitish = "",
+          pull = "",
+          release = "",
+          ref = case[[1]],
+          type = "github",
+          params = character()
+        ),
         case[-1]
       )
     )
@@ -83,10 +99,12 @@ test_that("resolve_remote", {
   )
 
   # set library to avoid installed packages
-  suppressMessages(plan <- new_pkg_installation_proposal(
-    refs,
-    config = list(library = tempfile())
-  ))
+  suppressMessages(
+    plan <- new_pkg_installation_proposal(
+      refs,
+      config = list(library = tempfile())
+    )
+  )
   suppressMessages(plan$resolve())
 
   res <- plan$get_resolution()
@@ -134,7 +152,9 @@ test_that("download_remote", {
   sha <- "b5221ab024605019800ddea474f7a0981a4d53f719f5af2b1af627b34e0760b2"
   ref <- paste0("github::r-lib/crayon@", sha)
   r <- pkg_plan$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
+    ref,
+    config = list(dependencies = FALSE, cache_dir = tmp)
+  )
 
   ## -----------------------------------------------------
   ## We get the tree zip first
@@ -160,7 +180,9 @@ test_that("download_remote", {
   ## -----------------------------------------------------
   ## Now the tree is in the cache, so it should come from there
   r <- pkg_plan$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
+    ref,
+    config = list(dependencies = FALSE, cache_dir = tmp)
+  )
 
   expect_error(suppressMessages(r$resolve()), NA)
   expect_error(suppressMessages(r$download_resolution()), NA)
@@ -184,12 +206,20 @@ test_that("download_remote", {
   ## Put a (fake) built version in the cache, to similate a cache hit
   file.copy(dl$fulltarget_tree, dl$fulltarget)
   pkgcache::pkg_cache_add_file(
-    NULL, dl$fulltarget, dl$target, package = "crayon", sha = sha,
-    built = TRUE, vignettes = TRUE)
+    NULL,
+    dl$fulltarget,
+    dl$target,
+    package = "crayon",
+    sha = sha,
+    built = TRUE,
+    vignettes = TRUE
+  )
   unlink(c(dl$fulltarget, dl$fulltarget_tree))
 
   r <- pkg_plan$new(
-    ref, config = list(dependencies = FALSE, cache_dir = tmp))
+    ref,
+    config = list(dependencies = FALSE, cache_dir = tmp)
+  )
 
   expect_error(suppressMessages(r$resolve()), NA)
   expect_error(suppressMessages(r$download_resolution()), NA)
@@ -208,98 +238,133 @@ test_that("download_remote", {
 })
 
 test_that("satisfies_remote", {
-
-  res <- make_fake_resolution(`github::r-lib/crayon` = list(
-    extra = list(list(remotesha = "badcafe")),
-    package = "crayon",
-    version = "1.0.0"))
+  res <- make_fake_resolution(
+    `github::r-lib/crayon` = list(
+      extra = list(list(remotesha = "badcafe")),
+      package = "crayon",
+      version = "1.0.0"
+    )
+  )
 
   ## Different package name
-  bad1 <- make_fake_resolution(`github::r-lib/crayon` = list(
-    package = "crayon2"))
+  bad1 <- make_fake_resolution(
+    `github::r-lib/crayon` = list(
+      package = "crayon2"
+    )
+  )
   expect_false(ans <- satisfy_remote_github(res, bad1))
   expect_match(attr(ans, "reason"), "names differ")
 
   ## Installed ref without sha
   fake_desc <- desc::desc("!new")
-  bad2 <- make_fake_resolution(`installed::foobar` = list(
-    extra = list(list(description = fake_desc)),
-    package = "crayon"))
+  bad2 <- make_fake_resolution(
+    `installed::foobar` = list(
+      extra = list(list(description = fake_desc)),
+      package = "crayon"
+    )
+  )
   expect_false(ans <- satisfy_remote_github(res, bad2))
   expect_match(attr(ans, "reason"), "Installed package sha mismatch")
 
   ## Installed ref with different sha
   fake_desc <- desc::desc("!new")
   fake_desc$set("RemoteSha" = "notsobad")
-  bad3 <- make_fake_resolution(`installed::foobar` = list(
-    extra = list(list(description = fake_desc)),
-    package = "crayon"))
+  bad3 <- make_fake_resolution(
+    `installed::foobar` = list(
+      extra = list(list(description = fake_desc)),
+      package = "crayon"
+    )
+  )
   expect_false(ans <- satisfy_remote_github(res, bad3))
   expect_match(attr(ans, "reason"), "Installed package sha mismatch")
 
   ## Other package, different sha
-  bad4 <- make_fake_resolution(`bioc::bar` = list(
-    package = "crayon",
-    extra = list(list(remotesha = "notsobad"))))
+  bad4 <- make_fake_resolution(
+    `bioc::bar` = list(
+      package = "crayon",
+      extra = list(list(remotesha = "notsobad"))
+    )
+  )
   expect_false(ans <- satisfy_remote_github(res, bad4))
   expect_match(attr(ans, "reason"), "Candidate package sha mismatch")
 
   ## Corrent sha, GitHub
-  ok1 <- make_fake_resolution(`installed::foo` = list(
-    extra =  list(list(remotesha = "badcafe")),
-    package = "crayon",
-    version = "1.0.0"))
+  ok1 <- make_fake_resolution(
+    `installed::foo` = list(
+      extra = list(list(remotesha = "badcafe")),
+      package = "crayon",
+      version = "1.0.0"
+    )
+  )
   expect_true(satisfy_remote_github(res, ok1))
 
   ## Corrent sha, another type
-  ok2 <- make_fake_resolution(`local::bar` = list(
-    package = "crayon",
-    extra = list(list(remotesha = "badcafe"))))
+  ok2 <- make_fake_resolution(
+    `local::bar` = list(
+      package = "crayon",
+      extra = list(list(remotesha = "badcafe"))
+    )
+  )
   expect_true(ans <- satisfy_remote_github(res, ok2))
 
   ## Local packages are OK, even w/o sha
   ## https://github.com/r-lib/pkgdepends/issues/229
-  ok3 <- make_fake_resolution(`local::bar` = list(
-    package = "crayon"
-  ))
+  ok3 <- make_fake_resolution(
+    `local::bar` = list(
+      package = "crayon"
+    )
+  )
   expect_true(ans <- satisfy_remote_github(res, ok3))
 })
 
 test_that("satisfies_remote 2", {
   ## installed is not OK, if reinstall is requested
-  res <- make_fake_resolution(`github::r-lib/crayon?reinstall` = list(
-    extra = list(list(remotesha = "badcafe")),
-    package = "crayon",
-    version = "1.0.0",
-    params = c(reinstall = "")
-  ))
-  bad1 <- make_fake_resolution(`installed::foo` = list(
-    extra =  list(list(remotesha = "badcafe")),
-    package = "crayon",
-    version = "1.0.0"))
+  res <- make_fake_resolution(
+    `github::r-lib/crayon?reinstall` = list(
+      extra = list(list(remotesha = "badcafe")),
+      package = "crayon",
+      version = "1.0.0",
+      params = c(reinstall = "")
+    )
+  )
+  bad1 <- make_fake_resolution(
+    `installed::foo` = list(
+      extra = list(list(remotesha = "badcafe")),
+      package = "crayon",
+      version = "1.0.0"
+    )
+  )
   expect_false(ans <- satisfy_remote_github(res, bad1))
 })
 
 test_that("satisfies_remote 3", {
   # other refs are OK, as long as the sha matches
   ## installed is not OK, if reinstall is requested
-  res <- make_fake_resolution(`github::r-lib/crayon` = list(
-    extra = list(list(remotesha = "badcafe")),
-    package = "crayon",
-    version = "1.0.0",
-    params = c(reinstall = "")
-  ))
+  res <- make_fake_resolution(
+    `github::r-lib/crayon` = list(
+      extra = list(list(remotesha = "badcafe")),
+      package = "crayon",
+      version = "1.0.0",
+      params = c(reinstall = "")
+    )
+  )
 
-  ok1 <- make_fake_resolution(`url::foo` = list(
-    extra =  list(list(remotesha = "badcafe")),
-    package = "crayon",
-    version = "1.0.0"))
+  ok1 <- make_fake_resolution(
+    `url::foo` = list(
+      extra = list(list(remotesha = "badcafe")),
+      package = "crayon",
+      version = "1.0.0"
+    )
+  )
   expect_true(ans <- satisfy_remote_github(res, ok1))
 
-  bad1 <- make_fake_resolution(`url::foo` = list(
-    extra =  list(list(remotesha = "baddddd")),
-    package = "crayon",
-    version = "1.0.0"))
+  bad1 <- make_fake_resolution(
+    `url::foo` = list(
+      extra = list(list(remotesha = "baddddd")),
+      package = "crayon",
+      version = "1.0.0"
+    )
+  )
   expect_false(ans <- satisfy_remote_github(res, bad1))
 })
 

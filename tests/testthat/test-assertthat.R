@@ -1,4 +1,3 @@
-
 test_that("basic", {
   expect_true(assert_that())
   expect_true(assert_that(TRUE))
@@ -153,7 +152,6 @@ test_that("default messages", {
 
     fn <- function(x) assert_that(is.symbol(x)),
     fn("almost"),
-
   )
 
   asciicast::expect_snapshot_r_process(
@@ -186,7 +184,8 @@ test_that("long call is truncated", {
 
 test_that("has_attr", {
   expect_true(
-    has_attr(mtcars, "class"))
+    has_attr(mtcars, "class")
+  )
   expect_snapshot(
     error = TRUE,
     assert_that(has_attr(1L, "foobar"))

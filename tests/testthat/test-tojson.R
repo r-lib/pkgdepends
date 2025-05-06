@@ -9,7 +9,10 @@ test_that("tojson is standalone", {
   on.exit(parent.env(stenv) <- orig, add = TRUE)
 
   expect_message(
-    mapply(codetools::checkUsage, funobjs, funs,
+    mapply(
+      codetools::checkUsage,
+      funobjs,
+      funs,
       MoreArgs = list(report = message)
     ),
     NA
@@ -97,16 +100,16 @@ test_that("lists", {
   # nested named lists
   expect_snapshot({
     cat(tojson$write_str(list(
-        a = list(a1 = 1, a2 = 2),
-        b = list(b1 = 3, b2 = 4)
+      a = list(a1 = 1, a2 = 2),
+      b = list(b1 = 3, b2 = 4)
     )))
   })
 
   # fill in names
   expect_snapshot({
     cat(tojson$write_str(list(
-        a = list(1, a2 = 2),
-        list(b1 = 3, 4)
+      a = list(1, a2 = 2),
+      list(b1 = 3, 4)
     )))
   })
 })
@@ -250,7 +253,7 @@ test_that("pretty", {
   # vectors
   expect_snapshot({
     tojson$write_str(1:5, opts = list(pretty = TRUE))
-    tojson$write_str(1:5/2, opts = list(pretty = TRUE))
+    tojson$write_str(1:5 / 2, opts = list(pretty = TRUE))
     tojson$write_str(letters[1:5], opts = list(pretty = TRUE))
     tojson$write_str(1:5 %% 2 == 0, opts = list(pretty = TRUE))
   })

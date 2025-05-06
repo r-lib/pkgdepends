@@ -1,8 +1,8 @@
 module({
-	import("A")
-	import(B)
-	import(from = "C")
-	import(symbol, from = D)
+  import("A")
+  import(B)
+  import(from = "C")
+  import(symbol, from = D)
 })
 
 # NOTE: these should be ignored as they are not
@@ -14,4 +14,3 @@ import(f)
 # be added to dependencies
 modules::import("G")
 modules::import(H)
-

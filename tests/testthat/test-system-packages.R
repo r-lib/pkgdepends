@@ -1,4 +1,3 @@
-
 test_that("async_system_list_packages, deb", {
   config <- current_config()
   config$set("sysreqs_platform", "x86_64-pc-linux-gnu-ubuntu-22.04")

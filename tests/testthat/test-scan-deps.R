@@ -164,17 +164,29 @@ test_that("parse_pkg_from_call", {
     parse_pkg_from_call(NA_character_, "library", "library(qwe)")
     parse_pkg_from_call("base", "loadNamespace", "loadNamespace('q1')")
     parse_pkg_from_call(
-      "base", "requireNamespace", "requireNamespace('q1')")
+      "base",
+      "requireNamespace",
+      "requireNamespace('q1')"
+    )
     parse_pkg_from_call(
-      NA_character_, "pkg_attach", "pkg_attach('foobar')")
+      NA_character_,
+      "pkg_attach",
+      "pkg_attach('foobar')"
+    )
     parse_pkg_from_call(
-      NA_character_, "pkg_attach2", "pkg_attach2('foobar')")
+      NA_character_,
+      "pkg_attach2",
+      "pkg_attach2('foobar')"
+    )
     parse_pkg_from_call("pacman", "p_load", "p_load('p1')")
     parse_pkg_from_call(NA_character_, "import", "import(x1)")
     parse_pkg_from_call(NA_character_, "module", "module({import('x2')})")
     parse_pkg_from_call("import", "from", "import::from(dplyr)")
     parse_pkg_from_call(
-      "import", "into", "import::into('operators', .from = 'dplyr')")
+      "import",
+      "into",
+      "import::into('operators', .from = 'dplyr')"
+    )
     parse_pkg_from_call("import", "here", "import::here('dplyr')")
     parse_pkg_from_call("box", "use", "box::use(dplyr[filter, select])")
     parse_pkg_from_call(
@@ -188,13 +200,25 @@ test_that("parse_pkg_from_call", {
       "glue::glue('blah {library(x5)} blah')"
     )
     parse_pkg_from_call(
-      NA_character_, "ggsave", "ggsave(filename = 'foo.svg')")
+      NA_character_,
+      "ggsave",
+      "ggsave(filename = 'foo.svg')"
+    )
     parse_pkg_from_call(
-      NA_character_, "set_engine", "set_engine(engine = 'spark')")
+      NA_character_,
+      "set_engine",
+      "set_engine(engine = 'spark')"
+    )
     parse_pkg_from_call(
-      "R6", "R6Class", "R6::R6Class('foobar', inherit = JunitReporter)")
+      "R6",
+      "R6Class",
+      "R6::R6Class('foobar', inherit = JunitReporter)"
+    )
     parse_pkg_from_call(
-      "testthat", "test_dir", "testthat::test_dir(reporter = 'junit')")
+      "testthat",
+      "test_dir",
+      "testthat::test_dir(reporter = 'junit')"
+    )
   })
 })
 
@@ -204,13 +228,17 @@ test_that("parse_pkg_from_call_library", {
     parse_pkg_from_call_library(ns, fn, matched)
   }
   expect_null(
-    ppcl("library", "library(qqq)", ns = "other"))
+    ppcl("library", "library(qqq)", ns = "other")
+  )
   expect_null(
-    ppcl("library", "library(qqq, character.only = TRUE)"))
+    ppcl("library", "library(qqq, character.only = TRUE)")
+  )
   expect_null(
-    ppcl("require", "require(qqq)", ns = "other"))
+    ppcl("require", "require(qqq)", ns = "other")
+  )
   expect_null(
-    ppcl("require", "require(qqq, character.only = TRUE)"))
+    ppcl("require", "require(qqq, character.only = TRUE)")
+  )
   expect_snapshot({
     ppcl("library", "library(qqq)")
     ppcl("library", "library('qqq')")
@@ -227,35 +255,47 @@ test_that("parse_pkg_from_call_loadnamespace", {
     parse_pkg_from_call_loadnamespace(ns, fn, matched)
   }
   expect_null(
-    ppcln("loadNamespace", "loadNamespace('www')", ns = "other"))
+    ppcln("loadNamespace", "loadNamespace('www')", ns = "other")
+  )
   expect_null(
-    ppcln("loadNamespace", "loadNamespace(www)"))
+    ppcln("loadNamespace", "loadNamespace(www)")
+  )
   expect_null(
-    ppcln("loadNamespace", "loadNamespace(c('one', 'two'))"))
+    ppcln("loadNamespace", "loadNamespace(c('one', 'two'))")
+  )
   expect_null(
-    ppcln("loadNamespace", "loadNamespace(123)"))
+    ppcln("loadNamespace", "loadNamespace(123)")
+  )
   expect_equal(
     ppcln("loadNamespace", "loadNamespace('eee')"),
-    "eee")
+    "eee"
+  )
   expect_equal(
     ppcln("loadNamespace", "loadNamespace('eee')", ns = "base"),
-    "eee")
+    "eee"
+  )
 
   expect_null(
-    ppcln("requireNamespace", "requireNamespace('www')", ns = "other"))
+    ppcln("requireNamespace", "requireNamespace('www')", ns = "other")
+  )
   expect_null(
-    ppcln("requireNamespace", "requireNamespace(www)"))
+    ppcln("requireNamespace", "requireNamespace(www)")
+  )
   expect_null(
-    ppcln("requireNamespace", "requireNamespace(c('one', 'two'))"))
+    ppcln("requireNamespace", "requireNamespace(c('one', 'two'))")
+  )
   expect_null(
-    ppcln("requireNamespace", "requireNamespace(123)"))
+    ppcln("requireNamespace", "requireNamespace(123)")
+  )
   expect_equal(
     ppcln("requireNamespace", "requireNamespace('eee')"),
-    "eee")
+    "eee"
+  )
   expect_equal(
     ppcln("requireNamespace", "requireNamespace('eee')", ns = "base"),
-    "eee")
-  })
+    "eee"
+  )
+})
 
 test_that("parse_pkg_from_call_xfun", {
   ppcx <- function(fn, code, ns = NA_character_) {
@@ -263,15 +303,19 @@ test_that("parse_pkg_from_call_xfun", {
     parse_pkg_from_call_xfun(ns, fn, matched)
   }
   expect_null(
-    ppcx("pkg_attach", "pkg_attach('qwe')", ns = "nope"))
+    ppcx("pkg_attach", "pkg_attach('qwe')", ns = "nope")
+  )
   expect_null(
-    ppcx("pkg_attach", "pkg_attach()"))
+    ppcx("pkg_attach", "pkg_attach()")
+  )
   expect_equal(
     ppcx("pkg_attach", "pkg_attach('p1', 'p2', 'p3')"),
-    c("p1", "p2", "p3"))
+    c("p1", "p2", "p3")
+  )
   expect_equal(
     ppcx("pkg_attach2", "pkg_attach2('p1', 'p2', 'p3')"),
-    c("p1", "p2", "p3"))
+    c("p1", "p2", "p3")
+  )
 })
 
 test_that("parse_pkg_from_call_pacman", {
@@ -305,14 +349,16 @@ test_that("parse_pkg_from_call_modules_module", {
   expect_null(ppcmm("module(x)", ns = "foo"))
   expect_null(ppcmm('module({})'))
   expect_equal(
-    ppcmm("module({
+    ppcmm(
+      "module({
       # other expressions, mixed with import()
       pkg::fun()
       blah + blah
       import(p1)
       baaaaah
       import('p2')
-    })"),
+    })"
+    ),
     c('p1', 'p2')
   )
 })
@@ -362,7 +408,10 @@ test_that("parse_pkg_from_call_targets", {
 
 test_that("dependencies_eval", {
   expect_snapshot({
-    dependencies_eval(quote({ 1:10; c(10:1)[1:3] }))
+    dependencies_eval(quote({
+      1:10
+      c(10:1)[1:3]
+    }))
   })
 })
 
@@ -416,7 +465,9 @@ test_that("parse_pkg_from_call_testthat_r6class", {
   expect_null(ppcttr6("R6Class(inherit = someother)"))
   expect_equal(ppcttr6("R6Class(inherit = JunitReporter)"), "xml2")
   expect_equal(
-    ppcttr6("R6Class(inherit = testthat::JunitReporter)"), "xml2")
+    ppcttr6("R6Class(inherit = testthat::JunitReporter)"),
+    "xml2"
+  )
 })
 
 test_that("parse_pkg_from_call_testthat_test", {
@@ -425,12 +476,15 @@ test_that("parse_pkg_from_call_testthat_test", {
     parse_pkg_from_call_testthat_test(ns, fn, matched)
   }
   expect_null(
-    ppcttt("test_dir", "test_dir(reporter = 'junit')", ns = "other"))
+    ppcttt("test_dir", "test_dir(reporter = 'junit')", ns = "other")
+  )
   expect_null(
-    ppcttt("test_dir", "test_dir(reporter = 'other')"))
+    ppcttt("test_dir", "test_dir(reporter = 'other')")
+  )
   expect_equal(
     ppcttt("test_dir", "test_dir(reporter = 'junit')"),
-    "xml2")
+    "xml2"
+  )
 })
 
 test_that("scan_path_deps_do_rmd", {
@@ -500,10 +554,13 @@ test_that("scan_path_deps_do_namespace", {
   local_reproducible_output(width = 500)
   path <- test_path("fixtures/scan/NAMESPACE")
   expect_snapshot({
-    print(scan_path_deps_do_namespace(
-      readBin(path, "raw", 10000),
-      path
-    ), n = Inf)
+    print(
+      scan_path_deps_do_namespace(
+        readBin(path, "raw", 10000),
+        path
+      ),
+      n = Inf
+    )
   })
 })
 

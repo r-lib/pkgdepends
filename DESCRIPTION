@@ -3,7 +3,7 @@ Title: Package Dependency Resolution and Downloads
 Version: 0.8.0.9000
 Authors@R: c(
     person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
-    person("Posit Software, PBC", role = c("cph", "fnd"))
+    person("Posit Software, PBC", role = c("cph", "fnd"), comment = c(ROR = "03wc8by49"))
   )
 Description: Find recursive dependencies of 'R' packages from various
     sources. Solve the dependencies to obtain a consistent set of packages

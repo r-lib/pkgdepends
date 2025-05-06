@@ -52,7 +52,7 @@ test_that("get_untar_decompress_arg", {
   })
 
   zip <- system.file(package = "pkgdepends", "tools", "xxx.zip")
-  expect_error(get_untar_decompress_arg(zip), "zip file")
+  expect_snapshot(error = TRUE, get_untar_decompress_arg(zip))
 })
 
 test_that("eup_get_args", {

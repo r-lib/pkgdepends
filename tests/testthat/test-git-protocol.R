@@ -17,13 +17,12 @@ test_that("git_list_refs", {
 
 test_that("git_list_files", {
   skip_on_cran()
-  expect_error(
+  expect_snapshot(error = TRUE, {
     git_list_files(
       fake_git$url("/pak-test.git"),
       "foobar"
-    ),
-    "Unknown git ref"
-  )
+    )
+  })
   if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
   expect_snapshot({
     git_list_files(

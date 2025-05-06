@@ -8,11 +8,13 @@ test_that("pkg_name_check", {
 })
 
 test_that("async_pkg_name_check", {
-  expect_error(sy(async_pkg_name_check(11)))
-  expect_error(sy(async_pkg_name_check(c("a", "b"))))
-  expect_error(sy(async_pkg_name_check(NA_character_)))
-  expect_error(sy(async_pkg_name_check("x", 11)))
-  expect_error(sy(async_pkg_name_check("x", NA_character_)))
+  expect_snapshot(error = TRUE, {
+    sy(async_pkg_name_check(11))
+    sy(async_pkg_name_check(c("a", "b")))
+    sy(async_pkg_name_check(NA_character_))
+    sy(async_pkg_name_check("x", 11))
+    sy(async_pkg_name_check("x", NA_character_))
+  })
 
   calls <- 0L
   fun <- function(name) calls <<- calls + 1L

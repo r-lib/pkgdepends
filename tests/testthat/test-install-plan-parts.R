@@ -284,16 +284,13 @@ test_that("select_next_task", {
 })
 
 test_that("start_task", {
-  expect_error(
-    start_task(list(), task("foobar")),
-    "Unknown task"
-  )
+  expect_snapshot(error = TRUE, start_task(list(), task("foobar")))
 })
 
 test_that("stop_task", {
-  expect_error(
-    stop_task(list(), list(task = task("foobar"))),
-    "Unknown task"
+  expect_snapshot(
+    error = TRUE,
+    stop_task(list(), list(task = task("foobar")))
   )
 })
 

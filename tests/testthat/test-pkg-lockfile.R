@@ -16,11 +16,15 @@ test_that("new_pkg_installation_plan", {
 
   plan$update()
 
-  expect_error(plan$resolve())
-  expect_error(plan$async_resolve())
+  expect_snapshot(error = TRUE, {
+    plan$resolve()
+    plan$async_resolve()
+  })
   expect_equal(plan$get_solve_policy(), NA_character_)
-  expect_error(plan$set_solve_policy())
-  expect_error(plan$solve())
+  expect_snapshot(error = TRUE, {
+    plan$set_solve_policy()
+    plan$solve()
+  })
 })
 
 test_that("install package from GH, in subdir", {
@@ -113,11 +117,15 @@ test_that("sysreqs", {
   plan$update()
   plan$update_sysreqs()
 
-  expect_error(plan$resolve())
-  expect_error(plan$async_resolve())
+  expect_snapshot(error = TRUE, {
+    plan$resolve()
+    plan$async_resolve()
+  })
   expect_equal(plan$get_solve_policy(), NA_character_)
-  expect_error(plan$set_solve_policy())
-  expect_error(plan$solve())
+  expect_snapshot(error = TRUE, {
+    plan$set_solve_policy()
+    plan$solve()
+  })
 })
 
 test_that("install_sysreqs", {

@@ -102,8 +102,10 @@ test_that("vlapply", {
     vapply(list(), is.character, logical(1)),
     vlapply(list(), is.character)
   )
-  expect_error(vlapply(l, identity), "values must be length 1")
-  expect_error(vlapply(1:5, identity), "values must be type .*logical")
+  expect_snapshot(error = TRUE, {
+    vlapply(l, identity)
+    vlapply(1:5, identity)
+  })
 })
 
 test_that("viapply", {
@@ -115,9 +117,7 @@ test_that("viapply", {
     viapply(c(a = 1L, b = 2L, c = 3L), function(x) x),
     c(a = 1L, b = 2L, c = 3L)
   )
-  expect_error(
-    viapply(c(a = 1L, b = 2L), function(x) 1)
-  )
+  expect_snapshot(error = TRUE, viapply(c(a = 1L, b = 2L), function(x) 1))
 })
 
 test_that("vdapply", {
@@ -131,8 +131,10 @@ test_that("vdapply", {
     vapply(list(), f, double(1)),
     vdapply(list(), f)
   )
-  expect_error(vdapply(l, identity), "values must be length 1")
-  expect_error(vdapply(letters, identity), "values must be type .*double")
+  expect_snapshot(error = TRUE, {
+    vdapply(l, identity)
+    vdapply(letters, identity)
+  })
 })
 
 test_that("add_class", {
@@ -240,8 +242,10 @@ test_that("update_named_vector", {
     expect_identical(update_named_vector(c[[1]], c[[2]]), c[[3]])
   }
 
-  expect_error(update_named_vector(1, c(a = 1)), "must be named.")
-  expect_error(update_named_vector(c(a = 1), 1), "must be named.")
+  expect_snapshot(error = TRUE, {
+    update_named_vector(1, c(a = 1))
+    update_named_vector(c(a = 1), 1)
+  })
 })
 
 test_that("make_dl_status", {

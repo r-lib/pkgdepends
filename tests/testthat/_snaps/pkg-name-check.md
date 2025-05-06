@@ -1,3 +1,31 @@
+# async_pkg_name_check
+
+    Code
+      sy(async_pkg_name_check(11))
+    Condition
+      Error:
+      ! `name` must be a string (character scalar), but it is a number.
+    Code
+      sy(async_pkg_name_check(c("a", "b")))
+    Condition
+      Error:
+      ! `name` must be a string (character scalar), but it is a character vector.
+    Code
+      sy(async_pkg_name_check(NA_character_))
+    Condition
+      Error:
+      ! `name` must not be `NA`.
+    Code
+      sy(async_pkg_name_check("x", 11))
+    Condition
+      Error:
+      ! One of `is.null(dictionaries)` and `is_character(dictionaries)` must be true.
+    Code
+      sy(async_pkg_name_check("x", NA_character_))
+    Condition
+      Error:
+      ! One of `is.null(dictionaries)` and `is_character(dictionaries)` must be true.
+
 # print.pkg_name_check
 
     Code

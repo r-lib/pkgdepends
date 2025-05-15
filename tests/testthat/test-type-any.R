@@ -35,7 +35,7 @@ test_that("parse_remote_any", {
   suppressMessages(plan$download())
   suppressMessages(plan$install())
 
-  # Now check the lockfile, it should install anything
+  # Now check the lockfile, it should not install anything
   plan <- pkgdepends::new_pkg_installation_plan(
     lockfile,
     config = list(library = lib)

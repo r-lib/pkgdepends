@@ -8,23 +8,23 @@
          <chr>                    <chr> <chr>               <chr>        <chr>   <chr>         <chr>             <chr>                            <chr>        
        1 Ubuntu Linux             linux ubuntu              ubuntu       *       <NA>          apt-get -y update apt-get -y install               dpkg-query   
        2 Debian Linux             linux debian              debian       *       <NA>          apt-get -y update apt-get -y install               dpkg-query   
-       3 CentOS Linux             linux centos              centos       *       <NA>          <NA>              yum install -y                   rpm          
-       4 Rocky Linux              linux rocky               rockylinux   *       <NA>          <NA>              dnf install -y                   rpm          
-       5 Rocky Linux              linux rockylinux          rockylinux   *       <NA>          <NA>              dnf install -y                   rpm          
-       6 AlmaLinux                linux almalinux           almalinux    *       <NA>          <NA>              dnf install -y                   rpm          
+       3 CentOS Linux             linux centos              centos       *       major         <NA>              yum install -y                   rpm          
+       4 Rocky Linux              linux rocky               rockylinux   *       major         <NA>              dnf install -y                   rpm          
+       5 Rocky Linux              linux rockylinux          rockylinux   *       major         <NA>              dnf install -y                   rpm          
+       6 AlmaLinux                linux almalinux           rockylinux   *       major         <NA>              dnf install -y                   rpm          
        7 Red Hat Enterprise Linux linux rhel                redhat       6       major         <NA>              yum install -y                   rpm          
        8 Red Hat Enterprise Linux linux rhel                redhat       7       major         <NA>              yum install -y                   rpm          
-       9 Red Hat Enterprise Linux linux rhel                redhat       *       <NA>          <NA>              dnf install -y                   rpm          
+       9 Red Hat Enterprise Linux linux rhel                redhat       *       major         <NA>              dnf install -y                   rpm          
       10 Red Hat Enterprise Linux linux redhat              redhat       6       major         <NA>              yum install -y                   rpm          
       11 Red Hat Enterprise Linux linux redhat              redhat       7       major         <NA>              yum install -y                   rpm          
-      12 Red Hat Enterprise Linux linux redhat              redhat       *       <NA>          <NA>              dnf install -y                   rpm          
+      12 Red Hat Enterprise Linux linux redhat              redhat       *       major         <NA>              dnf install -y                   rpm          
       13 Fedora Linux             linux fedora              fedora       *       <NA>          <NA>              dnf install -y                   rpm          
       14 openSUSE Linux           linux opensuse            opensuse     *       <NA>          <NA>              zypper --non-interactive install rpm          
       15 openSUSE Linux           linux opensuse-leap       opensuse     *       <NA>          <NA>              zypper --non-interactive install rpm          
       16 openSUSE Linux           linux opensuse-tumbleweed opensuse     *       <NA>          <NA>              zypper --non-interactive install rpm          
       17 SUSE Linux Enterprise    linux sles                sle          *       <NA>          <NA>              zypper --non-interactive install rpm          
       18 SUSE Linux Enterprise    linux sle                 sle          *       <NA>          <NA>              zypper --non-interactive install rpm          
-      19 Alpine Linux             linux alpine              alpine       *       <NA>          <NA>              apk add --no-cache               apk          
+      19 Alpine Linux             linux alpine              alpine       *       minor         <NA>              apk add --no-cache               apk          
 
 # sysreqs_db_list
 

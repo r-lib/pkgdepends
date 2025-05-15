@@ -91,3 +91,124 @@ test_that("do not run update if nothing to do", {
   sr1 <- sysreqs2_resolve("nothing needed", "ubuntu-22.04")
   expect_snapshot(sr1)
 })
+
+test_that("sysreqs_platforms", {
+  skip_on_cran()
+  sysreqs <- function(sysreqs_platform) {
+    sysreqs_resolve("libxml2", sysreqs_platform)[["install_scripts"]]
+  }
+  expect_snapshot({
+    sysreqs("ubuntu-20.04")
+    sysreqs("ubuntu-22.04")
+    sysreqs("ubuntu-24.04")
+
+    sysreqs("debian-11")
+    sysreqs("debian-12")
+    sysreqs("debian-unstable")
+
+    sysreqs("opensuse-15.4")
+    sysreqs("opensuse-15.5")
+    sysreqs("opensuse-15.6")
+    sysreqs("opensuse-leap-15.4")
+    sysreqs("opensuse-leap-15.5")
+    sysreqs("opensuse-leap-15.6")
+    sysreqs("opensuse-tumbleweed-20250509")
+
+    sysreqs("centos-6")
+    sysreqs("centos-7")
+    sysreqs("centos-8")
+
+    sysreqs("rhel-7")
+    sysreqs("rhel-7.9")
+    sysreqs("rhel-8")
+    sysreqs("rhel-8.10")
+    sysreqs("rhel-9")
+    sysreqs("rhel-9.6")
+
+    sysreqs("fedora-39")
+    sysreqs("fedora-40")
+    sysreqs("fedora-42")
+    sysreqs("fedora-42")
+    sysreqs("fedora-43")
+
+    sysreqs("sles-15.4")
+    sysreqs("sles-15.5")
+    sysreqs("sles-15.6")
+
+    sysreqs("almalinux-8.10")
+    sysreqs("almalinux-9.6")
+
+    sysreqs("rocky-8.9")
+    sysreqs("rocky-9.3")
+
+    sysreqs("alpine-3.19")
+    sysreqs("alpine-3.20")
+    sysreqs("alpine-3.21")
+    sysreqs("alpine-3.edge")
+
+    sysreqs("redhat-8")
+    sysreqs("redhat-8.10")
+    sysreqs("rockylinux-8")
+    sysreqs("rockylinux-8.9")
+  })
+})
+
+test_that("canonize_sysreqs_platform", {
+  expect_snapshot({
+    canonize_sysreqs_platform("ubuntu-20.04")
+    canonize_sysreqs_platform("ubuntu-22.04")
+    canonize_sysreqs_platform("ubuntu-24.04")
+
+    canonize_sysreqs_platform("debian-11")
+    canonize_sysreqs_platform("debian-12")
+    canonize_sysreqs_platform("debian-unstable")
+
+    canonize_sysreqs_platform("opensuse-15.4")
+    canonize_sysreqs_platform("opensuse-15.5")
+    canonize_sysreqs_platform("opensuse-15.6")
+    canonize_sysreqs_platform("opensuse-leap-15.4")
+    canonize_sysreqs_platform("opensuse-leap-15.5")
+    canonize_sysreqs_platform("opensuse-leap-15.6")
+    canonize_sysreqs_platform("opensuse-tumbleweed-20250509")
+
+    canonize_sysreqs_platform("centos-6")
+    canonize_sysreqs_platform("centos-7")
+    canonize_sysreqs_platform("centos-8")
+
+    canonize_sysreqs_platform("rhel-7")
+    canonize_sysreqs_platform("rhel-7.9")
+    canonize_sysreqs_platform("rhel-8")
+    canonize_sysreqs_platform("rhel-8.10")
+    canonize_sysreqs_platform("rhel-9")
+    canonize_sysreqs_platform("rhel-9.6")
+
+    canonize_sysreqs_platform("fedora-39")
+    canonize_sysreqs_platform("fedora-40")
+    canonize_sysreqs_platform("fedora-42")
+    canonize_sysreqs_platform("fedora-42")
+    canonize_sysreqs_platform("fedora-43")
+
+    canonize_sysreqs_platform("sles-15.4")
+    canonize_sysreqs_platform("sles-15.5")
+    canonize_sysreqs_platform("sles-15.6")
+
+    canonize_sysreqs_platform("almalinux-8.10")
+    canonize_sysreqs_platform("almalinux-9.6")
+
+    canonize_sysreqs_platform("rocky-8.9")
+    canonize_sysreqs_platform("rocky-9.3")
+
+    canonize_sysreqs_platform("alpine-3.19")
+    canonize_sysreqs_platform("alpine-3.20")
+    canonize_sysreqs_platform("alpine-3.21")
+    canonize_sysreqs_platform("alpine-3.19.1")
+    canonize_sysreqs_platform("alpine-3.20.2")
+    canonize_sysreqs_platform("alpine-3.21.3")
+    canonize_sysreqs_platform("alpine-3.edge")
+
+    canonize_sysreqs_platform("redhat-8")
+    canonize_sysreqs_platform("redhat-8.10")
+    canonize_sysreqs_platform("rockylinux-8")
+    canonize_sysreqs_platform("rockylinux-8.9")
+  })
+})

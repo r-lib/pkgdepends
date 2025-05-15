@@ -177,7 +177,8 @@ make_start_state <- function(plan, config) {
     package_time = I(rep_list(nrow(plan), as.POSIXct(NA))),
     package_error = I(rep_list(nrow(plan), list())),
     package_stdout = I(rep_list(nrow(plan), character())),
-    build_done = (plan$type %in% c("deps", "installed")) | plan$binary,
+    build_done = (plan$type %in% c("deps", "installed")) |
+      plan$binary | plan$used_cached_binary,
     build_time = I(rep_list(nrow(plan), as.POSIXct(NA))),
     build_error = I(rep_list(nrow(plan), list())),
     build_stdout = I(rep_list(nrow(plan), character())),

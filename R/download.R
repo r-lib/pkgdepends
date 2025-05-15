@@ -150,6 +150,7 @@ pkgplan_async_download_internal <- function(self, private, what, which) {
     what$download_status <- vcapply(dls, "[[", "download_status")
     what$download_error <- lapply(dls, function(x) x$download_error[[1]])
     what$file_size <- vdapply(dls, "[[", "file_size")
+    what$used_cached_binary <- vlapply(dls, "[[", "used_cached_binary")
     class(what) <- c("pkgplan_downloads", class(what))
     attr(what, "metadata")$download_start <- start
     attr(what, "metadata")$download_end <- Sys.time()
@@ -197,9 +198,16 @@ download_remote <- function(
     ) {
       stop("Failed to download ", res$type, " package ", res$package)
     }
+
+    dlres <- res
     if (!grepl("^Had", s) && !identical(s, "Got") && !identical(s, "Current"))
       s <- "Got"
-    dlres <- res
+    if (grepl("^Had-binary-", s)) {
+      dlres$used_cached_binary <- TRUE
+      s <- "Had"
+    } else {
+      dlres$used_cached_binary <- FALSE
+    }
     dlres$fulltarget <- target
     dlres$fulltarget_tree <- target_tree
     dlres$download_status <- s
@@ -208,6 +216,7 @@ download_remote <- function(
     dlres
   })$catch(error = function(err) {
     dlres <- res
+    dlres$used_cached_binary <- NA
     dlres$fulltarget <- target
     dlres$fulltarget_tree <- target_tree
     dlres$download_status <- "Failed"
@@ -304,16 +313,17 @@ download_ping_if_no_sha <- function(
       length(rver) == 1
   ) {
     ## Try to find a binary in the cache
+    cplt <- current_r_platform()
     bin <- cache$package$copy_to(
       target,
       package = resolution$package,
       version = resolution$version,
-      platform = current_r_platform(),
+      platform = cplt,
       built = TRUE,
       rversion = rver
     )
     if (nrow(bin)) {
-      return(async_constant("Had"))
+      return(async_constant(paste0("Had-binary-", cplt)))
     }
   }
 

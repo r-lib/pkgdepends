@@ -3,31 +3,28 @@
     Code
       print(sysreqs_platforms(), n = Inf)
     Output
-      # A data frame: 22 x 7
-         name  os    distribution version update_command install_command query_command
-         <chr> <chr> <chr>        <chr>   <chr>          <chr>           <chr>        
-       1 Ubun~ linux ubuntu       *       apt-get -y up~ apt-get -y ins~ dpkg-query   
-       2 Debi~ linux debian       *       apt-get -y up~ apt-get -y ins~ dpkg-query   
-       3 Cent~ linux centos       *       <NA>           yum install -y  rpm          
-       4 Rock~ linux rockylinux   *       <NA>           dnf install -y  rpm          
-       5 Red ~ linux redhat       6       <NA>           yum install -y  rpm          
-       6 Red ~ linux redhat       7       <NA>           yum install -y  rpm          
-       7 Red ~ linux redhat       *       <NA>           dnf install -y  rpm          
-       8 Red ~ linux rhel         7.0     <NA>           yum install -y  rpm          
-       9 Red ~ linux rhel         7.1     <NA>           yum install -y  rpm          
-      10 Red ~ linux rhel         7.2     <NA>           yum install -y  rpm          
-      11 Red ~ linux rhel         7.3     <NA>           yum install -y  rpm          
-      12 Red ~ linux rhel         7.4     <NA>           yum install -y  rpm          
-      13 Red ~ linux rhel         7.5     <NA>           yum install -y  rpm          
-      14 Red ~ linux rhel         7.6     <NA>           yum install -y  rpm          
-      15 Red ~ linux rhel         7.7     <NA>           yum install -y  rpm          
-      16 Red ~ linux rhel         7.8     <NA>           yum install -y  rpm          
-      17 Red ~ linux rhel         7.9     <NA>           yum install -y  rpm          
-      18 Red ~ linux rhel         *       <NA>           dnf install -y  rpm          
-      19 Fedo~ linux fedora       *       <NA>           dnf install -y  rpm          
-      20 open~ linux opensuse     *       <NA>           zypper --non-i~ rpm          
-      21 SUSE~ linux sle          *       <NA>           zypper --non-i~ rpm          
-      22 Alpi~ linux alpine       *       <NA>           apk add --no-c~ apk          
+      # A data frame: 19 x 9
+         name                     os    id                  distribution version version_match update_command    install_command                  query_command
+         <chr>                    <chr> <chr>               <chr>        <chr>   <chr>         <chr>             <chr>                            <chr>        
+       1 Ubuntu Linux             linux ubuntu              ubuntu       *       <NA>          apt-get -y update apt-get -y install               dpkg-query   
+       2 Debian Linux             linux debian              debian       *       <NA>          apt-get -y update apt-get -y install               dpkg-query   
+       3 CentOS Linux             linux centos              centos       *       <NA>          <NA>              yum install -y                   rpm          
+       4 Rocky Linux              linux rocky               rockylinux   *       <NA>          <NA>              dnf install -y                   rpm          
+       5 Rocky Linux              linux rockylinux          rockylinux   *       <NA>          <NA>              dnf install -y                   rpm          
+       6 AlmaLinux                linux almalinux           almalinux    *       <NA>          <NA>              dnf install -y                   rpm          
+       7 Red Hat Enterprise Linux linux rhel                redhat       6       major         <NA>              yum install -y                   rpm          
+       8 Red Hat Enterprise Linux linux rhel                redhat       7       major         <NA>              yum install -y                   rpm          
+       9 Red Hat Enterprise Linux linux rhel                redhat       *       <NA>          <NA>              dnf install -y                   rpm          
+      10 Red Hat Enterprise Linux linux redhat              redhat       6       major         <NA>              yum install -y                   rpm          
+      11 Red Hat Enterprise Linux linux redhat              redhat       7       major         <NA>              yum install -y                   rpm          
+      12 Red Hat Enterprise Linux linux redhat              redhat       *       <NA>          <NA>              dnf install -y                   rpm          
+      13 Fedora Linux             linux fedora              fedora       *       <NA>          <NA>              dnf install -y                   rpm          
+      14 openSUSE Linux           linux opensuse            opensuse     *       <NA>          <NA>              zypper --non-interactive install rpm          
+      15 openSUSE Linux           linux opensuse-leap       opensuse     *       <NA>          <NA>              zypper --non-interactive install rpm          
+      16 openSUSE Linux           linux opensuse-tumbleweed opensuse     *       <NA>          <NA>              zypper --non-interactive install rpm          
+      17 SUSE Linux Enterprise    linux sles                sle          *       <NA>          <NA>              zypper --non-interactive install rpm          
+      18 SUSE Linux Enterprise    linux sle                 sle          *       <NA>          <NA>              zypper --non-interactive install rpm          
+      19 Alpine Linux             linux alpine              alpine       *       <NA>          <NA>              apk add --no-cache               apk          
 
 # sysreqs_db_list
 

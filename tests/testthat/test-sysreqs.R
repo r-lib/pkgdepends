@@ -1,4 +1,5 @@
 test_that("sysreqs_platforms", {
+  withr::local_options(width = 200)
   expect_snapshot(print(sysreqs_platforms(), n = Inf))
 })
 

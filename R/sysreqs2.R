@@ -12,29 +12,26 @@ sysreqs2_cmds <- utils::read.table(
   header = TRUE,
   textConnection(
     "
-   name                       os      distribution version  update_command      install_command                     query_command
-   'Ubuntu Linux'             linux   ubuntu       *        'apt-get -y update' 'apt-get -y install'                dpkg-query
-   'Debian Linux'             linux   debian       *        'apt-get -y update' 'apt-get -y install'                dpkg-query
-   'CentOS Linux'             linux   centos       *         NA                  'yum install -y'                    rpm
-   'Rocky Linux'              linux   rockylinux   *         NA                  'dnf install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   redhat       6         NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   redhat       7         NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   redhat       *         NA                  'dnf install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.0       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.1       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.2       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.3       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.4       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.5       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.6       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.7       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.8       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         7.9       NA                  'yum install -y'                    rpm
-   'Red Hat Enterprise Linux' linux   rhel         *         NA                  'dnf install -y'                    rpm
-   'Fedora Linux'             linux   fedora       *         NA                  'dnf install -y'                    rpm
-   'openSUSE Linux'           linux   opensuse     *         NA                  'zypper --non-interactive install'  rpm
-   'SUSE Linux Enterprise'    linux   sle          *         NA                  'zypper --non-interactive install'  rpm
-   'Alpine Linux'             linux   alpine       *         NA                  'apk add --no-cache'                apk
+   name                       os      id                  distribution version  version_match update_command      install_command                     query_command
+   'Ubuntu Linux'             linux   ubuntu              ubuntu       *        NA            'apt-get -y update' 'apt-get -y install'                dpkg-query
+   'Debian Linux'             linux   debian              debian       *        NA            'apt-get -y update' 'apt-get -y install'                dpkg-query
+   'CentOS Linux'             linux   centos              centos       *        NA             NA                 'yum install -y'                    rpm
+   'Rocky Linux'              linux   rocky               rockylinux   *        NA             NA                 'dnf install -y'                    rpm
+   'Rocky Linux'              linux   rockylinux          rockylinux   *        NA             NA                 'dnf install -y'                    rpm
+   'AlmaLinux'                linux   almalinux           almalinux    *        NA             NA                 'dnf install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   rhel                redhat       6        major          NA                 'yum install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   rhel                redhat       7        major          NA                 'yum install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   rhel                redhat       *        NA             NA                 'dnf install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   redhat              redhat       6        major          NA                 'yum install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   redhat              redhat       7        major          NA                 'yum install -y'                    rpm
+   'Red Hat Enterprise Linux' linux   redhat              redhat       *        NA             NA                 'dnf install -y'                    rpm
+   'Fedora Linux'             linux   fedora              fedora       *        NA             NA                 'dnf install -y'                    rpm
+   'openSUSE Linux'           linux   opensuse            opensuse     *        NA             NA                 'zypper --non-interactive install'  rpm
+   'openSUSE Linux'           linux   opensuse-leap       opensuse     *        NA             NA                 'zypper --non-interactive install'  rpm
+   'openSUSE Linux'           linux   opensuse-tumbleweed opensuse     *        NA             NA                 'zypper --non-interactive install'  rpm
+   'SUSE Linux Enterprise'    linux   sles                sle          *        NA             NA                 'zypper --non-interactive install'  rpm
+   'SUSE Linux Enterprise'    linux   sle                 sle          *        NA             NA                 'zypper --non-interactive install'  rpm
+   'Alpine Linux'             linux   alpine              alpine       *        NA             NA                 'apk add --no-cache'                apk
 "
   )
 )
@@ -43,10 +40,14 @@ find_sysreqs_platform <- function(sysreqs_platform = NULL) {
   sysreqs_platform <- sysreqs_platform %||%
     current_config()$get("sysreqs_platform")
   plt <- parse_sysreqs_platform(sysreqs_platform)
-  idx <- which(
+  plt$version_major <- sub("[.].*$", "", plt$version)
+  which(
     sysreqs2_cmds$os == plt$os &
-      sysreqs2_cmds$distribution == plt$distribution &
-      sysreqs2_cmds$version %in% c("*", plt$version)
+      sysreqs2_cmds$id == plt$distribution &
+      (sysreqs2_cmds$version %in%
+        c("*", plt$version) |
+        sysreqs2_cmds$version_match == "major" &
+          sysreqs2_cmds$version == plt$version_major)
   )[1]
 }
 

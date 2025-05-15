@@ -327,7 +327,11 @@ parse_sysreqs_platform <- function(x) {
   stopifnot(length(x) == 1)
 
   # full form or only distro [+ version]
-  if (sum(strsplit(x, "")[[1]] == "-") >= 2) {
+  if (
+    sum(strsplit(x, "")[[1]] == "-") >= 2 &&
+      !grepl("opensuse-leap", x) &&
+      !grepl("opensuse-tumbleweed", x)
+  ) {
     osplt <- parse_platform(x)
     if (startsWith(osplt$os, "linux-")) {
       rest <- sub(
@@ -354,16 +358,25 @@ parse_sysreqs_platform <- function(x) {
     return(osplt)
   }
 
-  restpcs <- strsplit(rest, "-", fixed = TRUE)[[1]]
-  if (length(restpcs) == 1) {
-    osplt$distribution <- restpcs
-  } else if (length(restpcs) == 2) {
-    osplt$distribution <- restpcs[1]
-    osplt$version <- restpcs[2]
+  if (grepl("^opensuse-leap-", rest)) {
+    osplt$distribution <- "opensuse-leap"
+    osplt$version <- sub("^opensuse-leap-", "", rest)
+  } else if (grepl("^opensuse-tumbleweed-", rest)) {
+    osplt$distribution <- "opensuse-tumbleweed"
+    osplt$version <- sub("^opensuse-tumbleweed-", "", rest)
   } else {
-    osplt$distribution <- restpcs[1]
-    osplt$version <- paste0(restpcs[-1], collapse = "-")
+    restpcs <- strsplit(rest, "-", fixed = TRUE)[[1]]
+    if (length(restpcs) == 1) {
+      osplt$distribution <- restpcs
+    } else if (length(restpcs) == 2) {
+      osplt$distribution <- restpcs[1]
+      osplt$version <- restpcs[2]
+    } else {
+      osplt$distribution <- restpcs[1]
+      osplt$version <- paste0(restpcs[-1], collapse = "-")
+    }
   }
+
   osplt
 }
 

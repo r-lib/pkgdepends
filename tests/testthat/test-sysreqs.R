@@ -134,6 +134,7 @@ test_that("parse_sysreqs_platform", {
     parse_sysreqs_platform("x86_64-w64-mingw32")
     parse_sysreqs_platform("ubuntu")
     parse_sysreqs_platform("x86_64-px-linux-gnu-ubuntu-bar-baz")
+    parse_sysreqs_platform("ubuntu-22.04-libc++")
   })
 })
 

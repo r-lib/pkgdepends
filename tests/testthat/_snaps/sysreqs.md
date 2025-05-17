@@ -329,6 +329,13 @@
         cpu    vendor os    distribution version
         <chr>  <chr>  <chr> <chr>        <chr>  
       1 x86_64 px     linux ubuntu       bar-baz
+    Code
+      parse_sysreqs_platform("ubuntu-22.04-libc++")
+    Output
+      # A data frame: 1 x 5
+        cpu   vendor os    distribution version     
+        <chr> <chr>  <chr> <chr>        <chr>       
+      1 <NA>  <NA>   linux ubuntu       22.04-libc++
 
 # query, post_install
 

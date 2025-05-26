@@ -138,6 +138,20 @@ sysreqs_install_plan <- function(refs, upgrade = TRUE, config = list()) {
     on.exit(unlink(lib, recursive = TRUE), add = TRUE)
     config$library <- lib
   }
+  # If looking up sysreqs for another platform, and the platforms are
+  # not explicitly specified, then set 'platforms' to source. Ideally we
+  # would set it according to `config$sysreqs_platform`, but we don't
+  # currently have a way of doing that. This simplification should not
+  # fail currently, and even if we'll have sysreqs on non-source platforms
+  # in the future, it should fail very rarely. Hopefully we can improve it.
+  if (!"platforms" %in% names(config)) {
+    if (
+      ("sysreqs_platform" %in% names(config)) &&
+        config$sysreqs_platform != default_sysreqs_platform()
+    ) {
+      config$platforms <- "source"
+    }
+  }
   config$sysreqs <- TRUE
   config$sysreqs_lookup_system <- FALSE
 

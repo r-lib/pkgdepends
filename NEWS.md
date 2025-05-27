@@ -4,6 +4,13 @@
   R code. `deps::.` automatically uses detected dependencies now if no
   `DESCRIPTION` file is found.
 
+* pkgdepends now does not restore ownership when uncompressing `.tar.gz`
+  files. This works better on sshfs and other file systems that do not
+  have proper Unix permissions.
+
+* The dependency solver now uses better heuristics, that works better
+  (=faster) with multiple repositories with large overlaps (#392).
+
 # pkgdepends 0.8.0
 
 * pkgdepends now supports `gitlab::` package sources better, by adding

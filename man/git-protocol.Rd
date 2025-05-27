@@ -37,9 +37,9 @@ download from GitHub, so not really needed.
 }
 \subsection{Docs and other helpful links:}{
 \itemize{
-\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-common.txt}
-\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-pack.txt}
-\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.txt}
+\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-common.adoc}
+\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-pack.adoc}
+\item \url{https://github.com/git/git/blob/master/Documentation/gitprotocol-v2.adoc}
 \item \url{https://github.com/calebsander/git-internals/blob/part2/src/main.rs}
 \item \url{https://dev.to/calebsander/git-internals-part-1-the-git-object-model-474m}
 }

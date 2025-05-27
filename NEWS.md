@@ -1,3 +1,5 @@
+# pkgdepends (development version)
+
 # pkgdepends 0.9.0
 
 * New function `scan_deps()` to auto-detect package dependencies from

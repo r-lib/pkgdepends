@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pkgdepends</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.8.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.9.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="pkgdepends-development-version">pkgdepends (development version)<a class="anchor" aria-label="anchor" href="#pkgdepends-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.0" id="pkgdepends-090">pkgdepends 0.9.0<a class="anchor" aria-label="anchor" href="#pkgdepends-090"></a></h2><p class="text-muted">CRAN release: 2025-05-27</p>
 <ul><li><p>New function <code><a href="../reference/scan_deps.html">scan_deps()</a></code> to auto-detect package dependencies from R code. <code>deps::.</code> automatically uses detected dependencies now if no <code>DESCRIPTION</code> file is found.</p></li>
 <li><p>pkgdepends now does not restore ownership when uncompressing <code>.tar.gz</code> files. This works better on sshfs and other file systems that do not have proper Unix permissions.</p></li>
 <li><p>The dependency solver now uses better heuristics, that works better (=faster) with multiple repositories with large overlaps (<a href="https://github.com/r-lib/pkgdepends/issues/392" class="external-link">#392</a>).</p></li>

@@ -10,6 +10,7 @@ extern const TSLanguage *tree_sitter_r(void);
 extern const TSLanguage *tree_sitter_markdown(void);
 extern const TSLanguage *tree_sitter_markdown_inline(void);
 extern const TSLanguage *tree_sitter_yaml(void);
+extern const TSLanguage *tree_sitter_toml(void);
 
 static void r_free(void *data) {
   free(data);
@@ -19,12 +20,14 @@ static const TSLanguage *r_lang = NULL;
 static const TSLanguage *markdown_lang = NULL;
 static const TSLanguage *markdown_inline_lang = NULL;
 static const TSLanguage *yaml_lang = NULL;
+static const TSLanguage *toml_lang = NULL;
 
 enum ts_language_t {
   TS_LANGUAGE_R = 0,
   TS_LANGUAGE_MARKDOWN,
   TS_LANGUAGE_MARKDOWN_INLINE,
-  TS_LANGUAGE_YAML
+  TS_LANGUAGE_YAML,
+  TS_LANGUAGE_TOML
 };
 
 static const TSLanguage *get_language(int code) {
@@ -49,6 +52,11 @@ static const TSLanguage *get_language(int code) {
       yaml_lang = tree_sitter_yaml();
     }
     return yaml_lang;
+  case TS_LANGUAGE_TOML:
+    if (toml_lang == NULL) {
+      toml_lang = tree_sitter_toml();
+    }
+    return toml_lang;
   default:
     Rf_error("Unknonwn tree-sitter language code");
   }

@@ -7,6 +7,7 @@
 SEXP code_query(SEXP input, SEXP pattern, SEXP rlanguage, SEXP ranges);
 SEXP code_query_path(SEXP path, SEXP pattern, SEXP rlanguage, SEXP ranges);
 SEXP s_expr(SEXP input, SEXP rlanguage, SEXP ranges);
+SEXP token_table(SEXP input, SEXP rlanguage, SEXP rranges);
 
 SEXP yaml_parse_scalar(SEXP x);
 
@@ -15,6 +16,7 @@ static const R_CallMethodDef callMethods[]  = {
   { "code_query",        (DL_FUNC) &code_query,        4 },
   { "code_query_path",   (DL_FUNC) &code_query_path,   4 },
   { "s_expr",            (DL_FUNC) &s_expr,            3 },
+  { "token_table",       (DL_FUNC) &token_table,       3 },
   { "yaml_parse_scalar", (DL_FUNC) &yaml_parse_scalar, 1 },
   { NULL, NULL, 0 }
 };

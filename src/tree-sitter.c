@@ -119,6 +119,123 @@ SEXP s_expr(SEXP input, SEXP rlanguage, SEXP rranges) {
   return result;
 }
 
+SEXP token_table(SEXP input, SEXP rlanguage, SEXP rranges) {
+  const TSLanguage *language = get_language(INTEGER(rlanguage)[0]);
+  TSParser *parser = NULL;
+
+  parser = ts_parser_new();
+  if (!ts_parser_set_language(parser, language)) {
+    Rf_error("Failed to set R language, internal error.");
+  }
+  r_call_on_exit((cleanup_fn_t) ts_parser_delete, parser);
+
+  uint32_t count;
+  TSRange *ranges = get_ranges(rranges, &count);
+  if (ranges) {
+    if (!ts_parser_set_included_ranges(parser, ranges, count)) {
+      Rf_error("Invalid ranges for tree-sitter parser");
+    }
+  }
+
+  const char *c_input = (const char*) RAW(input);
+  uint32_t length = Rf_length(input);
+  TSTree *tree = ts_parser_parse_string(parser, NULL, c_input, length);
+  r_call_on_exit((cleanup_fn_t) ts_tree_delete, tree);
+  TSNode root = ts_tree_root_node(tree);
+  uint32_t num_nodes = ts_node_descendant_count(root);
+  const char *nms[] = {
+    "id", "parent", "type", "code", "start_byte", "end_byte",
+    "start_row", "start_column", "end_row", "end_column", ""
+  };
+  SEXP res = PROTECT(Rf_mkNamed(VECSXP, nms));
+  SET_VECTOR_ELT(res, 0, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_id = VECTOR_ELT(res, 0);
+  SET_VECTOR_ELT(res, 1, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_parent = VECTOR_ELT(res, 1);
+  SET_VECTOR_ELT(res, 2, Rf_allocVector(STRSXP, num_nodes));
+  SEXP res_type = VECTOR_ELT(res, 2);
+  SET_VECTOR_ELT(res, 3, Rf_allocVector(STRSXP, num_nodes));
+  SEXP res_code = VECTOR_ELT(res, 3);
+  SET_VECTOR_ELT(res, 4, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_start_byte = VECTOR_ELT(res, 4);
+  SET_VECTOR_ELT(res, 5, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_end_byte = VECTOR_ELT(res, 5);
+  SET_VECTOR_ELT(res, 6, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_start_row = VECTOR_ELT(res, 6);
+  SET_VECTOR_ELT(res, 7, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_start_column = VECTOR_ELT(res, 7);
+  SET_VECTOR_ELT(res, 8, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_end_row = VECTOR_ELT(res, 8);
+  SET_VECTOR_ELT(res, 9, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_end_column = VECTOR_ELT(res, 9);
+
+  TSTreeCursor cursor = ts_tree_cursor_new(root);
+  r_call_on_exit((cleanup_fn_t) ts_tree_cursor_delete, &cursor);
+
+  size_t idx = 0;
+  bool ok = true;
+  uint32_t parent = 0;
+  while (ok) {
+    // record current node
+    TSNode crnt = ts_tree_cursor_current_node(&cursor);
+    INTEGER(res_id)[idx] = idx + 1;
+    INTEGER(res_parent)[idx] = parent + 1;
+    const char *type = ts_node_type(crnt);
+    SET_STRING_ELT(res_type, idx, Rf_mkChar(type));
+    uint32_t sb = ts_node_start_byte(crnt);
+    INTEGER(res_start_byte)[idx] = sb;
+    uint32_t eb = ts_node_end_byte(crnt);
+    INTEGER(res_end_byte)[idx] = eb;
+    TSPoint spt = ts_node_start_point(crnt);
+    INTEGER(res_start_row)[idx] = spt.row;
+    INTEGER(res_start_column)[idx] = spt.column;
+    TSPoint ept = ts_node_end_point(crnt);
+    INTEGER(res_end_row)[idx] = ept.row;
+    INTEGER(res_end_column)[idx] = ept.column;
+    if (ts_node_child_count(crnt) == 0) {
+      SET_STRING_ELT(res_code, idx, Rf_mkCharLen(c_input + sb, eb - sb));
+    } else {
+      SET_STRING_ELT(res_code, idx, R_NaString);
+    }
+
+    // find next node. if there is a child, use that.
+    // otherwise if there is a sibling use that.
+    // otherwise go up until there is a sibling. or until cannot go up.
+    ok = ts_tree_cursor_goto_first_child(&cursor);
+    if (ok) {
+      parent = idx;
+    } else {
+      // parent stays the same
+      ok = ts_tree_cursor_goto_next_sibling(&cursor);
+    }
+    while (!ok) {
+      ok = ts_tree_cursor_goto_parent(&cursor);
+      if (!ok) break;
+      parent = INTEGER(res_parent)[parent] - 1;
+      ok = ts_tree_cursor_goto_next_sibling(&cursor);
+    }
+
+    idx++;
+  }
+
+  // no parent for root node
+  INTEGER(res_parent)[0] = NA_INTEGER;
+
+  SEXP rnms = PROTECT(Rf_allocVector(INTSXP, 2));
+  INTEGER(rnms)[0] = NA_INTEGER;
+  INTEGER(rnms)[1] = - num_nodes;
+  Rf_setAttrib(res, R_RowNamesSymbol, rnms);
+  UNPROTECT(1);
+
+  SEXP cls = PROTECT(Rf_allocVector(STRSXP, 2));
+  SET_STRING_ELT(cls, 0, Rf_mkChar("tbl"));
+  SET_STRING_ELT(cls, 1, Rf_mkChar("data.frame"));
+  Rf_setAttrib(res, R_ClassSymbol, cls);
+
+  UNPROTECT(2);
+  return res;
+}
+
 typedef enum {
   EQ = 0,
   NOT_EQ,

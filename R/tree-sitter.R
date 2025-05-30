@@ -17,6 +17,17 @@ s_expr <- function(
   call_with_cleanup(c_s_expr, code, language, ranges)
 }
 
+token_table <- function(
+  code,
+  language = c("r", "markdown", "markdown-inline", "yaml", "toml"),
+  ranges = NULL
+) {
+  language <- tolower(language)
+  language <- ts_languages[match.arg(language)]
+  if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
+  call_with_cleanup(c_token_table, code, language, ranges)
+}
+
 code_query <- function(
   code = NULL,
   query,

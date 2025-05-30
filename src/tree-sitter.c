@@ -192,7 +192,7 @@ SEXP token_table(SEXP input, SEXP rlanguage, SEXP rranges) {
     TSPoint ept = ts_node_end_point(crnt);
     INTEGER(res_end_row)[idx] = ept.row;
     INTEGER(res_end_column)[idx] = ept.column;
-    if (ts_node_child_count(crnt) == 0) {
+    if (ts_node_named_child_count(crnt) == 0) {
       SET_STRING_ELT(res_code, idx, Rf_mkCharLen(c_input + sb, eb - sb));
     } else {
       SET_STRING_ELT(res_code, idx, R_NaString);

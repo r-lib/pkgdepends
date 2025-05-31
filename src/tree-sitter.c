@@ -144,7 +144,7 @@ SEXP token_table(SEXP input, SEXP rlanguage, SEXP rranges) {
   TSNode root = ts_tree_root_node(tree);
   uint32_t num_nodes = ts_node_descendant_count(root);
   const char *nms[] = {
-    "id", "parent", "type", "code", "start_byte", "end_byte",
+    "id", "parent", "field_name", "type", "code", "start_byte", "end_byte",
     "start_row", "start_column", "end_row", "end_column", ""
   };
   SEXP res = PROTECT(Rf_mkNamed(VECSXP, nms));
@@ -153,21 +153,23 @@ SEXP token_table(SEXP input, SEXP rlanguage, SEXP rranges) {
   SET_VECTOR_ELT(res, 1, Rf_allocVector(INTSXP, num_nodes));
   SEXP res_parent = VECTOR_ELT(res, 1);
   SET_VECTOR_ELT(res, 2, Rf_allocVector(STRSXP, num_nodes));
-  SEXP res_type = VECTOR_ELT(res, 2);
+  SEXP res_field_name = VECTOR_ELT(res, 2);
   SET_VECTOR_ELT(res, 3, Rf_allocVector(STRSXP, num_nodes));
-  SEXP res_code = VECTOR_ELT(res, 3);
-  SET_VECTOR_ELT(res, 4, Rf_allocVector(INTSXP, num_nodes));
-  SEXP res_start_byte = VECTOR_ELT(res, 4);
+  SEXP res_type = VECTOR_ELT(res, 3);
+  SET_VECTOR_ELT(res, 4, Rf_allocVector(STRSXP, num_nodes));
+  SEXP res_code = VECTOR_ELT(res, 4);
   SET_VECTOR_ELT(res, 5, Rf_allocVector(INTSXP, num_nodes));
-  SEXP res_end_byte = VECTOR_ELT(res, 5);
+  SEXP res_start_byte = VECTOR_ELT(res, 5);
   SET_VECTOR_ELT(res, 6, Rf_allocVector(INTSXP, num_nodes));
-  SEXP res_start_row = VECTOR_ELT(res, 6);
+  SEXP res_end_byte = VECTOR_ELT(res, 6);
   SET_VECTOR_ELT(res, 7, Rf_allocVector(INTSXP, num_nodes));
-  SEXP res_start_column = VECTOR_ELT(res, 7);
+  SEXP res_start_row = VECTOR_ELT(res, 7);
   SET_VECTOR_ELT(res, 8, Rf_allocVector(INTSXP, num_nodes));
-  SEXP res_end_row = VECTOR_ELT(res, 8);
+  SEXP res_start_column = VECTOR_ELT(res, 8);
   SET_VECTOR_ELT(res, 9, Rf_allocVector(INTSXP, num_nodes));
-  SEXP res_end_column = VECTOR_ELT(res, 9);
+  SEXP res_end_row = VECTOR_ELT(res, 9);
+  SET_VECTOR_ELT(res, 10, Rf_allocVector(INTSXP, num_nodes));
+  SEXP res_end_column = VECTOR_ELT(res, 10);
 
   TSTreeCursor cursor = ts_tree_cursor_new(root);
   r_call_on_exit((cleanup_fn_t) ts_tree_cursor_delete, &cursor);
@@ -180,6 +182,9 @@ SEXP token_table(SEXP input, SEXP rlanguage, SEXP rranges) {
     TSNode crnt = ts_tree_cursor_current_node(&cursor);
     INTEGER(res_id)[idx] = idx + 1;
     INTEGER(res_parent)[idx] = parent + 1;
+    const char *field_name = ts_tree_cursor_current_field_name(&cursor);
+    SET_STRING_ELT(res_field_name, idx,
+      field_name ? Rf_mkChar(field_name) : R_NaString);
     const char *type = ts_node_type(crnt);
     SET_STRING_ELT(res_type, idx, Rf_mkChar(type));
     uint32_t sb = ts_node_start_byte(crnt);

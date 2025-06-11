@@ -12,7 +12,9 @@ tree-sitter-files = \
 	tree-sitter/markdown-inline/parser.o \
 	tree-sitter/markdown-inline/scanner.o \
         tree-sitter/yaml/parser.o \
-        tree-sitter/yaml/scanner.o
+        tree-sitter/yaml/scanner.o \
+        tree-sitter/toml/parser.o \
+        tree-sitter/toml/scanner.o
 
 yaml-files = \
         yaml/api.o \

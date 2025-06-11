@@ -19,7 +19,7 @@ resolve_remote_deps <- function(
   ...
 ) {
   in_pkg <- is_package_root(remote$path)
-  if (in_pkg) {
+  if (in_pkg || !is.dir(remote$path)) {
     ret <- resolve_remote_local(
       remote,
       direct,

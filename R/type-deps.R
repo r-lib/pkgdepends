@@ -102,8 +102,12 @@ resolve_remote_local_autodeps <- function(
     Title = "Local Project",
     License = "Unknown"
   )
-  for (p in hard) dsc$set_dep(p, type = "Depends")
-  for (s in soft) dsc$set_dep(p, type = "Suggests")
+  for (p in hard) {
+    dsc$set_dep(p, type = "Depends")
+  }
+  for (s in soft) {
+    dsc$set_dep(p, type = "Suggests")
+  }
   dsc$write(tmpdesc)
   resolve_from_description(
     tmpdesc,

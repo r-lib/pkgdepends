@@ -2210,7 +2210,7 @@ balance:
   ts_assert(self->finished_tree.ptr);
   if (!ts_parser__balance_subtree(self)) {
     self->canceled_balancing = true;
-    return false;
+    return (TSTree*) false;
   }
   self->canceled_balancing = false;
   LOG("done");

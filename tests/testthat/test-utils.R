@@ -7,7 +7,9 @@ test_that("%|z|%", {
     "foo",
     structure("", class = "foo")
   )
-  for (b in bad) expect_identical(b %|z|% FALSE, b)
+  for (b in bad) {
+    expect_identical(b %|z|% FALSE, b)
+  }
 })
 
 test_that("%&z&%", {
@@ -311,8 +313,12 @@ test_that("is_na_scalar", {
   pos <- list(NA, NA_character_, NA_real_, NA_integer_, NA_complex_)
   neg <- list(logical(), integer(), 1, 1L, NULL, "foobar", c(NA, 1))
 
-  for (p in pos) expect_true(is_na_scalar(p))
-  for (n in neg) expect_false(is_na_scalar(n))
+  for (p in pos) {
+    expect_true(is_na_scalar(p))
+  }
+  for (n in neg) {
+    expect_false(is_na_scalar(n))
+  }
 })
 
 test_that("omit_cols", {

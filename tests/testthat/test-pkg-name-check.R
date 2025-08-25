@@ -63,8 +63,12 @@ test_that("forbidden_package_names", {
 test_that("pnc_valid", {
   good <- c("A3", "aa", "a.3", "foo.bar.foobar")
   bad <- c("3aaa", "a.", "aaaa.", "aaa-bbb", "description", "ff\u00e1f")
-  for (c in good) expect_true(pnc_valid(c))
-  for (c in bad) expect_false(pnc_valid(c))
+  for (c in good) {
+    expect_true(pnc_valid(c))
+  }
+  for (c in bad) {
+    expect_false(pnc_valid(c))
+  }
 
   mockery::stub(pnc_valid, "grepl", TRUE)
   expect_false(pnc_valid("ff\u00e1f"))

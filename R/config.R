@@ -117,7 +117,9 @@ config <- local({
   true <- function(...) TRUE
 
   is_config_name <- function(name) {
-    if (is_string(name)) return(TRUE)
+    if (is_string(name)) {
+      return(TRUE)
+    }
     structure(
       FALSE,
       msg = c(
@@ -129,7 +131,9 @@ config <- local({
   }
 
   is_config_check <- function(check) {
-    if (is_string(check) || is.function(check) || is.null(check)) return(TRUE)
+    if (is_string(check) || is.function(check) || is.null(check)) {
+      return(TRUE)
+    }
     structure(
       FALSE,
       msg = c(
@@ -183,8 +187,12 @@ config <- local({
     },
     flag = function(x, name, ...) {
       x <- tolower(x)
-      if (tolower(x) %in% c("yes", "true", "1", "on")) return(TRUE)
-      if (tolower(x) %in% c("no", "false", "0", "off")) return(FALSE)
+      if (tolower(x) %in% c("yes", "true", "1", "on")) {
+        return(TRUE)
+      }
+      if (tolower(x) %in% c("no", "false", "0", "off")) {
+        return(FALSE)
+      }
       throw(pkg_error(
         "Invalid value for the {.envvar {name}} environment variable.",
         i = "It must be either {.code true} or {.code false}."
@@ -218,13 +226,17 @@ config <- local({
     rec <- env$data[[name]]
 
     # was explicitly set?
-    if (!is.null(rec$value)) return(list("set", rec$value))
+    if (!is.null(rec$value)) {
+      return(list("set", rec$value))
+    }
 
     # set via options()
     optname <- paste0(env$prefix, name)
     opt <- getOption(optname)
     if (!is.null(opt)) {
-      if (!is.null(chk <- env$data[[name]]$check)) chk(opt)
+      if (!is.null(chk <- env$data[[name]]$check)) {
+        chk(opt)
+      }
       return(list("option", opt))
     }
 
@@ -365,11 +377,17 @@ config <- local({
         ))
       }
 
-      if (is_string(check)) check <- env$checks[[check]]
+      if (is_string(check)) {
+        check <- env$checks[[check]]
+      }
       check <- check %||% true
-      if (!is.null(default) && !is.function(default)) check(default)
+      if (!is.null(default) && !is.function(default)) {
+        check(default)
+      }
 
-      if (is_string(env_decode)) env_decode <- env$env_decode[[env_decode]]
+      if (is_string(env_decode)) {
+        env_decode <- env$env_decode[[env_decode]]
+      }
       env_decode <- env_decode %||% identity
 
       env$data[[name]] <- list(
@@ -454,7 +472,9 @@ config <- local({
           i = "See `$list()` for the list of all config entries."
         ))
       }
-      if (!is.null(chk <- env$data[[name]]$check)) chk(value)
+      if (!is.null(chk <- env$data[[name]]$check)) {
+        chk(value)
+      }
       env$data[[name]]$value <- value
       invisible(env)
     }

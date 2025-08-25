@@ -46,7 +46,9 @@ test_that("assertion returns invalid value", {
 })
 
 test_that("default messages", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = function(x) {
       transform_no_srcref(transform_no_links(transform_show_cursor(x)))

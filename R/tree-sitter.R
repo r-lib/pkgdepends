@@ -24,7 +24,9 @@ s_expr <- function(
 ) {
   language <- tolower(language)
   language <- ts_languages[match.arg(language)]
-  if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
+  if (is.character(code)) {
+    code <- charToRaw(paste(code, collapse = "\n"))
+  }
   call_with_cleanup(c_s_expr, code, language, ranges)
 }
 
@@ -58,7 +60,9 @@ token_table <- function(
     language <- match.arg(tolower(language), names(ts_languages))
   }
   language <- ts_languages[language]
-  if (is.character(text)) text <- charToRaw(paste(text, collapse = "\n"))
+  if (is.character(text)) {
+    text <- charToRaw(paste(text, collapse = "\n"))
+  }
   tab <- call_with_cleanup(c_token_table, text, language, ranges)
   lvls <- seq_len(nrow(tab))
   tab$children <- I(unname(split(lvls, factor(tab$parent, levels = lvls))))
@@ -139,7 +143,9 @@ code_query <- function(
   query1 <- paste0(query, "\n", collapse = "")
 
   if (!is.null(code)) {
-    if (is.character(code)) code <- charToRaw(paste(code, collapse = "\n"))
+    if (is.character(code)) {
+      code <- charToRaw(paste(code, collapse = "\n"))
+    }
     res <- call_with_cleanup(c_code_query, code, query1, language, ranges)
   } else {
     res <- call_with_cleanup(c_code_query_path, file, query1, language, ranges)

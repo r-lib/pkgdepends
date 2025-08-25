@@ -26,3 +26,4 @@
 ^LICENSE\.md$
 ^[\.]?air\.toml$
 ^\.vscode$
+^air[.]toml$

@@ -57,7 +57,9 @@ read_fixture <- function(file) {
 }
 
 update_fixtures <- function(files = NULL) {
-  if (is.null(files)) files <- names(fixtures)
+  if (is.null(files)) {
+    files <- names(fixtures)
+  }
   fdir <- fixture_dir()
   for (f in files) {
     output <- file.path(fdir, f)

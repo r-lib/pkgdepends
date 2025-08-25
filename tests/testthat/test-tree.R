@@ -198,7 +198,9 @@ test_that("no emoji", {
 # The rest is for UTF-8 systems only
 
 test_that("emoji", {
-  if (!l10n_info()$"UTF-8") skip("Not UTF-8")
+  if (!l10n_info()$"UTF-8") {
+    skip("Not UTF-8")
+  }
   mockery::stub(emoji, "has_emoji", TRUE)
   mockery::stub(emoji, "emo_builder", "\U1F477")
   expect_snapshot({
@@ -215,7 +217,9 @@ test_that("emoji", {
 })
 
 test_that("emo_builder", {
-  if (!l10n_info()$"UTF-8") skip("Not UTF-8")
+  if (!l10n_info()$"UTF-8") {
+    skip("Not UTF-8")
+  }
 
   # make it deterministic
   mockery::stub(

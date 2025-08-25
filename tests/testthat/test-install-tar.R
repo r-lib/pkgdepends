@@ -123,7 +123,9 @@ test_that("eup_get_args", {
 })
 
 test_that("external_untar_process", {
-  if (need_internal_tar()) skip("external R does not work")
+  if (need_internal_tar()) {
+    skip("external R does not work")
+  }
 
   tarfile <- system.file(package = "pkgdepends", "tools", "pkg_1.0.0.tgz")
   mkdirp(tmp <- tempfile())

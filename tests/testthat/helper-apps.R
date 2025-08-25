@@ -531,7 +531,9 @@ new_sysreqs_app <- function() {
 
     dsc <- desc::desc(text = rawToChar(req$.body))
     pkgsrq <- trimws(dsc$get("SystemRequirements"))
-    if (is.na(pkgsrq)) pkgsrq <- ""
+    if (is.na(pkgsrq)) {
+      pkgsrq <- ""
+    }
 
     if (dist == "ubuntu" && rele %in% c("16.04", "18.04", "20.04", "22.04")) {
       mydb <- db[[dist]][[rele]]
@@ -595,7 +597,9 @@ transform_no_srcref <- function(x) {
   x <- sub("[ ]*at line [0-9]+", "", x)
   x <- sub("\033[90m\033[39m", "", x, fixed = TRUE)
   x <- sub("Caused by error: ", "Caused by error:", x, fixed = TRUE)
-  if (x[length(x)] == "") x <- x[-length(x)]
+  if (x[length(x)] == "") {
+    x <- x[-length(x)]
+  }
   x
 }
 

@@ -24,7 +24,9 @@ test_that("version_satisfies", {
     list("1.2.3", "!=", "1.2"),
     list("1.2.3", "!=", "1.2.0")
   )
-  for (p in pos) expect_true(version_satisfies(p[[1]], p[[2]], p[[3]]))
+  for (p in pos) {
+    expect_true(version_satisfies(p[[1]], p[[2]], p[[3]]))
+  }
 
   neg <- list(
     list("1.2.3", "<", "1.2.3"),
@@ -51,5 +53,7 @@ test_that("version_satisfies", {
     list("1.2.3", "==", "1.2"),
     list("1.2.3", "==", "1.2.0")
   )
-  for (n in neg) expect_false(version_satisfies(n[[1]], n[[2]], n[[3]]))
+  for (n in neg) {
+    expect_false(version_satisfies(n[[1]], n[[2]], n[[3]]))
+  }
 })

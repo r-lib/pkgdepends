@@ -268,7 +268,8 @@ Packages from a GitLab repository. Full syntax:
 \item \verb{<package>} is the name of the package. If this is missing, then
 the name of the repository is used.
 \item \verb{<project-path>} is typically the GitLab user or group name, but
-it may contain subgroups.
+it may contain subgroups. For GitLab instances that are not on gitlab.com, you
+must also give the protocol and hostname as part of the project-path.
 \item \verb{<repository>} is the name of the repository, or the project in GitLab
 terminology. GitLab
 \href{https://docs.gitlab.com/ee/user/group/subgroups/}{subgroups} are
@@ -290,6 +291,7 @@ Examples:
 \if{html}{\out{<div class="sourceCode">}}\preformatted{gitlab::gaborcsardi/cli
 gitlab::r-hub/filelock@main
 gitlab::group/subgroup/subsubgroup/project/-/subdir@ref
+gitlab::https://example.com/gaborcsardi/cli
 }\if{html}{\out{</div>}}
 }
 

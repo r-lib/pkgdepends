@@ -24,7 +24,9 @@ test_that("parse_submodules", {
 
 test_that("git_download_repo with submodules", {
   skip_on_cran()
-  if (Sys.which("git") == "") skip("Needs git")
+  if (Sys.which("git") == "") {
+    skip("Needs git")
+  }
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -70,7 +72,9 @@ test_that("git_download_repo with submodules", {
 
 test_that("git_download_repo R package with submodules", {
   skip_on_cran()
-  if (Sys.which("git") == "") skip("Needs git")
+  if (Sys.which("git") == "") {
+    skip("Needs git")
+  }
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -128,7 +132,9 @@ test_that("git_download_repo R package with submodules", {
 
 test_that("git_download_repo R package with ignored submodule", {
   skip_on_cran()
-  if (Sys.which("git") == "") skip("Needs git")
+  if (Sys.which("git") == "") {
+    skip("Needs git")
+  }
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)

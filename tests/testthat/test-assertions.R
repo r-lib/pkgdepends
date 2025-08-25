@@ -1,12 +1,18 @@
 test_that("is_character", {
   pos <- list("", "NA", "foobar", character(), letters, c(a = "b"))
   neg <- list(1, 1L, NA, NA_character_, c("x", NA_character_), NULL)
-  for (p in pos) expect_true(is_character(p))
-  for (n in neg) expect_false(is_character(n))
+  for (p in pos) {
+    expect_true(is_character(p))
+  }
+  for (n in neg) {
+    expect_false(is_character(n))
+  }
 })
 
 test_that("is_character errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     fn <- function(x) assert_that(is_character(x)),
     fn(1:2),
@@ -19,7 +25,9 @@ test_that("is_character errors", {
 })
 
 test_that("is_character errors, noninteractive", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     interactive = FALSE,
     fn <- function(x) assert_that(is_character(x)),
@@ -62,12 +70,18 @@ test_that("is_string", {
     character(),
     NULL
   )
-  for (p in pos) expect_true(is_string(p))
-  for (n in neg) expect_false(is_string(n))
+  for (p in pos) {
+    expect_true(is_string(p))
+  }
+  for (n in neg) {
+    expect_false(is_string(n))
+  }
 })
 
 test_that("is_string errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_string(x)),
@@ -90,12 +104,18 @@ test_that("is_optional_string", {
     letters[1:2],
     character()
   )
-  for (p in pos) expect_true(is_optional_string(p))
-  for (n in neg) expect_false(is_optional_string(n))
+  for (p in pos) {
+    expect_true(is_optional_string(p))
+  }
+  for (n in neg) {
+    expect_false(is_optional_string(n))
+  }
 })
 
 test_that("is_optional_string errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_optional_string(x)),
@@ -108,12 +128,18 @@ test_that("is_optional_string errors", {
 test_that("is_flag", {
   pos <- list(TRUE, FALSE)
   neg <- list(1, 1L, 1:10, NA, NA_character_)
-  for (p in pos) expect_true(is_flag(p))
-  for (n in neg) expect_false(is_flag(n))
+  for (p in pos) {
+    expect_true(is_flag(p))
+  }
+  for (n in neg) {
+    expect_false(is_flag(n))
+  }
 })
 
 test_that("is_flag errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_flag(x)),
@@ -135,12 +161,18 @@ test_that("is_path", {
     character(),
     NULL
   )
-  for (p in pos) expect_true(is_path(p))
-  for (n in neg) expect_false(is_path(n))
+  for (p in pos) {
+    expect_true(is_path(p))
+  }
+  for (n in neg) {
+    expect_false(is_path(n))
+  }
 })
 
 test_that("is_path errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_path(x)),
@@ -162,12 +194,18 @@ test_that("is_optional_path", {
     letters[1:2],
     character()
   )
-  for (p in pos) expect_true(is_optional_path(p))
-  for (n in neg) expect_false(is_optional_path(n))
+  for (p in pos) {
+    expect_true(is_optional_path(p))
+  }
+  for (n in neg) {
+    expect_false(is_optional_path(n))
+  }
 })
 
 test_that("is_optional path errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_optional_path(x)),
@@ -180,12 +218,18 @@ test_that("is_optional path errors", {
 test_that("all_named", {
   pos <- list(character(), list(), c(a = "b"), c(a = 1, b = 2), NULL)
   neg <- list(1, 1L, 1:10, NA, c(a = 1, 2), list(a = 1, 1:5))
-  for (p in pos) expect_true(all_named(p))
-  for (n in neg) expect_false(all_named(n))
+  for (p in pos) {
+    expect_true(all_named(p))
+  }
+  for (n in neg) {
+    expect_false(all_named(n))
+  }
 })
 
 test_that("all_named errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(all_named(x)),
@@ -205,7 +249,9 @@ test_that("is_existing_file", {
 })
 
 test_that("is_existing_file errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = function(x) transform_no_links(transform_show_cursor(x)),
     fn <- function(x) assert_that(is_existing_file(x)),
@@ -225,12 +271,18 @@ test_that("is_platform_list", {
     NULL,
     character()
   )
-  for (p in pos) expect_true(is_platform_list(p))
-  for (n in neg) expect_false(is_platform_list(n))
+  for (p in pos) {
+    expect_true(is_platform_list(p))
+  }
+  for (n in neg) {
+    expect_false(is_platform_list(n))
+  }
 })
 
 test_that("is_platform_list errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_platform_list(x)),
@@ -260,12 +312,18 @@ test_that("is_dependencies", {
     "linkingto",
     list(direct = "all", type = "all")
   )
-  for (p in pos) expect_true(is_dependencies(p))
-  for (n in neg) expect_false(is_dependencies(n))
+  for (p in pos) {
+    expect_true(is_dependencies(p))
+  }
+  for (n in neg) {
+    expect_false(is_dependencies(n))
+  }
 })
 
 test_that("is_dependencies errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_dependencies(x)),
@@ -285,12 +343,18 @@ test_that("is_r_version_list", {
     c("1.4.5", NA),
     c("1.4.5", "foobar")
   )
-  for (p in pos) expect_true(is_r_version_list(p), info = p)
-  for (n in neg) expect_false(is_r_version_list(n), info = n)
+  for (p in pos) {
+    expect_true(is_r_version_list(p), info = p)
+  }
+  for (n in neg) {
+    expect_false(is_r_version_list(n), info = n)
+  }
 })
 
 test_that("is_r_version_list errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = function(x) transform_show_cursor(transform_no_srcref(x)),
     fn <- function(x) assert_that(is_r_version_list(x)),
@@ -306,7 +370,9 @@ test_that("is_difftime", {
 })
 
 test_that("is_difftime errors", {
-  if (is_windows() && getRversion() < "4.0.0") skip("No magick")
+  if (is_windows() && getRversion() < "4.0.0") {
+    skip("No magick")
+  }
   asciicast::expect_snapshot_r_process(
     transform = transform_show_cursor,
     fn <- function(x) assert_that(is_difftime(x)),
@@ -318,8 +384,12 @@ test_that("is_count", {
   pos <- list(0, 0L, 1, 1L, 10000, 10000L)
   neg <- list(-1, 1.1, letters, integer(), 1:5, NA_integer_)
 
-  for (p in pos) expect_true(is_count(p), info = p)
-  for (n in neg) expect_false(is_count(n), info = n)
+  for (p in pos) {
+    expect_true(is_count(p), info = p)
+  }
+  for (n in neg) {
+    expect_false(is_count(n), info = n)
+  }
 
   expect_true(is_count(-10, min = -10))
   expect_true(is_count(-10, min = -100))

@@ -23,7 +23,9 @@ test_that("git_list_files", {
       "foobar"
     )
   })
-  if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
+  if (!l10n_info()[["UTF-8"]]) {
+    skip("UTF-8 snapshot")
+  }
   expect_snapshot({
     git_list_files(
       fake_git$url("/pak-test.git"),
@@ -80,7 +82,9 @@ test_that("git_fetch", {
     structure("cefdc0eebcd7f757efb9a80652fd8aaf1a87508e", protocol = "1")
   )
 
-  if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
+  if (!l10n_info()[["UTF-8"]]) {
+    skip("UTF-8 snapshot")
+  }
   expect_snapshot(cat(pack[[1]]$object))
 })
 
@@ -219,7 +223,9 @@ test_that("git_unpack", {
   up1 <- git_unpack(path)
   up2 <- git_unpack(readBin(path, "raw", file.size(path)))
   expect_equal(up1, up2)
-  if (!l10n_info()[["UTF-8"]]) skip("UTF-8 snapshot")
+  if (!l10n_info()[["UTF-8"]]) {
+    skip("UTF-8 snapshot")
+  }
   expect_snapshot(git_unpack(path))
 })
 
@@ -322,7 +328,7 @@ test_that("async_git_resolve_ref", {
   mockery::stub(
     async_git_resolve_ref,
     "async_git_list_refs",
-    function(...)
+    function(...) {
       async_constant(list(
         refs = data_frame(
           ref = c("one", "two"),
@@ -330,6 +336,7 @@ test_that("async_git_resolve_ref", {
         ),
         caps = character()
       ))
+    }
   )
 
   expect_snapshot(

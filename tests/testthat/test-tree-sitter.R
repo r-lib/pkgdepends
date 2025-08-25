@@ -337,7 +337,7 @@ test_that("code_query, predicates, #eq? vs string", {
     (program .
       (call function: (identifier) @fn) %s
       (#eq? @fn \"f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -368,7 +368,7 @@ test_that("code_query, predicates, #not-eq? vs string", {
     (program .
       (call function: (identifier) @fn) %s
       (#not-eq? @fn \"f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -402,7 +402,7 @@ test_that("code_query, predicates, #any-eq? vs string", {
     (program .
       (call function: (identifier) @fn) %s
       (#any-eq? @fn \"f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -433,7 +433,7 @@ test_that("code_query, predicates, #any-not-eq? vs string", {
     (program .
       (call function: (identifier) @fn) %s
       (#any-not-eq? @fn \"f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -467,7 +467,7 @@ test_that("code_query, predicates, #match?", {
     (program .
       (call function: (identifier) @fn) %s
       (#match? @fn \"^f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -498,7 +498,7 @@ test_that("code_query, predicates, #not-match?", {
     (program .
       (call function: (identifier) @fn) %s
       (#not-match? @fn \"^f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -532,7 +532,7 @@ test_that("code_query, predicates, #any-match?", {
     (program .
       (call function: (identifier) @fn) %s
       (#any-match? @fn \"^f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -563,7 +563,7 @@ test_that("code_query, predicates, #any-not-match?", {
     (program .
       (call function: (identifier) @fn) %s
       (#any-not-match? @fn \"^f\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -597,7 +597,7 @@ test_that("code_query, predicates, #any-of?", {
     (program .
       (call function: (identifier) @fn) %s
       (#any-of? @fn \"f\" \"f2\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)
@@ -628,7 +628,7 @@ test_that("code_query, predicates, #not-any-of?", {
     (program .
       (call function: (identifier) @fn) %s
       (#not-any-of? @fn \"f\" \"f2\")
-    . )"
+      )"
   do <- function(q1, code) {
     q_ <- sprintf(q, q1)
     code_query(code, q_)

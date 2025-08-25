@@ -1,6 +1,6 @@
 rstudio <- local({
   standalone_env <- environment()
-  parent.env(standalone_env) <- baseenv()
+  parent.env(standalone_env) <- globalenv()
 
   # -- Collect data ------------------------------------------------------
 

@@ -27,3 +27,5 @@
 ^[\.]?air\.toml$
 ^\.vscode$
 ^air[.]toml$
+^\.dev$
+^\.covrignore$

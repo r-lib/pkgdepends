@@ -1275,7 +1275,7 @@ err <- local({
   # -- public API --------------------------------------------------------
 
   err_env <- environment()
-  parent.env(err_env) <- baseenv()
+  parent.env(err_env) <- globalenv()
 
   structure(
     list(

@@ -3,7 +3,7 @@
 to create an installation plan for one or more packages, and then print
 their system requirements."><meta property="og:description" content="This function uses new_pkg_installation_proposal() and its methods
 to create an installation plan for one or more packages, and then print
-their system requirements."><meta name="robots" content="noindex"><script defer data-domain="https://r-lib.github.io/pkgdepends,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+their system requirements."><meta name="robots" content="noindex"><script src="https://cdn.jsdelivr.net/gh/posit-dev/supported-by-posit/js/badge.min.js" data-max-height="43" data-light-bg="#666f76" data-light-fg="#f9f9f9"></script><script defer data-domain="https://r-lib.github.io/pkgdepends,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -129,13 +129,13 @@ packages, and potentially system requirements.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "apt-get -y update"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $install_scripts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "apt-get -y install libx11-dev libcurl4-openssl-dev libssl-dev make zlib1g-dev pandoc libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "apt-get -y install libx11-dev libcurl4-openssl-dev libssl-dev make zlib1g-dev pandoc libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $post_install</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $packages</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 15 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 16 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    sysreq     packages  pre_install system_packages post_install</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> fontconfig <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
@@ -148,11 +148,12 @@ packages, and potentially system requirements.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> libjpeg    <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> libpng     <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> libtiff    <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> libxml2    <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> openssl    <span style="color: #949494;">&lt;chr [2]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> pandoc     <span style="color: #949494;">&lt;chr [3]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> x11        <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> zlib       <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> libwebp    <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> libxml2    <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> openssl    <span style="color: #949494;">&lt;chr [2]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> pandoc     <span style="color: #949494;">&lt;chr [3]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> x11        <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> zlib       <span style="color: #949494;">&lt;chr [1]&gt;</span> <span style="color: #949494;">&lt;chr [0]&gt;</span>   <span style="color: #949494;">&lt;chr [1]&gt;</span>       <span style="color: #949494;">&lt;chr [0]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

@@ -21,7 +21,9 @@ test_that("folders with potentially problematic characters", {
     error <- FALSE
     tryCatch(
       {
-        if ("foo" %in% loadedNamespaces()) unloadNamespace("foo")
+        if ("foo" %in% loadedNamespaces()) {
+          unloadNamespace("foo")
+        }
         unlink(tmp, recursive = TRUE)
         dir.create(tmp)
         dir.create(file.path(tmp, f))

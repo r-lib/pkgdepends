@@ -26,3 +26,6 @@
 ^LICENSE\.md$
 ^[\.]?air\.toml$
 ^\.vscode$
+^air[.]toml$
+^\.dev$
+^\.covrignore$

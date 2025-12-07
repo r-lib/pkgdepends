@@ -2,7 +2,9 @@ make_fake_deps <- function(...) {
   assert_that(all_named(list(...)))
 
   d <- desc::desc("!new")
-  if (length(list(...))) d$set(...)
+  if (length(list(...))) {
+    d$set(...)
+  }
   resolve_ref_deps(
     d$get_deps(),
     d$get("Remotes")[[1]],
@@ -12,7 +14,9 @@ make_fake_deps <- function(...) {
 
 make_fake_resolution1 <- function(ref, args = list()) {
   pref <- parse_pkg_refs(ref)[[1]]
-  if (!is.null(args$extra)) pref[names(args$extra)] <- args$extra
+  if (!is.null(args$extra)) {
+    pref[names(args$extra)] <- args$extra
+  }
 
   mirror <- args$mirror %||% current_config()$get("cran-mirror")
   repodir <- args$repodir %||% "src/contrib"
@@ -50,7 +54,9 @@ make_fake_resolution <- function(...) {
   )
 
   res <- res_make_empty_df()
-  for (r in ress) res <- res_add_df_entries(res, r)
+  for (r in ress) {
+    res <- res_add_df_entries(res, r)
+  }
   res
 }
 

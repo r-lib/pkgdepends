@@ -179,7 +179,9 @@ test_that("handle_event, install process finished", {
     repeat {
       events <- poll_workers(state)
       state <- handle_events(state, events)
-      if (done) break
+      if (done) {
+        break
+      }
       if (!proc$is_alive()) done <- TRUE
     }
   )
@@ -213,7 +215,9 @@ test_that("handle event, install process finished, but failed", {
     repeat {
       events <- poll_workers(state)
       state <- handle_events(state, events)
-      if (done) break
+      if (done) {
+        break
+      }
       if (!proc$is_alive()) done <- TRUE
     }
   })
@@ -331,7 +335,9 @@ test_that("kill_all_processes", {
 test_that("kill_all_processes that catch/ignore SIGINT", {
   skip_on_cran()
   skip_on_os("windows")
-  if (Sys.which("bash") == "") skip("Needs 'bash'")
+  if (Sys.which("bash") == "") {
+    skip("Needs 'bash'")
+  }
 
   sh <- "trap '>&2 echo \"Hold on\"' INT
     for ((n=5; n; n--))
@@ -351,7 +357,9 @@ test_that("kill_all_processes that catch/ignore SIGINT", {
   tic <- Sys.time()
   kill_all_processes(state)
   limit <- Sys.time() + as.difftime(3, units = "secs")
-  while (px$is_alive() && Sys.time() < limit) Sys.sleep(0.05)
+  while (px$is_alive() && Sys.time() < limit) {
+    Sys.sleep(0.05)
+  }
   expect_true(Sys.time() < limit)
   expect_true(Sys.time() - tic > as.difftime(0.2, units = "secs"))
   expect_false(px$is_alive())
@@ -442,8 +450,7 @@ test_that("install_args are passed", {
   expect_false(file.exists(file.path(lib, "foo", "installed-file")))
 })
 
-test_that("built package is added to the cache", {
-})
+test_that("built package is added to the cache", {})
 
 test_that("installed_note", {
   expect_snapshot({

@@ -7,7 +7,7 @@ pkg_plan <- R6::R6Class(
       library = NULL,
       remote_types = NULL,
       lockfile = NULL
-    )
+    ) {
       pkgplan_init(
         self,
         private,
@@ -16,12 +16,14 @@ pkg_plan <- R6::R6Class(
         library,
         remote_types,
         lockfile
-      ),
+      )
+    },
 
     get_refs = function() private$refs,
     has_resolution = function() !is.null(private$resolution$result),
-    has_clean_resolution = function()
-      self$has_resolution() && (all(private$resolution$result$status == "OK")),
+    has_clean_resolution = function() {
+      self$has_resolution() && (all(private$resolution$result$status == "OK"))
+    },
     has_resolution_downloads = function() !is.null(private$downloads),
     has_solution_downloads = function() !is.null(private$solution_downloads),
     has_solution = function() !is.null(private$solution),
@@ -31,38 +33,50 @@ pkg_plan <- R6::R6Class(
     resolve = function() pkgplan_resolve(self, private),
     get_resolution = function() pkgplan_get_resolution(self, private),
 
-    async_download_resolution = function()
-      pkgplan_async_download_resolution(self, private),
+    async_download_resolution = function() {
+      pkgplan_async_download_resolution(self, private)
+    },
     download_resolution = function() pkgplan_download_resolution(self, private),
-    get_resolution_download = function()
-      pkgplan_get_resolution_download(self, private),
+    get_resolution_download = function() {
+      pkgplan_get_resolution_download(self, private)
+    },
 
-    solve = function(policy = c("lazy", "upgrade"))
-      pkgplan_solve(self, private, match.arg(policy)),
+    solve = function(policy = c("lazy", "upgrade")) {
+      pkgplan_solve(self, private, match.arg(policy))
+    },
     delete_solution = function() private$solution <- NULL,
-    stop_for_solve_error = function()
-      pkgplan_stop_for_solve_error(self, private),
+    stop_for_solve_error = function() {
+      pkgplan_stop_for_solve_error(self, private)
+    },
     get_solution = function() pkgplan_get_solution(self, private),
-    show_solution = function(key = FALSE)
-      pkgplan_show_solution(self, private, key),
+    show_solution = function(key = FALSE) {
+      pkgplan_show_solution(self, private, key)
+    },
     get_sysreqs = function() pkgplan_get_sysreqs(self, private),
     show_sysreqs = function() pkgplan_show_sysreqs(self, private),
-    get_install_plan = function()
-      pkgplan_install_plan(self, private, downloads = TRUE),
-    export_install_plan = function(plan_file = "pkg.lock", version = 2)
-      pkgplan_export_install_plan(self, private, plan_file, version),
-    draw_solution_tree = function(pkgs = NULL, annotate = TRUE)
-      pkgplan_draw_solution_tree(self, private, pkgs, annotate),
+    get_install_plan = function() {
+      pkgplan_install_plan(self, private, downloads = TRUE)
+    },
+    export_install_plan = function(plan_file = "pkg.lock", version = 2) {
+      pkgplan_export_install_plan(self, private, plan_file, version)
+    },
+    draw_solution_tree = function(pkgs = NULL, annotate = TRUE) {
+      pkgplan_draw_solution_tree(self, private, pkgs, annotate)
+    },
 
-    async_download_solution = function()
-      pkgplan_async_download_solution(self, private),
+    async_download_solution = function() {
+      pkgplan_async_download_solution(self, private)
+    },
     download_solution = function() pkgplan_download_solution(self, private),
-    get_solution_download = function()
-      pkgplan_get_solution_download(self, private),
-    stop_for_solution_download_error = function()
-      pkgplan_stop_for_solution_download_error(self, private),
-    stop_for_resolution_download_error = function()
-      pkgplan_stop_for_resolution_download_error(self, private),
+    get_solution_download = function() {
+      pkgplan_get_solution_download(self, private)
+    },
+    stop_for_solution_download_error = function() {
+      pkgplan_stop_for_solution_download_error(self, private)
+    },
+    stop_for_resolution_download_error = function() {
+      pkgplan_stop_for_resolution_download_error(self, private)
+    },
 
     update = function() pkgplan_update(self, private),
     update_sysreqs = function() pkgplan_update_sysreqs(self, private),
@@ -87,22 +101,27 @@ pkg_plan <- R6::R6Class(
     system_packages = NULL,
     sysreqs = NULL,
 
-    download_res = function(res, which, on_progress = NULL)
-      pkgplan_download_res(self, private, res, which, on_progress),
-    subset_resolution = function(which)
-      pkgplan__subset_resolution(self, private, which),
-    create_lp_problem = function(pkgs, policy)
-      pkgplan__create_lp_problem(self, private, pkgs, policy),
-    solve_lp_problem = function(problem)
-      pkgplan__solve_lp_problem(self, private, problem),
+    download_res = function(res, which, on_progress = NULL) {
+      pkgplan_download_res(self, private, res, which, on_progress)
+    },
+    subset_resolution = function(which) {
+      pkgplan__subset_resolution(self, private, which)
+    },
+    create_lp_problem = function(pkgs, policy) {
+      pkgplan__create_lp_problem(self, private, pkgs, policy)
+    },
+    solve_lp_problem = function(problem) {
+      pkgplan__solve_lp_problem(self, private, problem)
+    },
 
     create_progress_bar = function(what) {
       bar <- pkgplan__create_progress_bar(what)
       pkgplan__init_progress_bar(bar)
       bar
     },
-    update_progress_bar = function(idx, event, data)
-      pkgplan__update_progress_bar(private$progress_bar, idx, event, data),
+    update_progress_bar = function(idx, event, data) {
+      pkgplan__update_progress_bar(private$progress_bar, idx, event, data)
+    },
     done_progress_bar = function() {
       if (!is.null(private$progress_bar)) {
         pkgplan__done_progress_bar(private$progress_bar)
@@ -372,10 +391,14 @@ pkgplan_update <- function(self, private) {
 }
 
 pkgplan_update_sysreqs <- function(self, private) {
-  if (!private$config$get("sysreqs")) return(invisible())
+  if (!private$config$get("sysreqs")) {
+    return(invisible())
+  }
   # Stop here is no sysreqs at all, no need to look up system packages
   sys <- self$get_solution()$data$sysreqs_packages
-  if (length(unlist(sys)) == 0) return(invisible())
+  if (length(unlist(sys)) == 0) {
+    return(invisible())
+  }
 
   private$solution$result$data$sysreqs_packages <-
     sysreqs_update_state(sys)

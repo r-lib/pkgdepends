@@ -76,7 +76,9 @@ test_that("github url regexes", {
   )
   for (c in cases) {
     m <- re_match(c[[1]], github_url_rx())
-    for (n in names(c[[2]])) expect_equal(c[[2]][[n]], m[[n]])
+    for (n in names(c[[2]])) {
+      expect_equal(c[[2]][[n]], m[[n]])
+    }
   }
 })
 

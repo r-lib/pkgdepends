@@ -308,7 +308,9 @@ test_that("highlight_sysreqs", {
     highlight_sysreqs(sq2)
   })
 
-  if (!l10n_info()[["UTF-8"]]) skip("No UTF-8 support")
+  if (!l10n_info()[["UTF-8"]]) {
+    skip("No UTF-8 support")
+  }
   withr::local_options(cli.unicode = TRUE, cli.num_colors = 256)
   expect_snapshot({
     highlight_sysreqs(sq)

@@ -1,0 +1,203 @@
+# List references in a remote git repository
+
+List references in a remote git repository
+
+## Usage
+
+``` r
+git_list_refs(url, prefixes = NULL)
+```
+
+## Arguments
+
+- url:
+
+  Repository URL, e.g. `https://github.com/r-lib/pak.git`. It might
+  include authentication information, e.g. a GitHub token.
+
+- prefixes:
+
+  If not `NULL`, then only references of which one of `prefixes` is a
+  prefix, are listed.
+
+## Value
+
+A list with entries: `refs` and `caps`. `caps` is a character vector of
+capabilities advertised by the server. `refs` is a data frame of git
+refs, it has columns `ref` and `hash`.
+
+## Details
+
+- Branches have references named `refs/heads/<branch>`, e.g.
+  `refs/heads/main`.
+
+- Tags have references named `refs/tags/<tag>`, e.g. `refs/tags/v1.0.2`.
+
+- On GitHub pull requests have references named
+  `refs/pull/<pr-number>/head`, e.g. `refs/pull/37/head`. For open pull
+  requests there should be a `refs/pull/<pr-number>/merge` reference as
+  well, which is the branch after the pull request has been merged.
+
+- There is a special reference called `HEAD`. This points to the default
+  branch on GitHub.
+
+## Examples
+
+    git_list_refs("https://github.com/r-lib/filelock.git")
+    #> $refs
+    #>                                       ref
+    #> 1                                    HEAD
+    #> 2                   refs/heads/cran-1-0-2
+    #> 3  refs/heads/fix/testthat-error-parallel
+    #> 4                     refs/heads/gh-pages
+    #> 5                         refs/heads/main
+    #> 6                  refs/heads/refcounting
+    #> 7                       refs/pull/14/head
+    #> 8                       refs/pull/37/head
+    #> 9                      refs/pull/37/merge
+    #> 10                      refs/pull/38/head
+    #> 11                      refs/pull/40/head
+    #> 12                       refs/tags/v1.0.2
+    #>                                        hash
+    #> 1  0331c49c0b17845468b5f3e2da75680475bc9989
+    #> 2  dfc615b14dfc030df3f44bd377e752728f76df3d
+    #> 3  6f4b4bfcc1d3442d63496c7640984c0d9570a05a
+    #> 4  2956fbdcbab65b75e3347048a9dc18b15fe377d2
+    #> 5  0331c49c0b17845468b5f3e2da75680475bc9989
+    #> 6  48e5bbe0e031897c7f0e194edbf6897f813fbaee
+    #> 7  48e5bbe0e031897c7f0e194edbf6897f813fbaee
+    #> 8  6f4b4bfcc1d3442d63496c7640984c0d9570a05a
+    #> 9  74b253543f6d2e7213a8174ebbe8e397b9cc866b
+    #> 10 c7e58188a55844e6e75cd38cf81388c3452b1259
+    #> 11 10421f0b7117244002d377d7a9699c2742abdfcc
+    #> 12 9fdba75a62facaa3e818902f58891166e45eabe9
+    #>
+    #> $caps
+    #>  [1] "multi_ack"                      "thin-pack"
+    #>  [3] "side-band"                      "side-band-64k"
+    #>  [5] "ofs-delta"                      "shallow"
+    #>  [7] "deepen-since"                   "deepen-not"
+    #>  [9] "deepen-relative"                "no-progress"
+    #> [11] "include-tag"                    "multi_ack_detailed"
+    #> [13] "allow-tip-sha1-in-want"         "allow-reachable-sha1-in-want"
+    #> [15] "no-done"                        "symref=HEAD:refs/heads/main"
+    #> [17] "filter"                         "object-format=sha1"
+    #> [19] "agent=git/github-g8119c27a9d8d"
+
+List only references having a certain prefix:
+
+    git_list_refs("https://github.com/r-lib/filelock.git", "refs/heads/main")
+    #> $refs
+    #>               ref                                     hash
+    #> 1 refs/heads/main 211dde89c4974b295aa02c5c77b5570ead0fc458
+    #>
+    #> $caps
+    #> [1] "version 2"                          "agent=git/github-1c5ee477c782"
+    #> [3] "ls-refs=unborn"                     "fetch=shallow wait-for-done filter"
+    #> [5] "server-option"                      "object-format=sha1"
+
+Various services:
+
+    git_list_refs("https://gitlab.com/Linaro/tuxmake.git", "HEAD")
+    #> $refs
+    #>    ref                                     hash
+    #> 1 HEAD 9441c1f6ae68148882e9d15ab2d6b3008f4c2c19
+    #>
+    #> $caps
+    #> [1] "version 2"                          "agent=git/2.40.0.gl1"
+    #> [3] "ls-refs=unborn"                     "fetch=shallow wait-for-done filter"
+    #> [5] "server-option"                      "object-format=sha1"
+    #> [7] "object-info"
+    git_list_refs("https://bitbucket.org/gaborcsardi/cli.git")
+    #> $refs
+    #>                                        ref
+    #> 1                                     HEAD
+    #> 2                           refs/heads/ask
+    #> 3                    refs/heads/cran-3.0.0
+    #> 4                   refs/heads/cran/v3.0.1
+    #> 5      refs/heads/feature/cli-capabilities
+    #> 6   refs/heads/feature/cli-condition-width
+    #> 7  refs/heads/feature/format-error-options
+    #> 8           refs/heads/feature/rstudio-job
+    #> 9          refs/heads/feature/span-bullets
+    #> 10                refs/heads/feature/table
+    #> 11            refs/heads/fix/pkgdown-2.0.0
+    #> 12                     refs/heads/gh-pages
+    #> 13                         refs/heads/main
+    #> 14    refs/heads/use-glue-literal-argument
+    #> 15                        refs/tags/v1.0.1
+    #> 16                        refs/tags/v1.1.0
+    #> 17                    refs/tags/v1.1.0-pre
+    #> 18                        refs/tags/v2.0.0
+    #> 19                        refs/tags/v2.0.1
+    #> 20                        refs/tags/v2.0.2
+    #> 21                        refs/tags/v2.1.0
+    #> 22                        refs/tags/v2.2.0
+    #> 23                        refs/tags/v2.3.0
+    #> 24                        refs/tags/v2.3.1
+    #> 25                        refs/tags/v2.4.0
+    #> 26                        refs/tags/v2.5.0
+    #> 27                        refs/tags/v3.0.0
+    #> 28                        refs/tags/v3.0.1
+    #> 29                        refs/tags/v3.1.0
+    #>                                        hash
+    #> 1  928ff3e6a52a08bbabadc57027c43de13b0d7601
+    #> 2  736e5824c082e94fc1acc68fb604fa66b19d1826
+    #> 3  75f3f185c116ff69f3abd56bf89fa9032a9eb965
+    #> 4  722cd638ebe4529db20442962cd2d7dc56c694d7
+    #> 5  b6ebff6771ff9ee8e5b19f8b6c20e142182ab866
+    #> 6  ee931427a9ee51bdfd837bd03c22d2d60ad81946
+    #> 7  28d4efb9b8875e933d682285b65ab05c61f6aef2
+    #> 8  8ddc6e68b970f14d45af6109108b17352dc8a4e7
+    #> 9  bfaabf3658c229d406591b4436991e37720476cf
+    #> 10 0d4089fc2f6cf8c7364f02698cf257363e877660
+    #> 11 be878b57b6f9978953916b0a1d7272f104e27309
+    #> 12 928ff3e6a52a08bbabadc57027c43de13b0d7601
+    #> 13 f6794c4a2d845b6706a41c58f63b4acbbc663968
+    #> 14 5c2904c05e8f809d0136e2253e2e6ea4b7743992
+    #> 15 6e0ffb0de1b54953583e01068a8052ae4cbe72aa
+    #> 16 d4f0e8618aba3475974394075f3f5384695d1d28
+    #> 17 57fb26d1c4582fc73a3a8531aa534948f88e96bc
+    #> 18 9a133422f200f7aa0cdc78b28eb42770cdfe4b35
+    #> 19 31aaccbdb3904c5b681175483a95688940345725
+    #> 20 19f3b864f4ee04c31627a3246dbea44bc07b7967
+    #> 21 a914e326aea8a9ec7d07f7accd64bb624065ba8a
+    #> 22 e0d0668030b482c1bda1fce66db63f402c4e9c5a
+    #> 23 e4c9180c5b53f68c3f938473c0d5871ceefe9991
+    #> 24 5c0c8a88549050e156ea4469adf536e1c0ac0881
+    #> 25 251c84f298b46e0529dd992b9ec86da4aaaf4fa8
+    #> 26 17fd0dc202a51aa82a7704786712d9f77c690c4d
+    #> 27 df963095361d77322676260e60c549d8807ded1d
+    #> 28 525e785e8b34e889707bbbe354287bd4a60e8fcb
+    #> 29 e40cfd4eedad58c22c3e7bcfdba6f23f11a79e13
+    #>
+    #> $caps
+    #>  [1] "multi_ack"                       "thin-pack"
+    #>  [3] "side-band"                       "side-band-64k"
+    #>  [5] "ofs-delta"                       "shallow"
+    #>  [7] "deepen-since"                    "deepen-not"
+    #>  [9] "deepen-relative"                 "no-progress"
+    #> [11] "include-tag"                     "multi_ack_detailed"
+    #> [13] "allow-tip-sha1-in-want"          "allow-reachable-sha1-in-want"
+    #> [15] "no-done"                         "symref=HEAD:refs/heads/gh-pages"
+    #> [17] "object-format=sha1"              "agent=git/2.32.0"
+    git_list_refs("https://git.savannah.nongnu.org/git/administration/savane.git")
+    #> $refs
+    #>                         ref                                     hash
+    #> 1                      HEAD bdfce5e39c3ebb36b748925dfc8a0cde483fda6a
+    #> 2           refs/heads/i18n e5f2c309b038789a82ab5a54d723a3564f1bde58
+    #> 3         refs/heads/master bdfce5e39c3ebb36b748925dfc8a0cde483fda6a
+    #> 4    refs/tags/release-3.10 e1db1a011effeb7d16a5af9c15b91d8998579ad7
+    #> 5 refs/tags/release-3.10^{} d16b7e7e849d5d63794b1c48847e8a57250ce2bd
+    #> 6    refs/tags/release-3.11 7d5723e022a7144c077501ecff5ac23984effe8d
+    #> 7 refs/tags/release-3.11^{} af29b8a99fe4b4e7deefb6bcbf9a6d98f43228bf
+    #>
+    #> $caps
+    #>  [1] "multi_ack"                     "thin-pack"
+    #>  [3] "side-band"                     "side-band-64k"
+    #>  [5] "ofs-delta"                     "shallow"
+    #>  [7] "deepen-since"                  "deepen-not"
+    #>  [9] "deepen-relative"               "no-progress"
+    #> [11] "include-tag"                   "multi_ack_detailed"
+    #> [13] "no-done"                       "symref=HEAD:refs/heads/master"
+    #> [15] "agent=git/2.17.1"

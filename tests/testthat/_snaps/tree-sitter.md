@@ -1595,7 +1595,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                   match_count
         <int> <chr> <chr>                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -1610,7 +1610,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                   match_count
         <int> <chr> <chr>                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1623,7 +1623,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1636,7 +1636,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -1652,7 +1652,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1665,7 +1665,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1678,7 +1678,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -1694,7 +1694,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1707,7 +1707,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1720,7 +1720,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -1735,7 +1735,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                    match_count
         <int> <chr> <chr>                                                                                            <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -1753,7 +1753,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                       match_count
         <int> <chr> <chr>                                                                                               <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1766,7 +1766,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                       match_count
         <int> <chr> <chr>                                                                                               <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -1781,7 +1781,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1794,7 +1794,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1807,7 +1807,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -1823,7 +1823,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1836,7 +1836,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1849,7 +1849,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1862,7 +1862,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -1878,7 +1878,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1891,7 +1891,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1904,7 +1904,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1917,7 +1917,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -1932,7 +1932,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1948,7 +1948,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                       match_count
         <int> <chr> <chr>                                                                                               <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -1963,7 +1963,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                       match_count
         <int> <chr> <chr>                                                                                               <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1976,7 +1976,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -1989,7 +1989,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2005,7 +2005,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 3 x 11
@@ -2022,7 +2022,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2035,7 +2035,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2051,7 +2051,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2067,7 +2067,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2080,7 +2080,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2095,7 +2095,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2113,7 +2113,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                           match_count
         <int> <chr> <chr>                                                                                                   <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2126,7 +2126,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                           match_count
         <int> <chr> <chr>                                                                                                   <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2141,7 +2141,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2154,7 +2154,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2167,7 +2167,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2183,7 +2183,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 3 x 11
@@ -2200,7 +2200,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2213,7 +2213,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2226,7 +2226,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2242,7 +2242,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2258,7 +2258,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2271,7 +2271,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2284,7 +2284,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2299,7 +2299,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-eq? @fn \"f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2315,7 +2315,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                       match_count
         <int> <chr> <chr>                                                                                               <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2330,7 +2330,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                       match_count
         <int> <chr> <chr>                                                                                               <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2343,7 +2343,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2356,7 +2356,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2372,7 +2372,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2385,7 +2385,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2398,7 +2398,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2414,7 +2414,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2427,7 +2427,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2440,7 +2440,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2455,7 +2455,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                        match_count
         <int> <chr> <chr>                                                                                                <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2473,7 +2473,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                           match_count
         <int> <chr> <chr>                                                                                                   <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2486,7 +2486,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                           match_count
         <int> <chr> <chr>                                                                                                   <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2501,7 +2501,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2514,7 +2514,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2527,7 +2527,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2543,7 +2543,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2556,7 +2556,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2569,7 +2569,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2582,7 +2582,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2598,7 +2598,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2611,7 +2611,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2624,7 +2624,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2637,7 +2637,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2652,7 +2652,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2668,7 +2668,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                           match_count
         <int> <chr> <chr>                                                                                                   <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2683,7 +2683,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                           match_count
         <int> <chr> <chr>                                                                                                   <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2696,7 +2696,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2709,7 +2709,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2725,7 +2725,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 3 x 11
@@ -2742,7 +2742,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2755,7 +2755,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2771,7 +2771,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2787,7 +2787,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2800,7 +2800,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2815,7 +2815,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                            match_count
         <int> <chr> <chr>                                                                                                    <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2833,7 +2833,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2846,7 +2846,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -2861,7 +2861,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2874,7 +2874,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2887,7 +2887,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2903,7 +2903,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 3 x 11
@@ -2920,7 +2920,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2933,7 +2933,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2946,7 +2946,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2962,7 +2962,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -2978,7 +2978,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -2991,7 +2991,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3004,7 +3004,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -3019,7 +3019,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                match_count
         <int> <chr> <chr>                                                                                                        <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-not-match? @fn \"^f\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3035,7 +3035,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                              match_count
         <int> <chr> <chr>                                                                                                      <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -3050,7 +3050,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                              match_count
         <int> <chr> <chr>                                                                                                      <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3063,7 +3063,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3076,7 +3076,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -3092,7 +3092,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3105,7 +3105,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3118,7 +3118,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -3134,7 +3134,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3147,7 +3147,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3160,7 +3160,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -3175,7 +3175,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                               match_count
         <int> <chr> <chr>                                                                                                       <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -3193,7 +3193,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                  match_count
         <int> <chr> <chr>                                                                                                          <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3206,7 +3206,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                  match_count
         <int> <chr> <chr>                                                                                                          <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) \n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -3221,7 +3221,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3234,7 +3234,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3247,7 +3247,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -3263,7 +3263,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) *\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3276,7 +3276,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3289,7 +3289,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3302,7 +3302,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 2 x 11
@@ -3318,7 +3318,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) +\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3331,7 +3331,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3344,7 +3344,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11
@@ -3357,7 +3357,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           1
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           1
       
       $matched_captures
       # A data frame: 1 x 11
@@ -3372,7 +3372,7 @@
       # A data frame: 1 x 4
            id name  pattern                                                                                                   match_count
         <int> <chr> <chr>                                                                                                           <int>
-      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n    . )\n"           0
+      1     1 <NA>  "(program .\n      (call function: (identifier) @fn) ?\n      (#not-any-of? @fn \"f\" \"f2\")\n      )\n"           0
       
       $matched_captures
       # A data frame: 0 x 11

@@ -184,15 +184,21 @@ fixture <- local({
     rep <- testthat::get_reporter()
     if (!isTRUE(rep$capabilities$fixture_setup)) {
       rep$capabilities$fixture_setup <- TRUE
-      if (class(rep)[1] != "MultiReporter") return()
+      if (class(rep)[1] != "MultiReporter") {
+        return()
+      }
       fixer <- new_fixture_reporter(data)
       file <- find_test_file(data$file, data$root)
-      if (is.na(file)) stop("Cannot determine test file for fixtures")
+      if (is.na(file)) {
+        stop("Cannot determine test file for fixtures")
+      }
       fixer$start_file(file, data$test)
       rep$reporters <- c(rep$reporters, list(fixer))
     }
     wfix <- sapply(rep$reporters, inherits, "FixtureReporter")
-    if (sum(wfix) != 1) stop("Must be exactly one FixtureReporter")
+    if (sum(wfix) != 1) {
+      stop("Must be exactly one FixtureReporter")
+    }
     fixer <- rep$reporters[[which(wfix)]]
     fixer$add_fixture(data$hash, data$code)
   }
@@ -200,13 +206,17 @@ fixture <- local({
   get <- function(expr, envir = parent.frame()) {
     expr <- substitute(expr)
     data <- get_test_data(expr)
-    if (!is.null(data$file)) setup_reporter(data)
+    if (!is.null(data$file)) {
+      setup_reporter(data)
+    }
     fxfile <- paste0(data$hash, ".rds")
     fxpath <- file.path(data$root, "_fixtures", fxfile)
     upd <- isTRUE(getOption("fixtures.update"))
     upd1 <- isTRUE(getOption("fixtures.update1"))
     if (upd || upd1) {
-      if (upd1) options(fixtures.update1 = NULL)
+      if (upd1) {
+        options(fixtures.update1 = NULL)
+      }
       value <- eval(expr, envir = envir)
       mkdirp(dirname(fxpath))
       saveRDS(value, fxpath, version = 2L)

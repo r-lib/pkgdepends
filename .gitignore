@@ -18,3 +18,4 @@ Meta
 /src/*.gcda
 *.gcda
 *.gcno
+/.dev

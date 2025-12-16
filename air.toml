@@ -1,0 +1,2 @@
+[format]
+exclude = ["tests/testthat/fixtures/packages/badbuild/R/foo.R" ]

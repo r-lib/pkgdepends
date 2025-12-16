@@ -1,7 +1,9 @@
 test_that("package_name_rx", {
   good <- c("A1", "a1", "Z1", "z1", "foo.bar", "foo.bar.baz", "a1.b2")
 
-  for (t in good) expect_true(is_valid_package_name(t), info = t)
+  for (t in good) {
+    expect_true(is_valid_package_name(t), info = t)
+  }
 
   bad <- list(
     c("pkg", "forbidden"),

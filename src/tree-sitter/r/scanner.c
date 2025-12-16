@@ -23,6 +23,7 @@ static inline void debug_print(const char* fmt, ...) {
 #endif
 
 enum TokenType {
+  START,
   NEWLINE,
   SEMICOLON,
   RAW_STRING_LITERAL,
@@ -162,24 +163,50 @@ static inline bool stack_exists(void* stack) {
 
 // ---------------------------------------------------------------------------------------
 
+// Consume all leading whitespace before the next meaningful character
+//
+// - For whitespace that isn't a newline, we skip it entirely.
+//   This includes spaces, tabs, `\r`, etc.
+//
+// - For newlines inside a `(`, `[`, or `[[` scope, we skip them.
+//   In this context, newlines have no syntactic meaning and R's parser
+//   simply eats them, so we do the same.
+//
+// - For newlines inside a "top level" or `{` scope, we return to `scan()`
+//   and give our handlers a chance to run. In this context, these newlines
+//   have contextual meaning, particularly for `if` statements.
+//
+// Because our external scanner is called on each character, this helper
+// effectively replaces the usage of `/\s/` in `extras`. That said,
+// practically the `/\s/` seems to still be needed. It seems like the
+// internal scanner re-checks that the whitespace that we advanced over is
+// skippable, which is why you see `skip character:' '` twice in the debug logs
+// (once in the external scanner, once in the internal scanner). Based on some
+// experimentation, this also seems true for Python, so we aren't too worried
+// about it.
+//
+// Resist the urge to "simplify" this by refusing to handle whitespace at all
+// in the external scanner. In theory we could return to the internal scanner
+// when we see a non-newline whitespace and let the `extras` handling eat it,
+// but in practice this does not work. An external scanner MUST skip whitespace.
+// https://github.com/tree-sitter/tree-sitter/discussions/884#discussioncomment-302898
+// https://github.com/tree-sitter/tree-sitter/issues/2735#issuecomment-1830392298
 static inline void consume_whitespace_and_ignored_newlines(TSLexer* lexer, Stack* stack) {
   while (iswspace(lexer->lookahead)) {
     if (lexer->lookahead != '\n') {
-      // Consume all spaces, tabs, etc, unconditionally
+      // Whitespace that isn't a newline, skip
       lexer->advance(lexer, true);
       continue;
     }
 
-    // If we are inside `(`, `[`, or `[[`, we consume newlines unconditionally.
-    // Notably not within `{` nor at "top level", where newlines have contextual
-    // meaning, particularly for `if` statements. Both of those are handled elsewhere.
     Scope scope = stack_peek(stack);
     if (scope == SCOPE_PAREN || scope == SCOPE_BRACKET || scope == SCOPE_BRACKET2) {
+      // Newline in `(`, `[`, or `[[` scope, skip
       lexer->advance(lexer, true);
       continue;
     }
 
-    // We've hit a newline with contextual meaning to be handled elsewhere
+    // Contextual newline, let handlers in `scan()` handle it
     break;
   }
 }
@@ -254,10 +281,10 @@ static inline bool scan_else_with_leading_newlines(TSLexer* lexer) {
 }
 
 static inline bool scan_raw_string_literal(TSLexer* lexer) {
-  // scan a raw string literal; see R source code for implementation:
+  // Scan a raw string literal; see R source code for implementation:
   // https://github.com/wch/r-source/blob/52b730f217c12ba3d95dee0cd1f330d1977b5ea3/src/main/gram.y#L3102
 
-  // raw string literals can start with either 'r' or 'R'
+  // Raw string literals can start with either 'r' or 'R'
   lexer->mark_end(lexer);
   char prefix = lexer->lookahead;
   if (prefix != 'r' && prefix != 'R') {
@@ -265,21 +292,21 @@ static inline bool scan_raw_string_literal(TSLexer* lexer) {
   }
   lexer->advance(lexer, false);
 
-  // check for quote character
-  char quote = lexer->lookahead;
-  if (quote != '"' && quote != '\'') {
+  // Check for quote character
+  char closing_quote = lexer->lookahead;
+  if (closing_quote != '"' && closing_quote != '\'') {
     return false;
   }
   lexer->advance(lexer, false);
 
-  // start counting '-' characters
+  // Start counting '-' characters
   int hyphen_count = 0;
   while (lexer->lookahead == '-') {
     lexer->advance(lexer, false);
     hyphen_count += 1;
   }
 
-  // check for an opening bracket, and figure out
+  // Check for an opening bracket, and figure out
   // the corresponding closing bracket
   char opening_bracket = lexer->lookahead;
   char closing_bracket = 0;
@@ -296,42 +323,77 @@ static inline bool scan_raw_string_literal(TSLexer* lexer) {
     return false;
   }
 
-  // we're in the body of the raw string; start looping until
-  // we find the matching closing bracket
-  for (; lexer->lookahead != 0; lexer->advance(lexer, false)) {
-    // consume a closing bracket
+  // We're in the body of the raw string, start looping until
+  // we find the matching `closing_bracket -> hyphens -> quote` sequence
+  //
+  // We purposefully only `advance()` on known non-closing sequence elements at the
+  // very beginning in the `!= closing_bracket` check (#162).
+  //
+  // Consider the following:
+  //
+  // r"(())"
+  //     ^^
+  //     ||
+  //     || 2) Which advances us to `)`. But this isn't a `"`, so we should loop around
+  //     ||    without advancing past the `)`.
+  //     | 1) This looks like it might be a closing `)`.
+  //
+  // If we also called `advance()` in the `!= closing_quote` branch, we'd skip past the
+  // `)` and we'd fail to recognize the raw string.
+  //
+  // Same logic applies to:
+  //
+  // r"-())-"
+  //     ^^
+  //     ||
+  //     || 2) Which advances us to `)`. But this isn't a `-`, so we should loop around
+  //     ||    without advancing past the `)`.
+  //     | 1) This looks like it might be a closing `)`.
+  //
+  // If we also called `advance()` in the `!matched_hyphens` branch, we'd skip past the
+  // `)` and we'd fail to recognize the raw string.
+  while (!lexer->eof(lexer)) {
     if (lexer->lookahead != closing_bracket) {
+      // Consume an arbitrary string part
+      lexer->advance(lexer, false);
       continue;
     }
+
+    // Consume a closing bracket
     lexer->advance(lexer, false);
 
-    // consume hyphens
-    bool hyphens_ok = true;
+    // Try and consume `hyphen_count` hyphens in a row
+    // (Start "matched" for the case of 0 hyphens)
+    bool matched_hyphens = true;
+
     for (int i = 0; i < hyphen_count; i++) {
       if (lexer->lookahead != '-') {
-        hyphens_ok = false;
+        matched_hyphens = false;
         break;
       }
+
+      // Consume a hyphen
       lexer->advance(lexer, false);
     }
 
-    if (!hyphens_ok) {
+    if (!matched_hyphens) {
       continue;
     }
 
-    // consume a closing quote character
-    if (lexer->lookahead != quote) {
+    if (lexer->lookahead != closing_quote) {
       continue;
     }
+
+    // Consume a closing quote character
     lexer->advance(lexer, false);
 
-    // success!
+    // Success!
     lexer->mark_end(lexer);
     lexer->result_symbol = RAW_STRING_LITERAL;
     return true;
   }
 
-  // if we get here, this implies we hit eof (and so we have
+  // If we get here, this implies we hit eof (and so we have
   // an unclosed raw string)
   return false;
 }
@@ -417,6 +479,22 @@ static inline bool scan_close_bracket2(TSLexer* lexer, Stack* stack) {
 }
 
 static bool scan(TSLexer* lexer, Stack* stack, const bool* valid_symbols) {
+  if (valid_symbols[ERROR_SENTINEL]) {
+    // Decline to handle when in "error recovery" mode. When a syntax error occurs,
+    // tree-sitter calls the external scanner with all `valid_symbols` marked as valid.
+    return false;
+  }
+
+  if (valid_symbols[START]) {
+    // The `START` symbol is only valid at the very beginning of a file before we
+    // have seen any tokens. We emit this zero width symbol to force the `program`
+    // node to open at position `(0, 0)`, regardless of how much leading whitespace
+    // (including both `' '` and `\r`) there may be before our first "real" token.
+    // This ensures the AST spans the entire file, which consumers of it rely on (#151).
+    lexer->result_symbol = START;
+    return true;
+  }
+
   consume_whitespace_and_ignored_newlines(lexer, stack);
 
   // Purposefully structured as a series of exclusive if statements to
@@ -424,11 +502,7 @@ static bool scan(TSLexer* lexer, Stack* stack, const bool* valid_symbols) {
   // because each `scan_*()` function calls `advance()` internally, meaning that
   // `lookahead` will no longer be accurate for checking other branches.
 
-  if (valid_symbols[ERROR_SENTINEL]) {
-    // Decline to handle when in "error recovery" mode. When a syntax error occurs,
-    // tree-sitter calls the external scanner with all `valid_symbols` marked as valid.
-    return false;
-  } else if (valid_symbols[SEMICOLON] && lexer->lookahead == ';') {
+  if (valid_symbols[SEMICOLON] && lexer->lookahead == ';') {
     return scan_semicolon(lexer);
   } else if (valid_symbols[OPEN_PAREN] && lexer->lookahead == '(') {
     return scan_open_block(lexer, stack, SCOPE_PAREN, OPEN_PAREN);

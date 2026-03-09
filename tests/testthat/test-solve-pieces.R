@@ -100,6 +100,60 @@ test_that("pkgplan_i_lp_prefer_binaries", {
   ## TODO
 })
 
+test_that("pkgplan_i_lp_prefer_new_binaries skips version-pinned direct refs", {
+  # A newer binary (pkg@4.0.2) is available, but the user directly requested
+  # pkg@3.5.2 (as a PPM binary with empty platform string). The 3.5.2 candidate
+  # must NOT be ruled out by prefer_new_binaries;
+  pkgs <- res_make_empty_df()
+  for (entry in list(
+    make_fake_resolution1("pkg@3.5.2", list(
+      direct   = TRUE,
+      version  = "3.5.2",
+      platform = ""   # PPM binary: empty platform for pure-R packages
+    )),
+    make_fake_resolution1("pkg", list(
+      direct   = FALSE,
+      version  = "4.0.2",
+      platform = "x86_64-pc-linux-gnu"
+    )),
+    make_fake_resolution1("pkg1", list(
+      direct   = FALSE,
+      version  = "1.0.0",
+      platform = "x86_64-pc-linux-gnu"
+    )),
+    make_fake_resolution1("pkg1", list(
+      direct   = FALSE,
+      version  = "2.0.0",
+      platform = "x86_64-pc-linux-gnu"
+    ))
+  )) pkgs <- res_add_df_entries(pkgs, entry)
+
+  config <- current_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
+  lp <- pkgplan_i_lp_prefer_new_binaries(lp)
+
+  types    <- vcapply(lp$conds, "[[", "type")
+  pnb_vars <- unlist(lapply(lp$conds[types == "prefer-new-binary"], "[[", "vars"))
+
+  pkg352_idx   <- which(pkgs$package == "pkg" & pkgs$version == "3.5.2")
+  pkg402_idx   <- which(pkgs$package == "pkg" & pkgs$version == "4.0.2")
+  pkg1_old_idx <- which(pkgs$package == "pkg1" & pkgs$version == "1.0.0")
+  pkg1_new_idx <- which(pkgs$package == "pkg1" & pkgs$version == "2.0.0")
+
+  # The pinned pkg@3.5.2 must not be ruled out
+  expect_false(pkg352_idx %in% pnb_vars)
+  expect_false(pkg352_idx %in% lp$ruled_out)
+
+  # pkg@4.0.2 is also unaffected (pkg as a whole is skipped when pinned)
+  expect_false(pkg402_idx %in% pnb_vars)
+
+  # pkg1@1.0.0 (no pin, indirect) is correctly ruled out in favour of 2.0.0
+  expect_true(pkg1_old_idx %in% pnb_vars)
+  expect_true(pkg1_old_idx %in% lp$ruled_out)
+  expect_false(pkg1_new_idx %in% pnb_vars)
+  expect_false(pkg1_new_idx %in% lp$ruled_out)
+})
+
 test_that("pkgplan_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
   config <- current_config()

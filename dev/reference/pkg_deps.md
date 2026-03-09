@@ -422,7 +422,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpIBIZjx/file1dd93de5df60"
+#> [1] "/tmp/RtmpRzErAD/file20fb40e648df"
 #> 
 #> ## platforms
 #> <default>
@@ -439,11 +439,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpIBIZjx/file1dd9148ab544"
+#> [1] "/tmp/RtmpRzErAD/file20fb7e136598"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpIBIZjx/file1dd9481f768"
+#> [1] "/tmp/RtmpRzErAD/file20fb1b269117"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -518,7 +518,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 3.65 MB in 3 files.
+#> ✔ Updated metadata database: 3.94 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -527,8 +527,8 @@ pd$get_resolution()
 #> # A data frame: 2 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.1   GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.1   GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.2   GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.2   GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -540,7 +540,7 @@ pd$get_resolution()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
-#> # A data frame: 27 × 35
+#> # A data frame: 26 × 35
 #>    ref            type  direct directpkg status package version license
 #>    <chr>          <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
 #>  1 r-lib/pkgdepe… gith… TRUE   TRUE      OK     pkgdep… 0.9.0.… MIT + …
@@ -552,8 +552,8 @@ pd$get_resolution()
 #>  7 jsonlite       stan… FALSE  FALSE     OK     jsonli… 2.0.0   MIT + …
 #>  8 lpSolve        stan… FALSE  FALSE     OK     lpSolve 5.6.23  LGPL-2 
 #>  9 pkgbuild       stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + …
-#> 10 pkgcache       stan… FALSE  FALSE     OK     pkgcac… 2.2.4   MIT + …
-#> # ℹ 17 more rows
+#> 10 processx       stan… FALSE  FALSE     OK     proces… 3.8.6   MIT + …
+#> # ℹ 16 more rows
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -583,7 +583,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + constraints (58):
+#> + constraints (57):
 #>   - select pkgdepends exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -593,7 +593,7 @@ pd$get_solution()
 #>   - select jsonlite at most once
 #>   - select lpSolve at most once
 #>   - select pkgbuild at most once
-#>   - select pkgcache at most once
+#>   - select processx at most once
 #>   ...
 #> + solution:
 #>   - R6
@@ -605,9 +605,9 @@ pd$get_solution()
 #>   - jsonlite
 #>   - lpSolve
 #>   - pkgbuild
-#>   - pkgcache
 #>   - processx
 #>   - ps
+#>   - r-lib/pkgcache
 #>   - r-lib/pkgdepends
 #>   - zip
 # Method get_solution()
@@ -619,7 +619,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - pkgload
-#> + constraints (49):
+#> + constraints (48):
 #>   - select pkgload exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -670,17 +670,16 @@ pd
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-#> pkgload 1.4.1 [new][dl] (unknown size)
+#> pkgload 1.5.0 [new][dl] (unknown size)
 #> ├─cli 3.6.5 [new][dl] (unknown size)
 #> ├─desc 1.4.3 [new][dl] (unknown size)
 #> │ ├─R6 2.6.1 [new][dl] (unknown size)
 #> │ └─cli
-#> ├─fs 1.6.6 [new][dl] (unknown size)
+#> ├─fs 1.6.7 [new][dl] (unknown size)
 #> ├─glue 1.8.0 [new][dl] (unknown size)
-#> ├─lifecycle 1.0.4 [new][dl] (unknown size)
+#> ├─lifecycle 1.0.5 [new][dl] (unknown size)
 #> │ ├─cli
-#> │ ├─glue
-#> │ └─rlang 1.1.6 [new][dl] (unknown size)
+#> │ └─rlang 1.1.7 [new][dl] (unknown size)
 #> ├─pkgbuild 1.4.8 [new][dl] (unknown size)
 #> │ ├─R6
 #> │ ├─callr 3.7.6 [new][dl] (unknown size)

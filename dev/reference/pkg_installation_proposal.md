@@ -757,7 +757,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmpIBIZjx/file1dd920d4ccde
+#> ℹ Creating library directory: /tmp/RtmpRzErAD/file20fb101bc146
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -771,7 +771,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpIBIZjx/file1dd9294c0f11
+#> ℹ Creating library directory: /tmp/RtmpRzErAD/file20fb7a246b0
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -788,7 +788,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpIBIZjx/file1dd97353b226"
+#> [1] "/tmp/RtmpRzErAD/file20fb7b962a47"
 #> 
 #> ## platforms
 #> <default>
@@ -805,11 +805,11 @@ pdi$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpIBIZjx/file1dd9148ab544"
+#> [1] "/tmp/RtmpRzErAD/file20fb7e136598"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpIBIZjx/file1dd9294c0f11"
+#> [1] "/tmp/RtmpRzErAD/file20fb7a246b0"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -884,7 +884,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpIBIZjx/file1dd938f769e9
+#> ℹ Creating library directory: /tmp/RtmpRzErAD/file20fb592e4d3e
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -894,7 +894,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpIBIZjx/file1dd933eaa1bc
+#> ℹ Creating library directory: /tmp/RtmpRzErAD/file20fb5c8924b2
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -905,7 +905,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpIBIZjx/file1dd93c12b515
+#> ℹ Creating library directory: /tmp/RtmpRzErAD/file20fb4dea0c3e
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -936,7 +936,7 @@ pdi
 
 pdi$download()
 #> ℹ Getting 1 pkg with unknown size
-#> ✔ Got pak 0.9.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (7.03 MB)
+#> ✔ Got pak 0.9.2 (x86_64-pc-linux-gnu-ubuntu-24.04) (7.03 MB)
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

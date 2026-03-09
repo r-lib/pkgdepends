@@ -65,7 +65,8 @@ pkg_name_check("cli")
 #> │ ✔  not a profanity                                                  │
 #> └─────────────────────────────────────────────────────────────────────┘
 #> ┌ Wikipedia ──────────────────────────────────────────────────────────┐
-#> │ CLI (from Cli) CLI may refer to multiple articles, see link.        │
+#> │ CLI (from Cli) CLI or cli may refer to multiple articles, see       │
+#> │ link.                                                               │
 #> └────────────────────────────────── https://en.wikipedia.org/wiki/CLI ┘
 #> ┌ Wiktionary ─────────────────────────────────────────────────────────┐
 #> │ cli No English definition found                                     │

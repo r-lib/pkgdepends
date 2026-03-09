@@ -45,7 +45,7 @@
       x Failed to install R6 2.2.2
     Condition
       Error:
-      ! Failed to install binary package R6.
+      ! ! Failed to install binary package R6.
 
 # handle_event, install process finished
 
@@ -73,7 +73,7 @@
       x Failed to install R6 2.2.2
     Condition
       Error:
-      ! Failed to install binary package R6.
+      ! ! Failed to install binary package R6.
 
 # start_task
 
@@ -81,7 +81,7 @@
       start_task(list(), task("foobar"))
     Condition
       Error:
-      ! Unknown task: "foobar".
+      ! ! Unknown task: "foobar".
       i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
 
 # stop_task
@@ -90,7 +90,7 @@
       stop_task(list(), list(task = task("foobar")))
     Condition
       Error:
-      ! Unknown task: "foobar".
+      ! ! Unknown task: "foobar".
       i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
 
 # deadlock detection
@@ -99,7 +99,7 @@
       install_package_plan(plan, lib = tempfile())
     Condition
       Error:
-      ! Cannot select new package installation task.
+      ! ! Cannot select new package installation task.
       i 3 packages still waiting to install: p1, p2, and p3.
       i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
 

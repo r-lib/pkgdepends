@@ -4,37 +4,37 @@
       scan_deps(1:10)
     Condition
       Error:
-      ! `path` must be a character vector without `NA`, but it is an integer vector
+      ! ! `path` must be a character vector without `NA`, but it is an integer vector
     Code
       scan_deps(root = mtcars)
     Condition
       Error:
-      ! `root` must be a string (character scalar), but it is a data frame.
+      ! ! `root` must be a string (character scalar), but it is a data frame.
     Code
       scan_deps(root = "sdfssdfsdf")
     Condition
       Error:
-      ! Project root 'sdfssdfsdf' does not exist.
+      ! ! Project root 'sdfssdfsdf' does not exist.
     Code
       scan_deps("sdfssdfsdf")
     Condition
       Error:
-      ! Path does not exist: 'sdfssdfsdf'.
+      ! ! Path does not exist: 'sdfssdfsdf'.
     Code
       scan_deps(c("sdfssdfsdf-1", "sdfssdfsdf-2"))
     Condition
       Error:
-      ! Paths do not exist: 'sdfssdfsdf-1' and 'sdfssdfsdf-2'.
+      ! ! Paths do not exist: 'sdfssdfsdf-1' and 'sdfssdfsdf-2'.
     Code
       scan_deps("foo", "bar")
     Condition
       Error:
-      ! 'foo' is outside of project root 'bar'.
+      ! ! 'foo' is outside of project root 'bar'.
     Code
       scan_deps(c("foo", "foobar"), "bar")
     Condition
       Error:
-      ! 'foo' and 'foobar' are outside of project root 'bar'.
+      ! ! 'foo' and 'foobar' are outside of project root 'bar'.
 
 # get_deps_cache_path
 
@@ -104,7 +104,7 @@
       scan_path_deps_do("code", "foo.unknown")
     Condition
       Error:
-      ! Cannot parse .unknown file for dependencies, internal error
+      ! ! Cannot parse .unknown file for dependencies, internal error
 
 # scan_path_deps_do_r
 

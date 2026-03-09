@@ -4,5 +4,5 @@
       get_untar_decompress_arg(zip)
     Condition
       Error:
-      ! '<path>/xxx.zip' is not a tar file, it looks like a zip file
+      ! ! '<path>/xxx.zip' is not a tar file, it looks like a zip file
 

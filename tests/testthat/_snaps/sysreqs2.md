@@ -64,7 +64,7 @@
       sysreqs2_command("foobar-2023")
     Condition
       Error:
-      ! Unknown OS. Don't know how to query or install system packages for foobar-2023.
+      ! ! Unknown OS. Don't know how to query or install system packages for foobar-2023.
 
 # do not run update if nothing to do
 

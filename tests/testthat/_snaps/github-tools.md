@@ -110,7 +110,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak")))
     Condition
       Error:
-      ! Can't find GitHub repo r-lib-xxx-xxx/pak.
+      ! ! Can't find GitHub repo r-lib-xxx-xxx/pak.
 
 ---
 
@@ -118,7 +118,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib-xxx-xxx/pak#90")))
     Condition
       Error:
-      ! Can't find GitHub repo r-lib-xxx-xxx/pak.
+      ! ! Can't find GitHub repo r-lib-xxx-xxx/pak.
 
 # type_github_get_data, no such repo
 
@@ -126,7 +126,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
     Condition
       Error:
-      ! Can't find GitHub repo r-lib/pak-xxx-xxx.
+      ! ! Can't find GitHub repo r-lib/pak-xxx-xxx.
 
 ---
 
@@ -134,7 +134,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
     Condition
       Error:
-      ! Can't find GitHub repo r-lib/pak-xxx-xxx.
+      ! ! Can't find GitHub repo r-lib/pak-xxx-xxx.
 
 # github_query, invalid PAT
 
@@ -142,8 +142,8 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx")))
     Condition
       Error:
-      ! Bad GitHub credentials, make sure that your GitHub token is valid.
-      Caused by error:
+      ! ! Bad GitHub credentials, make sure that your GitHub token is valid.
+      Caused by error in `stop(http_error(resp))`:
       ! Unauthorized (HTTP 401).
 
 ---
@@ -152,8 +152,8 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak-xxx-xxx#90")))
     Condition
       Error:
-      ! Bad GitHub credentials, make sure that your GitHub token is valid.
-      Caused by error:
+      ! ! Bad GitHub credentials, make sure that your GitHub token is valid.
+      Caused by error in `stop(http_error(resp))`:
       ! Unauthorized (HTTP 401).
 
 # github_query, no internet
@@ -162,7 +162,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak")))
     Condition
       Error:
-      ! Cannot query GitHub, are you offline?
+      ! ! Cannot query GitHub, are you offline?
 
 # github_query, access denied
 
@@ -170,7 +170,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("gaborcsardi/secret-test")))
     Condition
       Error:
-      ! Can't find GitHub repo gaborcsardi/secret-test.
+      ! ! Can't find GitHub repo gaborcsardi/secret-test.
 
 # cannot find R package on GitHub, no DESCRIPTION
 
@@ -178,7 +178,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("tidyverse/tidyverse.org")))
     Condition
       Error:
-      ! Can't find R package in GitHub repo tidyverse/tidyverse.org
+      ! ! Can't find R package in GitHub repo tidyverse/tidyverse.org
 
 ---
 
@@ -186,7 +186,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/cranyon/R")))
     Condition
       Error:
-      ! Can't find GitHub repo r-lib/cranyon.
+      ! ! Can't find GitHub repo r-lib/cranyon.
 
 ---
 
@@ -194,7 +194,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/crayon/R#79")))
     Condition
       Error:
-      ! Can't find R package in GitHub repo r-lib/crayon in directory 'R'
+      ! ! Can't find R package in GitHub repo r-lib/crayon in directory 'R'
 
 # cannot parse DESCRIPTION on GH
 
@@ -202,8 +202,8 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@main")))
     Condition
       Error:
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
-      Caused by error:
+      ! ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
+      Caused by error in `read.dcf(con)`:
       ! Line starting 'this is not ...' is malformed!
 
 ---
@@ -212,8 +212,8 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad#100")))
     Condition
       Error:
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
-      Caused by error:
+      ! ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad
+      Caused by error in `read.dcf(con)`:
       ! Line starting 'this is not ...' is malformed!
 
 ---
@@ -222,7 +222,7 @@
       synchronize(type_github_get_data(parse_pkg_ref("r-lib/bad/bin@main")))
     Condition
       Error:
-      ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad, in directory `bin`
+      ! ! Can't parse DESCRIPTION file in GitHub repo r-lib/bad, in directory `bin`
 
 # http error
 
@@ -230,8 +230,8 @@
       synchronise(type_github_get_data(parse_pkg_ref("foo/bar")))
     Condition
       Error:
-      ! GitHub HTTP error
-      Caused by error:
+      ! ! GitHub HTTP error
+      Caused by error in `stop(http_error(resp))`:
       ! Not Found (HTTP 404).
 
 # no such PR error
@@ -240,7 +240,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak#89")))
     Condition
       Error:
-      ! Can't find PR #89 in GitHub repo r-lib/pak
+      ! ! Can't find PR #89 in GitHub repo r-lib/pak
 
 # no such ref error
 
@@ -248,7 +248,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak@bad-ref-no-no-no")))
     Condition
       Error:
-      ! Can't find reference @bad-ref-no-no-no in GitHub repo r-lib/pak.
+      ! ! Can't find reference @bad-ref-no-no-no in GitHub repo r-lib/pak.
 
 # no release error
 
@@ -256,7 +256,7 @@
       synchronise(type_github_get_data(parse_pkg_ref("r-lib/bad@*release")))
     Condition
       Error:
-      ! Can't find any release in GitHub repo r-lib/bad.
+      ! ! Can't find any release in GitHub repo r-lib/bad.
 
 # builtin token messages once per session
 

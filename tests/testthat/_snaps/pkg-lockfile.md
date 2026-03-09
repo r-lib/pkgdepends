@@ -19,12 +19,12 @@
       plan$resolve()
     Condition
       Error:
-      ! Cannot resolve an installation plan, it is already resolved.
+      ! ! Cannot resolve an installation plan, it is already resolved.
     Code
       plan$async_resolve()
     Condition
       Error:
-      ! Cannot resolve an installation plan, it is already resolved.
+      ! ! Cannot resolve an installation plan, it is already resolved.
 
 ---
 
@@ -32,12 +32,12 @@
       plan$set_solve_policy()
     Condition
       Error:
-      ! Cannot solve an installation plan, it is already solved.
+      ! ! Cannot solve an installation plan, it is already solved.
     Code
       plan$solve()
     Condition
       Error:
-      ! Cannot solve an installation plan, it is already solved.
+      ! ! Cannot solve an installation plan, it is already solved.
 
 # sysreqs
 
@@ -60,12 +60,12 @@
       plan$resolve()
     Condition
       Error:
-      ! Cannot resolve an installation plan, it is already resolved.
+      ! ! Cannot resolve an installation plan, it is already resolved.
     Code
       plan$async_resolve()
     Condition
       Error:
-      ! Cannot resolve an installation plan, it is already resolved.
+      ! ! Cannot resolve an installation plan, it is already resolved.
 
 ---
 
@@ -73,12 +73,12 @@
       plan$set_solve_policy()
     Condition
       Error:
-      ! Cannot solve an installation plan, it is already solved.
+      ! ! Cannot solve an installation plan, it is already solved.
     Code
       plan$solve()
     Condition
       Error:
-      ! Cannot solve an installation plan, it is already solved.
+      ! ! Cannot solve an installation plan, it is already solved.
 
 # install_sysreqs
 

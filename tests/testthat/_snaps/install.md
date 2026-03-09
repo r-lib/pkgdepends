@@ -1,4 +1,4 @@
-# install_packages: works with source packages
+# install_packages / works with source packages
 
     Code
       plan <- make_install_plan(paste0("local::", pkg, "?nocache"), lib = libpath)

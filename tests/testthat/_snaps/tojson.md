@@ -31,12 +31,12 @@
       tojson$write_str(complex())
     Condition
       Error:
-      ! Cannot convert atomic complex vectors to JSON.
+      ! ! Cannot convert atomic complex vectors to JSON.
     Code
       tojson$write_str(raw())
     Condition
       Error:
-      ! Cannot convert atomic raw vectors to JSON.
+      ! ! Cannot convert atomic raw vectors to JSON.
 
 ---
 
@@ -339,27 +339,27 @@
       tojson$unbox(list())
     Condition
       Error:
-      ! Can only unbox atomic scalar, not list.
+      ! ! Can only unbox atomic scalar, not list.
     Code
       tojson$unbox(1:2)
     Condition
       Error:
-      ! Cannot unbox vector of length 2.
+      ! ! Cannot unbox vector of length 2.
     Code
       tojson$unbox(double(2))
     Condition
       Error:
-      ! Cannot unbox vector of length 2.
+      ! ! Cannot unbox vector of length 2.
     Code
       tojson$unbox(character(2))
     Condition
       Error:
-      ! Cannot unbox vector of length 2.
+      ! ! Cannot unbox vector of length 2.
     Code
       tojson$unbox(logical(2))
     Condition
       Error:
-      ! Cannot unbox vector of length 2.
+      ! ! Cannot unbox vector of length 2.
 
 # pretty
 

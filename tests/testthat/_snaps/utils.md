@@ -135,12 +135,12 @@
       update_named_vector(1, c(a = 1))
     Condition
       Error:
-      ! All elements in `old` must be named.
+      ! ! All elements in `old` must be named.
     Code
       update_named_vector(c(a = 1), 1)
     Condition
       Error:
-      ! All elements in `new` must be named.
+      ! ! All elements in `new` must be named.
 
 # once_per_session
 

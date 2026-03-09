@@ -6,7 +6,7 @@
       Error:
       * r-lib/crayon: Conflicts with crayon
       * crayon: Conflicts with r-lib/crayon
-      ! Could not solve package dependencies:
+      ! ! Could not solve package dependencies:
 
 # direct CRAN conflicts with downstream GH dep
 
@@ -14,7 +14,7 @@
       p$stop_for_solution_error()
     Condition
       Error:
-      ! Could not solve package dependencies:
+      ! ! Could not solve package dependencies:
       * r-lib/foo: Can't install dependency r-lib/crayon
       * r-lib/crayon: Conflicts with crayon
 
@@ -24,7 +24,7 @@
       p$stop_for_solution_error()
     Condition
       Error:
-      ! Could not solve package dependencies:
+      ! ! Could not solve package dependencies:
       * pkg1: Can't install dependency pkg2 (>= 2.0.0)
 
 # failed resolution
@@ -33,7 +33,7 @@
       p1$stop_for_solution_error()
     Condition
       Error:
-      ! Could not solve package dependencies:
+      ! ! Could not solve package dependencies:
       * SDF: Can't find package called SDF.
 
 ---
@@ -42,7 +42,7 @@
       p2$stop_for_solution_error()
     Condition
       Error:
-      ! Could not solve package dependencies:
+      ! ! Could not solve package dependencies:
       * SDF/SDF: ! pkgdepends resolution error for SDF/SDF.
       Caused by error: 
       ! Can't find GitHub repo SDF/SDF.

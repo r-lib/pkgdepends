@@ -4,7 +4,7 @@
       parse_pkg_refs(c("notgood::pkg", "good", "my_package"))
     Condition
       Error:
-      ! Cannot parse package: my_package.
+      ! ! Cannot parse package: my_package.
       i See `?pkgdepends::pkg_refs()` for supported package sources.
 
 # explicit package names

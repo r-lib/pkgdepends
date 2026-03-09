@@ -360,7 +360,7 @@ pdl$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpRzErAD/file20fb45dc14f6"
+#> [1] "/tmp/Rtmp1AFsI2/file1e8a6d227348"
 #> 
 #> ## platforms
 #> <default>
@@ -377,7 +377,7 @@ pdl$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpRzErAD/file20fb7e136598"
+#> [1] "/tmp/Rtmp1AFsI2/file1e8a55de1d6e"
 #> 
 #> ## library
 #> <default>
@@ -497,32 +497,32 @@ pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
 #> ℹ Getting 12 pkgs (3.66 MB) and 14 pkgs with unknown sizes
-#> ✔ Got callr 3.7.6 (source) (104.36 kB)
 #> ✔ Got cli 3.6.5 (source) (640.24 kB)
+#> ✔ Got callr 3.7.6 (source) (104.36 kB)
 #> ✔ Got curl 7.0.0 (source) (731.11 kB)
-#> ✔ Got R6 2.6.1 (source) (64.51 kB)
-#> ✔ Got pkgbuild 1.4.8 (source) (51.30 kB)
-#> ✔ Got ps 1.9.1 (source) (167.92 kB)
-#> ✔ Got lpSolve 5.6.23 (source) (467.59 kB)
+#> ✔ Got pkgcache 2.2.4.9000 (source) (446.38 kB)
 #> ✔ Got jsonlite 2.0.0 (source) (1.06 MB)
-#> ✔ Got zip 2.3.3 (source) (115.47 kB)
-#> ✔ Got filelock 1.0.3 (source) (15.44 kB)
-#> ✔ Got filelock 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (24.70 kB)
-#> ✔ Got processx 3.8.6 (source) (165.19 kB)
 #> ✔ Got desc 1.4.3 (source) (80.07 kB)
-#> ✔ Got pkgcache 2.2.4.9000 (source) (445.98 kB)
-#> ✔ Got desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (334.52 kB)
+#> ✔ Got filelock 1.0.3 (source) (15.44 kB)
+#> ✔ Got R6 2.6.1 (source) (64.51 kB)
+#> ✔ Got filelock 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (24.70 kB)
+#> ✔ Got lpSolve 5.6.23 (source) (467.59 kB)
 #> ✔ Got callr 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (449.24 kB)
-#> ✔ Got curl 7.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (788.30 kB)
-#> ✔ Got ps 1.9.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (499.64 kB)
-#> ✔ Got pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) (208.62 kB)
-#> ✔ Got R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (86.81 kB)
-#> ✔ Got cli 3.6.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.34 MB)
-#> ✔ Got processx 3.8.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (337.39 kB)
 #> ✔ Got zip 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (660.96 kB)
+#> ✔ Got zip 2.3.3 (source) (115.47 kB)
+#> ✔ Got desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (334.52 kB)
+#> ✔ Got pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) (208.62 kB)
+#> ✔ Got ps 1.9.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (499.64 kB)
+#> ✔ Got pkgbuild 1.4.8 (source) (51.30 kB)
 #> ✔ Got lpSolve 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) (374.14 kB)
-#> ✔ Got jsonlite 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.09 MB)
+#> ✔ Got R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (86.81 kB)
 #> ✔ Got pkgdepends 0.9.0.9000 (source) (1.73 MB)
+#> ✔ Got processx 3.8.6 (source) (165.19 kB)
+#> ✔ Got ps 1.9.1 (source) (167.92 kB)
+#> ✔ Got processx 3.8.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (337.39 kB)
+#> ✔ Got curl 7.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (788.30 kB)
+#> ✔ Got jsonlite 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.09 MB)
+#> ✔ Got cli 3.6.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.34 MB)
 pdl$get_downloads()
 #> # A data frame: 26 × 41
 #>    ref            type  direct directpkg status package version license
@@ -551,23 +551,23 @@ pdl$download()
 #> ℹ Getting 6 pkgs (2.36 MB) and 13 pkgs with unknown sizes, 7 (1.27 MB) cached
 #> ✔ Got glue 1.8.0 (source) (126.68 kB)
 #> ✔ Got lifecycle 1.0.5 (source) (107.14 kB)
-#> ✔ Got pkgload 1.5.0 (source) (87.78 kB)
-#> ✔ Got rprojroot 2.1.1 (source) (59.90 kB)
 #> ✔ Got fs 1.6.7 (source) (1.20 MB)
+#> ✔ Got rprojroot 2.1.1 (source) (59.90 kB)
+#> ✔ Got pkgload 1.5.0 (source) (87.78 kB)
 #> ✔ Got rlang 1.1.7 (source) (770.34 kB)
 #> ✔ Cached copy of callr 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of cli 3.6.5 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Got lifecycle 1.0.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (131.69 kB)
-#> ✔ Cached copy of processx 3.8.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of ps 1.9.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Got glue 1.8.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (168.12 kB)
 #> ✔ Cached copy of pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Got fs 1.6.7 (x86_64-pc-linux-gnu-ubuntu-24.04) (316.95 kB)
+#> ✔ Got lifecycle 1.0.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (131.69 kB)
 #> ✔ Got rprojroot 2.1.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (113.23 kB)
-#> ✔ Got pkgload 1.5.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (222.83 kB)
+#> ✔ Cached copy of processx 3.8.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Got fs 1.6.7 (x86_64-pc-linux-gnu-ubuntu-24.04) (316.95 kB)
+#> ✔ Cached copy of R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Got rlang 1.1.7 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.60 MB)
+#> ✔ Got pkgload 1.5.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (222.83 kB)
+#> ✔ Cached copy of ps 1.9.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 pdl$get_downloads()
 #> # A data frame: 26 × 41
 #>    ref       type     direct directpkg status package   version license
@@ -611,17 +611,17 @@ pdl$download()
 #> ✔ Cached copy of pkgdepends 0.9.0.9000 (source) is the latest build
 #> ✔ Cached copy of pkgcache 2.2.4.9000 (source) is the latest build
 #> ✔ Cached copy of cli 3.6.5 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of curl 7.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of curl 7.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of filelock 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of jsonlite 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of lpSolve 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of processx 3.8.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of ps 1.9.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of zip 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of callr 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of zip 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of processx 3.8.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of ps 1.9.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 pdl
 #> <pkg_download_proposal>
 #> + refs:

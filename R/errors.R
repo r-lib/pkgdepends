@@ -760,8 +760,10 @@ err <- local({
 
   cnd_message_cli <- function(cond, full = FALSE) {
     exp <- paste0(cli::col_yellow("!"), " ")
-    add_exp <- is.null(names(cond$message))
     msg <- cnd_message_robust(cond)
+    add_exp <- is.null(names(cond$message)) &&
+      cli::ansi_substr(msg[1], 1, 1) != "!" &&
+      Sys.getenv("TESTTHAT_PKG") != .packageName
 
     c(
       paste0(if (add_exp) exp, msg),
@@ -791,9 +793,12 @@ err <- local({
 
   cnd_message_plain <- function(cond, full = FALSE) {
     exp <- "! "
-    add_exp <- is.null(names(cond$message))
+    msg <- cnd_message_robust(cond)
+    add_exp <- is.null(names(cond$message)) &&
+        substr(msg[1], 1, 1) != "!" &&
+        Sys.getenv("TESTTHAT_PKG") != .packageName
     c(
-      paste0(if (add_exp) exp, cnd_message_robust(cond)),
+      paste0(if (add_exp) exp, msg),
       if (inherits(cond$parent, "condition")) {
         msg <- if (full && inherits(cond$parent, "rlib_error_3_0")) {
           format(
@@ -1227,12 +1232,14 @@ err <- local({
 
   # -- public API --------------------------------------------------------
 
+  .packageName <- utils::packageName() %||% ""
   err_env <- environment()
   parent.env(err_env) <- baseenv()
 
   structure(
     list(
       .internal = err_env,
+      .package_name = .packageName,
       new_cond = new_cond,
       new_error = new_error,
       throw = throw,

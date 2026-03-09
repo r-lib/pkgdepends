@@ -218,7 +218,7 @@
       resolve_ref_deps(dsc$get_deps(), dsc$get("Remotes"), NULL)
     Condition
       Error:
-      ! Cannot determine package name for 1 package: "url::http://example.com".
+      ! ! Cannot determine package name for 1 package: "url::http://example.com".
       i Maybe you need to add a `<packagename>=` prefix?
 
 # as_pkg_dependencies

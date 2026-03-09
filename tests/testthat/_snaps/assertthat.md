@@ -4,7 +4,7 @@
       assert_that(assert())
     Condition
       Error:
-      ! isTRUE(x = FALSE) is not true
+      ! ! isTRUE(x = FALSE) is not true
 
 # assert_error
 
@@ -21,7 +21,7 @@
       assert_that(2 * 2)
     Condition
       Error:
-      ! `assert_that()`: assertion must return a logical value.
+      ! ! `assert_that()`: assertion must return a logical value.
       i it returned a number instead.
 
 ---
@@ -30,7 +30,7 @@
       assert_that(c(TRUE, FALSE))
     Condition
       Error:
-      ! `assert_that()`: assertion must return a scalar.
+      ! ! `assert_that()`: assertion must return a scalar.
       i it returned a vector of length 2.
 
 ---
@@ -39,7 +39,7 @@
       assert_that(NA)
     Condition
       Error:
-      ! `assert_that()`: assertion must not return `NA`.
+      ! ! `assert_that()`: assertion must not return `NA`.
 
 # default messages
 
@@ -263,7 +263,7 @@
       assert_that(has_attr(1L, "foobar"))
     Condition
       Error:
-      ! `1L` must have attribute `foobar`.
+      ! ! `1L` must have attribute `foobar`.
 
 ---
 
@@ -271,7 +271,7 @@
       assert_that(1L %has_attr% "foobar")
     Condition
       Error:
-      ! `1L` must have attribute `foobar`.
+      ! ! `1L` must have attribute `foobar`.
 
 # custom message
 
@@ -279,6 +279,6 @@
       fn(1:10)
     Condition
       Error:
-      ! `name` must be a name (character scalar).
+      ! ! `name` must be a name (character scalar).
       i It is an integer vector.
 

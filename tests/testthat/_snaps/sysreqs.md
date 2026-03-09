@@ -448,7 +448,7 @@
       sysreqs_resolve("java", "foobar-11")
     Condition
       Error:
-      ! Failed to look up system requirements for OS foobar-11.
+      ! ! Failed to look up system requirements for OS foobar-11.
       i HTTP error 400 for <<server>/__api__/repos/1/sysreqs?distribution=foobar&release=11>.
       i Response: "{\"code\":14,\"error\":\"Unsupported system\",\"payload\":null}".
 

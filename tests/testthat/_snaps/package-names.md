@@ -4,7 +4,7 @@
       p$stop_for_solution_error()
     Condition
       Error:
-      ! Could not solve package dependencies:
+      ! ! Could not solve package dependencies:
       * local::./pkg1: ! pkgdepends resolution error for local::./pkg1.
       Caused by error:
       ! Cannot determine package name for 1 package: "local::./pkg2".
@@ -33,7 +33,7 @@
       p$stop_for_solution_error()
     Condition
       Error:
-      ! Could not solve package dependencies:
+      ! ! Could not solve package dependencies:
       * local::./pkg2: ! pkgdepends resolution error for local::./pkg2.
       Caused by error:
       ! Cannot determine package name for 1 package: "url::http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz".

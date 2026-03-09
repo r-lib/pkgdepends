@@ -86,6 +86,6 @@
       add_metadata(tmp, c(foo = "bar"))
     Condition
       Error:
-      ! Could not find 'DESCRIPTION' file when installing package into '<tempdir>/<tempfile>'.
+      ! ! Could not find 'DESCRIPTION' file when installing package into '<tempdir>/<tempfile>'.
       i This is an internal error in pkgdepends, please report an issue at <https://github.com/r-lib/pkgdepends/issues>.
 

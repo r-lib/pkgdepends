@@ -266,7 +266,7 @@
       fn(letters)
     Condition
       Error:
-      ! `x` must be a count, a non-negative integer scalar.
+      ! ! `x` must be a count, a non-negative integer scalar.
       i It is a character vector.
 
 ---
@@ -275,7 +275,7 @@
       fn(1:10)
     Condition
       Error:
-      ! `x` must be a count, a non-negative integer scalar.
+      ! ! `x` must be a count, a non-negative integer scalar.
       i It is an integer vector.
 
 ---
@@ -284,7 +284,7 @@
       fn(-1)
     Condition
       Error:
-      ! `x` must be at least 0.
+      ! ! `x` must be at least 0.
 
 ---
 
@@ -292,7 +292,7 @@
       fn(0, min = 1)
     Condition
       Error:
-      ! `x` must be at least 1.
+      ! ! `x` must be at least 1.
 
 ---
 
@@ -300,5 +300,5 @@
       fn(NA_integer_)
     Condition
       Error:
-      ! `x` must not be a missing value (`NA`).
+      ! ! `x` must not be a missing value (`NA`).
 

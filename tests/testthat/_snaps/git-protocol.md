@@ -30,7 +30,7 @@
       git_list_files(fake_git$url("/pak-test.git"), "foobar")
     Condition
       Error:
-      ! Unknown git ref: "foobar".
+      ! ! Unknown git ref: "foobar".
 
 ---
 
@@ -202,7 +202,7 @@
       git_parse_message(raw(3))
     Condition
       Error:
-      ! Invalid pkt-line at the enf of message from git.
+      ! ! Invalid pkt-line at the enf of message from git.
 
 ---
 
@@ -210,7 +210,7 @@
       git_parse_message(charToRaw("foobvar"))
     Condition
       Error:
-      ! Invalid pkt-len field in message from git, must be four hexa digits.
+      ! ! Invalid pkt-len field in message from git, must be four hexa digits.
 
 ---
 
@@ -218,7 +218,7 @@
       git_parse_message(charToRaw("00bbnoteonugh"))
     Condition
       Error:
-      ! Invalid pkt-payload in message from git.
+      ! ! Invalid pkt-payload in message from git.
       i Need 187 bytes, found 13.
 
 # git_create_message_v1
@@ -227,7 +227,7 @@
       git_create_message_v1(character())
     Condition
       Error:
-      ! Invalid git protocol (v1) message, must have at least one argument
+      ! ! Invalid git protocol (v1) message, must have at least one argument
 
 # pkt_line
 
@@ -235,7 +235,7 @@
       pkt_line(raw(70000))
     Condition
       Error:
-      ! packet line longer than 65516 bytes is not implemented yet.
+      ! ! packet line longer than 65516 bytes is not implemented yet.
 
 # git_list_refs_v1
 
@@ -279,7 +279,7 @@
       async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
     Condition
       Error:
-      ! Invalid git protocol message from <http://localhost:3000/git/cli>.
+      ! ! Invalid git protocol message from <http://localhost:3000/git/cli>.
 
 ---
 
@@ -287,7 +287,7 @@
       async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
     Condition
       Error:
-      ! Only git protocol version 2 is supported, not version 10.
+      ! ! Only git protocol version 2 is supported, not version 10.
 
 ---
 
@@ -295,7 +295,7 @@
       async_git_list_refs_v2_process_2(NULL, psd2, url, NULL)
     Condition
       Error:
-      ! Response from git server does not have a closing `flush-pkt`.
+      ! ! Response from git server does not have a closing `flush-pkt`.
 
 ---
 
@@ -304,7 +304,7 @@
       url)
     Condition
       Error:
-      ! Response from git server does not have a closing `flush-pkt`.
+      ! ! Response from git server does not have a closing `flush-pkt`.
 
 # check_initial_response
 
@@ -312,7 +312,7 @@
       check_initial_response(list(), "http://localhost:3000/git/cli")
     Condition
       Error:
-      ! Unexpected response from git server, no `data-pkt` line.
+      ! ! Unexpected response from git server, no `data-pkt` line.
 
 # git_unpack
 
@@ -632,7 +632,7 @@
       git_unpack(pack[1:30])
     Condition
       Error:
-      ! Invalid packfile from git, too short.
+      ! ! Invalid packfile from git, too short.
 
 ---
 
@@ -640,7 +640,7 @@
       git_unpack(charToRaw("nope and some more so we have enough bytes"))
     Condition
       Error:
-      ! Not a git packfile, it does not have a `PACK` header.
+      ! ! Not a git packfile, it does not have a `PACK` header.
 
 ---
 
@@ -648,7 +648,7 @@
       git_unpack(pack2)
     Condition
       Error:
-      ! Unexpected packfile version, must be version 2.
+      ! ! Unexpected packfile version, must be version 2.
 
 ---
 
@@ -656,7 +656,7 @@
       git_unpack(pack2)
     Condition
       Error:
-      ! Checksum mismatch in git packfile.
+      ! ! Checksum mismatch in git packfile.
 
 # parse_int32_nwb
 
@@ -664,7 +664,7 @@
       parse_int32_nwb(raw(3))
     Condition
       Error:
-      ! Cannot parse integer, not raw or number of bytes is wrong.
+      ! ! Cannot parse integer, not raw or number of bytes is wrong.
 
 # async_git_resolve_ref
 
@@ -705,7 +705,7 @@
       sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "badcafe"))
     Condition
       Error:
-      ! Unknown git ref: "badcafe".
+      ! ! Unknown git ref: "badcafe".
 
 ---
 
@@ -713,7 +713,7 @@
       sy(async_git_resolve_ref(fake_git$url("/pak-test.git"), "badcafe"))
     Condition
       Error:
-      ! Found multiple git refs with prefix "badcafe", it is ambiguous.
+      ! ! Found multiple git refs with prefix "badcafe", it is ambiguous.
       i Matching git refs: "badcafe1" and "badcafe2".
       i Specify a longer prefix to choose a single git ref.
 
@@ -723,7 +723,7 @@
       git_fetch_process_v1(list(), url, "badcafe")
     Condition
       Error:
-      ! Empty reply from git server (protocol v1) at <https://<auth>@example.com>.
+      ! ! Empty reply from git server (protocol v1) at <https://<auth>@example.com>.
 
 ---
 
@@ -731,7 +731,7 @@
       git_fetch_process_v1(list(list(type = "boo")), url, "badcafe")
     Condition
       Error:
-      ! No PACK in git server response (protocol v1) from <https://<auth>@example.com>.
+      ! ! No PACK in git server response (protocol v1) from <https://<auth>@example.com>.
 
 # git_download_repo
 

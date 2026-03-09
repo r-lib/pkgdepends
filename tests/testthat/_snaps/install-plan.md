@@ -72,7 +72,7 @@
       x Failed to build badbuild 1.0.0
     Condition
       Error:
-      ! Failed to build source package badbuild.
+      ! ! Failed to build source package badbuild.
 
 ---
 

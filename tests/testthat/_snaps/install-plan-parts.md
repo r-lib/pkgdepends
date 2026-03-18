@@ -53,7 +53,9 @@
       repeat {
         events <- poll_workers(state)
         state <- handle_events(state, events)
-        if (done) break
+        if (done) {
+          break
+        }
         if (!proc$is_alive()) done <- TRUE
       }
     Message
@@ -66,7 +68,9 @@
       repeat {
         events <- poll_workers(state)
         state <- handle_events(state, events)
-        if (done) break
+        if (done) {
+          break
+        }
         if (!proc$is_alive()) done <- TRUE
       }
     Message

@@ -28,7 +28,9 @@ test_that("vignettes can be turned on and off", {
   expect_false("doc" %in% dir(file.path(tmplib, "pkgdependstest")))
   rimraf(tmplib, "pkgdependstest")
 
-  if (Sys.which("pandoc") == "") skip("Needs pandoc")
+  if (Sys.which("pandoc") == "") {
+    skip("Needs pandoc")
+  }
 
   inst2 <- new_pkg_installation_proposal(
     paste0("local::", pkgdir, "?nocache"),

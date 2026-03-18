@@ -106,37 +106,55 @@ test_that("pkgplan_i_lp_prefer_new_binaries skips version-pinned direct refs", {
   # must NOT be ruled out by prefer_new_binaries;
   pkgs <- res_make_empty_df()
   for (entry in list(
-    make_fake_resolution1("pkg@3.5.2", list(
-      direct   = TRUE,
-      version  = "3.5.2",
-      platform = ""   # PPM binary: empty platform for pure-R packages
-    )),
-    make_fake_resolution1("pkg", list(
-      direct   = FALSE,
-      version  = "4.0.2",
-      platform = "x86_64-pc-linux-gnu"
-    )),
-    make_fake_resolution1("pkg1", list(
-      direct   = FALSE,
-      version  = "1.0.0",
-      platform = "x86_64-pc-linux-gnu"
-    )),
-    make_fake_resolution1("pkg1", list(
-      direct   = FALSE,
-      version  = "2.0.0",
-      platform = "x86_64-pc-linux-gnu"
-    ))
-  )) pkgs <- res_add_df_entries(pkgs, entry)
+    make_fake_resolution1(
+      "pkg@3.5.2",
+      list(
+        direct = TRUE,
+        version = "3.5.2",
+        platform = "" # PPM binary: empty platform for pure-R packages
+      )
+    ),
+    make_fake_resolution1(
+      "pkg",
+      list(
+        direct = FALSE,
+        version = "4.0.2",
+        platform = "x86_64-pc-linux-gnu"
+      )
+    ),
+    make_fake_resolution1(
+      "pkg1",
+      list(
+        direct = FALSE,
+        version = "1.0.0",
+        platform = "x86_64-pc-linux-gnu"
+      )
+    ),
+    make_fake_resolution1(
+      "pkg1",
+      list(
+        direct = FALSE,
+        version = "2.0.0",
+        platform = "x86_64-pc-linux-gnu"
+      )
+    )
+  )) {
+    pkgs <- res_add_df_entries(pkgs, entry)
+  }
 
   config <- current_config()
   lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
   lp <- pkgplan_i_lp_prefer_new_binaries(lp)
 
-  types    <- vcapply(lp$conds, "[[", "type")
-  pnb_vars <- unlist(lapply(lp$conds[types == "prefer-new-binary"], "[[", "vars"))
+  types <- vcapply(lp$conds, "[[", "type")
+  pnb_vars <- unlist(lapply(
+    lp$conds[types == "prefer-new-binary"],
+    "[[",
+    "vars"
+  ))
 
-  pkg352_idx   <- which(pkgs$package == "pkg" & pkgs$version == "3.5.2")
-  pkg402_idx   <- which(pkgs$package == "pkg" & pkgs$version == "4.0.2")
+  pkg352_idx <- which(pkgs$package == "pkg" & pkgs$version == "3.5.2")
+  pkg402_idx <- which(pkgs$package == "pkg" & pkgs$version == "4.0.2")
   pkg1_old_idx <- which(pkgs$package == "pkg1" & pkgs$version == "1.0.0")
   pkg1_new_idx <- which(pkgs$package == "pkg1" & pkgs$version == "2.0.0")
 

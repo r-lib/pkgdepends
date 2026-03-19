@@ -189,9 +189,6 @@ cran::forecast
 forecast@last
 forecast@current
 }\if{html}{\out{</div>}}
-
-Note: pkgdepends currently parses the version specification part
-(everything after \code{@}), but does not use it.
 }
 
 \subsection{Bioconductor packages (\verb{bioc::})}{

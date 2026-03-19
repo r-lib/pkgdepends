@@ -72,7 +72,7 @@ pd$solve()
 pd$draw()
 ```
 
-    ## ✔ Updated metadata database: 3.30 MB in 8 files.
+    ## ✔ Updated metadata database: 3.31 MB in 8 files.
     ## ✔ Updating metadata database ... done
     ## r-lib/pkgcache 2.2.4.9000 [new][bld][cmp][dl] (unknown size)
     ## ├─callr 3.7.6 [new][bld][dl] (104.36 kB)
@@ -129,11 +129,11 @@ pdi$install()
     ## ℹ Getting 1 pkg with unknown size
     ## ✔ Cached copy of cli 3.6.5.9000 (source) is the latest build
     ## ℹ Packaging cli 3.6.5.9000
-    ## ✔ Packaged cli 3.6.5.9000 (1.7s)
+    ## ✔ Packaged cli 3.6.5.9000 (1.8s)
     ## ℹ Building cli 3.6.5.9000
-    ## ✔ Built cli 3.6.5.9000 (9.7s)
-    ## ✔ Installed cli 3.6.5.9000 (github::r-lib/cli@3dd94c0) (38ms)
-    ## ✔ Summary:   1 new  in 9.7s
+    ## ✔ Built cli 3.6.5.9000 (9.2s)
+    ## ✔ Installed cli 3.6.5.9000 (github::r-lib/cli@3dd94c0) (62ms)
+    ## ✔ Summary:   1 new  in 9.2s
 
 ## Dependency resolution
 

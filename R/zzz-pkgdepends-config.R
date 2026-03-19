@@ -146,7 +146,7 @@ pkgdepends_config <- sort_by_name(list(
 
   # -----------------------------------------------------------------------
   library = list(
-    type = "string_or_null",
+    type = "character_or_null",
     docs = "Package library to install packages to. It is also used for
        already installed packages when considering dependencies in
        [dependency lookup][pkg_deps] or

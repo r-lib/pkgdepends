@@ -18,6 +18,33 @@ is_character <- function(x) {
   }
 }
 
+is_non_empty_character <- function(x) {
+  if (!is.character(x)) {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must be a non-empty character vector without {.code NA},
+             but it is {.type {x}}",
+      env = environment()
+    )
+  } else if (anyNA(x)) {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must be a non-empty character vector without {.code NA},
+             but it has {sum(is.na(x))} {.code NA} value{?s}.",
+      env = environment()
+    )
+  } else if (length(x) == 0) {
+    structure(
+      FALSE,
+      msg = "{.arg {(.arg)}} must be a non-empty character vector without {.code NA},
+             but it is empty.",
+      env = environment()
+    )
+  } else {
+    TRUE
+  }
+}
+
 is_string <- function(x) {
   if (is.character(x) && length(x) == 1 && !is.na(x)) {
     return(TRUE)

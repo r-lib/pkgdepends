@@ -58,7 +58,7 @@ pkg_installation_plan <- R6::R6Class(
       config = list(),
       remote_types = NULL
     ) {
-      assert_that(is_path(config$library))
+      assert_that(is_character(config$library))
       private$library <- config$library
       config$goal <- "install"
       private$plan <- pkg_plan$new(

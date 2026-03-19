@@ -99,6 +99,11 @@
 #' String or `NULL`. `NA` is not allowed. In environment variables the
 #' string `NULL` means an R `NULL` value.
 #'
+#' ## `character_or_null`
+#'
+#' Character vector or `NULL`. `NA` is not allowed. In environment variables
+#' the entries are separated by a semicolon.
+#'
 #' ## `character`
 #'
 #' Character vector without `NA` values. In environment variables the
@@ -157,6 +162,7 @@ config <- local({
   # Built-in types
   builtin_types <- c(
     "character",
+    "character_or_null",
     "count",
     "custom",
     "flag",
@@ -167,6 +173,9 @@ config <- local({
   # Checks for builtin types
   builtin_checks <- list(
     character = function(x) is.character(x) && !anyNA(x),
+    character_or_null = function(x) {
+      (is.character(x) && !anyNA(x)) || is.null(x)
+    },
     custom = function(x) true(x),
     flag = function(x) is_flag(x),
     string = function(x) is_string(x),
@@ -200,6 +209,9 @@ config <- local({
     },
     string = function(x, ...) x,
     string_or_null = function(x, ...) if (identical(x, "NULL")) NULL else x,
+    character_or_null = function(x, ...) {
+      if (x %in% c("", "NULL")) NULL else strsplit(x, ";", fixed = TRUE)[[1]]
+    },
     count = function(x, name, ...) {
       num <- suppressWarnings(as.numeric(num))
       if (is.na(num) || !is_count(num)) {

@@ -70,6 +70,8 @@ install_package_plan <- function(
   cli::ansi_hide_cursor()
   on.exit(cli::ansi_show_cursor())
 
+  lib <- lib[1]
+
   cli::cli_div(
     theme = list(
       ".timestamp" = list(

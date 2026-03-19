@@ -99,8 +99,8 @@ pkg_installation_proposal <- R6::R6Class(
     ) {
       config$goal <- "install"
       policy <- match.arg(policy)
-      assert_that(is_path(config$library))
-      private$library <- config$library
+      assert_that(is_character(config$library))
+      private$library <- config$library[1]
       private$policy <- policy
       private$plan <- pkg_plan$new(
         refs,

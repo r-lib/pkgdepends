@@ -208,18 +208,23 @@ res_init <- function(self, private, config, cache, library, remote_types) {
       npkgs <- value$package[not_inst & !want_source & !want_reinst]
 
       ## Installed already? Resolve that as well
-      if (!is.null(private$library) && length(npkgs)) {
-        ml <- file.exists(file.path(private$library, npkgs))
-        rc <- file.exists(file.path(.Library, npkgs)) &
+      if (length(npkgs)) {
+        for (lib in private$library) {
+          ex <- file.exists(file.path(lib, npkgs))
+          if (any(ex)) {
+            lib <- normalizePath(lib, winslash = "/", mustWork = FALSE)
+            refs <- paste0("installed::", lib, "/", npkgs[ex])
+            refs <- setdiff(refs, private$state$ref)
+            self$push(.list = parse_pkg_refs(refs))
+            npkgs <- npkgs[!ex]
+          }
+        }
+        lib <- .Library
+        ex <- file.exists(file.path(lib, npkgs)) &
           npkgs %in% recommended_packages()
-        npkgs <- npkgs[ml | rc]
-        if (length(npkgs)) {
-          lib <- normalizePath(
-            private$library,
-            winslash = "/",
-            mustWork = FALSE
-          )
-          refs <- paste0("installed::", lib, "/", npkgs)
+        if (any(ex)) {
+          lib <- normalizePath(lib, winslash = "/", mustWork = FALSE)
+          refs <- paste0("installed::", lib, "/", npkgs[ex])
           refs <- setdiff(refs, private$state$ref)
           self$push(.list = parse_pkg_refs(refs))
         }

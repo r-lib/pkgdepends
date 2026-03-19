@@ -1327,11 +1327,14 @@ pkgplan_install_plan <- function(self, private, downloads) {
     deps <- lapply(deps, setdiff, y = c("R", base_packages()))
   }
 
-  installed <- ifelse(
-    sol$type == "installed",
-    file.path(private$config$get("library"), sol$package),
-    NA_character_
-  )
+  installed <- rep(NA_character_, nrow(sol))
+  if (any(sol$type == "installed")) {
+    for (lib in c(private$config$get("library"), .Library)) {
+      todo <- is.na(installed) & sol$type == "installed"
+      ex <- file.exists(file.path(lib, sol$package[todo]))
+      installed[todo][ex] <- file.path(lib, sol$package[todo][ex])
+    }
+  }
 
   res <- self$get_resolution()
   direct_packages <- res$package[res$direct]

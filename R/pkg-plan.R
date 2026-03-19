@@ -153,7 +153,10 @@ pkgplan_init <- function(
     ))
   }
 
-  assert_that(is_character(refs), is_optional_path(library))
+  assert_that(
+    is_character(refs),
+    is.null(library) || is_non_empty_character(library)
+  )
 
   private$refs <- refs
   private$remotes <- parse_pkg_refs(refs)
@@ -162,15 +165,15 @@ pkgplan_init <- function(
   private$remote_types <- remote_types %||% default_remote_types()
 
   if (!is.null(library)) {
-    mkdirp(library, msg = "Creating library directory")
-    library <- normalizePath(library)
+    mkdirp(library[1], msg = "Creating library directory")
+    library[1] <- normalizePath(library[1])
   }
   mkdirp(private$download_cache <- private$config$get("cache_dir"))
 
-  installed <- NULL
-  if (!is.null(library)) {
+  installed <- make_installed_cache(library)
+  if (!is.null(installed)) {
     installed <- merge_installed_caches(
-      make_installed_cache(library),
+      installed,
       make_installed_cache(.Library, priority = "recommended")
     )
   }
@@ -212,8 +215,8 @@ pkgplan_init_lockfile <- function(
   private$remote_types <- remote_types %||% default_remote_types()
 
   if (!is.null(library)) {
-    mkdirp(library, msg = "Creating library directory")
-    library <- normalizePath(library)
+    mkdirp(library[1], msg = "Creating library directory")
+    library[1] <- normalizePath(library[1])
   }
   mkdirp(private$download_cache <- private$config$get("cache_dir"))
 
@@ -335,7 +338,11 @@ pkgplan_print <- function(self, private, ...) {
 
   ## library
   if (!is.null(private$config$get("library"))) {
-    cat("- library:", backtick(private$config$get("library")), "\n")
+    cat(
+      "- library:",
+      paste(backtick(private$config$get("library")), collapse = ", "),
+      "\n"
+    )
   }
 
   ## resolution

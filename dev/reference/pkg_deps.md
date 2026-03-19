@@ -422,7 +422,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpl3rUGL/file233d6338b4ee"
+#> [1] "/tmp/Rtmph60gLG/file2093744d9609"
 #> 
 #> ## platforms
 #> <default>
@@ -439,11 +439,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpl3rUGL/file233d3f29df9f"
+#> [1] "/tmp/Rtmph60gLG/file20936e0b4bb8"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmpl3rUGL/file233d14e7a97e"
+#> [1] "/tmp/Rtmph60gLG/file209331c2ce5e"
 #> 
 #> ## metadata_update_after
 #> <default>

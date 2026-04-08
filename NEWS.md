@@ -1,4 +1,4 @@
-# pkgdepends (development version)
+# pkgdepends 0.9.1
 
 * `deps::<filename>` works again correctly now
   (https://github.com/r-lib/pak/issues/784).

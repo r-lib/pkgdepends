@@ -2,6 +2,17 @@
 
 ## pkgdepends (development version)
 
+- `deps::<filename>` works again correctly now
+  (<https://github.com/r-lib/pak/issues/784>).
+
+- pkgdepends now works with `options(install.lock = FALSE)`
+  ([@Fan-iX](https://github.com/Fan-iX),
+  [\#455](https://github.com/r-lib/pkgdepends/issues/455)).
+
+- pkgdepends can now consider installed packages in mutliple libraries,
+  when installing packages. Pass a character vector of library path as
+  the `library` option.
+
 ## pkgdepends 0.9.0
 
 CRAN release: 2025-05-27

@@ -131,9 +131,9 @@ pdi$install()
     ## ℹ Packaging cli 3.6.5.9000
     ## ✔ Packaged cli 3.6.5.9000 (1.7s)
     ## ℹ Building cli 3.6.5.9000
-    ## ✔ Built cli 3.6.5.9000 (8.5s)
-    ## ✔ Installed cli 3.6.5.9000 (github::r-lib/cli@eef82e9) (37ms)
-    ## ✔ Summary:   1 new  in 8.5s
+    ## ✔ Built cli 3.6.5.9000 (9.1s)
+    ## ✔ Installed cli 3.6.5.9000 (github::r-lib/cli@eef82e9) (38ms)
+    ## ✔ Summary:   1 new  in 9.1s
 
 ## Dependency resolution
 

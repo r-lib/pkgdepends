@@ -422,7 +422,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmph60gLG/file2093744d9609"
+#> [1] "/tmp/RtmpOxiVMJ/file235dac41492"
 #> 
 #> ## platforms
 #> <default>
@@ -439,11 +439,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmph60gLG/file20936e0b4bb8"
+#> [1] "/tmp/RtmpOxiVMJ/file235d204bf17c"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmph60gLG/file209331c2ce5e"
+#> [1] "/tmp/RtmpOxiVMJ/file235d3b5a8bc1"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -518,7 +518,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 3.96 MB in 3 files.
+#> ✔ Updated metadata database: 3.98 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -552,7 +552,7 @@ pd$get_resolution()
 #>  7 jsonlite       stan… FALSE  FALSE     OK     jsonli… 2.0.0   MIT + …
 #>  8 lpSolve        stan… FALSE  FALSE     OK     lpSolve 5.6.23  LGPL-2 
 #>  9 pkgbuild       stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + …
-#> 10 processx       stan… FALSE  FALSE     OK     proces… 3.8.6   MIT + …
+#> 10 processx       stan… FALSE  FALSE     OK     proces… 3.8.7   MIT + …
 #> # ℹ 16 more rows
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
@@ -670,23 +670,23 @@ pd
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-#> pkgload 1.5.0 [new][dl] (unknown size)
+#> pkgload 1.5.1 [new][dl] (unknown size)
 #> ├─cli 3.6.5 [new][dl] (unknown size)
 #> ├─desc 1.4.3 [new][dl] (unknown size)
 #> │ ├─R6 2.6.1 [new][dl] (unknown size)
 #> │ └─cli
-#> ├─fs 1.6.7 [new][dl] (unknown size)
+#> ├─fs 2.0.1 [new][dl] (unknown size)
 #> ├─glue 1.8.0 [new][dl] (unknown size)
 #> ├─lifecycle 1.0.5 [new][dl] (unknown size)
 #> │ ├─cli
-#> │ └─rlang 1.1.7 [new][dl] (unknown size)
+#> │ └─rlang 1.2.0 [new][dl] (unknown size)
 #> ├─pkgbuild 1.4.8 [new][dl] (unknown size)
 #> │ ├─R6
 #> │ ├─callr 3.7.6 [new][dl] (unknown size)
 #> │ │ ├─R6
-#> │ │ └─processx 3.8.6 [new][dl] (unknown size)
+#> │ │ └─processx 3.8.7 [new][dl] (unknown size)
 #> │ │   ├─R6
-#> │ │   └─ps 1.9.1 [new][dl] (unknown size)
+#> │ │   └─ps 1.9.2 [new][dl] (unknown size)
 #> │ ├─cli
 #> │ ├─desc
 #> │ └─processx

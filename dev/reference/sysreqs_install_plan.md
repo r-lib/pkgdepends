@@ -103,30 +103,32 @@ sysreqs_install_plan(
 #> [1] "apt-get -y update"
 #> 
 #> $install_scripts
-#> [1] "apt-get -y install libx11-dev libcurl4-openssl-dev libssl-dev make zlib1g-dev pandoc libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev"
+#> [1] "apt-get -y install libx11-dev libcurl4-openssl-dev libssl-dev cmake make libuv1-dev zlib1g-dev pandoc libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev"
 #> 
 #> $post_install
 #> character(0)
 #> 
 #> $packages
-#> # A data frame: 16 × 5
+#> # A data frame: 18 × 5
 #>    sysreq     packages  pre_install system_packages post_install
 #>    <chr>      <list>    <list>      <list>          <list>      
-#>  1 fontconfig <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  2 freetype   <chr [3]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  3 fribidi    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  4 gnumake    <chr [3]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  5 harfbuzz   <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  6 libcurl    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  7 libicu     <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  8 libjpeg    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#>  9 libpng     <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#> 10 libtiff    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#> 11 libwebp    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#> 12 libxml2    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#> 13 openssl    <chr [2]> <chr [0]>   <chr [1]>       <chr [0]>   
-#> 14 pandoc     <chr [3]> <chr [0]>   <chr [1]>       <chr [0]>   
-#> 15 x11        <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
-#> 16 zlib       <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  1 cmake      <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  2 fontconfig <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  3 freetype   <chr [3]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  4 fribidi    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  5 gnumake    <chr [3]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  6 harfbuzz   <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  7 libcurl    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  8 libicu     <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#>  9 libjpeg    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 10 libpng     <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 11 libtiff    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 12 libuv      <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 13 libwebp    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 14 libxml2    <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 15 openssl    <chr [2]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 16 pandoc     <chr [3]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 17 x11        <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
+#> 18 zlib       <chr [1]> <chr [0]>   <chr [1]>       <chr [0]>   
 #> 
 ```

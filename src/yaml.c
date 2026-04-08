@@ -37,7 +37,8 @@ SEXP yaml_parse_scalar(SEXP rx) {
           break;
 
         case YAML_SCALAR_EVENT:
-          res = handle_scalar(&event);
+	  Rf_unprotect(1);
+          res = Rf_protect(handle_scalar(&event));
           yaml_event_delete(&event);
           yaml_parser_delete(&parser);
           done = 1;

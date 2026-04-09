@@ -1,0 +1,98 @@
+# Status of packages in a library
+
+Query data of all packages in a package library.
+
+## Usage
+
+``` r
+lib_status(library = .libPaths()[1], packages = NULL)
+```
+
+## Arguments
+
+- library:
+
+  Path to library.
+
+- packages:
+
+  If not `NULL`, then only these packages are shown.
+
+## Value
+
+Data frame that contains data about the packages installed in the
+library.
+
+It has always has columns:
+
+- `biocviews`: the corresponding field from `DESCRIPTION`, it must be
+  present for all Bioconductor packages, other packages typically don't
+  have it.
+
+- `built`: the `Built` field from `DESCRIPTION`.
+
+- `depends`, `suggests`, `Imports`, `linkingto`, `enhances`: the
+  corresponding fields from the `DESCRIPTION` files.
+
+- `deps`: A list or data frames, the dependencies of the package. It has
+  columns: `ref`, `type` (dependency type in lowercase), `package`
+  (dependent package, or `R`), `op` and `version`, for last two are for
+  version requirement. `op` can be `>=`, `>`, `==` or `<=`, although the
+  only the first one is common in practice.
+
+- `library`: path to the package library containing the package.
+
+- `license`: from `DESCRIPTION`.
+
+- `md5sum`: from `DESCTIPTION`, typically `NA`, except on Windows.
+
+- `needscompilation`: from `DESCRIPTION`, this column is logical.
+
+- `package`: package name.
+
+- `platform`: from the `Built` field in `DESCRIPTION`, the current
+  platform if missing from `DESCRIPTION`.
+
+- `priority`: from `DESCRIPTION`, usually `base`, `recommended`, or
+  missing.
+
+- `ref`: the corresponding `installed::*` package reference.
+
+- `repository`: from `DESCRIPTION`. For packages from a CRAN repository
+  this is `CRAN`, some other repositories, e.g. R-universe adds the
+  repository URL here.
+
+- `repotype`: `cran`, `bioc` or missing.
+
+- `rversion`: from the `Built` field. If no such field, then the current
+  R version.
+
+- `sysreqs`: the `SystemRequirements` field from `DESCRIPTION`.
+
+- `title`: package title.
+
+- `type`: always `installed`.
+
+- `version`: package version (as string).
+
+Most of these columns are unchanged from `DESCRIPTION`, but pkgdepends
+also adds a couple.
+
+### Notes:
+
+- In addition, it also has all `remote*` and `config/needs/*` entries
+  from the `DESCRIPTION` files. (Case insensitive.)
+
+- All columns are of type `character`, except for `needscompilation`,
+  which is logical and `deps`, which is a list columns.
+
+- If an entry is missing for a package, it is set to `NA`.
+
+- Note that column names are lowercase, even if the corresponding
+  entries are not in `DESCRIPTION`.
+
+- The order of the columns is not deterministic, so don't assume any
+  order.
+
+- Additional columns might be present, these are internal for pkgdepends
+  and should not be used in user code.

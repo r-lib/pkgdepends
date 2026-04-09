@@ -74,7 +74,7 @@ pd$draw()
 
     ## ✔ Updated metadata database: 3.33 MB in 8 files.
     ## ✔ Updating metadata database ... done
-    ## r-lib/pkgcache 2.2.4.9000 [new][bld][cmp][dl] (unknown size)
+    ## r-lib/pkgcache 2.2.5.9000 [new][bld][cmp][dl] (unknown size)
     ## ├─callr 3.7.6 [new][bld][dl] (104.36 kB)
     ## │ ├─processx 3.8.7 [new][bld][cmp][dl] (165.19 kB)
     ## │ │ ├─ps 1.9.2 [new][bld][cmp][dl] (167.92 kB)
@@ -129,11 +129,11 @@ pdi$install()
     ## ℹ Getting 1 pkg with unknown size
     ## ✔ Cached copy of cli 3.6.5.9000 (source) is the latest build
     ## ℹ Packaging cli 3.6.5.9000
-    ## ✔ Packaged cli 3.6.5.9000 (1.9s)
+    ## ✔ Packaged cli 3.6.5.9000 (1.8s)
     ## ℹ Building cli 3.6.5.9000
-    ## ✔ Built cli 3.6.5.9000 (10s)
-    ## ✔ Installed cli 3.6.5.9000 (github::r-lib/cli@eef82e9) (39ms)
-    ## ✔ Summary:   1 new  in 10s
+    ## ✔ Built cli 3.6.5.9000 (9.3s)
+    ## ✔ Installed cli 3.6.5.9000 (github::r-lib/cli@eef82e9) (37ms)
+    ## ✔ Summary:   1 new  in 9.3s
 
 ## Dependency resolution
 

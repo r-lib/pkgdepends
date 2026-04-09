@@ -2,6 +2,10 @@
 
 ## pkgdepends (development version)
 
+## pkgdepends 0.9.1
+
+CRAN release: 2026-04-09
+
 - `deps::<filename>` works again correctly now
   (<https://github.com/r-lib/pak/issues/784>).
 

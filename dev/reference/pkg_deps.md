@@ -422,7 +422,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpEDWftH/file209c5318cee1"
+#> [1] "/tmp/RtmpMWPkgC/file20b033aeb849"
 #> 
 #> ## platforms
 #> <default>
@@ -439,11 +439,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpEDWftH/file209c52a7505c"
+#> [1] "/tmp/RtmpMWPkgC/file20b07bb92d50"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpEDWftH/file209c48aca092"
+#> [1] "/tmp/RtmpMWPkgC/file20b06b6e8451"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -543,7 +543,7 @@ pd$get_resolution()
 #> # A data frame: 27 × 35
 #>    ref            type  direct directpkg status package version license
 #>    <chr>          <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#>  1 r-lib/pkgdepe… gith… TRUE   TRUE      OK     pkgdep… 0.9.0.… MIT + …
+#>  1 r-lib/pkgdepe… gith… TRUE   TRUE      OK     pkgdep… 0.9.1.… MIT + …
 #>  2 callr          stan… FALSE  FALSE     OK     callr   3.7.6   MIT + …
 #>  3 cli            stan… FALSE  FALSE     OK     cli     3.6.5   MIT + …
 #>  4 curl           stan… FALSE  FALSE     OK     curl    7.0.0   MIT + …
@@ -583,7 +583,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + constraints (58):
+#> + constraints (64):
 #>   - select pkgdepends exactly once
 #>   - select callr at most once
 #>   - select cli at most once

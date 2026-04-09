@@ -15,13 +15,13 @@ Source:
 [`DESCRIPTION`](https://github.com/r-lib/pkgdepends/blob/main/DESCRIPTION)
 
 Csárdi G (2026). *pkgdepends: Package Dependency Resolution and
-Downloads*. R package version 0.9.0.9000,
+Downloads*. R package version 0.9.1.9000,
 <https://r-lib.github.io/pkgdepends/>.
 
     @Manual{,
       title = {pkgdepends: Package Dependency Resolution and Downloads},
       author = {Gábor Csárdi},
       year = {2026},
-      note = {R package version 0.9.0.9000},
+      note = {R package version 0.9.1.9000},
       url = {https://r-lib.github.io/pkgdepends/},
     }

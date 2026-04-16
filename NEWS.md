@@ -7,7 +7,7 @@
 
 * pkgdepends now works with `options(install.lock = FALSE)` (@Fan-iX, #455).
 
-* pkgdepends can now consider installed packages in mutliple
+* pkgdepends can now consider installed packages in multiple
   libraries, when installing packages. Pass a character vector
   of library path as the `library` option.
 

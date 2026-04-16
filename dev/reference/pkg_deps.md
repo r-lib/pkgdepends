@@ -422,7 +422,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpMWPkgC/file20b033aeb849"
+#> [1] "/tmp/RtmpUNsu0V/file1fc730666c7e"
 #> 
 #> ## platforms
 #> <default>
@@ -439,11 +439,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpMWPkgC/file20b07bb92d50"
+#> [1] "/tmp/RtmpUNsu0V/file1fc7722d020b"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpMWPkgC/file20b06b6e8451"
+#> [1] "/tmp/RtmpUNsu0V/file1fc73a3d29c1"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -524,11 +524,12 @@ pd$resolve()
 #> ✔ Updating metadata database ... done
 #> 
 pd$get_resolution()
-#> # A data frame: 2 × 35
+#> # A data frame: 3 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.2   GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.2   GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.3   GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.3   GPL-3  
+#> 3 pak   standard TRUE   TRUE      OK     pak     0.9.3-1 GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -545,14 +546,14 @@ pd$get_resolution()
 #>    <chr>          <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
 #>  1 r-lib/pkgdepe… gith… TRUE   TRUE      OK     pkgdep… 0.9.1.… MIT + …
 #>  2 callr          stan… FALSE  FALSE     OK     callr   3.7.6   MIT + …
-#>  3 cli            stan… FALSE  FALSE     OK     cli     3.6.5   MIT + …
+#>  3 cli            stan… FALSE  FALSE     OK     cli     3.6.6   MIT + …
 #>  4 curl           stan… FALSE  FALSE     OK     curl    7.0.0   MIT + …
 #>  5 desc           stan… FALSE  FALSE     OK     desc    1.4.3   MIT + …
 #>  6 filelock       stan… FALSE  FALSE     OK     filelo… 1.0.3   MIT + …
 #>  7 jsonlite       stan… FALSE  FALSE     OK     jsonli… 2.0.0   MIT + …
 #>  8 lpSolve        stan… FALSE  FALSE     OK     lpSolve 5.6.23  LGPL-2 
 #>  9 pkgbuild       stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + …
-#> 10 pkgcache       stan… FALSE  FALSE     OK     pkgcac… 2.2.4   MIT + …
+#> 10 pkgcache       stan… FALSE  FALSE     OK     pkgcac… 2.2.5   MIT + …
 #> # ℹ 17 more rows
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
@@ -583,7 +584,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + constraints (64):
+#> + constraints (58):
 #>   - select pkgdepends exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -671,7 +672,7 @@ pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
 #> pkgload 1.5.1 [new][dl] (unknown size)
-#> ├─cli 3.6.5 [new][dl] (unknown size)
+#> ├─cli 3.6.6 [new][dl] (unknown size)
 #> ├─desc 1.4.3 [new][dl] (unknown size)
 #> │ ├─R6 2.6.1 [new][dl] (unknown size)
 #> │ └─cli

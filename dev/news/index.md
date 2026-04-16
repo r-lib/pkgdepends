@@ -13,7 +13,7 @@ CRAN release: 2026-04-09
   ([@Fan-iX](https://github.com/Fan-iX),
   [\#455](https://github.com/r-lib/pkgdepends/issues/455)).
 
-- pkgdepends can now consider installed packages in mutliple libraries,
+- pkgdepends can now consider installed packages in multiple libraries,
   when installing packages. Pass a character vector of library path as
   the `library` option.
 

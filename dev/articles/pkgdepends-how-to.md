@@ -15,7 +15,7 @@ prop$get_solution()$data
     #> # A data frame: 17 × 38                                                         
     #>    ref    type  direct directpkg status package version license needscompilation
     #>    <chr>  <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>   <lgl>           
-    #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.5   MIT + … TRUE            
+    #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
     #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.4   MIT + … FALSE           
     #>  3 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
     #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.2   MIT + … FALSE           
@@ -27,11 +27,11 @@ prop$get_solution()$data
     #> 10 R6     stan… FALSE  FALSE     OK     R6      2.6.1   MIT + … FALSE           
     #> 11 RColo… stan… FALSE  FALSE     OK     RColor… 1.1-3   Apache… FALSE           
     #> 12 rlang  stan… FALSE  FALSE     OK     rlang   1.2.0   MIT + … TRUE            
-    #> 13 S7     stan… FALSE  FALSE     OK     S7      0.2.1   MIT + … TRUE            
-    #> 14 scales stan… FALSE  FALSE     OK     scales  1.4.0   MIT + … FALSE           
-    #> 15 vctrs  stan… FALSE  FALSE     OK     vctrs   0.7.2   MIT + … TRUE            
-    #> 16 virid… stan… FALSE  FALSE     OK     viridi… 0.4.3   MIT + … FALSE           
-    #> 17 withr  stan… FALSE  FALSE     OK     withr   3.0.2   MIT + … FALSE           
+    #> 13 scales stan… FALSE  FALSE     OK     scales  1.4.0   MIT + … FALSE           
+    #> 14 vctrs  stan… FALSE  FALSE     OK     vctrs   0.7.3   MIT + … TRUE            
+    #> 15 virid… stan… FALSE  FALSE     OK     viridi… 0.4.3   MIT + … FALSE           
+    #> 16 withr  stan… FALSE  FALSE     OK     withr   3.0.2   MIT + … FALSE           
+    #> 17 S7     stan… FALSE  FALSE     OK     S7      0.2.1-1 MIT + … TRUE            
     #> # ℹ 29 more variables: priority <chr>, md5sum <chr>, sha256 <chr>,              
     #> #   filesize <int>, built <chr>, platform <chr>, rversion <chr>,                
     #> #   repotype <chr>, repodir <chr>, target <chr>, deps <list>, mirror <chr>,     
@@ -47,7 +47,7 @@ prop$draw()
 ```
 
     #> ggplot2 4.0.2 [new][bld][dl] (6.36 MB)                                          
-    #> ├─cli 3.6.5 [new][bld][cmp]                                                     
+    #> ├─cli 3.6.6 [new][bld][cmp][dl] (640.24 kB)                                     
     #> ├─gtable 0.3.6 [new][bld][dl] (148.15 kB)                                       
     #> │ ├─cli                                                                         
     #> │ ├─glue 1.8.0 [new][bld][cmp]                                                  
@@ -61,7 +61,7 @@ prop$draw()
     #> │ └─rlang                                                                       
     #> ├─lifecycle                                                                     
     #> ├─rlang                                                                         
-    #> ├─S7 0.2.1 [new][bld][cmp][dl] (184.14 kB)                                      
+    #> ├─S7 0.2.1-1 [new][bld][cmp][dl] (184.14 kB)                                    
     #> ├─scales 1.4.0 [new][bld][dl] (328.67 kB)                                       
     #> │ ├─cli                                                                         
     #> │ ├─farver 2.1.2 [new][bld][cmp][dl] (1.28 MB)                                  
@@ -72,7 +72,7 @@ prop$draw()
     #> │ ├─RColorBrewer 1.1-3 [new][bld][dl] (11.64 kB)                                
     #> │ ├─rlang                                                                       
     #> │ └─viridisLite 0.4.3 [new][bld][dl] (1.27 MB)                                  
-    #> ├─vctrs 0.7.2 [new][bld][cmp][dl] (1.08 MB)                                     
+    #> ├─vctrs 0.7.3 [new][bld][cmp][dl] (1.08 MB)                                     
     #> │ ├─cli                                                                         
     #> │ ├─glue                                                                        
     #> │ ├─lifecycle                                                                   
@@ -94,7 +94,7 @@ prop$get_solution()$data
     #>    ref    type  direct directpkg status package version license needscompilation
     #>    <chr>  <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>   <lgl>           
     #>  1 tidyv… gith… TRUE   TRUE      OK     ggplot2 4.0.2.… MIT + … TRUE            
-    #>  2 cli    stan… FALSE  FALSE     OK     cli     3.6.5   MIT + … TRUE            
+    #>  2 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
     #>  3 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.4   MIT + … FALSE           
     #>  4 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
     #>  5 glue   stan… FALSE  FALSE     OK     glue    1.8.0   MIT + … TRUE            
@@ -105,11 +105,11 @@ prop$get_solution()$data
     #> 10 R6     stan… FALSE  FALSE     OK     R6      2.6.1   MIT + … FALSE           
     #> 11 RColo… stan… FALSE  FALSE     OK     RColor… 1.1-3   Apache… FALSE           
     #> 12 rlang  stan… FALSE  FALSE     OK     rlang   1.2.0   MIT + … TRUE            
-    #> 13 S7     stan… FALSE  FALSE     OK     S7      0.2.1   MIT + … TRUE            
-    #> 14 scales stan… FALSE  FALSE     OK     scales  1.4.0   MIT + … FALSE           
-    #> 15 vctrs  stan… FALSE  FALSE     OK     vctrs   0.7.2   MIT + … TRUE            
-    #> 16 virid… stan… FALSE  FALSE     OK     viridi… 0.4.3   MIT + … FALSE           
-    #> 17 withr  stan… FALSE  FALSE     OK     withr   3.0.2   MIT + … FALSE           
+    #> 13 scales stan… FALSE  FALSE     OK     scales  1.4.0   MIT + … FALSE           
+    #> 14 vctrs  stan… FALSE  FALSE     OK     vctrs   0.7.3   MIT + … TRUE            
+    #> 15 virid… stan… FALSE  FALSE     OK     viridi… 0.4.3   MIT + … FALSE           
+    #> 16 withr  stan… FALSE  FALSE     OK     withr   3.0.2   MIT + … FALSE           
+    #> 17 S7     stan… FALSE  FALSE     OK     S7      0.2.1-1 MIT + … TRUE            
     #> # ℹ 29 more variables: priority <chr>, md5sum <chr>, sha256 <chr>,              
     #> #   filesize <int>, built <chr>, platform <chr>, rversion <chr>,                
     #> #   repotype <chr>, repodir <chr>, target <chr>, deps <list>, mirror <chr>,     
@@ -132,7 +132,7 @@ prop$get_solution()$data
     #>    <chr>  <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>   <lgl>           
     #>  1 local… local TRUE   TRUE      OK     pkgdep… 0.9.1.… MIT + … NA              
     #>  2 callr  stan… FALSE  FALSE     OK     callr   3.7.6   MIT + … FALSE           
-    #>  3 cli    stan… FALSE  FALSE     OK     cli     3.6.5   MIT + … TRUE            
+    #>  3 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
     #>  4 curl   stan… FALSE  FALSE     OK     curl    7.0.0   MIT + … TRUE            
     #>  5 desc   stan… FALSE  FALSE     OK     desc    1.4.3   MIT + … FALSE           
     #>  6 filel… stan… FALSE  FALSE     OK     filelo… 1.0.3   MIT + … TRUE            
@@ -167,24 +167,26 @@ prop$get_downloads()
 dir(target_dir)
 ```
 
-    #> ℹ Getting 13 pkgs (13.44 MB), 4 (938.57 kB) cached                              
-    #> ✔ Got RColorBrewer 1.1-3 (source) (11.64 kB)                                    
-    #> ✔ Got cpp11 0.5.4 (source) (303.48 kB)                                          
-    #> ✔ Cached copy of rlang 1.2.0 (source) is the latest build                       
-    #> ✔ Got farver 2.1.2 (source) (1.28 MB)                                           
-    #> ✔ Got withr 3.0.2 (source) (103.24 kB)                                          
-    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
+    #> ℹ Getting 15 pkgs (14.26 MB), 3 (298.33 kB) cached                              
+    #> ✔ Cached copy of cli 3.6.6 (source) is the latest build                         
     #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
+    #> ✔ Got cpp11 0.5.4 (source) (303.48 kB)                                          
     #> ✔ Got S7 0.2.1 (source) (184.14 kB)                                             
+    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
+    #> ✔ Got withr 3.0.2 (source) (103.24 kB)                                          
+    #> ✔ Got farver 2.1.2 (source) (1.28 MB)                                           
+    #> ✔ Cached copy of rlang 1.2.0 (source) is the latest build                       
+    #> ✔ Got RColorBrewer 1.1-3 (source) (11.64 kB)                                    
     #> ✔ Got viridisLite 0.4.3 (source) (1.27 MB)                                      
-    #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
-    #> ✔ Got vctrs 0.7.2 (source) (1.08 MB)                                            
-    #> ✔ Got ggplot2 4.0.2 (source) (6.36 MB)                                          
+    #> ✔ Got vctrs 0.7.3 (source) (1.08 MB)                                            
+    #> ✔ Got S7 0.2.1-1 (source) (166.36 kB)                                           
     #> ✔ Got isoband 0.3.0 (source) (1.59 MB)                                          
-    #> # A data frame: 17 × 41                                                         
+    #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
+    #> ✔ Got ggplot2 4.0.2 (source) (6.36 MB)                                          
+    #> # A data frame: 18 × 41                                                         
     #>    ref    type  direct directpkg status package version license needscompilation
     #>    <chr>  <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>   <lgl>           
-    #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.5   MIT + … TRUE            
+    #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
     #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.4   MIT + … FALSE           
     #>  3 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
     #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.2   MIT + … FALSE           
@@ -198,9 +200,10 @@ dir(target_dir)
     #> 12 rlang  stan… FALSE  FALSE     OK     rlang   1.2.0   MIT + … TRUE            
     #> 13 S7     stan… FALSE  FALSE     OK     S7      0.2.1   MIT + … TRUE            
     #> 14 scales stan… FALSE  FALSE     OK     scales  1.4.0   MIT + … FALSE           
-    #> 15 vctrs  stan… FALSE  FALSE     OK     vctrs   0.7.2   MIT + … TRUE            
+    #> 15 vctrs  stan… FALSE  FALSE     OK     vctrs   0.7.3   MIT + … TRUE            
     #> 16 virid… stan… FALSE  FALSE     OK     viridi… 0.4.3   MIT + … FALSE           
     #> 17 withr  stan… FALSE  FALSE     OK     withr   3.0.2   MIT + … FALSE           
+    #> 18 S7     stan… FALSE  FALSE     OK     S7      0.2.1-1 MIT + … TRUE            
     #> # ℹ 32 more variables: priority <chr>, md5sum <chr>, sha256 <chr>,              
     #> #   filesize <int>, built <chr>, platform <chr>, rversion <chr>,                
     #> #   repotype <chr>, repodir <chr>, target <chr>, deps <list>, mirror <chr>,     
@@ -227,13 +230,13 @@ lib_status(new_lib)
     #> ℹ Getting 1 pkg (6.08 kB)                                                       
     #> ✔ Got pkgconfig 2.0.3 (source) (6.08 kB)                                        
     #> ℹ Building pkgconfig 2.0.3                                                      
-    #> ✔ Built pkgconfig 2.0.3 (876ms)                                                 
+    #> ✔ Built pkgconfig 2.0.3 (870ms)                                                 
     #> ✔ Installed pkgconfig 2.0.3  (1s)                                               
     #> ✔ Summary:   1 new  in 1.9s                                                     
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpznXM… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpsMpr… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   
@@ -259,15 +262,15 @@ lib_status(new_lib)
     #> ℹ No downloads are needed, 1 pkg is cached                                      
     #> ✔ Got pkgconfig 2.0.2 (source) (13.22 kB)                                       
     #> ℹ Packaging pkgconfig 2.0.2                                                     
-    #> ✔ Packaged pkgconfig 2.0.2 (528ms)                                              
+    #> ✔ Packaged pkgconfig 2.0.2 (501ms)                                              
     #> ℹ Building pkgconfig 2.0.2                                                      
-    #> ✔ Built pkgconfig 2.0.2 (878ms)                                                 
-    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (18ms)             
-    #> ✔ Summary:   1 new  in 895ms                                                    
+    #> ✔ Built pkgconfig 2.0.2 (873ms)                                                 
+    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (1s)               
+    #> ✔ Summary:   1 new  in 1.9s                                                     
     #> # A data frame: 1 × 32                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpznXM… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpsMpr… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
     #> # ℹ 24 more variables: repository <chr>, remotetype <chr>, remotehost <chr>,    
     #> #   remoterepo <chr>, remoteusername <chr>, remotepkgref <chr>,                 
     #> #   remoteref <chr>, remotesha <chr>, built <chr>, depends <chr>,               
@@ -293,7 +296,7 @@ lib_status(new_lib)
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpznXM… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpsMpr… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   

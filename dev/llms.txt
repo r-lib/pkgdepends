@@ -80,7 +80,7 @@ pd$draw()
     ## │ │ ├─ps 1.9.2 [new][bld][cmp][dl] (167.92 kB)
     ## │ │ └─R6 2.6.1 [new][bld][dl] (64.51 kB)
     ## │ └─R6
-    ## ├─cli 3.6.5 [new][bld][cmp][dl] (640.24 kB)
+    ## ├─cli 3.6.6 [new][bld][cmp][dl] (640.24 kB)
     ## ├─curl 7.0.0 [new][bld][cmp][dl] (731.11 kB)
     ## ├─filelock 1.0.3 [new][bld][cmp][dl] (15.44 kB)
     ## ├─jsonlite 2.0.0 [new][bld][cmp][dl] (1.06 MB)
@@ -104,7 +104,7 @@ pdl$download()
 ```
 
     ## ℹ Getting 1 pkg with unknown size
-    ## ✔ Got cli 3.6.5.9000 (source) (852.59 kB)
+    ## ✔ Got cli 3.6.6.9000 (source) (853.01 kB)
 
 See the
 [`pkg_download_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html)
@@ -127,13 +127,13 @@ pdi$install()
 ```
 
     ## ℹ Getting 1 pkg with unknown size
-    ## ✔ Cached copy of cli 3.6.5.9000 (source) is the latest build
-    ## ℹ Packaging cli 3.6.5.9000
-    ## ✔ Packaged cli 3.6.5.9000 (1.8s)
-    ## ℹ Building cli 3.6.5.9000
-    ## ✔ Built cli 3.6.5.9000 (9.3s)
-    ## ✔ Installed cli 3.6.5.9000 (github::r-lib/cli@eef82e9) (37ms)
-    ## ✔ Summary:   1 new  in 9.3s
+    ## ✔ Cached copy of cli 3.6.6.9000 (source) is the latest build
+    ## ℹ Packaging cli 3.6.6.9000
+    ## ✔ Packaged cli 3.6.6.9000 (1.7s)
+    ## ℹ Building cli 3.6.6.9000
+    ## ✔ Built cli 3.6.6.9000 (8.9s)
+    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@9cf4733) (1s)
+    ## ✔ Summary:   1 new  in 9.9s
 
 ## Dependency resolution
 

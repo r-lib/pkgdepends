@@ -103,7 +103,7 @@ sysreqs_install_plan(
 #> [1] "apt-get -y update"
 #> 
 #> $install_scripts
-#> [1] "apt-get -y install libx11-dev libcurl4-openssl-dev libssl-dev cmake make libuv1-dev zlib1g-dev pandoc libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev"
+#> [1] "apt-get -y install libx11-dev cmake make libuv1-dev zlib1g-dev pandoc libssl-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev libcurl4-openssl-dev"
 #> 
 #> $post_install
 #> character(0)

@@ -72,16 +72,16 @@ pd$solve()
 pd$draw()
 ```
 
-    ## ✔ Updated metadata database: 3.33 MB in 8 files.
+    ## ✔ Updated metadata database: 3.54 MB in 8 files.
     ## ✔ Updating metadata database ... done
     ## r-lib/pkgcache 2.2.5.9000 [new][bld][cmp][dl] (unknown size)
     ## ├─callr 3.7.6 [new][bld][dl] (104.36 kB)
-    ## │ ├─processx 3.8.7 [new][bld][cmp][dl] (165.19 kB)
-    ## │ │ ├─ps 1.9.2 [new][bld][cmp][dl] (167.92 kB)
+    ## │ ├─processx 3.9.0 [new][bld][cmp][dl] (165.19 kB)
+    ## │ │ ├─ps 1.9.3 [new][bld][cmp][dl] (167.92 kB)
     ## │ │ └─R6 2.6.1 [new][bld][dl] (64.51 kB)
     ## │ └─R6
     ## ├─cli 3.6.6 [new][bld][cmp][dl] (640.24 kB)
-    ## ├─curl 7.0.0 [new][bld][cmp][dl] (731.11 kB)
+    ## ├─curl 7.1.0 [new][bld][cmp][dl] (731.11 kB)
     ## ├─filelock 1.0.3 [new][bld][cmp][dl] (15.44 kB)
     ## ├─jsonlite 2.0.0 [new][bld][cmp][dl] (1.06 MB)
     ## ├─processx
@@ -129,11 +129,11 @@ pdi$install()
     ## ℹ Getting 1 pkg with unknown size
     ## ✔ Cached copy of cli 3.6.6.9000 (source) is the latest build
     ## ℹ Packaging cli 3.6.6.9000
-    ## ✔ Packaged cli 3.6.6.9000 (1.7s)
+    ## ✔ Packaged cli 3.6.6.9000 (1.5s)
     ## ℹ Building cli 3.6.6.9000
-    ## ✔ Built cli 3.6.6.9000 (8.9s)
-    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@9cf4733) (1s)
-    ## ✔ Summary:   1 new  in 9.9s
+    ## ✔ Built cli 3.6.6.9000 (8.7s)
+    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@9cf4733) (31ms)
+    ## ✔ Summary:   1 new  in 8.7s
 
 ## Dependency resolution
 

@@ -422,7 +422,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpUNsu0V/file1fc730666c7e"
+#> [1] "/tmp/RtmpL2FPan/file1f1814268dcc"
 #> 
 #> ## platforms
 #> <default>
@@ -439,11 +439,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpUNsu0V/file1fc7722d020b"
+#> [1] "/tmp/RtmpL2FPan/file1f186ad78c5e"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpUNsu0V/file1fc73a3d29c1"
+#> [1] "/tmp/RtmpL2FPan/file1f183255f03"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -518,18 +518,17 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 3.98 MB in 3 files.
+#> ✔ Updated metadata database: 4.00 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
 #> 
 pd$get_resolution()
-#> # A data frame: 3 × 35
+#> # A data frame: 2 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.3   GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.3   GPL-3  
-#> 3 pak   standard TRUE   TRUE      OK     pak     0.9.3-1 GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.4   GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.4   GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -620,7 +619,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - pkgload
-#> + constraints (48):
+#> + constraints (49):
 #>   - select pkgload exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -671,13 +670,13 @@ pd
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-#> pkgload 1.5.1 [new][dl] (unknown size)
+#> pkgload 1.5.2 [new][bld][dl] (87.78 kB)
 #> ├─cli 3.6.6 [new][dl] (unknown size)
 #> ├─desc 1.4.3 [new][dl] (unknown size)
 #> │ ├─R6 2.6.1 [new][dl] (unknown size)
 #> │ └─cli
-#> ├─fs 2.0.1 [new][dl] (unknown size)
-#> ├─glue 1.8.0 [new][dl] (unknown size)
+#> ├─fs 2.1.0 [new][dl] (unknown size)
+#> ├─glue 1.8.1 [new][dl] (unknown size)
 #> ├─lifecycle 1.0.5 [new][dl] (unknown size)
 #> │ ├─cli
 #> │ └─rlang 1.2.0 [new][dl] (unknown size)
@@ -687,7 +686,7 @@ pd$draw()
 #> │ │ ├─R6
 #> │ │ └─processx 3.8.7 [new][dl] (unknown size)
 #> │ │   ├─R6
-#> │ │   └─ps 1.9.2 [new][dl] (unknown size)
+#> │ │   └─ps 1.9.3 [new][dl] (unknown size)
 #> │ ├─cli
 #> │ ├─desc
 #> │ └─processx
@@ -695,7 +694,7 @@ pd$draw()
 #> ├─rlang
 #> └─rprojroot 2.1.1 [new][dl] (unknown size)
 #> 
-#> Key:  [new] new | [dl] download
+#> Key:  [new] new | [dl] download | [bld] build
 # Method print()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd

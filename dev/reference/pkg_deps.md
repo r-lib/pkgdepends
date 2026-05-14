@@ -422,7 +422,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpL2FPan/file1f1814268dcc"
+#> [1] "/tmp/Rtmpw22yQL/file20c53106868c"
 #> 
 #> ## platforms
 #> <default>
@@ -435,15 +435,15 @@ pd$get_config()
 #> 
 #> ## r_versions
 #> <default>
-#> [1] "4.5.3"
+#> [1] "4.6.0"
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpL2FPan/file1f186ad78c5e"
+#> [1] "/tmp/Rtmpw22yQL/file20c5737370e6"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpL2FPan/file1f183255f03"
+#> [1] "/tmp/Rtmpw22yQL/file20c51bc5769a"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -518,7 +518,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 4.00 MB in 3 files.
+#> ✔ Updated metadata database: 4.01 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -527,8 +527,8 @@ pd$get_resolution()
 #> # A data frame: 2 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.4   GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.4   GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.5   GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.5   GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -546,7 +546,7 @@ pd$get_resolution()
 #>  1 r-lib/pkgdepe… gith… TRUE   TRUE      OK     pkgdep… 0.9.1.… MIT + …
 #>  2 callr          stan… FALSE  FALSE     OK     callr   3.7.6   MIT + …
 #>  3 cli            stan… FALSE  FALSE     OK     cli     3.6.6   MIT + …
-#>  4 curl           stan… FALSE  FALSE     OK     curl    7.0.0   MIT + …
+#>  4 curl           stan… FALSE  FALSE     OK     curl    7.1.0   MIT + …
 #>  5 desc           stan… FALSE  FALSE     OK     desc    1.4.3   MIT + …
 #>  6 filelock       stan… FALSE  FALSE     OK     filelo… 1.0.3   MIT + …
 #>  7 jsonlite       stan… FALSE  FALSE     OK     jsonli… 2.0.0   MIT + …
@@ -619,7 +619,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - pkgload
-#> + constraints (49):
+#> + constraints (48):
 #>   - select pkgload exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -670,7 +670,7 @@ pd
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-#> pkgload 1.5.2 [new][bld][dl] (87.78 kB)
+#> pkgload 1.5.2 [new][dl] (unknown size)
 #> ├─cli 3.6.6 [new][dl] (unknown size)
 #> ├─desc 1.4.3 [new][dl] (unknown size)
 #> │ ├─R6 2.6.1 [new][dl] (unknown size)
@@ -684,7 +684,7 @@ pd$draw()
 #> │ ├─R6
 #> │ ├─callr 3.7.6 [new][dl] (unknown size)
 #> │ │ ├─R6
-#> │ │ └─processx 3.8.7 [new][dl] (unknown size)
+#> │ │ └─processx 3.9.0 [new][dl] (unknown size)
 #> │ │   ├─R6
 #> │ │   └─ps 1.9.3 [new][dl] (unknown size)
 #> │ ├─cli
@@ -694,7 +694,7 @@ pd$draw()
 #> ├─rlang
 #> └─rprojroot 2.1.1 [new][dl] (unknown size)
 #> 
-#> Key:  [new] new | [dl] download | [bld] build
+#> Key:  [new] new | [dl] download
 # Method print()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd

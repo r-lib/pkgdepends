@@ -5,18 +5,20 @@
 ### How to list all dependencies of a CRAN/Bioconductor package?
 
 ``` r
+
 library(pkgdepends)
 prop <- new_pkg_deps("ggplot2")
 prop$solve()
 prop$get_solution()$data
 ```
 
+
     #> ✔ Loading metadata database ... done                                            
     #> # A data frame: 17 × 38                                                         
     #>    ref    type  direct directpkg status package version license needscompilation
     #>    <chr>  <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>   <lgl>           
     #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
-    #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.4   MIT + … FALSE           
+    #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.5   MIT + … FALSE           
     #>  3 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
     #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.3   MIT + … FALSE           
     #>  5 glue   stan… FALSE  FALSE     OK     glue    1.8.1   MIT + … TRUE            
@@ -43,8 +45,10 @@ prop$get_solution()$data
 You can also draw a dependency tree:
 
 ``` r
+
 prop$draw()
 ```
+
 
     #> ggplot2 4.0.3 [new][bld][dl] (6.36 MB)                                          
     #> ├─cli 3.6.6 [new][bld][cmp][dl] (640.24 kB)                                     
@@ -57,7 +61,7 @@ prop$draw()
     #> │ └─rlang                                                                       
     #> ├─isoband 0.3.0 [new][bld][cmp][dl] (1.59 MB)                                   
     #> │ ├─cli                                                                         
-    #> │ ├─cpp11 0.5.4 [new][bld][dl] (302.29 kB)                                      
+    #> │ ├─cpp11 0.5.5 [new][bld][dl] (302.29 kB)                                      
     #> │ └─rlang                                                                       
     #> ├─lifecycle                                                                     
     #> ├─rlang                                                                         
@@ -84,18 +88,20 @@ prop$draw()
 ### How to list all dependencies of a GitHub package?
 
 ``` r
+
 library(pkgdepends)
 prop <- new_pkg_deps("tidyverse/ggplot2")
 prop$solve()
 prop$get_solution()$data
 ```
 
+
     #> # A data frame: 17 × 38                                                         
     #>    ref    type  direct directpkg status package version license needscompilation
     #>    <chr>  <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>   <lgl>           
     #>  1 tidyv… gith… TRUE   TRUE      OK     ggplot2 4.0.3.… MIT + … TRUE            
     #>  2 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
-    #>  3 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.4   MIT + … FALSE           
+    #>  3 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.5   MIT + … FALSE           
     #>  4 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
     #>  5 glue   stan… FALSE  FALSE     OK     glue    1.8.1   MIT + … TRUE            
     #>  6 gtable stan… FALSE  FALSE     OK     gtable  0.3.6   MIT + … FALSE           
@@ -121,11 +127,13 @@ prop$get_solution()$data
 ### How to list all dependencies of a local package?
 
 ``` r
+
 library(pkgdepends)
 prop <- new_pkg_deps("local::.")
 prop$solve()
 prop$get_solution()$data
 ```
+
 
     #> # A data frame: 14 × 38                                                         
     #>    ref    type  direct directpkg status package version license needscompilation
@@ -157,6 +165,7 @@ prop$get_solution()$data
 ### How to download a package and all of its dependencies?
 
 ``` r
+
 library(pkgdepends)
 target_dir <- tempfile()
 dir.create(target_dir)
@@ -167,27 +176,28 @@ prop$get_downloads()
 dir(target_dir)
 ```
 
+
     #> ℹ Getting 15 pkgs (14.21 MB), 2 (171.64 kB) cached                              
     #> ✔ Cached copy of cli 3.6.6 (source) is the latest build                         
     #> ✔ Cached copy of rlang 1.2.0 (source) is the latest build                       
-    #> ✔ Got cpp11 0.5.4 (source) (303.48 kB)                                          
-    #> ✔ Got farver 2.1.2 (source) (1.28 MB)                                           
-    #> ✔ Got isoband 0.3.0 (source) (1.59 MB)                                          
-    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
-    #> ✔ Got viridisLite 0.4.3 (source) (1.27 MB)                                      
+    #> ✔ Got cpp11 0.5.5 (source) (304.82 kB)                                          
     #> ✔ Cached copy of glue 1.8.1 (source) is the latest build                        
     #> ✔ Got withr 3.0.2 (source) (103.24 kB)                                          
-    #> ✔ Got S7 0.2.2 (source) (184.63 kB)                                             
+    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
     #> ✔ Got RColorBrewer 1.1-3 (source) (11.64 kB)                                    
     #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
+    #> ✔ Got farver 2.1.2 (source) (1.28 MB)                                           
     #> ✔ Got vctrs 0.7.3 (source) (1.08 MB)                                            
+    #> ✔ Got isoband 0.3.0 (source) (1.59 MB)                                          
+    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
+    #> ✔ Got S7 0.2.2 (source) (184.63 kB)                                             
+    #> ✔ Got viridisLite 0.4.3 (source) (1.27 MB)                                      
     #> ✔ Got ggplot2 4.0.3 (source) (6.33 MB)                                          
-    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
     #> # A data frame: 17 × 41                                                         
     #>    ref    type  direct directpkg status package version license needscompilation
     #>    <chr>  <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>   <lgl>           
     #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
-    #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.4   MIT + … FALSE           
+    #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.5   MIT + … FALSE           
     #>  3 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
     #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.3   MIT + … FALSE           
     #>  5 glue   stan… FALSE  FALSE     OK     glue    1.8.1   MIT + … TRUE            
@@ -217,6 +227,7 @@ dir(target_dir)
 ### How to install a package into a new library?
 
 ``` r
+
 library(pkgdepends)
 dir.create(new_lib <- tempfile())
 prop <- new_pkg_installation_proposal("pkgconfig", config = list(library = new_lib))
@@ -226,16 +237,17 @@ prop$install()
 lib_status(new_lib)
 ```
 
+
     #> ℹ Getting 1 pkg (6.08 kB)                                                       
     #> ✔ Got pkgconfig 2.0.3 (source) (6.08 kB)                                        
     #> ℹ Building pkgconfig 2.0.3                                                      
-    #> ✔ Built pkgconfig 2.0.3 (788ms)                                                 
-    #> ✔ Installed pkgconfig 2.0.3  (14ms)                                             
-    #> ✔ Summary:   1 new  in 801ms                                                    
+    #> ✔ Built pkgconfig 2.0.3 (916ms)                                                 
+    #> ✔ Installed pkgconfig 2.0.3  (27ms)                                             
+    #> ✔ Summary:   1 new  in 943ms                                                    
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpmJXc… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpyB6W… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   
@@ -248,6 +260,7 @@ lib_status(new_lib)
 Install an older version first.
 
 ``` r
+
 library(pkgdepends)
 dir.create(new_lib <- tempfile())
 config <- list(library = new_lib)
@@ -258,18 +271,19 @@ prop$install()
 lib_status(new_lib)
 ```
 
+
     #> ℹ No downloads are needed, 1 pkg is cached                                      
     #> ✔ Got pkgconfig 2.0.2 (source) (13.22 kB)                                       
     #> ℹ Packaging pkgconfig 2.0.2                                                     
-    #> ✔ Packaged pkgconfig 2.0.2 (441ms)                                              
+    #> ✔ Packaged pkgconfig 2.0.2 (508ms)                                              
     #> ℹ Building pkgconfig 2.0.2                                                      
-    #> ✔ Built pkgconfig 2.0.2 (781ms)                                                 
-    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (35ms)             
-    #> ✔ Summary:   1 new  in 816ms                                                    
+    #> ✔ Built pkgconfig 2.0.2 (880ms)                                                 
+    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (18ms)             
+    #> ✔ Summary:   1 new  in 897ms                                                    
     #> # A data frame: 1 × 32                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpmJXc… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpyB6W… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
     #> # ℹ 24 more variables: repository <chr>, remotetype <chr>, remotehost <chr>,    
     #> #   remoterepo <chr>, remoteusername <chr>, remotepkgref <chr>,                 
     #> #   remoteref <chr>, remotesha <chr>, built <chr>, depends <chr>,               
@@ -280,6 +294,7 @@ lib_status(new_lib)
 Now update.
 
 ``` r
+
 library(pkgdepends)
 prop2 <- new_pkg_installation_proposal("pkgconfig", config = config)
 prop2$set_solve_policy("upgrade")
@@ -289,13 +304,14 @@ prop2$install()
 lib_status(new_lib)
 ```
 
+
     #> ℹ No downloads are needed, 1 pkg (6.08 kB) is cached                            
     #> ✔ Installed pkgconfig 2.0.3  (1s)                                               
     #> ✔ Summary:   1 updated  in 1s                                                   
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpmJXc… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpyB6W… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   

@@ -757,7 +757,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmpL2FPan/file1f18832f182
+#> ℹ Creating library directory: /tmp/Rtmpw22yQL/file20c569bcf472
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -771,7 +771,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpL2FPan/file1f18c3f0310
+#> ℹ Creating library directory: /tmp/Rtmpw22yQL/file20c525909a4
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -788,7 +788,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpL2FPan/file1f186b2e06d9"
+#> [1] "/tmp/Rtmpw22yQL/file20c5818c7fd"
 #> 
 #> ## platforms
 #> <default>
@@ -801,15 +801,15 @@ pdi$get_config()
 #> 
 #> ## r_versions
 #> <default>
-#> [1] "4.5.3"
+#> [1] "4.6.0"
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpL2FPan/file1f186ad78c5e"
+#> [1] "/tmp/Rtmpw22yQL/file20c5737370e6"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpL2FPan/file1f18c3f0310"
+#> [1] "/tmp/Rtmpw22yQL/file20c525909a4"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -884,7 +884,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpL2FPan/file1f182bc41c5a
+#> ℹ Creating library directory: /tmp/Rtmpw22yQL/file20c520e03181
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -894,7 +894,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpL2FPan/file1f181c0a2594
+#> ℹ Creating library directory: /tmp/Rtmpw22yQL/file20c53bdf5fd9
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -905,7 +905,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpL2FPan/file1f18b0bac8a
+#> ℹ Creating library directory: /tmp/Rtmpw22yQL/file20c54e6aa3ed
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -936,7 +936,7 @@ pdi
 
 pdi$download()
 #> ℹ Getting 1 pkg with unknown size
-#> ✔ Got pak 0.9.4 (x86_64-pc-linux-gnu-ubuntu-24.04) (7.05 MB)
+#> ✔ Got pak 0.9.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (7.08 MB)
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

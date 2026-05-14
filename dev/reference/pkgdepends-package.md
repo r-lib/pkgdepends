@@ -73,6 +73,7 @@ Dependencies of the development version of the cli package:
     pd$solve()
     pd$draw()
 
+
     ## ✔ Loading metadata database ... done
     ## r-lib/pkgcache 2.1.0.9000 ✨👷🏽🔧 
     ## ├─callr 3.7.3 ✨ ⬇ (431.00 kB)
@@ -103,6 +104,7 @@ Downloading all dependencies of a package:
     pdl$resolve()
     pdl$download()
 
+
     ## ℹ No downloads are needed, 1 pkg is cached
     ##
 
@@ -123,6 +125,7 @@ Installing or updating a set of package:
     pdi$solve()
     pdi$download()
     pdi$install()
+
 
     ## ℹ No downloads are needed, 1 pkg is cached
     ## ✔ Installed cli 3.6.1.9000 (github::r-lib/cli@c37f34b) (36ms)

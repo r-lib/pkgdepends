@@ -104,6 +104,11 @@ are: `no`, `false`, `0`, `off`. (All are case insensitive.)
 String or `NULL`. `NA` is not allowed. In environment variables the
 string `NULL` means an R `NULL` value.
 
+### `character_or_null`
+
+Character vector or `NULL`. `NA` is not allowed. In environment
+variables the entries are separated by a semicolon.
+
 ### `character`
 
 Character vector without `NA` values. In environment variables the

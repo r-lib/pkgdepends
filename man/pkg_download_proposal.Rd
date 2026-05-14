@@ -42,43 +42,43 @@ Typical workflow to download a set of packages:
 }
 }
 \examples{
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_refs()
 pdl <- new_pkg_download_proposal(c("pak", "jsonlite"))
 pdl$get_refs()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_config()
 pdl <- new_pkg_download_proposal("pak")
 pdl$get_config()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method resolve()
 pdl <- new_pkg_download_proposal("pak")
 pdl$resolve()
 pdl$get_resolution()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_resolution()
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$get_resolution()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method download()
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
 pdl$get_downloads()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_downloads()
 pdl <- new_pkg_download_proposal("pkgload")
 pdl$resolve()
 pdl$download()
 pdl$get_downloads()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method print()
 pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl

@@ -64,24 +64,24 @@ pdi
 pdi$download()
 pdi
 }
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
 pdi
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal("r-lib/pkgdepends")
 pdi$get_refs()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
 pdi$get_config()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -90,7 +90,7 @@ pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
@@ -99,7 +99,7 @@ pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method print
 pdi <- new_pkg_installation_proposal(
   "pak",

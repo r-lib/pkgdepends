@@ -27,7 +27,7 @@ see \eval{man_config_link("Configuration")}. Set this if
 pkgdepends does not detect your platform correctly.
 }
 \examples{
-\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true" && Sys.info()[["sysname"]] == "Linux") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true" && Sys.info()[["sysname"]] == "Linux") withAutoprint(\{ # examplesIf}
 sysreqs_list_system_packages()[1:10,]
 \dontshow{\}) # examplesIf}
 }

@@ -75,8 +75,7 @@ installed packages, GitHub, etc.
 \item \code{priority}: this is \code{"base"} for base packages, \code{"recommended"} for
 recommended packages, and \code{NA} otherwise.
 \item \code{ref}: package reference.
-\item \code{remote}: the parsed \code{remote_ref} objects, see \code{\link[=parse_pkg_refs]{parse_pkg_refs()}}.
-This is a list column.
+\item \code{remote}: the parsed \code{remote_ref} objects.
 \item \code{repodir}: the directory where this package should be in a CRAN-like
 repository.
 \item \code{sha256}: SHA256 hash of the package file, if available, otherwise

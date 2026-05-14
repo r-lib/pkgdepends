@@ -39,62 +39,62 @@ result of the dependency solver.
 }
 }
 \examples{
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method initialize()
 pd <- pkg_deps$new("r-lib/pkgdepends")
 pd
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_refs()
 pd <- new_pkg_deps(c("pak", "jsonlite"))
 pd$get_refs()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_config()
 pd <- new_pkg_deps("pak")
 pd$get_config()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method resolve()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 pd$get_resolution()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_resolution()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_solve_policy()
 pdi <- new_pkg_deps("r-lib/pkgdepends")
 pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method set_solve_policy()
 pdi <- new_pkg_deps("r-lib/pkgdepends")
 pdi$get_solve_policy()
 pdi$set_solve_policy("upgrade")
 pdi$get_solve_policy()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method solve()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$solve()
 pd$get_solution()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method get_solution()
 pd <- new_pkg_deps("pkgload")
 pd$resolve()
 pd$solve()
 pd$get_solution()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method stop_for_solution_error()
 # This is an error, because the packages conflict:
 pd <- new_pkg_deps(
@@ -107,13 +107,13 @@ pd
 # This fails:
 # pd$stop_for_solution_error()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method draw()
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
 \dontshow{\}) # examplesIf}
-\dontshow{if (pkgdepends:::is_online()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method print()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd

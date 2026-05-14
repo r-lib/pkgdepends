@@ -110,6 +110,12 @@ String or \code{NULL}. \code{NA} is not allowed. In environment variables the
 string \code{NULL} means an R \code{NULL} value.
 }
 
+\subsection{\code{character_or_null}}{
+
+Character vector or \code{NULL}. \code{NA} is not allowed. In environment variables
+the entries are separated by a semicolon.
+}
+
 \subsection{\code{character}}{
 
 Character vector without \code{NA} values. In environment variables the

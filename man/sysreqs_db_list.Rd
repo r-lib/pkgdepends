@@ -29,7 +29,7 @@ outdated. (I.e. older than allowed in the \code{metadata_update_after}
 \eval{man_config_link("configuration option")}.
 }
 \examples{
-\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") withAutoprint(\{ # examplesIf}
 sysreqs_db_list(sysreqs_platform = "ubuntu-22.04")
 \dontshow{\}) # examplesIf}
 }

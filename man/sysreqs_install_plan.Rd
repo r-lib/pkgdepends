@@ -54,7 +54,7 @@ to create an installation plan for one or more packages, and then print
 their system requirements.
 }
 \examples{
-\dontshow{if (!pkgdepends:::is_rcmd_check()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (!pkgdepends:::is_rcmd_check()) withAutoprint(\{ # examplesIf}
 sysreqs_install_plan(
   "tidyverse",
   config = list(sysreqs_platform = "ubuntu-22.04")

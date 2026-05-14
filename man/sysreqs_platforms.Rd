@@ -24,7 +24,7 @@ information.
 List platforms with system requirements support
 }
 \examples{
-\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") withAutoprint(\{ # examplesIf}
 sysreqs_platforms()
 \dontshow{\}) # examplesIf}
 }

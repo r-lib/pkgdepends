@@ -19,7 +19,7 @@ Logical scalar.
 Check if a platform has system requirements support
 }
 \examples{
-\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") withAutoprint(\{ # examplesIf}
 sysreqs_is_supported()
 \dontshow{\}) # examplesIf}
 }

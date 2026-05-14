@@ -37,7 +37,7 @@ The \code{sysreqs_db_match()} function lets you match any string, and it is
 mainly useful for debugging.
 }
 \examples{
-\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (Sys.getenv("IN_PKGDOWN") == "true") withAutoprint(\{ # examplesIf}
 sysreqs_db_match(
   c("Needs libcurl", "Java, libssl"),
   sysreqs_platform = "ubuntu-22.04"

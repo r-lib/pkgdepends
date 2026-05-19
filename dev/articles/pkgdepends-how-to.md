@@ -50,22 +50,22 @@ prop$draw()
 ```
 
 
-    #> ggplot2 4.0.3 [new][bld][dl] (6.36 MB)                                          
-    #> ├─cli 3.6.6 [new][bld][cmp][dl] (640.24 kB)                                     
+    #> ggplot2 4.0.3 [new][bld][dl] (6.33 MB)                                          
+    #> ├─cli 3.6.6 [new][bld][cmp]                                                     
     #> ├─gtable 0.3.6 [new][bld][dl] (148.15 kB)                                       
     #> │ ├─cli                                                                         
-    #> │ ├─glue 1.8.1 [new][bld][cmp][dl] (126.68 kB)                                  
+    #> │ ├─glue 1.8.1 [new][bld][cmp]                                                  
     #> │ ├─lifecycle 1.0.5 [new][bld]                                                  
     #> │ │ ├─cli                                                                       
-    #> │ │ └─rlang 1.2.0 [new][bld][cmp][dl] (770.34 kB)                               
+    #> │ │ └─rlang 1.2.0 [new][bld][cmp]                                               
     #> │ └─rlang                                                                       
     #> ├─isoband 0.3.0 [new][bld][cmp][dl] (1.59 MB)                                   
     #> │ ├─cli                                                                         
-    #> │ ├─cpp11 0.5.5 [new][bld][dl] (302.29 kB)                                      
+    #> │ ├─cpp11 0.5.5 [new][bld][dl] (304.82 kB)                                      
     #> │ └─rlang                                                                       
     #> ├─lifecycle                                                                     
     #> ├─rlang                                                                         
-    #> ├─S7 0.2.2 [new][bld][cmp][dl] (184.14 kB)                                      
+    #> ├─S7 0.2.2 [new][bld][cmp][dl] (184.63 kB)                                      
     #> ├─scales 1.4.0 [new][bld][dl] (328.67 kB)                                       
     #> │ ├─cli                                                                         
     #> │ ├─farver 2.1.2 [new][bld][cmp][dl] (1.28 MB)                                  
@@ -177,20 +177,17 @@ dir(target_dir)
 ```
 
 
-    #> ℹ Getting 15 pkgs (14.21 MB), 2 (171.64 kB) cached                              
-    #> ✔ Cached copy of cli 3.6.6 (source) is the latest build                         
-    #> ✔ Cached copy of rlang 1.2.0 (source) is the latest build                       
+    #> ℹ Getting 12 pkgs (12.64 MB), 5 (1.73 MB) cached                                
     #> ✔ Got cpp11 0.5.5 (source) (304.82 kB)                                          
-    #> ✔ Cached copy of glue 1.8.1 (source) is the latest build                        
-    #> ✔ Got withr 3.0.2 (source) (103.24 kB)                                          
-    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
     #> ✔ Got RColorBrewer 1.1-3 (source) (11.64 kB)                                    
-    #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
+    #> ✔ Got S7 0.2.2 (source) (184.63 kB)                                             
+    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
     #> ✔ Got farver 2.1.2 (source) (1.28 MB)                                           
+    #> ✔ Got withr 3.0.2 (source) (103.24 kB)                                          
     #> ✔ Got vctrs 0.7.3 (source) (1.08 MB)                                            
     #> ✔ Got isoband 0.3.0 (source) (1.59 MB)                                          
+    #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
     #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
-    #> ✔ Got S7 0.2.2 (source) (184.63 kB)                                             
     #> ✔ Got viridisLite 0.4.3 (source) (1.27 MB)                                      
     #> ✔ Got ggplot2 4.0.3 (source) (6.33 MB)                                          
     #> # A data frame: 17 × 41                                                         
@@ -241,13 +238,13 @@ lib_status(new_lib)
     #> ℹ Getting 1 pkg (6.08 kB)                                                       
     #> ✔ Got pkgconfig 2.0.3 (source) (6.08 kB)                                        
     #> ℹ Building pkgconfig 2.0.3                                                      
-    #> ✔ Built pkgconfig 2.0.3 (916ms)                                                 
-    #> ✔ Installed pkgconfig 2.0.3  (27ms)                                             
-    #> ✔ Summary:   1 new  in 943ms                                                    
+    #> ✔ Built pkgconfig 2.0.3 (859ms)                                                 
+    #> ✔ Installed pkgconfig 2.0.3  (1s)                                               
+    #> ✔ Summary:   1 new  in 1.9s                                                     
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpyB6W… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpP9bT… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   
@@ -275,15 +272,15 @@ lib_status(new_lib)
     #> ℹ No downloads are needed, 1 pkg is cached                                      
     #> ✔ Got pkgconfig 2.0.2 (source) (13.22 kB)                                       
     #> ℹ Packaging pkgconfig 2.0.2                                                     
-    #> ✔ Packaged pkgconfig 2.0.2 (508ms)                                              
+    #> ✔ Packaged pkgconfig 2.0.2 (506ms)                                              
     #> ℹ Building pkgconfig 2.0.2                                                      
-    #> ✔ Built pkgconfig 2.0.2 (880ms)                                                 
-    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (18ms)             
-    #> ✔ Summary:   1 new  in 897ms                                                    
+    #> ✔ Built pkgconfig 2.0.2 (862ms)                                                 
+    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (1s)               
+    #> ✔ Summary:   1 new  in 1.9s                                                     
     #> # A data frame: 1 × 32                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpyB6W… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpP9bT… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
     #> # ℹ 24 more variables: repository <chr>, remotetype <chr>, remotehost <chr>,    
     #> #   remoterepo <chr>, remoteusername <chr>, remotepkgref <chr>,                 
     #> #   remoteref <chr>, remotesha <chr>, built <chr>, depends <chr>,               
@@ -311,7 +308,7 @@ lib_status(new_lib)
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpyB6W… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpP9bT… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   

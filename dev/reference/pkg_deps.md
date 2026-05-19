@@ -68,6 +68,8 @@ The usual steps to query package dependencies are:
 
 - [`pkg_deps$get_solution()`](#method-pkg_deps-get_solution)
 
+- [`pkg_deps$show_solution()`](#method-pkg_deps-show_solution)
+
 - [`pkg_deps$stop_for_solution_error()`](#method-pkg_deps-stop_for_solution_error)
 
 - [`pkg_deps$draw()`](#method-pkg_deps-draw)
@@ -293,6 +295,28 @@ for details.
 
 ------------------------------------------------------------------------
 
+### Method `show_solution()`
+
+Show the solution of the package dependencies. This is a formatted list
+of packages that will be installed.
+
+#### Usage
+
+    pkg_deps$show_solution(key = FALSE)
+
+#### Arguments
+
+- `key`:
+
+  Whether to print the key for the symbols used in the output. Default
+  is `FALSE`.
+
+#### Returns
+
+The solution object, invisibly.
+
+------------------------------------------------------------------------
+
 ### Method `stop_for_solution_error()`
 
 Error if the dependency solver failed to find a consistent set of
@@ -422,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpw22yQL/file20c53106868c"
+#> [1] "/tmp/Rtmp8Cki2U/file1e1b5dabe50d"
 #> 
 #> ## platforms
 #> <default>
@@ -439,11 +463,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpw22yQL/file20c5737370e6"
+#> [1] "/tmp/Rtmp8Cki2U/file1e1b5a73fb0f"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmpw22yQL/file20c51bc5769a"
+#> [1] "/tmp/Rtmp8Cki2U/file1e1b5329f4d1"
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -518,7 +542,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 4.01 MB in 3 files.
+#> ✔ Updated metadata database: 4.02 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -645,6 +669,23 @@ pd$get_solution()
 #>   - ps
 #>   - rlang
 #>   - rprojroot
+# Method show_solution()
+pd <- new_pkg_deps("pkgload")
+pd$solve()
+pd$show_solution()
+#> + R6          2.6.1 [dl]
+#> + callr       3.7.6 [dl]
+#> + cli         3.6.6 [dl]
+#> + desc        1.4.3 [dl]
+#> + fs          2.1.0 [dl] + cmake, make, libuv1-dev
+#> + glue        1.8.1 [dl]
+#> + lifecycle   1.0.5 [dl]
+#> + pkgbuild    1.4.8 [dl]
+#> + pkgload     1.5.2 [dl]
+#> + processx    3.9.0 [dl]
+#> + ps          1.9.3 [dl]
+#> + rlang       1.2.0 [dl]
+#> + rprojroot   2.1.1 [dl]
 # Method stop_for_solution_error()
 # This is an error, because the packages conflict:
 pd <- new_pkg_deps(
@@ -662,7 +703,7 @@ pd
 #> + has solution
 #> x has solution errors
 #> (use `$get_resolution()` to see resolution results)
-#> (use `$show_solution()` to see the dependencies
+#> (use `$show_solution()` to see the dependencies)
 #> (use `$get_solution()` to see the full solution results)
 # This fails:
 # pd$stop_for_solution_error()
@@ -721,7 +762,7 @@ pd
 #> + has resolution (+13 dependencies)
 #> + has solution
 #> (use `$get_resolution()` to see resolution results)
-#> (use `$show_solution()` to see the dependencies
+#> (use `$show_solution()` to see the dependencies)
 #> (use `$get_solution()` to see the full solution results)
 #> (use `$draw()` to draw the dependency tree)
 ```

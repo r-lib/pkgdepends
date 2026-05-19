@@ -77,16 +77,16 @@ pd$draw()
 ```
 
 
-    ## ✔ Updated metadata database: 3.56 MB in 8 files.
+    ## ✔ Updated metadata database: 3.57 MB in 8 files.
     ## ✔ Updating metadata database ... done
     ## r-lib/pkgcache 2.2.5.9000 [new][bld][cmp][dl] (unknown size)
     ## ├─callr 3.7.6 [new][bld][dl] (104.36 kB)
-    ## │ ├─processx 3.9.0 [new][bld][cmp][dl] (165.19 kB)
-    ## │ │ ├─ps 1.9.3 [new][bld][cmp][dl] (167.92 kB)
+    ## │ ├─processx 3.9.0 [new][bld][cmp][dl] (195.28 kB)
+    ## │ │ ├─ps 1.9.3 [new][bld][cmp][dl] (172.43 kB)
     ## │ │ └─R6 2.6.1 [new][bld][dl] (64.51 kB)
     ## │ └─R6
-    ## ├─cli 3.6.6 [new][bld][cmp][dl] (640.24 kB)
-    ## ├─curl 7.1.0 [new][bld][cmp][dl] (731.11 kB)
+    ## ├─cli 3.6.6 [new][bld][cmp][dl] (644.13 kB)
+    ## ├─curl 7.1.0 [new][bld][cmp][dl] (717.73 kB)
     ## ├─filelock 1.0.3 [new][bld][cmp][dl] (15.44 kB)
     ## ├─jsonlite 2.0.0 [new][bld][cmp][dl] (1.06 MB)
     ## ├─processx
@@ -141,7 +141,7 @@ pdi$install()
     ## ✔ Packaged cli 3.6.6.9000 (1.7s)
     ## ℹ Building cli 3.6.6.9000
     ## ✔ Built cli 3.6.6.9000 (9.5s)
-    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@9cf4733) (34ms)
+    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@9cf4733) (33ms)
     ## ✔ Summary:   1 new  in 9.5s
 
 ## Dependency resolution

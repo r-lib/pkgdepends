@@ -236,6 +236,24 @@ pkg_deps <- R6::R6Class(
     get_solution = function() private$plan$get_solution(),
 
     #' @description
+    #' Show the solution of the package dependencies. This is a formatted
+    #' list of packages that will be installed.
+    #'
+    #' @param key Whether to print the key for the symbols used in the
+    #'   output. Default is `FALSE`.
+    #'
+    #' @return
+    #' The solution object, invisibly.
+    #'
+    #' @examplesIf pkgdepends:::is_online()
+    #' # Method show_solution()
+    #' pd <- new_pkg_deps("pkgload")
+    #' pd$solve()
+    #' pd$show_solution()
+
+    show_solution = function(key = FALSE) private$plan$show_solution(key),
+
+    #' @description
     #' Error if the dependency solver failed to find a consistent set of
     #' packages that can be installed together.
     #'

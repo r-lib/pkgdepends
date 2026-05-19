@@ -95,6 +95,12 @@ pd$solve()
 pd$get_solution()
 \dontshow{\}) # examplesIf}
 \dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
+# Method show_solution()
+pd <- new_pkg_deps("pkgload")
+pd$solve()
+pd$show_solution()
+\dontshow{\}) # examplesIf}
+\dontshow{if (pkgdepends:::is_online()) withAutoprint(\{ # examplesIf}
 # Method stop_for_solution_error()
 # This is an error, because the packages conflict:
 pd <- new_pkg_deps(
@@ -138,6 +144,7 @@ pd
 \item \href{#method-pkg_deps-set_solve_policy}{\code{pkg_deps$set_solve_policy()}}
 \item \href{#method-pkg_deps-solve}{\code{pkg_deps$solve()}}
 \item \href{#method-pkg_deps-get_solution}{\code{pkg_deps$get_solution()}}
+\item \href{#method-pkg_deps-show_solution}{\code{pkg_deps$show_solution()}}
 \item \href{#method-pkg_deps-stop_for_solution_error}{\code{pkg_deps$stop_for_solution_error()}}
 \item \href{#method-pkg_deps-draw}{\code{pkg_deps$draw()}}
 \item \href{#method-pkg_deps-format}{\code{pkg_deps$format()}}
@@ -325,6 +332,28 @@ Returns the solution of the package dependencies.
 \subsection{Returns}{
 A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-pkg_deps-show_solution"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-show_solution}{}}}
+\subsection{Method \code{show_solution()}}{
+Show the solution of the package dependencies. This is a formatted
+list of packages that will be installed.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$show_solution(key = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{key}}{Whether to print the key for the symbols used in the
+output. Default is \code{FALSE}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The solution object, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

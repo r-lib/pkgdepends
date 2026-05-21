@@ -11,8 +11,7 @@ new_pkg_installation_plan(lockfile = "pkg.lock", config = list(), ...)
 \item{lockfile}{Path to the lock file to use.}
 
 \item{config}{Configuration options, a named list. See
-\link[=pkgdepends-config]{'Configuration'}. If it does not include \code{library}, then
-\code{.libPaths()[1]} is added as \code{library}.}
+\link[=pkgdepends-config]{'Configuration'}.}
 
 \item{...}{Additional arguments, passed to
 \href{#method-new}{\code{pkg_installation_plan$new()}}.}
@@ -33,197 +32,212 @@ to download the packages and then its \verb{$install()} method to install
 them.
 }
 \section{Super class}{
-\code{\link[pkgdepends:pkg_installation_proposal]{pkgdepends::pkg_installation_proposal}} -> \code{pkg_installation_plan}
+\code{\link[pkgdepends:pkg_installation_proposal]{pkg_installation_proposal}} -> \code{pkg_installation_plan}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-pkg_installation_plan-new}{\code{pkg_installation_plan$new()}}
-\item \href{#method-pkg_installation_plan-resolve}{\code{pkg_installation_plan$resolve()}}
-\item \href{#method-pkg_installation_plan-async_resolve}{\code{pkg_installation_plan$async_resolve()}}
-\item \href{#method-pkg_installation_plan-get_solve_policy}{\code{pkg_installation_plan$get_solve_policy()}}
-\item \href{#method-pkg_installation_plan-set_solve_policy}{\code{pkg_installation_plan$set_solve_policy()}}
-\item \href{#method-pkg_installation_plan-solve}{\code{pkg_installation_plan$solve()}}
-\item \href{#method-pkg_installation_plan-update}{\code{pkg_installation_plan$update()}}
-\item \href{#method-pkg_installation_plan-update_sysreqs}{\code{pkg_installation_plan$update_sysreqs()}}
-\item \href{#method-pkg_installation_plan-format}{\code{pkg_installation_plan$format()}}
-\item \href{#method-pkg_installation_plan-clone}{\code{pkg_installation_plan$clone()}}
+  \itemize{
+    \item \href{#method-pkg_installation_plan-initialize}{\code{pkg_installation_plan$new()}}
+    \item \href{#method-pkg_installation_plan-resolve}{\code{pkg_installation_plan$resolve()}}
+    \item \href{#method-pkg_installation_plan-async_resolve}{\code{pkg_installation_plan$async_resolve()}}
+    \item \href{#method-pkg_installation_plan-get_solve_policy}{\code{pkg_installation_plan$get_solve_policy()}}
+    \item \href{#method-pkg_installation_plan-set_solve_policy}{\code{pkg_installation_plan$set_solve_policy()}}
+    \item \href{#method-pkg_installation_plan-solve}{\code{pkg_installation_plan$solve()}}
+    \item \href{#method-pkg_installation_plan-update}{\code{pkg_installation_plan$update()}}
+    \item \href{#method-pkg_installation_plan-update_sysreqs}{\code{pkg_installation_plan$update_sysreqs()}}
+    \item \href{#method-pkg_installation_plan-format}{\code{pkg_installation_plan$format()}}
+    \item \href{#method-pkg_installation_plan-clone}{\code{pkg_installation_plan$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="async_download"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-async_download'><code>pkgdepends::pkg_installation_proposal$async_download()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="create_lockfile"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-create_lockfile'><code>pkgdepends::pkg_installation_proposal$create_lockfile()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="download"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-download'><code>pkgdepends::pkg_installation_proposal$download()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="draw"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-draw'><code>pkgdepends::pkg_installation_proposal$draw()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_config"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_config'><code>pkgdepends::pkg_installation_proposal$get_config()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_downloads"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_downloads'><code>pkgdepends::pkg_installation_proposal$get_downloads()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_install_plan"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_install_plan'><code>pkgdepends::pkg_installation_proposal$get_install_plan()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_refs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_refs'><code>pkgdepends::pkg_installation_proposal$get_refs()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_resolution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_resolution'><code>pkgdepends::pkg_installation_proposal$get_resolution()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_solution'><code>pkgdepends::pkg_installation_proposal$get_solution()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_sysreqs'><code>pkgdepends::pkg_installation_proposal$get_sysreqs()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-install'><code>pkgdepends::pkg_installation_proposal$install()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-install_sysreqs'><code>pkgdepends::pkg_installation_proposal$install_sysreqs()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="print"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-print'><code>pkgdepends::pkg_installation_proposal$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-show_solution'><code>pkgdepends::pkg_installation_proposal$show_solution()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-show_sysreqs'><code>pkgdepends::pkg_installation_proposal$show_sysreqs()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_download_error"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-stop_for_download_error'><code>pkgdepends::pkg_installation_proposal$stop_for_download_error()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_solution_error"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-stop_for_solution_error'><code>pkgdepends::pkg_installation_proposal$stop_for_solution_error()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="async_download"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-async_download'><code>pkg_installation_proposal$async_download()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="create_lockfile"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-create_lockfile'><code>pkg_installation_proposal$create_lockfile()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="download"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-download'><code>pkg_installation_proposal$download()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="draw"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-draw'><code>pkg_installation_proposal$draw()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_config"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_config'><code>pkg_installation_proposal$get_config()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_downloads"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_downloads'><code>pkg_installation_proposal$get_downloads()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_install_plan"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_install_plan'><code>pkg_installation_proposal$get_install_plan()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_refs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_refs'><code>pkg_installation_proposal$get_refs()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_resolution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_resolution'><code>pkg_installation_proposal$get_resolution()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_solution'><code>pkg_installation_proposal$get_solution()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="get_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-get_sysreqs'><code>pkg_installation_proposal$get_sysreqs()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-install'><code>pkg_installation_proposal$install()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="install_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-install_sysreqs'><code>pkg_installation_proposal$install_sysreqs()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="print"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-print'><code>pkg_installation_proposal$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_solution"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-show_solution'><code>pkg_installation_proposal$show_solution()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="show_sysreqs"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-show_sysreqs'><code>pkg_installation_proposal$show_sysreqs()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_download_error"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-stop_for_download_error'><code>pkg_installation_proposal$stop_for_download_error()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="pkgdepends" data-topic="pkg_installation_proposal" data-id="stop_for_solution_error"><a href='../../pkgdepends/html/pkg_installation_proposal.html#method-pkg_installation_proposal-stop_for_solution_error'><code>pkg_installation_proposal$stop_for_solution_error()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-pkg_installation_plan-new"></a>}}
-\if{latex}{\out{\hypertarget{method-pkg_installation_plan-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{pkg_installation_plan} object. Consider using
+\if{html}{\out{<a id="method-pkg_installation_plan-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_plan-initialize}{}}}
+\subsection{\code{pkg_installation_plan$new()}}{
+  Create a new \code{pkg_installation_plan} object. Consider using
 \code{new_pkg_installation_plan()} instead of calling the constructor
 directly.
 
 The returned object can be used to download and install
 packages, according to the plan.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$new(
   lockfile = "pkg.lock",
   config = list(),
   remote_types = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{lockfile}}{Path to the lock file to use.}
-
-\item{\code{config}}{Configuration options. See
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{lockfile}}{Path to the lock file to use.}
+      \item{\code{config}}{Configuration options. See
 \link[=pkgdepends-config]{'Configuration'}. It needs to include the package
 library to install to, in \code{library}.}
-
-\item{\code{remote_types}}{Custom remote ref types, this is for advanced
+      \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-resolve}{}}}
-\subsection{Method \code{resolve()}}{
-This function is implemented for installation plans, and will error.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$resolve()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_plan$resolve()}}{
+  This function is implemented for installation plans, and will error.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$resolve()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-async_resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-async_resolve}{}}}
-\subsection{Method \code{async_resolve()}}{
-This function is implemented for installation plans, and will error.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$async_resolve()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_plan$async_resolve()}}{
+  This function is implemented for installation plans, and will error.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$async_resolve()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-get_solve_policy"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-get_solve_policy}{}}}
-\subsection{Method \code{get_solve_policy()}}{
-Installation plans are already solved, and this method will return
+\subsection{\code{pkg_installation_plan$get_solve_policy()}}{
+  Installation plans are already solved, and this method will return
 \code{NA_character_}, always.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$get_solve_policy()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$get_solve_policy()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-set_solve_policy"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-set_solve_policy}{}}}
-\subsection{Method \code{set_solve_policy()}}{
-This function is implemented for installation plans, and will error.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$set_solve_policy()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_plan$set_solve_policy()}}{
+  This function is implemented for installation plans, and will error.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$set_solve_policy()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-solve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-solve}{}}}
-\subsection{Method \code{solve()}}{
-This function is implemented for installation plans, and will error.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$solve()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_plan$solve()}}{
+  This function is implemented for installation plans, and will error.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$solve()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-update"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-update}{}}}
-\subsection{Method \code{update()}}{
-Update the plan to the current state of the library. If the library
+\subsection{\code{pkg_installation_plan$update()}}{
+  Update the plan to the current state of the library. If the library
 has not changed since the plan was created, then it does nothing.
 If new packages have been installed, then it might not be necessary
 to download and install all packages in the plan.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$update()}\if{html}{\out{</div>}}
-}
-
-\subsection{Details}{
-This operation is different than creating a new proposal with the
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$update()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Details}{
+    This operation is different than creating a new proposal with the
 updated library, because it uses the the packages and package
 versions of the original plan. E.g. if the library has a newer
 version of a package, then \verb{$update()} will downgrade it to the
 version in the plan.
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-update_sysreqs"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-update_sysreqs}{}}}
-\subsection{Method \code{update_sysreqs()}}{
-Update information about installed and missing system requirements.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$update_sysreqs()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_plan$update_sysreqs()}}{
+  Update information about installed and missing system requirements.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$update_sysreqs()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-format"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-format}{}}}
-\subsection{Method \code{format()}}{
-Format a \code{pkg_installation_plan} object, typically for printing.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$format(...)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_plan$format()}}{
+  Format a \code{pkg_installation_plan} object, typically for printing.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$format(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{not used currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector, each element should be a line in the printout.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{not used currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A character vector, each element should be a line in the printout.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_plan-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_plan-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_plan$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_plan$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_plan$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

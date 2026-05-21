@@ -65,13 +65,13 @@ sysreqs_install_plan(
 \code{\link[=new_pkg_installation_proposal]{new_pkg_installation_proposal()}} to actually install
 packages, and potentially system requirements.
 
-Other system requirements functions: 
-\code{\link{sysreqs_check_installed}()},
-\code{\link{sysreqs_db_list}()},
-\code{\link{sysreqs_db_match}()},
-\code{\link{sysreqs_db_update}()},
-\code{\link{sysreqs_is_supported}()},
-\code{\link{sysreqs_list_system_packages}()},
-\code{\link{sysreqs_platforms}()}
+Other system requirements functions:
+\code{\link[=sysreqs_check_installed]{sysreqs_check_installed()}},
+\code{\link[=sysreqs_db_list]{sysreqs_db_list()}},
+\code{\link[=sysreqs_db_match]{sysreqs_db_match()}},
+\code{\link[=sysreqs_db_update]{sysreqs_db_update()}},
+\code{\link[=sysreqs_is_supported]{sysreqs_is_supported()}},
+\code{\link[=sysreqs_list_system_packages]{sysreqs_list_system_packages()}},
+\code{\link[=sysreqs_platforms]{sysreqs_platforms()}}
 }
 \concept{system requirements functions}

@@ -87,7 +87,7 @@ soft dependencies as well.
 }
 }
 \seealso{
-Other package dependency utilities: 
-\code{\link{pkg_dep_types_hard}()}
+Other package dependency utilities:
+\code{\link[=pkg_dep_types_hard]{pkg_dep_types_hard()}}
 }
 \concept{package dependency utilities}

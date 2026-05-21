@@ -92,47 +92,46 @@ pdl
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-pkg_download_proposal-new}{\code{pkg_download_proposal$new()}}
-\item \href{#method-pkg_download_proposal-get_refs}{\code{pkg_download_proposal$get_refs()}}
-\item \href{#method-pkg_download_proposal-get_config}{\code{pkg_download_proposal$get_config()}}
-\item \href{#method-pkg_download_proposal-resolve}{\code{pkg_download_proposal$resolve()}}
-\item \href{#method-pkg_download_proposal-async_resolve}{\code{pkg_download_proposal$async_resolve()}}
-\item \href{#method-pkg_download_proposal-get_resolution}{\code{pkg_download_proposal$get_resolution()}}
-\item \href{#method-pkg_download_proposal-download}{\code{pkg_download_proposal$download()}}
-\item \href{#method-pkg_download_proposal-async_download}{\code{pkg_download_proposal$async_download()}}
-\item \href{#method-pkg_download_proposal-get_downloads}{\code{pkg_download_proposal$get_downloads()}}
-\item \href{#method-pkg_download_proposal-stop_for_download_error}{\code{pkg_download_proposal$stop_for_download_error()}}
-\item \href{#method-pkg_download_proposal-format}{\code{pkg_download_proposal$format()}}
-\item \href{#method-pkg_download_proposal-print}{\code{pkg_download_proposal$print()}}
-\item \href{#method-pkg_download_proposal-clone}{\code{pkg_download_proposal$clone()}}
-}
+  \itemize{
+    \item \href{#method-pkg_download_proposal-initialize}{\code{pkg_download_proposal$new()}}
+    \item \href{#method-pkg_download_proposal-get_refs}{\code{pkg_download_proposal$get_refs()}}
+    \item \href{#method-pkg_download_proposal-get_config}{\code{pkg_download_proposal$get_config()}}
+    \item \href{#method-pkg_download_proposal-resolve}{\code{pkg_download_proposal$resolve()}}
+    \item \href{#method-pkg_download_proposal-async_resolve}{\code{pkg_download_proposal$async_resolve()}}
+    \item \href{#method-pkg_download_proposal-get_resolution}{\code{pkg_download_proposal$get_resolution()}}
+    \item \href{#method-pkg_download_proposal-download}{\code{pkg_download_proposal$download()}}
+    \item \href{#method-pkg_download_proposal-async_download}{\code{pkg_download_proposal$async_download()}}
+    \item \href{#method-pkg_download_proposal-get_downloads}{\code{pkg_download_proposal$get_downloads()}}
+    \item \href{#method-pkg_download_proposal-stop_for_download_error}{\code{pkg_download_proposal$stop_for_download_error()}}
+    \item \href{#method-pkg_download_proposal-format}{\code{pkg_download_proposal$format()}}
+    \item \href{#method-pkg_download_proposal-print}{\code{pkg_download_proposal$print()}}
+    \item \href{#method-pkg_download_proposal-clone}{\code{pkg_download_proposal$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-pkg_download_proposal-new"></a>}}
-\if{latex}{\out{\hypertarget{method-pkg_download_proposal-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{pkg_download_proposal} object. Consider using
+\if{html}{\out{<a id="method-pkg_download_proposal-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_download_proposal-initialize}{}}}
+\subsection{\code{pkg_download_proposal$new()}}{
+  Create a new \code{pkg_download_proposal} object. Consider using
 \code{new_pkg_download_proposal()} instead of calling the constructor
 directly.
 
 The returned object can be used to look up (recursive) dependencies
 of R packages from various sources, and then to download the
 package files.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$new(refs, config = list(), remote_types = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{refs}}{Package names or references. See
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$new(refs, config = list(), remote_types = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{refs}}{Package names or references. See
 \link[=pkg_refs]{'Package references'} for the syntax.}
-
-\item{\code{config}}{Configuration options, a named list. See
+      \item{\code{config}}{Configuration options, a named list. See
 \link[=pkgdepends-config]{'Configuration'}.}
-
-\item{\code{remote_types}}{Custom remote ref types, this is for advanced
+      \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.
 \subsection{Examples}{
 
@@ -140,166 +139,187 @@ use, and experimental currently.
 pdl
 }\if{html}{\out{</div>}}
 }}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-get_refs"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_refs}{}}}
-\subsection{Method \code{get_refs()}}{
-The package refs that were used to create the
+\subsection{\code{pkg_download_proposal$get_refs()}}{
+  The package refs that were used to create the
 \code{pkg_download_proposal} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_refs()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$get_refs()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector of package refs that were used to create the
+\code{pkg_download_proposal} object.
+  }
 }
 
-\subsection{Returns}{
-A character vector of package refs that were used to create the
-\code{pkg_download_proposal} object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-get_config"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_config}{}}}
-\subsection{Method \code{get_config()}}{
-Configuration options for the \code{pkg_download_proposal} object. See
+\subsection{\code{pkg_download_proposal$get_config()}}{
+  Configuration options for the \code{pkg_download_proposal} object. See
 \link[=pkgdepends-config]{'Configuration'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_config()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$get_config()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Named list. See \link[=pkgdepends-config]{'Configuration'} for the configuration
+options.
+  }
 }
 
-\subsection{Returns}{
-Named list. See \link[=pkgdepends-config]{'Configuration'} for the configuration
-options.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-resolve}{}}}
-\subsection{Method \code{resolve()}}{
-Resolve the dependencies of the specified package references. This
+\subsection{\code{pkg_download_proposal$resolve()}}{
+  Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
 unless already cached, and also from GitHub if GitHub refs were
 included, either directly or indirectly. See
 \link[=pkg_resolution]{'Dependency resolution'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$resolve()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$resolve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_download_proposal} object itself, invisibly.
+  }
 }
 
-\subsection{Returns}{
-The \code{pkg_download_proposal} object itself, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-async_resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-async_resolve}{}}}
-\subsection{Method \code{async_resolve()}}{
-The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
+\subsection{\code{pkg_download_proposal$async_resolve()}}{
+  The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
 This method is for advanced use.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$async_resolve()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$async_resolve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A deferred value.
+  }
 }
 
-\subsection{Returns}{
-A deferred value.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-get_resolution"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_resolution}{}}}
-\subsection{Method \code{get_resolution()}}{
-Query the result of the dependency resolution. This method can be
+\subsection{\code{pkg_download_proposal$get_resolution()}}{
+  Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_resolution()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$get_resolution()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_resolution_result} object, which is also a data frame. See
+\link[=pkg_resolution]{'Dependency resolution'} for its columns.
+  }
 }
 
-\subsection{Returns}{
-A \link{pkg_resolution_result} object, which is also a data frame. See
-\link[=pkg_resolution]{'Dependency resolution'} for its columns.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-download"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-download}{}}}
-\subsection{Method \code{download()}}{
-Download all resolved packages. It uses the package cache in the
+\subsection{\code{pkg_download_proposal$download()}}{
+  Download all resolved packages. It uses the package cache in the
 pkgcache package by default, to avoid downloads if possible.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$download()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$download()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_download_proposal} object, invisibly.
+  }
 }
 
-\subsection{Returns}{
-The \code{pkg_download_proposal} object, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-async_download"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-async_download}{}}}
-\subsection{Method \code{async_download()}}{
-The same as \href{#method-download}{\code{download()}}, but asynchronous.
+\subsection{\code{pkg_download_proposal$async_download()}}{
+  The same as \href{#method-download}{\code{download()}}, but asynchronous.
 This method is for advanced use.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$async_download()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$async_download()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A deferred value.
+  }
 }
 
-\subsection{Returns}{
-A deferred value.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-get_downloads"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-get_downloads}{}}}
-\subsection{Method \code{get_downloads()}}{
-Returns the summary of the package downloads.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$get_downloads()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_download_proposal$get_downloads()}}{
+  Returns the summary of the package downloads.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$get_downloads()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_download_result} object, which is a list. See
+\link{pkg_download_result} for details.
+  }
 }
 
-\subsection{Returns}{
-A \link{pkg_download_result} object, which is a list. See
-\link{pkg_download_result} for details.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-stop_for_download_error"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-stop_for_download_error}{}}}
-\subsection{Method \code{stop_for_download_error()}}{
-Throw and error if the some of the downloads have failed for the
+\subsection{\code{pkg_download_proposal$stop_for_download_error()}}{
+  Throw and error if the some of the downloads have failed for the
 most recent
 \href{#method-download}{\code{pkg_download_proposal$download()}} call.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$stop_for_download_error()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$stop_for_download_error()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-format"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-format}{}}}
-\subsection{Method \code{format()}}{
-Format a \code{pkg_download_proposal} object, typically for printing.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$format(...)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_download_proposal$format()}}{
+  Format a \code{pkg_download_proposal} object, typically for printing.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$format(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{not used currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Nothing.
+A character vector, each element should be a line in the printout.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{not used currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Nothing.
-A character vector, each element should be a line in the printout.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-print"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-print}{}}}
-\subsection{Method \code{print()}}{
-Prints a \code{pkg_download_proposal} object to the screen. The printout
+\subsection{\code{pkg_download_proposal$print()}}{
+  Prints a \code{pkg_download_proposal} object to the screen. The printout
 includes:
 \itemize{
 \item The package refs.
@@ -311,36 +331,40 @@ includes:
 }
 
 See the example below.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$print(...)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$print(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{not used currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_download_proposal} object itself, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{not used currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The \code{pkg_download_proposal} object itself, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_download_proposal-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_download_proposal-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_download_proposal$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_download_proposal$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_download_proposal$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

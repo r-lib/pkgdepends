@@ -12,8 +12,7 @@ new_pkg_installation_proposal(refs, config = list(), ...)
 \link[=pkg_refs]{'Package references'} for the syntax.}
 
 \item{config}{Configuration options, a named list. See
-\link[=pkgdepends-config]{'Configuration'}. If it does not include \code{library}, then
-\code{.libPaths()[1]} is added as \code{library}.}
+\link[=pkgdepends-config]{'Configuration'}.}
 
 \item{...}{Additional arguments, passed to
 \href{#method-new}{\code{pkg_installation_proposal$new()}}.}
@@ -118,7 +117,7 @@ pdi
 \dontshow{\}) # examplesIf}
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$resolve`
+## Method `pkg_installation_proposal$resolve()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -132,7 +131,7 @@ pdi$get_resolution()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$get_resolution`
+## Method `pkg_installation_proposal$get_resolution()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -145,7 +144,7 @@ pdi$get_resolution()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$solve`
+## Method `pkg_installation_proposal$solve()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -159,7 +158,7 @@ pdi$get_solution()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$get_solution`
+## Method `pkg_installation_proposal$get_solution()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -173,7 +172,7 @@ pdi$get_solution()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$show_solution`
+## Method `pkg_installation_proposal$show_solution()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -188,7 +187,7 @@ pdi$show_solution()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$stop_for_solution_error`
+## Method `pkg_installation_proposal$stop_for_solution_error()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -205,7 +204,7 @@ pdi
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$draw`
+## Method `pkg_installation_proposal$draw()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -219,7 +218,7 @@ pdi$draw()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$download`
+## Method `pkg_installation_proposal$download()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -234,7 +233,7 @@ pdi$get_downloads()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$get_downloads`
+## Method `pkg_installation_proposal$get_downloads()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -249,7 +248,7 @@ pdi$get_downloads()
 }
 
 ## ------------------------------------------------
-## Method `pkg_installation_proposal$get_install_plan`
+## Method `pkg_installation_proposal$get_install_plan()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -265,123 +264,126 @@ pdi$get_install_plan()
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-pkg_installation_proposal-new}{\code{pkg_installation_proposal$new()}}
-\item \href{#method-pkg_installation_proposal-get_refs}{\code{pkg_installation_proposal$get_refs()}}
-\item \href{#method-pkg_installation_proposal-get_config}{\code{pkg_installation_proposal$get_config()}}
-\item \href{#method-pkg_installation_proposal-resolve}{\code{pkg_installation_proposal$resolve()}}
-\item \href{#method-pkg_installation_proposal-async_resolve}{\code{pkg_installation_proposal$async_resolve()}}
-\item \href{#method-pkg_installation_proposal-get_resolution}{\code{pkg_installation_proposal$get_resolution()}}
-\item \href{#method-pkg_installation_proposal-get_solve_policy}{\code{pkg_installation_proposal$get_solve_policy()}}
-\item \href{#method-pkg_installation_proposal-set_solve_policy}{\code{pkg_installation_proposal$set_solve_policy()}}
-\item \href{#method-pkg_installation_proposal-solve}{\code{pkg_installation_proposal$solve()}}
-\item \href{#method-pkg_installation_proposal-get_solution}{\code{pkg_installation_proposal$get_solution()}}
-\item \href{#method-pkg_installation_proposal-show_solution}{\code{pkg_installation_proposal$show_solution()}}
-\item \href{#method-pkg_installation_proposal-get_sysreqs}{\code{pkg_installation_proposal$get_sysreqs()}}
-\item \href{#method-pkg_installation_proposal-show_sysreqs}{\code{pkg_installation_proposal$show_sysreqs()}}
-\item \href{#method-pkg_installation_proposal-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
-\item \href{#method-pkg_installation_proposal-create_lockfile}{\code{pkg_installation_proposal$create_lockfile()}}
-\item \href{#method-pkg_installation_proposal-draw}{\code{pkg_installation_proposal$draw()}}
-\item \href{#method-pkg_installation_proposal-download}{\code{pkg_installation_proposal$download()}}
-\item \href{#method-pkg_installation_proposal-async_download}{\code{pkg_installation_proposal$async_download()}}
-\item \href{#method-pkg_installation_proposal-get_downloads}{\code{pkg_installation_proposal$get_downloads()}}
-\item \href{#method-pkg_installation_proposal-stop_for_download_error}{\code{pkg_installation_proposal$stop_for_download_error()}}
-\item \href{#method-pkg_installation_proposal-install}{\code{pkg_installation_proposal$install()}}
-\item \href{#method-pkg_installation_proposal-install_sysreqs}{\code{pkg_installation_proposal$install_sysreqs()}}
-\item \href{#method-pkg_installation_proposal-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
-\item \href{#method-pkg_installation_proposal-format}{\code{pkg_installation_proposal$format()}}
-\item \href{#method-pkg_installation_proposal-print}{\code{pkg_installation_proposal$print()}}
-\item \href{#method-pkg_installation_proposal-clone}{\code{pkg_installation_proposal$clone()}}
-}
+  \itemize{
+    \item \href{#method-pkg_installation_proposal-initialize}{\code{pkg_installation_proposal$new()}}
+    \item \href{#method-pkg_installation_proposal-get_refs}{\code{pkg_installation_proposal$get_refs()}}
+    \item \href{#method-pkg_installation_proposal-get_config}{\code{pkg_installation_proposal$get_config()}}
+    \item \href{#method-pkg_installation_proposal-resolve}{\code{pkg_installation_proposal$resolve()}}
+    \item \href{#method-pkg_installation_proposal-async_resolve}{\code{pkg_installation_proposal$async_resolve()}}
+    \item \href{#method-pkg_installation_proposal-get_resolution}{\code{pkg_installation_proposal$get_resolution()}}
+    \item \href{#method-pkg_installation_proposal-get_solve_policy}{\code{pkg_installation_proposal$get_solve_policy()}}
+    \item \href{#method-pkg_installation_proposal-set_solve_policy}{\code{pkg_installation_proposal$set_solve_policy()}}
+    \item \href{#method-pkg_installation_proposal-solve}{\code{pkg_installation_proposal$solve()}}
+    \item \href{#method-pkg_installation_proposal-get_solution}{\code{pkg_installation_proposal$get_solution()}}
+    \item \href{#method-pkg_installation_proposal-show_solution}{\code{pkg_installation_proposal$show_solution()}}
+    \item \href{#method-pkg_installation_proposal-get_sysreqs}{\code{pkg_installation_proposal$get_sysreqs()}}
+    \item \href{#method-pkg_installation_proposal-show_sysreqs}{\code{pkg_installation_proposal$show_sysreqs()}}
+    \item \href{#method-pkg_installation_proposal-stop_for_solution_error}{\code{pkg_installation_proposal$stop_for_solution_error()}}
+    \item \href{#method-pkg_installation_proposal-create_lockfile}{\code{pkg_installation_proposal$create_lockfile()}}
+    \item \href{#method-pkg_installation_proposal-draw}{\code{pkg_installation_proposal$draw()}}
+    \item \href{#method-pkg_installation_proposal-download}{\code{pkg_installation_proposal$download()}}
+    \item \href{#method-pkg_installation_proposal-async_download}{\code{pkg_installation_proposal$async_download()}}
+    \item \href{#method-pkg_installation_proposal-get_downloads}{\code{pkg_installation_proposal$get_downloads()}}
+    \item \href{#method-pkg_installation_proposal-stop_for_download_error}{\code{pkg_installation_proposal$stop_for_download_error()}}
+    \item \href{#method-pkg_installation_proposal-install}{\code{pkg_installation_proposal$install()}}
+    \item \href{#method-pkg_installation_proposal-install_sysreqs}{\code{pkg_installation_proposal$install_sysreqs()}}
+    \item \href{#method-pkg_installation_proposal-get_install_plan}{\code{pkg_installation_proposal$get_install_plan()}}
+    \item \href{#method-pkg_installation_proposal-format}{\code{pkg_installation_proposal$format()}}
+    \item \href{#method-pkg_installation_proposal-print}{\code{pkg_installation_proposal$print()}}
+    \item \href{#method-pkg_installation_proposal-clone}{\code{pkg_installation_proposal$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-pkg_installation_proposal-new"></a>}}
-\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{pkg_installation_proposal} object. Consider using
+\if{html}{\out{<a id="method-pkg_installation_proposal-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_installation_proposal-initialize}{}}}
+\subsection{\code{pkg_installation_proposal$new()}}{
+  Create a new \code{pkg_installation_proposal} object. Consider using
 \code{new_pkg_installation_proposal()} instead of calling the constructor
 directly.
 
 The returned object can be used to look up (recursive) dependencies
 of R packages from various sources, and then download and install
 the package files.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$new(
   refs,
   config = list(),
   policy = c("lazy", "upgrade"),
   remote_types = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{refs}}{Package names or references. See
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{refs}}{Package names or references. See
 \link[=pkg_refs]{'Package references'} for the syntax.}
-
-\item{\code{config}}{Configuration options, a named list. See
+      \item{\code{config}}{Configuration options, a named list. See
 \link[=pkgdepends-config]{'Configuration'}. It needs to include the package
 library to install to, in \code{library}.}
-
-\item{\code{policy}}{Solution policy. See \link[=pkg_solution]{'The dependency solver'}.}
-
-\item{\code{remote_types}}{Custom remote ref types, this is for advanced
+      \item{\code{policy}}{Solution policy. See \link[=pkg_solution]{'The dependency solver'}.}
+      \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_refs"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_refs}{}}}
-\subsection{Method \code{get_refs()}}{
-The package refs that were used to create the
+\subsection{\code{pkg_installation_proposal$get_refs()}}{
+  The package refs that were used to create the
 \code{pkg_installation_proposal} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_refs()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_refs()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector of package refs that were used to create the
+\code{pkg_installation_proposal} object.
+  }
 }
 
-\subsection{Returns}{
-A character vector of package refs that were used to create the
-\code{pkg_installation_proposal} object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_config"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_config}{}}}
-\subsection{Method \code{get_config()}}{
-Configuration options for the \code{pkg_installation_proposal} object. See
+\subsection{\code{pkg_installation_proposal$get_config()}}{
+  Configuration options for the \code{pkg_installation_proposal} object. See
 \link[=pkgdepends-config]{'Configuration'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_config()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_config()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Named list. See \link[=pkgdepends-config]{'Configuration'} for the configuration
+options.
+  }
 }
 
-\subsection{Returns}{
-Named list. See \link[=pkgdepends-config]{'Configuration'} for the configuration
-options.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-resolve}{}}}
-\subsection{Method \code{resolve()}}{
-Resolve the dependencies of the specified package references. This
+\subsection{\code{pkg_installation_proposal$resolve()}}{
+  Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
 unless already cached, and also from GitHub if GitHub refs were
 included, either directly or indirectly. See
 \link[=pkg_resolution]{'Dependency resolution'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$resolve()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-The \code{pkg_installation_proposal} object, invisibly.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$resolve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_installation_proposal} object, invisibly.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
@@ -389,111 +391,113 @@ pdi <- new_pkg_installation_proposal(
 pdi$resolve()
 pdi$get_resolution()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-async_resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-async_resolve}{}}}
-\subsection{Method \code{async_resolve()}}{
-The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous. This
+\subsection{\code{pkg_installation_proposal$async_resolve()}}{
+  The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous. This
 method is for advanced use.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$async_resolve()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$async_resolve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A deferred value.
+  }
 }
 
-\subsection{Returns}{
-A deferred value.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_resolution"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_resolution}{}}}
-\subsection{Method \code{get_resolution()}}{
-Query the result of the dependency resolution. This method can be
+\subsection{\code{pkg_installation_proposal$get_resolution()}}{
+  Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_resolution()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A \link{pkg_resolution_result} object, which is also a data frame. See
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_resolution()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_resolution_result} object, which is also a data frame. See
 \link[=pkg_resolution]{'Dependency resolution'} for its columns.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
 pdi$resolve()
 pdi$get_resolution()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_solve_policy"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_solve_policy}{}}}
-\subsection{Method \code{get_solve_policy()}}{
-Returns the current policy of the dependency solver.
+\subsection{\code{pkg_installation_proposal$get_solve_policy()}}{
+  Returns the current policy of the dependency solver.
 See \link[=pkg_solution]{'The dependency solver'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_solve_policy()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_solve_policy()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector of length one.
+  }
 }
 
-\subsection{Returns}{
-A character vector of length one.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-set_solve_policy"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-set_solve_policy}{}}}
-\subsection{Method \code{set_solve_policy()}}{
-Set the current policy of the dependency solver.
+\subsection{\code{pkg_installation_proposal$set_solve_policy()}}{
+  Set the current policy of the dependency solver.
 If the object already contains a solution and the new policy is
 different than the old policy, then the solution is deleted.
 See \link[=pkg_solution]{'The dependency solver'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$set_solve_policy(policy = c("lazy", "upgrade"))}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$set_solve_policy(policy = c("lazy", "upgrade"))}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{policy}}{Policy to set.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{policy}}{Policy to set.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-solve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-solve}{}}}
-\subsection{Method \code{solve()}}{
-Solve the package dependencies. Out of the resolved dependencies,
+\subsection{\code{pkg_installation_proposal$solve()}}{
+  Solve the package dependencies. Out of the resolved dependencies,
 it works out a set of packages, that can be installed together to
 create a functional installation. The set includes all directly
 specified packages, and all required (or suggested, depending on
 the configuration) packages as well. It includes every package at
 most once. See \link[=pkg_solution]{'The dependency solver'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$solve()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-The \code{pkg_installation_proposal} object itself, invisibly.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$solve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_installation_proposal} object itself, invisibly.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -501,29 +505,27 @@ pdi$resolve()
 pdi$solve()
 pdi$get_solution()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_solution"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_solution}{}}}
-\subsection{Method \code{get_solution()}}{
-Returns the solution of the package dependencies.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_solution()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A \link{pkg_solution_result} object, which is a list. See
+\subsection{\code{pkg_installation_proposal$get_solution()}}{
+  Returns the solution of the package dependencies.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_solution()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -531,36 +533,34 @@ pdi$resolve()
 pdi$solve()
 pdi$get_solution()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-show_solution"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-show_solution}{}}}
-\subsection{Method \code{show_solution()}}{
-Show the solution on the screen.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$show_solution(key = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{key}}{Whether to show the key to the package list annotation.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \link{pkg_solution_result} object, which is a list. See
+\subsection{\code{pkg_installation_proposal$show_solution()}}{
+  Show the solution on the screen.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$show_solution(key = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{key}}{Whether to show the key to the package list annotation.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_solution_result} object, which is a list. See
 \link{pkg_solution_result} for details.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
@@ -569,46 +569,48 @@ pdi$solve()
 pdi$get_solution()
 pdi$show_solution()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_sysreqs"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_sysreqs}{}}}
-\subsection{Method \code{get_sysreqs()}}{
-Query and categorize system requirements.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_sysreqs()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_proposal$get_sysreqs()}}{
+  Query and categorize system requirements.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_sysreqs()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-show_sysreqs"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-show_sysreqs}{}}}
-\subsection{Method \code{show_sysreqs()}}{
-Show system requirements for the packages in the solution.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$show_sysreqs()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_proposal$show_sysreqs()}}{
+  Show system requirements for the packages in the solution.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$show_sysreqs()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-stop_for_solution_error"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-stop_for_solution_error}{}}}
-\subsection{Method \code{stop_for_solution_error()}}{
-Error if the dependency solver failed to find a consistent set of
+\subsection{\code{pkg_installation_proposal$stop_for_solution_error()}}{
+  Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$stop_for_solution_error()}\if{html}{\out{</div>}}
-}
-
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-# This is an error, because the packages conflict:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$stop_for_solution_error()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{# This is an error, because the packages conflict:
 pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
@@ -619,34 +621,32 @@ pdi
 # This fails:
 # pdi$stop_for_solution_error()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-create_lockfile"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-create_lockfile}{}}}
-\subsection{Method \code{create_lockfile()}}{
-Create a lock file that contains the information to perform
+\subsection{\code{pkg_installation_proposal$create_lockfile()}}{
+  Create a lock file that contains the information to perform
 the installation later, possibly in another R session.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$create_lockfile(path = "pkg.lock", version = 1)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{path}}{Name of the lock file. The default is \code{pkg.lock} in the
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$create_lockfile(path = "pkg.lock", version = 1)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{path}}{Name of the lock file. The default is \code{pkg.lock} in the
 current working directory.}
-
-\item{\code{version}}{Only version 1 is supported currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-Note, since the URLs of CRAN and most CRAN-like repositories change
+      \item{\code{version}}{Only version 1 is supported currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Details}{
+    Note, since the URLs of CRAN and most CRAN-like repositories change
 over time, in practice you cannot perform the plan of the lock file
 \emph{much} later. For example, binary packages of older package version
 are removed, and won't be found.
@@ -660,27 +660,27 @@ updated package has different (e.g. new) dependencies.
 Currently the intended use case of lock files in on CI systems, to
 facilitate caching. The (hash of the) lock file provides a good key
 for caching systems.
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-draw"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-draw}{}}}
-\subsection{Method \code{draw()}}{
-Draw a tree of package dependencies. It returns a \code{tree} object, see
+\subsection{\code{pkg_installation_proposal$draw()}}{
+  Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the dependency tree to the
 screen.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$draw()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$draw()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
@@ -688,30 +688,28 @@ pdi$resolve()
 pdi$solve()
 pdi$draw()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-download"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-download}{}}}
-\subsection{Method \code{download()}}{
-Download all packages that are part of the solution. It uses the
+\subsection{\code{pkg_installation_proposal$download()}}{
+  Download all packages that are part of the solution. It uses the
 package cache in the pkgcache package by default, to avoid downloads
 if possible.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$download()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-The \code{pkg_installation_proposal} object itself, invisibly.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$download()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_installation_proposal} object itself, invisibly.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
 )
@@ -720,43 +718,43 @@ pdi$solve()
 pdi$download()
 pdi$get_downloads()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-async_download"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-async_download}{}}}
-\subsection{Method \code{async_download()}}{
-The same as \href{#method-download}{\code{download()}}, but asynchronous.
+\subsection{\code{pkg_installation_proposal$async_download()}}{
+  The same as \href{#method-download}{\code{download()}}, but asynchronous.
 This method is for advanced use.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$async_download()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$async_download()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A deferred value.
+  }
 }
 
-\subsection{Returns}{
-A deferred value.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_downloads"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_downloads}{}}}
-\subsection{Method \code{get_downloads()}}{
-Returns the summary of the package downloads.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_downloads()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A \link{pkg_download_result} object, which is a list. See
+\subsection{\code{pkg_installation_proposal$get_downloads()}}{
+  Returns the summary of the package downloads.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_downloads()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_download_result} object, which is a list. See
 \link{pkg_download_result} for details.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   c("r-lib/pak", "cran::pak"),
   config = list(library = tempfile())
 )
@@ -765,65 +763,69 @@ pdi$solve()
 pdi$download()
 pdi$get_downloads()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-stop_for_download_error"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-stop_for_download_error}{}}}
-\subsection{Method \code{stop_for_download_error()}}{
-Throw and error if the some of the downloads have failed for the
+\subsection{\code{pkg_installation_proposal$stop_for_download_error()}}{
+  Throw and error if the some of the downloads have failed for the
 most recent
 \href{#method-download}{\code{pkg_installation_proposal$download()}} call.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$stop_for_download_error()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$stop_for_download_error()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-install"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-install}{}}}
-\subsection{Method \code{install()}}{
-Install the downloaded packages. It calls \code{\link[=install_package_plan]{install_package_plan()}}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$install()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_proposal$install()}}{
+  Install the downloaded packages. It calls \code{\link[=install_package_plan]{install_package_plan()}}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$install()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
+  }
 }
 
-\subsection{Returns}{
-The return value of \code{\link[=install_package_plan]{install_package_plan()}}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-install_sysreqs"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-install_sysreqs}{}}}
-\subsection{Method \code{install_sysreqs()}}{
-Install system requirements. It does nothing if system requirements
+\subsection{\code{pkg_installation_proposal$install_sysreqs()}}{
+  Install system requirements. It does nothing if system requirements
 are turned off.
 Create an installation plan for the downloaded packages.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$install_sysreqs()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$install_sysreqs()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-get_install_plan"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-get_install_plan}{}}}
-\subsection{Method \code{get_install_plan()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$get_install_plan()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-An installation plan, see \link[=install_plans]{'Installation plans'} for
+\subsection{\code{pkg_installation_proposal$get_install_plan()}}{
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$get_install_plan()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    An installation plan, see \link[=install_plans]{'Installation plans'} for
 the format.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-pdi <- new_pkg_installation_proposal(
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
@@ -832,37 +834,37 @@ pdi$solve()
 pdi$download()
 pdi$get_install_plan()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-format"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-format}{}}}
-\subsection{Method \code{format()}}{
-Format a \code{pkg_installation_proposal} object, typically for printing.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$format(...)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_proposal$format()}}{
+  Format a \code{pkg_installation_proposal} object, typically for printing.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$format(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{not used currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector, each element should be a line in the printout.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{not used currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A character vector, each element should be a line in the printout.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-print"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-print}{}}}
-\subsection{Method \code{print()}}{
-Prints a \code{pkg_installation_proposal} object to the screen.
+\subsection{\code{pkg_installation_proposal$print()}}{
+  Prints a \code{pkg_installation_proposal} object to the screen.
 
 The printout includes:
 \itemize{
@@ -876,36 +878,40 @@ The printout includes:
 }
 
 See the example below.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$print(...)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$print(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{not used currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_installation_proposal} object itself, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{not used currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The \code{pkg_installation_proposal} object itself, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_installation_proposal-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_installation_proposal-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_installation_proposal$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_installation_proposal$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_installation_proposal$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

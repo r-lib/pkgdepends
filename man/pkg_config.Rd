@@ -43,7 +43,7 @@ then you need to make sure that the vignette builder packages are
 available, as these are not installed by default currently.
 \item \code{cache_dir}: Directory to download the packages to. Defaults to a temporary
 directory within the R session temporary directory, see
-\code{\link[base:tempfile]{base::tempdir()}}.
+\code{\link[base:tempdir]{base::tempdir()}}.
 \item \code{cran_mirror}: CRAN mirror to use. Defaults to the \code{repos} option
 (see \code{\link[base:options]{base::options()}}), if that's not set then
 \verb{https://cran.rstudio.com}.
@@ -59,6 +59,7 @@ affects \verb{git::} and \verb{gitlab::} package sources only.
 If the R package is in a subdirectory then only the submodules
 within that directory are updated. If a submodule appears in
 \code{.Rbuildignore}, then it is skipped.
+\item \code{ignore_dev_library}: Whether to ignore library directories called \verb{__dev_lib__}.
 \item \code{include_linkingto}: Whether to always include \code{LinkingTo} dependencies in the solution
 of and installation, even if they are needed because the packages
 are installed from binaries. This is sometimes useful, see e.g.
@@ -71,7 +72,7 @@ first path in \code{\link[=.libPaths]{.libPaths()}}.
 \item \code{metadata_cache_dir}: Location of metadata replica of
 \code{\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}}. Defaults to a temporary
 directory within the R session temporary directory, see
-\code{\link[base:tempfile]{base::tempdir()}}.
+\code{\link[base:tempdir]{base::tempdir()}}.
 \item \code{metadata_update_after}: A time interval as a \link{difftime} object. pkgdepends will update the
 metadata cache if it is older than this. The default is one day.
 The \code{PKG_METADATA_UPDATE_AFTER} environment variable may be set

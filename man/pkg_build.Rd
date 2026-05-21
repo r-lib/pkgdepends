@@ -6,7 +6,7 @@
 \usage{
 pkg_build(
   pkg,
-  library = .libPaths()[1],
+  library = NULL,
   flavor = Sys.getenv("PKG_BUILD_FLAVOR"),
   build_number = 1L
 )

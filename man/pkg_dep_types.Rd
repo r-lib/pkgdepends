@@ -20,7 +20,7 @@ Hard dependencies are needed for a package to load, soft dependencies
 are optional.
 }
 \seealso{
-Other package dependency utilities: 
-\code{\link{as_pkg_dependencies}()}
+Other package dependency utilities:
+\code{\link[=as_pkg_dependencies]{as_pkg_dependencies()}}
 }
 \concept{package dependency utilities}

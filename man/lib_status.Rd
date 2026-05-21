@@ -4,7 +4,7 @@
 \alias{lib_status}
 \title{Status of packages in a library}
 \usage{
-lib_status(library = .libPaths()[1], packages = NULL)
+lib_status(library = NULL, packages = NULL)
 }
 \arguments{
 \item{library}{Path to library.}

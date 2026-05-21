@@ -5,8 +5,8 @@
 \alias{sysreqs_fix_installed}
 \title{Check if installed packages have all their system requirements}
 \usage{
-sysreqs_check_installed(packages = NULL, library = .libPaths()[1])
-sysreqs_fix_installed(packages = NULL, library = .libPaths()[1])
+sysreqs_check_installed(packages = NULL, library = NULL)
+sysreqs_fix_installed(packages = NULL, library = NULL)
 }
 \arguments{
 \item{packages}{If not \code{NULL}, then only these packages are checked.
@@ -56,13 +56,13 @@ sysreqs_check_installed()
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other system requirements functions: 
-\code{\link{sysreqs_db_list}()},
-\code{\link{sysreqs_db_match}()},
-\code{\link{sysreqs_db_update}()},
-\code{\link{sysreqs_install_plan}()},
-\code{\link{sysreqs_is_supported}()},
-\code{\link{sysreqs_list_system_packages}()},
-\code{\link{sysreqs_platforms}()}
+Other system requirements functions:
+\code{\link[=sysreqs_db_list]{sysreqs_db_list()}},
+\code{\link[=sysreqs_db_match]{sysreqs_db_match()}},
+\code{\link[=sysreqs_db_update]{sysreqs_db_update()}},
+\code{\link[=sysreqs_install_plan]{sysreqs_install_plan()}},
+\code{\link[=sysreqs_is_supported]{sysreqs_is_supported()}},
+\code{\link[=sysreqs_list_system_packages]{sysreqs_list_system_packages()}},
+\code{\link[=sysreqs_platforms]{sysreqs_platforms()}}
 }
 \concept{system requirements functions}

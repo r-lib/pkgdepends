@@ -4,12 +4,7 @@
 \alias{install_package_plan}
 \title{Perform a package installation plan}
 \usage{
-install_package_plan(
-  plan,
-  lib = .libPaths()[[1]],
-  num_workers = 1,
-  cache = NULL
-)
+install_package_plan(plan, lib = NULL, num_workers = 1, cache = NULL)
 }
 \arguments{
 \item{plan}{Package plan object, a data frame, see

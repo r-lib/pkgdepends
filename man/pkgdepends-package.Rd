@@ -223,6 +223,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Gábor Csárdi \email{csardi.gabor@gmail.com}
 
+Authors:
+\itemize{
+  \item Gábor Csárdi \email{csardi.gabor@gmail.com}
+}
+
 Other contributors:
 \itemize{
   \item Posit Software, PBC (\href{https://ror.org/03wc8by49}{ROR}) [copyright holder, funder]

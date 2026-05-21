@@ -2,13 +2,16 @@ $build_vignettes
 [1] "Whether to build vignettes for package trees.\nThis is only used if the package is obtained from a package tree,\nand not from a source (or binary) package archive. By default\nvignettes are not built in this case. If you set this to \\code{TRUE},\nthen you need to make sure that the vignette builder packages are\navailable, as these are not installed by default currently."
 
 $cache_dir
-[1] "Directory to download the packages to. Defaults to a temporary\ndirectory within the R session temporary directory, see\n\\code{\\link[base:tempfile]{base::tempdir()}}."
+[1] "Directory to download the packages to. Defaults to a temporary\ndirectory within the R session temporary directory, see\n\\code{\\link[base:tempdir]{base::tempdir()}}."
 
 $cran_mirror
 [1] "CRAN mirror to use. Defaults to the \\code{repos} option\n(see \\code{\\link[base:options]{base::options()}}), if that's not set then\n\\verb{https://cran.rstudio.com}. See also \\code{\\link[pak:repo_add]{pak::repo_add()}} and\n\\code{\\link[pak:repo_get]{pak::repo_get()}}"
 
 $git_submodules
 [1] "Whether or not to update submodules in git repositories. This\naffects \\verb{git::} and \\verb{gitlab::} package sources only.\nIf the R package is in a subdirectory then only the submodules\nwithin that directory are updated. If a submodule appears in\n\\code{.Rbuildignore}, then it is skipped."
+
+$ignore_dev_library
+[1] "Whether to ignore library directories called \\verb{__dev_lib__}."
 
 $include_linkingto
 [1] "Whether to always include \\code{LinkingTo} dependencies in the solution\nof and installation, even if they are needed because the packages\nare installed from binaries. This is sometimes useful, see e.g.\n\\url{https://github.com/r-lib/pak/issues/485} for an example use case."
@@ -17,13 +20,13 @@ $library
 [1] "Package library to install packages to. It is also used for\nalready installed packages when considering dependencies."
 
 $metadata_cache_dir
-[1] "Location of metadata replica of\n\\code{\\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}}. Defaults to a temporary\ndirectory within the R session temporary directory, see\n\\code{\\link[base:tempfile]{base::tempdir()}}."
+[1] "Location of metadata replica of\n\\code{\\link[pkgcache:cranlike_metadata_cache]{pkgcache::cranlike_metadata_cache}}. Defaults to a temporary\ndirectory within the R session temporary directory, see\n\\code{\\link[base:tempdir]{base::tempdir()}}."
 
 $metadata_update_after
 [1] "A time interval as a \\link{difftime} object. pak will update the\nmetadata cache if it is older than this. The default is one day.\nThe \\code{PKG_METADATA_UPDATE_AFTER} environment variable may be set\nin seconds (\\code{s} suffix), minutes (\\code{m} suffix), hours (\\code{h} suffix),\nor days (\\code{d} suffix). E.g: \\verb{1d} means one day."
 
 $package_cache_dir
-[1] "Location of the package cache on the disk. See\n\\code{\\link[pak:cache]{pak::cache_summary()}}. Default is selected by pkgcache."
+[1] "Location of the package cache on the disk. See\n\\code{\\link[pak:cache_summary]{pak::cache_summary()}}. Default is selected by pkgcache."
 
 $platforms
 [1] "Character vector of platforms to \\emph{download} or \\emph{install} packages\nfor. See \\code{\\link[pkgdepends:default_platforms]{pkgdepends::default_platforms()}} for possible platform\nnames. Defaults to the platform of the current R session, plus\n\\code{\"source\"}."

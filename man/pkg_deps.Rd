@@ -133,177 +133,190 @@ pd
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-pkg_deps-new}{\code{pkg_deps$new()}}
-\item \href{#method-pkg_deps-get_refs}{\code{pkg_deps$get_refs()}}
-\item \href{#method-pkg_deps-get_config}{\code{pkg_deps$get_config()}}
-\item \href{#method-pkg_deps-resolve}{\code{pkg_deps$resolve()}}
-\item \href{#method-pkg_deps-async_resolve}{\code{pkg_deps$async_resolve()}}
-\item \href{#method-pkg_deps-get_resolution}{\code{pkg_deps$get_resolution()}}
-\item \href{#method-pkg_deps-get_solve_policy}{\code{pkg_deps$get_solve_policy()}}
-\item \href{#method-pkg_deps-set_solve_policy}{\code{pkg_deps$set_solve_policy()}}
-\item \href{#method-pkg_deps-solve}{\code{pkg_deps$solve()}}
-\item \href{#method-pkg_deps-get_solution}{\code{pkg_deps$get_solution()}}
-\item \href{#method-pkg_deps-show_solution}{\code{pkg_deps$show_solution()}}
-\item \href{#method-pkg_deps-stop_for_solution_error}{\code{pkg_deps$stop_for_solution_error()}}
-\item \href{#method-pkg_deps-draw}{\code{pkg_deps$draw()}}
-\item \href{#method-pkg_deps-format}{\code{pkg_deps$format()}}
-\item \href{#method-pkg_deps-print}{\code{pkg_deps$print()}}
-\item \href{#method-pkg_deps-clone}{\code{pkg_deps$clone()}}
-}
+  \itemize{
+    \item \href{#method-pkg_deps-initialize}{\code{pkg_deps$new()}}
+    \item \href{#method-pkg_deps-get_refs}{\code{pkg_deps$get_refs()}}
+    \item \href{#method-pkg_deps-get_config}{\code{pkg_deps$get_config()}}
+    \item \href{#method-pkg_deps-resolve}{\code{pkg_deps$resolve()}}
+    \item \href{#method-pkg_deps-async_resolve}{\code{pkg_deps$async_resolve()}}
+    \item \href{#method-pkg_deps-get_resolution}{\code{pkg_deps$get_resolution()}}
+    \item \href{#method-pkg_deps-get_solve_policy}{\code{pkg_deps$get_solve_policy()}}
+    \item \href{#method-pkg_deps-set_solve_policy}{\code{pkg_deps$set_solve_policy()}}
+    \item \href{#method-pkg_deps-solve}{\code{pkg_deps$solve()}}
+    \item \href{#method-pkg_deps-get_solution}{\code{pkg_deps$get_solution()}}
+    \item \href{#method-pkg_deps-show_solution}{\code{pkg_deps$show_solution()}}
+    \item \href{#method-pkg_deps-stop_for_solution_error}{\code{pkg_deps$stop_for_solution_error()}}
+    \item \href{#method-pkg_deps-draw}{\code{pkg_deps$draw()}}
+    \item \href{#method-pkg_deps-format}{\code{pkg_deps$format()}}
+    \item \href{#method-pkg_deps-print}{\code{pkg_deps$print()}}
+    \item \href{#method-pkg_deps-clone}{\code{pkg_deps$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-pkg_deps-new"></a>}}
-\if{latex}{\out{\hypertarget{method-pkg_deps-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{pkg_deps} object. Consider using \code{new_pkg_deps()}
+\if{html}{\out{<a id="method-pkg_deps-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-pkg_deps-initialize}{}}}
+\subsection{\code{pkg_deps$new()}}{
+  Create a new \code{pkg_deps} object. Consider using \code{new_pkg_deps()}
 instead of calling the constructor directly.
 
 The returned object can be used to look up (recursive) dependencies
 of R packages from various sources. To perform the actual lookup,
 you'll need to call the \href{#method-resolve}{\code{resolve()}} method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$new(
   refs,
   config = list(),
   policy = c("lazy", "upgrade"),
   remote_types = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{refs}}{Package names or references. See
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{refs}}{Package names or references. See
 \link[=pkg_refs]{'Package references'} for the syntax.}
-
-\item{\code{config}}{Configuration options, a named list. See
+      \item{\code{config}}{Configuration options, a named list. See
 \link[=pkgdepends-config]{'Configuration'}.}
-
-\item{\code{policy}}{Solution policy. See \link[=pkg_solution]{'The dependency solver'}.}
-
-\item{\code{remote_types}}{Custom remote ref types, this is for advanced
+      \item{\code{policy}}{Solution policy. See \link[=pkg_solution]{'The dependency solver'}.}
+      \item{\code{remote_types}}{Custom remote ref types, this is for advanced
 use, and experimental currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A new \code{pkg_deps} object.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new \code{pkg_deps} object.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-get_refs"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-get_refs}{}}}
-\subsection{Method \code{get_refs()}}{
-The package refs that were used to create the \code{pkg_deps} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_refs()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_deps$get_refs()}}{
+  The package refs that were used to create the \code{pkg_deps} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$get_refs()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector of package refs that were used to create the
+\code{pkg_deps} object.
+  }
 }
 
-\subsection{Returns}{
-A character vector of package refs that were used to create the
-\code{pkg_deps} object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-get_config"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-get_config}{}}}
-\subsection{Method \code{get_config()}}{
-Configuration options for the \code{pkg_deps} object. See
+\subsection{\code{pkg_deps$get_config()}}{
+  Configuration options for the \code{pkg_deps} object. See
 \link[=pkgdepends-config]{'Configuration'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_config()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$get_config()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    See \link[=pkgdepends-config]{'Configuration'} for the configuration entries.
+  }
 }
 
-\subsection{Returns}{
-See \link[=pkgdepends-config]{'Configuration'} for the configuration entries.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-resolve}{}}}
-\subsection{Method \code{resolve()}}{
-Resolve the dependencies of the specified package references. This
+\subsection{\code{pkg_deps$resolve()}}{
+  Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
 already cached, and also from GitHub if GitHub refs were included,
 either directly or indirectly. See
 \link[=pkg_resolution]{'Dependency resolution'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$resolve()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$resolve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_deps} object itself, invisibly.
+  }
 }
 
-\subsection{Returns}{
-The \code{pkg_deps} object itself, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-async_resolve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-async_resolve}{}}}
-\subsection{Method \code{async_resolve()}}{
-The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
+\subsection{\code{pkg_deps$async_resolve()}}{
+  The same as \href{#method-resolve}{\code{resolve()}}, but asynchronous.
 This method is for advanced use.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$async_resolve()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$async_resolve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A deferred value.
+  }
 }
 
-\subsection{Returns}{
-A deferred value.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-get_resolution"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-get_resolution}{}}}
-\subsection{Method \code{get_resolution()}}{
-Query the result of the dependency resolution. This method can be
+\subsection{\code{pkg_deps$get_resolution()}}{
+  Query the result of the dependency resolution. This method can be
 called after \href{#method-resolve}{\code{resolve()}} has completed.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_resolution()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$get_resolution()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_resolution_result} object, which is also a data frame. See
+\link[=pkg_resolution]{'Dependency resolution'} for its columns.
+  }
 }
 
-\subsection{Returns}{
-A \link{pkg_resolution_result} object, which is also a data frame. See
-\link[=pkg_resolution]{'Dependency resolution'} for its columns.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-get_solve_policy"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-get_solve_policy}{}}}
-\subsection{Method \code{get_solve_policy()}}{
-Returns the current policy of the dependency solver.
+\subsection{\code{pkg_deps$get_solve_policy()}}{
+  Returns the current policy of the dependency solver.
 See \link[=pkg_solution]{'The dependency solver'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_solve_policy()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$get_solve_policy()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector of length one.
+  }
 }
 
-\subsection{Returns}{
-A character vector of length one.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-set_solve_policy"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-set_solve_policy}{}}}
-\subsection{Method \code{set_solve_policy()}}{
-Set the current policy of the dependency solver.
+\subsection{\code{pkg_deps$set_solve_policy()}}{
+  Set the current policy of the dependency solver.
 If the object already contains a solution and the new policy is
 different than the old policy, then the solution is deleted.
 See \link[=pkg_solution]{'The dependency solver'} for details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$set_solve_policy(policy = c("lazy", "upgrade"))}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$set_solve_policy(policy = c("lazy", "upgrade"))}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{policy}}{Policy to set.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{policy}}{Policy to set.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-solve"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-solve}{}}}
-\subsection{Method \code{solve()}}{
-Solve the package dependencies. Out of the resolved dependencies, it
+\subsection{\code{pkg_deps$solve()}}{
+  Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that can be installed together to
 create a functional installation. The set includes all directly
 specified packages, and all required (or suggested, depending on
@@ -312,101 +325,113 @@ most once. See \link[=pkg_solution]{'The dependency solver'} for details.
 
 \code{solve()} calls \href{#method-resolve}{\code{resolve()}} automatically, if it
 hasn't been called yet.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$solve()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$solve()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_deps} object itself, invisibly.
+  }
 }
 
-\subsection{Returns}{
-The \code{pkg_deps} object itself, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-get_solution"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-get_solution}{}}}
-\subsection{Method \code{get_solution()}}{
-Returns the solution of the package dependencies.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$get_solution()}\if{html}{\out{</div>}}
+\subsection{\code{pkg_deps$get_solution()}}{
+  Returns the solution of the package dependencies.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$get_solution()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \link{pkg_solution_result} object, which is a list. See
+\link{pkg_solution_result} for details.
+  }
 }
 
-\subsection{Returns}{
-A \link{pkg_solution_result} object, which is a list. See
-\link{pkg_solution_result} for details.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-show_solution"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-show_solution}{}}}
-\subsection{Method \code{show_solution()}}{
-Show the solution of the package dependencies. This is a formatted
+\subsection{\code{pkg_deps$show_solution()}}{
+  Show the solution of the package dependencies. This is a formatted
 list of packages that will be installed.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$show_solution(key = FALSE)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$show_solution(key = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{key}}{Whether to print the key for the symbols used in the
+output. Default is \code{FALSE}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The solution object, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{key}}{Whether to print the key for the symbols used in the
-output. Default is \code{FALSE}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The solution object, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-stop_for_solution_error"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-stop_for_solution_error}{}}}
-\subsection{Method \code{stop_for_solution_error()}}{
-Error if the dependency solver failed to find a consistent set of
+\subsection{\code{pkg_deps$stop_for_solution_error()}}{
+  Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$stop_for_solution_error()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$stop_for_solution_error()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-draw"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-draw}{}}}
-\subsection{Method \code{draw()}}{
-Draw a tree of package dependencies. It returns a \code{tree} object, see
+\subsection{\code{pkg_deps$draw()}}{
+  Draw a tree of package dependencies. It returns a \code{tree} object, see
 \code{\link[cli:tree]{cli::tree()}}. Printing this object prints the dependency tree to the
 screen.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$draw()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$draw()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
+  }
 }
 
-\subsection{Returns}{
-A \code{tree} object from the cli package, see \code{\link[cli:tree]{cli::tree()}}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-format"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-format}{}}}
-\subsection{Method \code{format()}}{
-Format a \code{pkg_deps} object, typically for printing.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$format(...)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_deps$format()}}{
+  Format a \code{pkg_deps} object, typically for printing.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$format(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Not used currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A character vector, each element should be a line in the printout.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Not used currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A character vector, each element should be a line in the printout.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-print"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-print}{}}}
-\subsection{Method \code{print()}}{
-Prints a \code{pkg_deps} object to the screen. The printout includes:
+\subsection{\code{pkg_deps$print()}}{
+  Prints a \code{pkg_deps} object to the screen. The printout includes:
 \itemize{
 \item The package refs.
 \item Whether the object has the resolved dependencies.
@@ -417,36 +442,40 @@ Prints a \code{pkg_deps} object to the screen. The printout includes:
 }
 
 See the example below.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$print(...)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$print(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{not used currently.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{pkg_deps} object itself, invisibly.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{not used currently.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The \code{pkg_deps} object itself, invisibly.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-pkg_deps-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-pkg_deps-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pkg_deps$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{pkg_deps$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{pkg_deps$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

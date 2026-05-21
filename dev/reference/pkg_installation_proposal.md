@@ -757,7 +757,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/Rtmp8Cki2U/file1e1b85f20f6
+#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df7567f8b5e
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -771,7 +771,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/Rtmp8Cki2U/file1e1b3638f821
+#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df71de111e
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -788,7 +788,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmp8Cki2U/file1e1b7d504d62"
+#> [1] "/tmp/RtmpsemGW8/file1df77385bd72"
 #> 
 #> ## platforms
 #> <default>
@@ -805,11 +805,15 @@ pdi$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmp8Cki2U/file1e1b5a73fb0f"
+#> [1] "/tmp/RtmpsemGW8/file1df7334815af"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmp8Cki2U/file1e1b3638f821"
+#> [1] "/tmp/RtmpsemGW8/file1df71de111e"
+#> 
+#> ## ignore_dev_library
+#> <default>
+#> [1] TRUE
 #> 
 #> ## metadata_update_after
 #> <default>
@@ -884,7 +888,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/Rtmp8Cki2U/file1e1b68965e1e
+#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df72f173e27
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -894,7 +898,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/Rtmp8Cki2U/file1e1b7fedceea
+#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df76704326b
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -905,7 +909,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/Rtmp8Cki2U/file1e1b520fb6f9
+#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df73897678c
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

@@ -1,5 +1,11 @@
 # pkgdepends (development version)
 
+* The solver no longer silently keeps an installed package as the solution
+  for a direct ref that failed to resolve. E.g. requesting a CRAN package
+  that is not on CRAN but happens to be installed locally from another
+  source. `$solve()` now reports a failed solution and `$download()` raises
+  an error in this case.
+
 # pkgdepends 0.9.1
 
 * `deps::<filename>` works again correctly now

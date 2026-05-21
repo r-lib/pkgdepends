@@ -172,6 +172,48 @@ test_that("pkgplan_i_lp_prefer_new_binaries skips version-pinned direct refs", {
   expect_false(pkg1_new_idx %in% lp$ruled_out)
 })
 
+test_that("pkgplan_i_lp_satisfy_direct enforces failed direct refs", {
+  # A direct "standard" ref that failed resolution must still rule out
+  # candidates that don't satisfy it (e.g. a locally installed copy of the
+  # same package that came from a different source like GitHub). Otherwise
+  # the solver silently keeps the installed package even though the user
+  # requested a package that isn't available from the configured repos.
+  pkgs <- res_make_empty_df()
+  for (entry in list(
+    make_fake_resolution1(
+      "pkg",
+      list(
+        direct = TRUE,
+        status = "FAILED",
+        version = NA_character_
+      )
+    ),
+    make_fake_resolution1(
+      "installed::/tmp/lib/pkg",
+      list(
+        direct = FALSE,
+        version = "1.0.0",
+        extra = list(data_frame(
+          repotype = NA_character_,
+          remotetype = "github"
+        ))
+      )
+    )
+  )) {
+    pkgs <- res_add_df_entries(pkgs, entry)
+  }
+
+  config <- current_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
+  lp <- pkgplan_i_lp_failures(lp)
+  lp <- pkgplan_i_lp_satisfy_direct(lp)
+
+  inst_idx <- which(pkgs$type == "installed")
+  types <- vcapply(lp$conds, "[[", "type")
+  sat_vars <- unlist(lapply(lp$conds[types == "satisfy-refs"], "[[", "vars"))
+  expect_true(inst_idx %in% sat_vars)
+})
+
 test_that("pkgplan_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
   config <- current_config()

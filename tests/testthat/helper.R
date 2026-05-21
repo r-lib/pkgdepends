@@ -95,6 +95,13 @@ local_cli_config <- function(
   )
 }
 
+pkg_file <- function(package, ...) {
+  root <- find.package(package)
+  inst <- file.path(root, "inst")
+  base <- if (dir.exists(inst)) inst else root
+  file.path(base, ...)
+}
+
 pst <- function(...) suppressMessages(...)
 
 long_basename <- function(x) {

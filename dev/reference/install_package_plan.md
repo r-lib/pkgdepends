@@ -7,12 +7,7 @@ for the details and the format.
 ## Usage
 
 ``` r
-install_package_plan(
-  plan,
-  lib = .libPaths()[[1]],
-  num_workers = 1,
-  cache = NULL
-)
+install_package_plan(plan, lib = NULL, num_workers = 1, cache = NULL)
 ```
 
 ## Arguments

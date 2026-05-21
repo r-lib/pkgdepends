@@ -87,6 +87,7 @@ affects <code>git::</code> and <code>gitlab::</code> package sources only.
 If the R package is in a subdirectory then only the submodules
 within that directory are updated. If a submodule appears in
 <code>.Rbuildignore</code>, then it is skipped.</p></li>
+<li><p><code>ignore_dev_library</code>: Whether to ignore library directories called <code>__dev_lib__</code>.</p></li>
 <li><p><code>include_linkingto</code>: Whether to always include <code>LinkingTo</code> dependencies in the solution
 of and installation, even if they are needed because the packages
 are installed from binaries. This is sometimes useful, see e.g.

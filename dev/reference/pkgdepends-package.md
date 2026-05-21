@@ -207,6 +207,10 @@ Useful links:
 
 **Maintainer**: Gábor Csárdi <csardi.gabor@gmail.com>
 
+Authors:
+
+- Gábor Csárdi <csardi.gabor@gmail.com>
+
 Other contributors:
 
 - Posit Software, PBC ([ROR](https://ror.org/03wc8by49)) \[copyright

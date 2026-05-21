@@ -53,7 +53,7 @@ Typical workflow to download a set of packages:
 
 ### Public methods
 
-- [`pkg_download_proposal$new()`](#method-pkg_download_proposal-new)
+- [`pkg_download_proposal$new()`](#method-pkg_download_proposal-initialize)
 
 - [`pkg_download_proposal$get_refs()`](#method-pkg_download_proposal-get_refs)
 
@@ -81,7 +81,7 @@ Typical workflow to download a set of packages:
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `pkg_download_proposal$new()`
 
 Create a new `pkg_download_proposal` object. Consider using
 `new_pkg_download_proposal()` instead of calling the constructor
@@ -119,7 +119,7 @@ packages from various sources, and then to download the package files.
 
 ------------------------------------------------------------------------
 
-### Method `get_refs()`
+### `pkg_download_proposal$get_refs()`
 
 The package refs that were used to create the `pkg_download_proposal`
 object.
@@ -135,7 +135,7 @@ A character vector of package refs that were used to create the
 
 ------------------------------------------------------------------------
 
-### Method `get_config()`
+### `pkg_download_proposal$get_config()`
 
 Configuration options for the `pkg_download_proposal` object. See
 ['Configuration'](https://r-lib.github.io/pkgdepends/dev/reference/pkg_config.md)
@@ -153,7 +153,7 @@ for the configuration options.
 
 ------------------------------------------------------------------------
 
-### Method `resolve()`
+### `pkg_download_proposal$resolve()`
 
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
@@ -172,7 +172,7 @@ The `pkg_download_proposal` object itself, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `async_resolve()`
+### `pkg_download_proposal$async_resolve()`
 
 The same as [`resolve()`](#method-resolve), but asynchronous. This
 method is for advanced use.
@@ -187,7 +187,7 @@ A deferred value.
 
 ------------------------------------------------------------------------
 
-### Method `get_resolution()`
+### `pkg_download_proposal$get_resolution()`
 
 Query the result of the dependency resolution. This method can be called
 after [`resolve()`](#method-resolve) has completed.
@@ -206,7 +206,7 @@ for its columns.
 
 ------------------------------------------------------------------------
 
-### Method `download()`
+### `pkg_download_proposal$download()`
 
 Download all resolved packages. It uses the package cache in the
 pkgcache package by default, to avoid downloads if possible.
@@ -221,7 +221,7 @@ The `pkg_download_proposal` object, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `async_download()`
+### `pkg_download_proposal$async_download()`
 
 The same as [`download()`](#method-download), but asynchronous. This
 method is for advanced use.
@@ -236,7 +236,7 @@ A deferred value.
 
 ------------------------------------------------------------------------
 
-### Method `get_downloads()`
+### `pkg_download_proposal$get_downloads()`
 
 Returns the summary of the package downloads.
 
@@ -254,7 +254,7 @@ for details.
 
 ------------------------------------------------------------------------
 
-### Method `stop_for_download_error()`
+### `pkg_download_proposal$stop_for_download_error()`
 
 Throw and error if the some of the downloads have failed for the most
 recent [`pkg_download_proposal$download()`](#method-download) call.
@@ -265,7 +265,7 @@ recent [`pkg_download_proposal$download()`](#method-download) call.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `pkg_download_proposal$format()`
 
 Format a `pkg_download_proposal` object, typically for printing.
 
@@ -286,7 +286,7 @@ printout.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `pkg_download_proposal$print()`
 
 Prints a `pkg_download_proposal` object to the screen. The printout
 includes:
@@ -321,7 +321,7 @@ The `pkg_download_proposal` object itself, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `pkg_download_proposal$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -360,7 +360,7 @@ pdl$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpstkaX8/file1e886802e360"
+#> [1] "/tmp/Rtmp02Tg33/file1e11322a1b76"
 #> 
 #> ## platforms
 #> <default>
@@ -377,11 +377,11 @@ pdl$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpstkaX8/file1e8879d5ef4"
+#> [1] "/tmp/Rtmp02Tg33/file1e11dc03022"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpstkaX8/file1e886ff1e50b"
+#> [1] "/tmp/Rtmp02Tg33/file1e114fbada50"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -501,33 +501,33 @@ pdl <- new_pkg_download_proposal("r-lib/pkgdepends")
 pdl$resolve()
 pdl$download()
 #> ℹ Getting 13 pkgs (3.98 MB) and 14 pkgs with unknown sizes
-#> ✔ Got callr 3.7.6 (source) (104.36 kB)
 #> ✔ Got desc 1.4.3 (source) (80.07 kB)
-#> ✔ Got curl 7.1.0 (source) (717.73 kB)
-#> ✔ Got cli 3.6.6 (source) (644.13 kB)
-#> ✔ Got lpSolve 5.6.23 (source) (467.59 kB)
-#> ✔ Got pkgcache 2.2.5 (source) (294.02 kB)
-#> ✔ Got ps 1.9.3 (source) (172.43 kB)
 #> ✔ Got filelock 1.0.3 (source) (15.44 kB)
-#> ✔ Got filelock 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (29.56 kB)
-#> ✔ Got processx 3.9.0 (source) (195.28 kB)
+#> ✔ Got callr 3.7.6 (source) (104.36 kB)
 #> ✔ Got pkgbuild 1.4.8 (source) (51.30 kB)
-#> ✔ Got zip 2.3.3 (source) (115.47 kB)
 #> ✔ Got R6 2.6.1 (source) (64.51 kB)
-#> ✔ Got desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (340.59 kB)
+#> ✔ Got ps 1.9.3 (source) (172.43 kB)
+#> ✔ Got cli 3.6.6 (source) (644.13 kB)
+#> ✔ Got curl 7.1.0 (source) (717.73 kB)
+#> ✔ Got processx 3.9.0 (source) (195.28 kB)
+#> ✔ Got zip 2.3.3 (source) (115.47 kB)
+#> ✔ Got filelock 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (29.56 kB)
+#> ✔ Got lpSolve 5.6.23 (source) (467.59 kB)
 #> ✔ Got jsonlite 2.0.0 (source) (1.06 MB)
+#> ✔ Got pkgcache 2.2.5 (source) (294.02 kB)
+#> ✔ Got desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (340.59 kB)
 #> ✔ Got callr 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (458.13 kB)
-#> ✔ Got lpSolve 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) (375.71 kB)
-#> ✔ Got pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) (212.65 kB)
-#> ✔ Got curl 7.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (776.71 kB)
-#> ✔ Got cli 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.35 MB)
-#> ✔ Got processx 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (412.56 kB)
-#> ✔ Got pkgcache 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (969.65 kB)
-#> ✔ Got ps 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (515.33 kB)
-#> ✔ Got R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (90.09 kB)
-#> ✔ Got zip 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (664.93 kB)
-#> ✔ Got jsonlite 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.09 MB)
 #> ✔ Got pkgdepends 0.9.1.9000 (source) (1.73 MB)
+#> ✔ Got curl 7.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (776.71 kB)
+#> ✔ Got zip 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (664.93 kB)
+#> ✔ Got lpSolve 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) (375.71 kB)
+#> ✔ Got processx 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (412.56 kB)
+#> ✔ Got pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) (212.65 kB)
+#> ✔ Got R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (90.09 kB)
+#> ✔ Got ps 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (515.33 kB)
+#> ✔ Got jsonlite 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.09 MB)
+#> ✔ Got cli 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.35 MB)
+#> ✔ Got pkgcache 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (969.65 kB)
 pdl$get_downloads()
 #> # A data frame: 27 × 41
 #>    ref            type  direct directpkg status package version license
@@ -559,19 +559,19 @@ pdl$download()
 #> ✔ Got pkgload 1.5.2 (source) (88.12 kB)
 #> ✔ Got rprojroot 2.1.1 (source) (59.90 kB)
 #> ✔ Got rlang 1.2.0 (source) (780.86 kB)
-#> ✔ Got fs 2.1.0 (source) (1.47 MB)
 #> ✔ Cached copy of callr 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of cli 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Got glue 1.8.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (178.50 kB)
+#> ✔ Got lifecycle 1.0.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (135.22 kB)
 #> ✔ Cached copy of pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of processx 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Got fs 2.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (247.06 kB)
-#> ✔ Got glue 1.8.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (178.50 kB)
 #> ✔ Cached copy of ps 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Got lifecycle 1.0.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (135.22 kB)
-#> ✔ Got pkgload 1.5.2 (x86_64-pc-linux-gnu-ubuntu-24.04) (226.42 kB)
+#> ✔ Got fs 2.1.0 (source) (1.47 MB)
 #> ✔ Got rprojroot 2.1.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (117.22 kB)
+#> ✔ Got pkgload 1.5.2 (x86_64-pc-linux-gnu-ubuntu-24.04) (226.42 kB)
 #> ✔ Got rlang 1.2.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.62 MB)
 pdl$get_downloads()
 #> # A data frame: 26 × 41
@@ -617,16 +617,16 @@ pdl$download()
 #> ✔ Cached copy of cli 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of curl 7.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of desc 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of callr 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of filelock 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of jsonlite 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of ps 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of callr 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of zip 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of lpSolve 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
-#> ✔ Cached copy of pkgcache 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 #> ✔ Cached copy of processx 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of ps 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of pkgbuild 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of R6 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of pkgcache 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
+#> ✔ Cached copy of lpSolve 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build
 pdl
 #> <pkg_download_proposal>
 #> + refs:

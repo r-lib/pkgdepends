@@ -48,7 +48,7 @@ The usual steps to query package dependencies are:
 
 ### Public methods
 
-- [`pkg_deps$new()`](#method-pkg_deps-new)
+- [`pkg_deps$new()`](#method-pkg_deps-initialize)
 
 - [`pkg_deps$get_refs()`](#method-pkg_deps-get_refs)
 
@@ -82,7 +82,7 @@ The usual steps to query package dependencies are:
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `pkg_deps$new()`
 
 Create a new `pkg_deps` object. Consider using `new_pkg_deps()` instead
 of calling the constructor directly.
@@ -129,7 +129,7 @@ A new `pkg_deps` object.
 
 ------------------------------------------------------------------------
 
-### Method `get_refs()`
+### `pkg_deps$get_refs()`
 
 The package refs that were used to create the `pkg_deps` object.
 
@@ -144,7 +144,7 @@ A character vector of package refs that were used to create the
 
 ------------------------------------------------------------------------
 
-### Method `get_config()`
+### `pkg_deps$get_config()`
 
 Configuration options for the `pkg_deps` object. See
 ['Configuration'](https://r-lib.github.io/pkgdepends/dev/reference/pkg_config.md)
@@ -162,7 +162,7 @@ for the configuration entries.
 
 ------------------------------------------------------------------------
 
-### Method `resolve()`
+### `pkg_deps$resolve()`
 
 Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor, unless
@@ -181,7 +181,7 @@ The `pkg_deps` object itself, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `async_resolve()`
+### `pkg_deps$async_resolve()`
 
 The same as [`resolve()`](#method-resolve), but asynchronous. This
 method is for advanced use.
@@ -196,7 +196,7 @@ A deferred value.
 
 ------------------------------------------------------------------------
 
-### Method `get_resolution()`
+### `pkg_deps$get_resolution()`
 
 Query the result of the dependency resolution. This method can be called
 after [`resolve()`](#method-resolve) has completed.
@@ -215,7 +215,7 @@ for its columns.
 
 ------------------------------------------------------------------------
 
-### Method `get_solve_policy()`
+### `pkg_deps$get_solve_policy()`
 
 Returns the current policy of the dependency solver. See ['The
 dependency
@@ -232,7 +232,7 @@ A character vector of length one.
 
 ------------------------------------------------------------------------
 
-### Method `set_solve_policy()`
+### `pkg_deps$set_solve_policy()`
 
 Set the current policy of the dependency solver. If the object already
 contains a solution and the new policy is different than the old policy,
@@ -252,7 +252,7 @@ for details.
 
 ------------------------------------------------------------------------
 
-### Method [`solve()`](https://rdrr.io/r/base/solve.html)
+### `pkg_deps$solve()`
 
 Solve the package dependencies. Out of the resolved dependencies, it
 works out a set of packages, that can be installed together to create a
@@ -277,7 +277,7 @@ The `pkg_deps` object itself, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `get_solution()`
+### `pkg_deps$get_solution()`
 
 Returns the solution of the package dependencies.
 
@@ -295,7 +295,7 @@ for details.
 
 ------------------------------------------------------------------------
 
-### Method `show_solution()`
+### `pkg_deps$show_solution()`
 
 Show the solution of the package dependencies. This is a formatted list
 of packages that will be installed.
@@ -317,7 +317,7 @@ The solution object, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `stop_for_solution_error()`
+### `pkg_deps$stop_for_solution_error()`
 
 Error if the dependency solver failed to find a consistent set of
 packages that can be installed together.
@@ -328,7 +328,7 @@ packages that can be installed together.
 
 ------------------------------------------------------------------------
 
-### Method `draw()`
+### `pkg_deps$draw()`
 
 Draw a tree of package dependencies. It returns a `tree` object, see
 [`cli::tree()`](https://cli.r-lib.org/reference/tree.html). Printing
@@ -345,7 +345,7 @@ A `tree` object from the cli package, see
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `pkg_deps$format()`
 
 Format a `pkg_deps` object, typically for printing.
 
@@ -365,7 +365,7 @@ A character vector, each element should be a line in the printout.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `pkg_deps$print()`
 
 Prints a `pkg_deps` object to the screen. The printout includes:
 
@@ -399,7 +399,7 @@ The `pkg_deps` object itself, invisibly.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `pkg_deps$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpstkaX8/file1e8821833102"
+#> [1] "/tmp/Rtmp02Tg33/file1e113958f8ed"
 #> 
 #> ## platforms
 #> <default>
@@ -463,11 +463,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpstkaX8/file1e8879d5ef4"
+#> [1] "/tmp/Rtmp02Tg33/file1e11dc03022"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpstkaX8/file1e8830b9c1fa"
+#> [1] "/tmp/Rtmp02Tg33/file1e1156ef0fa6"
 #> 
 #> ## ignore_dev_library
 #> <default>

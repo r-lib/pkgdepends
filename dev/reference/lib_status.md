@@ -5,7 +5,7 @@ Query data of all packages in a package library.
 ## Usage
 
 ``` r
-lib_status(library = .libPaths()[1], packages = NULL)
+lib_status(library = NULL, packages = NULL)
 ```
 
 ## Arguments

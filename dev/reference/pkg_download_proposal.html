@@ -84,8 +84,7 @@ pkgdepends a build time dependency.</p>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-pkg_download_proposal-new"><code>pkg_download_proposal$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-pkg_download_proposal-initialize"><code>pkg_download_proposal$new()</code></a></p></li>
 <li><p><a href="#method-pkg_download_proposal-get_refs"><code>pkg_download_proposal$get_refs()</code></a></p></li>
 <li><p><a href="#method-pkg_download_proposal-get_config"><code>pkg_download_proposal$get_config()</code></a></p></li>
 <li><p><a href="#method-pkg_download_proposal-resolve"><code>pkg_download_proposal$resolve()</code></a></p></li>
@@ -98,8 +97,8 @@ pkgdepends a build time dependency.</p>
 <li><p><a href="#method-pkg_download_proposal-format"><code>pkg_download_proposal$format()</code></a></p></li>
 <li><p><a href="#method-pkg_download_proposal-print"><code>pkg_download_proposal$print()</code></a></p></li>
 <li><p><a href="#method-pkg_download_proposal-clone"><code>pkg_download_proposal$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-pkg_download_proposal-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-pkg_download_proposal-initialize"></a><div class="section">
+<h3 id="pkg-download-proposal-new-"><code>pkg_download_proposal$new()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-new-"></a></h3>
 <p>Create a new <code>pkg_download_proposal</code> object. Consider using
 <code>new_pkg_download_proposal()</code> instead of calling the constructor
 directly.</p>
@@ -108,21 +107,17 @@ of R packages from various sources, and then to download the
 package files.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/pkg_download_proposal.html">pkg_download_proposal</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">refs</span>, config <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, remote_types <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>refs</code></dt>
 <dd><p>Package names or references. See
 <a href="pkg_refs.html">'Package references'</a> for the syntax.</p></dd>
 
-
-<dt><code>config</code></dt>
+      <dt><code>config</code></dt>
 <dd><p>Configuration options, a named list. See
 <a href="pkg_config.html">'Configuration'</a>.</p></dd>
 
-
-<dt><code>remote_types</code></dt>
+      <dt><code>remote_types</code></dt>
 <dd><p>Custom remote ref types, this is for advanced
 use, and experimental currently.</p><div class="section">
 <h5 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h5>
@@ -136,36 +131,38 @@ use, and experimental currently.</p><div class="section">
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-get_refs"></a><div class="section">
-<h3 id="method-get-refs-">Method <code>get_refs()</code><a class="anchor" aria-label="anchor" href="#method-get-refs-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-get_refs"></a><div class="section">
+<h3 id="pkg-download-proposal-get-refs-"><code>pkg_download_proposal$get_refs()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-get-refs-"></a></h3>
 <p>The package refs that were used to create the
 <code>pkg_download_proposal</code> object.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">get_refs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>A character vector of package refs that were used to create the
 <code>pkg_download_proposal</code> object.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-get_config"></a><div class="section">
-<h3 id="method-get-config-">Method <code>get_config()</code><a class="anchor" aria-label="anchor" href="#method-get-config-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-get_config"></a><div class="section">
+<h3 id="pkg-download-proposal-get-config-"><code>pkg_download_proposal$get_config()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-get-config-"></a></h3>
 <p>Configuration options for the <code>pkg_download_proposal</code> object. See
 <a href="pkg_config.html">'Configuration'</a> for details.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">get_config</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>Named list. See <a href="pkg_config.html">'Configuration'</a> for the configuration
 options.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-resolve"></a><div class="section">
-<h3 id="method-resolve-">Method <code>resolve()</code><a class="anchor" aria-label="anchor" href="#method-resolve-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-resolve"></a><div class="section">
+<h3 id="pkg-download-proposal-resolve-"><code>pkg_download_proposal$resolve()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-resolve-"></a></h3>
 <p>Resolve the dependencies of the specified package references. This
 usually means downloading metadata from CRAN and Bioconductor,
 unless already cached, and also from GitHub if GitHub refs were
@@ -173,81 +170,81 @@ included, either directly or indirectly. See
 <a href="pkg_resolution.html">'Dependency resolution'</a> for details.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>The <code>pkg_download_proposal</code> object itself, invisibly.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-async_resolve"></a><div class="section">
-<h3 id="method-async-resolve-">Method <code>async_resolve()</code><a class="anchor" aria-label="anchor" href="#method-async-resolve-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-async_resolve"></a><div class="section">
+<h3 id="pkg-download-proposal-async-resolve-"><code>pkg_download_proposal$async_resolve()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-async-resolve-"></a></h3>
 <p>The same as <a href="#method-resolve"><code>resolve()</code></a>, but asynchronous.
 This method is for advanced use.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">async_resolve</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p>A deferred value.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-get_resolution"></a><div class="section">
-<h3 id="method-get-resolution-">Method <code>get_resolution()</code><a class="anchor" aria-label="anchor" href="#method-get-resolution-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-get_resolution"></a><div class="section">
+<h3 id="pkg-download-proposal-get-resolution-"><code>pkg_download_proposal$get_resolution()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-get-resolution-"></a></h3>
 <p>Query the result of the dependency resolution. This method can be
 called after <a href="#method-resolve"><code>resolve()</code></a> has completed.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">get_resolution</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p>A <a href="pkg_resolution.html">pkg_resolution_result</a> object, which is also a data frame. See
 <a href="pkg_resolution.html">'Dependency resolution'</a> for its columns.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-download"></a><div class="section">
-<h3 id="method-download-">Method <code>download()</code><a class="anchor" aria-label="anchor" href="#method-download-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-download"></a><div class="section">
+<h3 id="pkg-download-proposal-download-"><code>pkg_download_proposal$download()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-download-"></a></h3>
 <p>Download all resolved packages. It uses the package cache in the
 pkgcache package by default, to avoid downloads if possible.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p>The <code>pkg_download_proposal</code> object, invisibly.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-async_download"></a><div class="section">
-<h3 id="method-async-download-">Method <code>async_download()</code><a class="anchor" aria-label="anchor" href="#method-async-download-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-async_download"></a><div class="section">
+<h3 id="pkg-download-proposal-async-download-"><code>pkg_download_proposal$async_download()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-async-download-"></a></h3>
 <p>The same as <a href="#method-download"><code>download()</code></a>, but asynchronous.
 This method is for advanced use.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">async_download</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p>A deferred value.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-get_downloads"></a><div class="section">
-<h3 id="method-get-downloads-">Method <code>get_downloads()</code><a class="anchor" aria-label="anchor" href="#method-get-downloads-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-get_downloads"></a><div class="section">
+<h3 id="pkg-download-proposal-get-downloads-"><code>pkg_download_proposal$get_downloads()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-get-downloads-"></a></h3>
 <p>Returns the summary of the package downloads.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">get_downloads</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
 <p>A <a href="pkg_downloads.html">pkg_download_result</a> object, which is a list. See
 <a href="pkg_downloads.html">pkg_download_result</a> for details.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-stop_for_download_error"></a><div class="section">
-<h3 id="method-stop-for-download-error-">Method <code>stop_for_download_error()</code><a class="anchor" aria-label="anchor" href="#method-stop-for-download-error-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-stop_for_download_error"></a><div class="section">
+<h3 id="pkg-download-proposal-stop-for-download-error-"><code>pkg_download_proposal$stop_for_download_error()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-stop-for-download-error-"></a></h3>
 <p>Throw and error if the some of the downloads have failed for the
 most recent
 <a href="#method-download"><code>pkg_download_proposal$download()</code></a> call.</p><div class="section">
@@ -255,30 +252,30 @@ most recent
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">stop_for_download_error</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-format"></a><div class="section">
-<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
+<p></p><hr><a id="method-pkg_download_proposal-format"></a><div class="section">
+<h3 id="pkg-download-proposal-format-"><code>pkg_download_proposal$format()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-format-"></a></h3>
 <p>Format a <code>pkg_download_proposal</code> object, typically for printing.</p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>not used currently.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
 <p>Nothing.
 A character vector, each element should be a line in the printout.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-print"></a><div class="section">
-<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-print"></a><div class="section">
+<h3 id="pkg-download-proposal-print-"><code>pkg_download_proposal$print()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-print-"></a></h3>
 <p>Prints a <code>pkg_download_proposal</code> object to the screen. The printout
 includes:</p><ul><li><p>The package refs.</p></li>
 <li><p>Whether the object has the resolved dependencies.</p></li>
@@ -289,29 +286,26 @@ includes:</p><ul><li><p>The package refs.</p></li>
 </ul><p>See the example below.</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>not used currently.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
 <p>The <code>pkg_download_proposal</code> object itself, invisibly.</p>
 </div>
 
-</div><p></p><hr><a id="method-pkg_download_proposal-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-pkg_download_proposal-clone"></a><div class="section">
+<h3 id="pkg-download-proposal-clone-"><code>pkg_download_proposal$clone()</code><a class="anchor" aria-label="anchor" href="#pkg-download-proposal-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">pkg_download_proposal</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -321,6 +315,7 @@ includes:</p><ul><li><p>The package refs.</p></li>
 </div>
 
 </div>
+
 
     </div>
 
@@ -348,7 +343,7 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## metadata_cache_dir</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpstkaX8/file1e886802e360"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp02Tg33/file1e11322a1b76"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## platforms</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
@@ -365,11 +360,11 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## cache_dir</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpstkaX8/file1e8879d5ef4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp02Tg33/file1e11dc03022"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## library</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;set&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpstkaX8/file1e886ff1e50b"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp02Tg33/file1e114fbada50"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## ignore_dev_library</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;default&gt;</span>
@@ -489,33 +484,33 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-in"><span><span class="va">pdl</span><span class="op">$</span><span class="fu">resolve</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pdl</span><span class="op">$</span><span class="fu">download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Getting 13 pkgs (3.98 MB) and 14 pkgs with unknown sizes</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">callr</span> 3.7.6 (source) (104.36 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">desc</span> 1.4.3 (source) (80.07 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 7.1.0 (source) (717.73 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.6.6 (source) (644.13 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.23 (source) (467.59 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.2.5 (source) (294.02 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.9.3 (source) (172.43 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">filelock</span> 1.0.3 (source) (15.44 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">filelock</span> 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (29.56 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">processx</span> 3.9.0 (source) (195.28 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">callr</span> 3.7.6 (source) (104.36 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgbuild</span> 1.4.8 (source) (51.30 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">zip</span> 2.3.3 (source) (115.47 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">R6</span> 2.6.1 (source) (64.51 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">desc</span> 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (340.59 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.9.3 (source) (172.43 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.6.6 (source) (644.13 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 7.1.0 (source) (717.73 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">processx</span> 3.9.0 (source) (195.28 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">zip</span> 2.3.3 (source) (115.47 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">filelock</span> 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (29.56 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.23 (source) (467.59 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">jsonlite</span> 2.0.0 (source) (1.06 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.2.5 (source) (294.02 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">desc</span> 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (340.59 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">callr</span> 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (458.13 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) (375.71 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgbuild</span> 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) (212.65 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 7.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (776.71 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.35 MB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">processx</span> 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (412.56 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (969.65 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (515.33 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">R6</span> 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (90.09 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">zip</span> 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (664.93 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">jsonlite</span> 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.09 MB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgdepends</span> 0.9.1.9000 (source) (1.73 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">curl</span> 7.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (776.71 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">zip</span> 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (664.93 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lpSolve</span> 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) (375.71 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">processx</span> 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (412.56 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgbuild</span> 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) (212.65 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">R6</span> 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (90.09 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">ps</span> 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) (515.33 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">jsonlite</span> 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.09 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">cli</span> 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.35 MB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgcache</span> 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (969.65 kB)</span>
 <span class="r-in"><span><span class="va">pdl</span><span class="op">$</span><span class="fu">get_downloads</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 27 × 41</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ref            type  direct directpkg status package version license</span>
@@ -547,19 +542,19 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgload</span> 1.5.2 (source) (88.12 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rprojroot</span> 2.1.1 (source) (59.90 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rlang</span> 1.2.0 (source) (780.86 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">fs</span> 2.1.0 (source) (1.47 MB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">callr</span> 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">cli</span> 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">desc</span> 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">glue</span> 1.8.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (178.50 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lifecycle</span> 1.0.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (135.22 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgbuild</span> 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">processx</span> 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">fs</span> 2.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (247.06 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">glue</span> 1.8.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (178.50 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">ps</span> 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">R6</span> 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">lifecycle</span> 1.0.5 (x86_64-pc-linux-gnu-ubuntu-24.04) (135.22 kB)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgload</span> 1.5.2 (x86_64-pc-linux-gnu-ubuntu-24.04) (226.42 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">fs</span> 2.1.0 (source) (1.47 MB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rprojroot</span> 2.1.1 (x86_64-pc-linux-gnu-ubuntu-24.04) (117.22 kB)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">pkgload</span> 1.5.2 (x86_64-pc-linux-gnu-ubuntu-24.04) (226.42 kB)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Got <span style="color: #0000BB;">rlang</span> 1.2.0 (x86_64-pc-linux-gnu-ubuntu-24.04) (1.62 MB)</span>
 <span class="r-in"><span><span class="va">pdl</span><span class="op">$</span><span class="fu">get_downloads</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 26 × 41</span></span>
@@ -605,16 +600,16 @@ includes:</p><ul><li><p>The package refs.</p></li>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">cli</span> 3.6.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">curl</span> 7.1.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">desc</span> 1.4.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">callr</span> 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">filelock</span> 1.0.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">jsonlite</span> 2.0.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">ps</span> 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">R6</span> 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">callr</span> 3.7.6 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">zip</span> 2.3.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">lpSolve</span> 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgbuild</span> 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgcache</span> 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">processx</span> 3.9.0 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">ps</span> 1.9.3 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgbuild</span> 1.4.8 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">R6</span> 2.6.1 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">pkgcache</span> 2.2.5 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Cached copy of <span style="color: #0000BB;">lpSolve</span> 5.6.23 (x86_64-pc-linux-gnu-ubuntu-24.04) is the latest build</span>
 <span class="r-in"><span><span class="va">pdl</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;pkg_download_proposal&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + refs:</span>

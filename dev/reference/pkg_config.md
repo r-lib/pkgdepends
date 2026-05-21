@@ -66,6 +66,9 @@ Call `current_config()` to print the current configuration.
   within that directory are updated. If a submodule appears in
   `.Rbuildignore`, then it is skipped.
 
+- `ignore_dev_library`: Whether to ignore library directories called
+  `__dev_lib__`.
+
 - `include_linkingto`: Whether to always include `LinkingTo`
   dependencies in the solution of and installation, even if they are
   needed because the packages are installed from binaries. This is

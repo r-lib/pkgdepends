@@ -757,7 +757,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df7567f8b5e
+#> ℹ Creating library directory: /tmp/RtmpstkaX8/file1e8817d36bf4
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -771,7 +771,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df71de111e
+#> ℹ Creating library directory: /tmp/RtmpstkaX8/file1e882031370
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -788,7 +788,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpsemGW8/file1df77385bd72"
+#> [1] "/tmp/RtmpstkaX8/file1e885d15fa21"
 #> 
 #> ## platforms
 #> <default>
@@ -805,11 +805,11 @@ pdi$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpsemGW8/file1df7334815af"
+#> [1] "/tmp/RtmpstkaX8/file1e8879d5ef4"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpsemGW8/file1df71de111e"
+#> [1] "/tmp/RtmpstkaX8/file1e882031370"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -888,7 +888,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df72f173e27
+#> ℹ Creating library directory: /tmp/RtmpstkaX8/file1e88a2787f0
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -898,7 +898,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df76704326b
+#> ℹ Creating library directory: /tmp/RtmpstkaX8/file1e886ea86938
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -909,7 +909,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpsemGW8/file1df73897678c
+#> ℹ Creating library directory: /tmp/RtmpstkaX8/file1e887859cd8
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

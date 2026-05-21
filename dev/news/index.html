@@ -35,7 +35,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="pkgdepends-development-version">pkgdepends (development version)<a class="anchor" aria-label="anchor" href="#pkgdepends-development-version"></a></h2>
-</div>
+<ul><li>The solver no longer silently keeps an installed package as the solution for a direct ref that failed to resolve. E.g. requesting a CRAN package that is not on CRAN but happens to be installed locally from another source. <code>$solve()</code> now reports a failed solution and <code>$download()</code> raises an error in this case.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.1" id="pkgdepends-091">pkgdepends 0.9.1<a class="anchor" aria-label="anchor" href="#pkgdepends-091"></a></h2><p class="text-muted">CRAN release: 2026-04-09</p>
 <ul><li><p><code>deps::&lt;filename&gt;</code> works again correctly now (<a href="https://github.com/r-lib/pak/issues/784" class="external-link uri">https://github.com/r-lib/pak/issues/784</a>).</p></li>

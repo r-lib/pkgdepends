@@ -71,13 +71,13 @@ pkg_deps <- R6::R6Class(
     ) {
       private$library <- tempfile()
       config$sysreqs_lookup_system <- FALSE
+      config$library <- private$library
       policy <- match.arg(policy)
       private$policy <- policy
       dir.create(private$library)
       private$plan <- pkg_plan$new(
         refs,
         config,
-        library = private$library,
         remote_types
       )
     },

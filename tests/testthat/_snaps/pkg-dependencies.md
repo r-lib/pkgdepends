@@ -24,16 +24,17 @@
        [1] "build_vignettes"           "cache_dir"                
        [3] "cran_mirror"               "dependencies"             
        [5] "git_submodules"            "goal"                     
-       [7] "include_linkingto"         "library"                  
-       [9] "metadata_cache_dir"        "metadata_update_after"    
-      [11] "package_cache_dir"         "platforms"                
-      [13] "r_versions"                "sysreqs"                  
-      [15] "sysreqs_db_update"         "sysreqs_db_update_timeout"
-      [17] "sysreqs_dry_run"           "sysreqs_lookup_system"    
-      [19] "sysreqs_platform"          "sysreqs_rspm_repo_id"     
-      [21] "sysreqs_rspm_url"          "sysreqs_sudo"             
-      [23] "sysreqs_update"            "sysreqs_verbose"          
-      [25] "use_bioconductor"          "windows_archs"            
+       [7] "ignore_dev_library"        "include_linkingto"        
+       [9] "library"                   "metadata_cache_dir"       
+      [11] "metadata_update_after"     "package_cache_dir"        
+      [13] "platforms"                 "r_versions"               
+      [15] "sysreqs"                   "sysreqs_db_update"        
+      [17] "sysreqs_db_update_timeout" "sysreqs_dry_run"          
+      [19] "sysreqs_lookup_system"     "sysreqs_platform"         
+      [21] "sysreqs_rspm_repo_id"      "sysreqs_rspm_url"         
+      [23] "sysreqs_sudo"              "sysreqs_update"           
+      [25] "sysreqs_verbose"           "use_bioconductor"         
+      [27] "windows_archs"            
 
 ---
 
@@ -58,7 +59,7 @@
       + has resolution (+2 dependencies)
       + has solution
       (use `$get_resolution()` to see resolution results)
-      (use `$show_solution()` to see the dependencies
+      (use `$show_solution()` to see the dependencies)
       (use `$get_solution()` to see the full solution results)
       (use `$draw()` to draw the dependency tree)
 
@@ -123,7 +124,7 @@
       + has resolution (+2 dependencies)
       + has solution
       (use `$get_resolution()` to see resolution results)
-      (use `$show_solution()` to see the dependencies
+      (use `$show_solution()` to see the dependencies)
       (use `$get_solution()` to see the full solution results)
       (use `$draw()` to draw the dependency tree)
 

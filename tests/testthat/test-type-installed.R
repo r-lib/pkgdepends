@@ -62,8 +62,11 @@ test_that("download", {
   ref <- paste0("installed::", tt)
   r <- pkg_plan$new(
     ref,
-    library = dirname(tt),
-    config = list(dependencies = FALSE, cache_dir = tmp)
+    config = list(
+      library = dirname(tt),
+      dependencies = FALSE,
+      cache_dir = tmp
+    )
   )
   expect_error(suppressMessages(r$resolve()), NA)
   expect_error(suppressMessages(r$download_resolution()), NA)

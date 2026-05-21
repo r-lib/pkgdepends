@@ -1,11 +1,11 @@
 fixtures <- list(
   "resolution-simple.rds" = function() {
-    r <- pkg_plan$new("pkgconfig", lib = tempfile())
+    r <- pkg_plan$new("pkgconfig", config = list(library = tempfile()))
     r$resolve()
   },
 
   "resolution-progress.rds" = function() {
-    r <- pkg_plan$new("progress", lib = tempfile())
+    r <- pkg_plan$new("progress", config = list(library = tempfile()))
     r$resolve()
   },
 
@@ -13,7 +13,7 @@ fixtures <- list(
     dir.create(tmp <- tempfile())
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
     install.packages("pkgconfig", lib = tmp)
-    r <- pkg_plan$new("pkgconfig", library = tmp)
+    r <- pkg_plan$new("pkgconfig", config = list(library = tmp))
     r$resolve()
   },
 
@@ -22,7 +22,7 @@ fixtures <- list(
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
     r <- pkg_plan$new(
       c("cran::pkgconfig", "github::r-lib/pkgconfig"),
-      lib = tmp
+      config = list(library = tmp)
     )
     r$resolve()
   },
@@ -30,7 +30,7 @@ fixtures <- list(
   "solution-crayon.rds" = function() {
     dir.create(tmp <- tempfile())
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-    r <- pkg_plan$new("crayon", lib = tempfile())
+    r <- pkg_plan$new("crayon", config = list(library = tempfile()))
     r$resolve()
     r$solve()
   },
@@ -38,7 +38,7 @@ fixtures <- list(
   "solution-igraph.rds" = function() {
     dir.create(tmp <- tempfile())
     on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-    r <- pkg_plan$new("igraph", lib = tempfile())
+    r <- pkg_plan$new("igraph", config = list(library = tempfile()))
     r$resolve()
     r$solve()
   }

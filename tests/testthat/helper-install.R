@@ -125,7 +125,7 @@ make_dummy_worker_process <- function(n_iter = 10, sleep = 1, status = 0) {
 }
 
 make_install_plan <- function(ref, lib = .libPaths()[1]) {
-  r <- pkg_plan$new(ref, library = lib)
+  r <- pkg_plan$new(ref, config = list(library = lib))
   r$resolve()
   r$solve()
   r$download_solution()

@@ -153,9 +153,11 @@ test_that("download_remote", {
 
   sha <- "b5221ab024605019800ddea474f7a0981a4d53f719f5af2b1af627b34e0760b2"
   ref <- paste0("github::r-lib/crayon@", sha)
-  r <- pkg_plan$new(
-    ref,
-    config = list(dependencies = FALSE, cache_dir = tmp)
+  suppressMessages(
+    r <- pkg_plan$new(
+      ref,
+      config = list(library = tempfile(), dependencies = FALSE, cache_dir = tmp)
+    )
   )
 
   ## -----------------------------------------------------
@@ -181,9 +183,11 @@ test_that("download_remote", {
 
   ## -----------------------------------------------------
   ## Now the tree is in the cache, so it should come from there
-  r <- pkg_plan$new(
-    ref,
-    config = list(dependencies = FALSE, cache_dir = tmp)
+  suppressMessages(
+    r <- pkg_plan$new(
+      ref,
+      config = list(library = tempfile(), dependencies = FALSE, cache_dir = tmp)
+    )
   )
 
   expect_error(suppressMessages(r$resolve()), NA)
@@ -218,9 +222,11 @@ test_that("download_remote", {
   )
   unlink(c(dl$fulltarget, dl$fulltarget_tree))
 
-  r <- pkg_plan$new(
-    ref,
-    config = list(dependencies = FALSE, cache_dir = tmp)
+  suppressMessages(
+    r <- pkg_plan$new(
+      ref,
+      config = list(library = tempfile(), dependencies = FALSE, cache_dir = tmp)
+    )
   )
 
   expect_error(suppressMessages(r$resolve()), NA)

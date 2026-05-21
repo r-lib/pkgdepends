@@ -98,8 +98,7 @@ cli::test_that_cli("draw_solution_tree", {
 
   r <- pkg_plan$new(
     c("pkgconfig", "dplyr"),
-    library = lib,
-    config = list(use_bioconductor = FALSE)
+    config = list(library = lib, use_bioconductor = FALSE)
   )
   suppressMessages(r$resolve())
   suppressMessages(r$solve())

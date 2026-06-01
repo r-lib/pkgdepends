@@ -111,7 +111,7 @@ pdl$download()
 
 
     ## ℹ Getting 1 pkg with unknown size
-    ## ✔ Got cli 3.6.6.9000 (source) (860.42 kB)
+    ## ✔ Got cli 3.6.6.9000 (source) (868.99 kB)
 
 See the
 [`pkg_download_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html)
@@ -140,9 +140,9 @@ pdi$install()
     ## ℹ Packaging cli 3.6.6.9000
     ## ✔ Packaged cli 3.6.6.9000 (1.8s)
     ## ℹ Building cli 3.6.6.9000
-    ## ✔ Built cli 3.6.6.9000 (9.5s)
-    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@2e112bc) (34ms)
-    ## ✔ Summary:   1 new  in 9.5s
+    ## ✔ Built cli 3.6.6.9000 (10s)
+    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@f645af4) (37ms)
+    ## ✔ Summary:   1 new  in 10s
 
 ## Dependency resolution
 

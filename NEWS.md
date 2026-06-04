@@ -3,8 +3,7 @@
 * GitHub remotes now auto-detect an R package in a well-known subdirectory
   (`pkg-r/`, `r/`, or `R/`) when no `subdir` is given and there is no
   `DESCRIPTION` at the repository root. This lets multi-language
-  repositories be installed without specifying `subdir`
-  (https://github.com/r-lib/pkgdepends/issues/459).
+  repositories be installed without specifying `subdir` (#459).
 
 * The solver no longer silently keeps an installed package as the solution
   for a direct ref that failed to resolve. E.g. requesting a CRAN package

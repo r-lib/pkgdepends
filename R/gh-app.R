@@ -111,7 +111,7 @@ gh_app_desc_aliases <- function(query) {
     # prefix); aliased queries use `descN:`.
     gh_app_extract_aliases(
       query,
-      "(?:(?<alias>\\w+):\\s*)?file\\(path:\\s*\"(?<path>[^\"]+)\"",
+      "(?:(?<alias>\\w+):\\s*)?\\bfile\\(path:\\s*\"(?<path>[^\"]+)\"",
       "file"
     )
   )

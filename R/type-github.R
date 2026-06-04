@@ -31,6 +31,7 @@ resolve_remote_github <- function(
   force(dependencies)
   ## Get the DESCRIPTION data, and the SHA we need
   type_github_get_data(remote)$then(function(resp) {
+    remote$subdir <- resp$subdir %||% remote$subdir
     data <- list(
       desc = resp$description,
       sha = resp$sha,
@@ -369,7 +370,7 @@ type_github_get_data <- function(rem) {
       dsc <- desc::desc(text = data$desc),
       new_github_baddesc_error(rem, call)
     )
-    list(sha = data$sha, description = dsc)
+    list(sha = data$sha, description = dsc, subdir = data$subdir)
   })
 }
 
@@ -377,17 +378,12 @@ type_github_get_data_ref <- function(rem) {
   user <- rem$username
   repo <- rem$repo
   ref <- rem$commitish %|z|% "HEAD"
-  subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
+  dirs <- github_query_subdirs(rem)
 
   query <- sprintf(
     "{
     repository(owner: \"%s\", name: \"%s\") {
-      description: object(expression: \"%s:%sDESCRIPTION\") {
-        ... on Blob {
-          isBinary
-          text
-        }
-      }
+      %s
       sha: object(expression: \"%s\") {
         oid
       }
@@ -395,17 +391,26 @@ type_github_get_data_ref <- function(rem) {
   }",
     user,
     repo,
-    ref,
-    subdir,
+    github_ref_desc_fragment(ref, dirs),
     ref
   )
 
   github_query(query)$then(function(resp) {
-    check_github_response_ref(resp$response, resp$obj, rem, call. = call)
-  })$then(function(obj) {
+    obj <- check_github_response_ref(resp$response, resp$obj, rem, call. = call)
+    hit <- github_pick_desc(
+      obj,
+      dirs,
+      get_node = function(o, a) o[[c("data", "repository", a)]],
+      rem = rem,
+      call. = call
+    )
+    if (is.null(hit)) {
+      throw(new_github_no_package_error(rem, call))
+    }
     list(
       sha = obj[[c("data", "repository", "sha", "oid")]],
-      desc = obj[[c("data", "repository", "description", "text")]]
+      desc = hit$text,
+      subdir = hit$subdir
     )
   })
 }
@@ -414,14 +419,8 @@ check_github_response_ref <- function(resp, obj, rem, call.) {
   if (!is.null(obj$errors)) {
     throw(new_github_query_error(rem, resp, obj, call.))
   }
-  if (isTRUE(obj[[c("data", "repository", "description", "isBinary")]])) {
-    throw(new_github_baddesc_error(rem, call.))
-  }
   if (is.null(obj[[c("data", "repository", "sha")]])) {
     throw(new_github_noref_error(rem, call.))
-  }
-  if (is.null(obj[[c("data", "repository", "description", "text")]])) {
-    throw(new_github_no_package_error(rem, call.))
   }
   obj
 }

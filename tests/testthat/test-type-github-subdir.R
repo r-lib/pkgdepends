@@ -68,3 +68,68 @@ test_that("github_pick_desc throws baddesc when the first hit is binary", {
     "Can't parse DESCRIPTION"
   )
 })
+
+test_that("ref resolution auto-detects pkg-r/ subdir", {
+  setup_fake_gh_app()
+  r <- pkg_plan$new(
+    "r-lib/subdirpkg",
+    config = list(library = tempfile(), dependencies = FALSE)
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+
+  expect_true(all(res$status == "OK"))
+  expect_identical(res$package, "subdirpkg")
+  expect_identical(res$metadata[[1]][["RemoteSubdir"]], "pkg-r")
+})
+
+test_that("ref resolution prefers r/ over R/", {
+  setup_fake_gh_app()
+  r <- pkg_plan$new(
+    "r-lib/subdirprio",
+    config = list(library = tempfile(), dependencies = FALSE)
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+
+  expect_true(all(res$status == "OK"))
+  expect_identical(res$package, "subdirprio")
+  expect_identical(res$metadata[[1]][["RemoteSubdir"]], "r")
+})
+
+test_that("ref resolution with root DESCRIPTION sets no RemoteSubdir", {
+  setup_fake_gh_app()
+  r <- pkg_plan$new(
+    "r-lib/crayon",
+    config = list(library = tempfile(), dependencies = FALSE)
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+
+  expect_true(all(res$status == "OK"))
+  expect_identical(res$package, "crayon")
+  expect_false("RemoteSubdir" %in% names(res$metadata[[1]]))
+})
+
+test_that("ref resolution fails when no candidate has a package", {
+  setup_fake_gh_app()
+  r <- pkg_plan$new(
+    "tidyverse/tidyverse.org",
+    config = list(library = tempfile(), dependencies = FALSE)
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+  expect_true(all(res$status == "FAILED"))
+})
+
+test_that("explicit subdir is queried alone, no probing fallback", {
+  setup_fake_gh_app()
+  # crayon has a root DESCRIPTION but nothing in nonexistent/
+  r <- pkg_plan$new(
+    "r-lib/crayon/nonexistent",
+    config = list(library = tempfile(), dependencies = FALSE)
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+  expect_true(all(res$status == "FAILED"))
+})

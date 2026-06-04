@@ -301,7 +301,8 @@ github_file_desc_fragment <- function(dirs) {
 # Walk the candidate dirs in priority order and return the first DESCRIPTION
 # hit as list(text=, subdir=). `get_node(obj, alias)` extracts the Blob node
 # (a list with `isBinary`/`text`) for an alias, or NULL if absent. Throws
-# baddesc if the first existing blob is binary. Returns NULL if nothing found.
+# baddesc if the first blob found (in priority order) is binary. Returns NULL
+# if nothing found.
 github_pick_desc <- function(obj, dirs, get_node, rem, call.) {
   aliases <- github_subdir_aliases(length(dirs))
   for (i in seq_along(dirs)) {

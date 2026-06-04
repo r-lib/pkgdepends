@@ -431,7 +431,7 @@ type_github_get_data_pull <- function(rem) {
   user <- rem$username
   repo <- rem$repo
   pull <- rem$pull
-  subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
+  dirs <- github_query_subdirs(rem)
 
   query <- sprintf(
     "{
@@ -441,14 +441,7 @@ type_github_get_data_pull <- function(rem) {
         headRef {
           target {
             ... on Commit {
-              file(path: \"%sDESCRIPTION\") {
-                object {
-                  ... on Blob {
-                    isBinary
-                    text
-                  }
-                }
-              }
+              %s
             }
           }
         }
@@ -458,63 +451,39 @@ type_github_get_data_pull <- function(rem) {
     user,
     repo,
     pull,
-    subdir
+    github_file_desc_fragment(dirs)
   )
 
   github_query(query)$then(function(resp) {
-    check_github_response_pull(resp$response, resp$obj, rem, call. = call)
-  })$then(function(obj) {
+    obj <- check_github_response_pull(resp$response, resp$obj, rem, call. = call)
+    hit <- github_pick_desc(
+      obj,
+      dirs,
+      get_node = function(o, a) {
+        o[[c(
+          "data",
+          "repository",
+          "pullRequest",
+          "headRef",
+          "target",
+          a,
+          "object"
+        )]]
+      },
+      rem = rem,
+      call. = call
+    )
+    if (is.null(hit)) {
+      throw(new_github_no_package_error(rem, call))
+    }
     ref <- obj[[c("data", "repository", "pullRequest", "headRefOid")]]
-    txt <- obj[[c(
-      "data",
-      "repository",
-      "pullRequest",
-      "headRef",
-      "target",
-      "file",
-      "object",
-      "text"
-    )]]
-    list(sha = ref, desc = txt)
+    list(sha = ref, desc = hit$text, subdir = hit$subdir)
   })
 }
 
 check_github_response_pull <- function(resp, obj, rem, call.) {
   if (!is.null(obj$errors)) {
     throw(new_github_query_error(rem, resp, obj, call.))
-  }
-  # No full coverage here, because unless something goes super wrong,
-  # these cases almost never happen.
-  if (!is.null(obj$errors)) {
-    throw(new_github_query_error(rem, resp, obj, call.)) # nocov
-  }
-
-  if (
-    isTRUE(obj[[c(
-      "data",
-      "repository",
-      "pullRequest",
-      "headRef",
-      "target",
-      "file",
-      "object",
-      "isBinary"
-    )]])
-  ) {
-    throw(new_github_baddesc_error(rem, call.)) # nocov
-  }
-  if (
-    is.null(obj[[c(
-      "data",
-      "repository",
-      "pullRequest",
-      "headRef",
-      "target",
-      "file",
-      "object"
-    )]])
-  ) {
-    throw(new_github_no_package_error(rem, call.))
   }
   obj
 }

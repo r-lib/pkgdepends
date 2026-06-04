@@ -133,3 +133,17 @@ test_that("explicit subdir is queried alone, no probing fallback", {
   res <- r$get_resolution()
   expect_true(all(res$status == "FAILED"))
 })
+
+test_that("pull request resolution auto-detects pkg-r/ subdir", {
+  setup_fake_gh_app()
+  r <- pkg_plan$new(
+    "r-lib/subdirpkg#12",
+    config = list(library = tempfile(), dependencies = FALSE)
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+
+  expect_true(all(res$status == "OK"))
+  expect_identical(res$package, "subdirpkg")
+  expect_identical(res$metadata[[1]][["RemoteSubdir"]], "pkg-r")
+})

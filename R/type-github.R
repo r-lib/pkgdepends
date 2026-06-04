@@ -492,8 +492,7 @@ type_github_get_data_release <- function(rem) {
   call <- sys.call(-1)
   user <- rem$username
   repo <- rem$repo
-  ref <- NULL
-  subdir <- rem$subdir %&z&% paste0(utils::URLencode(rem$subdir), "/")
+  dirs <- github_query_subdirs(rem)
 
   query <- sprintf(
     "{
@@ -502,37 +501,39 @@ type_github_get_data_release <- function(rem) {
         tagName
         tagCommit {
           oid,
-          file(path: \"%sDESCRIPTION\") {
-            object {
-              ... on Blob {
-                isBinary
-                text
-              }
-            }
-          }
+          %s
         }
       }
     }
   }",
     user,
     repo,
-    subdir
+    github_file_desc_fragment(dirs)
   )
 
   github_query(query)$then(function(resp) {
-    check_github_response_release(resp$response, resp$obj, rem, call. = call)
-  })$then(function(obj) {
+    obj <- check_github_response_release(resp$response, resp$obj, rem, call. = call)
+    hit <- github_pick_desc(
+      obj,
+      dirs,
+      get_node = function(o, a) {
+        o[[c(
+          "data",
+          "repository",
+          "latestRelease",
+          "tagCommit",
+          a,
+          "object"
+        )]]
+      },
+      rem = rem,
+      call. = call
+    )
+    if (is.null(hit)) {
+      throw(new_github_no_package_error(rem, call))
+    }
     ref <- obj[[c("data", "repository", "latestRelease", "tagCommit", "oid")]]
-    txt <- obj[[c(
-      "data",
-      "repository",
-      "latestRelease",
-      "tagCommit",
-      "file",
-      "object",
-      "text"
-    )]]
-    list(sha = ref, desc = txt)
+    list(sha = ref, desc = hit$text, subdir = hit$subdir)
   })
 }
 
@@ -542,31 +543,6 @@ check_github_response_release <- function(resp, obj, rem, call.) {
   }
   if (is.null(obj[[c("data", "repository", "latestRelease")]])) {
     throw(new_github_no_release_error(rem, call.))
-  }
-  if (
-    isTRUE(obj[[c(
-      "data",
-      "repository",
-      "latestRelease",
-      "tagCommit",
-      "file",
-      "object",
-      "isBinary"
-    )]])
-  ) {
-    throw(new_github_baddesc_error(rem, call.))
-  }
-  if (
-    is.null(obj[[c(
-      "data",
-      "repository",
-      "latestRelease",
-      "tagCommit",
-      "file",
-      "object"
-    )]])
-  ) {
-    throw(new_github_no_package_error(rem, call.))
   }
   obj
 }

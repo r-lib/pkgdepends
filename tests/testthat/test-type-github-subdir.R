@@ -147,3 +147,17 @@ test_that("pull request resolution auto-detects pkg-r/ subdir", {
   expect_identical(res$package, "subdirpkg")
   expect_identical(res$metadata[[1]][["RemoteSubdir"]], "pkg-r")
 })
+
+test_that("release resolution auto-detects pkg-r/ subdir", {
+  setup_fake_gh_app()
+  r <- pkg_plan$new(
+    "r-lib/subdirpkg@*release",
+    config = list(library = tempfile(), dependencies = FALSE)
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+
+  expect_true(all(res$status == "OK"))
+  expect_identical(res$package, "subdirpkg")
+  expect_identical(res$metadata[[1]][["RemoteSubdir"]], "pkg-r")
+})

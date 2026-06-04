@@ -18,6 +18,7 @@ test_that("github_subdir_paths appends a slash to non-root dirs", {
     github_subdir_paths(c("", "pkg-r", "r")),
     c("", "pkg-r/", "r/")
   )
+  expect_identical(github_subdir_paths(character(0)), character(0))
 })
 
 test_that("github_ref_desc_fragment builds one aliased object per dir", {
@@ -40,6 +41,16 @@ test_that("github_pick_desc returns first non-null hit in order", {
   get_node <- function(o, a) o$d[[a]]
   hit <- github_pick_desc(obj, c("", "pkg-r"), get_node, rem = list(), call. = NULL)
   expect_identical(hit, list(text = "Package: foo\n", subdir = "pkg-r"))
+})
+
+test_that("github_pick_desc skips nodes that exist but have no text", {
+  obj <- list(d = list(
+    desc1 = list(isBinary = FALSE, text = NULL),
+    desc2 = list(isBinary = FALSE, text = "Package: foo\n")
+  ))
+  get_node <- function(o, a) o$d[[a]]
+  hit <- github_pick_desc(obj, c("", "pkg-r"), get_node, rem = list(), call. = NULL)
+  expect_identical(hit$subdir, "pkg-r")
 })
 
 test_that("github_pick_desc returns NULL when no candidate matches", {

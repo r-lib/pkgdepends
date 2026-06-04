@@ -264,10 +264,11 @@ github_subdir_aliases <- function(n) {
 
 # Slash-suffixed, URL-encoded path prefixes (root -> "").
 github_subdir_paths <- function(dirs) {
-  ifelse(
-    nzchar(dirs),
-    paste0(vapply(dirs, utils::URLencode, character(1)), "/"),
-    ""
+  vapply(
+    dirs,
+    function(d) if (nzchar(d)) paste0(utils::URLencode(d), "/") else "",
+    character(1),
+    USE.NAMES = FALSE
   )
 }
 

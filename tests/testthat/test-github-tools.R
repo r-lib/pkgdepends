@@ -158,6 +158,7 @@ test_that("cannot parse DESCRIPTION on GH", {
 })
 
 test_that("http error", {
+  setup_fake_gh_app()
   withr::local_envvar(
     R_PKG_GITHUB_API_URL = paste0(fake_gh$url(), "/404")
   )

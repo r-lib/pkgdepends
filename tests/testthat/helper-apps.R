@@ -334,10 +334,22 @@ fake_gh <- webfakes::local_app_process(
   opts = webfakes::server_opts(num_threads = 3)
 )
 
+# A deterministic, well-formed GitHub token for the fake GitHub app. It is not
+# a real credential, but it matches `re_gh_auth()` so the fake app accepts it.
+fake_gh_token <- "0123456789abcdef0123456789abcdef01234567"
+
 setup_fake_gh_app <- function(.local_envir = parent.frame()) {
   withr::local_envvar(
     .local_envir = .local_envir,
-    R_PKG_GITHUB_API_URL = fake_gh$url()
+    R_PKG_GITHUB_API_URL = fake_gh$url(),
+    # Point all token sources at a known-good fake token, so requests to the
+    # fake GitHub app never depend on ambient credentials. Otherwise a real
+    # token from the environment (e.g. `GITHUB_PAT` set to `secrets.GITHUB_TOKEN`
+    # on CI) leaks in and is rejected by the fake app as invalid.
+    CI_GITHUB_TOKEN = fake_gh_token,
+    GITHUB_PAT_GITHUB_COM = fake_gh_token,
+    GITHUB_PAT = fake_gh_token,
+    GITHUB_TOKEN = fake_gh_token
   )
 }
 

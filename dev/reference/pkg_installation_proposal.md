@@ -735,7 +735,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmppWpug6/file1efb438e5f97
+#> ℹ Creating library directory: /tmp/Rtmp7H4aZu/file1eba6e935f1d
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -749,7 +749,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmppWpug6/file1efb4d6e9d3f
+#> ℹ Creating library directory: /tmp/Rtmp7H4aZu/file1eba2a05ad95
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -766,7 +766,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmppWpug6/file1efb2a673664"
+#> [1] "/tmp/Rtmp7H4aZu/file1eba4d80d2ad"
 #> 
 #> ## platforms
 #> <default>
@@ -783,11 +783,11 @@ pdi$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmppWpug6/file1efb834866b"
+#> [1] "/tmp/Rtmp7H4aZu/file1eba717a9b95"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmppWpug6/file1efb4d6e9d3f"
+#> [1] "/tmp/Rtmp7H4aZu/file1eba2a05ad95"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -866,7 +866,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmppWpug6/file1efb41897621
+#> ℹ Creating library directory: /tmp/Rtmp7H4aZu/file1eba591e06c3
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -876,7 +876,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmppWpug6/file1efb444ca14e
+#> ℹ Creating library directory: /tmp/Rtmp7H4aZu/file1eba6ffff583
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -887,7 +887,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmppWpug6/file1efb66bd8fcf
+#> ℹ Creating library directory: /tmp/Rtmp7H4aZu/file1eba22669b1
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

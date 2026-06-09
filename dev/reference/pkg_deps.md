@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpgpfpx0/file20a7291f605"
+#> [1] "/tmp/RtmppWpug6/file1efb61015a0a"
 #> 
 #> ## platforms
 #> <default>
@@ -463,11 +463,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpgpfpx0/file20a77b462326"
+#> [1] "/tmp/RtmppWpug6/file1efb834866b"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmpgpfpx0/file20a7163493b4"
+#> [1] "/tmp/RtmppWpug6/file1efb7207f1b4"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -546,7 +546,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 4.05 MB in 3 files.
+#> ✔ Updated metadata database: 4.07 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -555,8 +555,8 @@ pd$get_resolution()
 #> # A data frame: 2 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.9.5   GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.9.5   GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.10.0  GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.10.0  GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -568,20 +568,20 @@ pd$get_resolution()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
-#> # A data frame: 27 × 35
+#> # A data frame: 29 × 35
 #>    ref            type  direct directpkg status package version license
 #>    <chr>          <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
 #>  1 r-lib/pkgdepe… gith… TRUE   TRUE      OK     pkgdep… 0.9.1.… MIT + …
-#>  2 callr          stan… FALSE  FALSE     OK     callr   3.7.6   MIT + …
+#>  2 callr          stan… FALSE  FALSE     OK     callr   3.8.0   MIT + …
 #>  3 cli            stan… FALSE  FALSE     OK     cli     3.6.6   MIT + …
 #>  4 curl           stan… FALSE  FALSE     OK     curl    7.1.0   MIT + …
 #>  5 desc           stan… FALSE  FALSE     OK     desc    1.4.3   MIT + …
 #>  6 filelock       stan… FALSE  FALSE     OK     filelo… 1.0.3   MIT + …
 #>  7 jsonlite       stan… FALSE  FALSE     OK     jsonli… 2.0.0   MIT + …
 #>  8 lpSolve        stan… FALSE  FALSE     OK     lpSolve 5.6.23  LGPL-2 
-#>  9 pkgbuild       stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + …
-#> 10 pkgcache       stan… FALSE  FALSE     OK     pkgcac… 2.2.5   MIT + …
-#> # ℹ 17 more rows
+#>  9 otel           stan… FALSE  FALSE     OK     otel    0.2.0   MIT + …
+#> 10 pkgbuild       stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + …
+#> # ℹ 19 more rows
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -611,7 +611,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + constraints (58):
+#> + constraints (61):
 #>   - select pkgdepends exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -620,8 +620,8 @@ pd$get_solution()
 #>   - select filelock at most once
 #>   - select jsonlite at most once
 #>   - select lpSolve at most once
+#>   - select otel at most once
 #>   - select pkgbuild at most once
-#>   - select pkgcache at most once
 #>   ...
 #> + solution:
 #>   - R6
@@ -632,6 +632,7 @@ pd$get_solution()
 #>   - filelock
 #>   - jsonlite
 #>   - lpSolve
+#>   - otel
 #>   - pkgbuild
 #>   - pkgcache
 #>   - processx
@@ -647,7 +648,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - pkgload
-#> + constraints (48):
+#> + constraints (51):
 #>   - select pkgload exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -655,9 +656,9 @@ pd$get_solution()
 #>   - select fs at most once
 #>   - select glue at most once
 #>   - select lifecycle at most once
+#>   - select otel at most once
 #>   - select pkgbuild at most once
 #>   - select processx at most once
-#>   - select ps at most once
 #>   ...
 #> + solution:
 #>   - R6
@@ -667,6 +668,7 @@ pd$get_solution()
 #>   - fs
 #>   - glue
 #>   - lifecycle
+#>   - otel
 #>   - pkgbuild
 #>   - pkgload
 #>   - processx
@@ -678,12 +680,13 @@ pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$show_solution()
 #> + R6          2.6.1 [dl]
-#> + callr       3.7.6 [dl]
+#> + callr       3.8.0 [dl]
 #> + cli         3.6.6 [dl]
 #> + desc        1.4.3 [dl]
 #> + fs          2.1.0 [dl] + cmake, make, libuv1-dev
 #> + glue        1.8.1 [dl]
 #> + lifecycle   1.0.5 [dl]
+#> + otel        0.2.0 [dl]
 #> + pkgbuild    1.4.8 [dl]
 #> + pkgload     1.5.2 [dl]
 #> + processx    3.9.0 [dl]
@@ -727,8 +730,9 @@ pd$draw()
 #> │ └─rlang 1.2.0 [new][dl] (unknown size)
 #> ├─pkgbuild 1.4.8 [new][dl] (unknown size)
 #> │ ├─R6
-#> │ ├─callr 3.7.6 [new][dl] (unknown size)
+#> │ ├─callr 3.8.0 [new][dl] (unknown size)
 #> │ │ ├─R6
+#> │ │ ├─otel 0.2.0 [new][dl] (unknown size)
 #> │ │ └─processx 3.9.0 [new][dl] (unknown size)
 #> │ │   ├─R6
 #> │ │   └─ps 1.9.3 [new][dl] (unknown size)
@@ -754,7 +758,7 @@ pd
 #> <pkg_dependencies>
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + has resolution (+13 dependencies)
+#> + has resolution (+14 dependencies)
 #> (use `$get_resolution()` to see resolution results)
 #> (use `$solve()` to solve dependencies)
 
@@ -763,7 +767,7 @@ pd
 #> <pkg_dependencies>
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + has resolution (+13 dependencies)
+#> + has resolution (+14 dependencies)
 #> + has solution
 #> (use `$get_resolution()` to see resolution results)
 #> (use `$show_solution()` to see the dependencies)

@@ -98,7 +98,7 @@ test_that("conflicting dependencies and installed packages", {
 
   fake_gh <- webfakes::local_app_process(gh_app(gh))
   withr::local_envvar(R_PKG_GITHUB_API_URL = fake_gh$url())
-  local_fake_gh_token(fake_gh)
+  local_fake_gh_token()
   setup_fake_apps(cran_repo = cran)
 
   # -----------------------------------------------------------------------

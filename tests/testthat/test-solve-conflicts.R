@@ -60,6 +60,7 @@ test_that("direct CRAN conflicts with downstream GH dep", {
     gh_app(gh)
   )
   withr::local_envvar(R_PKG_GITHUB_API_URL = fake_gh$url())
+  local_fake_gh_token()
   setup_fake_apps()
 
   lib <- withr::local_tempdir()

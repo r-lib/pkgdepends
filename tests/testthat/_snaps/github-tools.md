@@ -10,6 +10,9 @@
       Package: pak
       Version: 1.0.0
       
+      $subdir
+      [1] ""
+      
 
 ---
 
@@ -22,6 +25,9 @@
       $description
       Package: pak
       Version: 1.0.0
+      
+      $subdir
+      [1] ""
       
 
 ---
@@ -36,6 +42,9 @@
       Package: pak
       Version: 1.0.0
       
+      $subdir
+      [1] ""
+      
 
 ---
 
@@ -49,6 +58,9 @@
       Package: pak
       Version: 1.0.0
       
+      $subdir
+      [1] ""
+      
 
 ---
 
@@ -61,6 +73,9 @@
       $description
       Package: pak
       Version: 1.0.0
+      
+      $subdir
+      [1] ""
       
 
 ---
@@ -76,6 +91,9 @@
       Package: pak
       Version: 1.0.0
       
+      $subdir
+      [1] ""
+      
 
 ---
 
@@ -88,6 +106,9 @@
       $description
       Package: pak
       Version: 1.0.0
+      
+      $subdir
+      [1] ""
       
 
 ---
@@ -102,6 +123,9 @@
       $description
       Package: feather
       Version: 1.0.0
+      
+      $subdir
+      [1] "R"
       
 
 # type_github_get_data, no such user

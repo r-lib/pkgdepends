@@ -376,7 +376,6 @@ type_github_get_data <- function(rem) {
 }
 
 type_github_get_data_ref <- function(rem) {
-  call <- sys.call(-1)
   user <- rem$username
   repo <- rem$repo
   ref <- rem$commitish %|z|% "HEAD"

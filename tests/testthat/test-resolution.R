@@ -439,3 +439,63 @@ test_that("dependency types", {
     )
   )
 })
+
+test_that("a failing batch resolution fails all its refs (#462)", {
+  # Indirect dependencies of a batch type (cran/standard/bioc) are resolved
+  # together, sharing a single `async_id` (see `res__resolve_delayed()`). This
+  # is how the recommended/base packages are resolved in the reprex from #462.
+  # If that batch resolution rejects (in the original report, CRAN's Windows /
+  # R 4.3 metadata was no longer fully available), all of its refs must fail
+  # gracefully, instead of triggering an `nrow(out) == 1` assertion error in
+  # `res_one_row_df()`, which masked the real error.
+  conf <- current_config()
+  cache <- list(package = pkgcache::package_cache$new(), metadata = NULL)
+
+  do <- function() {
+    res <- new_resolution(config = conf, cache = cache)
+    res$push(.list = parse_pkg_refs("foo::bar"))
+    res$when_complete()
+  }
+
+  # A direct `foo::` ref resolves fine, but pulls in two indirect `standard`
+  # deps (bare package names). These are batched and resolved together.
+  foo_resolve <- function(remote, direct, config, cache, dependencies) {
+    list(
+      ref = remote$ref,
+      type = remote$type,
+      package = remote$rest,
+      version = "1.0.0",
+      sources = "src1",
+      unknown_deps = c("pkga", "pkgb"),
+      direct = direct
+    )
+  }
+  # The batch resolution of the two deps fails, as it would if the metadata
+  # download failed.
+  std_resolve <- function(remote, direct, config, cache, dependencies) {
+    stop("metadata boom", call. = FALSE)
+  }
+  standard <- modifyList(
+    default_remote_types()$standard,
+    list(resolve = std_resolve)
+  )
+
+  res <- withr::with_options(
+    list(
+      pkg.remote_types = list(
+        foo = list(resolve = foo_resolve),
+        standard = standard
+      )
+    ),
+    synchronise(do())
+  )
+
+  expect_equal(nrow(res), 3)
+  expect_setequal(res$ref, c("foo::bar", "pkga", "pkgb"))
+  failed <- res[res$status == "FAILED", ]
+  expect_identical(sort(failed$ref), c("pkga", "pkgb"))
+  expect_identical(sort(failed$package), c("pkga", "pkgb"))
+  # the underlying error is preserved for each ref, instead of being masked
+  expect_match(conditionMessage(failed$error[[1]]$parent), "metadata boom")
+  expect_match(conditionMessage(failed$error[[2]]$parent), "metadata boom")
+})

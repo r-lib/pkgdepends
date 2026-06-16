@@ -2,6 +2,10 @@
 
 ## pkgdepends (development version)
 
+- Resolution for downloads for a different platform no longer fails with
+  a cryptic error
+  ([\#462](https://github.com/r-lib/pkgdepends/issues/462)).
+
 - The solver no longer silently keeps an installed package as the
   solution for a direct ref that failed to resolve. E.g. requesting a
   CRAN package that is not on CRAN but happens to be installed locally

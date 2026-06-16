@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmp7H4aZu/file1eba58c2a962"
+#> [1] "/tmp/RtmpoQwMJg/file2023b1b7c4"
 #> 
 #> ## platforms
 #> <default>
@@ -463,11 +463,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmp7H4aZu/file1eba717a9b95"
+#> [1] "/tmp/RtmpoQwMJg/file20233a619cac"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmp7H4aZu/file1ebac47910c"
+#> [1] "/tmp/RtmpoQwMJg/file2023442ecec0"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -688,7 +688,7 @@ pd$show_solution()
 #> + lifecycle   1.0.5 [dl]
 #> + otel        0.2.0 [dl]
 #> + pkgbuild    1.4.8 [dl]
-#> + pkgload     1.5.2 [dl]
+#> + pkgload     1.5.3 [dl]
 #> + processx    3.9.0 [dl]
 #> + ps          1.9.3 [dl]
 #> + rlang       1.2.0 [dl]
@@ -718,7 +718,7 @@ pd
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$draw()
-#> pkgload 1.5.2 [new][dl] (unknown size)
+#> pkgload 1.5.3 [new][dl] (unknown size)
 #> ├─cli 3.6.6 [new][dl] (unknown size)
 #> ├─desc 1.4.3 [new][dl] (unknown size)
 #> │ ├─R6 2.6.1 [new][dl] (unknown size)

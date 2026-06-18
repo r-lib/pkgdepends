@@ -29,7 +29,12 @@ test_that("resolve_remote_git", {
   ref <- paste0("git::", fake_git$url("/pak-test.git"), "@main")
   prop <- suppressMessages(new_pkg_installation_proposal(
     ref,
-    config = list(library = tempfile(), sysreqs_platform = "unknown")
+    config = list(
+      library = withr::local_tempdir(),
+      cache_dir = withr::local_tempdir(),
+      package_cache_dir = withr::local_tempdir(),
+      sysreqs_platform = "unknown"
+    )
   ))
   suppressMessages(prop$resolve())
   res <- prop$get_resolution()
@@ -49,7 +54,12 @@ test_that("download_remote_git", {
   ref <- paste0("git::", fake_git$url("/pak-test.git"), "@main")
   prop <- suppressMessages(new_pkg_installation_proposal(
     ref,
-    config = list(library = tempfile(), sysreqs_platform = "unknown")
+    config = list(
+      library = withr::local_tempdir(),
+      cache_dir = withr::local_tempdir(),
+      package_cache_dir = withr::local_tempdir(),
+      sysreqs_platform = "unknown"
+    )
   ))
   suppressMessages(prop$solve())
   suppressMessages(prop$download())

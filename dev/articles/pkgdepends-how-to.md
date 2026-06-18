@@ -153,8 +153,8 @@ prop$get_solution()$data
     #> 13 R6     stan… FALSE  FALSE     OK     R6      2.6.1   MIT + … FALSE           
     #> 14 zip    stan… FALSE  FALSE     OK     zip     3.0.0   MIT + … TRUE            
     #> 15 r-lib… gith… FALSE  FALSE     OK     pkgcac… 2.2.5.… MIT + … TRUE            
-    #> 16 gabor… gith… FALSE  FALSE     OK     tstoml  0.0.0.… MIT + … TRUE            
-    #> 17 r-lib… gith… FALSE  FALSE     OK     tsitter 0.0.0.… MIT + … TRUE            
+    #> 16 r-lib… gith… FALSE  FALSE     OK     tsitter 0.0.0.… MIT + … TRUE            
+    #> 17 gabor… gith… FALSE  FALSE     OK     tstoml  0.0.0.… MIT + … TRUE            
     #> # ℹ 29 more variables: priority <chr>, md5sum <chr>, sha256 <chr>,              
     #> #   filesize <int>, built <chr>, platform <chr>, rversion <chr>,                
     #> #   repotype <chr>, repodir <chr>, target <chr>, deps <list>, mirror <chr>,     
@@ -183,14 +183,14 @@ dir(target_dir)
     #> ℹ Getting 12 pkgs (12.64 MB), 5 (1.73 MB) cached                                
     #> ✔ Got cpp11 0.5.5 (source) (304.82 kB)                                          
     #> ✔ Got RColorBrewer 1.1-3 (source) (11.64 kB)                                    
-    #> ✔ Got S7 0.2.2 (source) (184.63 kB)                                             
-    #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
     #> ✔ Got farver 2.1.2 (source) (1.28 MB)                                           
-    #> ✔ Got withr 3.0.2 (source) (103.24 kB)                                          
-    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
-    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
-    #> ✔ Got vctrs 0.7.3 (source) (1.08 MB)                                            
+    #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
     #> ✔ Got viridisLite 0.4.3 (source) (1.27 MB)                                      
+    #> ✔ Got vctrs 0.7.3 (source) (1.08 MB)                                            
+    #> ✔ Got withr 3.0.2 (source) (103.24 kB)                                          
+    #> ✔ Got S7 0.2.2 (source) (184.63 kB)                                             
+    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
+    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
     #> ✔ Got isoband 0.3.0 (source) (1.59 MB)                                          
     #> ✔ Got ggplot2 4.0.3 (source) (6.33 MB)                                          
     #> # A data frame: 17 × 41                                                         
@@ -241,13 +241,13 @@ lib_status(new_lib)
     #> ℹ Getting 1 pkg (6.08 kB)                                                       
     #> ✔ Got pkgconfig 2.0.3 (source) (6.08 kB)                                        
     #> ℹ Building pkgconfig 2.0.3                                                      
-    #> ✔ Built pkgconfig 2.0.3 (911ms)                                                 
+    #> ✔ Built pkgconfig 2.0.3 (872ms)                                                 
     #> ✔ Installed pkgconfig 2.0.3  (17ms)                                             
-    #> ✔ Summary:   1 new  in 928ms                                                    
+    #> ✔ Summary:   1 new  in 888ms                                                    
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpxMzY… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpJUrp… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   
@@ -275,15 +275,15 @@ lib_status(new_lib)
     #> ℹ No downloads are needed, 1 pkg is cached                                      
     #> ✔ Got pkgconfig 2.0.2 (source) (13.22 kB)                                       
     #> ℹ Packaging pkgconfig 2.0.2                                                     
-    #> ✔ Packaged pkgconfig 2.0.2 (533ms)                                              
+    #> ✔ Packaged pkgconfig 2.0.2 (503ms)                                              
     #> ℹ Building pkgconfig 2.0.2                                                      
-    #> ✔ Built pkgconfig 2.0.2 (916ms)                                                 
-    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (1s)               
-    #> ✔ Summary:   1 new  in 1.9s                                                     
+    #> ✔ Built pkgconfig 2.0.2 (901ms)                                                 
+    #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (18ms)             
+    #> ✔ Summary:   1 new  in 919ms                                                    
     #> # A data frame: 1 × 32                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpxMzY… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpJUrp… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
     #> # ℹ 24 more variables: repository <chr>, remotetype <chr>, remotehost <chr>,    
     #> #   remoterepo <chr>, remoteusername <chr>, remotepkgref <chr>,                 
     #> #   remoteref <chr>, remotesha <chr>, built <chr>, depends <chr>,               
@@ -306,12 +306,12 @@ lib_status(new_lib)
 
 
     #> ℹ No downloads are needed, 1 pkg (6.08 kB) is cached                            
-    #> ✔ Installed pkgconfig 2.0.3  (17ms)                                             
-    #> ✔ Summary:   1 updated  in 17ms                                                 
+    #> ✔ Installed pkgconfig 2.0.3  (1s)                                               
+    #> ✔ Summary:   1 updated  in 1s                                                   
     #> # A data frame: 1 × 31                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpxMzY… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> 1 /tmp/RtmpJUrp… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
     #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
     #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   

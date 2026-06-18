@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpp0e92N/file1eb95488ed34"
+#> [1] "/tmp/RtmpC7MNtM/file249269a81f2b"
 #> 
 #> ## platforms
 #> <default>
@@ -463,11 +463,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpp0e92N/file1eb91daa9b41"
+#> [1] "/tmp/RtmpC7MNtM/file24927ff242a2"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmpp0e92N/file1eb96d384b1"
+#> [1] "/tmp/RtmpC7MNtM/file249231654a6b"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -568,7 +568,7 @@ pd$get_resolution()
 pd <- new_pkg_deps("r-lib/pkgdepends")
 pd$resolve()
 pd$get_resolution()
-#> # A data frame: 29 × 35
+#> # A data frame: 30 × 35
 #>    ref            type  direct directpkg status package version license
 #>    <chr>          <chr> <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
 #>  1 r-lib/pkgdepe… gith… TRUE   TRUE      OK     pkgdep… 0.9.1.… MIT + …
@@ -581,7 +581,7 @@ pd$get_resolution()
 #>  8 lpSolve        stan… FALSE  FALSE     OK     lpSolve 5.6.23  LGPL-2 
 #>  9 otel           stan… FALSE  FALSE     OK     otel    0.2.0   MIT + …
 #> 10 pkgbuild       stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + …
-#> # ℹ 19 more rows
+#> # ℹ 20 more rows
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -611,7 +611,7 @@ pd$get_solution()
 #> + result: OK
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + constraints (61):
+#> + constraints (66):
 #>   - select pkgdepends exactly once
 #>   - select callr at most once
 #>   - select cli at most once
@@ -630,14 +630,16 @@ pd$get_solution()
 #>   - curl
 #>   - desc
 #>   - filelock
+#>   - gaborcsardi/tstoml
 #>   - jsonlite
 #>   - lpSolve
 #>   - otel
 #>   - pkgbuild
-#>   - pkgcache
 #>   - processx
 #>   - ps
+#>   - r-lib/pkgcache@feature/ppm-sso
 #>   - r-lib/pkgdepends
+#>   - r-lib/tsitter
 #>   - zip
 # Method get_solution()
 pd <- new_pkg_deps("pkgload")
@@ -758,7 +760,7 @@ pd
 #> <pkg_dependencies>
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + has resolution (+14 dependencies)
+#> + has resolution (+16 dependencies)
 #> (use `$get_resolution()` to see resolution results)
 #> (use `$solve()` to solve dependencies)
 
@@ -767,7 +769,7 @@ pd
 #> <pkg_dependencies>
 #> + refs:
 #>   - r-lib/pkgdepends
-#> + has resolution (+14 dependencies)
+#> + has resolution (+16 dependencies)
 #> + has solution
 #> (use `$get_resolution()` to see resolution results)
 #> (use `$show_solution()` to see the dependencies)

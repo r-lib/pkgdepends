@@ -24,8 +24,11 @@ test_that("parse_remote_git", {
 test_that("resolve_remote_git", {
   skip_on_cran()
   setup_fake_apps()
+  # Use the local git server (serving the `pak-test.git` repo) instead of a
+  # real repository on github.com, so the test does not need the internet.
+  ref <- paste0("git::", fake_git$url("/pak-test.git"), "@main")
   prop <- suppressMessages(new_pkg_installation_proposal(
-    "git::https://github.com/r-lib/cli@v3.6.0",
+    ref,
     config = list(library = tempfile(), sysreqs_platform = "unknown")
   ))
   suppressMessages(prop$resolve())
@@ -34,27 +37,31 @@ test_that("resolve_remote_git", {
   attr(res, "metadata")$resolution_end <- NULL
   expect_snapshot(
     as.list(res),
-    variant = paste0("pillar-", packageVersion("pillar"))
+    variant = paste0("pillar-", packageVersion("pillar")),
+    transform = transform_local_port
   )
 })
 
 test_that("download_remote_git", {
   skip_on_cran()
   setup_fake_apps()
-  prop <- new_pkg_installation_proposal(
-    "git::https://github.com/r-lib/cli@v3.6.0"
-  )
+  # See `resolve_remote_git` above: use the local git server, not the internet.
+  ref <- paste0("git::", fake_git$url("/pak-test.git"), "@main")
+  prop <- suppressMessages(new_pkg_installation_proposal(
+    ref,
+    config = list(library = tempfile(), sysreqs_platform = "unknown")
+  ))
   suppressMessages(prop$solve())
   suppressMessages(prop$download())
   expect_snapshot(
-    dir(file.path(prop$get_downloads()$fulltarget_tree, "cli"))
+    dir(file.path(prop$get_downloads()$fulltarget_tree, "empty"))
   )
   expect_equal(
     desc::desc_get(
       "Version",
-      file.path(prop$get_downloads()$fulltarget_tree, "cli")
+      file.path(prop$get_downloads()$fulltarget_tree, "empty")
     ),
-    c(Version = "3.6.0")
+    c(Version = "1.0.0")
   )
   expect_equal(prop$get_downloads()$download_status, "Got")
 })

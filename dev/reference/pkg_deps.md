@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpB1JbID/file1f895ea71945"
+#> [1] "/tmp/RtmpacXOfe/file1eb6537c33af"
 #> 
 #> ## platforms
 #> <default>
@@ -463,11 +463,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpB1JbID/file1f8934b479e8"
+#> [1] "/tmp/RtmpacXOfe/file1eb668cf136a"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpB1JbID/file1f892a200999"
+#> [1] "/tmp/RtmpacXOfe/file1eb6448d639b"
 #> 
 #> ## ignore_dev_library
 #> <default>

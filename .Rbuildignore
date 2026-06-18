@@ -27,3 +27,4 @@
 ^[\.]?air\.toml$
 ^\.vscode$
 ^[.]cache$
+/CLAUDE.md

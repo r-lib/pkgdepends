@@ -61,6 +61,7 @@ test_that("update", {
   # to access the real r-system-requirements repository over the internet.
   skip_on_cran()
   setup_fake_sysreqs_git()
+  local_fake_git_no_creds(fake_sysreqs_git$url())
   tmp <- withr::local_tempdir()
   synchronize(sysreqs2_async_update_metadata(tmp))
   expect_true(file.exists(tmp))

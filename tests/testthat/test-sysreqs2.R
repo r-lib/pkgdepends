@@ -57,8 +57,10 @@ test_that("sysreqs_is_supported", {
 })
 
 test_that("update", {
-  # TODO: needs internet
+  # Use a local git server that serves the bundled rules, so we don't need
+  # to access the real r-system-requirements repository over the internet.
   skip_on_cran()
+  setup_fake_sysreqs_git()
   tmp <- withr::local_tempdir()
   synchronize(sysreqs2_async_update_metadata(tmp))
   expect_true(file.exists(tmp))
@@ -71,11 +73,16 @@ test_that("update", {
 })
 
 test_that("match", {
-  skip_on_cran()
-  sr1 <- sysreqs2_resolve("libcurl and Java", "ubuntu-22.04")
+  # Resolve against the bundled rules, without updating from the internet.
+  config <- current_config()$set("sysreqs_db_update", FALSE)
+  sr1 <- sysreqs2_resolve("libcurl and Java", "ubuntu-22.04", config = config)
   expect_snapshot(sr1)
 
-  sr2 <- sysreqs2_resolve("libcurl and Java", "debian-unstable")
+  sr2 <- sysreqs2_resolve(
+    "libcurl and Java",
+    "debian-unstable",
+    config = config
+  )
   expect_snapshot(sr2)
 })
 
@@ -87,15 +94,19 @@ test_that("sysreqs2_command error", {
 })
 
 test_that("do not run update if nothing to do", {
-  skip_on_cran()
-  sr1 <- sysreqs2_resolve("nothing needed", "ubuntu-22.04")
+  config <- current_config()$set("sysreqs_db_update", FALSE)
+  sr1 <- sysreqs2_resolve("nothing needed", "ubuntu-22.04", config = config)
   expect_snapshot(sr1)
 })
 
 test_that("sysreqs_platforms", {
-  skip_on_cran()
+  config <- current_config()$set("sysreqs_db_update", FALSE)
   sysreqs <- function(sysreqs_platform) {
-    sysreqs_resolve("libxml2", sysreqs_platform)[["install_scripts"]]
+    sysreqs_resolve(
+      "libxml2",
+      sysreqs_platform,
+      config = config
+    )[["install_scripts"]]
   }
   expect_snapshot({
     sysreqs("ubuntu-20.04")

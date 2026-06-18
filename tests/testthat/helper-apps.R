@@ -690,3 +690,52 @@ fake_git <- local({
   app <- asNamespace("pkgdepends")$git_app(file.path(tmp, "repo"))
   webfakes::local_app_process(app)
 })
+
+fake_sysreqs_git <- local({
+  rules <- system.file("sysreqs", "rules", package = "pkgdepends")
+  work <- file.path(tempfile(), "work")
+  dir.create(work, recursive = TRUE)
+  file.copy(rules, work, recursive = TRUE)
+  gitroot <- tempfile()
+  dir.create(gitroot)
+
+  null_dev <- if (.Platform$OS.type == "windows") "NUL" else "/dev/null"
+  git_env <- c(
+    "current",
+    GIT_CONFIG_GLOBAL = null_dev,
+    GIT_CONFIG_SYSTEM = null_dev,
+    GIT_AUTHOR_NAME = "pkgdepends",
+    GIT_AUTHOR_EMAIL = "pkgdepends@example.com",
+    GIT_COMMITTER_NAME = "pkgdepends",
+    GIT_COMMITTER_EMAIL = "pkgdepends@example.com"
+  )
+  git <- function(args, wd) {
+    processx::run("git", args, wd = wd, env = git_env)
+  }
+  git(c("-c", "init.defaultBranch=main", "init", "-q"), wd = work)
+  git(c("add", "-A"), wd = work)
+  git(c("-c", "commit.gpgsign=false", "commit", "-q", "-m", "rules"), wd = work)
+  git(
+    c(
+      "-c",
+      "safe.bareRepository=all",
+      "clone",
+      "-q",
+      "--bare",
+      work,
+      "sysreqs.git"
+    ),
+    wd = gitroot
+  )
+
+  app <- asNamespace("pkgdepends")$git_app(gitroot)
+  webfakes::local_app_process(app)
+})
+
+setup_fake_sysreqs_git <- function(.local_envir = parent.frame()) {
+  withr::local_envvar(
+    .local_envir = .local_envir,
+    R_PKG_SYSREQS_GIT_REPO_URL = fake_sysreqs_git$url("/sysreqs.git"),
+    R_PKG_SYSREQS_GIT_REPO_REF = "HEAD"
+  )
+}

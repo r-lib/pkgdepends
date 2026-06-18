@@ -143,7 +143,7 @@ pdi$install()
     ## ℹ Building cli 3.6.6.9000
     ## ✔ Built cli 3.6.6.9000 (9.6s)
     ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@86bdefe) (35ms)
-    ## ✔ Summary:   1 new  in 9.6s
+    ## ✔ Summary:   1 new  in 9.7s
 
 ## Dependency resolution
 

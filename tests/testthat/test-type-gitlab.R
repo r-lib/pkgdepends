@@ -7,6 +7,7 @@
 test_that("resolve", {
   skip_on_cran()
   setup_fake_apps()
+  local_fake_git_no_creds(fake_gitlab$url())
   tmp <- tempfile()
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
@@ -94,6 +95,7 @@ test_that("resolve", {
 test_that("download", {
   skip_on_cran()
   setup_fake_apps()
+  local_fake_git_no_creds(fake_gitlab$url())
   tmp <- tempfile()
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 

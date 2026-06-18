@@ -81,6 +81,8 @@ test_that("github_query, invalid PAT", {
 
 test_that("github_query, no internet", {
   withr::local_envvar(R_PKG_GITHUB_API_URL = "https://127.0.0.1:80")
+  withr::local_options(async_http_connecttimeout = 1)
+  local_fake_git_no_creds(Sys.getenv("R_PKG_GITHUB_API_URL"))
   expect_snapshot(
     error = TRUE,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak")))

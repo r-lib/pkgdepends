@@ -729,6 +729,18 @@ transform_installed_in_temp <- function(x) {
   x
 }
 
+# Avoid credential helper
+local_fake_git_no_creds <- function(
+  url = fake_git$url(),
+  .local_envir = parent.frame()
+) {
+  ev <- asNamespace("pkgdepends")$gitcreds_cache_envvar(url)
+  withr::local_envvar(
+    structure("FAIL", names = ev),
+    .local_envir = .local_envir
+  )
+}
+
 fake_git <- local({
   dir.create(tmp <- tempfile())
   untar(testthat::test_path("fixtures/git-repo.tar.gz"), exdir = tmp)

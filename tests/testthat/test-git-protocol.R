@@ -2,6 +2,7 @@ withr::local_envvar(GITHUB_PAT = "FAIL")
 
 test_that("git_list_refs", {
   skip_on_cran()
+  local_fake_git_no_creds()
   expect_snapshot(
     git_list_refs(fake_git$url("/pak-test.git"))$refs
   )
@@ -17,6 +18,7 @@ test_that("git_list_refs", {
 
 test_that("git_list_files", {
   skip_on_cran()
+  local_fake_git_no_creds()
   expect_snapshot(error = TRUE, {
     git_list_files(
       fake_git$url("/pak-test.git"),
@@ -39,6 +41,7 @@ test_that("git_list_files", {
 })
 
 test_that("async_git_list_files_process", {
+  local_fake_git_no_creds()
   # reordering objects in a PACK file does not matter
   ref <- "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
   pack <- git_fetch(fake_git$url("/pak-test.git"), ref, blobs = FALSE)
@@ -60,6 +63,7 @@ test_that("async_git_list_files_process", {
 
 test_that("git_download_file", {
   skip_on_cran()
+  local_fake_git_no_creds()
   tmp <- tempfile()
   on.exit(unlink(tmp), add = TRUE)
   expect_snapshot({
@@ -75,6 +79,7 @@ test_that("git_download_file", {
 
 test_that("git_fetch", {
   skip_on_cran()
+  local_fake_git_no_creds()
 
   # force v1
   pack <- git_fetch(
@@ -134,6 +139,7 @@ test_that("pkt_line", {
 
 test_that("git_list_refs_v1", {
   skip_on_cran()
+  local_fake_git_no_creds()
   expect_snapshot(
     git_list_refs_v1(fake_git$url("/pak-test.git"))$refs
   )
@@ -291,6 +297,7 @@ test_that("parse_commit", {
 
 test_that("async_git_resolve_ref", {
   skip_on_cran()
+  local_fake_git_no_creds()
 
   # branches w/o refs/heads/ prefix
   expect_snapshot(
@@ -363,6 +370,7 @@ test_that("git_fetch_process_v1", {
 
 test_that("git_download_repo", {
   skip_on_cran()
+  local_fake_git_no_creds()
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
@@ -375,6 +383,7 @@ test_that("git_download_repo", {
 })
 
 test_that("unpack_packfile_repo", {
+  local_fake_git_no_creds()
   # reordering objects in a PACK file does not matter
   ref <- "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e"
   pack <- git_fetch(fake_git$url("/pak-test.git"), ref, blobs = TRUE)

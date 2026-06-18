@@ -24,6 +24,7 @@ test_that("parse_remote_git", {
 test_that("resolve_remote_git", {
   skip_on_cran()
   setup_fake_apps()
+  local_fake_git_no_creds()
   # Use the local git server (serving the `pak-test.git` repo) instead of a
   # real repository on github.com, so the test does not need the internet.
   ref <- paste0("git::", fake_git$url("/pak-test.git"), "@main")
@@ -50,6 +51,7 @@ test_that("resolve_remote_git", {
 test_that("download_remote_git", {
   skip_on_cran()
   setup_fake_apps()
+  local_fake_git_no_creds()
   # See `resolve_remote_git` above: use the local git server, not the internet.
   ref <- paste0("git::", fake_git$url("/pak-test.git"), "@main")
   prop <- suppressMessages(new_pkg_installation_proposal(

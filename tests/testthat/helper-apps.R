@@ -710,7 +710,8 @@ fake_sysreqs_git <- local({
   gitroot <- tempfile()
   dir.create(gitroot)
 
-  null_dev <- if (.Platform$OS.type == "windows") "NUL" else "/dev/null"
+  # Git for Windows understands "/dev/null" here, but not "NUL".
+  null_dev <- "/dev/null"
   git_env <- c(
     "current",
     GIT_CONFIG_GLOBAL = null_dev,

@@ -9,30 +9,30 @@
     Code
       res$package
     Output
-      [1] "cli"
+      [1] "empty"
     Code
       res$version
     Output
-      [1] "3.5.0.9000"
+      [1] "1.0.0"
     Code
       res$metadata[[1]]
     Output
-                                      RemoteType 
-                                        "gitlab" 
-                                       RemoteUrl 
-        "https://gitlab.com/gaborcsardi/cli.git" 
-                                    RemotePkgRef 
-                       "gitlab::gaborcsardi/cli" 
-                                       RemoteRef 
-                                          "HEAD" 
-                                       RemoteSha 
-      "bc503509cddb65d0007aeb301936e27de76bc7d7" 
-                                      RemoteHost 
-                                    "gitlab.com" 
-                                      RemoteRepo 
-                                           "cli" 
-                                  RemoteUsername 
-                                   "gaborcsardi" 
+                                          RemoteType 
+                                            "gitlab" 
+                                           RemoteUrl 
+          "http://127.0.0.1:<port>/repo/pak-test.git" 
+                                        RemotePkgRef 
+      "gitlab::http://127.0.0.1:<port>/repo/pak-test" 
+                                           RemoteRef 
+                                              "HEAD" 
+                                           RemoteSha 
+          "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b" 
+                                          RemoteHost 
+                                   "127.0.0.1:<port>" 
+                                          RemoteRepo 
+                                          "pak-test" 
+                                      RemoteUsername 
+                                              "repo" 
 
 ---
 
@@ -45,30 +45,30 @@
     Code
       res$package
     Output
-      [1] "filelock"
+      [1] "empty"
     Code
       res$version
     Output
-      [1] "1.0.2"
+      [1] "1.0.0"
     Code
       res$metadata[[1]]
     Output
-                                      RemoteType 
-                                        "gitlab" 
-                                       RemoteUrl 
-         "https://gitlab.com/r-hub/filelock.git" 
-                                    RemotePkgRef 
-             "gitlab::r-hub/filelock@cran-1-0-2" 
-                                       RemoteRef 
-                                    "cran-1-0-2" 
-                                       RemoteSha 
-      "dfc615b14dfc030df3f44bd377e752728f76df3d" 
-                                      RemoteHost 
-                                    "gitlab.com" 
-                                      RemoteRepo 
-                                      "filelock" 
-                                  RemoteUsername 
-                                         "r-hub" 
+                                                       RemoteType 
+                                                         "gitlab" 
+                                                        RemoteUrl 
+                       "http://127.0.0.1:<port>/repo/pak-test.git" 
+                                                     RemotePkgRef 
+      "gitlab::http://127.0.0.1:<port>/repo/pak-test@build-ignore" 
+                                                        RemoteRef 
+                                                   "build-ignore" 
+                                                        RemoteSha 
+                       "a9ffc55f59e0567ecdc67fb3f0333eca49be8d03" 
+                                                       RemoteHost 
+                                                "127.0.0.1:<port>" 
+                                                       RemoteRepo 
+                                                       "pak-test" 
+                                                   RemoteUsername 
+                                                           "repo" 
 
 ---
 
@@ -81,30 +81,32 @@
     Code
       res$package
     Output
-      [1] "filelock"
+      [1] "dotenv"
     Code
       res$version
     Output
-      [1] "1.0.2"
+      [1] "1.0.3.9000"
     Code
       res$metadata[[1]]
     Output
-                                      RemoteType 
-                                        "gitlab" 
-                                       RemoteUrl 
-         "https://gitlab.com/r-hub/filelock.git" 
-                                    RemotePkgRef 
-                 "gitlab::r-hub/filelock@v1.0.2" 
-                                       RemoteRef 
-                                        "v1.0.2" 
-                                       RemoteSha 
-      "9fdba75a62facaa3e818902f58891166e45eabe9" 
-                                      RemoteHost 
-                                    "gitlab.com" 
-                                      RemoteRepo 
-                                      "filelock" 
-                                  RemoteUsername 
-                                         "r-hub" 
+                                                             RemoteType 
+                                                               "gitlab" 
+                                                              RemoteUrl 
+                             "http://127.0.0.1:<port>/repo/pak-test.git" 
+                                                           RemotePkgRef 
+      "gitlab::http://127.0.0.1:<port>/repo/pak-test/-/subdir/dotenv@v1" 
+                                                              RemoteRef 
+                                                                   "v1" 
+                                                              RemoteSha 
+                             "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e" 
+                                                             RemoteHost 
+                                                      "127.0.0.1:<port>" 
+                                                             RemoteRepo 
+                                                             "pak-test" 
+                                                         RemoteUsername 
+                                                                 "repo" 
+                                                           RemoteSubdir 
+                                                        "subdir/dotenv" 
 
 ---
 
@@ -117,39 +119,38 @@
     Code
       res$package
     Output
-      [1] "feather"
+      [1] "dotenv"
     Code
       res$version
     Output
-      [1] "0.3.5.9000"
+      [1] "1.0.3.9000"
     Code
       res$metadata[[1]]
     Output
-                                        RemoteType 
-                                          "gitlab" 
-                                         RemoteUrl 
-      "https://gitlab.com/gaborcsardi/feather.git" 
-                                      RemotePkgRef 
-                 "gitlab::gaborcsardi/feather/-/R" 
-                                         RemoteRef 
-                                            "HEAD" 
-                                         RemoteSha 
-        "3635466429b5ef7910da606267d0a339cf1c9821" 
-                                        RemoteHost 
-                                      "gitlab.com" 
-                                        RemoteRepo 
-                                         "feather" 
-                                    RemoteUsername 
-                                     "gaborcsardi" 
-                                      RemoteSubdir 
-                                               "R" 
+                                                                 RemoteType 
+                                                                   "gitlab" 
+                                                                  RemoteUrl 
+                                 "http://127.0.0.1:<port>/repo/pak-test.git" 
+                                                               RemotePkgRef 
+      "gitlab::http://127.0.0.1:<port>/repo/pak-test/-/subdir/dotenv@subdir" 
+                                                                  RemoteRef 
+                                                                   "subdir" 
+                                                                  RemoteSha 
+                                 "cefdc0eebcd7f757efb9a80652fd8aaf1a87508e" 
+                                                                 RemoteHost 
+                                                          "127.0.0.1:<port>" 
+                                                                 RemoteRepo 
+                                                                 "pak-test" 
+                                                             RemoteUsername 
+                                                                     "repo" 
+                                                               RemoteSubdir 
+                                                            "subdir/dotenv" 
 
 # download
 
     Code
-      dir(file.path(dl$fulltarget_tree, "feather", "R"))
+      dir(file.path(dl$fulltarget_tree, "dotenv", "subdir", "dotenv"))
     Output
-       [1] "DESCRIPTION"      "NAMESPACE"        "NEWS.md"          "R"               
-       [5] "README.md"        "cran-comments.md" "feather.Rproj"    "inst"            
-       [9] "man"              "revdep"           "tests"           
+      [1] "DESCRIPTION" "LICENSE"     "NAMESPACE"   "NEWS.md"     "R"          
+      [6] "README.Rmd"  "README.md"   "man"        
 

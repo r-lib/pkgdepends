@@ -691,6 +691,17 @@ fake_git <- local({
   webfakes::local_app_process(app)
 })
 
+fake_gitlab <- local({
+  dir.create(tmp <- tempfile())
+  untar(testthat::test_path("fixtures/git-repo.tar.gz"), exdir = tmp)
+  # Serve from the parent of the `repo` directory, so that GitLab-style paths
+  # like `/repo/pak-test.git` (group `repo`, project `pak-test`) resolve to the
+  # `pak-test.git` repository in the fixture. This lets the GitLab tests use the
+  # local git server instead of the real gitlab.com, so they work offline.
+  app <- asNamespace("pkgdepends")$git_app(tmp)
+  webfakes::local_app_process(app)
+})
+
 fake_sysreqs_git <- local({
   rules <- system.file("sysreqs", "rules", package = "pkgdepends")
   work <- file.path(tempfile(), "work")

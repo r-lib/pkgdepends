@@ -47,13 +47,3 @@ jobs:
           extra-packages: any::rcmdcheck, asciicast=?ignore-before-r=4.1.0
           needs: check
           pak-version: devel
-
-      - name: "Set environmental variables"
-        run: |
-          cat(paste0("R_USER_CACHE_DIR=", Sys.getenv("GITHUB_WORKSPACE"), "/.github/cache\n"), file = Sys.getenv("GITHUB_ENV"), append = TRUE)
-        shell: Rscript {0}
-
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'

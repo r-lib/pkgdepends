@@ -72,6 +72,8 @@ Config/Needs/website:
     pkgdown (>= 2.0.2),
     tidyverse/tidytemplate
 Config/testthat/edition: 3
+Config/testthat/parallel: true
+Config/testthat/start-first: parameters, tree, install-plan, solve-deps, pkg-lockfile
 Config/usethis/last-upkeep: 2025-05-05
 Encoding: UTF-8
 Config/roxygen2/version: 8.0.0

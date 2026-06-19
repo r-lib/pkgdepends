@@ -23,18 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-
           - {os: windows-latest, r: 'release'}
-          # use 4.0 or 4.1 to check with rtools40's older compiler
-          - {os: windows-latest, r: 'oldrel-4'}
-
-          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,  r: 'release'}
-          - {os: ubuntu-latest,  r: 'oldrel-1'}
-          - {os: ubuntu-latest,  r: 'oldrel-2'}
-          - {os: ubuntu-latest,  r: 'oldrel-3'}
-          - {os: ubuntu-latest,  r: 'oldrel-4'}
 
     env:
       GITHUB_PAT: ${{ secrets.MY_GITHUB_TOKEN }}
@@ -42,6 +31,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+
+      - uses: r-hub/actions/debug-shell@v1
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -51,17 +42,26 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      # Cold-cache attempt: expected to fail with "Cannot query GitHub, are
+      # you offline?". continue-on-error keeps the workflow going so the
+      # warm-cache attempt below can run for comparison.
       - uses: r-lib/actions/setup-r-dependencies@v2
+        id: deps-cold
+        continue-on-error: true
         with:
           extra-packages: any::rcmdcheck, asciicast=?ignore-before-r=4.1.0
           needs: check
+          pak-version: devel
 
-      - name: "Set environmental variables"
-        run: |
-          cat(paste0("R_USER_CACHE_DIR=", Sys.getenv("GITHUB_WORKSPACE"), "/.github/cache\n"), file = Sys.getenv("GITHUB_ENV"), append = TRUE)
-        shell: Rscript {0}
+      - name: Report cold-cache outcome
+        shell: bash
+        run: echo "cold-cache outcome = ${{ steps.deps-cold.outcome }}"
 
-      - uses: r-lib/actions/check-r-package@v2
+      # Warm-cache attempt: metadata DB is now populated, so no metadata burst
+      # churns the shared curl connection pool. If the theory holds, it passes.
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        id: deps-warm
         with:
-          upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          extra-packages: any::rcmdcheck, asciicast=?ignore-before-r=4.1.0
+          needs: check
+          pak-version: devel

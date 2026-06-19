@@ -42,7 +42,25 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      # Cold-cache attempt: expected to fail with "Cannot query GitHub, are
+      # you offline?". continue-on-error keeps the workflow going so the
+      # warm-cache attempt below can run for comparison.
       - uses: r-lib/actions/setup-r-dependencies@v2
+        id: deps-cold
+        continue-on-error: true
+        with:
+          extra-packages: any::rcmdcheck, asciicast=?ignore-before-r=4.1.0
+          needs: check
+          pak-version: devel
+
+      - name: Report cold-cache outcome
+        shell: bash
+        run: echo "cold-cache outcome = ${{ steps.deps-cold.outcome }}"
+
+      # Warm-cache attempt: metadata DB is now populated, so no metadata burst
+      # churns the shared curl connection pool. If the theory holds, it passes.
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        id: deps-warm
         with:
           extra-packages: any::rcmdcheck, asciicast=?ignore-before-r=4.1.0
           needs: check

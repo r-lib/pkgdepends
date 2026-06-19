@@ -163,6 +163,9 @@
     Condition
       Error:
       ! ! Cannot query GitHub, are you offline?
+      Caused by error: 
+      ! Could not connect to server [127.0.0.1]:
+      Failed to connect to 127.0.0.1 port 80 after 0 ms: Could not connect to server
 
 # github_query, access denied
 

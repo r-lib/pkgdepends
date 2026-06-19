@@ -619,7 +619,21 @@ github_query <- function(
   obj <- NULL
 
   http_post(url, data = data, headers = headers, ...)$catch(
-    error = function(err) throw(new_github_offline_error())
+    error = function(err) {
+      async_delay(1)$then(function() {
+        http_post(url, data = data, headers = headers, ...)$catch(
+          error = function(err) {
+            async_delay(3)$then(function() {
+              http_post(url, data = data, headers = headers, ...)$catch(
+                error = function(err) {
+                  throw(new_github_offline_error(), parent = err)
+                }
+              )
+            })
+          }
+        )
+      })
+    }
   )$then(function(res) {
     resp <<- res
     json <- rawToChar(res$content %||% raw())

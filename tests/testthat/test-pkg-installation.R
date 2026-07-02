@@ -71,8 +71,13 @@ test_that("create_lockfile", {
 
   lock$packages$filesize <- 100
 
-  # Newer windows adds a --no-multiarch install parameter, by default
-  vrt <- if (.Platform$OS.type == "windows" && getRversion() >= "4.2.0") {
+  # Newer x86_64 windows adds a --no-multiarch install parameter, by default.
+  # aarch64 windows does not, so it matches the "unix" snapshot.
+  vrt <- if (
+    .Platform$OS.type == "windows" &&
+      getRversion() >= "4.2.0" &&
+      R.version$arch == "x86_64"
+  ) {
     "windows"
   } else {
     "unix"

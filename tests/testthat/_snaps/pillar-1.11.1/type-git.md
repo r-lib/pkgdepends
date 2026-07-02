@@ -4,7 +4,7 @@
       as.list(res)
     Output
       $ref
-      [1] "git::https://github.com/r-lib/cli@v3.6.0"
+      [1] "git::http://127.0.0.1:<port>/pak-test.git@main"
       
       $type
       [1] "git"
@@ -19,13 +19,13 @@
       [1] "OK"
       
       $package
-      [1] "cli"
+      [1] "empty"
       
       $version
-      [1] "3.6.0"
+      [1] "1.0.0"
       
       $license
-      [1] "MIT + file LICENSE"
+      [1] "GPL-3"
       
       $needscompilation
       [1] TRUE
@@ -58,24 +58,14 @@
       [1] "src/contrib"
       
       $target
-      [1] "src/contrib/cli_3.6.0_git_4cc6312"
+      [1] "src/contrib/empty_1.0.0_git_3f3b0b4"
       
       $deps
       $deps[[1]]
-      # A data frame: 32 x 5
-         ref         type     package     op    version
-         <chr>       <chr>    <chr>       <chr> <chr>  
-       1 R           Depends  R           ">="  "3.4"  
-       2 callr       Suggests callr       ""    ""     
-       3 covr        Suggests covr        ""    ""     
-       4 crayon      Suggests crayon      ""    ""     
-       5 digest      Suggests digest      ""    ""     
-       6 glue        Suggests glue        ">="  "1.6.0"
-       7 htmltools   Suggests htmltools   ""    ""     
-       8 htmlwidgets Suggests htmlwidgets ""    ""     
-       9 knitr       Suggests knitr       ""    ""     
-      10 mockery     Suggests mockery     ""    ""     
-      # i 22 more rows
+      # A data frame: 1 x 5
+        ref   type    package op    version
+        <chr> <chr>   <chr>   <chr> <chr>  
+      1 R     Depends R       >=    3.2    
       
       
       $mirror
@@ -83,40 +73,40 @@
       
       $sources
       $sources[[1]]
-      [1] "https://github.com/r-lib/cli"
+      [1] "http://127.0.0.1:<port>/pak-test.git"
       
       
       $remote
       $remote[[1]]
       $package
-      [1] "cli"
+      [1] "pak-test"
       
       $protocol
-      [1] "https"
+      [1] "http"
       
       $host
-      [1] "github.com"
+      [1] "127.0.0.1:<port>"
       
       $path
-      [1] "/r-lib/"
+      [1] "/"
       
       $repo
-      [1] "cli"
+      [1] "pak-test"
       
       $commitish
-      [1] "v3.6.0"
+      [1] "main"
       
       $ref
-      [1] "git::https://github.com/r-lib/cli@v3.6.0"
+      [1] "git::http://127.0.0.1:<port>/pak-test.git@main"
       
       $type
       [1] "git"
       
       $dotgit
-      [1] ""
+      [1] ".git"
       
       $url
-      [1] "https://github.com/r-lib/cli"
+      [1] "http://127.0.0.1:<port>/pak-test.git"
       
       $params
       character(0)
@@ -132,22 +122,22 @@
       
       $metadata
       $metadata[[1]]
-                                      RemoteType 
-                                           "git" 
-                                       RemoteUrl 
-                  "https://github.com/r-lib/cli" 
-                                    RemotePkgRef 
-      "git::https://github.com/r-lib/cli@v3.6.0" 
-                                       RemoteRef 
-                                        "v3.6.0" 
-                                       RemoteSha 
-      "4cc6312883f2842e948f34a816ce8e846f323a6e" 
+                                           RemoteType 
+                                                "git" 
+                                            RemoteUrl 
+                "http://127.0.0.1:<port>/pak-test.git" 
+                                         RemotePkgRef 
+      "git::http://127.0.0.1:<port>/pak-test.git@main" 
+                                            RemoteRef 
+                                               "main" 
+                                            RemoteSha 
+           "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b" 
       
       
       $extra
       $extra[[1]]
       $extra[[1]]$remotesha
-      [1] "4cc6312883f2842e948f34a816ce8e846f323a6e"
+      [1] "3f3b0b4ee8a0ff4563073924e5fe069da67a6d8b"
       attr(,"protocol")
       [1] 2
       attr(,"filter")

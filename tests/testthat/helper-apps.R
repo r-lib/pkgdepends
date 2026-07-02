@@ -161,30 +161,50 @@ gh_app_repos <- list(
               sha = "111ef906acb58fe406370f7bc0a72cac55dbbb231ea687494c25742ca521255a",
               branch = "main",
               tag = "HEAD",
-              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+              files = list(
+                "DESCRIPTION" = gh_app_desc("pak"),
+                NAMESPACE = "",
+                "R/pak.R" = ""
+              )
             ),
             list(
               sha = "a503fe843f11c279864f29d58137f8de319d115b239ce48ccc15406306019480",
               branch = "main",
               tag = "v0.1.2",
-              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+              files = list(
+                "DESCRIPTION" = gh_app_desc("pak"),
+                NAMESPACE = "",
+                "R/pak.R" = ""
+              )
             ),
             list(
               sha = "e65de1e9630dbfcaf1044718b742bf806486b107239ce48ccc15406306019480",
               branch = "main",
-              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+              files = list(
+                "DESCRIPTION" = gh_app_desc("pak"),
+                NAMESPACE = "",
+                "R/pak.R" = ""
+              )
             ),
             list(
               sha = "b001d6ddeab1589ad367b62baabbeeb2af3b0ebac2e61d239df660c1d63e3232",
               branch = "somebranch",
               pull = 90,
-              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+              files = list(
+                "DESCRIPTION" = gh_app_desc("pak"),
+                NAMESPACE = "",
+                "R/pak.R" = ""
+              )
             ),
             list(
               sha = "b001d6ddeab1589ad367b62baabbeeb2af3b0ebac2e61d239df660c1d63e3232",
               latestRelease = TRUE,
               tagName = "v1.2.3",
-              files = list("DESCRIPTION" = gh_app_desc("pak"), NAMESPACE = "")
+              files = list(
+                "DESCRIPTION" = gh_app_desc("pak"),
+                NAMESPACE = "",
+                "R/pak.R" = ""
+              )
             )
           )
         ),
@@ -213,18 +233,36 @@ gh_app_repos <- list(
               sha = "bdd9a1bcf062396790c341cf1dba563eb0277f2ca0a6d524bc3da98a9a6f2975",
               tag = "HEAD",
               branch = "main",
-              files = list(DESCRIPTION = gh_app_desc("crayon"), NAMESPACE = "")
+              files = list(
+                DESCRIPTION = gh_app_desc("crayon"),
+                NAMESPACE = "",
+                # R-devel's `R CMD build` fails to build a package whose
+                # source tree has no subdirectories, so we add an R file.
+                "R/crayon.R" = ""
+              )
             ),
             list(
               sha = "b5221ab024605019800ddea474f7a0981a4d53f719f5af2b1af627b34e0760b2",
               branch = "b5221ab024605019800ddea474f7a0981a4d53f719f5af2b1af627b34e0760b2",
-              files = list(DESCRIPTION = gh_app_desc("crayon"), NAMESPACE = "")
+              files = list(
+                DESCRIPTION = gh_app_desc("crayon"),
+                NAMESPACE = "",
+                # R-devel's `R CMD build` fails to build a package whose
+                # source tree has no subdirectories, so we add an R file.
+                "R/crayon.R" = ""
+              )
             ),
             list(
               sha = "9d93692f8f7c1d6b2308d0c4aa83cdc2d99ec1fd0097cede1d9aa1301247cb01",
               branch = "pr61",
               pull = 79,
-              files = list(DESCRIPTION = gh_app_desc("crayon"), NAMESPACE = "")
+              files = list(
+                DESCRIPTION = gh_app_desc("crayon"),
+                NAMESPACE = "",
+                # R-devel's `R CMD build` fails to build a package whose
+                # source tree has no subdirectories, so we add an R file.
+                "R/crayon.R" = ""
+              )
             )
           )
         ),
@@ -236,7 +274,8 @@ gh_app_repos <- list(
               pull = 7,
               files = list(
                 DESCRIPTION = gh_app_desc("pkgconfig"),
-                NAMESPACE = ""
+                NAMESPACE = "",
+                "R/pkgconfig.R" = ""
               )
             )
           )
@@ -299,7 +338,10 @@ gh_app_repos <- list(
               branch = "main",
               files = list(
                 "R/DESCRIPTION" = gh_app_desc("feather"),
-                NAMESPACE = ""
+                NAMESPACE = "",
+                # feather's package root is the `R/` subdir, so the extra
+                # file needs to live below it (see crayon for the why).
+                "R/R/feather.R" = ""
               )
             )
           )
@@ -318,7 +360,8 @@ gh_app_repos <- list(
               token = "b9984750bea6a170081ca98255c3b43fe5fb0978",
               files = list(
                 "DESCRIPTION" = gh_app_desc("secret"),
-                NAMESPACE = ""
+                NAMESPACE = "",
+                "R/secret.R" = ""
               )
             )
           )
@@ -331,7 +374,8 @@ gh_app_repos <- list(
               branch = "x",
               files = list(
                 "DESCRIPTION" = gh_app_desc("secret"),
-                NAMESPACE = ""
+                NAMESPACE = "",
+                "R/secret.R" = ""
               )
             )
           )
@@ -364,7 +408,8 @@ gh_app_repos <- list(
               branch = "master",
               files = list(
                 DESCRIPTION = "Package: rJava\nVersion: 1.0-6\nSystemRequirements: Java JDK 1.2 or higher (for JRI/REngine JDK 1.4 or higher), GNU make\n",
-                NAMESPACE = ""
+                NAMESPACE = "",
+                "R/rJava.R" = ""
               )
             )
           )
@@ -729,9 +774,82 @@ transform_installed_in_temp <- function(x) {
   x
 }
 
+# Avoid credential helper
+local_fake_git_no_creds <- function(
+  url = fake_git$url(),
+  .local_envir = parent.frame()
+) {
+  ev <- asNamespace("pkgdepends")$gitcreds_cache_envvar(url)
+  withr::local_envvar(
+    structure("FAIL", names = ev),
+    .local_envir = .local_envir
+  )
+}
+
 fake_git <- local({
   dir.create(tmp <- tempfile())
   untar(testthat::test_path("fixtures/git-repo.tar.gz"), exdir = tmp)
   app <- asNamespace("pkgdepends")$git_app(file.path(tmp, "repo"))
   webfakes::local_app_process(app)
 })
+
+fake_gitlab <- local({
+  dir.create(tmp <- tempfile())
+  untar(testthat::test_path("fixtures/git-repo.tar.gz"), exdir = tmp)
+  # Serve from the parent of the `repo` directory, so that GitLab-style paths
+  # like `/repo/pak-test.git` (group `repo`, project `pak-test`) resolve to the
+  # `pak-test.git` repository in the fixture. This lets the GitLab tests use the
+  # local git server instead of the real gitlab.com, so they work offline.
+  app <- asNamespace("pkgdepends")$git_app(tmp)
+  webfakes::local_app_process(app)
+})
+
+fake_sysreqs_git <- local({
+  rules <- system.file("sysreqs", "rules", package = "pkgdepends")
+  work <- file.path(tempfile(), "work")
+  dir.create(work, recursive = TRUE)
+  file.copy(rules, work, recursive = TRUE)
+  gitroot <- tempfile()
+  dir.create(gitroot)
+
+  # Git for Windows understands "/dev/null" here, but not "NUL".
+  null_dev <- "/dev/null"
+  git_env <- c(
+    "current",
+    GIT_CONFIG_GLOBAL = null_dev,
+    GIT_CONFIG_SYSTEM = null_dev,
+    GIT_AUTHOR_NAME = "pkgdepends",
+    GIT_AUTHOR_EMAIL = "pkgdepends@example.com",
+    GIT_COMMITTER_NAME = "pkgdepends",
+    GIT_COMMITTER_EMAIL = "pkgdepends@example.com"
+  )
+  git <- function(args, wd) {
+    processx::run("git", args, wd = wd, env = git_env)
+  }
+  git(c("-c", "init.defaultBranch=main", "init", "-q"), wd = work)
+  git(c("add", "-A"), wd = work)
+  git(c("-c", "commit.gpgsign=false", "commit", "-q", "-m", "rules"), wd = work)
+  git(
+    c(
+      "-c",
+      "safe.bareRepository=all",
+      "clone",
+      "-q",
+      "--bare",
+      work,
+      "sysreqs.git"
+    ),
+    wd = gitroot
+  )
+
+  app <- asNamespace("pkgdepends")$git_app(gitroot)
+  webfakes::local_app_process(app)
+})
+
+setup_fake_sysreqs_git <- function(.local_envir = parent.frame()) {
+  withr::local_envvar(
+    .local_envir = .local_envir,
+    R_PKG_SYSREQS_GIT_REPO_URL = fake_sysreqs_git$url("/sysreqs.git"),
+    R_PKG_SYSREQS_GIT_REPO_REF = "HEAD"
+  )
+}

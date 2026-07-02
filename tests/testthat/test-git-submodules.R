@@ -27,6 +27,7 @@ test_that("git_download_repo with submodules", {
   if (Sys.which("git") == "") {
     skip("Needs git")
   }
+  local_fake_git_no_creds()
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -75,6 +76,7 @@ test_that("git_download_repo R package with submodules", {
   if (Sys.which("git") == "") {
     skip("Needs git")
   }
+  local_fake_git_no_creds()
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
@@ -135,6 +137,7 @@ test_that("git_download_repo R package with ignored submodule", {
   if (Sys.which("git") == "") {
     skip("Needs git")
   }
+  local_fake_git_no_creds()
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)

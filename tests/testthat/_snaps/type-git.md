@@ -386,10 +386,7 @@
 # download_remote_git
 
     Code
-      dir(file.path(prop$get_downloads()$fulltarget_tree, "cli"))
+      dir(file.path(prop$get_downloads()$fulltarget_tree, "empty"))
     Output
-       [1] "DESCRIPTION"  "LICENSE"      "LICENSE.md"   "LICENSE.note" "Makefile"    
-       [6] "NAMESPACE"    "NEWS.md"      "R"            "README.Rmd"   "README.md"   
-      [11] "_pkgdown.yml" "cli.Rproj"    "codecov.yml"  "inst"         "man"         
-      [16] "src"          "tests"        "tools"        "vignettes"   
+      [1] "DESCRIPTION" "NAMESPACE"   "R"           "README.md"   "wipe.R"     
 

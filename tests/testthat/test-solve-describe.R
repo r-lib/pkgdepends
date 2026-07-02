@@ -123,13 +123,20 @@ test_that("conflicting dependencies and installed packages", {
       "Version: 1.0.0",
       "Imports: dplyr (>= 1.0.10)",
       "Repository: CRAN",
-      # need this on older windows, because pak matches archs on that
+      # need this on windows, because pak matches archs on that. x86_64 is a
+      # multi-arch build; other arches (e.g. aarch64) use the current platform.
       if (is_windows()) {
+        arch <- if (R.version$arch == "x86_64") {
+          "i386+x86_64-w64-mingw32"
+        } else {
+          R.version$platform
+        }
         paste0(
           "Built: R ",
           getRversion(),
           "; ",
-          "i386+x86_64-w64-mingw32; ",
+          arch,
+          "; ",
           "2023-02-06 08:15:41 UTC; ",
           "windows"
         )

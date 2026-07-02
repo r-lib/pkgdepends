@@ -74,6 +74,66 @@ test_that("download", {
   expect_equal(dl$download_status, "Had")
 })
 
+test_that("resolve a package that is not installed (#462)", {
+  conf <- current_config()
+
+  # the requested package is not in the (empty) library, so it must resolve
+  # to a FAILED entry, instead of crashing in `get_installed_metadata()`
+  tmp <- withr::local_tempdir()
+  cache <- list(
+    package = NULL,
+    metadata = NULL,
+    installed = make_installed_cache(tmp)
+  )
+
+  ref <- paste0("installed::", tmp, "/nosuchpkg")
+  res <- synchronise(
+    resolve_remote_installed(
+      parse_pkg_refs(ref)[[1]],
+      TRUE,
+      conf,
+      cache,
+      dependencies = "Imports"
+    )
+  )
+
+  expect_equal(nrow(res), 1)
+  expect_equal(res$ref, ref)
+  expect_equal(res$type, "installed")
+  expect_equal(res$status, "FAILED")
+  expect_equal(res$package, "nosuchpkg")
+})
+
+test_that("resolve a batch where no package is installed (#462)", {
+  # The reprex from #462: several recommended packages are resolved together
+  # as a single batch of `installed::` refs, but the installed cache does not
+  # contain them. They must all fail gracefully.
+  conf <- current_config()
+  tmp <- withr::local_tempdir()
+  cache <- list(
+    package = NULL,
+    metadata = NULL,
+    installed = make_installed_cache(tmp)
+  )
+
+  refs <- paste0("installed::", tmp, "/", c("MASS", "Matrix", "lattice"))
+  remotes <- parse_pkg_refs(refs)
+  res <- synchronise(
+    resolve_remote_installed(
+      remotes,
+      FALSE,
+      conf,
+      cache,
+      dependencies = c("Imports", "Imports")
+    )
+  )
+
+  expect_equal(nrow(res), 3)
+  expect_setequal(res$ref, refs)
+  expect_true(all(res$status == "FAILED"))
+  expect_setequal(res$package, c("MASS", "Matrix", "lattice"))
+})
+
 test_that("satisfy", {
   ## Always TRUE, independently of arguments
   expect_true(satisfy_remote_installed())

@@ -8,6 +8,6 @@ test_that("failure in non-needed package is ignored", {
     c("needspak", "r-lib/pak"),
     config = list(library = lib)
   )
-  suppressWarnings(p$solve())
+  suppressMessages(p$solve())
   expect_snapshot(p$draw(), transform = transform_bytes)
 })

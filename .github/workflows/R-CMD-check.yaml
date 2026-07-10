@@ -62,7 +62,10 @@ jobs:
           self <- sub("^--file=", "",
             grep("^--file=", commandArgs(FALSE), value = TRUE))[1]
 
-          arms <- c("http11", "http2", "http11_tls12", "http11_maxage", "http11_fresh")
+          # Two dimensions: how the POST body is issued (cr = customrequest=
+          # "POST" + postfields, pkgcache's current pattern; post = canonical
+          # postfields/CURLOPT_POST) crossed with TLS version (default vs 1.2).
+          arms <- c("cr", "post", "cr_tls12", "post_tls12")
 
           if (length(args) == 0) {
             # Parent: launch each arm in a fresh process (fresh curl pool).
@@ -73,28 +76,30 @@ jobs:
             }
           } else {
             arm <- args[1]
+            cr  <- arm %in% c("cr", "cr_tls12")          # use customrequest="POST"?
+            tls <- arm %in% c("cr_tls12", "post_tls12")  # pin TLS 1.2?
             # Raw string: backslash-escaped quotes are the JSON escaping, kept
             # verbatim through YAML and R, so the payload is unambiguous.
             q <- r"({"query":"{ repository(owner: \"gaborcsardi\", name: \"tstoml\") { sha: object(expression: \"HEAD\") { oid } } }"})"
-            opts <- switch(arm,
-              http11        = list(http_version = 2L),                    # HTTP/1.1
-              http2         = list(http_version = 3L),                    # HTTP/2
-              http11_tls12  = list(http_version = 2L,                     # force TLS 1.2 only (min|max)
-                                   sslversion = bitwOr(6L, bitwShiftL(6L, 16L))),
-              http11_maxage = list(http_version = 2L, maxage_conn = 5L),
-              http11_fresh  = list(http_version = 2L, fresh_connect = TRUE, forbid_reuse = TRUE),
-              stop("unknown arm: ", arm)
-            )
+            opts <- list(verbose = TRUE, http_version = 2L)
+            if (tls) opts$sslversion <- bitwOr(6L, bitwShiftL(6L, 16L))  # TLS 1.2 only (min|max)
+            `%||%` <- function(a, b) if (length(a)) a else b
             post <- function(h) {
               curl::handle_setheaders(h,
                 Authorization = paste("token", Sys.getenv("GITHUB_PAT")),
                 `Content-Type` = "application/json")
-              curl::handle_setopt(h, customrequest = "POST",
-                postfields = q, postfieldsize = nchar(q))
+              if (cr) {
+                curl::handle_setopt(h, customrequest = "POST",
+                  postfields = q, postfieldsize = nchar(q))
+              } else {
+                curl::handle_setopt(h, post = TRUE,
+                  postfields = q, postfieldsize = nchar(q))
+              }
               r <- curl::curl_fetch_memory("https://api.github.com/graphql", handle = h)
-              cat("STATUS:", r$status_code, "\n")
+              cat("STATUS:", r$status_code,
+                  "BODY:", substr(rawToChar(r$content %||% raw()), 1, 200), "\n")
             }
-            h <- do.call(curl::new_handle, c(list(verbose = TRUE), opts))
+            h <- do.call(curl::new_handle, opts)
             tryCatch({
               post(h)
               cat("---- sleeping 40s to let GitHub drop the idle connection ----\n")

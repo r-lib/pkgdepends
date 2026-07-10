@@ -63,9 +63,9 @@ jobs:
             r <- curl::curl_fetch_memory("https://api.github.com/graphql", handle = h)
             cat("STATUS:", r$status_code, "\n")
           }
-          run <- function(label, ...) {
+          run <- function(label, hv = 2, ...) {          # hv: 2 = HTTP/1.1, 3 = HTTP/2
             cat("\n==== ", label, " ====\n")
-            h <- curl::new_handle(verbose = TRUE, http_version = 2, ...)  # 2 = HTTP 1.1
+            h <- curl::new_handle(verbose = TRUE, http_version = hv, ...)
             tryCatch({
               post(h)
               cat("---- sleeping 40s to let GitHub drop the idle connection ----\n")
@@ -73,9 +73,11 @@ jobs:
               post(h)                      # <- reuse attempt
             }, error = function(e) cat("ERROR:", conditionMessage(e), "\n"))
           }
-          run("default (maxage_conn = 118s)")
-          run("maxage_conn = 5s", maxage_conn = 5)
-          run("fresh_connect + forbid_reuse", fresh_connect = TRUE, forbid_reuse = TRUE)
+          run("HTTP/1.1, default (maxage_conn = 118s)", hv = 2)
+          run("HTTP/2,   default (maxage_conn = 118s)", hv = 3)
+          run("HTTP/1.1, maxage_conn = 5s", hv = 2, maxage_conn = 5)
+          run("HTTP/1.1, fresh_connect + forbid_reuse", hv = 2,
+              fresh_connect = TRUE, forbid_reuse = TRUE)
 
       # Cold-cache attempt: expected to fail with "Cannot query GitHub, are
       # you offline?". continue-on-error keeps the workflow going so the

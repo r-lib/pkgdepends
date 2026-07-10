@@ -51,7 +51,6 @@ jobs:
         with:
           extra-packages: any::rcmdcheck, asciicast=?ignore-before-r=4.1.0
           needs: check
-          pak-version: devel
 
       - name: Report cold-cache outcome
         shell: bash

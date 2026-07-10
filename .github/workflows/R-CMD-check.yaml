@@ -42,6 +42,12 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: install curl 5.2.3
+        shell: Rscript {0}
+        run: |
+          system("git clone --depth 1 https://github.com/r-lib/pak.git")
+          system("R CMD INSTALL pak/src/library/curl")
+
       # Probe whether the GitHub GraphQL POST failure is caused by reusing a
       # connection that GitHub closed while it sat idle. Runs standalone (not
       # via pak) so curl's verbose output (stderr) is captured in the step log.
@@ -52,7 +58,6 @@ jobs:
         if: ${{ always() }}
         shell: Rscript {0}
         run: |
-          install.packages("curl")
           q <- '{"query":"{ repository(owner: \\"gaborcsardi\\", name: \\"tstoml\\") { sha: object(expression: \\"HEAD\\") { oid } } }"}'
           post <- function(h) {
             curl::handle_setheaders(h,

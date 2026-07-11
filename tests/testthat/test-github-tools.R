@@ -85,6 +85,7 @@ test_that("github_query, no internet", {
   local_fake_git_no_creds(Sys.getenv("R_PKG_GITHUB_API_URL"))
   expect_snapshot(
     error = TRUE,
+    transform = transform_no_internet,
     synchronise(type_github_get_data(parse_pkg_ref("r-lib/pak")))
   )
 })

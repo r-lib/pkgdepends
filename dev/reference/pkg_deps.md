@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpDER1yV/file1e4288b0ffc"
+#> [1] "/tmp/RtmpYD5DdD/file24d9346b308f"
 #> 
 #> ## platforms
 #> <default>
@@ -459,15 +459,15 @@ pd$get_config()
 #> 
 #> ## r_versions
 #> <default>
-#> [1] "4.6.0"
+#> [1] "4.6.1"
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpDER1yV/file1e42442e20de"
+#> [1] "/tmp/RtmpYD5DdD/file24d927c5271f"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpDER1yV/file1e4269bf6b4d"
+#> [1] "/tmp/RtmpYD5DdD/file24d93b696083"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -546,7 +546,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 5.91 MB in 4 files.
+#> ✔ Updated metadata database: 4.10 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -693,7 +693,7 @@ pd$show_solution()
 #> + pkgload     1.5.3 [dl]
 #> + processx    3.9.0 [dl]
 #> + ps          1.9.3 [dl]
-#> + rlang       1.2.0 [dl]
+#> + rlang       1.3.0 [dl]
 #> + rprojroot   2.1.1 [dl]
 # Method stop_for_solution_error()
 # This is an error, because the packages conflict:
@@ -729,7 +729,7 @@ pd$draw()
 #> ├─glue 1.8.1 [new][dl] (unknown size)
 #> ├─lifecycle 1.0.5 [new][dl] (unknown size)
 #> │ ├─cli
-#> │ └─rlang 1.2.0 [new][dl] (unknown size)
+#> │ └─rlang 1.3.0 [new][dl] (unknown size)
 #> ├─pkgbuild 1.4.8 [new][dl] (unknown size)
 #> │ ├─R6
 #> │ ├─callr 3.8.0 [new][dl] (unknown size)

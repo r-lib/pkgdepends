@@ -735,7 +735,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmpDER1yV/file1e42477c3a99
+#> ℹ Creating library directory: /tmp/RtmpYD5DdD/file24d969edc7dd
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -749,7 +749,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpDER1yV/file1e4278896919
+#> ℹ Creating library directory: /tmp/RtmpYD5DdD/file24d9f1062f
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -766,7 +766,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpDER1yV/file1e42a97e36a"
+#> [1] "/tmp/RtmpYD5DdD/file24d91dbd6d86"
 #> 
 #> ## platforms
 #> <default>
@@ -779,15 +779,15 @@ pdi$get_config()
 #> 
 #> ## r_versions
 #> <default>
-#> [1] "4.6.0"
+#> [1] "4.6.1"
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpDER1yV/file1e42442e20de"
+#> [1] "/tmp/RtmpYD5DdD/file24d927c5271f"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpDER1yV/file1e4278896919"
+#> [1] "/tmp/RtmpYD5DdD/file24d9f1062f"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -866,7 +866,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpDER1yV/file1e42c604e42
+#> ℹ Creating library directory: /tmp/RtmpYD5DdD/file24d94cc7abb5
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -876,7 +876,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpDER1yV/file1e425b2d53d8
+#> ℹ Creating library directory: /tmp/RtmpYD5DdD/file24d9645de4f5
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -887,7 +887,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpDER1yV/file1e427564b2d
+#> ℹ Creating library directory: /tmp/RtmpYD5DdD/file24d916caffe0
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

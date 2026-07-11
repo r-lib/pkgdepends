@@ -28,6 +28,7 @@ make_source_fallback_repo <- function() {
 
 test_that("a source package served in place of a binary (pak#891)", {
   skip_on_cran()
+  skip_on_os("windows")
 
   repo <- make_source_fallback_repo()
   app <- webfakes::local_app_process(

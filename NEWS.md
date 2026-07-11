@@ -1,5 +1,9 @@
 # pkgdepends (development version)
 
+* pkgdepends now handles the case when a repository (PPM typically) serves
+  a source package instead of the bianry
+  (https://github.com/r-lib/pak/issues/891).
+
 * Resolution for downloads for a different platform no longer fails with a
   cryptic error (#462).
 

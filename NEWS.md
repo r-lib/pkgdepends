@@ -1,5 +1,10 @@
 # pkgdepends (development version)
 
+* `install_args` coming from a lockfile are no longer overwritten when
+  building packages. The `--no-multiarch` flag needed on some Windows
+  configurations is now added to the existing `install_args` instead of
+  replacing them (#472).
+
 * Resolution for downloads for a different platform no longer fails with a
   cryptic error (#462).
 

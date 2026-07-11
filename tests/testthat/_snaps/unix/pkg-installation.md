@@ -28,7 +28,7 @@
       2 <sha>      100
       3 <sha>      100
                           dep_types params install_args repotype
-      1 Depends, Imports, LinkingTo   NULL                  cran
-      2 Depends, Imports, LinkingTo   NULL                  cran
-      3 Depends, Imports, LinkingTo   NULL                  cran
+      1 Depends, Imports, LinkingTo   NULL         NULL     cran
+      2 Depends, Imports, LinkingTo   NULL         NULL     cran
+      3 Depends, Imports, LinkingTo   NULL         NULL     cran
 

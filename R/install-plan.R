@@ -600,8 +600,8 @@ start_task_build <- function(state, task) {
   alert("info", "Building {.pkg {pkg}} {.version {version}}")
 
   if ("install_args" %in% names(state$plan)) {
-    cmd_args <- state$plan$install_args[pkgidx]
-    if (identical(cmd_args, "")) cmd_args <- NULL
+    cmd_args <- state$plan$install_args[[pkgidx]]
+    if (length(cmd_args) == 0 || identical(cmd_args, "")) cmd_args <- NULL
   } else {
     cmd_args <- NULL
   }

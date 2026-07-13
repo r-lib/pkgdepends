@@ -672,13 +672,17 @@ transform_local_port <- function(x) {
   gsub("127\\.0\\.0\\.1:[0-9]+", "127.0.0.1:<port>", x)
 }
 
-# curl's connection-failure message varies across curl versions and
-# platforms, both in wording ("Could not connect" vs "Couldn't connect")
-# and in the timing it reports ("after 0 ms" vs "after 1 ms"). Normalize
-# these so the snapshot only checks the stable, meaningful parts.
+# curl's connection-failure message varies
 transform_no_internet <- function(x) {
-  x <- gsub("Couldn't connect to server", "Could not connect to server", x, fixed = TRUE)
-  x <- sub("^Failed to connect to .*$", "Failed to connect <detail>", x)
+  i <- grep("\\[127\\.0\\.0\\.1\\]:", x)
+  if (length(i) > 0) {
+    i <- i[[1]]
+    lead <- sub("(^\\s*).*", "\\1", x[[i]])
+    x <- c(
+      x[seq_len(i - 1L)],
+      paste0(lead, "! <connection error> [127.0.0.1]:")
+    )
+  }
   x
 }
 

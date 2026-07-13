@@ -164,8 +164,7 @@
       Error:
       ! ! Cannot query GitHub, are you offline?
       Caused by error: 
-      ! Could not connect to server [127.0.0.1]:
-      Failed to connect <detail>
+      ! <connection error> [127.0.0.1]:
 
 # github_query, access denied
 

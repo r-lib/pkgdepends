@@ -279,6 +279,51 @@ gh_app_repos <- list(
               )
             )
           )
+        ),
+        subdirpkg = list(
+          commits = list(
+            list(
+              sha = "5111111111111111111111111111111111111111111111111111111111111111",
+              tag = "HEAD",
+              branch = "main",
+              files = list(
+                "pkg-r/DESCRIPTION" = gh_app_desc("subdirpkg"),
+                "pkg-r/NAMESPACE" = "",
+                "README.md" = "top level readme"
+              )
+            ),
+            list(
+              sha = "5222222222222222222222222222222222222222222222222222222222222222",
+              branch = "prbranch",
+              pull = 12,
+              files = list(
+                "pkg-r/DESCRIPTION" = gh_app_desc("subdirpkg"),
+                "pkg-r/NAMESPACE" = ""
+              )
+            ),
+            list(
+              sha = "5333333333333333333333333333333333333333333333333333333333333333",
+              latestRelease = TRUE,
+              tagName = "v2.0.0",
+              files = list(
+                "pkg-r/DESCRIPTION" = gh_app_desc("subdirpkg"),
+                "pkg-r/NAMESPACE" = ""
+              )
+            )
+          )
+        ),
+        subdirprio = list(
+          commits = list(
+            list(
+              sha = "5444444444444444444444444444444444444444444444444444444444444444",
+              tag = "HEAD",
+              branch = "main",
+              files = list(
+                "r/DESCRIPTION" = gh_app_desc("subdirprio"),
+                "R/DESCRIPTION" = gh_app_desc("subdirprioCAP")
+              )
+            )
+          )
         )
       )
     ),

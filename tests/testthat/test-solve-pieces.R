@@ -214,6 +214,50 @@ test_that("pkgplan_i_lp_satisfy_direct enforces failed direct refs", {
   expect_true(inst_idx %in% sat_vars)
 })
 
+test_that("pkgplan_i_lp_satisfy_direct skips ruled-out candidates", {
+  # Requesting an archived version (e.g. `pkg@0.15.3`) also resolves the bare
+  # package name, which FAILS if that version is no longer in the current
+  # index. The failed candidate has an `NA` version and is ruled out by
+  # `pkgplan_i_lp_failures()`. `pkgplan_i_lp_satisfy_direct()` must not run
+  # `satisfies_remote()` on it, otherwise the version check on the direct ref
+  # errors with "missing value where TRUE/FALSE needed".
+  pkgs <- res_make_empty_df()
+  for (entry in list(
+    make_fake_resolution1(
+      "pkg@0.15.3",
+      list(
+        direct = TRUE,
+        version = "0.15.3"
+      )
+    ),
+    make_fake_resolution1(
+      "pkg",
+      list(
+        direct = FALSE,
+        status = "FAILED",
+        version = NA_character_
+      )
+    )
+  )) {
+    pkgs <- res_add_df_entries(pkgs, entry)
+  }
+
+  config <- current_config()
+  lp <- pkgplan_i_lp_init(pkgs, config, "lazy")
+  lp <- pkgplan_i_lp_failures(lp)
+
+  failed_idx <- which(pkgs$status == "FAILED")
+  expect_true(failed_idx %in% lp$ruled_out)
+
+  # This used to error on the NA version of the failed candidate.
+  expect_no_error(lp <- pkgplan_i_lp_satisfy_direct(lp))
+
+  # No satisfy constraint is added for the already ruled-out failed candidate.
+  types <- vcapply(lp$conds, "[[", "type")
+  sat_vars <- unlist(lapply(lp$conds[types == "satisfy-refs"], "[[", "vars"))
+  expect_false(failed_idx %in% sat_vars)
+})
+
 test_that("pkgplan_i_lp_dependencies", {
   pkgs <- read_fixture("resolution-progress.rds")
   config <- current_config()

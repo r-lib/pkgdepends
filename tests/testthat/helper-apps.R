@@ -672,6 +672,20 @@ transform_local_port <- function(x) {
   gsub("127\\.0\\.0\\.1:[0-9]+", "127.0.0.1:<port>", x)
 }
 
+# curl's connection-failure message varies
+transform_no_internet <- function(x) {
+  i <- grep("\\[127\\.0\\.0\\.1\\]:", x)
+  if (length(i) > 0) {
+    i <- i[[1]]
+    lead <- sub("(^\\s*).*", "\\1", x[[i]])
+    x <- c(
+      x[seq_len(i - 1L)],
+      paste0(lead, "! <connection error> [127.0.0.1]:")
+    )
+  }
+  x
+}
+
 transform_bioc_version <- function(x) {
   sub("3[.][0-9]+/bioc", "<bioc-version>/bioc", x)
 }

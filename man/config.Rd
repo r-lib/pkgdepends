@@ -210,6 +210,39 @@ The configuration, invisibly.
 
 }
 
+\subsection{\code{conf$add_forwarded()}: add a forwarded (documentation-only) entry}{
+
+A forwarded entry is not read or used by the package itself. It is
+handled elsewhere, e.g. by another package that actually makes the
+request the entry configures. Adding it to the configuration only
+serves documentation and discoverability: it appears in \verb{$list()}
+and when printing the configuration, but it cannot be queried with
+\verb{$get()} or changed with \verb{$set()}.
+\subsection{Usage}{
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{conf$add_forwarded(name, option = NULL, envvar = NULL)
+}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\itemize{
+\item \code{name}: name of the entry.
+\item \code{option}: name of the R option that configures the entry. If \code{NULL},
+then it is derived from the prefix and \code{name}, the same way as for
+regular entries.
+\item \code{envvar}: name of the environment variable that configures the entry.
+If \code{NULL}, then it is derived from the prefix and \code{name}, the same
+way as for regular entries.
+}
+}
+
+\subsection{Value}{
+
+The configuration, invisibly.
+}
+
+}
+
 \subsection{\code{conf$get()}: query the value of a configuration entry}{
 \subsection{Usage}{
 

@@ -163,6 +163,8 @@
     Condition
       Error:
       ! ! Cannot query GitHub, are you offline?
+      Caused by error: 
+      ! <connection error> [127.0.0.1]:
 
 # github_query, access denied
 

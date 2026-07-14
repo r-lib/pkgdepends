@@ -12,6 +12,10 @@
   from another source. `$solve()` now reports a failed solution and
   `$download()` raises an error in this case.
 
+- The solver no longer fails when requesting a older version
+  (e.g. `pkg@1.0.0`) of a package that is no longer in the repository
+  (<https://github.com/r-lib/pak/issues/896>).
+
 ## pkgdepends 0.9.1
 
 CRAN release: 2026-04-09

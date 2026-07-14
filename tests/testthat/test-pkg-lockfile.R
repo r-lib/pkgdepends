@@ -27,6 +27,33 @@ test_that("new_pkg_installation_plan", {
   })
 })
 
+test_that("install_args from the lockfile are preserved (#472)", {
+  setup_fake_apps()
+  pkgcache::pkg_cache_delete_files()
+  lib <- withr::local_tempdir()
+  lockfile <- withr::local_tempfile()
+
+  config <- list(library = lib)
+  prop <- pst(new_pkg_installation_proposal("pkg3", config = config))
+  pst(prop$solve())
+  prop$create_lockfile(lockfile)
+
+  # Inject custom install_args into the lockfile, as a user might do.
+  lock <- jsonlite::fromJSON(lockfile, simplifyVector = FALSE)
+  for (i in seq_along(lock$packages)) {
+    lock$packages[[i]]$install_args <- list("--install-tests")
+  }
+  jsonlite::write_json(lock, lockfile, auto_unbox = TRUE, pretty = TRUE)
+
+  plan <- new_pkg_installation_plan(lockfile, config = config)
+  pst(plan$download())
+  iplan <- plan$get_install_plan()
+  expect_true("install_args" %in% names(iplan))
+  for (args in iplan$install_args) {
+    expect_true("--install-tests" %in% args)
+  }
+})
+
 test_that("install package from GH, in subdir", {
   setup_fake_apps()
   setup_fake_gh_app()

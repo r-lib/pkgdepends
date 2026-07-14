@@ -5,6 +5,10 @@
   `DESCRIPTION` at the repository root. This lets multi-language
   repositories be installed without specifying `subdir` (#459).
 
+* pkgdepends now handles the case when a repository (PPM typically) serves
+  a source package instead of the binary
+  (https://github.com/r-lib/pak/issues/891).
+
 * Resolution for downloads for a different platform no longer fails with a
   cryptic error (#462).
 
@@ -13,6 +17,10 @@
   that is not on CRAN but happens to be installed locally from another
   source. `$solve()` now reports a failed solution and `$download()` raises
   an error in this case.
+
+* The solver no longer fails when requesting a older version
+  (e.g. `pkg@1.0.0`) of a package that is no longer in the repository
+  (https://github.com/r-lib/pak/issues/896).
 
 # pkgdepends 0.9.1
 

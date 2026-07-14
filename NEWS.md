@@ -1,5 +1,10 @@
 # pkgdepends (development version)
 
+* `install_args` coming from a lockfile are no longer overwritten when
+  building packages. The `--no-multiarch` flag needed on some Windows
+  configurations is now added to the existing `install_args` instead of
+  replacing them (#472).
+
 * pkgdepends now handles the case when a repository (PPM typically) serves
   a source package instead of the binary
   (https://github.com/r-lib/pak/issues/891).

@@ -144,3 +144,13 @@ for R 4.2.0 and earlier.
 }
 }
 
+\section{Forwarded configuration}{
+The following entries are not used directly, they are handled by other packages that perform the corresponding requests. They are set via R options and environment variables, but, unlike the entries above, they cannot be set via the \code{config} argument, and their option and environment variable names may differ from the \code{pkg.} and \code{PKG_} naming convention.
+\itemize{
+\item \code{pkg_http_retry} option, \code{PKG_HTTP_RETRY} environment variable: Whether to retry failed HTTP requests. It can be \code{TRUE} to retry
+with the default settings, or \code{FALSE} to never retry. Defaults to
+\code{TRUE}. This entry is handled by pkgcache, which performs all HTTP
+requests.
+}
+}
+

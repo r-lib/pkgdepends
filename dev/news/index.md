@@ -2,6 +2,12 @@
 
 ## pkgdepends (development version)
 
+- GitHub remotes now auto-detect an R package in a well-known
+  subdirectory (`pkg-r/`, `r/`, or `R/`) when no `subdir` is given and
+  there is no `DESCRIPTION` at the repository root. This lets
+  multi-language repositories be installed without specifying `subdir`
+  ([\#459](https://github.com/r-lib/pkgdepends/issues/459)).
+
 - `install_args` coming from a lockfile are no longer overwritten when
   building packages. The `--no-multiarch` flag needed on some Windows
   configurations is now added to the existing `install_args` instead of

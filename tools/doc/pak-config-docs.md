@@ -10,6 +10,13 @@ $cran_mirror
 $git_submodules
 [1] "Whether or not to update submodules in git repositories. This\naffects \\verb{git::} and \\verb{gitlab::} package sources only.\nIf the R package is in a subdirectory then only the submodules\nwithin that directory are updated. If a submodule appears in\n\\code{.Rbuildignore}, then it is skipped."
 
+$http_retry
+[1] "Whether to retry failed HTTP requests. It can be \\code{TRUE} to retry\nwith the default settings, or \\code{FALSE} to never retry. Defaults to\n\\code{TRUE}. This entry is handled by pkgcache, which performs all HTTP\nrequests."
+attr(,"option")
+[1] "pkg_http_retry"
+attr(,"envvar")
+[1] "PKG_HTTP_RETRY"
+
 $ignore_dev_library
 [1] "Whether to ignore library directories called \\verb{__dev_lib__}."
 

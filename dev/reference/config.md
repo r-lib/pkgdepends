@@ -193,6 +193,35 @@ configuration data and functions (methods) to query and change it.
 
 The configuration, invisibly.
 
+### `conf$add_forwarded()`: add a forwarded (documentation-only) entry
+
+A forwarded entry is not read or used by the package itself. It is
+handled elsewhere, e.g. by another package that actually makes the
+request the entry configures. Adding it to the configuration only serves
+documentation and discoverability: it appears in `$list()` and when
+printing the configuration, but it cannot be queried with `$get()` or
+changed with `$set()`.
+
+#### Usage
+
+    conf$add_forwarded(name, option = NULL, envvar = NULL)
+
+#### Arguments
+
+- `name`: name of the entry.
+
+- `option`: name of the R option that configures the entry. If `NULL`,
+  then it is derived from the prefix and `name`, the same way as for
+  regular entries.
+
+- `envvar`: name of the environment variable that configures the entry.
+  If `NULL`, then it is derived from the prefix and `name`, the same way
+  as for regular entries.
+
+#### Value
+
+The configuration, invisibly.
+
 ### `conf$get()`: query the value of a configuration entry
 
 #### Usage

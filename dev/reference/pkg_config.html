@@ -168,6 +168,13 @@ Windows binaries for R 4.2.x currently. <code>"both"</code> is the default
 for R 4.2.0 and earlier.</p></li>
 </ul></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="forwarded-configuration">Forwarded configuration<a class="anchor" aria-label="anchor" href="#forwarded-configuration"></a></h2>
+    <p>The following entries are not used directly, they are handled by other packages that perform the corresponding requests. They are set via R options and environment variables, but, unlike the entries above, they cannot be set via the <code>config</code> argument, and their option and environment variable names may differ from the <code>pkg.</code> and <code>PKG_</code> naming convention.</p><ul><li><p><code>pkg_http_retry</code> option, <code>PKG_HTTP_RETRY</code> environment variable: Whether to retry failed HTTP requests. It can be <code>TRUE</code> to retry
+with the default settings, or <code>FALSE</code> to never retry. Defaults to
+<code>TRUE</code>. This entry is handled by pkgcache, which performs all HTTP
+requests.</p></li>
+</ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

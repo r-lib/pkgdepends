@@ -735,7 +735,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmpKpP0P7/file20413f6fcafe
+#> ℹ Creating library directory: /tmp/RtmpTQRhcB/file1f3169b942f2
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -749,7 +749,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKpP0P7/file20414d4057b7
+#> ℹ Creating library directory: /tmp/RtmpTQRhcB/file1f317b61d0e4
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -766,7 +766,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpKpP0P7/file20412c06be39"
+#> [1] "/tmp/RtmpTQRhcB/file1f311bfaec30"
 #> 
 #> ## platforms
 #> <default>
@@ -783,11 +783,11 @@ pdi$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpKpP0P7/file20413054e3ee"
+#> [1] "/tmp/RtmpTQRhcB/file1f314a615088"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpKpP0P7/file20414d4057b7"
+#> [1] "/tmp/RtmpTQRhcB/file1f317b61d0e4"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -833,6 +833,10 @@ pdi$get_config()
 #> <default>
 #> [1] FALSE
 #> 
+#> ## http_retry
+#> <forwarded>
+#> option: pkg_http_retry, envvar: PKG_HTTP_RETRY
+#> 
 #> ## sysreqs_platform
 #> <default>
 #> [1] "x86_64-pc-linux-gnu-ubuntu-24.04"
@@ -866,7 +870,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKpP0P7/file20412ee46c34
+#> ℹ Creating library directory: /tmp/RtmpTQRhcB/file1f313eb0419b
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -876,7 +880,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKpP0P7/file2041498f4a94
+#> ℹ Creating library directory: /tmp/RtmpTQRhcB/file1f317870bcb5
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -887,7 +891,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKpP0P7/file20413a40c071
+#> ℹ Creating library directory: /tmp/RtmpTQRhcB/file1f3144552eb
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

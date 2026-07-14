@@ -280,23 +280,61 @@ function of that type is used for decoding.</p></li>
 </div>
 
 <div class="section">
-<h3 id="conf-get-query-the-value-of-a-configuration-entry"><code>conf$get()</code>: query the value of a configuration entry<a class="anchor" aria-label="anchor" href="#conf-get-query-the-value-of-a-configuration-entry"></a></h3>
+<h3 id="conf-add-forwarded-add-a-forwarded-documentation-only-entry"><code>conf$add_forwarded()</code>: add a forwarded (documentation-only) entry<a class="anchor" aria-label="anchor" href="#conf-add-forwarded-add-a-forwarded-documentation-only-entry"></a></h3>
 
-<div class="section">
+
+<p>A forwarded entry is not read or used by the package itself. It is
+handled elsewhere, e.g. by another package that actually makes the
+request the entry configures. Adding it to the configuration only
+serves documentation and discoverability: it appears in <code>$list()</code>
+and when printing the configuration, but it cannot be queried with
+<code>$get()</code> or changed with <code>$set()</code>.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 
 
-<p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">add_forwarded</span><span class="op">(</span><span class="va">name</span>, option <span class="op">=</span> <span class="cn">NULL</span>, envvar <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 
 <ul><li><p><code>name</code>: name of the entry.</p></li>
+<li><p><code>option</code>: name of the R option that configures the entry. If <code>NULL</code>,
+then it is derived from the prefix and <code>name</code>, the same way as for
+regular entries.</p></li>
+<li><p><code>envvar</code>: name of the environment variable that configures the entry.
+If <code>NULL</code>, then it is derived from the prefix and <code>name</code>, the same
+way as for regular entries.</p></li>
 </ul></div>
 
 <div class="section">
 <h4 id="value-2">Value<a class="anchor" aria-label="anchor" href="#value-2"></a></h4>
+
+
+<p>The configuration, invisibly.</p>
+</div>
+
+
+</div>
+
+<div class="section">
+<h3 id="conf-get-query-the-value-of-a-configuration-entry"><code>conf$get()</code>: query the value of a configuration entry<a class="anchor" aria-label="anchor" href="#conf-get-query-the-value-of-a-configuration-entry"></a></h3>
+
+<div class="section">
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+
+
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+
+<ul><li><p><code>name</code>: name of the entry.</p></li>
+</ul></div>
+
+<div class="section">
+<h4 id="value-3">Value<a class="anchor" aria-label="anchor" href="#value-3"></a></h4>
 
 
 <p>Value of the entry.</p><ul><li><p>If the entry was set via <code>conf$set()</code> or <code>conf$update()</code>, then
@@ -329,14 +367,14 @@ function, that is called before returning.</p></li>
 <p>If you <code>$set()</code> a config entry, then the <code>value</code> used in <code>$set()</code>
 will be returned by <code>$get()</code>, without consulting R options or
 environment variables.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span><span class="va">name</span>, <span class="va">value</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 
 <ul><li><p><code>name</code>: name of the entry.</p></li>
 <li><p><code>value</code>: value of the entry. If the entry has a check function,
@@ -344,7 +382,7 @@ it is called here.</p></li>
 </ul></div>
 
 <div class="section">
-<h4 id="value-3">Value<a class="anchor" aria-label="anchor" href="#value-3"></a></h4>
+<h4 id="value-4">Value<a class="anchor" aria-label="anchor" href="#value-4"></a></h4>
 
 
 <p>The configuration, invisibly.</p>
@@ -360,47 +398,16 @@ it is called here.</p></li>
 <p>Note that this function does <em>not</em> unset R options and environment
 variables. It merely removes a value that was assigned by <code>$set()</code>
 or <code>$update()</code>.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">unset</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-
-<ul><li><p><code>name</code>: name of the entry.</p></li>
-</ul></div>
-
-<div class="section">
-<h4 id="value-4">Value<a class="anchor" aria-label="anchor" href="#value-4"></a></h4>
-
-
-<p>The configuration, invisibly.</p>
-</div>
-
-
-</div>
-
-<div class="section">
-<h3 id="cond-update-update-the-values-of-configuration-entries"><code>cond$update()</code>: update the values of configuration entries<a class="anchor" aria-label="anchor" href="#cond-update-update-the-values-of-configuration-entries"></a></h3>
-
-
-<p>You can use this method to set()<code>and/or</code>$unset()<code>multiple config entries.</code>NULL<code>values in</code>new` will unset the corresponding entry.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-
-
-<p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="va">new</span><span class="op">)</span></span></code></pre><p></p></div>
-</div>
-
-<div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 
-<ul><li><p><code>new</code>: named list, where names are config entry names and values
-are the corresponding config entry values. <code>NULL</code> values will
-unset the config entry. The list is processed sequentially, so
-for duplicates the latest values will be in effect. (But every
-value is checked with its check function, if any.)</p></li>
+<ul><li><p><code>name</code>: name of the entry.</p></li>
 </ul></div>
 
 <div class="section">
@@ -414,18 +421,49 @@ value is checked with its check function, if any.)</p></li>
 </div>
 
 <div class="section">
+<h3 id="cond-update-update-the-values-of-configuration-entries"><code>cond$update()</code>: update the values of configuration entries<a class="anchor" aria-label="anchor" href="#cond-update-update-the-values-of-configuration-entries"></a></h3>
+
+
+<p>You can use this method to set()<code>and/or</code>$unset()<code>multiple config entries.</code>NULL<code>values in</code>new` will unset the corresponding entry.</p><div class="section">
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+
+
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="va">new</span><span class="op">)</span></span></code></pre><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+
+<ul><li><p><code>new</code>: named list, where names are config entry names and values
+are the corresponding config entry values. <code>NULL</code> values will
+unset the config entry. The list is processed sequentially, so
+for duplicates the latest values will be in effect. (But every
+value is checked with its check function, if any.)</p></li>
+</ul></div>
+
+<div class="section">
+<h4 id="value-6">Value<a class="anchor" aria-label="anchor" href="#value-6"></a></h4>
+
+
+<p>The configuration, invisibly.</p>
+</div>
+
+
+</div>
+
+<div class="section">
 <h3 id="conf-list-query-the-names-of-all-config-entries"><code>conf$list()</code>: query the names of all config entries<a class="anchor" aria-label="anchor" href="#conf-list-query-the-names-of-all-config-entries"></a></h3>
 
 
 <p>Note that their order is non-deterministic currently.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">list</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="value-6">Value<a class="anchor" aria-label="anchor" href="#value-6"></a></h4>
+<h4 id="value-7">Value<a class="anchor" aria-label="anchor" href="#value-7"></a></h4>
 
 
 <p>Character vector.</p>
@@ -438,20 +476,20 @@ value is checked with its check function, if any.)</p></li>
 <h3 id="conf-exists-check-if-a-config-entry-exists"><code>conf$exists()</code>: check if a config entry exists<a class="anchor" aria-label="anchor" href="#conf-exists-check-if-a-config-entry-exists"></a></h3>
 
 <div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">exists</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 
 <ul><li><p><code>name</code>: name of the entry.</p></li>
 </ul></div>
 
 <div class="section">
-<h4 id="value-7">Value<a class="anchor" aria-label="anchor" href="#value-7"></a></h4>
+<h4 id="value-8">Value<a class="anchor" aria-label="anchor" href="#value-8"></a></h4>
 
 
 <p>Logical scalar, <code>TRUE</code> if the entry exists in the configuration,
@@ -468,14 +506,14 @@ of the entry was set.</p>
 
 <p>If a configuration is locked, then no more entries can be added to
 it.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">lock</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="value-8">Value<a class="anchor" aria-label="anchor" href="#value-8"></a></h4>
+<h4 id="value-9">Value<a class="anchor" aria-label="anchor" href="#value-9"></a></h4>
 
 
 <p>The configuration, invisibly.</p>
@@ -491,20 +529,20 @@ it.</p><div class="section">
 <p>The currently <code>$set()</code> value is fixed and cannot be changed any
 more. You can fix an entry without setting its value, in which case
 R options and environment variables can still be used to update it.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">unset</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 
 <ul><li><p><code>name</code>: name of the entry.</p></li>
 </ul></div>
 
 <div class="section">
-<h4 id="value-9">Value<a class="anchor" aria-label="anchor" href="#value-9"></a></h4>
+<h4 id="value-10">Value<a class="anchor" aria-label="anchor" href="#value-10"></a></h4>
 
 
 <p>The configuration, invisibly.</p>
@@ -518,14 +556,14 @@ R options and environment variables can still be used to update it.</p><div clas
 
 
 <p>After this the new type can be used in <code>conf$add()</code> calls.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">conf</span><span class="op">$</span><span class="fu">add_type</span><span class="op">(</span><span class="va">type_name</span>, <span class="va">check</span>, <span class="va">env_decode</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 
 <ul><li><p><code>type_name</code>: type name.</p></li>
 <li><p><code>check</code>: default check function of the type. Use <code>NULL</code> for no
@@ -535,7 +573,7 @@ an environment variable (i.e. string).</p></li>
 </ul></div>
 
 <div class="section">
-<h4 id="value-10">Value<a class="anchor" aria-label="anchor" href="#value-10"></a></h4>
+<h4 id="value-11">Value<a class="anchor" aria-label="anchor" href="#value-11"></a></h4>
 
 
 <p>The configuration, invisibly.</p>

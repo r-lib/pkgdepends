@@ -176,3 +176,17 @@ Call `current_config()` to print the current configuration.
     available binaries are for `x64` only, like the CRAN Windows
     binaries for R 4.2.x currently. `"both"` is the default for R 4.2.0
     and earlier.
+
+## Forwarded configuration
+
+The following entries are not used directly, they are handled by other
+packages that perform the corresponding requests. They are set via R
+options and environment variables, but, unlike the entries above, they
+cannot be set via the `config` argument, and their option and
+environment variable names may differ from the `pkg.` and `PKG_` naming
+convention.
+
+- `pkg_http_retry` option, `PKG_HTTP_RETRY` environment variable:
+  Whether to retry failed HTTP requests. It can be `TRUE` to retry with
+  the default settings, or `FALSE` to never retry. Defaults to `TRUE`.
+  This entry is handled by pkgcache, which performs all HTTP requests.

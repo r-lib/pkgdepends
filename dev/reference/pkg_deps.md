@@ -446,7 +446,11 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpU2tjVw/file1e8e7e82cee1"
+#> [1] "/tmp/RtmpBk6zuY/file1f3825f7e879"
+#> 
+#> ## configure_args
+#> <default>
+#> character(0)
 #> 
 #> ## platforms
 #> <default>
@@ -463,11 +467,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpU2tjVw/file1e8e58c36d7f"
+#> [1] "/tmp/RtmpBk6zuY/file1f387b9559e4"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpU2tjVw/file1e8e2e96f7d2"
+#> [1] "/tmp/RtmpBk6zuY/file1f3858addc04"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -477,6 +481,10 @@ pd$get_config()
 #> <default>
 #> Time difference of 24 hours
 #> 
+#> ## sysreqs_update
+#> <default>
+#> [1] TRUE
+#> 
 #> ## include_linkingto
 #> <default>
 #> [1] FALSE
@@ -484,10 +492,6 @@ pd$get_config()
 #> ## sysreqs_rspm_repo_id
 #> <default>
 #> [1] "1"
-#> 
-#> ## sysreqs_update
-#> <default>
-#> [1] TRUE
 #> 
 #> ## package_cache_dir
 #> <default>
@@ -512,6 +516,10 @@ pd$get_config()
 #> ## git_submodules
 #> <default>
 #> [1] FALSE
+#> 
+#> ## configure_vars
+#> <default>
+#> character(0)
 #> 
 #> ## http_retry
 #> <forwarded>

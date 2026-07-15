@@ -2,6 +2,11 @@
 
 ## pkgdepends (development version)
 
+- New `configure_args` and `configure_vars` configuration options to
+  pass `--configure-args` and `--configure-vars` to `R CMD INSTALL` when
+  building packages from source
+  (<https://github.com/r-lib/pak/issues/788>).
+
 - GitHub remotes now auto-detect an R package in a well-known
   subdirectory (`pkg-r/`, `r/`, or `R/`) when no `subdir` is given and
   there is no `DESCRIPTION` at the repository root. This lets

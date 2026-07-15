@@ -735,7 +735,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmpU2tjVw/file1e8e2ac0544c
+#> ℹ Creating library directory: /tmp/RtmpBk6zuY/file1f381b706c84
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -749,7 +749,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpU2tjVw/file1e8e79e887ee
+#> ℹ Creating library directory: /tmp/RtmpBk6zuY/file1f383b8dfc2d
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -766,7 +766,11 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpU2tjVw/file1e8ece7d516"
+#> [1] "/tmp/RtmpBk6zuY/file1f3851cd81fb"
+#> 
+#> ## configure_args
+#> <default>
+#> character(0)
 #> 
 #> ## platforms
 #> <default>
@@ -783,11 +787,11 @@ pdi$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpU2tjVw/file1e8e58c36d7f"
+#> [1] "/tmp/RtmpBk6zuY/file1f387b9559e4"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpU2tjVw/file1e8e79e887ee"
+#> [1] "/tmp/RtmpBk6zuY/file1f383b8dfc2d"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -797,6 +801,10 @@ pdi$get_config()
 #> <default>
 #> Time difference of 24 hours
 #> 
+#> ## sysreqs_update
+#> <default>
+#> [1] TRUE
+#> 
 #> ## include_linkingto
 #> <default>
 #> [1] FALSE
@@ -804,10 +812,6 @@ pdi$get_config()
 #> ## sysreqs_rspm_repo_id
 #> <default>
 #> [1] "1"
-#> 
-#> ## sysreqs_update
-#> <default>
-#> [1] TRUE
 #> 
 #> ## package_cache_dir
 #> <default>
@@ -832,6 +836,10 @@ pdi$get_config()
 #> ## git_submodules
 #> <default>
 #> [1] FALSE
+#> 
+#> ## configure_vars
+#> <default>
+#> character(0)
 #> 
 #> ## http_retry
 #> <forwarded>
@@ -870,7 +878,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpU2tjVw/file1e8e36b420ea
+#> ℹ Creating library directory: /tmp/RtmpBk6zuY/file1f38736708cf
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -880,7 +888,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpU2tjVw/file1e8e702dbed3
+#> ℹ Creating library directory: /tmp/RtmpBk6zuY/file1f38438dc051
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -891,7 +899,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpU2tjVw/file1e8e7e8ba56
+#> ℹ Creating library directory: /tmp/RtmpBk6zuY/file1f3853b07ad3
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

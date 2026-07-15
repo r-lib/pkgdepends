@@ -139,11 +139,11 @@ pdi$install()
     ## ℹ Getting 1 pkg with unknown size
     ## ✔ Cached copy of cli 3.6.6.9000 (source) is the latest build
     ## ℹ Packaging cli 3.6.6.9000
-    ## ✔ Packaged cli 3.6.6.9000 (1.7s)
+    ## ✔ Packaged cli 3.6.6.9000 (1.2s)
     ## ℹ Building cli 3.6.6.9000
-    ## ✔ Built cli 3.6.6.9000 (9.2s)
-    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@86bdefe) (36ms)
-    ## ✔ Summary:   1 new  in 9.2s
+    ## ✔ Built cli 3.6.6.9000 (7.7s)
+    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@86bdefe) (27ms)
+    ## ✔ Summary:   1 new  in 7.8s
 
 ## Dependency resolution
 

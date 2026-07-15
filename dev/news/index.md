@@ -32,6 +32,10 @@
   (e.g. `pkg@1.0.0`) of a package that is no longer in the repository
   (<https://github.com/r-lib/pak/issues/896>).
 
+- Better error message when a requested (standard) package is installed,
+  but the package was removed from the repository
+  (<https://github.com/r-lib/pak/issues/895>).
+
 ## pkgdepends 0.9.1
 
 CRAN release: 2026-04-09

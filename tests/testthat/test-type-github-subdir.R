@@ -71,9 +71,12 @@ test_that("github_pick_desc throws baddesc when the first hit is binary", {
 
 test_that("ref resolution auto-detects pkg-r/ subdir", {
   setup_fake_gh_app()
-  r <- pkg_plan$new(
-    "r-lib/subdirpkg",
-    config = list(library = tempfile(), dependencies = FALSE)
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/subdirpkg",
+      config = list(library = lib, dependencies = FALSE)
+    )
   )
   suppressMessages(r$resolve())
   res <- r$get_resolution()
@@ -85,9 +88,12 @@ test_that("ref resolution auto-detects pkg-r/ subdir", {
 
 test_that("ref resolution prefers r/ over R/", {
   setup_fake_gh_app()
-  r <- pkg_plan$new(
-    "r-lib/subdirprio",
-    config = list(library = tempfile(), dependencies = FALSE)
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/subdirprio",
+      config = list(library = lib, dependencies = FALSE)
+    )
   )
   suppressMessages(r$resolve())
   res <- r$get_resolution()
@@ -99,9 +105,12 @@ test_that("ref resolution prefers r/ over R/", {
 
 test_that("ref resolution with root DESCRIPTION sets no RemoteSubdir", {
   setup_fake_gh_app()
-  r <- pkg_plan$new(
-    "r-lib/crayon",
-    config = list(library = tempfile(), dependencies = FALSE)
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/crayon",
+      config = list(library = lib, dependencies = FALSE)
+    )
   )
   suppressMessages(r$resolve())
   res <- r$get_resolution()
@@ -113,9 +122,12 @@ test_that("ref resolution with root DESCRIPTION sets no RemoteSubdir", {
 
 test_that("ref resolution fails when no candidate has a package", {
   setup_fake_gh_app()
-  r <- pkg_plan$new(
-    "tidyverse/tidyverse.org",
-    config = list(library = tempfile(), dependencies = FALSE)
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "tidyverse/tidyverse.org",
+      config = list(library = lib, dependencies = FALSE)
+    )
   )
   suppressMessages(r$resolve())
   res <- r$get_resolution()
@@ -125,9 +137,12 @@ test_that("ref resolution fails when no candidate has a package", {
 test_that("explicit subdir is queried alone, no probing fallback", {
   setup_fake_gh_app()
   # crayon has a root DESCRIPTION but nothing in nonexistent/
-  r <- pkg_plan$new(
-    "r-lib/crayon/nonexistent",
-    config = list(library = tempfile(), dependencies = FALSE)
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/crayon/nonexistent",
+      config = list(library = lib, dependencies = FALSE)
+    )
   )
   suppressMessages(r$resolve())
   res <- r$get_resolution()
@@ -136,9 +151,12 @@ test_that("explicit subdir is queried alone, no probing fallback", {
 
 test_that("pull request resolution auto-detects pkg-r/ subdir", {
   setup_fake_gh_app()
-  r <- pkg_plan$new(
-    "r-lib/subdirpkg#12",
-    config = list(library = tempfile(), dependencies = FALSE)
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/subdirpkg#12",
+      config = list(library = lib, dependencies = FALSE)
+    )
   )
   suppressMessages(r$resolve())
   res <- r$get_resolution()
@@ -150,9 +168,12 @@ test_that("pull request resolution auto-detects pkg-r/ subdir", {
 
 test_that("release resolution auto-detects pkg-r/ subdir", {
   setup_fake_gh_app()
-  r <- pkg_plan$new(
-    "r-lib/subdirpkg@*release",
-    config = list(library = tempfile(), dependencies = FALSE)
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/subdirpkg@*release",
+      config = list(library = lib, dependencies = FALSE)
+    )
   )
   suppressMessages(r$resolve())
   res <- r$get_resolution()

@@ -87,6 +87,19 @@ test_that("satisfies_remote", {
   expect_false(ans <- satisfy_remote_cran(res, bad6))
   expect_match(attr(ans, "reason"), "Direct ref needs update")
 
+  # installed, but not in repository
+  res_failed <- make_fake_resolution(
+    `cran::crayon` = list(direct = TRUE, version = NA_character_)
+  )
+  bad7 <- make_fake_resolution(
+    `installed::foobar` = list(
+      package = "crayon",
+      extra = list(list(repotype = "cran"))
+    )
+  )
+  expect_false(ans <- satisfy_remote_cran(res_failed, bad7))
+  expect_match(attr(ans, "reason"), "failed to resolve")
+
   # without version req
   res <- make_fake_resolution(`cran::crayon` = list())
 

@@ -44,6 +44,28 @@ available, as these are not installed by default currently.
 \item \code{cache_dir}: Directory to download the packages to. Defaults to a temporary
 directory within the R session temporary directory, see
 \code{\link[base:tempdir]{base::tempdir()}}.
+\item \code{configure_args}: Extra \code{--configure-args} to pass to \verb{R CMD INSTALL} when
+building packages from source. It can be a single string, which is
+then used for all packages built from source. It can also be a named
+character vector (or a named list of character vectors) to set
+configure arguments for individual packages: the names are package
+names and the values are the corresponding configure arguments.
+Defaults to the \code{configure.args} option (see \code{\link[base:options]{base::options()}}), for
+compatibility with \code{\link[utils:install.packages]{utils::install.packages()}}. The
+\code{PKG_CONFIGURE_ARGS} environment variable may be either a single
+string (used for all packages), or a semicolon separated list of
+\verb{<package>=<args>} entries to set arguments for individual packages.
+\item \code{configure_vars}: Extra \code{--configure-vars} to pass to \verb{R CMD INSTALL} when
+building packages from source. It can be a single string, which is
+then used for all packages built from source. It can also be a named
+character vector (or a named list of character vectors) to set
+configure variables for individual packages: the names are package
+names and the values are the corresponding configure variables.
+Defaults to the \code{configure.vars} option (see \code{\link[base:options]{base::options()}}), for
+compatibility with \code{\link[utils:install.packages]{utils::install.packages()}}. The
+\code{PKG_CONFIGURE_VARS} environment variable may be either a single
+string (used for all packages), or a semicolon separated list of
+\verb{<package>=<vars>} entries to set variables for individual packages.
 \item \code{cran_mirror}: CRAN mirror to use. Defaults to the \code{repos} option
 (see \code{\link[base:options]{base::options()}}), if that's not set then
 \verb{https://cran.rstudio.com}.

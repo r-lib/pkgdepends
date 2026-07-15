@@ -4,6 +4,12 @@ $build_vignettes
 $cache_dir
 [1] "Directory to download the packages to. Defaults to a temporary\ndirectory within the R session temporary directory, see\n\\code{\\link[base:tempdir]{base::tempdir()}}."
 
+$configure_args
+[1] "Extra \\code{--configure-args} to pass to \\verb{R CMD INSTALL} when\nbuilding packages from source. It can be a single string, which is\nthen used for all packages built from source. It can also be a named\ncharacter vector (or a named list of character vectors) to set\nconfigure arguments for individual packages: the names are package\nnames and the values are the corresponding configure arguments.\nDefaults to the \\code{configure.args} option (see \\code{\\link[base:options]{base::options()}}), for\ncompatibility with \\code{\\link[utils:install.packages]{utils::install.packages()}}. The\n\\code{PKG_CONFIGURE_ARGS} environment variable may be either a single\nstring (used for all packages), or a semicolon separated list of\n\\verb{<package>=<args>} entries to set arguments for individual packages."
+
+$configure_vars
+[1] "Extra \\code{--configure-vars} to pass to \\verb{R CMD INSTALL} when\nbuilding packages from source. It can be a single string, which is\nthen used for all packages built from source. It can also be a named\ncharacter vector (or a named list of character vectors) to set\nconfigure variables for individual packages: the names are package\nnames and the values are the corresponding configure variables.\nDefaults to the \\code{configure.vars} option (see \\code{\\link[base:options]{base::options()}}), for\ncompatibility with \\code{\\link[utils:install.packages]{utils::install.packages()}}. The\n\\code{PKG_CONFIGURE_VARS} environment variable may be either a single\nstring (used for all packages), or a semicolon separated list of\n\\verb{<package>=<vars>} entries to set variables for individual packages."
+
 $cran_mirror
 [1] "CRAN mirror to use. Defaults to the \\code{repos} option\n(see \\code{\\link[base:options]{base::options()}}), if that's not set then\n\\verb{https://cran.rstudio.com}. See also \\code{\\link[pak:repo_add]{pak::repo_add()}} and\n\\code{\\link[pak:repo_get]{pak::repo_get()}}"
 

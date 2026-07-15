@@ -224,3 +224,20 @@ test_that("canonize_sysreqs_platform", {
     canonize_sysreqs_platform("rockylinux-8.9")
   })
 })
+
+test_that("sysreqs2_scripts deduplicates repeated pre/post_install commands", {
+  # https://github.com/r-lib/pak/issues/888
+  rust <- paste0(
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | ",
+    "sh -s -- --no-modify-path -y"
+  )
+  post <- "echo done"
+  recs <- list(
+    list(list(pre_install = rust, post_install = post, packages = "pkgA")),
+    list(list(pre_install = rust, post_install = post, packages = "pkgB"))
+  )
+  scripts <- sysreqs2_scripts(recs, "ubuntu-24.04")
+  expect_equal(sum(scripts$pre_install == rust), 1L)
+  expect_equal(scripts$post_install, post)
+  expect_true(rust %in% scripts$pre_install)
+})

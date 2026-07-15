@@ -1,5 +1,8 @@
 # pkgdepends (development version)
 
+* Duplicate system requirement commands (`pre_install` and `post_install`)
+  are now deduplicated (https://github.com/r-lib/pak/issues/888).
+
 * New `configure_args` and `configure_vars` configuration options to pass
   `--configure-args` and `--configure-vars` to `R CMD INSTALL` when
   building packages from source (https://github.com/r-lib/pak/issues/788).

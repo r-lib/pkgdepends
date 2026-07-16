@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmptzRVvU/file1e4558c91204"
+#> [1] "/tmp/Rtmp6JhY77/file1dde35dce962"
 #> 
 #> ## configure_args
 #> <default>
@@ -467,11 +467,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmptzRVvU/file1e4548c89b4b"
+#> [1] "/tmp/Rtmp6JhY77/file1dde6bda1d46"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmptzRVvU/file1e454cefaa37"
+#> [1] "/tmp/Rtmp6JhY77/file1dde742db005"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -567,8 +567,8 @@ pd$get_resolution()
 #> # A data frame: 2 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.10.0  GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.10.0  GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.11.0  GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.11.0  GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,

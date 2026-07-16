@@ -11,14 +11,14 @@
       1            FALSE            standard                  pkg1               pkg1
       2            FALSE            standard                  pkg2               pkg2
       3            FALSE            standard                  pkg3               pkg3
-           metadata.RemoteRepos metadata.RemotePkgPlatform metadata.RemoteSha
-      1 http://127.0.0.1:<port>/                     source              1.0.0
-      2 http://127.0.0.1:<port>/                     source              1.0.0
-      3 http://127.0.0.1:<port>/                     source              1.0.0
-                                                                                                                          sources
-      1 http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
-      2 http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
-      3 http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
+          metadata.RemoteRepos metadata.RemotePkgPlatform metadata.RemoteSha
+      1 http://127.0.0.1:<port>                     source              1.0.0
+      2 http://127.0.0.1:<port>                     source              1.0.0
+      3 http://127.0.0.1:<port>                     source              1.0.0
+                                                                                                                        sources
+      1 http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      2 http://127.0.0.1:<port>/src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
+      3 http://127.0.0.1:<port>/src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
                                target platform rversion directpkg
       1 src/contrib/pkg1_1.0.0.tar.gz   source        *     FALSE
       2 src/contrib/pkg2_1.0.0.tar.gz   source        *     FALSE

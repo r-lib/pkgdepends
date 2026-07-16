@@ -152,11 +152,11 @@
       pkgcache::parse_installed(lib)[, c("Package", "RemoteRepos")]
     Output
       # A data frame: 3 x 2
-        Package RemoteRepos            
-        <chr>   <chr>                  
-      1 pkg1    http://127.0.0.1:<port>/
-      2 pkg2    http://127.0.0.1:<port>/
-      3 pkg3    http://127.0.0.1:<port>/
+        Package RemoteRepos           
+        <chr>   <chr>                 
+      1 pkg1    http://127.0.0.1:<port>
+      2 pkg2    http://127.0.0.1:<port>
+      3 pkg3    http://127.0.0.1:<port>
 
 # get_install_plan
 

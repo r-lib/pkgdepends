@@ -13,20 +13,20 @@
         repotype repodir     target                        deps         
         <chr>    <chr>       <chr>                         <list>       
       1 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz <tbl [0 x 5]>
-        mirror                  sources   remote         error      metadata 
-        <chr>                   <list>    <list>         <list>     <list>   
-      1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+        mirror                 sources   remote         error      metadata 
+        <chr>                  <list>    <list>         <list>     <list>   
+      1 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
         extra      dep_types params    sysreqs os_type cache_status
         <list>     <list>    <list>    <chr>   <chr>   <chr>       
       1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: ; ref: pkg1; type: standard; params: 
       + error:
       -
       + metadata:
-      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
       Depends, Imports, LinkingTo
 
@@ -51,20 +51,20 @@
       1 cran     src/contrib src/contrib/pkg2_1.0.0.tar.gz <tbl [1 x 5]>
       2 cran     src/contrib src/contrib/pkg3_1.0.0.tar.gz <tbl [1 x 5]>
       3 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz <tbl [0 x 5]>
-        mirror                  sources   remote         error      metadata 
-        <chr>                   <list>    <list>         <list>     <list>   
-      1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-      2 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>
-      3 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+        mirror                 sources   remote         error      metadata 
+        <chr>                  <list>    <list>         <list>     <list>   
+      1 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+      2 http://127.0.0.1:<port> <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>
+      3 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
         extra      dep_types params    sysreqs os_type cache_status
         <list>     <list>    <list>    <chr>   <chr>   <chr>       
       1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       2 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       3 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg2; atleast: ; version: ; ref: pkg2; type: standard; params: 
       <remote_ref_cran/remote_ref/list> package: pkg3; atleast: ; version: ; ref: cran::pkg3; type: cran; params: 
@@ -74,9 +74,9 @@
       -
       -
       + metadata:
-      RemoteType: standard; RemotePkgRef: pkg2; RemoteRef: pkg2; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
-      RemoteType: cran; RemotePkgRef: cran::pkg3; RemoteRef: cran::pkg3; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
-      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg2; RemoteRef: pkg2; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: cran; RemotePkgRef: cran::pkg3; RemoteRef: cran::pkg3; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
       Depends, Imports, LinkingTo
       Depends, Imports, LinkingTo
@@ -103,20 +103,20 @@
       1 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz <tbl [0 x 5]>
       2 cran     src/contrib src/contrib/pkg2_1.0.0.tar.gz <tbl [1 x 5]>
       3 cran     src/contrib src/contrib/pkg3_1.0.0.tar.gz <tbl [1 x 5]>
-        mirror                  sources   remote         error      metadata 
-        <chr>                   <list>    <list>         <list>     <list>   
-      1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-      2 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
-      3 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+        mirror                 sources   remote         error      metadata 
+        <chr>                  <list>    <list>         <list>     <list>   
+      1 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+      2 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+      3 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
         extra      dep_types params    sysreqs os_type cache_status
         <list>     <list>    <list>    <chr>   <chr>   <chr>       
       1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       2 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       3 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg3_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg3/pkg3_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: ; ref: pkg1; type: standard; params: 
       <remote_ref_standard/remote_ref/list> package: pkg2; atleast: ; version: ; ref: pkg2; type: standard; params: 
@@ -126,9 +126,9 @@
       -
       -
       + metadata:
-      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
-      RemoteType: standard; RemotePkgRef: pkg2; RemoteRef: pkg2; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
-      RemoteType: standard; RemotePkgRef: pkg3; RemoteRef: pkg3; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg2; RemoteRef: pkg2; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg3; RemoteRef: pkg3; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
       Depends, Imports, LinkingTo
       Depends, Imports, LinkingTo
@@ -187,10 +187,10 @@
         <chr>    <chr>    <chr>    <chr>      
       1 source   *        cran     src/contrib
       2 source   *        <NA>     src/contrib
-        target                                   deps          mirror                 
-        <chr>                                    <list>        <chr>                  
-      1 src/contrib/pkg1_1.0.0.tar.gz            <tbl [0 x 5]> http://127.0.0.1:<port>/
-      2 src/contrib/xxyyzzqwertyqwerty_NA.tar.gz <tbl [0 x 5]> <NA>                   
+        target                                   deps          mirror                
+        <chr>                                    <list>        <chr>                 
+      1 src/contrib/pkg1_1.0.0.tar.gz            <tbl [0 x 5]> http://127.0.0.1:<port>
+      2 src/contrib/xxyyzzqwertyqwerty_NA.tar.gz <tbl [0 x 5]> <NA>                  
         sources   remote         error      metadata   extra      dep_types params   
         <list>    <list>         <list>     <list>     <list>     <list>    <list>   
       1 <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>  <list [0]> <chr [3]> <chr [0]>
@@ -200,7 +200,7 @@
       1 <NA>    <NA>    miss        
       2 <NA>    <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       NA
       + remote:
       <remote_ref_cran/remote_ref/list> package: pkg1; atleast: ; version: ; ref: cran::pkg1; type: cran; params: 
@@ -209,7 +209,7 @@
       -
       <error/condition> Can't find package called cran::xxyyzzqwertyqwerty.
       + metadata:
-      RemoteType: cran; RemotePkgRef: cran::pkg1; RemoteRef: cran::pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: cran; RemotePkgRef: cran::pkg1; RemoteRef: cran::pkg1; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       -
       + dep_types:
       Depends, Imports, LinkingTo
@@ -230,20 +230,20 @@
         repotype repodir     target                        deps         
         <chr>    <chr>       <chr>                         <list>       
       1 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz <tbl [0 x 5]>
-        mirror                  sources   remote         error      metadata 
-        <chr>                   <list>    <list>         <list>     <list>   
-      1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>
+        mirror                 sources   remote         error      metadata 
+        <chr>                  <list>    <list>         <list>     <list>   
+      1 http://127.0.0.1:<port> <chr [2]> <rmt_rf_c [6]> <list [0]> <chr [6]>
         extra      dep_types params    sysreqs os_type cache_status
         <list>     <list>    <list>    <chr>   <chr>   <chr>       
       1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_cran/remote_ref/list> package: pkg1; atleast: ==; version: current; ref: cran::pkg1@current; type: cran; params: 
       + error:
       -
       + metadata:
-      RemoteType: cran; RemotePkgRef: cran::pkg1@current; RemoteRef: cran::pkg1@current; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: cran; RemotePkgRef: cran::pkg1@current; RemoteRef: cran::pkg1@current; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
       Depends, Imports, LinkingTo
 
@@ -265,17 +265,17 @@
         <chr>    <chr>       <chr>                                    <list>       
       1 <NA>     src/contrib src/contrib/pkg1_0.9.0-<hash>.tar.gz <tbl [0 x 5]>
       2 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz            <tbl [0 x 5]>
-        mirror                  sources   remote         error      metadata 
-        <chr>                   <list>    <list>         <list>     <list>   
-      1 <NA>                    <chr [1]> <rmt_rf_s [8]> <list [0]> <chr [8]>
-      2 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+        mirror                 sources   remote         error      metadata 
+        <chr>                  <list>    <list>         <list>     <list>   
+      1 <NA>                   <chr [1]> <rmt_rf_s [8]> <list [0]> <chr [8]>
+      2 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
         extra            dep_types params    sysreqs os_type cache_status
         <list>           <list>    <list>    <chr>   <chr>   <chr>       
       1 <named list [1]> <chr [3]> <chr [0]> ""      <NA>    miss        
       2 <list [0]>       <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
       http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ==; version: 0.9.0; ref: pkg1@0.9.0; type: standard; params: ; url: http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz; hash: <hash>
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: ; ref: pkg1; type: standard; params: 
@@ -284,7 +284,7 @@
       -
       + metadata:
       RemotePkgRef: pkg1@0.9.0; RemoteType: standard; RemoteEtag: "<etag>"; RemotePackaged: TRUE; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 0.9.0
-      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
       Depends, Imports, LinkingTo
       Depends, Imports, LinkingTo
@@ -304,20 +304,20 @@
         repotype repodir     target                        deps         
         <chr>    <chr>       <chr>                         <list>       
       1 cran     src/contrib src/contrib/pkg1_1.0.0.tar.gz <tbl [0 x 5]>
-        mirror                  sources   remote         error      metadata 
-        <chr>                   <list>    <list>         <list>     <list>   
-      1 http://127.0.0.1:<port>/ <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
+        mirror                 sources   remote         error      metadata 
+        <chr>                  <list>    <list>         <list>     <list>   
+      1 http://127.0.0.1:<port> <chr [2]> <rmt_rf_s [6]> <list [0]> <chr [6]>
         extra      dep_types params    sysreqs os_type cache_status
         <list>     <list>    <list>    <chr>   <chr>   <chr>       
       1 <list [0]> <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ==; version: 1.0.0; ref: pkg1@1.0.0; type: standard; params: 
       + error:
       -
       + metadata:
-      RemoteType: standard; RemotePkgRef: pkg1@1.0.0; RemoteRef: pkg1@1.0.0; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 1.0.0
+      RemoteType: standard; RemotePkgRef: pkg1@1.0.0; RemoteRef: pkg1@1.0.0; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
       Depends, Imports, LinkingTo
 

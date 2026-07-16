@@ -37,12 +37,12 @@
       [1] "src/contrib/crayon_1.0.0.tar.gz"
       
       $mirror
-      [1] "http://127.0.0.1:<port>/"
+      [1] "http://127.0.0.1:<port>"
       
       $sources
       $sources[[1]]
-      [1] "http://127.0.0.1:<port>//src/contrib/crayon_1.0.0.tar.gz"               
-      [2] "http://127.0.0.1:<port>//src/contrib/Archive/crayon/crayon_1.0.0.tar.gz"
+      [1] "http://127.0.0.1:<port>/src/contrib/crayon_1.0.0.tar.gz"               
+      [2] "http://127.0.0.1:<port>/src/contrib/Archive/crayon/crayon_1.0.0.tar.gz"
       
       
       $sysreqs
@@ -70,10 +70,10 @@
       
       $metadata
       $metadata[[1]]
-                     RemoteType              RemotePkgRef                 RemoteRef 
-                     "standard"                  "crayon"                  "crayon" 
-                    RemoteRepos         RemotePkgPlatform                 RemoteSha 
-      "http://127.0.0.1:<port>/"                  "source"                   "1.0.0" 
+                    RemoteType             RemotePkgRef                RemoteRef 
+                    "standard"                 "crayon"                 "crayon" 
+                   RemoteRepos        RemotePkgPlatform                RemoteSha 
+      "http://127.0.0.1:<port>"                 "source"                  "1.0.0" 
       
       
 

@@ -182,3 +182,63 @@ test_that("release resolution auto-detects pkg-r/ subdir", {
   expect_identical(res$package, "subdirpkg")
   expect_identical(res$metadata[[1]][["RemoteSubdir"]], "pkg-r")
 })
+
+test_that("github_drop_subdir_errors drops only aliased file-probe misses", {
+  probe <- list(
+    type = "NOT_FOUND",
+    path = list("repository", "latestRelease", "tagCommit", "desc2"),
+    message = "Could not resolve file for path 'pkg-r/DESCRIPTION'."
+  )
+  norepo <- list(
+    type = "NOT_FOUND",
+    path = list("repository"),
+    message = "Could not resolve to a Repository with the name 'u/r'."
+  )
+
+  # Only probe misses -> errors cleared entirely.
+  expect_null(github_drop_subdir_errors(list(errors = list(probe, probe)))$errors)
+  # No errors -> unchanged.
+  expect_null(github_drop_subdir_errors(list(data = 1))$errors)
+  # Genuine errors are kept, probe misses removed.
+  kept <- github_drop_subdir_errors(list(errors = list(probe, norepo)))
+  expect_identical(kept$errors, list(norepo))
+})
+
+# Regression: real GitHub returns partial NOT_FOUND errors for the candidate
+# subdirs a `file(path:)` probe cannot find, even when the package lives in the
+# repo root. This used to abort release/pull resolution, and tripped an `if` on
+# a length > 1 condition. See the `r-lib/pak@*release` report.
+
+test_that("release resolution ignores probe errors for a root package", {
+  setup_fake_gh_app()
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/pak@*release",
+      config = list(library = lib, dependencies = FALSE)
+    )
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+
+  expect_true(all(res$status == "OK"))
+  expect_identical(res$package, "pak")
+  expect_false("RemoteSubdir" %in% names(res$metadata[[1]]))
+})
+
+test_that("pull resolution ignores probe errors for a root package", {
+  setup_fake_gh_app()
+  lib <- withr::local_tempdir()
+  suppressMessages(
+    r <- pkg_plan$new(
+      "r-lib/pak#90",
+      config = list(library = lib, dependencies = FALSE)
+    )
+  )
+  suppressMessages(r$resolve())
+  res <- r$get_resolution()
+
+  expect_true(all(res$status == "OK"))
+  expect_identical(res$package, "pak")
+  expect_false("RemoteSubdir" %in% names(res$metadata[[1]]))
+})

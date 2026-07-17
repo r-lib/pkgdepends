@@ -12,6 +12,10 @@
   `DESCRIPTION` at the repository root. This lets multi-language
   repositories be installed without specifying `subdir` (#459).
 
+* Resolving GitHub `@*release` and pull request (`#<number>`) remotes no
+  longer fails for packages that live in the repository root.
+  Closes https://github.com/r-lib/pak/issues/900.
+
 * `install_args` coming from a lockfile are no longer overwritten when
   building packages. The `--no-multiarch` flag needed on some Windows
   configurations is now added to the existing `install_args` instead of

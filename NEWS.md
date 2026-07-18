@@ -22,7 +22,13 @@
   replacing them (#472).
 
 * pkgdepends now handles the case when a repository (PPM typically) serves
-  a source package instead of the binary
+  a source package instead of the binary. Such a package is put back into
+  the installation queue as a source package, and its (recursive) hard
+  dependencies are installed before it is built. If a `LinkingTo`
+  dependency needed for the build is missing from the installation plan,
+  pkgdepends now fails with an informative error, suggesting the
+  `include_linkingto` configuration option. The raw dependencies of each
+  package, including `LinkingTo`, are now also recorded in the lockfile
   (https://github.com/r-lib/pak/issues/891).
 
 * Resolution for downloads for a different platform no longer fails with a

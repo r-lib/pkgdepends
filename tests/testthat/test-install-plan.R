@@ -120,6 +120,140 @@ test_that("add_recursive_dependencies", {
   expect_snapshot(add_recursive_dependencies(plan)$dependencies)
 })
 
+test_that("source_deps recovers LinkingTo dependencies", {
+  plan <- data_frame(
+    package = c("A", "B", "C", "D"),
+    dependencies = list("C", character(), character(), character()),
+    deps = list(
+      data_frame(package = c("B", "C"), type = c("LinkingTo", "Imports")),
+      data_frame(package = character(), type = character()),
+      data_frame(package = character(), type = character()),
+      data_frame(package = character(), type = character())
+    ),
+    dep_types = rep(list(pkg_dep_types_hard()), 4)
+  )
+
+  # LinkingTo (B) is added back, in addition to the known Imports (C)
+  expect_equal(sort(source_deps(plan, 1L)), c("B", "C"))
+
+  # falls back to the `dependencies` column if there is no `deps` column
+  plan$deps <- NULL
+  expect_equal(source_deps(plan, 1L), "C")
+})
+
+test_that("handle_install_needs_build requeues the package as source", {
+  local_cli_config()
+  # A is a binary depending on B (LinkingTo) and C (Imports), C depends on D.
+  # As a binary, A's `dependencies` dropped the LinkingTo B.
+  plan <- data_frame(
+    package = c("A", "B", "C", "D"),
+    version = "1.0.0",
+    binary = TRUE,
+    needscompilation = "no",
+    dependencies = list("C", character(), "D", character()),
+    deps = list(
+      data_frame(package = c("B", "C"), type = c("LinkingTo", "Imports")),
+      data_frame(package = character(), type = character()),
+      data_frame(package = "D", type = "Imports"),
+      data_frame(package = character(), type = character())
+    ),
+    dep_types = rep(list(pkg_dep_types_hard()), 4),
+    build_done = TRUE,
+    install_done = c(FALSE, FALSE, TRUE, TRUE),
+    worker_id = NA_character_,
+    deps_left = rep(list(character()), 4)
+  )
+  state <- list(plan = plan, workers = list(), config = list())
+  worker <- list(
+    task = list(args = list(pkgidx = 1L)),
+    result = structure(
+      list(needscompilation = "yes"),
+      class = "install_needs_build"
+    )
+  )
+
+  state <- suppressMessages(handle_install_needs_build(state, worker))
+
+  # A is now a source package that still needs to be built
+  expect_false(state$plan$binary[[1]])
+  expect_false(state$plan$build_done[[1]])
+  expect_true(is.na(state$plan$worker_id[[1]]))
+  expect_equal(state$plan$needscompilation[[1]], "yes")
+
+  # Its dependency closure includes the recovered LinkingTo dep, and it now
+  # waits only for the not-yet-installed ones (B; C and D are installed).
+  expect_equal(sort(state$plan$dependencies[[1]]), c("B", "C", "D"))
+  expect_equal(state$plan$deps_left[[1]], "B")
+})
+
+test_that("handle_install_needs_build errors on missing LinkingTo dep", {
+  local_cli_config()
+  # A LinkingTo X, but X is not part of the plan (dropped, because A was a
+  # binary). We cannot build A from source without X.
+  plan <- data_frame(
+    package = c("A", "B"),
+    version = "1.0.0",
+    binary = TRUE,
+    needscompilation = "no",
+    dependencies = list("B", character()),
+    deps = list(
+      data_frame(package = c("X", "B"), type = c("LinkingTo", "Imports")),
+      data_frame(package = character(), type = character())
+    ),
+    dep_types = rep(list(pkg_dep_types_hard()), 2),
+    build_done = TRUE,
+    install_done = c(FALSE, TRUE),
+    worker_id = NA_character_,
+    deps_left = rep(list(character()), 2)
+  )
+  state <- list(plan = plan, workers = list(), config = list())
+  worker <- list(
+    task = list(args = list(pkgidx = 1L)),
+    result = structure(
+      list(needscompilation = "yes"),
+      class = "install_needs_build"
+    )
+  )
+
+  expect_snapshot(
+    error = TRUE,
+    handle_install_needs_build(state, worker)
+  )
+})
+
+test_that("lockfile_deps reconstructs the deps data frame", {
+  # empty / missing input yields an empty deps frame
+  expect_equal(lockfile_deps(NULL), make_null_deps())
+  expect_equal(lockfile_deps(list()), make_null_deps())
+
+  deps <- list(
+    list(
+      ref = "B",
+      type = "Imports",
+      package = "B",
+      op = "",
+      version = ""
+    ),
+    list(
+      ref = "C",
+      type = "LinkingTo",
+      package = "C",
+      op = ">=",
+      version = "1.0.0"
+    )
+  )
+  expect_equal(
+    lockfile_deps(deps),
+    data_frame(
+      ref = c("B", "C"),
+      type = c("Imports", "LinkingTo"),
+      package = c("B", "C"),
+      op = c("", ">="),
+      version = c("", "1.0.0")
+    )
+  )
+})
+
 test_that("ignore-build-errors parameter", {
   setup_fake_apps()
   local_cli_config()

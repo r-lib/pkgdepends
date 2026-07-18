@@ -3,18 +3,22 @@
     Code
       lock$packages
     Output
-         ref package version     type direct binary dependencies vignettes
-      1 pkg1    pkg1   1.0.0 standard  FALSE  FALSE                  FALSE
-      2 pkg2    pkg2   1.0.0 standard  FALSE  FALSE         pkg1     FALSE
-      3 pkg3    pkg3   1.0.0 standard   TRUE  FALSE         pkg2     FALSE
-        needscompilation metadata.RemoteType metadata.RemotePkgRef metadata.RemoteRef
-      1            FALSE            standard                  pkg1               pkg1
-      2            FALSE            standard                  pkg2               pkg2
-      3            FALSE            standard                  pkg3               pkg3
-          metadata.RemoteRepos metadata.RemotePkgPlatform metadata.RemoteSha
-      1 http://127.0.0.1:<port>                     source              1.0.0
-      2 http://127.0.0.1:<port>                     source              1.0.0
-      3 http://127.0.0.1:<port>                     source              1.0.0
+         ref package version     type direct binary dependencies
+      1 pkg1    pkg1   1.0.0 standard  FALSE  FALSE             
+      2 pkg2    pkg2   1.0.0 standard  FALSE  FALSE         pkg1
+      3 pkg3    pkg3   1.0.0 standard   TRUE  FALSE         pkg2
+                           deps vignettes needscompilation metadata.RemoteType
+      1                    NULL     FALSE            FALSE            standard
+      2 pkg1, depends, pkg1, ,      FALSE            FALSE            standard
+      3 pkg2, depends, pkg2, ,      FALSE            FALSE            standard
+        metadata.RemotePkgRef metadata.RemoteRef   metadata.RemoteRepos
+      1                  pkg1               pkg1 http://127.0.0.1:<port>
+      2                  pkg2               pkg2 http://127.0.0.1:<port>
+      3                  pkg3               pkg3 http://127.0.0.1:<port>
+        metadata.RemotePkgPlatform metadata.RemoteSha
+      1                     source              1.0.0
+      2                     source              1.0.0
+      3                     source              1.0.0
                                                                                                                         sources
       1 http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       2 http://127.0.0.1:<port>/src/contrib/pkg2_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg2/pkg2_1.0.0.tar.gz

@@ -27,6 +27,33 @@ test_that("new_pkg_installation_plan", {
   })
 })
 
+test_that("deps are preserved in the lockfile (#891)", {
+  setup_fake_apps()
+  pkgcache::pkg_cache_delete_files()
+  lib <- withr::local_tempdir()
+  lockfile <- withr::local_tempfile()
+
+  config <- list(library = lib)
+  prop <- pst(new_pkg_installation_proposal("pkg3", config = config))
+  pst(prop$solve())
+  prop$create_lockfile(lockfile)
+
+  sol <- prop$get_solution()$data
+  plan <- new_pkg_installation_plan(lockfile, config = config)
+  pst(plan$download())
+  iplan <- plan$get_install_plan()
+
+  expect_true("deps" %in% names(iplan))
+  # the raw `deps` table (columns and contents) survives the round-trip
+  for (pkg in sol$package) {
+    before <- sol$deps[[match(pkg, sol$package)]]
+    after <- iplan$deps[[match(pkg, iplan$package)]]
+    expect_equal(after[order(after$package), ], before[order(before$package), ],
+      ignore_attr = TRUE
+    )
+  }
+})
+
 test_that("install_args from the lockfile are preserved (#472)", {
   setup_fake_apps()
   pkgcache::pkg_cache_delete_files()

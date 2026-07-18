@@ -59,6 +59,16 @@
       character(0)
       
 
+# handle_install_needs_build errors on missing LinkingTo dep
+
+    Code
+      handle_install_needs_build(state, worker)
+    Condition
+      Error:
+      ! ! Cannot install A from source: it was served as a source package instead of a binary (typically by Posit Package Manager), but its `LinkingTo` dependency X is not part of the installation plan.
+      i `LinkingTo` dependencies are omitted from the plan for binary packages, because they are not needed to install a binary.
+      i To build A from source, set the `pkg.include_linkingto` option or the `PKG_INCLUDE_LINKINGTO` environment variable to `TRUE` and try again, to always include `LinkingTo` dependencies in the installation plan.
+
 # ignore-build-errors parameter
 
     Code

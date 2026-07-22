@@ -311,4 +311,8 @@ test_that("data frames", {
     tojson$write_str(df)
     cat(tojson$write_str(df, opts = list(pretty = TRUE)))
   })
+
+  # zero-row data frame
+  expect_equal(tojson$write_str(mtcars[0, ]), "[]")
+  expect_equal(tojson$write_str(mtcars[0, ], opts = list(pretty = TRUE)), "[]")
 })

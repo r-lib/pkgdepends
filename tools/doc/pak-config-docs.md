@@ -27,7 +27,7 @@ $ignore_dev_library
 [1] "Whether to ignore library directories called \\verb{__dev_lib__}."
 
 $include_linkingto
-[1] "Whether to always include \\code{LinkingTo} dependencies in the solution\nof and installation, even if they are needed because the packages\nare installed from binaries. This is sometimes useful, see e.g.\n\\url{https://github.com/r-lib/pak/issues/485} for an example use case."
+[1] "Whether to always include \\code{LinkingTo} dependencies in the solution\nof and installation, even if they are not needed because the packages\nare installed from binaries. This is sometimes useful, see e.g.\n\\url{https://github.com/r-lib/pak/issues/485} for an example use case.\nIt is also needed if a repository (Posit Package Manager typically)\nmight serve a source package instead of a binary, so that the source\npackage can be built, see\n\\url{https://github.com/r-lib/pak/issues/891}."
 
 $library
 [1] "Package library to install packages to. It is also used for\nalready installed packages when considering dependencies."

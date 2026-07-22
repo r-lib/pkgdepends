@@ -83,9 +83,13 @@ within that directory are updated. If a submodule appears in
 \code{.Rbuildignore}, then it is skipped.
 \item \code{ignore_dev_library}: Whether to ignore library directories called \verb{__dev_lib__}.
 \item \code{include_linkingto}: Whether to always include \code{LinkingTo} dependencies in the solution
-of and installation, even if they are needed because the packages
+of and installation, even if they are not needed because the packages
 are installed from binaries. This is sometimes useful, see e.g.
 \url{https://github.com/r-lib/pak/issues/485} for an example use case.
+It is also needed if a repository (Posit Package Manager typically)
+might serve a source package instead of a binary, so that the source
+package can be built, see
+\url{https://github.com/r-lib/pak/issues/891}.
 \item \code{library}: Package library to install packages to. It is also used for
 already installed packages when considering dependencies in
 \link[=pkg_deps]{dependency lookup} or

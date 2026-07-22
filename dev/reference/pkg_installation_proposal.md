@@ -735,7 +735,7 @@ pdi
 pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile()))
-#> ℹ Creating library directory: /tmp/RtmpKeA5eu/file1e0bd83dcbd
+#> ℹ Creating library directory: /tmp/Rtmpb8oFo6/file1ee6402e6
 pdi
 #> <pkg_installation_proposal>
 #> + refs:
@@ -749,7 +749,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKeA5eu/file1e0b31ebb109
+#> ℹ Creating library directory: /tmp/Rtmpb8oFo6/file1ee630dcd621
 pdi$get_config()
 #> # pkg config
 #> ## build_vignettes
@@ -766,7 +766,7 @@ pdi$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpKeA5eu/file1e0b61c9651b"
+#> [1] "/tmp/Rtmpb8oFo6/file1ee65206e79d"
 #> 
 #> ## configure_args
 #> <default>
@@ -787,11 +787,11 @@ pdi$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpKeA5eu/file1e0b6aa1fd57"
+#> [1] "/tmp/Rtmpb8oFo6/file1ee63972d481"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpKeA5eu/file1e0b31ebb109"
+#> [1] "/tmp/Rtmpb8oFo6/file1ee630dcd621"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -878,7 +878,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKeA5eu/file1e0b97f78ae
+#> ℹ Creating library directory: /tmp/Rtmpb8oFo6/file1ee653686de5
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -888,7 +888,7 @@ pdi <- new_pkg_installation_proposal(
   "r-lib/pkgdepends",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKeA5eu/file1e0b56eb4c98
+#> ℹ Creating library directory: /tmp/Rtmpb8oFo6/file1ee613789e1a
 pdi$get_solve_policy()
 #> [1] "lazy"
 pdi$set_solve_policy("upgrade")
@@ -899,7 +899,7 @@ pdi <- new_pkg_installation_proposal(
   "pak",
   config = list(library = tempfile())
 )
-#> ℹ Creating library directory: /tmp/RtmpKeA5eu/file1e0b538e343e
+#> ℹ Creating library directory: /tmp/Rtmpb8oFo6/file1ee67ad29804
 pdi
 #> <pkg_installation_proposal>
 #> + refs:

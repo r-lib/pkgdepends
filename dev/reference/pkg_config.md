@@ -98,10 +98,13 @@ Call `current_config()` to print the current configuration.
   `__dev_lib__`.
 
 - `include_linkingto`: Whether to always include `LinkingTo`
-  dependencies in the solution of and installation, even if they are
+  dependencies in the solution of and installation, even if they are not
   needed because the packages are installed from binaries. This is
   sometimes useful, see e.g. <https://github.com/r-lib/pak/issues/485>
-  for an example use case.
+  for an example use case. It is also needed if a repository (Posit
+  Package Manager typically) might serve a source package instead of a
+  binary, so that the source package can be built, see
+  <https://github.com/r-lib/pak/issues/891>.
 
 - `library`: Package library to install packages to. It is also used for
   already installed packages when considering dependencies in

@@ -2,6 +2,10 @@
 
 ## pkgdepends (development version)
 
+- Blank lines in `.Rbuildignore` no longer cause all git submodules of a
+  package to be skipped, empty lines are now dropped
+  ([\#480](https://github.com/r-lib/pkgdepends/issues/480)).
+
 - Duplicate system requirement commands (`pre_install` and
   `post_install`) are now deduplicated
   (<https://github.com/r-lib/pak/issues/888>).

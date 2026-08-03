@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpb8oFo6/file1ee66ad10fed"
+#> [1] "/tmp/RtmpCv7BKA/file21b972fb0797"
 #> 
 #> ## configure_args
 #> <default>
@@ -467,11 +467,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/Rtmpb8oFo6/file1ee63972d481"
+#> [1] "/tmp/RtmpCv7BKA/file21b93f69db51"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/Rtmpb8oFo6/file1ee65406eb70"
+#> [1] "/tmp/RtmpCv7BKA/file21b9f16feeb"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -558,7 +558,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 4.12 MB in 3 files.
+#> ✔ Updated metadata database: 4.14 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -567,8 +567,8 @@ pd$get_resolution()
 #> # A data frame: 2 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.11.0  GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.11.0  GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.11.1  GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.11.1  GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,

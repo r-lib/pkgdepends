@@ -104,7 +104,12 @@ download_remote_git <- function(
 
   rel_target <- resolution$target
   subdir <- resolution$remote[[1]]$subdir
-  if (!nocache) {
+  submodules <- config$get("git-submodules")
+  ## We never put a snapshot with submodules into the cache, and a cached
+  ## snapshot may well be missing them, e.g. the repo snapshots we download
+  ## from the GitHub API never have them. So we ignore the cache here if
+  ## submodules are needed.
+  if (!nocache && !submodules) {
     hit <- cache$package$copy_to(
       target_tree,
       package = package,
@@ -125,7 +130,6 @@ download_remote_git <- function(
   p <- async_git_download_repo(url, ref = sha, output = pkgdir)
 
   # submodules?
-  submodules <- config$get("git-submodules")
   if (submodules) {
     p <- p$then(function(x) async_update_git_submodules_r(pkgdir, subdir))
   }

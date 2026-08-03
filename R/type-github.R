@@ -68,6 +68,27 @@ download_remote_github <- function(
   ## 4. Otherwise we download the repo, add it to the cache, build the
   ##    R package, and add that to the cache as well.
 
+  ## The repo snapshot we download from the GitHub API never contains the
+  ## contents of the Git submodules of the repository. So if we need those,
+  ## we download the repository over the Git protocol instead, exactly like
+  ## for `git::` and `gitlab::` remotes.
+  ## https://github.com/r-lib/pkgdepends/issues/480
+  if (config$get("git-submodules")) {
+    resolution$remote[[1]]$url <- github_git_url(
+      resolution$remote[[1]]$username,
+      resolution$remote[[1]]$repo
+    )
+    return(download_remote_git(
+      resolution,
+      target,
+      target_tree,
+      config,
+      cache,
+      which,
+      on_progress
+    ))
+  }
+
   package <- resolution$package
   sha <- resolution$extra[[1]][["remotesha"]] %||% NA_character_
   need_vignettes <- which == "resolution"
@@ -243,6 +264,19 @@ installedok_remote_github <- function(installed, solution, config, ...) {
 
 ## ----------------------------------------------------------------------
 ## Internal functions
+
+# The URL of the Git repository behind a GitHub remote. GitHub serves its
+# API on a different host (or path) than the Git repositories themselves,
+# so we derive one from the other:
+# * `https://api.github.com` -> `https://github.com`,
+# * `https://ghe.example.com/api/v3` -> `https://ghe.example.com`.
+github_git_url <- function(username, repo) {
+  url <- Sys.getenv("R_PKG_GITHUB_API_URL", "https://api.github.com")
+  url <- sub("/+$", "", url)
+  url <- sub("/api(/v[0-9]+)?$", "", url)
+  url <- sub("^([a-zA-Z0-9]+://)api[.]", "\\1", url)
+  paste0(url, "/", username, "/", repo, ".git")
+}
 
 # Well-known subdirectories to probe for a DESCRIPTION when no `subdir` is
 # given. Order matters: the first match wins, and "" (the repo root) always

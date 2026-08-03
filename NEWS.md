@@ -1,5 +1,10 @@
 # pkgdepends (development version)
 
+* `github::` remotes now support Git submodules, if the `git_submodules`
+  configuration option is set. Previously this option only had an effect for
+  `git::` and `gitlab::` remotes, so submodules were silently missing from
+  packages installed from GitHub (#480).
+
 * Blank lines in `.Rbuildignore` no longer cause all git submodules of a
   package to be skipped, empty lines are now dropped (#480).
 

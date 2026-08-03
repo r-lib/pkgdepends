@@ -245,6 +245,84 @@ test_that("download_remote", {
   expect_false(file.exists(dl$fulltarget_tree))
 })
 
+test_that("github_git_url", {
+  withr::local_envvar(R_PKG_GITHUB_API_URL = NA)
+  expect_equal(
+    github_git_url("r-lib", "pak"),
+    "https://github.com/r-lib/pak.git"
+  )
+
+  # GitHub Enterprise
+  withr::local_envvar(R_PKG_GITHUB_API_URL = "https://ghe.example.com/api/v3")
+  expect_equal(
+    github_git_url("r-lib", "pak"),
+    "https://ghe.example.com/r-lib/pak.git"
+  )
+
+  # Anything else is used as is, sans trailing slashes
+  withr::local_envvar(R_PKG_GITHUB_API_URL = "http://127.0.0.1:3000/")
+  expect_equal(
+    github_git_url("user", "repo"),
+    "http://127.0.0.1:3000/user/repo.git"
+  )
+})
+
+test_that("download_remote with submodules uses git", {
+  # The snapshots we download from the GitHub API do not include the
+  # submodules, so we need to fall back to a git download.
+  # https://github.com/r-lib/pkgdepends/issues/480
+  skip_on_cran()
+  if (Sys.which("git") == "") {
+    skip("Needs git")
+  }
+
+  # `fake_gitlab` serves the git fixture from the *parent* of the `repo`
+  # directory, so a GitHub style `<username>/<repo>.git` path, i.e.
+  # `/repo/pak-test.git` here, resolves to the `pak-test` fixture repo.
+  withr::local_envvar(R_PKG_GITHUB_API_URL = fake_gitlab$url())
+  local_fake_git_no_creds(fake_gitlab$url())
+
+  dir.create(tmp <- tempfile())
+  dir.create(tmp2 <- tempfile())
+  on.exit(unlink(c(tmp, tmp2), recursive = TRUE), add = TRUE)
+
+  conf <- current_config()
+  conf$set("cache-dir", tmp)
+  conf$set("package-cache-dir", tmp2)
+  conf$set("git-submodules", TRUE)
+  cache <- list(package = pkgcache::package_cache$new(tmp2))
+
+  # The `build-ignore` branch of the fixture has a `cli` submodule, which
+  # is listed in `.Rbuildignore`, so it must not be downloaded.
+  sha <- "a9ffc55f59e0567ecdc67fb3f0333eca49be8d03"
+  res <- make_fake_resolution(
+    `github::repo/pak-test` = list(
+      package = "empty",
+      extra = list(list(remotesha = sha)),
+      metadata = list(list(RemoteSha = sha))
+    )
+  )
+
+  target <- file.path(tmp, res$target[1])
+  tree <- paste0(target, "-t")
+  dl <- synchronise(download_remote_github(
+    res[1, ],
+    target,
+    tree,
+    conf,
+    cache,
+    which = "resolution",
+    on_progress = NULL
+  ))
+
+  expect_equal(dl, "Got")
+  # A git download creates a directory, the GitHub API snapshot is a file
+  expect_false(file.exists(target))
+  expect_true(dir.exists(file.path(tree, "empty")))
+  expect_true(file.exists(file.path(tree, "empty", "DESCRIPTION")))
+  expect_false(file.exists(file.path(tree, "empty", "cli")))
+})
+
 test_that("satisfies_remote", {
   res <- make_fake_resolution(
     `github::r-lib/crayon` = list(

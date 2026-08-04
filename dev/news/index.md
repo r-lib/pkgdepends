@@ -2,6 +2,9 @@
 
 ## pkgdepends (development version)
 
+- Directly requested base packages are now ignored with a warning
+  ([\#478](https://github.com/r-lib/pkgdepends/issues/478)).
+
 - pkgdepends now skips the system requirements of binary packages that
   come from a Posit Package Manager `manylinux` repository
   (<https://github.com/r-lib/pak/issues/815>).

@@ -249,6 +249,32 @@
       system package installed required by
       -------------- --        -----------
 
+# sysreqs_check_installed ignores manylinux packages
+
+    Code
+      res
+    Output
+      system package  installed required by
+      --------------  --        -----------
+      gsfonts         x         magick     
+      libmagick++-dev x         magick     
+
+# sysreqs_fix_installed
+
+    Code
+      invisible(sysreqs_fix_installed())
+    Message
+      > No system requirements.
+
+---
+
+    Code
+      invisible(sysreqs_fix_installed())
+    Message
+      i Ignoring the system requirements of 2 self-contained
+      manylinux packages: magick and png.
+      v All system requirements are installed.
+
 # async_parse_installed
 
     Code

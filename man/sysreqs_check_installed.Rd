@@ -30,10 +30,12 @@ before the installation of the the system package.
 after the installation of the system package.
 }
 
-The data frame also have two attributes with additional data:
+The data frame also have three attributes with additional data:
 \itemize{
-\item \code{sysreqs_records}: the raw system requirements records, and
-\item \code{system_packages}: the list of the installed system packages.
+\item \code{sysreqs_records}: the raw system requirements records,
+\item \code{system_packages}: the list of the installed system packages, and
+\item \code{manylinux_packages}: the names of the installed self-contained
+\code{manylinux} packages, whose system requirements were ignored.
 }
 
 \code{sysreqs_fix_packages()} returns the same value, but invisibly.
@@ -48,6 +50,9 @@ packages (or a subset of packages) are installed.
 These functions use the \code{sysreqs_platform} configuration option,
 see \eval{man_config_link("Configuration")}. Set this if
 pkgdepends does not detect your platform correctly.
+
+Packages installed from a Posit Package Manager \code{manylinux} repository
+are self-contained: they bundle the shared libraries they need.
 }
 \examples{
 \dontshow{if (Sys.getenv("IN_PKGDOWN") == "true" && Sys.info()[["sysname"]] == "Linux") withAutoprint(\{ # examplesIf}

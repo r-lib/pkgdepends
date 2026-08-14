@@ -54,3 +54,29 @@ test_that("platform_is_ok", {
     expect_false(platform_is_ok(c[[1]], c[[2]], c[[3]]), info = c)
   }
 })
+
+test_that("is_manylinux_platform", {
+  expect_true(is_manylinux_platform("x86_64-pc-linux-gnu-manylinux-2.28"))
+  expect_true(is_manylinux_platform(
+    "aarch64-unknown-linux-gnu-manylinux-2.34"
+  ))
+  expect_true(is_manylinux_platform("x86_64-pc-linux-musl-manylinux-2.28"))
+
+  expect_false(is_manylinux_platform("x86_64-pc-linux-gnu-ubuntu-24.04"))
+  expect_false(is_manylinux_platform("source"))
+  expect_false(is_manylinux_platform(""))
+  expect_false(is_manylinux_platform(NA_character_))
+  # version number is required
+  expect_false(is_manylinux_platform("x86_64-pc-linux-gnu-manylinux"))
+
+  # vectorized, including the zero length case
+  expect_equal(
+    is_manylinux_platform(c(
+      "x86_64-pc-linux-gnu-manylinux-2.28",
+      "x86_64-pc-linux-gnu-ubuntu-24.04",
+      NA_character_
+    )),
+    c(TRUE, FALSE, FALSE)
+  )
+  expect_equal(is_manylinux_platform(character()), logical())
+})

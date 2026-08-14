@@ -437,8 +437,23 @@ test_that("plan_sysreqs_suppressed", {
   expect_false(plan_sysreqs_suppressed(plan, 3L))
   expect_false(plan_sysreqs_suppressed(plan, 4L))
 
-  # a plan created from a lock file has no `mirror` column
+  # a plan created from a lock file has no `mirror` column, but the
+  # manylinux platform is still a good signal
   plan$mirror <- NULL
+  expect_false(plan_sysreqs_suppressed(plan, 1L))
+  plan$platform <- c(
+    "x86_64-pc-linux-gnu-manylinux-2.28",
+    "x86_64-pc-linux-gnu-ubuntu-24.04",
+    "x86_64-pc-linux-gnu-manylinux-2.28",
+    "x86_64-pc-linux-gnu-manylinux-2.28"
+  )
+  expect_true(plan_sysreqs_suppressed(plan, 1L))
+  expect_false(plan_sysreqs_suppressed(plan, 2L))
+  expect_false(plan_sysreqs_suppressed(plan, 3L))
+  expect_false(plan_sysreqs_suppressed(plan, 4L))
+
+  # no `sysreqs` column at all
+  plan$sysreqs <- NULL
   expect_false(plan_sysreqs_suppressed(plan, 1L))
 })
 

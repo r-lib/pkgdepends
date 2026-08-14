@@ -110,6 +110,91 @@ test_that("sysreqs_check_installed", {
   expect_snapshot(sysreqs_check_installed())
 })
 
+test_that("sysreqs_check_installed ignores manylinux packages", {
+  skip_on_cran()
+  withr::local_options(pkg.sysreqs_db_update = FALSE)
+
+  # curl is a self-contained manylinux binary, magick is not
+  lib <- withr::local_tempdir()
+  dir.create(file.path(lib, "curl", "libs", ".libs"), recursive = TRUE)
+  dir.create(file.path(lib, "magick", "libs"), recursive = TRUE)
+
+  fakesys <- data_frame(
+    status = "ii",
+    package = character(),
+    provides = list()
+  )
+
+  faker <- data_frame(
+    Package = c("magick", "curl"),
+    Repository = c("RSPM", "RSPM"),
+    LibPath = c(lib, lib),
+    SystemRequirements = c(
+      "ImageMagick++: ImageMagick-c++-devel (rpm) or\nlibmagick++-dev (deb)",
+      "libcurl: libcurl-devel (rpm) or\nlibcurl4-openssl-dev (deb)."
+    )
+  )
+
+  mockery::stub(
+    sysreqs_check_installed,
+    "async_system_list_packages",
+    function(...) async_constant(fakesys)
+  )
+  mockery::stub(
+    sysreqs_check_installed,
+    "async_parse_installed",
+    function(...) async_constant(faker)
+  )
+
+  withr::local_options(pkg.sysreqs_platform = "ubuntu-22.04")
+  res <- sysreqs_check_installed()
+  expect_snapshot(res)
+  expect_equal(attr(res, "manylinux_packages"), "curl")
+})
+
+test_that("sysreqs_fix_installed", {
+  skip_on_cran()
+  local_cli_config()
+
+  fake_check <- function(system_package = character(), manylinux = character()) {
+    n <- length(system_package)
+    chk <- data_frame(
+      system_package = system_package,
+      installed = rep(TRUE, n),
+      packages = replicate(n, "curl", simplify = FALSE),
+      pre_install = replicate(n, character(), simplify = FALSE),
+      post_install = replicate(n, character(), simplify = FALSE)
+    )
+    class(chk) <- c("pkg_sysreqs_check_result", class(chk))
+    attr(chk, "sysreqs_records") <- list()
+    attr(chk, "manylinux_packages") <- manylinux
+    chk
+  }
+
+  chk <- fake_check()
+
+  mockery::stub(
+    sysreqs_fix_installed,
+    "sysreqs_check_installed",
+    function(...) chk
+  )
+  installed <- NULL
+  mockery::stub(
+    sysreqs_fix_installed,
+    "sysreqs_install",
+    function(cmds, config) installed <<- cmds
+  )
+
+  # nothing to do
+  expect_snapshot(invisible(sysreqs_fix_installed()))
+  expect_null(installed)
+
+  # all installed already, and some manylinux packages were ignored
+  chk <- fake_check("libcurl4-openssl-dev", c("magick", "png"))
+  expect_snapshot(invisible(sysreqs_fix_installed()))
+  expect_null(installed)
+})
+
 test_that("async_parse_installed", {
   mockery::stub(
     async_parse_installed,

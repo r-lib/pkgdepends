@@ -6,6 +6,9 @@
   from a Posit Package Manager `manylinux` repository
   (https://github.com/r-lib/pak/issues/815).
 
+* `sysreqs_check_installed()` and `sysreqs_fix_installed()` now ignore the
+  system requirements of installed self-contained `manylinux` packages.
+
 * pkgdepends now accepts binary packages from a Posit Package Manager
   `manylinux` repository. pkgcache labels these with a
   `*-manylinux-<glibc-version>` platform now, and they are OK for any

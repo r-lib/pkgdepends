@@ -519,6 +519,12 @@ test_that("no sysreqs for PPM manylinux binaries", {
       mirror = "https://p3m.dev/cran/__linux__/noble/latest",
       platform = "x86_64-pc-linux-gnu",
       sysreqs = "openssl"
+    ),
+    # manylinux platform, plain repo URL: suppressed
+    "png" = list(
+      mirror = "https://p3m.dev/cran/latest",
+      platform = "x86_64-pc-linux-gnu-manylinux-2.28",
+      sysreqs = "libpng"
     )
   )
 
@@ -531,13 +537,18 @@ test_that("no sysreqs for PPM manylinux binaries", {
   res__sysreqs_match(self, private)
 
   # the raw `SystemRequirements` string is kept for all of them
-  expect_equal(self$result$sysreqs, c("libcurl", "libxml2", "openssl"))
+  expect_equal(
+    self$result$sysreqs,
+    c("libcurl", "libxml2", "openssl", "libpng")
+  )
 
-  # but no system packages, and no commands, for the manylinux binary
-  expect_null(self$result$sysreqs_packages[[1]])
-  expect_equal(self$result$sysreqs_pre_install[[1]], "")
-  expect_equal(self$result$sysreqs_install[[1]], "")
-  expect_equal(self$result$sysreqs_post_install[[1]], "")
+  # but no system packages, and no commands, for the manylinux binaries
+  for (idx in c(1L, 4L)) {
+    expect_null(self$result$sysreqs_packages[[idx]])
+    expect_equal(self$result$sysreqs_pre_install[[idx]], "")
+    expect_equal(self$result$sysreqs_install[[idx]], "")
+    expect_equal(self$result$sysreqs_post_install[[idx]], "")
+  }
 
   # the other two are matched as usual
   expect_equal(

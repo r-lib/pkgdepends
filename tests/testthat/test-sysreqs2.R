@@ -292,5 +292,49 @@ test_that("binary_needs_no_sysreqs", {
   expect_false(binary_needs_no_sysreqs("x86_64-pc-linux-gnu", NA_character_))
   expect_false(binary_needs_no_sysreqs(NA_character_, ppm))
 
+  # a manylinux platform is enough, even if the repo URL does not look like
+  # a manylinux repo
+  expect_true(binary_needs_no_sysreqs(
+    "x86_64-pc-linux-gnu-manylinux-2.28",
+    "https://p3m.dev/cran/latest"
+  ))
+  expect_true(binary_needs_no_sysreqs(
+    "x86_64-pc-linux-gnu-manylinux-2.28",
+    NA_character_
+  ))
+
   expect_equal(binary_needs_no_sysreqs(character(), character()), logical())
+})
+
+test_that("installed_needs_no_sysreqs", {
+  lib <- withr::local_tempdir()
+  dir.create(file.path(lib, "curl", "libs", ".libs"), recursive = TRUE)
+  dir.create(file.path(lib, "magick", "libs"), recursive = TRUE)
+
+  expect_true(installed_needs_no_sysreqs("curl", "RSPM", lib))
+  # no bundled libraries
+  expect_false(installed_needs_no_sysreqs("magick", "RSPM", lib))
+  # not from PPM
+  expect_false(installed_needs_no_sysreqs("curl", "CRAN", lib))
+  expect_false(installed_needs_no_sysreqs("curl", NA_character_, lib))
+  # not installed at all
+  expect_false(installed_needs_no_sysreqs("filelock", "RSPM", lib))
+
+  # vectorized, possibly over multiple libraries
+  expect_equal(
+    installed_needs_no_sysreqs(
+      c("curl", "magick", "curl"),
+      c("RSPM", "RSPM", "CRAN"),
+      c(lib, lib, lib)
+    ),
+    c(TRUE, FALSE, FALSE)
+  )
+
+  # missing `Repository` or `LibPath` column, and the zero length case
+  expect_equal(installed_needs_no_sysreqs("curl", NULL, lib), FALSE)
+  expect_equal(installed_needs_no_sysreqs("curl", "RSPM", NULL), FALSE)
+  expect_equal(
+    installed_needs_no_sysreqs(character(), character(), character()),
+    logical()
+  )
 })

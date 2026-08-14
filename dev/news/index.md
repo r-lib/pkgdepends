@@ -9,6 +9,11 @@
   come from a Posit Package Manager `manylinux` repository
   (<https://github.com/r-lib/pak/issues/815>).
 
+- pkgdepends now accepts binary packages from a Posit Package Manager
+  `manylinux` repository. pkgcache labels these with a
+  `*-manylinux-<glibc-version>` platform now, and they are OK for any
+  requested Linux platform with the same `cpu-vendor-os` triple.
+
 - Blank lines in `.Rbuildignore` no longer cause all git submodules of a
   package to be skipped, empty lines are now dropped
   ([\#480](https://github.com/r-lib/pkgdepends/issues/480)).

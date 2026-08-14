@@ -42,11 +42,14 @@ Data frame with a custom print and format method, and a
 - `post_install`: list column of character vectors. Commands to run
   after the installation of the system package.
 
-The data frame also have two attributes with additional data:
+The data frame also have three attributes with additional data:
 
-- `sysreqs_records`: the raw system requirements records, and
+- `sysreqs_records`: the raw system requirements records,
 
-- `system_packages`: the list of the installed system packages.
+- `system_packages`: the list of the installed system packages, and
+
+- `manylinux_packages`: the names of the installed self-contained
+  `manylinux` packages, whose system requirements were ignored.
 
 `sysreqs_fix_packages()` returns the same value, but invisibly.
 
@@ -55,6 +58,9 @@ The data frame also have two attributes with additional data:
 These functions use the `sysreqs_platform` configuration option, see
 `man_config_link("Configuration")`. Set this if pkgdepends does not
 detect your platform correctly.
+
+Packages installed from a Posit Package Manager `manylinux` repository
+are self-contained: they bundle the shared libraries they need.
 
 ## See also
 

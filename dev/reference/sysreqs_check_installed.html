@@ -76,8 +76,10 @@ installed R packages that need this system package.</p></li>
 before the installation of the the system package.</p></li>
 <li><p><code>post_install</code>: list column of character vectors. Commands to run
 after the installation of the system package.</p></li>
-</ul><p>The data frame also have two attributes with additional data:</p><ul><li><p><code>sysreqs_records</code>: the raw system requirements records, and</p></li>
-<li><p><code>system_packages</code>: the list of the installed system packages.</p></li>
+</ul><p>The data frame also have three attributes with additional data:</p><ul><li><p><code>sysreqs_records</code>: the raw system requirements records,</p></li>
+<li><p><code>system_packages</code>: the list of the installed system packages, and</p></li>
+<li><p><code>manylinux_packages</code>: the names of the installed self-contained
+<code>manylinux</code> packages, whose system requirements were ignored.</p></li>
 </ul><p><code>sysreqs_fix_packages()</code> returns the same value, but invisibly.</p>
     </div>
     <div class="section level2">
@@ -85,6 +87,8 @@ after the installation of the system package.</p></li>
     <p>These functions use the <code>sysreqs_platform</code> configuration option,
 see <code>man_config_link("Configuration")</code>. Set this if
 pkgdepends does not detect your platform correctly.</p>
+<p>Packages installed from a Posit Package Manager <code>manylinux</code> repository
+are self-contained: they bundle the shared libraries they need.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

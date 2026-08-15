@@ -21,6 +21,12 @@ test_that("parse_remote_git", {
   )))
 })
 
+test_that("parse_remote_git, trailing slash", {
+  p <- parse_remote_git("git::https://github.com/r-lib/cli/")[[1]]
+  expect_equal(p$repo, "cli")
+  expect_equal(p$url, "https://github.com/r-lib/cli")
+})
+
 test_that("resolve_remote_git", {
   skip_on_cran()
   setup_fake_apps()

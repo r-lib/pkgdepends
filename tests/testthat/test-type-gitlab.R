@@ -4,6 +4,12 @@
 # `pak-test.git` fixture as `<group `repo`>/pak-test`) instead of gitlab.com,
 # and the tests work offline. See `fake_gitlab` in helper-apps.R.
 
+test_that("parse_remote_gitlab, trailing slash", {
+  p <- parse_remote_gitlab("gitlab::user/repo/")[[1]]
+  expect_equal(p$projectpath, "user")
+  expect_equal(p$project, "repo")
+})
+
 test_that("resolve", {
   skip_on_cran()
   setup_fake_apps()

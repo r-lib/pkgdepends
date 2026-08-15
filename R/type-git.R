@@ -197,7 +197,9 @@ git_rx <- function() {
     "(?:(?<protocol>[^/]*)://)?",
     "(?<host>[^/]+)",
     "(?<path>[^@]*/)",
-    "(?<repo>[^/@]*)",
+    "(?<repo>[^/@]+)",
+    ## Optional trailing slash(es)
+    "/*",
     "(?:@(?<commitish>.*))?"
   )
 }

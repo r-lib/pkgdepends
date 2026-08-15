@@ -81,17 +81,18 @@ github_rx <- function() {
     "?",
     ## Commit / PR / Release
     github_detail_rx(),
-    "$"
+    ## Optional trailing slash(es)
+    "/*$"
   )
 }
 
 github_url_commitish_rx <- function() {
-  "(?:(?:tree|commit|releases/tag)/(?<commitish>.+$))"
+  "(?:(?:tree|commit|releases/tag)/(?<commitish>.+?))"
 }
 
-github_url_pull_rx <- function() "(?:pull/(?<pull>.+$))"
+github_url_pull_rx <- function() "(?:pull/(?<pull>.+?))"
 
-github_url_release_rx <- function() "(?:releases/)(?<release>.+$)"
+github_url_release_rx <- function() "(?:releases/)(?<release>.+?)"
 
 github_url_detail_rx <- function() {
   paste0(
@@ -135,7 +136,8 @@ github_url_rx <- function() {
     "(?:[.]git)?",
     ## Commit / PR / Release
     github_url_detail_rx(),
-    "$"
+    ## Optional trailing slash(es)
+    "/*$"
   )
 }
 

@@ -1,5 +1,8 @@
 # pkgdepends (development version)
 
+* GitHub, GitLab and `git::` remotes now allow trailing
+  slashes, e.g. `github::r-lib/pkgdepends/`
+  (https://github.com/r-lib/pkgdepends/issues/477).
 * Directly requested base packages are now ignored with a warning (#478).
 
 * pkgdepends now skips the system requirements of binary packages that come

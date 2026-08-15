@@ -42,7 +42,11 @@ test_that("parse_pkg_refs, github", {
       "git@github.com:foo-bar/baz-qux.git",
       username = "foo-bar",
       repo = "baz-qux"
-    )
+    ),
+
+    # Trailing slashes are ignored
+    list("user/repo/"),
+    list("https://github.com/user/repo/")
   )
 
   for (case in cases) {

@@ -100,6 +100,7 @@ gitlab_rx <- function() {
     "(?:",
     github_commitish_rx(),
     ")?",
-    "$"
+    ## Optional trailing slash(es)
+    "/*$"
   )
 }

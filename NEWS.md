@@ -1,5 +1,8 @@
 # pkgdepends (development version)
 
+* Version-pinned CRAN-like refs now look in `Archive/` for every repository in
+  `options("repos")`, after trying the CRAN mirror first.
+
 * Directly requested base packages are now ignored with a warning (#478).
 
 * pkgdepends now skips the system requirements of binary packages that come

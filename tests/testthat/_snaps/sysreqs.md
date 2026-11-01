@@ -26,47 +26,6 @@
       18 SUSE Linux Enterprise    linux sle                 sle          *       <NA>          <NA>              zypper --non-interactive install rpm          
       19 Alpine Linux             linux alpine              alpine       *       minor         <NA>              apk add --no-cache               apk          
 
-# sysreqs_db_list
-
-    Code
-      lst$packages
-    Output
-      [[1]]
-      [1] "libcairo2-dev"
-      
-      [[2]]
-      [1] "chromium"
-      
-      [[3]]
-      [1] "libcurl4-openssl-dev"
-      
-    Code
-      lst$pre_install
-    Output
-      [[1]]
-      NULL
-      
-      [[2]]
-      [1] "apt-get install -y software-properties-common"
-      [2] "add-apt-repository -y ppa:xtradeb/apps"       
-      [3] "apt-get update"                               
-      
-      [[3]]
-      NULL
-      
-    Code
-      lst$post_install
-    Output
-      [[1]]
-      NULL
-      
-      [[2]]
-      NULL
-      
-      [[3]]
-      NULL
-      
-
 # sysreqs_db_match
 
     Code

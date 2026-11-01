@@ -178,6 +178,9 @@ type_cran_resolve_version <- function(
   # contain `//src/contrib`, whether or not the configured repo had a slash.
   repos <- sub("/+$", "", repos)
   repos <- unique(repos[nzchar(repos)])
+  if (length(repos) == 0L) {
+    return(resolve_from_metadata(remote, direct, config, cache, dependencies))
+  }
 
   type_cran_resolve_archive(
     remote,

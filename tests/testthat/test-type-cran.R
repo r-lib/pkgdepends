@@ -194,6 +194,30 @@ test_that("resolve an old version from another configured archive", {
   ))
 })
 
+test_that("missing archive repositories fall back to metadata", {
+  withr::local_options(repos = character())
+  remote <- structure(
+    list(package = "pkg1", version = "0.9.0", atleast = "=="),
+    class = "remote_ref"
+  )
+  config <- list(get = function(key) "")
+  called <- FALSE
+  mockery::stub(
+    type_cran_resolve_version,
+    "resolve_from_metadata",
+    function(...) {
+      called <<- TRUE
+      "metadata fallback"
+    }
+  )
+
+  expect_equal(
+    type_cran_resolve_version(remote, TRUE, config, NULL, NULL),
+    "metadata fallback"
+  )
+  expect_true(called)
+})
+
 test_that("resolve an old version from archives with trailing slashes", {
   pkgcache::pkg_cache_delete_files()
 

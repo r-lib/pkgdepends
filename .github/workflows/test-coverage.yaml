@@ -32,12 +32,11 @@ jobs:
       - name: Test coverage
         run: |
           uncovr::test()
-          if (nzchar(Sys.getenv("CODECOV_TOKEN")) || Sys.getenv("GITHUB_EVENT_NAME") != "pull_request") {
+          if (nzchar(Sys.getenv("CODECOV_TOKEN"))) {
             uncovr::codecov()
           } else {
-            message("Skipping uncovr::codecov(): no CODECOV_TOKEN available for PR run.")
+            message("Skipping uncovr::codecov(): no CODECOV_TOKEN configured.")
           }
         shell: Rscript {0}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}

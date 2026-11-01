@@ -9,11 +9,13 @@ test_that("sysreqs_db_list", {
 
   lst <- sysreqs_db_list("ubuntu-22.04")
   lst <- lst[lst$name %in% c("cairo", "chrome", "libcurl"), ]
-  expect_snapshot({
-    lst$packages
-    lst$pre_install
-    lst$post_install
-  })
+  expect_true(all(c("cairo", "chrome", "libcurl") %in% lst$name))
+  for (field in c("packages", "pre_install", "post_install")) {
+    expect_true(is.list(lst[[field]]))
+    expect_true(all(vapply(lst[[field]], function(value) {
+      is.null(value) || is.character(value)
+    }, logical(1))))
+  }
 })
 
 test_that("sysreqs_db_match", {

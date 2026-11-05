@@ -35,7 +35,7 @@
       [1] "libcairo2-dev"
       
       [[2]]
-      [1] "chromium"
+      NULL
       
       [[3]]
       [1] "libcurl4-openssl-dev"
@@ -47,9 +47,10 @@
       NULL
       
       [[2]]
-      [1] "apt-get install -y software-properties-common"
-      [2] "add-apt-repository -y ppa:xtradeb/apps"       
-      [3] "apt-get update"                               
+      [1] "[ $(which google-chrome) ] || [ $(which chromium) ] || apt-get install -y software-properties-common"               
+      [2] "[ $(which google-chrome) ] || [ $(which chromium) ] || add-apt-repository -y ppa:xtradeb/apps"                      
+      [3] "[ $(which google-chrome) ] || [ $(which chromium) ] || apt-get update"                                              
+      [4] "[ $(which google-chrome) ] || [ $(which chromium) ] || DEBIAN_FRONTEND='noninteractive' apt-get install -y chromium"
       
       [[3]]
       NULL

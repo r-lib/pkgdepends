@@ -77,7 +77,7 @@ pd$draw()
 ```
 
 
-    ## ✔ Updated metadata database: 3.71 MB in 8 files.
+    ## ✔ Updated metadata database: 3.86 MB in 8 files.
     ## ✔ Updating metadata database ... done
     ## r-lib/pkgcache 2.2.5.9000 [new][bld][cmp][dl] (unknown size)
     ## ├─callr 3.8.0 [new][bld][dl] (113.26 kB)
@@ -87,7 +87,7 @@ pd$draw()
     ## │ │ └─R6 2.6.1 [new][bld][dl] (64.51 kB)
     ## │ └─R6
     ## ├─cli 3.6.6 [new][bld][cmp][dl] (644.13 kB)
-    ## ├─curl 7.1.0 [new][bld][cmp][dl] (717.73 kB)
+    ## ├─curl 8.1.0 [new][bld][cmp][dl] (730.86 kB)
     ## ├─filelock 1.0.3 [new][bld][cmp][dl] (15.44 kB)
     ## ├─jsonlite 2.0.0 [new][bld][cmp][dl] (1.06 MB)
     ## ├─processx
@@ -112,7 +112,7 @@ pdl$download()
 
 
     ## ℹ Getting 1 pkg with unknown size
-    ## ✔ Got cli 3.6.6.9000 (source) (870.03 kB)
+    ## ✔ Got cli 3.6.6.9000 (source) (1.16 MB)
 
 See the
 [`pkg_download_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html)
@@ -139,11 +139,11 @@ pdi$install()
     ## ℹ Getting 1 pkg with unknown size
     ## ✔ Cached copy of cli 3.6.6.9000 (source) is the latest build
     ## ℹ Packaging cli 3.6.6.9000
-    ## ✔ Packaged cli 3.6.6.9000 (1.8s)
+    ## ✔ Packaged cli 3.6.6.9000 (1.1s)
     ## ℹ Building cli 3.6.6.9000
-    ## ✔ Built cli 3.6.6.9000 (9.6s)
-    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@86bdefe) (35ms)
-    ## ✔ Summary:   1 new  in 9.6s
+    ## ✔ Built cli 3.6.6.9000 (6.1s)
+    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@633bc27) (1s)
+    ## ✔ Summary:   1 new  in 7.2s
 
 ## Dependency resolution
 

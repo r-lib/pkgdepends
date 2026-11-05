@@ -27,7 +27,8 @@ scan_deps(path = NULL, root = NULL)
   are scanned, the directories recursively. In this case the `root`
   argument is used as the project root, to find `.gitignore` and
   `.renvignore` files. All entries of `path` must be within the `root`,
-  the project root.
+  the project root. Files in `path` are scanned if they have a supported
+  file type. Paths in the result are relative to `root`.
 
 - root:
 

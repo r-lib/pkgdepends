@@ -79,8 +79,8 @@ pkgdepends:
 
 ``` r
 current_r_platform()
-#> [1] "x86_64-pc-linux-gnu-ubuntu-24.04"
+#> [1] "x86_64-pc-linux-gnu-ubuntu-26.04"
 default_platforms()
-#> [1] "x86_64-pc-linux-gnu-ubuntu-24.04"
+#> [1] "x86_64-pc-linux-gnu-ubuntu-26.04"
 #> [2] "source"                          
 ```

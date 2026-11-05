@@ -30,6 +30,53 @@ test_that("scan_deps errors", {
     # path are not inside root
     scan_deps("foo", "bar")
     scan_deps(c("foo", "foobar"), "bar")
+    # sibling directory with a common prefix is not inside root
+    scan_deps("foobar", "foo")
+    # unsupported file type
+    file.create("foo.txt")
+    scan_deps("foo.txt", ".")
+  })
+})
+
+test_that("scan_deps with files and directories in path (#460)", {
+  local_reproducible_output(width = 500)
+  withr::local_envvar(R_PKG_CACHE_DIR = cache <- tempfile())
+  on.exit(unlink(cache, recursive = TRUE), add = TRUE)
+  mkdirp(tmp <- tempfile())
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  withr::local_dir(tmp)
+
+  mkdirp(c("R", "sub", "tests/testthat", "empty"))
+  writeLines("dplyr::filter(mtcars, cyl == 4)", "example.R")
+  writeLines("library(cli)", "R/a.R")
+  writeLines("library(ps)", "sub/b.R")
+  writeLines("library(testthat)", "tests/testthat/test-a.R")
+
+  # single file
+  expect_snapshot({
+    scan_deps("example.R", root = ".")
+  })
+  deps <- scan_deps("example.R", root = ".")
+  expect_equal(deps$path, "example.R")
+  expect_equal(deps$package, "dplyr")
+
+  # file in subdirectory, file and directory together,
+  # multiple directories
+  deps <- scan_deps(c("sub/b.R", "R", "tests"), root = ".")
+  expect_equal(
+    deps$path,
+    c("sub/b.R", "R/a.R", "tests/testthat/test-a.R")
+  )
+  expect_equal(deps$package, c("ps", "cli", "testthat"))
+  expect_equal(deps$type, c("prod", "prod", "test"))
+
+  # absolute paths work, too
+  deps <- scan_deps(file.path(tmp, "sub"), root = tmp)
+  expect_equal(deps$path, "sub/b.R")
+
+  # no dependencies
+  expect_snapshot({
+    scan_deps("empty", root = ".")
   })
 })
 

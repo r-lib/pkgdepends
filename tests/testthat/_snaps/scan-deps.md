@@ -35,6 +35,36 @@
     Condition
       Error:
       ! ! 'foo' and 'foobar' are outside of project root 'bar'.
+    Code
+      scan_deps("foobar", "foo")
+    Condition
+      Error:
+      ! ! 'foobar' is outside of project root 'foo'.
+    Code
+      file.create("foo.txt")
+    Output
+      [1] TRUE
+    Code
+      scan_deps("foo.txt", ".")
+    Condition
+      Error:
+      ! ! Cannot scan 'foo.txt' for dependencies, unsupported file type.
+
+# scan_deps with files and directories in path (#460)
+
+    Code
+      scan_deps("example.R", root = ".")
+    Output
+      
+      Dependencies:
+      + dplyr @ example.R
+
+---
+
+    Code
+      scan_deps("empty", root = ".")
+    Output
+      No dependencies found.
 
 # get_deps_cache_path
 

@@ -1,5 +1,9 @@
 # pkgdepends (development version)
 
+* `scan_deps()` now scans files given in `path`, not only directories.
+  Paths in the result are now always relative to the project root
+  (#460, https://github.com/r-lib/pak/issues/844).
+
 * Directly requested base packages are now ignored with a warning (#478).
 
 * pkgdepends now skips the system requirements of binary packages that come

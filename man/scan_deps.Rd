@@ -18,7 +18,8 @@ If \code{path} is not \code{NULL}, then only the specified files and directories
 are scanned, the directories recursively. In this case the \code{root}
 argument is used as the project root, to find \code{.gitignore} and
 \code{.renvignore} files. All entries of \code{path} must be within the \code{root},
-the project root.}
+the project root. Files in \code{path} are scanned if they have a
+supported file type. Paths in the result are relative to \code{root}.}
 
 \item{root}{The root directory of the project. It is used to find the
 \code{.gitignore} and \code{.renvignore} files. By default the same algorithm

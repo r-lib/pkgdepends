@@ -1,5 +1,8 @@
 # pkgdepends (development version)
 
+* Version-pinned CRAN-like refs now look in `Archive/` for every repository in
+  `options("repos")`, after trying the CRAN mirror first.
+
 * `scan_deps()` now scans files given in `path`, not only directories.
   Paths in the result are now always relative to the project root
   (#460, https://github.com/r-lib/pak/issues/844).

@@ -167,9 +167,45 @@ type_cran_resolve_version <- function(
     ))
   }
 
+  # Try Archive/ on the CRAN mirror first, then on every other repo in
+  # `options("repos")`: CRAN-like repos (e.g. RDepot) keep superseded
+  # versions in their own Archive/ with the same layout.
+  repos <- c(config$get("cran-mirror")[[1]], unname(getOption("repos")))
+  repos <- repos[!is.na(repos) & nzchar(repos) & repos != "@CRAN@"]
+  repos <- unique(repos)
+  if (length(repos) == 0L) {
+    return(resolve_from_metadata(remote, direct, config, cache, dependencies))
+  }
+
+  type_cran_resolve_archive(
+    remote,
+    repos,
+    direct,
+    config,
+    cache,
+    dependencies
+  )$catch(
+    error = function(err) {
+      # if it is not in any repo's Archive, try the main package.
+      # This will fail if not the right vesion
+      resolve_from_metadata(remote, direct, config, cache, dependencies)
+    }
+  )
+}
+
+# Tries `repos[[1]]`'s Archive/ for `remote`, recursing through the rest of
+# `repos` on failure. RemoteRepos is the repo that served the tarball.
+type_cran_resolve_archive <- function(
+  remote,
+  repos,
+  direct,
+  config,
+  cache,
+  dependencies
+) {
   url_remote <- remote
   url_remote$url <- paste0(
-    config$get("cran-mirror")[[1]],
+    repos[[1]],
     "/src/contrib/Archive/",
     remote$package,
     "/",
@@ -178,7 +214,7 @@ type_cran_resolve_version <- function(
     remote$version,
     ".tar.gz"
   )
-  url_remote$hash <- url_hash(paste0(remote$package, "=url::", remote$url))
+  url_remote$hash <- url_hash(paste0(remote$package, "=url::", url_remote$url))
 
   resolve_remote_url(url_remote, direct, config, cache, dependencies)$then(
     function(res) {
@@ -190,14 +226,22 @@ type_cran_resolve_version <- function(
 
       # Metadata for standard::, not url::
       res$metadata[["RemoteRef"]] <- remote$package
-      res$metadata[["RemoteRepos"]] <- config$get("cran-mirror")[[1]]
+      res$metadata[["RemoteRepos"]] <- repos[[1]]
       res$metadata[["RemotePkgPlatform"]] <- "source"
       res$metadata[["RemoteSha"]] <- remote$version
       res
     }
   )$catch(error = function(err) {
-    # if it is not in Archive, try the main package.
-    # This will fail if not the right vesion
-    resolve_from_metadata(remote, direct, config, cache, dependencies)
+    if (length(repos) == 1) {
+      throw(err)
+    }
+    type_cran_resolve_archive(
+      remote,
+      repos[-1],
+      direct,
+      config,
+      cache,
+      dependencies
+    )
   })
 }

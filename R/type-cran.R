@@ -172,10 +172,7 @@ type_cran_resolve_version <- function(
   # versions in their own Archive/ with the same layout.
   repos <- c(config$get("cran-mirror")[[1]], unname(getOption("repos")))
   repos <- repos[!is.na(repos) & nzchar(repos) & repos != "@CRAN@"]
-  # Normalize before deduplicating so the archive URLs built below never
-  # contain `//src/contrib`, whether or not the configured repo had a slash.
-  repos <- sub("/+$", "", repos)
-  repos <- unique(repos[nzchar(repos)])
+  repos <- unique(repos)
   if (length(repos) == 0L) {
     return(resolve_from_metadata(remote, direct, config, cache, dependencies))
   }

@@ -143,6 +143,136 @@ test_that("resolve an old version", {
   )
 })
 
+test_that("resolve an old version from another configured archive", {
+  pkgcache::pkg_cache_delete_files()
+
+  primary_repo <- dcf(
+    "
+    Package: pkg1
+    Version: 1.0.0
+  "
+  )
+  archive_repo <- dcf(
+    "
+    Package: pkg1
+    Version: 1.0.0
+
+    Package: pkg1
+    Version: 0.9.0
+  "
+  )
+
+  primary <- webfakes::local_app_process(
+    cran_app(primary_repo),
+    opts = webfakes::server_opts(num_threads = 3),
+    .local_envir = environment()
+  )
+  archive <- webfakes::local_app_process(
+    cran_app(archive_repo),
+    opts = webfakes::server_opts(num_threads = 3),
+    .local_envir = environment()
+  )
+
+  setup_fake_apps(cran_app = primary)
+  withr::local_options(repos = c(CRAN = primary$url(), archive = archive$url()))
+
+  prop <- new_pkg_installation_proposal(
+    "pkg1@0.9.0",
+    config = list(sysreqs_platform = "unknown")
+  )
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
+
+  # webfakes urls end in `/`; pkgdepends uses the slash-free form.
+  archive_url <- sub("/+$", "", archive$url())
+  expect_equal(res$status[[1]], "OK")
+  expect_equal(res$version[[1]], "0.9.0")
+  expect_equal(res$metadata[[1]][["RemoteRepos"]], archive_url)
+  expect_equal(res$remote[[1]]$url, paste0(
+    archive_url,
+    "/src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz"
+  ))
+})
+
+test_that("missing archive repositories fall back to metadata", {
+  withr::local_options(repos = character())
+  remote <- structure(
+    list(package = "pkg1", version = "0.9.0", atleast = "=="),
+    class = "remote_ref"
+  )
+  config <- list(get = function(key) "")
+  called <- FALSE
+  mockery::stub(
+    type_cran_resolve_version,
+    "resolve_from_metadata",
+    function(...) {
+      called <<- TRUE
+      "metadata fallback"
+    }
+  )
+
+  expect_equal(
+    type_cran_resolve_version(remote, TRUE, config, NULL, NULL),
+    "metadata fallback"
+  )
+  expect_true(called)
+})
+
+test_that("resolve an old version from archives with trailing slashes", {
+  pkgcache::pkg_cache_delete_files()
+
+  primary_repo <- dcf(
+    "
+    Package: pkg1
+    Version: 1.0.0
+  "
+  )
+  archive_repo <- dcf(
+    "
+    Package: pkg1
+    Version: 1.0.0
+
+    Package: pkg1
+    Version: 0.9.0
+  "
+  )
+
+  primary <- webfakes::local_app_process(
+    cran_app(primary_repo),
+    opts = webfakes::server_opts(num_threads = 3),
+    .local_envir = environment()
+  )
+  archive <- webfakes::local_app_process(
+    cran_app(archive_repo),
+    opts = webfakes::server_opts(num_threads = 3),
+    .local_envir = environment()
+  )
+
+  setup_fake_apps(cran_app = primary)
+  # Trailing slashes must not produce `//src/contrib/Archive` request URLs,
+  # and the repo recorded in RemoteRepos must be the slash-free URL.
+  archive_url <- sub("/+$", "", archive$url())
+  withr::local_options(repos = c(
+    CRAN = paste0(sub("/+$", "", primary$url()), "/"),
+    archive = paste0(archive_url, "/")
+  ))
+
+  prop <- new_pkg_installation_proposal(
+    "pkg1@0.9.0",
+    config = list(sysreqs_platform = "unknown")
+  )
+  suppressMessages(prop$resolve())
+  res <- prop$get_resolution()
+
+  expect_equal(res$status[[1]], "OK")
+  expect_equal(res$metadata[[1]][["RemoteRepos"]], archive_url)
+  expect_equal(res$remote[[1]]$url, paste0(
+    archive_url,
+    "/src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz"
+  ))
+  expect_false(grepl("//src/", res$remote[[1]]$url, fixed = TRUE))
+})
+
 test_that("resolve a version range", {
   pkgcache::pkg_cache_delete_files()
   setup_fake_apps()

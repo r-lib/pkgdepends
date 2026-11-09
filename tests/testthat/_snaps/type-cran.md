@@ -274,16 +274,16 @@
       1 <named list [1]> <chr [3]> <chr [0]> ""      <NA>    miss        
       2 <list [0]>       <chr [3]> <chr [0]> <NA>    <NA>    miss        
       + sources:
-      http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz
+      http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz
       http://127.0.0.1:<port>/src/contrib/pkg1_1.0.0.tar.gz, http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_1.0.0.tar.gz
       + remote:
-      <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ==; version: 0.9.0; ref: pkg1@0.9.0; type: standard; params: ; url: http://127.0.0.1:<port>//src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz; hash: <hash>
+      <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ==; version: 0.9.0; ref: pkg1@0.9.0; type: standard; params: ; url: http://127.0.0.1:<port>/src/contrib/Archive/pkg1/pkg1_0.9.0.tar.gz; hash: <hash>
       <remote_ref_standard/remote_ref/list> package: pkg1; atleast: ; version: ; ref: pkg1; type: standard; params: 
       + error:
       -
       -
       + metadata:
-      RemotePkgRef: pkg1@0.9.0; RemoteType: standard; RemoteEtag: "<etag>"; RemotePackaged: TRUE; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>/; RemotePkgPlatform: source; RemoteSha: 0.9.0
+      RemotePkgRef: pkg1@0.9.0; RemoteType: standard; RemoteEtag: "<etag>"; RemotePackaged: TRUE; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 0.9.0
       RemoteType: standard; RemotePkgRef: pkg1; RemoteRef: pkg1; RemoteRepos: http://127.0.0.1:<port>; RemotePkgPlatform: source; RemoteSha: 1.0.0
       + dep_types:
       Depends, Imports, LinkingTo

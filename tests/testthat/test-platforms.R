@@ -26,6 +26,11 @@ test_that("platform_is_ok", {
       "x86_64-pc-linux-musl-manylinux-2.28",
       c("x86_64-pc-linux-musl-alpine-3.21.0", "source"),
       NULL
+    ),
+    list(
+      "aarch64-apple-darwin23",
+      c("aarch64-apple-darwin23-macos.binary.arm64", "source"),
+      NULL
     )
   )
   for (c in ok) {
@@ -47,6 +52,11 @@ test_that("platform_is_ok", {
     list(
       "aarch64-unknown-linux-gnu-manylinux-2.28",
       "aarch64-apple-darwin20",
+      NULL
+    ),
+    list(
+      "aarch64-apple-darwin20",
+      c("aarch64-apple-darwin23-macos.binary.arm64", "source"),
       NULL
     )
   )

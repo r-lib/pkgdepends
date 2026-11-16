@@ -149,6 +149,45 @@ test_that("make_installed_cache", {
   expect_equal(cache$pkgs$package, "boot")
 })
 
+test_that("make_installed_cache uses RemoteBuildPlatform", {
+  tmp <- withr::local_tempdir()
+  built <- "R 4.7.0; aarch64-apple-darwin23; 2026-11-01 00:00:00 UTC; unix"
+  mkpkg <- function(name, extra = NULL) {
+    dir.create(file.path(tmp, name))
+    writeLines(
+      c(
+        paste0("Package: ", name),
+        "Version: 1.0.0",
+        paste0("Built: ", built),
+        extra
+      ),
+      file.path(tmp, name, "DESCRIPTION")
+    )
+  }
+  mkpkg("foo")
+  mkpkg(
+    "bar",
+    "RemoteBuildPlatform: aarch64-apple-darwin23-macos.binary.arm64"
+  )
+  # no compiled code, empty platform in `Built`
+  built <- "R 4.7.0; ; 2026-11-01 00:00:00 UTC; unix"
+  mkpkg(
+    "baz",
+    "RemoteBuildPlatform: aarch64-apple-darwin23-macos.binary.arm64"
+  )
+  cache <- make_installed_cache(tmp)
+  pkgs <- cache$pkgs[order(cache$pkgs$package), ]
+  expect_equal(pkgs$package, c("bar", "baz", "foo"))
+  expect_equal(
+    pkgs$platform,
+    c(
+      "aarch64-apple-darwin23-macos.binary.arm64",
+      "*",
+      "aarch64-apple-darwin23"
+    )
+  )
+})
+
 test_that("make_installed_cache edge case", {
   tmp <- withr::local_tempdir()
   cache <- make_installed_cache(tmp, "MASS")

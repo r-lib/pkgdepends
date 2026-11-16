@@ -2,6 +2,10 @@
 
 ## pkgdepends (development version)
 
+- pkgdepends now recognizes installed packages again on R builds with a
+  custom binary package type, e.g. current R-devel (4.7.0) on macOS
+  (<https://github.com/r-lib/pak/issues/926>).
+
 - [`scan_deps()`](https://r-lib.github.io/pkgdepends/dev/reference/scan_deps.md)
   now scans files given in `path`, not only directories. Paths in the
   result are now always relative to the project root

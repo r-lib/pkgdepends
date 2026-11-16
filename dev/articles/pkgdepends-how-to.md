@@ -20,7 +20,7 @@ prop$get_solution()$data
     #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
     #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.5   MIT + … FALSE           
     #>  3 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
-    #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.3   MIT + … FALSE           
+    #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.4   MIT + … FALSE           
     #>  5 glue   stan… FALSE  FALSE     OK     glue    1.8.1   MIT + … TRUE            
     #>  6 gtable stan… FALSE  FALSE     OK     gtable  0.3.6   MIT + … FALSE           
     #>  7 isoba… stan… FALSE  FALSE     OK     isoband 0.3.0   MIT + … TRUE            
@@ -50,7 +50,7 @@ prop$draw()
 ```
 
 
-    #> ggplot2 4.0.3 [new][bld][dl] (6.33 MB)                                          
+    #> ggplot2 4.0.4 [new][bld][dl] (6.36 MB)                                          
     #> ├─cli 3.6.6 [new][bld][cmp]                                                     
     #> ├─gtable 0.3.6 [new][bld][dl] (148.15 kB)                                       
     #> │ ├─cli                                                                         
@@ -146,15 +146,15 @@ prop$get_solution()$data
     #>  6 filel… stan… FALSE  FALSE     OK     filelo… 1.0.3   MIT + … TRUE            
     #>  7 jsonl… stan… FALSE  FALSE     OK     jsonli… 2.0.0   MIT + … TRUE            
     #>  8 lpSol… stan… FALSE  FALSE     OK     lpSolve 5.6.23  LGPL-2  TRUE            
-    #>  9 otel   stan… FALSE  FALSE     OK     otel    0.2.0   MIT + … FALSE           
+    #>  9 otel   stan… FALSE  FALSE     OK     otel    0.3.0   MIT + … FALSE           
     #> 10 pkgbu… stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + … FALSE           
     #> 11 proce… stan… FALSE  FALSE     OK     proces… 3.9.0   MIT + … TRUE            
     #> 12 ps     stan… FALSE  FALSE     OK     ps      1.9.3   MIT + … TRUE            
     #> 13 R6     stan… FALSE  FALSE     OK     R6      2.6.1   MIT + … FALSE           
     #> 14 zip    stan… FALSE  FALSE     OK     zip     3.0.2   MIT + … TRUE            
     #> 15 r-lib… gith… FALSE  FALSE     OK     pkgcac… 2.2.5.… MIT + … TRUE            
-    #> 16 gabor… gith… FALSE  FALSE     OK     tstoml  0.0.0.… MIT + … TRUE            
-    #> 17 r-lib… gith… FALSE  FALSE     OK     tsitter 0.2.0.… MIT + … TRUE            
+    #> 16 r-lib… gith… FALSE  FALSE     OK     tsitter 0.2.0.… MIT + … TRUE            
+    #> 17 gabor… gith… FALSE  FALSE     OK     tstoml  0.0.0.… MIT + … TRUE            
     #> # ℹ 29 more variables: priority <chr>, md5sum <chr>, sha256 <chr>,              
     #> #   filesize <int>, built <chr>, platform <chr>, rversion <chr>,                
     #> #   repotype <chr>, repodir <chr>, target <chr>, deps <list>, mirror <chr>,     
@@ -180,18 +180,18 @@ dir(target_dir)
 ```
 
 
-    #> ℹ Getting 12 pkgs (12.64 MB), 5 (1.73 MB) cached                                
-    #> ✔ Got cpp11 0.5.5 (source) (304.82 kB)                                          
+    #> ℹ Getting 12 pkgs (12.67 MB), 5 (1.73 MB) cached                                
     #> ✔ Got farver 2.1.2 (source) (1.28 MB)                                           
+    #> ✔ Got cpp11 0.5.5 (source) (304.82 kB)                                          
     #> ✔ Got gtable 0.3.6 (source) (148.15 kB)                                         
-    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
-    #> ✔ Got RColorBrewer 1.1-3 (source) (11.64 kB)                                    
     #> ✔ Got isoband 0.3.0 (source) (1.59 MB)                                          
+    #> ✔ Got labeling 0.4.3 (source) (10.17 kB)                                        
+    #> ✔ Got ggplot2 4.0.4 (source) (6.36 MB)                                          
+    #> ✔ Got RColorBrewer 1.1-3 (source) (11.64 kB)                                    
     #> ✔ Got S7 0.2.2 (source) (184.63 kB)                                             
-    #> ✔ Got ggplot2 4.0.3 (source) (6.33 MB)                                          
-    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
-    #> ✔ Got vctrs 0.7.3 (source) (1.08 MB)                                            
     #> ✔ Got withr 3.0.3 (source) (103.97 kB)                                          
+    #> ✔ Got vctrs 0.7.3 (source) (1.08 MB)                                            
+    #> ✔ Got scales 1.4.0 (source) (328.67 kB)                                         
     #> ✔ Got viridisLite 0.4.3 (source) (1.27 MB)                                      
     #> # A data frame: 17 × 41                                                         
     #>    ref    type  direct directpkg status package version license needscompilation
@@ -199,7 +199,7 @@ dir(target_dir)
     #>  1 cli    stan… FALSE  FALSE     OK     cli     3.6.6   MIT + … TRUE            
     #>  2 cpp11  stan… FALSE  FALSE     OK     cpp11   0.5.5   MIT + … FALSE           
     #>  3 farver stan… FALSE  FALSE     OK     farver  2.1.2   MIT + … TRUE            
-    #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.3   MIT + … FALSE           
+    #>  4 ggplo… stan… TRUE   TRUE      OK     ggplot2 4.0.4   MIT + … FALSE           
     #>  5 glue   stan… FALSE  FALSE     OK     glue    1.8.1   MIT + … TRUE            
     #>  6 gtable stan… FALSE  FALSE     OK     gtable  0.3.6   MIT + … FALSE           
     #>  7 isoba… stan… FALSE  FALSE     OK     isoband 0.3.0   MIT + … TRUE            
@@ -241,19 +241,20 @@ lib_status(new_lib)
     #> ℹ Getting 1 pkg (6.08 kB)                                                       
     #> ✔ Got pkgconfig 2.0.3 (source) (6.08 kB)                                        
     #> ℹ Building pkgconfig 2.0.3                                                      
-    #> ✔ Built pkgconfig 2.0.3 (1.6s)                                                  
+    #> ✔ Built pkgconfig 2.0.3 (602ms)                                                 
     #> ✔ Installed pkgconfig 2.0.3  (1s)                                               
-    #> ✔ Summary:   1 new  in 2.6s                                                     
-    #> # A data frame: 1 × 31                                                          
+    #> ✔ Summary:   1 new  in 1.6s                                                     
+    #> # A data frame: 1 × 32                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpJSqI… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
-    #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
+    #> 1 /tmp/Rtmpsmj1… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> # ℹ 24 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
-    #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   
-    #> #   enhances <chr>, md5sum <chr>, platform <chr>, priority <chr>,               
-    #> #   biocviews <chr>, sysreqs <chr>, ref <chr>, type <chr>, status <chr>,        
-    #> #   rversion <chr>, sources <list>, repotype <chr>, deps <list>                 
+    #> #   remotepkgplatform <chr>, remotesha <chr>, remotebuildplatform <chr>,        
+    #> #   depends <chr>, linkingto <chr>, enhances <chr>, md5sum <chr>,               
+    #> #   platform <chr>, priority <chr>, biocviews <chr>, sysreqs <chr>, ref <chr>,  
+    #> #   type <chr>, status <chr>, rversion <chr>, sources <list>, repotype <chr>,   
+    #> #   deps <list>                                                                 
 
 ### How to update a package?
 
@@ -275,21 +276,22 @@ lib_status(new_lib)
     #> ℹ No downloads are needed, 1 pkg is cached                                      
     #> ✔ Got pkgconfig 2.0.2 (source) (13.22 kB)                                       
     #> ℹ Packaging pkgconfig 2.0.2                                                     
-    #> ✔ Packaged pkgconfig 2.0.2 (357ms)                                              
+    #> ✔ Packaged pkgconfig 2.0.2 (395ms)                                              
     #> ℹ Building pkgconfig 2.0.2                                                      
-    #> ✔ Built pkgconfig 2.0.2 (622ms)                                                 
+    #> ✔ Built pkgconfig 2.0.2 (604ms)                                                 
     #> ✔ Installed pkgconfig 2.0.2 (github::cran/pkgconfig@d892880) (1s)               
-    #> ✔ Summary:   1 new  in 1.7s                                                     
-    #> # A data frame: 1 × 32                                                          
+    #> ✔ Summary:   1 new  in 1.6s                                                     
+    #> # A data frame: 1 × 33                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpJSqI… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
-    #> # ℹ 24 more variables: repository <chr>, remotetype <chr>, remotehost <chr>,    
+    #> 1 /tmp/Rtmpsmj1… pkgcon… Priv… 2.0.2   MIT + … utils   covr, t… FALSE           
+    #> # ℹ 25 more variables: repository <chr>, remotetype <chr>, remotehost <chr>,    
     #> #   remoterepo <chr>, remoteusername <chr>, remotepkgref <chr>,                 
-    #> #   remoteref <chr>, remotesha <chr>, built <chr>, depends <chr>,               
-    #> #   linkingto <chr>, enhances <chr>, md5sum <chr>, platform <chr>,              
-    #> #   priority <chr>, biocviews <chr>, sysreqs <chr>, ref <chr>, type <chr>,      
-    #> #   status <chr>, rversion <chr>, sources <list>, repotype <chr>, deps <list>   
+    #> #   remoteref <chr>, remotesha <chr>, built <chr>, remotebuildplatform <chr>,   
+    #> #   depends <chr>, linkingto <chr>, enhances <chr>, md5sum <chr>,               
+    #> #   platform <chr>, priority <chr>, biocviews <chr>, sysreqs <chr>, ref <chr>,  
+    #> #   type <chr>, status <chr>, rversion <chr>, sources <list>, repotype <chr>,   
+    #> #   deps <list>                                                                 
 
 Now update.
 
@@ -308,13 +310,14 @@ lib_status(new_lib)
     #> ℹ No downloads are needed, 1 pkg (6.08 kB) is cached                            
     #> ✔ Installed pkgconfig 2.0.3  (1s)                                               
     #> ✔ Summary:   1 updated  in 1s                                                   
-    #> # A data frame: 1 × 31                                                          
+    #> # A data frame: 1 × 32                                                          
     #>   library        package title version license imports suggests needscompilation
     #>   <chr>          <chr>   <chr> <chr>   <chr>   <chr>   <chr>    <lgl>           
-    #> 1 /tmp/RtmpJSqI… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
-    #> # ℹ 23 more variables: repository <chr>, built <chr>, remotetype <chr>,         
+    #> 1 /tmp/Rtmpsmj1… pkgcon… Priv… 2.0.3   MIT + … utils   covr, t… FALSE           
+    #> # ℹ 24 more variables: repository <chr>, built <chr>, remotetype <chr>,         
     #> #   remotepkgref <chr>, remoteref <chr>, remoterepos <chr>,                     
-    #> #   remotepkgplatform <chr>, remotesha <chr>, depends <chr>, linkingto <chr>,   
-    #> #   enhances <chr>, md5sum <chr>, platform <chr>, priority <chr>,               
-    #> #   biocviews <chr>, sysreqs <chr>, ref <chr>, type <chr>, status <chr>,        
-    #> #   rversion <chr>, sources <list>, repotype <chr>, deps <list>                 
+    #> #   remotepkgplatform <chr>, remotesha <chr>, remotebuildplatform <chr>,        
+    #> #   depends <chr>, linkingto <chr>, enhances <chr>, md5sum <chr>,               
+    #> #   platform <chr>, priority <chr>, biocviews <chr>, sysreqs <chr>, ref <chr>,  
+    #> #   type <chr>, status <chr>, rversion <chr>, sources <list>, repotype <chr>,   
+    #> #   deps <list>                                                                 

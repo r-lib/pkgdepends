@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpeHw43U/file1c9a73c5969b"
+#> [1] "/tmp/RtmpZRjMvW/file1dc5392d4cca"
 #> 
 #> ## configure_args
 #> <default>
@@ -467,11 +467,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpeHw43U/file1c9a79ca36db"
+#> [1] "/tmp/RtmpZRjMvW/file1dc5df904ed"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpeHw43U/file1c9a72fa413"
+#> [1] "/tmp/RtmpZRjMvW/file1dc5446dde12"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -558,7 +558,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 4.55 MB in 3 files.
+#> ✔ Updated metadata database: 4.57 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -567,8 +567,8 @@ pd$get_resolution()
 #> # A data frame: 2 × 35
 #>   ref   type     direct directpkg status package version license
 #>   <chr> <chr>    <lgl>  <lgl>     <chr>  <chr>   <chr>   <chr>  
-#> 1 pak   standard TRUE   TRUE      OK     pak     0.11.1  GPL-3  
-#> 2 pak   standard TRUE   TRUE      OK     pak     0.11.1  GPL-3  
+#> 1 pak   standard TRUE   TRUE      OK     pak     0.11.2  GPL-3  
+#> 2 pak   standard TRUE   TRUE      OK     pak     0.11.2  GPL-3  
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
 #> #   md5sum <chr>, sha256 <chr>, filesize <int>, built <chr>,
 #> #   platform <chr>, rversion <chr>, repotype <chr>, repodir <chr>,
@@ -591,7 +591,7 @@ pd$get_resolution()
 #>  6 filelock       stan… FALSE  FALSE     OK     filelo… 1.0.3   MIT + …
 #>  7 jsonlite       stan… FALSE  FALSE     OK     jsonli… 2.0.0   MIT + …
 #>  8 lpSolve        stan… FALSE  FALSE     OK     lpSolve 5.6.23  LGPL-2 
-#>  9 otel           stan… FALSE  FALSE     OK     otel    0.2.0   MIT + …
+#>  9 otel           stan… FALSE  FALSE     OK     otel    0.3.0   MIT + …
 #> 10 pkgbuild       stan… FALSE  FALSE     OK     pkgbui… 1.4.8   MIT + …
 #> # ℹ 20 more rows
 #> # ℹ 27 more variables: needscompilation <lgl>, priority <chr>,
@@ -700,7 +700,7 @@ pd$show_solution()
 #> + fs          2.1.0 [dl] + cmake, make, libuv1-dev
 #> + glue        1.8.1 [dl]
 #> + lifecycle   1.0.5 [dl]
-#> + otel        0.2.0 [dl]
+#> + otel        0.3.0 [dl]
 #> + pkgbuild    1.4.8 [dl]
 #> + pkgload     1.5.3 [dl]
 #> + processx    3.9.0 [dl]
@@ -746,7 +746,7 @@ pd$draw()
 #> │ ├─R6
 #> │ ├─callr 3.8.0 [new][dl] (unknown size)
 #> │ │ ├─R6
-#> │ │ ├─otel 0.2.0 [new][dl] (unknown size)
+#> │ │ ├─otel 0.3.0 [new][dl] (unknown size)
 #> │ │ └─processx 3.9.0 [new][dl] (unknown size)
 #> │ │   ├─R6
 #> │ │   └─ps 1.9.3 [new][dl] (unknown size)

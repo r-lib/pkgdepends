@@ -77,11 +77,11 @@ pd$draw()
 ```
 
 
-    ## ✔ Updated metadata database: 3.86 MB in 8 files.
+    ## ✔ Updated metadata database: 3.88 MB in 8 files.
     ## ✔ Updating metadata database ... done
     ## r-lib/pkgcache 2.2.5.9000 [new][bld][cmp][dl] (unknown size)
     ## ├─callr 3.8.0 [new][bld][dl] (113.26 kB)
-    ## │ ├─otel 0.2.0 [new][bld][dl] (72.58 kB)
+    ## │ ├─otel 0.3.0 [new][bld][dl] (81.53 kB)
     ## │ ├─processx 3.9.0 [new][bld][cmp][dl] (195.28 kB)
     ## │ │ ├─ps 1.9.3 [new][bld][cmp][dl] (172.43 kB)
     ## │ │ └─R6 2.6.1 [new][bld][dl] (64.51 kB)
@@ -112,7 +112,7 @@ pdl$download()
 
 
     ## ℹ Getting 1 pkg with unknown size
-    ## ✔ Got cli 3.6.6.9000 (source) (1.16 MB)
+    ## ✔ Got cli 3.6.6.9000 (source) (1.17 MB)
 
 See the
 [`pkg_download_proposal`](https://r-lib.github.io/pkgdepends/reference/pkg_download_proposal.html)
@@ -136,14 +136,24 @@ pdi$install()
 ```
 
 
-    ## ℹ Getting 1 pkg with unknown size
-    ## ✔ Cached copy of cli 3.6.6.9000 (source) is the latest build
-    ## ℹ Packaging cli 3.6.6.9000
-    ## ✔ Packaged cli 3.6.6.9000 (1.2s)
-    ## ℹ Building cli 3.6.6.9000
-    ## ✔ Built cli 3.6.6.9000 (8.2s)
-    ## ✔ Installed cli 3.6.6.9000 (github::r-lib/cli@633bc27) (1s)
-    ## ✔ Summary:   1 new  in 9.2s
+    ## ! Could not solve package dependencies:
+    ## * r-lib/cli: ! pkgdepends resolution error for r-lib/cli.
+    ## Caused by error:
+    ## ! Can't find reference @HEAD in GitHub repo r-lib/cli.
+    ## ---
+    ## Backtrace:
+    ##  1. pdi$download()
+    ##  2. private$plan$download_solution()
+    ##  3. pkgdepends:::pkgplan_download_solution(self, private)
+    ##  4. pkgdepends:::synchronise(self$async_download_solution())
+    ##  5. asNamespace("pkgcache")$synchronise(...)
+    ##  6. self$async_download_solution()
+    ##  7. pkgdepends:::pkgplan_async_download_solution(self, private)
+    ##  8. self$stop_for_solve_error()
+    ##  9. pkgdepends:::pkgplan_stop_for_solve_error(self, private)
+    ## 10. pkgdepends:::throw(new_error("Could not solve package dependencies:\n", msg,
+    ##  …
+    ## Execution halted
 
 ## Dependency resolution
 

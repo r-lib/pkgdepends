@@ -274,6 +274,13 @@ res_init <- function(self, private, config, cache, library, remote_types) {
       # nocovif !is_linux()
       private$system_packages <- x
       NULL
+    })$catch(error = function(e) {
+      cli::cli_alert_warning(
+        "Failed to query installed system packages: {conditionMessage(e)}",
+        wrap = TRUE
+      )
+      private$system_packages <- NULL
+      NULL
     })$then(private$deferred) # nocovif !is_linux() # nocovif !is_linux()
   }
   if (sys_sup) {

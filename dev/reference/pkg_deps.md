@@ -446,7 +446,7 @@ pd$get_config()
 #> 
 #> ## metadata_cache_dir
 #> <default>
-#> [1] "/tmp/RtmpZRjMvW/file1dc5392d4cca"
+#> [1] "/tmp/Rtmpz4EjCM/file1e9b7b1e00f7"
 #> 
 #> ## configure_args
 #> <default>
@@ -467,11 +467,11 @@ pd$get_config()
 #> 
 #> ## cache_dir
 #> <default>
-#> [1] "/tmp/RtmpZRjMvW/file1dc5df904ed"
+#> [1] "/tmp/Rtmpz4EjCM/file1e9b26a43393"
 #> 
 #> ## library
 #> <set>
-#> [1] "/tmp/RtmpZRjMvW/file1dc5446dde12"
+#> [1] "/tmp/Rtmpz4EjCM/file1e9b63ec3f74"
 #> 
 #> ## ignore_dev_library
 #> <default>
@@ -558,7 +558,7 @@ pd$get_config()
 pd <- new_pkg_deps("pak")
 pd$resolve()
 #> 
-#> ✔ Updated metadata database: 4.57 MB in 3 files.
+#> ✔ Updated metadata database: 4.58 MB in 3 files.
 #> 
 #> ℹ Updating metadata database
 #> ✔ Updating metadata database ... done
@@ -693,20 +693,20 @@ pd$get_solution()
 pd <- new_pkg_deps("pkgload")
 pd$solve()
 pd$show_solution()
-#> + R6          2.6.1 [dl]
-#> + callr       3.8.0 [dl]
-#> + cli         3.6.6 [dl]
-#> + desc        1.4.3 [dl]
-#> + fs          2.1.0 [dl] + cmake, make, libuv1-dev
-#> + glue        1.8.1 [dl]
-#> + lifecycle   1.0.5 [dl]
-#> + otel        0.3.0 [dl]
-#> + pkgbuild    1.4.8 [dl]
-#> + pkgload     1.5.3 [dl]
-#> + processx    3.9.0 [dl]
-#> + ps          1.9.3 [dl]
-#> + rlang       1.3.0 [dl]
-#> + rprojroot   2.1.1 [dl]
+#> + R6          2.6.1  [dl]
+#> + callr       3.8.0  [dl]
+#> + cli         3.6.6  [dl]
+#> + desc        1.4.3  [dl]
+#> + fs          2.1.0  [dl] + cmake, make, libuv1-dev
+#> + glue        1.8.1  [dl]
+#> + lifecycle   1.0.5  [dl]
+#> + otel        0.3.0  [dl]
+#> + pkgbuild    1.4.8  [dl]
+#> + pkgload     1.5.3  [dl]
+#> + processx    3.10.0 [dl]
+#> + ps          1.9.3  [dl]
+#> + rlang       1.3.0  [dl]
+#> + rprojroot   2.1.1  [dl]
 # Method stop_for_solution_error()
 # This is an error, because the packages conflict:
 pd <- new_pkg_deps(
@@ -747,7 +747,7 @@ pd$draw()
 #> │ ├─callr 3.8.0 [new][dl] (unknown size)
 #> │ │ ├─R6
 #> │ │ ├─otel 0.3.0 [new][dl] (unknown size)
-#> │ │ └─processx 3.9.0 [new][dl] (unknown size)
+#> │ │ └─processx 3.10.0 [new][dl] (unknown size)
 #> │ │   ├─R6
 #> │ │   └─ps 1.9.3 [new][dl] (unknown size)
 #> │ ├─cli

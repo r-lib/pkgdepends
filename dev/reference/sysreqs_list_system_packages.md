@@ -45,16 +45,16 @@ Other system requirements functions:
 ``` r
 sysreqs_list_system_packages()[1:10,]
 #> # A data frame: 10 × 4
-#>    status package                  version         provides 
-#>  * <chr>  <chr>                    <chr>           <list>   
-#>  1 ii     3cpio                    0.14.0-1ubuntu1 <chr [0]>
-#>  2 ii     7zip                     26.00+dfsg-1    <chr [2]>
-#>  3 ii     7zip-rar                 26.00+ds-1      <chr [0]>
-#>  4 ii     aardvark-dns             1.16.0-3        <chr [0]>
-#>  5 ii     acl                      2.3.2-2         <chr [0]>
-#>  6 ii     adduser                  3.153ubuntu1    <chr [0]>
-#>  7 ii     adoptium-ca-certificates 1.0.6-1         <chr [0]>
-#>  8 ii     adwaita-icon-theme       50.0-1          <chr [2]>
-#>  9 ii     ant                      1.10.15-1build1 <chr [0]>
-#> 10 ii     ant-optional             1.10.15-1build1 <chr [0]>
+#>    status package                  version             provides 
+#>  * <chr>  <chr>                    <chr>               <list>   
+#>  1 ii     3cpio                    0.14.0-1ubuntu1     <chr [0]>
+#>  2 ii     7zip                     26.00+dfsg-1        <chr [2]>
+#>  3 ii     7zip-rar                 26.00+ds-1          <chr [0]>
+#>  4 ii     aardvark-dns             1.16.0-3            <chr [0]>
+#>  5 ii     acl                      2.3.2-2             <chr [0]>
+#>  6 ii     acpid                    1:2.0.34-1ubuntu3   <chr [0]>
+#>  7 ii     adduser                  3.153ubuntu1        <chr [0]>
+#>  8 ii     adoptium-ca-certificates 1.0.6-1             <chr [0]>
+#>  9 ii     adwaita-icon-theme       50.0-1              <chr [2]>
+#> 10 ii     amd64-microcode          3.20251202.1ubuntu2 <chr [0]>
 ```
